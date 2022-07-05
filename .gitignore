@@ -1,0 +1,10 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+### VS Code ###
+.vscode/
+### mac os ###
+*.DS_Store

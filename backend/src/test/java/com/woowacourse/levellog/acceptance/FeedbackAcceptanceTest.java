@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.acceptance;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 
 import com.woowacourse.levellog.dto.FeedbackContentDto;
@@ -28,15 +29,52 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요."));
 
         // when
+        final ValidatableResponse response = requestCreateFeedback(request);
+
+        // then
+        response.statusCode(HttpStatus.CREATED.value())
+                .header(HttpHeaders.LOCATION, equalTo("/api/feedbacks"));
+    }
+
+    /*
+     * Scenario: 피드백 전체 조회
+     *   given: 피드백이 등록되어있다.
+     *   when: 등록된 모든 피드백을 조회한다.
+     *   then: 200 OK 상태 코드와 모든 피드백을 응답 받는다.
+     */
+    @Test
+    @DisplayName("피드백 조회")
+    void findAllFeedbacks() {
+        // given
+        final FeedbackCreateRequest request1 = new FeedbackCreateRequest("로마",
+                new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타"));
+        final FeedbackCreateRequest request2 = new FeedbackCreateRequest("알린",
+                new FeedbackContentDto("알린 스터디", "알린 말하기", "알린 기타"));
+
+        requestCreateFeedback(request1);
+        requestCreateFeedback(request2);
+
+        // when
         final ValidatableResponse response = RestAssured.given().log().all()
+                .when()
+                .get("/api/feedbacks")
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("feedbacks.name", contains("로마", "알린"),
+                        "feedbacks.feedback.study", contains("로마 스터디", "알린 스터디"),
+                        "feedbacks.feedback.speak", contains("로마 말하기", "알린 말하기"),
+                        "feedbacks.feedback.etc", contains("로마 기타", "알린 기타")
+                );
+    }
+
+    private ValidatableResponse requestCreateFeedback(final FeedbackCreateRequest request) {
+        return RestAssured.given().log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/api/feedbacks")
                 .then().log().all();
-
-        // then
-        response.statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, equalTo("/api/feedbacks"));
     }
 }

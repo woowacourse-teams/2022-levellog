@@ -6,6 +6,7 @@ import com.woowacourse.levellog.domain.Feedback;
 import com.woowacourse.levellog.domain.FeedbackRepository;
 import com.woowacourse.levellog.dto.FeedbackContentDto;
 import com.woowacourse.levellog.dto.FeedbackCreateRequest;
+import com.woowacourse.levellog.dto.FeedbacksResponse;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -38,5 +39,19 @@ class FeedbackServiceTest {
         // then
         final Optional<Feedback> feedback = feedbackRepository.findById(id);
         assertThat(feedback).isPresent();
+    }
+
+    @Test
+    @DisplayName("모든 피드백을 조회한다.")
+    void findAll() {
+        // given
+        feedbackRepository.save(new Feedback("로마", "로마 스터디", "로마 말하기", "로마 기타"));
+        feedbackRepository.save(new Feedback("알린", "알린 스터디", "알린 말하기", "알린 기타"));
+
+        // when
+        final FeedbacksResponse feedbacksResponse = feedbackService.findAll();
+
+        // then
+        assertThat(feedbacksResponse.getFeedbacks()).hasSize(2);
     }
 }

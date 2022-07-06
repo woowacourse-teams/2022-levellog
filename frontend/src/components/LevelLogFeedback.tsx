@@ -5,30 +5,15 @@ import Input from './@commons/Input';
 import SmallInput from './@commons/SmallInput';
 import Button from './@commons/Button';
 import { FeedbackAddContainer } from './@commons/Style';
-
-interface InitialStateType {
-  name: string;
-  feeedback: {
-    study: string;
-    speak: string;
-    etc: string;
-  };
-}
-
-const initialState = Object.freeze({
-  name: '',
-  feedback: {
-    study: '',
-    speak: '',
-    etc: '',
-  },
-});
+import { useFeedback } from '../hooks/useFeedback';
 
 const LevelLogFeedback = () => {
+  const { useFeedbackAdd } = useFeedback();
   const feedbackRef = useRef([]);
 
   const handleSubmitFeedbackForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const [name, study, speak, etc] = feedbackRef.current;
     const feedbackResult = {
       name: name.value,
@@ -38,6 +23,8 @@ const LevelLogFeedback = () => {
         etc: etc.value,
       },
     };
+
+    useFeedbackAdd(feedbackResult);
   };
 
   return (

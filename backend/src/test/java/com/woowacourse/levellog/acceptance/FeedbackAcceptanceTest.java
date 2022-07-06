@@ -2,9 +2,11 @@ package com.woowacourse.levellog.acceptance;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
 import com.woowacourse.levellog.dto.FeedbackContentDto;
 import com.woowacourse.levellog.dto.FeedbackCreateRequest;
+import com.woowacourse.levellog.dto.FeedbacksResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -55,10 +57,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         requestCreateFeedback(request2);
 
         // when
-        final ValidatableResponse response = RestAssured.given().log().all()
-                .when()
-                .get("/api/feedbacks")
-                .then().log().all();
+        final ValidatableResponse response = requestFindAllFeedbacks();
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -69,12 +68,58 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 );
     }
 
+    /*
+     * Scenario: 피드백 삭제
+     *   given: 피드백이 등록되어 있다.
+     *   given: 피드백을 모두 조회한다.
+     *   when: 특정 피드백을 삭제한다.
+     *   then: 204 No Content 상태 코드를 응답받는다.
+     */
+
+    @Test
+    @DisplayName("피드백 삭제")
+    void deleteFeedback() {
+        // given
+        final FeedbackCreateRequest request1 = new FeedbackCreateRequest("로마",
+                new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타"));
+        final FeedbackCreateRequest request2 = new FeedbackCreateRequest("알린",
+                new FeedbackContentDto("알린 스터디", "알린 말하기", "알린 기타"));
+
+        requestCreateFeedback(request1);
+        requestCreateFeedback(request2);
+
+        final Long deleteId = requestFindAllFeedbacks()
+                .extract()
+                .as(FeedbacksResponse.class)
+                .getFeedbacks()
+                .get(0)
+                .getId();
+
+        // when
+        final ValidatableResponse response = RestAssured.given().log().all()
+                .when()
+                .delete("/api/feedbacks/" + deleteId)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.NO_CONTENT.value());
+
+        requestFindAllFeedbacks().body("feedbacks.id", not(contains(deleteId)));
+    }
+
     private ValidatableResponse requestCreateFeedback(final FeedbackCreateRequest request) {
         return RestAssured.given().log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/api/feedbacks")
+                .then().log().all();
+    }
+
+    private ValidatableResponse requestFindAllFeedbacks() {
+        return RestAssured.given().log().all()
+                .when()
+                .get("/api/feedbacks")
                 .then().log().all();
     }
 }

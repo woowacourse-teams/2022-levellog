@@ -1,9 +1,11 @@
 import React from 'react';
+import { useRoutes } from 'react-router-dom';
+import { routes } from './routes/Routes';
 
 const App = () => {
-  const hello = 'qwer' as String;
+  const content = useRoutes(routes);
 
-  return <div>{hello}</div>;
+  return content;
 };
 
 export default App;

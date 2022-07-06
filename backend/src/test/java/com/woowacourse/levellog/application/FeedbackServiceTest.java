@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Transactional
+@DisplayName("FeedbackService의")
 class FeedbackServiceTest {
 
     @Autowired
@@ -25,7 +26,7 @@ class FeedbackServiceTest {
     private FeedbackRepository feedbackRepository;
 
     @Test
-    @DisplayName("피드백을 저장한다.")
+    @DisplayName("save 메서드는 피드백을 저장한다.")
     void save() {
         // given
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
@@ -42,7 +43,7 @@ class FeedbackServiceTest {
     }
 
     @Test
-    @DisplayName("모든 피드백을 조회한다.")
+    @DisplayName("findAll 메서드는 모든 피드백을 조회한다.")
     void findAll() {
         // given
         feedbackRepository.save(new Feedback("로마", "로마 스터디", "로마 말하기", "로마 기타"));
@@ -53,5 +54,21 @@ class FeedbackServiceTest {
 
         // then
         assertThat(feedbacksResponse.getFeedbacks()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("delete 메서드는 피드백을 삭제한다.")
+    void delete() {
+        // given
+        feedbackRepository.save(new Feedback("로마", "로마 스터디", "로마 말하기", "로마 기타"));
+        final Feedback savedFeedback = feedbackRepository.save(new Feedback("알린", "알린 스터디", "알린 말하기", "알린 기타"));
+        final Long id = savedFeedback.getId();
+
+        // when
+        feedbackService.deleteById(id);
+
+        // then
+        final Optional<Feedback> deletedFeedback = feedbackRepository.findById(id);
+        assertThat(deletedFeedback).isEmpty();
     }
 }

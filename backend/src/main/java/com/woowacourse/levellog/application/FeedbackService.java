@@ -36,4 +36,8 @@ public class FeedbackService {
 
         return new FeedbacksResponse(responses);
     }
+
+    public void deleteById(final Long id) {
+        feedbackRepository.deleteById(id);
+    }
 }

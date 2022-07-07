@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -9,23 +9,31 @@ import { useFeedback } from '../hooks/useFeedback';
 
 import { ROUTES_PATH } from '../constants/constants';
 import { FeedbackType } from '../types';
+import { useEffect } from 'react';
 
 const FeedbackList = () => {
-  const { useFeedbackLookup } = useFeedback();
-  const feedbacks = useFeedbackLookup();
-  console.log(feedbacks);
+  const [feedbacks, setFeedbacks] = useState([]);
+  const { feedbackLookup } = useFeedback();
+
+  useEffect(() => {
+    const requsetFeedbackLookup = async () => {
+      const res = await feedbackLookup();
+      setFeedbacks(res.feedbacks);
+    };
+
+    requsetFeedbackLookup();
+  }, []);
+
   return (
     <>
       <Link to={ROUTES_PATH.FEEDBACK_ADD}>
         <FeedbackAddButton />
       </Link>
       <FeedbacksContainer>
-        {/* {feedbacks &&
-          feedbacks.map((feedback: FeedbackType) => {
-            <Feedback feedback={feedback} />;
-          })} */}
-        <Feedback />
-        <Feedback />
+        {feedbacks.length !== 0 &&
+          feedbacks.map((feedback: FeedbackType) => (
+            <Feedback key={feedback.id} userFeedback={feedback} />
+          ))}
       </FeedbacksContainer>
     </>
   );

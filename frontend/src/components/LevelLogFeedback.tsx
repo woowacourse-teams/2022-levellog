@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 
 import Input from './@commons/Input';
@@ -6,16 +6,17 @@ import SmallInput from './@commons/SmallInput';
 import Button from './@commons/Button';
 import { FeedbackAddContainer } from './@commons/Style';
 import { useFeedback } from '../hooks/useFeedback';
+import { FeedbackType } from '../types';
 
 const LevelLogFeedback = () => {
-  const { useFeedbackAdd } = useFeedback();
+  const { feedbackAdd } = useFeedback();
   const feedbackRef = useRef([]);
 
   const handleSubmitFeedbackForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const [name, study, speak, etc] = feedbackRef.current;
-    const feedbackResult = {
+    const feedbackResult: Omit<FeedbackType, 'id'> = {
       name: name.value,
       feedback: {
         study: study.value,
@@ -24,7 +25,7 @@ const LevelLogFeedback = () => {
       },
     };
 
-    useFeedbackAdd(feedbackResult);
+    feedbackAdd(feedbackResult);
   };
 
   return (

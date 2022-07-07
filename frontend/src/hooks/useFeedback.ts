@@ -1,26 +1,32 @@
+import { useNavigate } from 'react-router-dom';
+
 import { deleteFeedbacks, getFeedbacks, postFeedback } from '../api/feedback';
 import { FeedbackType } from '../types';
 
 export const useFeedback = () => {
-  const useFeedbackAdd = async (feedbackResult: FeedbackType) => {
+  const navigate = useNavigate();
+
+  const feedbackAdd = async (feedbackResult: Omit<FeedbackType, 'id'>) => {
     try {
       await postFeedback(feedbackResult);
+      navigate('/');
     } catch (err) {
       console.log(err);
     }
   };
 
-  const useFeedbackLookup = async () => {
+  const feedbackLookup = async () => {
     try {
       const res = await getFeedbacks();
-      const feedbacks = res;
-      return res;
+      const feedbacks = res.data;
+
+      return feedbacks;
     } catch (err) {
       console.log(err);
     }
   };
 
-  const useFeedbackDelete = async (id: number) => {
+  const feedbackDelete = async (id: number) => {
     try {
       await deleteFeedbacks(id);
     } catch (err) {
@@ -28,5 +34,5 @@ export const useFeedback = () => {
     }
   };
 
-  return { useFeedbackAdd, useFeedbackLookup, useFeedbackDelete };
+  return { feedbackAdd, feedbackLookup, feedbackDelete };
 };

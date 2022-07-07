@@ -15,24 +15,29 @@ const FeedbackList = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const { feedbackLookup } = useFeedback();
 
-  useEffect(() => {
-    const requsetFeedbackLookup = async () => {
-      const res = await feedbackLookup();
-      setFeedbacks(res.feedbacks);
-    };
+  const requsetFeedbackLookup = async () => {
+    const res = await feedbackLookup();
+    setFeedbacks(res.feedbacks);
+  };
 
+  useEffect(() => {
     requsetFeedbackLookup();
   }, []);
 
   return (
     <>
+      <h1>결의 레벨로그 피드백</h1>
       <Link to={ROUTES_PATH.FEEDBACK_ADD}>
         <FeedbackAddButton />
       </Link>
       <FeedbacksContainer>
         {feedbacks.length !== 0 &&
           feedbacks.map((feedback: FeedbackType) => (
-            <Feedback key={feedback.id} userFeedback={feedback} />
+            <Feedback
+              key={feedback.id}
+              userFeedback={feedback}
+              requsetFeedbackLookup={requsetFeedbackLookup}
+            />
           ))}
       </FeedbacksContainer>
     </>

@@ -9,7 +9,7 @@ export const handlers = [
     return res(ctx.status(200));
   }),
 
-  rest.delete('/api/feedbacks/:id', (req, res, ctx) => {
-    return res(ctx.status(204));
-  }),
+  // rest.delete(`/api/feedbacks/${id}`, (req, res, ctx) => {
+  //   return res(ctx.status(204));
+  // }),
 ];

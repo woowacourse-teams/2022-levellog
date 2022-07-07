@@ -1,18 +1,30 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useFeedback } from '../hooks/useFeedback';
 
 import { FeedbackType } from '../types';
+import Button from './@commons/Button';
 
-const Feedback = ({ userFeedback }: FeedbackProps) => {
+const Feedback = ({ userFeedback, requsetFeedbackLookup }: FeedbackProps) => {
+  const { feedbackDelete } = useFeedback();
   const {
+    id,
     name,
     feedback: { study, speak, etc },
   } = userFeedback;
 
+  const handleClickDeleteButton = async () => {
+    await feedbackDelete(id);
+    requsetFeedbackLookup();
+  };
+
   return (
     <FeedbackContent>
-      <h3>{name}의 피드백</h3>
-      <hr></hr>
+      <div>
+        <h3>{name}의 피드백</h3>
+        <Button onClick={handleClickDeleteButton}>삭제</Button>
+      </div>
+      <hr />
       <h3>학습 측면에서 좋은 점과 부족한 점은?</h3>
       <p>{study}</p>
       <h3>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</h3>
@@ -25,6 +37,7 @@ const Feedback = ({ userFeedback }: FeedbackProps) => {
 
 interface FeedbackProps {
   userFeedback: FeedbackType;
+  requsetFeedbackLookup: Function;
 }
 
 const FeedbackContent = styled.div`

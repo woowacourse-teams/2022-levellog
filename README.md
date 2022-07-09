@@ -7,7 +7,7 @@
 
 ## 팀원 🫂
 | [로마](https://github.com/kbsat) | [페퍼](https://github.com/SuyeonChoi) | [알린](https://github.com/OzRagwort) | [릭](https://github.com/nailseong) | [이브](https://github.com/2yujeong) | [결](https://github.com/yunjin-kim) | [해리](https://github.com/jihyeok-um) |
-|----------|----------|----------|----------|----------|----------|----------|
+|:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|:----------:|
 |[<img src="https://avatars.githubusercontent.com/u/52696169?v=4" alt="로마" width="100"/>](https://github.com/kbsat)|[<img src="https://avatars.githubusercontent.com/u/28749734?v=4" alt="페퍼" width="100"/>](https://github.com/SuyeonChoi)|[<img src="https://avatars.githubusercontent.com/u/32123302?v=4" alt="알린" width="100"/>](https://github.com/OzRagwort)|[<img src="https://avatars.githubusercontent.com/u/68512686?v=4" alt="릭" width="100"/>](https://github.com/nailseong)|[<img src="https://avatars.githubusercontent.com/u/76840965?v=4" alt="이브" width="100"/>](https://github.com/2yujeong)|[<img src="https://avatars.githubusercontent.com/u/79692272?v=4" alt="결" width="100"/>](https://github.com/yunjin-kim)|[<img src="https://avatars.githubusercontent.com/u/75592315?v=4" alt="해리" width="100"/>](https://github.com/jihyeok-um)|
 |    BE    |    BE    |    BE    |    BE    |    BE    |    FE    |    FE    |
 

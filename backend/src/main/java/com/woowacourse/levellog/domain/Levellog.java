@@ -26,4 +26,8 @@ public class Levellog {
     public Levellog(final String content) {
         this.content = content;
     }
+
+    public void updateContent(final String content) {
+        this.content = content;
+    }
 }

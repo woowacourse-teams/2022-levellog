@@ -52,4 +52,20 @@ class LevellogServiceTest {
         // then
         assertThat(response.getContent()).isEqualTo(content);
     }
+
+    @Test
+    @DisplayName("update 메서드는 id에 해당하는 레벨로그를 변경한다.")
+    void update() {
+        // given
+        final Levellog levellog = levellogRepository.save(new Levellog("original content"));
+        final LevellogCreateRequest request = new LevellogCreateRequest("update content");
+
+        // when
+        levellogService.update(levellog.getId(), request);
+
+        // then
+        final Levellog actual = levellogRepository.findById(levellog.getId())
+                .orElseThrow();
+        assertThat(actual.getContent()).isEqualTo(request.getContent());
+    }
 }

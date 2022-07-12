@@ -23,8 +23,17 @@ public class LevellogService {
     }
 
     public LevellogResponse find(final Long id) {
-        final Levellog levellog = levellogRepository.findById(id)
-                .orElseThrow();
+        final Levellog levellog = getLevellog(id);
         return new LevellogResponse(levellog.getContent());
+    }
+
+    public void update(final Long id, final LevellogCreateRequest request) {
+        final Levellog levellog = getLevellog(id);
+        levellog.updateContent(request.getContent());
+    }
+
+    private Levellog getLevellog(final Long id) {
+        return levellogRepository.findById(id)
+                .orElseThrow();
     }
 }

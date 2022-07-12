@@ -1,9 +1,10 @@
 package com.woowacourse.levellog.acceptance;
 
+import static org.hamcrest.Matchers.equalTo;
+
 import com.woowacourse.levellog.dto.LevellogCreateRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -25,15 +26,48 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final LevellogCreateRequest request = new LevellogCreateRequest("heloo");
 
         // when
+        final ValidatableResponse response = requestCreateLevellog(request);
+
+        // then
+        response.statusCode(HttpStatus.CREATED.value())
+                .header(HttpHeaders.LOCATION, equalTo("/api/levellogs/1"));
+    }
+
+    /*
+     * Scenario: 레벨로그 상세 조회
+     *   given: 레벨로그가 등록되어있다.
+     *   when: 등록된 레벨로그를 조회한다.
+     *   then: 200 Ok 상태 코드와 레벨로그를 응답 받는다.
+     */
+    @Test
+    @DisplayName("레벨로그 상세 조회")
+    void findLevellog() {
+        // given
+        final String content = "트렌젝션에 대해 학습함.";
+        final LevellogCreateRequest request = new LevellogCreateRequest(content);
+        final String id = requestCreateLevellog(request)
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split("/api/levellogs/")[1];
+
+        // when
         final ValidatableResponse response = RestAssured.given().log().all()
+                .accept(MediaType.ALL_VALUE)
+                .when()
+                .get("/api/levellogs/{id}", id)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("content", equalTo(content));
+    }
+
+    private ValidatableResponse requestCreateLevellog(final LevellogCreateRequest request) {
+        return RestAssured.given().log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .post("/api/levellogs")
                 .then().log().all();
-
-        // then
-        response.statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, Matchers.equalTo("/api/levellogs/1"));
     }
 }

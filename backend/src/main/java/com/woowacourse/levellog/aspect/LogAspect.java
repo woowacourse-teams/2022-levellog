@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,11 +19,11 @@ public class LogAspect {
         result = joinPoint.proceed();
         final long endTime = System.currentTimeMillis();
 
+        final String correlationId = MDC.get("correlationId");
         final long executionTimeMillis = endTime - startTime;
         final String declaringTypeName = joinPoint.getSignature()
                 .getDeclaringTypeName();
-        log.info("{} took {}ms", declaringTypeName, executionTimeMillis);
+        log.info("[{}]-{} took {}ms", correlationId, declaringTypeName, executionTimeMillis);
         return result;
-
     }
 }

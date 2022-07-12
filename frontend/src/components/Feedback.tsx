@@ -29,7 +29,7 @@ const Feedback = ({ userFeedback, requsetFeedbackLookup }: FeedbackProps) => {
       <p>{study}</p>
       <h3>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</h3>
       <p>{speak}</p>
-      <h3>기타 피드백 (위 2 질문 외에 다른 피드백을 주새요.)</h3>
+      <h3>기타 피드백 (위 2 질문 외에 다른 피드백을 주세요.)</h3>
       <p>{etc}</p>
     </FeedbackContent>
   );

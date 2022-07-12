@@ -1,3 +1,4 @@
+import { postLevellog } from '../api/levellog';
 import { LevellogType } from '../types';
 
 const useLevellog = () => {
@@ -8,8 +9,12 @@ const useLevellog = () => {
     return levellogContent;
   };
 
-  const levellogAdd = (inputvalue: string) => {
-    const levellogContent = stringToLevellogFormat(inputvalue);
+  const levellogAdd = async (inputvalue: string) => {
+    try {
+      await postLevellog(stringToLevellogFormat(inputvalue));
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return { stringToLevellogFormat, levellogAdd };

@@ -1,4 +1,4 @@
-export const API_URL = 'http://52.79.235.135:8080';
+export const API_URL = 'http://52.79.235.135:8080/api';
 
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',
@@ -8,6 +8,11 @@ export const ROUTES_PATH = Object.freeze({
 
   LEVELLOG: '/levellog',
   LEVELLOG_ADD: '/levellog/add',
+});
+
+export const SERVER_PATH = Object.freeze({
+  FEEDBACKS: `${API_URL}/feedbacks`,
+  LEVELLOGS: `${API_URL}/levellogs`,
 });
 
 export const BASE_INPUTSIZE = Object.freeze({

@@ -55,6 +55,12 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .body("content", equalTo(content));
     }
 
+    /*
+     * Scenario: 레벨로그 수정
+     *   given: 레벨로그가 등록되어있다.
+     *   when: 레벨로그를 수정한다.
+     *   then: 204 No Content 상태 코드를 응답 받는다.
+     */
     @Test
     @DisplayName("레벨로그 수정")
     void updateLevellog() {

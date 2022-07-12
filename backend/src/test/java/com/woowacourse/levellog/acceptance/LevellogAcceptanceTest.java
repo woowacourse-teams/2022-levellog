@@ -84,6 +84,31 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .body("content", equalTo(updateContent));
     }
 
+    /*
+     * Scenario: 레벨로그 삭제
+     *   given: 레벨로그가 등록되어있다.
+     *   when: 레벨로그를 삭제한다.
+     *   then: 204 No Content 상태 코드를 응답 받는다.
+     */
+    @Test
+    @DisplayName("레벨로그 삭제")
+    void deleteLevellog() {
+        // given
+        final ValidatableResponse createResponse = requestCreateLevellog(new LevellogCreateRequest("original content"));
+        final String id = extractLevellogId(createResponse);
+
+        // when
+        final ValidatableResponse response = RestAssured.given().log().all()
+                .when()
+                .delete("/api/levellogs/{id}", id)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.NO_CONTENT.value());
+        requestFindLevellog(id)
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
     private ValidatableResponse requestFindLevellog(final String id) {
         return RestAssured.given().log().all()
                 .accept(MediaType.ALL_VALUE)

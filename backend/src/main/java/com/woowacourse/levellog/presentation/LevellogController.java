@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,5 +32,12 @@ public class LevellogController {
     public ResponseEntity<LevellogResponse> find(@PathVariable final Long id) {
         final LevellogResponse response = levellogService.find(id);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable final Long id,
+                                       @RequestBody @Valid final LevellogCreateRequest request) {
+        levellogService.update(id, request);
+        return ResponseEntity.noContent().build();
     }
 }

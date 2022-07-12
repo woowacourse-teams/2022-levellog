@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteFeedbacks, getFeedbacks, postFeedback } from '../api/feedback';
 import { FeedbackType } from '../types';
 
-export const useFeedback = () => {
+const useFeedback = () => {
   const navigate = useNavigate();
 
   const feedbackAdd = async (feedbackResult: Omit<FeedbackType, 'id'>) => {
@@ -36,3 +36,5 @@ export const useFeedback = () => {
 
   return { feedbackAdd, feedbackLookup, feedbackDelete };
 };
+
+export default useFeedback;

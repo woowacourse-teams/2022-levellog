@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useFeedback } from '../hooks/useFeedback';
+import useFeedback from '../hooks/useFeedback';
 
 import { FeedbackType } from '../types';
 import Button from './@commons/Button';

@@ -21,9 +21,15 @@ public class LogAspect {
 
         final String correlationId = MDC.get("correlationId");
         final long executionTimeMillis = endTime - startTime;
-        final String declaringTypeName = joinPoint.getSignature()
-                .getDeclaringTypeName();
-        log.info("[{}]-{} took {}ms", correlationId, declaringTypeName, executionTimeMillis);
+
+        final String className = joinPoint.getSignature()
+                .getDeclaringType()
+                .getSimpleName();
+        final String methodName = joinPoint.getSignature()
+                .getName();
+
+        log.info("[{}]-{}.{} took {}ms", correlationId, className, methodName, executionTimeMillis);
+
         return result;
     }
 }

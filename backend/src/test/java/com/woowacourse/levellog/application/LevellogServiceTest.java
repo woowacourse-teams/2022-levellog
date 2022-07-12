@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.dto.LevellogCreateRequest;
+import com.woowacourse.levellog.dto.LevellogResponse;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -36,5 +37,19 @@ class LevellogServiceTest {
         // then
         final Optional<Levellog> levellog = levellogRepository.findById(id);
         assertThat(levellog).isPresent();
+    }
+
+    @Test
+    @DisplayName("find 메서드는 id에 해당하는 레벨로그를 조회한다.")
+    void find() {
+        // given
+        final String content = "content";
+        final Levellog levellog = levellogRepository.save(new Levellog(content));
+
+        // when
+        final LevellogResponse response = levellogService.find(levellog.getId());
+
+        // then
+        assertThat(response.getContent()).isEqualTo(content);
     }
 }

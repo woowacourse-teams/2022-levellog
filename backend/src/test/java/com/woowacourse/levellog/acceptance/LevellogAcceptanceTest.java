@@ -45,10 +45,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         // given
         final String content = "트렌젝션에 대해 학습함.";
         final LevellogCreateRequest request = new LevellogCreateRequest(content);
-        final String id = requestCreateLevellog(request)
-                .extract()
-                .header(HttpHeaders.LOCATION)
-                .split("/api/levellogs/")[1];
+        final String id = extractLevellogId(requestCreateLevellog(request));
 
         // when
         final ValidatableResponse response = RestAssured.given().log().all()
@@ -69,5 +66,12 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .when()
                 .post("/api/levellogs")
                 .then().log().all();
+    }
+
+    private String extractLevellogId(final ValidatableResponse response) {
+        return response
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split("/api/levellogs/")[1];
     }
 }

@@ -7,6 +7,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +39,12 @@ public class LevellogController {
     public ResponseEntity<Void> update(@PathVariable final Long id,
                                        @RequestBody @Valid final LevellogCreateRequest request) {
         levellogService.update(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
+        levellogService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -68,4 +68,18 @@ class LevellogServiceTest {
                 .orElseThrow();
         assertThat(actual.getContent()).isEqualTo(request.getContent());
     }
+
+    @Test
+    @DisplayName("delete 메서드는 id에 해당하는 레벨로그를 삭제한다.")
+    void delete() {
+        // given
+        final Levellog levellog = levellogRepository.save(new Levellog("original content"));
+
+        // when
+        levellogService.delete(levellog.getId());
+
+        // then
+        final Optional<Levellog> actual = levellogRepository.findById(levellog.getId());
+        assertThat(actual).isEmpty();
+    }
 }

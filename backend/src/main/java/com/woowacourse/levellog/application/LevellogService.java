@@ -36,4 +36,8 @@ public class LevellogService {
         return levellogRepository.findById(id)
                 .orElseThrow();
     }
+
+    public void delete(final Long id) {
+        levellogRepository.deleteById(id);
+    }
 }

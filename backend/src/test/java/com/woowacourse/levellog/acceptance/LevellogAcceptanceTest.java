@@ -48,15 +48,42 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final String id = extractLevellogId(requestCreateLevellog(request));
 
         // when
-        final ValidatableResponse response = RestAssured.given().log().all()
-                .accept(MediaType.ALL_VALUE)
-                .when()
-                .get("/api/levellogs/{id}", id)
-                .then().log().all();
+        final ValidatableResponse response = requestFindLevellog(id);
 
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("content", equalTo(content));
+    }
+
+    @Test
+    @DisplayName("레벨로그 수정")
+    void updateLevellog() {
+        // given
+        final ValidatableResponse createResponse = requestCreateLevellog(new LevellogCreateRequest("original content"));
+        final String id = extractLevellogId(createResponse);
+        final String updateContent = "update content";
+        final LevellogCreateRequest request = new LevellogCreateRequest(updateContent);
+
+        // when
+        final ValidatableResponse response = RestAssured.given().log().all()
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/api/levellogs/{id}", id)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.NO_CONTENT.value());
+        requestFindLevellog(id)
+                .body("content", equalTo(updateContent));
+    }
+
+    private ValidatableResponse requestFindLevellog(final String id) {
+        return RestAssured.given().log().all()
+                .accept(MediaType.ALL_VALUE)
+                .when()
+                .get("/api/levellogs/{id}", id)
+                .then().log().all();
     }
 
     private ValidatableResponse requestCreateLevellog(final LevellogCreateRequest request) {

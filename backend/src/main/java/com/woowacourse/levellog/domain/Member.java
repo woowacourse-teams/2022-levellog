@@ -32,4 +32,8 @@ public class Member {
         this.githubId = githubId;
         this.profileUrl = profileUrl;
     }
+
+    public void updateProfileUrl(final String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
 }

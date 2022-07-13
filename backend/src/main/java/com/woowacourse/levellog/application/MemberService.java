@@ -6,9 +6,11 @@ import com.woowacourse.levellog.dto.MemberCreateDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -22,5 +24,11 @@ public class MemberService {
 
     public Optional<Member> findByGithubId(final int githubId) {
         return memberRepository.findByGithubId(githubId);
+    }
+
+    public void updateProfileUrl(final Long id, final String profileUrl) {
+        final Member member = memberRepository.findById(id)
+                .orElseThrow();
+        member.updateProfileUrl(profileUrl);
     }
 }

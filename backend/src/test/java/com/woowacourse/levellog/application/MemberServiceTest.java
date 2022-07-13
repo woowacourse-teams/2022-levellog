@@ -50,4 +50,20 @@ public class MemberServiceTest {
         assertThat(findMember).isPresent();
         assertThat(findMember.get().getGithubId()).isEqualTo(githubId);
     }
+
+    @Test
+    @DisplayName("updateProfileUrl 메서드는 Gtihub Id에 해당하는 멤버 정보를 업데이트한다.")
+    void updateProfileUrl() {
+        // given
+        final Member savedMember = memberRepository.save(new Member("로마", 1234567, "profileUrl.image"));
+        final Long id = savedMember.getId();
+        final String newProfileUrl = "newProfile.image";
+
+        // when
+        memberService.updateProfileUrl(id, newProfileUrl);
+
+        // then
+        final Member updateMember = memberRepository.findById(id).orElseThrow();
+        assertThat(updateMember.getProfileUrl()).isEqualTo(newProfileUrl);
+    }
 }

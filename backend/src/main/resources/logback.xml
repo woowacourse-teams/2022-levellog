@@ -4,7 +4,7 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread][%-5level][%logger{35}]%msg%n</pattern>
+            <pattern>[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%logger{20}]%msg%n</pattern>
         </layout>
     </appender>
 
@@ -16,7 +16,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread][%-5level][%logger{35}]%msg%n</pattern>
+            <pattern>[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%logger{20}]%msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./was-logs/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
@@ -36,7 +36,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread][%-5level][%logger{35}]%msg%n</pattern>
+            <pattern>[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%logger{20}]%msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./was-logs/warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
@@ -51,8 +51,7 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="LogAspect" additivity="false">
-        <level value = "INFO" />
+    <logger name="LogAspect" level="INFO" additivity="false">
         <appender-ref ref="INFO_LOG" />
         <appender-ref ref="WARN_LOG" />
     </logger>

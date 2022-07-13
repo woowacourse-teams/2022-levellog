@@ -56,6 +56,21 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     }
 
     /*
+     * Scenario: 레벨로그 상세 조회
+     *   when: 존재하지 않는 레벨로그를 조회한다.
+     *   then: 500 상태 코드를 응답 받는다.
+     */
+    @Test
+    @DisplayName("존재하지 않는 레벨로그 상세 조회")
+    void findLevellog_notExistId_500() {
+        // when
+        final ValidatableResponse response = requestFindLevellog("999");
+
+        // then
+        response.statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
+    /*
      * Scenario: 레벨로그 수정
      *   given: 레벨로그가 등록되어있다.
      *   when: 레벨로그를 수정한다.

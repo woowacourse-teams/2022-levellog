@@ -17,7 +17,7 @@ interface InputProps {
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
-export const InputStyle = styled.input`
+const InputStyle = styled.input`
   font-size: 1.2rem;
   background-color: #f1f1f1;
   border-style: none;

@@ -15,13 +15,13 @@ const FeedbackList = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const { feedbackLookup } = useFeedback();
 
-  const requsetFeedbackLookup = async () => {
+  const requestFeedbackLookup = async () => {
     const res = await feedbackLookup();
     setFeedbacks(res.feedbacks);
   };
 
   useEffect(() => {
-    requsetFeedbackLookup();
+    requestFeedbackLookup();
   }, []);
 
   return (
@@ -36,7 +36,7 @@ const FeedbackList = () => {
             <Feedback
               key={feedback.id}
               userFeedback={feedback}
-              requsetFeedbackLookup={requsetFeedbackLookup}
+              requsetFeedbackLookup={requestFeedbackLookup}
             />
           ))}
       </FeedbacksContainer>

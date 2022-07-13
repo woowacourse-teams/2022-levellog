@@ -1,25 +1,27 @@
-import React, { Children } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-const Button = ({ children, onClick, ...rest }: ButtonProps) => {
+const Button = ({ children, onClick, color = '#f1f1f1', ...rest }: ButtonProps) => {
   return (
-    <StyledButton onClick={onClick} {...rest}>
+    <ButtonStyle onClick={onClick} color={color} {...rest}>
       {children}
-    </StyledButton>
+    </ButtonStyle>
   );
 };
 
 interface ButtonProps {
   onClick?: any;
   children: string;
+  color?: string;
 }
 
-const StyledButton = styled.button`
-  width: 100px;
+const ButtonStyle = styled.button`
+  width: max-content;
   height: 40px;
   cursor: pointer;
-  background-color: #f1f1f1;
-  padding: 5px;
+  background-color: ${(props) => props.color};
+  text-align: center;
+  padding: 5px 10px;
   border-radius: 5px;
   border-style: none;
   font-size: 22px;

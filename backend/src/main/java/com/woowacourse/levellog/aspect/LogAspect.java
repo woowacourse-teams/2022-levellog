@@ -28,7 +28,7 @@ public class LogAspect {
         final String methodName = joinPoint.getSignature()
                 .getName();
 
-        log.info("[{}]-{}.{} took {}ms", correlationId, className, methodName, executionTimeMillis);
+        log.info("[{}]{}.{} took {}ms", correlationId, className, methodName, executionTimeMillis);
 
         return result;
     }

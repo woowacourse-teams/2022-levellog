@@ -3,6 +3,7 @@ package com.woowacourse.levellog.application;
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.dto.MemberCreateDto;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +18,9 @@ public class MemberService {
                 memberCreateDto.getProfileUrl());
         final Member savedMember = memberRepository.save(member);
         return savedMember.getId();
+    }
+
+    public Optional<Member> findByGithubId(final int githubId) {
+        return memberRepository.findByGithubId(githubId);
     }
 }

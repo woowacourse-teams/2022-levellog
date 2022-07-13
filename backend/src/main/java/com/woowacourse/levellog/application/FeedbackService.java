@@ -8,9 +8,9 @@ import com.woowacourse.levellog.dto.FeedbackResponse;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

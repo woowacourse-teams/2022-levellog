@@ -4,9 +4,9 @@ import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.dto.LevellogCreateRequest;
 import com.woowacourse.levellog.dto.LevellogResponse;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -22,6 +22,7 @@ public class LevellogService {
         return savedLevellog.getId();
     }
 
+    @Transactional(readOnly = true)
     public LevellogResponse find(final Long id) {
         final Levellog levellog = getLevellog(id);
         return new LevellogResponse(levellog.getContent());

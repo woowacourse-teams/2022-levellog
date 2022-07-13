@@ -9,7 +9,7 @@ import useFeedback from '../hooks/useFeedback';
 
 import { FeedbackType } from '../types';
 
-const LevelLogFeedback = () => {
+const LevellogFeedback = () => {
   const { feedbackAdd } = useFeedback();
   const feedbackRef = useRef([]);
 
@@ -69,4 +69,4 @@ const FormStyle = styled.form`
   align-content: space-between;
 `;
 
-export default LevelLogFeedback;
+export default LevellogFeedback;

@@ -124,14 +124,6 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
-    private ValidatableResponse requestFindLevellog(final String id) {
-        return RestAssured.given().log().all()
-                .accept(MediaType.ALL_VALUE)
-                .when()
-                .get("/api/levellogs/{id}", id)
-                .then().log().all();
-    }
-
     private ValidatableResponse requestCreateLevellog(final LevellogCreateRequest request) {
         return RestAssured.given().log().all()
                 .body(request)
@@ -146,5 +138,13 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .extract()
                 .header(HttpHeaders.LOCATION)
                 .split("/api/levellogs/")[1];
+    }
+
+    private ValidatableResponse requestFindLevellog(final String id) {
+        return RestAssured.given().log().all()
+                .accept(MediaType.ALL_VALUE)
+                .when()
+                .get("/api/levellogs/{id}", id)
+                .then().log().all();
     }
 }

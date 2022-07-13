@@ -20,7 +20,6 @@ const LevellogModal = () => {
 
   useEffect(() => {
     requestLevellogLookup();
-    console.log('run');
   }, []);
 
   return (

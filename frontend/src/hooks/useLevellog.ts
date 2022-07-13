@@ -1,4 +1,4 @@
-import { getLevellog, postLevellog } from '../api/levellog';
+import { postLevellog } from '../api/levellog';
 import { LevellogType } from '../types';
 
 const useLevellog = () => {
@@ -17,17 +17,7 @@ const useLevellog = () => {
     }
   };
 
-  const levellogLookup = async (id: number) => {
-    try {
-      const res = await getLevellog(id);
-      const levellog = res.data;
-
-      return levellog;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  return { stringToLevellogFormat, levellogAdd, levellogLookup };
+  return { stringToLevellogFormat, levellogAdd };
 };
 
 export default useLevellog;

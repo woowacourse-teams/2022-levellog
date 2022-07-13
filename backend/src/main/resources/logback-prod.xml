@@ -2,12 +2,6 @@
 <configuration>
     <property name="LOGS_ABSOLUTE_PATH" value="./logs"/>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%logger{20}]%msg%n</pattern>
-        </layout>
-    </appender>
-
     <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>./logs/info.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">

@@ -24,16 +24,16 @@ public class LevellogService {
 
     @Transactional(readOnly = true)
     public LevellogResponse find(final Long id) {
-        final Levellog levellog = getLevellog(id);
+        final Levellog levellog = getLevellogById(id);
         return new LevellogResponse(levellog.getContent());
     }
 
     public void update(final Long id, final LevellogCreateRequest request) {
-        final Levellog levellog = getLevellog(id);
+        final Levellog levellog = getLevellogById(id);
         levellog.updateContent(request.getContent());
     }
 
-    private Levellog getLevellog(final Long id) {
+    private Levellog getLevellogById(final Long id) {
         return levellogRepository.findById(id)
                 .orElseThrow();
     }

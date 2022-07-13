@@ -31,7 +31,7 @@ public class LevellogController {
 
     @GetMapping("/{id}")
     public ResponseEntity<LevellogResponse> find(@PathVariable final Long id) {
-        final LevellogResponse response = levellogService.find(id);
+        final LevellogResponse response = levellogService.findById(id);
         return ResponseEntity.ok(response);
     }
 
@@ -44,7 +44,7 @@ public class LevellogController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        levellogService.delete(id);
+        levellogService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

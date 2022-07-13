@@ -40,14 +40,14 @@ class LevellogServiceTest {
     }
 
     @Test
-    @DisplayName("find 메서드는 id에 해당하는 레벨로그를 조회한다.")
-    void find() {
+    @DisplayName("findById 메서드는 id에 해당하는 레벨로그를 조회한다.")
+    void findById() {
         // given
         final String content = "content";
         final Levellog levellog = levellogRepository.save(new Levellog(content));
 
         // when
-        final LevellogResponse response = levellogService.find(levellog.getId());
+        final LevellogResponse response = levellogService.findById(levellog.getId());
 
         // then
         assertThat(response.getContent()).isEqualTo(content);
@@ -70,13 +70,13 @@ class LevellogServiceTest {
     }
 
     @Test
-    @DisplayName("delete 메서드는 id에 해당하는 레벨로그를 삭제한다.")
-    void delete() {
+    @DisplayName("deleteById 메서드는 id에 해당하는 레벨로그를 삭제한다.")
+    void deleteById() {
         // given
         final Levellog levellog = levellogRepository.save(new Levellog("original content"));
 
         // when
-        levellogService.delete(levellog.getId());
+        levellogService.deleteById(levellog.getId());
 
         // then
         final Optional<Levellog> actual = levellogRepository.findById(levellog.getId());

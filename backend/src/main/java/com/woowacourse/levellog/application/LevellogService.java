@@ -23,7 +23,7 @@ public class LevellogService {
     }
 
     @Transactional(readOnly = true)
-    public LevellogResponse find(final Long id) {
+    public LevellogResponse findById(final Long id) {
         final Levellog levellog = getLevellogById(id);
         return new LevellogResponse(levellog.getContent());
     }
@@ -38,7 +38,7 @@ public class LevellogService {
                 .orElseThrow();
     }
 
-    public void delete(final Long id) {
+    public void deleteById(final Long id) {
         levellogRepository.deleteById(id);
     }
 }

@@ -1,13 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BASE_INPUTSIZE } from '../../constants/constants';
 
-const Input = ({
-  width = BASE_INPUTSIZE.WIDTH,
-  height = BASE_INPUTSIZE.HEIGHT,
-  inputRef,
-  ...props
-}: InputProps) => {
+const Input = ({ width = '300px', height = '40px', inputRef, ...props }: InputProps) => {
   return <InputStyle width={width} height={height} ref={inputRef} {...props} />;
 };
 

@@ -45,7 +45,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         // given
         final String content = "트렌젝션에 대해 학습함.";
         final LevellogCreateRequest request = new LevellogCreateRequest(content);
-        final String id = extractLevellogId(requestCreateLevellog(request));
+        final Long id = extractLevellogId(requestCreateLevellog(request));
 
         // when
         final ValidatableResponse response = requestFindLevellog(id);
@@ -64,7 +64,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("존재하지 않는 레벨로그 상세 조회")
     void findLevellog_notExistId_500() {
         // when
-        final ValidatableResponse response = requestFindLevellog("999");
+        final ValidatableResponse response = requestFindLevellog(999L);
 
         // then
         response.statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -81,7 +81,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     void updateLevellog() {
         // given
         final ValidatableResponse createResponse = requestCreateLevellog(new LevellogCreateRequest("original content"));
-        final String id = extractLevellogId(createResponse);
+        final Long id = extractLevellogId(createResponse);
         final String updateContent = "update content";
         final LevellogCreateRequest request = new LevellogCreateRequest(updateContent);
 
@@ -110,7 +110,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     void deleteLevellog() {
         // given
         final ValidatableResponse createResponse = requestCreateLevellog(new LevellogCreateRequest("original content"));
-        final String id = extractLevellogId(createResponse);
+        final Long id = extractLevellogId(createResponse);
 
         // when
         final ValidatableResponse response = RestAssured.given().log().all()
@@ -133,14 +133,14 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .then().log().all();
     }
 
-    private String extractLevellogId(final ValidatableResponse response) {
-        return response
+    private Long extractLevellogId(final ValidatableResponse response) {
+        return Long.valueOf(response
                 .extract()
                 .header(HttpHeaders.LOCATION)
-                .split("/api/levellogs/")[1];
+                .split("/api/levellogs/")[1]);
     }
 
-    private ValidatableResponse requestFindLevellog(final String id) {
+    private ValidatableResponse requestFindLevellog(final Long id) {
         return RestAssured.given().log().all()
                 .accept(MediaType.ALL_VALUE)
                 .when()

@@ -15,6 +15,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(LevellogException.class)
     public ResponseEntity<ExceptionResponse> handleLevellogException(final LevellogException e) {
+        log.info("[{}]{} : {}", getCorrelationId(), e.getClass().getSimpleName(), e.getMessage());
         return toResponseEntity(e.getMessage(), e.getHttpStatus());
     }
 
@@ -28,7 +29,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleUnexpectedException(final Exception e) {
-        log.warn("[{}]", MDC.get("correlationId"), e);
+        log.warn("[{}]", getCorrelationId(), e);
         return toResponseEntity("예상치 못한 예외가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -37,5 +38,9 @@ public class ControllerAdvice {
         return ResponseEntity
                 .status(httpStatus)
                 .body(response);
+    }
+
+    private String getCorrelationId() {
+        return MDC.get("correlationId");
     }
 }

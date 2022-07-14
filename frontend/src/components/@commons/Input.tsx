@@ -6,9 +6,9 @@ const Input = ({
   width = BASE_INPUTSIZE.WIDTH,
   height = BASE_INPUTSIZE.HEIGHT,
   inputRef,
-  ...rest
+  ...props
 }: InputProps) => {
-  return <InputStyle width={width} height={height} ref={inputRef} {...rest} />;
+  return <InputStyle width={width} height={height} ref={inputRef} {...props} />;
 };
 
 interface InputProps {

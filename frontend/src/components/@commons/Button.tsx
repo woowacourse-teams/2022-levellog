@@ -1,9 +1,9 @@
 import React, { Children } from 'react';
 import styled from 'styled-components';
 
-const Button = ({ children, onClick, ...rest }: ButtonProps) => {
+const Button = ({ children, onClick, ...props }: ButtonProps) => {
   return (
-    <StyledButton onClick={onClick} {...rest}>
+    <StyledButton onClick={onClick} {...props}>
       {children}
     </StyledButton>
   );

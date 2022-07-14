@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { routes } from './routes/Routes';
 
@@ -11,9 +12,16 @@ const App = () => {
   return (
     <>
       <GlobalStyles />
-      {content}
+      <PageContainer>{content}</PageContainer>
     </>
   );
 };
+
+const PageContainer = styled.main`
+  overflow: auto;
+  overflow-x: hidden;
+  width: 80%;
+  margin: 5% 10% 0 10%;
+`;
 
 export default App;

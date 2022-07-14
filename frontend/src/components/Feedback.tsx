@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useFeedback } from '../hooks/useFeedback';
+import useFeedback from '../hooks/useFeedback';
 
 import { FeedbackType } from '../types';
 import Button from './@commons/Button';
@@ -29,7 +29,7 @@ const Feedback = ({ userFeedback, requsetFeedbackLookup }: FeedbackProps) => {
       <p>{study}</p>
       <h3>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</h3>
       <p>{speak}</p>
-      <h3>기타 피드백 (위 2 질문 외에 다른 피드백을 주새요.)</h3>
+      <h3>기타 피드백 (위 2 질문 외에 다른 피드백을 주세요.)</h3>
       <p>{etc}</p>
     </FeedbackContent>
   );
@@ -41,9 +41,9 @@ interface FeedbackProps {
 }
 
 const FeedbackContent = styled.div`
+  overflow: auto;
   height: 300px;
   width: 700px;
-  overflow: auto;
   padding: 10px;
   border: 1px solid black;
   margin: 30px;

@@ -14,8 +14,3 @@ export const SERVER_PATH = Object.freeze({
   FEEDBACKS: `${API_URL}/feedbacks`,
   LEVELLOGS: `${API_URL}/levellogs`,
 });
-
-export const BASE_INPUTSIZE = Object.freeze({
-  WIDTH: '300px',
-  HEIGHT: '40px',
-});

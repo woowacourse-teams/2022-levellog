@@ -12,7 +12,8 @@ const ContentHeader = ({ title, children }: InputProps) => {
 
 interface InputProps {
   title: string;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
+
 }
 
 const ButtonBox = styled.div`
@@ -21,10 +22,10 @@ const ButtonBox = styled.div`
 `;
 
 const ContentHeaderStyle = styled.div`
-  height: 120px;
-  width: 100%;
-  display: flex;
   position: relative;
+  width: 100%;
+  height: 120px;
+  display: flex;
   justify-content: center;
   align-items: center;
 `;

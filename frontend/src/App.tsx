@@ -18,10 +18,10 @@ const App = () => {
 };
 
 const PageContainer = styled.main`
-  width: 80%;
-  margin: 5% 10% 0 10%;
   overflow: auto;
   overflow-x: hidden;
+  width: 80%;
+  margin: 5% 10% 0 10%;
 `;
 
 export default App;

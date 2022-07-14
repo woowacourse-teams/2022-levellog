@@ -3,14 +3,14 @@ import React from 'react';
 import FeedbackList from '../pages/FeedbackList';
 import FeedbackAdd from '../pages/FeedbackAdd';
 import LevellogAdd from '../pages/LevellogAdd';
-import Main from '../pages/Main';
+import Home from '../pages/Home';
 
 import { ROUTES_PATH } from '../constants/constants';
 
 export const routes = [
   {
     path: ROUTES_PATH.HOME,
-    element: <Main />,
+    element: <Home />,
   },
   {
     path: ROUTES_PATH.FEEDBACK,

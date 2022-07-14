@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
+import Header from './components/Header';
 
 import { routes } from './routes/Routes';
 
@@ -11,6 +12,7 @@ const App = () => {
   return (
     <>
       <GlobalStyles />
+      <Header />
       {content}
     </>
   );

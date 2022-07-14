@@ -15,7 +15,7 @@ const LevellogModal = () => {
 
   const requestLevellogLookup = async () => {
     const res = await levellogLookup(dummyId);
-    setLevellog(String(res.contents));
+    setLevellog(res.contents);
   };
 
   useEffect(() => {

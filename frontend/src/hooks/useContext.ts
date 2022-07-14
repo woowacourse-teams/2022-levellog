@@ -3,13 +3,13 @@ import { useContext } from 'react';
 import { UserContext, UserDispatchContext } from '../context';
 
 export const useUserState = () => {
-  const state = useContext(UserContext);
+  const userState = useContext(UserContext);
 
-  return state;
+  return userState;
 };
 
 export const useUserDispatch = () => {
-  const dispatch = useContext(UserDispatchContext);
+  const userStateDispatch = useContext(UserDispatchContext);
 
-  return dispatch;
+  return userStateDispatch;
 };

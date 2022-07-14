@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,7 +20,10 @@ public class ControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleValidationException(final MethodArgumentNotValidException e) {
-        return toResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        final FieldError fieldError = e.getFieldErrors()
+                .get(0);
+        final String message = fieldError.getField() + " " + fieldError.getDefaultMessage();
+        return toResponseEntity(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

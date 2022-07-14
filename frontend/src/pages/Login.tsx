@@ -6,7 +6,7 @@ import { getUserAuthority } from '../api/login';
 import { useUserDispatch } from '../hooks/useContext';
 
 const Login = () => {
-  const dispatch = useUserDispatch();
+  const profileUrlDispatch = useUserDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const Login = () => {
       try {
         const res = await getUserAuthority(code);
         localStorage.setItem('accessToken', res.data.accessToken);
-        dispatch(res.data.profileUrl);
+        profileUrlDispatch(res.data.profileUrl);
         navigate('/');
       } catch (err) {
         console.log(err);

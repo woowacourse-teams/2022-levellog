@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.authentication;
+package com.woowacourse.levellog.authentication.domain;
 
 import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
 import io.jsonwebtoken.JwtException;

@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.authentication.application;
+package com.woowacourse.levellog.authentication.domain;
 
 import com.woowacourse.levellog.authentication.dto.GithubAccessTokenRequest;
 import com.woowacourse.levellog.authentication.dto.GithubAccessTokenResponse;

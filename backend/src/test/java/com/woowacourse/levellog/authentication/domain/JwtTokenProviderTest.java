@@ -1,8 +1,9 @@
-package com.woowacourse.levellog.authentication;
+package com.woowacourse.levellog.authentication.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

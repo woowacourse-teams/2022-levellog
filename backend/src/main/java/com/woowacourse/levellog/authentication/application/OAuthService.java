@@ -1,0 +1,37 @@
+package com.woowacourse.levellog.authentication.application;
+
+import com.woowacourse.levellog.application.MemberService;
+import com.woowacourse.levellog.authentication.JwtTokenProvider;
+import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.LoginResponse;
+import com.woowacourse.levellog.dto.MemberCreateDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class OAuthService {
+
+    private final MemberService memberService;
+
+    private final GithubOAuthClient githubOAuthClient;
+
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public LoginResponse login(final GithubCodeRequest codeRequest) {
+        final String code = codeRequest.getAuthorizationCode();
+        final String githubAccessToken = githubOAuthClient.getGithubAccessToken(code);
+        final GithubProfileResponse githubProfile = githubOAuthClient.getGithubProfile(githubAccessToken);
+        final int githubId = Integer.parseInt(githubProfile.getGithubId());
+
+        if (memberService.findByGithubId(githubId).isEmpty()) {
+            memberService.save(
+                    new MemberCreateDto(githubProfile.getNickname(), githubId, githubProfile.getProfileUrl()));
+        }
+        // user 정보로 token 제작하고 반환드
+        final String token = jwtTokenProvider.createToken(githubId);
+
+        return new LoginResponse(token, githubProfile.getProfileUrl());
+    }
+}

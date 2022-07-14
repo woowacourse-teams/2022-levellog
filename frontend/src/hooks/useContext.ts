@@ -2,14 +2,9 @@ import { useContext } from 'react';
 
 import { UserContext, UserDispatchContext } from '../context';
 
-export const useUserState = () => {
-  const userState = useContext(UserContext);
+export const useUser = () => {
+  const profileUrl = useContext(UserContext);
+  const profileUrlDispatch = useContext(UserDispatchContext);
 
-  return userState;
-};
-
-export const useUserDispatch = () => {
-  const userStateDispatch = useContext(UserDispatchContext);
-
-  return userStateDispatch;
+  return { profileUrl, profileUrlDispatch };
 };

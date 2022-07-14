@@ -4,14 +4,14 @@ import styled from 'styled-components';
 
 import Button from './@commons/Button';
 
-import { useUserDispatch } from '../hooks/useContext';
+import { useUser } from '../hooks/useContext';
 
 const ProfileDropdown = ({
   isProfileDropdownShow,
   setIsProfileDropdownShow,
 }: ProfileDropdownProps) => {
   const navigate = useNavigate();
-  const profileUrlDispatch = useUserDispatch();
+  const { profileUrlDispatch } = useUser();
 
   const handleClickProfileButton = () => {
     // profile route가 들어가야 한다.

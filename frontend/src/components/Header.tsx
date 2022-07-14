@@ -3,13 +3,13 @@ import styled from 'styled-components';
 
 import Button from './@commons/Button';
 
-import { useUserState } from '../hooks/useContext';
+import { useUser } from '../hooks/useContext';
 
 import ProfileDropdown from './ProfileDropdown';
 
 const Header = () => {
   const [isProfileDropdownShow, setIsProfileDropdownShow] = useState(false);
-  const profileUrl = useUserState();
+  const { profileUrl } = useUser();
 
   const handleErrorProfileImage = (e: React.SyntheticEvent<EventTarget>) => {
     const target = e.target as HTMLImageElement;

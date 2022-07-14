@@ -9,7 +9,7 @@ import useLevellog from '../hooks/useLevellog';
 import { ROUTES_PATH } from '../constants/constants';
 
 const LevellogModal = () => {
-  const [levellog, setLevellog] = useState(null);
+  const [levellog, setLevellog] = useState('');
   const { levellogLookup } = useLevellog();
   const dummyId = 1;
 

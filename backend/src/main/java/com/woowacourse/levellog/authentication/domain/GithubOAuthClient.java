@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 public class GithubOAuthClient {
 
     private static final String TOKEN_URL = "https://github.com/login/oauth/access_token";
-    private static final String USER_ACCESS_URL = "https://github.com/user";
+    private static final String USER_ACCESS_URL = "https://api.github.com/user";
 
     private final String clientId;
     private final String clientSecret;

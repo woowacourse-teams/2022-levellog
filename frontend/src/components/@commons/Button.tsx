@@ -15,12 +15,9 @@ interface ButtonProps {
 }
 
 const StyledButton = styled.button`
-  width: 100px;
-  height: 40px;
+  width: fit-content;
   cursor: pointer;
-  background-color: #f1f1f1;
-  padding: 5px;
-  border-radius: 5px;
+  background-color: #b4b4b4;
   border-style: none;
   font-size: 22px;
   font-weight: 500;

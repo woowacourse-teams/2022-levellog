@@ -27,7 +27,7 @@ const useLevellog = () => {
       console.log(err);
     }
   };
-  return { stringToLevellogFormat, levellogAdd, levellogLookup };
+  return { levellogAdd, levellogLookup };
 };
 
 export default useLevellog;

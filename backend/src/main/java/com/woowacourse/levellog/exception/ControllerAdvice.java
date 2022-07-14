@@ -16,4 +16,12 @@ public class ControllerAdvice {
                 .status(e.getHttpStatus())
                 .body(response);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleUnexpectedException(final Exception e) {
+        final ExceptionResponse response = new ExceptionResponse(e.getMessage());
+        return ResponseEntity
+                .internalServerError()
+                .body(response);
+    }
 }

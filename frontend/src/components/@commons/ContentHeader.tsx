@@ -21,10 +21,10 @@ const ButtonBox = styled.div`
 `;
 
 const ContentHeaderStyle = styled.div`
-  height: 120px;
-  width: 100%;
-  display: flex;
   position: relative;
+  width: 100%;
+  height: 120px;
+  display: flex;
   justify-content: center;
   align-items: center;
 `;

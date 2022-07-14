@@ -41,9 +41,9 @@ interface FeedbackProps {
 }
 
 const FeedbackContent = styled.div`
+  overflow: auto;
   height: 300px;
   width: 700px;
-  overflow: auto;
   padding: 10px;
   border: 1px solid black;
   margin: 30px;

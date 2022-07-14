@@ -1,7 +1,8 @@
 package com.woowacourse.levellog.authentication.application;
 
 import com.woowacourse.levellog.application.MemberService;
-import com.woowacourse.levellog.authentication.JwtTokenProvider;
+import com.woowacourse.levellog.authentication.domain.GithubOAuthClient;
+import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;

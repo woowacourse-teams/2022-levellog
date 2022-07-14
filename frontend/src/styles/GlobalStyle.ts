@@ -21,6 +21,8 @@ const GlobalStyles = createGlobalStyle`
     font-size: 100%;
     font-style: normal;
   }
+  
+  input:focus {outline: none;}
 
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;

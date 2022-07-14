@@ -3,16 +3,18 @@ import styled from 'styled-components';
 
 const Button = ({ children, onClick, ...props }: ButtonProps) => {
   return (
-    <StyledButton onClick={onClick} {...props}>
+    <ButtonStyle onClick={onClick} color={color} {...props}>
       {children}
-    </StyledButton>
+    </ButtonStyle>
   );
 };
 
 interface ButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   children: string;
+  color?: string;
 }
+
 
 const StyledButton = styled.button`
   width: fit-content;

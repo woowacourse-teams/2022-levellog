@@ -9,3 +9,9 @@ export const postLevellog = (levellogContent: LevellogType) => {
     data: levellogContent,
   });
 };
+
+export const getLevellog = (id: number) =>
+  axios({
+    method: 'get',
+    url: `${SERVER_PATH.LEVELLOGS}/${id}`,
+  });

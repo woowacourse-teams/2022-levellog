@@ -15,6 +15,12 @@ BaseButton.args = {
   children: '기본버튼',
 };
 
+export const ColorButton = Template.bind({});
+BaseButton.args = {
+  children: '붉은색버튼',
+  color: '#FF0000',
+};
+
 export const SubmitButton = Template.bind({});
 SubmitButton.args = {
   children: '제출하기',

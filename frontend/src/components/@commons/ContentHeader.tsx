@@ -13,6 +13,7 @@ const ContentHeader = ({ title, children }: InputProps) => {
 interface InputProps {
   title: string;
   children?: React.ReactElement;
+
 }
 
 const ButtonBox = styled.div`

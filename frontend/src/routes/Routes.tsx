@@ -2,6 +2,7 @@ import React from 'react';
 
 import FeedbackList from '../pages/FeedbackList';
 import FeedbackAdd from '../pages/FeedbackAdd';
+import Login from '../pages/Login';
 import LevellogAdd from '../pages/LevellogAdd';
 import Home from '../pages/Home';
 
@@ -21,6 +22,10 @@ export const routes = [
     element: <FeedbackAdd />,
   },
   {
+    path: ROUTES_PATH.LOGIN,
+    element: <Login />,
+   },
+   {
     path: ROUTES_PATH.LEVELLOG_ADD,
     element: <LevellogAdd />,
   },

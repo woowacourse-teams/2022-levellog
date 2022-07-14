@@ -5,7 +5,7 @@ export const ROUTES_PATH = Object.freeze({
 
   FEEDBACK: '/feedback',
   FEEDBACK_ADD: '/feedback/add',
-
+  LOGIN: '/login',
   LEVELLOG: '/levellog',
   LEVELLOG_ADD: '/levellog/add',
 });

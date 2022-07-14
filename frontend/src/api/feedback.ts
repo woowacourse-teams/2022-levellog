@@ -1,22 +1,22 @@
 import axios from 'axios';
-import { API_URL } from '../constants/constants';
+import { API_URL, SERVER_PATH } from '../constants/constants';
 import { FeedbackType } from '../types';
 
 export const postFeedback = (feedbackResult: Omit<FeedbackType, 'id'>) =>
   axios({
     method: 'post',
-    url: `${API_URL}/api/feedbacks`,
+    url: SERVER_PATH.FEEDBACKS,
     data: { ...feedbackResult },
   });
 
 export const getFeedbacks = () =>
   axios({
     method: 'get',
-    url: `${API_URL}/api/feedbacks`,
+    url: SERVER_PATH.FEEDBACKS,
   });
 
 export const deleteFeedbacks = (id: number) =>
   axios({
     method: 'delete',
-    url: `${API_URL}/api/feedbacks/${id}`,
+    url: `${SERVER_PATH.FEEDBACKS}/${id}`,
   });

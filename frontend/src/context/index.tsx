@@ -2,13 +2,13 @@ import { useState, createContext, Dispatch, SetStateAction } from 'react';
 
 type UserDispatchType = Dispatch<SetStateAction<string>>;
 
-const userInfo: string = '';
+const profileUrl: string = '';
 
 export const UserContext = createContext<string>('');
 export const UserDispatchContext = createContext<UserDispatchType>(() => {});
 
 export const UserProvider = ({ children }: { children: JSX.Element }) => {
-  const [userState, setUserState] = useState(userInfo);
+  const [userState, setUserState] = useState(profileUrl);
 
   return (
     <UserContext.Provider value={userState}>

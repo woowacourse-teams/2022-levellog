@@ -4,7 +4,7 @@ import { useUserState } from '../hooks/useContext';
 import Button from './@commons/Button';
 
 const Header = () => {
-  const userInfo = useUserState();
+  const profileUrl = useUserState();
 
   const handleClickLoginButton = () => {
     window.location.href =
@@ -19,8 +19,11 @@ const Header = () => {
   return (
     <HeaderStyle>
       <LogoStyle src={'http://localhost:3000/img/levellog-logo.png'} alt="레벨로그 로고" />
-      <Button onClick={handleClickLoginButton}>로그인</Button>
-      <ProfileImgStyle onError={handleErrorProfileImage} src={userInfo} alt="프로필 이미지" />
+      {profileUrl ? (
+        <ProfileImgStyle onError={handleErrorProfileImage} src={profileUrl} alt="프로필 이미지" />
+      ) : (
+        <Button onClick={handleClickLoginButton}>로그인</Button>
+      )}
     </HeaderStyle>
   );
 };

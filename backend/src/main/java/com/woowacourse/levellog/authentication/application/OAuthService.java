@@ -9,8 +9,10 @@ import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import com.woowacourse.levellog.dto.MemberCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OAuthService {
 
@@ -30,7 +32,6 @@ public class OAuthService {
             memberService.save(
                     new MemberCreateDto(githubProfile.getNickname(), githubId, githubProfile.getProfileUrl()));
         }
-        // user 정보로 token 제작하고 반환드
         final String token = jwtTokenProvider.createToken(githubId);
 
         return new LoginResponse(token, githubProfile.getProfileUrl());

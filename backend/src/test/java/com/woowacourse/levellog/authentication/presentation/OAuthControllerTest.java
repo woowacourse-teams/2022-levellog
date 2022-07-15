@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.application.OAuthService;
+import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,6 +22,9 @@ import org.springframework.test.web.servlet.ResultActions;
 @WebMvcTest(OAuthController.class)
 @DisplayName("OAuthController의")
 class OAuthControllerTest {
+
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
 
     @MockBean
     private OAuthService oAuthService;

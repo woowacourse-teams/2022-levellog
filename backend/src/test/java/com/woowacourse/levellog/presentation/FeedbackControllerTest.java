@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.application.FeedbackService;
+import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.dto.FeedbackContentDto;
 import com.woowacourse.levellog.dto.FeedbackCreateRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +26,9 @@ import org.springframework.test.web.servlet.ResultActions;
 @WebMvcTest(FeedbackController.class)
 @DisplayName("FeedbackController의")
 class FeedbackControllerTest {
+
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
 
     @MockBean
     private FeedbackService feedbackService;

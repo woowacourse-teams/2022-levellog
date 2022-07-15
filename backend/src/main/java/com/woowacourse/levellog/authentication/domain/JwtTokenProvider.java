@@ -48,5 +48,4 @@ public class JwtTokenProvider {
             throw new InvalidTokenException(e);
         }
     }
-
 }

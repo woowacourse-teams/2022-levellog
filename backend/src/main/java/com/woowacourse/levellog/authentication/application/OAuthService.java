@@ -26,16 +26,25 @@ public class OAuthService {
     public LoginResponse login(final GithubCodeRequest codeRequest) {
         final String code = codeRequest.getAuthorizationCode();
         final String githubAccessToken = githubOAuthClient.getGithubAccessToken(code);
-        final GithubProfileResponse githubProfile = githubOAuthClient.getGithubProfile(githubAccessToken);
-        final int githubId = Integer.parseInt(githubProfile.getGithubId());
 
-        final Long memberId = memberService.findByGithubId(githubId)
-                .map(Member::getId)
-                .orElseGet(() -> memberService.save(
-                        new MemberCreateDto(githubProfile.getNickname(), githubId, githubProfile.getProfileUrl())));
+        final GithubProfileResponse githubProfile = githubOAuthClient.getGithubProfile(githubAccessToken);
+        final Long memberId = getMemberIdByGithubProfile(githubProfile);
 
         final String token = jwtTokenProvider.createToken(memberId.toString());
 
         return new LoginResponse(token, githubProfile.getProfileUrl());
+    }
+
+    private Long getMemberIdByGithubProfile(final GithubProfileResponse githubProfile) {
+        final int githubId = Integer.parseInt(githubProfile.getGithubId());
+
+        return memberService.findByGithubId(githubId)
+                .map(Member::getId)
+                .orElseGet(() -> registerMember(githubProfile, githubId));
+    }
+
+    private Long registerMember(final GithubProfileResponse githubProfile, final int githubId) {
+        return memberService.save(
+                new MemberCreateDto(githubProfile.getNickname(), githubId, githubProfile.getProfileUrl()));
     }
 }

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import FeedbackList from '../pages/FeedbackList';
 import FeedbackAdd from '../pages/FeedbackAdd';
 import Login from '../pages/Login';
@@ -24,8 +22,8 @@ export const routes = [
   {
     path: ROUTES_PATH.LOGIN,
     element: <Login />,
-   },
-   {
+  },
+  {
     path: ROUTES_PATH.LEVELLOG_ADD,
     element: <LevellogAdd />,
   },

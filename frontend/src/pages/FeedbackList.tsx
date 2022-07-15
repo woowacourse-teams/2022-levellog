@@ -36,7 +36,7 @@ const FeedbackList = () => {
             <Feedback
               key={feedback.id}
               userFeedback={feedback}
-              requsetFeedbackLookup={requestFeedbackLookup}
+              requestFeedbackLookup={requestFeedbackLookup}
             />
           ))}
       </FeedbacksContainer>

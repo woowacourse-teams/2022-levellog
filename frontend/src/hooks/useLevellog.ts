@@ -1,4 +1,4 @@
-import { getLevellog, postLevellog } from '../api/levellog';
+import { getLevellog, postLevellog } from '../apis/levellog';
 import { LevellogType } from '../types';
 
 const useLevellog = () => {

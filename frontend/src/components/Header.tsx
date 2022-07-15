@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-import Button from './@commons/Button';
-
 import { useUser } from '../hooks/useContext';
-
+import Button from './@commons/Button';
 import ProfileDropdown from './ProfileDropdown';
 
 const Header = () => {
@@ -13,7 +11,7 @@ const Header = () => {
 
   const handleErrorProfileImage = (e: React.SyntheticEvent<EventTarget>) => {
     const target = e.target as HTMLImageElement;
-    target.src = 'http://localhost:3000/img/defaultProfile.png';
+    target.src = 'http://localhost:3000/images/defaultProfile.png';
   };
 
   const handleClickLoginButton = () => {
@@ -27,7 +25,7 @@ const Header = () => {
 
   return (
     <HeaderStyle>
-      <LogoStyle src={'http://localhost:3000/img/levellog-logo.png'} alt="레벨로그 로고" />
+      <LogoStyle src={'http://localhost:3000/images/levellog-logo.png'} alt="레벨로그 로고" />
       {profileUrl ? (
         <ProfileImageStyle
           onClick={handleClickProfileImage}

@@ -1,10 +1,9 @@
-import FeedbackList from '../pages/FeedbackList';
-import FeedbackAdd from '../pages/FeedbackAdd';
-import Login from '../pages/Login';
-import LevellogAdd from '../pages/LevellogAdd';
-import Home from '../pages/Home';
-
 import { ROUTES_PATH } from '../constants/constants';
+import FeedbackAdd from '../pages/FeedbackAdd';
+import FeedbackList from '../pages/FeedbackList';
+import Home from '../pages/Home';
+import LevellogAdd from '../pages/LevellogAdd';
+import Login from '../pages/Login';
 
 export const routes = [
   {

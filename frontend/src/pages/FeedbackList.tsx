@@ -1,15 +1,12 @@
-import { useState } from 'react';
-import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-import Feedback from '../components/Feedback';
 import Button from '../components/@commons/Button';
-
-import useFeedback from '../hooks/useFeedback';
-
+import Feedback from '../components/Feedback';
 import { ROUTES_PATH } from '../constants/constants';
+import useFeedback from '../hooks/useFeedback';
 import { FeedbackType } from '../types';
-import { useEffect } from 'react';
 
 const FeedbackList = () => {
   const [feedbacks, setFeedbacks] = useState([]);

@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woowacourse.levellog.application.MemberService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
@@ -22,6 +23,9 @@ import org.springframework.test.web.servlet.ResultActions;
 @WebMvcTest(OAuthController.class)
 @DisplayName("OAuthController의")
 class OAuthControllerTest {
+
+    @MockBean
+    private MemberService memberService;
 
     @MockBean
     private JwtTokenProvider jwtTokenProvider;

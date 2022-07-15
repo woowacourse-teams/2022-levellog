@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.application;
 
+import com.woowacourse.levellog.authentication.exception.MemberNotFoundException;
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.dto.MemberCreateDto;
@@ -24,6 +25,11 @@ public class MemberService {
 
     public Optional<Member> findByGithubId(final int githubId) {
         return memberRepository.findByGithubId(githubId);
+    }
+
+    public Member getById(final Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     public void updateProfileUrl(final Long id, final String profileUrl) {

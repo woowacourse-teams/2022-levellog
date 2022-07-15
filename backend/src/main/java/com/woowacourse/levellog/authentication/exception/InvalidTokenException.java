@@ -5,13 +5,13 @@ package com.woowacourse.levellog.authentication.exception;
  */
 public class InvalidTokenException extends RuntimeException {
 
-    private static final String ERROR_MEESAGE = "유효하지 않은 토큰입니다.";
+    private static final String ERROR_MESSAGE = "유효하지 않은 토큰입니다.";
 
-    public InvalidTokenException(final String message, final Throwable cause) {
-        super(message, cause);
+    public InvalidTokenException() {
+        super(ERROR_MESSAGE);
     }
 
-    public InvalidTokenException(final Throwable cause) {
-        super(ERROR_MEESAGE, cause);
+    public InvalidTokenException(final String message) {
+        super(message);
     }
 }

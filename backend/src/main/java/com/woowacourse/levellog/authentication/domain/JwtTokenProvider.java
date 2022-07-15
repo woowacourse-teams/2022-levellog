@@ -44,7 +44,7 @@ public class JwtTokenProvider {
                     .getBody()
                     .getSubject();
         } catch (final JwtException e) {
-            throw new InvalidTokenException(e);
+            throw new InvalidTokenException();
         }
     }
 }

@@ -3,7 +3,6 @@ package com.woowacourse.levellog.authentication.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,7 +21,7 @@ class JwtTokenProviderTest {
         final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(SECRET_KEY, EXPIRE_LENGTH);
 
         // when
-        final String token = jwtTokenProvider.createToken(1234567);
+        final String token = jwtTokenProvider.createToken("1234567");
 
         // then
         assertThat(token).isNotNull();
@@ -37,13 +36,13 @@ class JwtTokenProviderTest {
         void success() {
             // given
             final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(SECRET_KEY, EXPIRE_LENGTH);
-            final String token = jwtTokenProvider.createToken(1234567);
+            final String token = jwtTokenProvider.createToken("1234567");
 
             // when
-            final int actual = jwtTokenProvider.getPayload(token);
+            final String actual = jwtTokenProvider.getPayload(token);
 
             // then
-            assertThat(actual).isEqualTo(1234567);
+            assertThat(actual).isEqualTo("1234567");
         }
 
         @Test
@@ -51,7 +50,7 @@ class JwtTokenProviderTest {
         void expiredToken_Exception() {
             // given
             final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(SECRET_KEY, 0);
-            final String token = jwtTokenProvider.createToken(1234567);
+            final String token = jwtTokenProvider.createToken("1234567");
 
             // when & then
             assertThatThrownBy(() -> jwtTokenProvider.getPayload(token))

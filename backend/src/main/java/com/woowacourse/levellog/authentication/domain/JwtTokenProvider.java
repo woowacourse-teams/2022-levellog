@@ -23,28 +23,27 @@ public class JwtTokenProvider {
         this.validityInMilliseconds = validityInMilliseconds;
     }
 
-    public String createToken(final int payload) {
+    public String createToken(final String payload) {
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(payload))
+                .setSubject(payload)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public int getPayload(final String token) {
+    public String getPayload(final String token) {
         try {
-            final String payload = Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token)
                     .getBody()
                     .getSubject();
-            return Integer.parseInt(payload);
-        } catch (final JwtException | NumberFormatException e) {
+        } catch (final JwtException e) {
             throw new InvalidTokenException(e);
         }
     }

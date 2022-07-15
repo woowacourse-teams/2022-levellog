@@ -1,10 +1,6 @@
 package com.woowacourse.levellog.authentication.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.woowacourse.levellog.application.MemberService;
@@ -32,7 +28,7 @@ class OAuthServiceTest {
     @MockBean
     private GithubOAuthClient githubOAuthClient;
 
-    @MockBean
+    @Autowired
     private MemberService memberService;
 
     @Autowired
@@ -52,15 +48,15 @@ class OAuthServiceTest {
             when(githubOAuthClient.getGithubAccessToken("githubCode")).thenReturn("accessToken");
             when(githubOAuthClient.getGithubProfile("accessToken")).thenReturn(
                     new GithubProfileResponse("12345", "로마", "imageUrl"));
-            when(memberService.findByGithubId(12345)).thenReturn(Optional.empty());
 
             // when
             final LoginResponse tokenResponse = oAuthService.login(new GithubCodeRequest("githubCode"));
-            final int payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
+            final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
+            final Optional<Member> savedMember = memberService.findByGithubId(12345);
 
             // then
-            verify(memberService, times(1)).save(any(MemberCreateDto.class));
-            assertThat(payload).isEqualTo(12345);
+            assertThat(savedMember).isPresent();
+            assertThat(Long.parseLong(payload)).isEqualTo(savedMember.get().getId());
             assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
         }
 
@@ -68,20 +64,18 @@ class OAuthServiceTest {
         @DisplayName("첫 로그인이 아닌 경우 회원가입 하지 않고 토큰과 이미지 URL를 반환한다.")
         void loginNotFirst() {
             // given
+            final Long savedId = memberService.save(new MemberCreateDto("로마", 12345, "imageUrl"));
+
             when(githubOAuthClient.getGithubAccessToken("githubCode")).thenReturn("accessToken");
             when(githubOAuthClient.getGithubProfile("accessToken")).thenReturn(
                     new GithubProfileResponse("12345", "로마", "imageUrl"));
 
-            final Member savedMember = new Member("로마", 12345, "imageUrl");
-            when(memberService.findByGithubId(12345)).thenReturn(Optional.of(savedMember));
-
             // when
             final LoginResponse tokenResponse = oAuthService.login(new GithubCodeRequest("githubCode"));
-            final int payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
+            final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
 
             // then
-            verify(memberService, never()).save(any(MemberCreateDto.class));
-            assertThat(payload).isEqualTo(12345);
+            assertThat(Long.parseLong(payload)).isEqualTo(savedId);
             assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
         }
     }

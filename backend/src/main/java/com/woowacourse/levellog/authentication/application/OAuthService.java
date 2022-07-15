@@ -6,6 +6,7 @@ import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
+import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.dto.MemberCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,12 @@ public class OAuthService {
         final GithubProfileResponse githubProfile = githubOAuthClient.getGithubProfile(githubAccessToken);
         final int githubId = Integer.parseInt(githubProfile.getGithubId());
 
-        if (memberService.findByGithubId(githubId).isEmpty()) {
-            memberService.save(
-                    new MemberCreateDto(githubProfile.getNickname(), githubId, githubProfile.getProfileUrl()));
-        }
-        final String token = jwtTokenProvider.createToken(githubId);
+        final Long memberId = memberService.findByGithubId(githubId)
+                .map(Member::getId)
+                .orElseGet(() -> memberService.save(
+                        new MemberCreateDto(githubProfile.getNickname(), githubId, githubProfile.getProfileUrl())));
+
+        final String token = jwtTokenProvider.createToken(memberId.toString());
 
         return new LoginResponse(token, githubProfile.getProfileUrl());
     }

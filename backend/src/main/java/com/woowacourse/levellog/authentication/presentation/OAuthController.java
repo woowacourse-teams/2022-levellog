@@ -21,7 +21,7 @@ public class OAuthController {
 
     @CrossOrigin
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid final GithubCodeRequest code) {
-        return ResponseEntity.ok(oAuthService.login(code));
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid final GithubCodeRequest request) {
+        return ResponseEntity.ok(oAuthService.login(request));
     }
 }

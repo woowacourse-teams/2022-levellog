@@ -9,6 +9,8 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: create
+  profiles:
+    include: auth
 
 logging:
   level:

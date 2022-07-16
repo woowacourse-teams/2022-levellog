@@ -1,34 +1,36 @@
 import { rest } from 'msw';
-import { SERVER_PATH } from '../constants/constants';
-import { feedbacks, levellog } from './mockData';
 
-export const handlers = [
-  // 피드백 CRUD MOCKING
-  rest.post(SERVER_PATH.FEEDBACKS, (req, res, ctx) => {
+import { feedbacks, levellog, levellogGroups } from './mockData';
+
+// 피드백 CRUD MOCKING
+export const feedbackHandlers = [
+  rest.post('/api/feedbacks', (req, res, ctx) => {
     return res(ctx.status(201));
   }),
 
-  rest.get(SERVER_PATH.FEEDBACKS, (req, res, ctx) => {
+  rest.get('/api/feedbacks', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(feedbacks));
   }),
 
-  rest.delete(`${SERVER_PATH.FEEDBACKS}/:id`, (req, res, ctx) => {
+  rest.delete('/api/feedbacks/:id', (req, res, ctx) => {
     const id = +req.params.id;
     return res(ctx.status(204));
   }),
+];
 
-  // 레벨로그 CRUD MOCKING
-  rest.post(SERVER_PATH.LEVELLOGS, (req, res, ctx) => {
+// 레벨로그 CRUD MOCKING
+export const levellogHandlers = [
+  rest.post('/api/levellogs', (req, res, ctx) => {
     return res(ctx.status(201));
   }),
 
-  rest.get(`${SERVER_PATH.LEVELLOGS}/:id`, (req, res, ctx) => {
+  rest.get(`/api/levellogs/:id`, (req, res, ctx) => {
     const id = +req.params.id;
     return res(ctx.status(200), ctx.json(levellog));
   }),
 ];
 
-export const loginHandler = [
+export const loginHandlers = [
   rest.post('/api/auth/login', (req, res, ctx) => {
     if (Object.keys(req.body).includes('authorizationCode')) {
       return res(
@@ -41,5 +43,20 @@ export const loginHandler = [
     }
 
     return res(ctx.status(403));
+  }),
+];
+
+export const levellogGroupHandlers = [
+  rest.get('/api/groups', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(levellogGroups));
+  }),
+
+  rest.get('/api/groups/:groupId', (req, res, ctx) => {
+    const { groupId } = req.params;
+    const levellogGroup = levellogGroups.group.find(
+      (levellogGroup) => levellogGroup.id === +groupId,
+    );
+
+    return res(ctx.status(200), ctx.json(levellogGroup));
   }),
 ];

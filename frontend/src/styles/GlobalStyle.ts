@@ -1,5 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
+// 나중에 rem으로 단위 변경 시 사용 (#root)
+// font-size: 62.5%;
 const GlobalStyles = createGlobalStyle` 
   #root {
     width: 100%;
@@ -21,6 +23,8 @@ const GlobalStyles = createGlobalStyle`
     font-size: 100%;
     font-style: normal;
   }
+  
+  input:focus {outline: none;}
 
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;

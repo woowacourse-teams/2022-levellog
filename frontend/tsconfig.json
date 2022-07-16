@@ -5,7 +5,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
   "include": ["./src"]
 }

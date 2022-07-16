@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { InputStyle } from './Input';
 
-const SmallInput = ({ labelText, inputRef, ...rest }: InputProps) => {
+const SmallInput = ({ labelText, inputRef, ...props }: InputProps) => {
   return (
     <>
       <label>{labelText}</label>
-      <SmallInputStyle ref={inputRef} {...rest} />
+      <SmallInputStyle ref={inputRef} {...props} />
     </>
   );
 };

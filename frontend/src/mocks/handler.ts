@@ -1,15 +1,45 @@
 import { rest } from 'msw';
+import { SERVER_PATH } from '../constants/constants';
+import { feedbacks, levellog } from './mockData';
 
 export const handlers = [
-  rest.post('/api/feedbacks', (req, res, ctx) => {
+  // 피드백 CRUD MOCKING
+  rest.post(SERVER_PATH.FEEDBACKS, (req, res, ctx) => {
     return res(ctx.status(201));
   }),
 
-  rest.get('/api/feedbacks', (req, res, ctx) => {
-    return res(ctx.status(200));
+  rest.get(SERVER_PATH.FEEDBACKS, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(feedbacks));
   }),
 
-  // rest.delete(`/api/feedbacks/${id}`, (req, res, ctx) => {
-  //   return res(ctx.status(204));
-  // }),
+  rest.delete(`${SERVER_PATH.FEEDBACKS}/:id`, (req, res, ctx) => {
+    const id = +req.params.id;
+    return res(ctx.status(204));
+  }),
+
+  // 레벨로그 CRUD MOCKING
+  rest.post(SERVER_PATH.LEVELLOGS, (req, res, ctx) => {
+    return res(ctx.status(201));
+  }),
+
+  rest.get(`${SERVER_PATH.LEVELLOGS}/:id`, (req, res, ctx) => {
+    const id = +req.params.id;
+    return res(ctx.status(200), ctx.json(levellog));
+  }),
+];
+
+export const loginHandler = [
+  rest.post('/api/auth/login', (req, res, ctx) => {
+    if (Object.keys(req.body).includes('authorizationCode')) {
+      return res(
+        ctx.status(200),
+        ctx.json({
+          accessToken: 'fflkmdsaklfmkals32$Rmksdlfmlksdm',
+          profileUrl: 'https://avatars.githubusercontent.com/u/432423423?v=4',
+        }),
+      );
+    }
+
+    return res(ctx.status(403));
+  }),
 ];

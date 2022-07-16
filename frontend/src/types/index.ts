@@ -7,3 +7,7 @@ export interface FeedbackType {
     etc: string;
   };
 }
+
+export interface LevellogType {
+  content: string;
+}

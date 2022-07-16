@@ -1,7 +1,7 @@
 import React from 'react';
 import { FeedbackAddContainer } from './@commons/Style';
 
-const LevelLogReport = () => {
+const LevellogReport = () => {
   return (
     <FeedbackAddContainer>
       <h2>결의 레벨로그</h2>
@@ -22,4 +22,4 @@ const LevelLogReport = () => {
   );
 };
 
-export default LevelLogReport;
+export default LevellogReport;

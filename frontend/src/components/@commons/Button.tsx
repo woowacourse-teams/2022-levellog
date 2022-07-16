@@ -1,23 +1,28 @@
-import React, { Children } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-const Button = ({ children, onClick, ...rest }: ButtonProps) => {
+const Button = ({ children, onClick, ...props }: ButtonProps) => {
   return (
-    <StyledButton onClick={onClick} {...rest}>
+    <ButtonStyle onClick={onClick} color={color} {...props}>
       {children}
-    </StyledButton>
+    </ButtonStyle>
   );
 };
 
 interface ButtonProps {
-  onClick?: any;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   children: string;
+  color?: string;
 }
 
+
 const StyledButton = styled.button`
-  width: 200px;
-  height: 40px;
+  width: fit-content;
   cursor: pointer;
+  background-color: #b4b4b4;
+  border-style: none;
+  font-size: 22px;
+  font-weight: 500;
 `;
 
 export default Button;

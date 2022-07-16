@@ -1,19 +1,24 @@
 import { createGlobalStyle } from 'styled-components';
 
-// 나중에 rem으로 단위 변경 시 사용 (#root)
-// font-size: 62.5%;
+import NanumFont from 'assets/fonts/NanumSquare_ac.woff';
+
 const GlobalStyles = createGlobalStyle` 
   #root {
     width: 100%;
     height: 100%;
     margin: 0;
-    font-family: 'Noto Sans KR';
+    font-size: 62.5%;
   }
 
+    @font-face {
+      font-family: "Font_Regular";
+      src: local("Font_test"), url(${NanumFont}) format('woff'); 
+    }
+
   body {
+    font-family: 'Font_Regular';
+    box-sizing: border-box;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;

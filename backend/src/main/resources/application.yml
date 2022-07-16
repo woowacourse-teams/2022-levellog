@@ -1,14 +1,77 @@
 spring:
+  profiles:
+    group:
+      "prod": "prod_db"
+      "dev":  "test_db, jpa_log"
+      "local": "local_db, jpa_log"
+      "default": "local_db, jpa_log"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod_db
   datasource:
-    url: jdbc:h2:~/test2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${DB_HOST}:3306/${PROD_DB_NAME}?characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${PROD_DB_USER_NAME}
+    password: ${PROD_DB_PASSWORD}
+  jpa:
+    hibernate:
+        ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test_db
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${DB_HOST}:3306/${TEST_DB_NAME}?characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${TEST_DB_USER_NAME}
+    password: ${TEST_DB_PASSWORD}
+  jpa:
+    hibernate:
+        ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "local_db"
+  datasource:
+    url: jdbc:h2:./local_db;MODE=MySQL
     username: sa
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+        ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "jpa_log"
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-    hibernate:
-      ddl-auto: create
 
 logging:
   level:

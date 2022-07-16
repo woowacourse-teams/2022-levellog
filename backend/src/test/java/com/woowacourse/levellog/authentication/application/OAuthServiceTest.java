@@ -79,5 +79,4 @@ class OAuthServiceTest {
             assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
         }
     }
-
 }

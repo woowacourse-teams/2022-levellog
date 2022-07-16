@@ -35,5 +35,4 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
-
 }

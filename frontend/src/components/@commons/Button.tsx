@@ -17,8 +17,8 @@ interface ButtonProps {
 const ButtonStyle = styled.button`
   width: fit-content;
   cursor: pointer;
-  background-color: #b4b4b4;
-  border-style: none;
+  background-color: none;
+  border: 2px solid ${(props) => props.theme.default.BLACK};
   font-size: 22px;
   font-weight: 500;
 `;

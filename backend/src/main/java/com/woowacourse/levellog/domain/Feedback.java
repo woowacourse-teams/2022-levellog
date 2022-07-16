@@ -33,9 +33,6 @@ public class Feedback {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_levellog"))
     private Levellog levellog;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(length = 1000)
     private String study;
 
@@ -45,8 +42,11 @@ public class Feedback {
     @Column(length = 1000)
     private String etc;
 
-    public Feedback(final String name, final String study, final String speak, final String etc) {
-        this.name = name;
+    public Feedback(final Member from, final Member to, final Levellog levellog, final String study, final String speak,
+                    final String etc) {
+        this.from = from;
+        this.to = to;
+        this.levellog = levellog;
         this.study = study;
         this.speak = speak;
         this.etc = etc;

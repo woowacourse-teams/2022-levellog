@@ -30,4 +30,11 @@ public class Team {
 
     @Column(nullable = false, length = 2048)
     private String profileUrl;
+
+    public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl) {
+        this.title = title;
+        this.place = place;
+        this.startAt = startAt;
+        this.profileUrl = profileUrl;
+    }
 }

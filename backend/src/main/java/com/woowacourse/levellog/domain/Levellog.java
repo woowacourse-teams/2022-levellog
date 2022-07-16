@@ -26,11 +26,17 @@ public class Levellog {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_levellog_author"))
     private Member author;
 
+    @ManyToOne
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_levellog_team"))
+    private Team team;
+
     @Column(nullable = false)
     @Lob
     private String content;
 
-    public Levellog(final String content) {
+    public Levellog(final Member author, final Team team, final String content) {
+        this.author = author;
+        this.team = team;
         this.content = content;
     }
 

@@ -2,8 +2,12 @@ package com.woowacourse.levellog.application;
 
 import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
+import com.woowacourse.levellog.domain.Member;
+import com.woowacourse.levellog.domain.Team;
+import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.LevellogCreateRequest;
 import com.woowacourse.levellog.dto.LevellogResponse;
+import com.woowacourse.levellog.exception.TeamNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class LevellogService {
 
     private final LevellogRepository levellogRepository;
+    private final TeamRepository teamRepository;
 
-    public Long save(final LevellogCreateRequest request) {
-        final Levellog levellog = new Levellog(request.getContent());
+    public Long save(final Member author, final Long groupId, final LevellogCreateRequest request) {
+        final Team team = getTeam(groupId);
+        final Levellog levellog = new Levellog(author, team, request.getContent());
 
         final Levellog savedLevellog = levellogRepository.save(levellog);
         return savedLevellog.getId();
@@ -24,21 +30,24 @@ public class LevellogService {
 
     @Transactional(readOnly = true)
     public LevellogResponse findById(final Long id) {
-        final Levellog levellog = getLevellogById(id);
+        final Levellog levellog = getById(id);
         return new LevellogResponse(levellog.getContent());
     }
 
     public void update(final Long id, final LevellogCreateRequest request) {
-        final Levellog levellog = getLevellogById(id);
+        final Levellog levellog = getById(id);
         levellog.updateContent(request.getContent());
-    }
-
-    private Levellog getLevellogById(final Long id) {
-        return levellogRepository.findById(id)
-                .orElseThrow();
     }
 
     public void deleteById(final Long id) {
         levellogRepository.deleteById(id);
+    }
+
+    private Levellog getById(final Long id) {
+        return levellogRepository.findById(id).orElseThrow();
+    }
+
+    private Team getTeam(final Long groupId) {
+        return teamRepository.findById(groupId).orElseThrow(TeamNotFoundException::new);
     }
 }

@@ -1,9 +1,10 @@
-import { UserProvider } from '../src/contexts';
-import GlobalStyles from '../src/styles/GlobalStyle';
-import { theme } from '../src/styles/theme';
-
 import { BrowserRouter } from 'react-router-dom';
+
+import { UserProvider } from 'contexts';
 import { ThemeProvider } from 'styled-components';
+
+import GlobalStyles from 'styles/GlobalStyle';
+import { theme } from 'styles/theme';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },

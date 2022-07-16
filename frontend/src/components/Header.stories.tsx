@@ -1,14 +1,14 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-
 import Header from './Header';
 
+import { ComponentMeta, ComponentStory } from '@storybook/react';
+
 export default {
-  title: 'Component',
+  title: 'Header',
   component: Header,
 } as ComponentMeta<typeof Header>;
 
 const HeaderTemplate: ComponentStory<typeof Header> = () => <Header />;
 
-export const HeaderStory = HeaderTemplate.bind({});
+export const Base = HeaderTemplate.bind({});
 
-HeaderStory.args = {};
+Base.args = {};

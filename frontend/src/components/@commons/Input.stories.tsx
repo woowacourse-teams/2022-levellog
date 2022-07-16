@@ -1,6 +1,6 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-
 import Input from './Input';
+
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
   title: 'Input',
@@ -9,5 +9,5 @@ export default {
 
 const Template: ComponentStory<typeof Input> = (args) => <Input {...args}></Input>;
 
-export const BaseInput = Template.bind({});
-BaseInput.args = {};
+export const Base = Template.bind({});
+Base.args = {};

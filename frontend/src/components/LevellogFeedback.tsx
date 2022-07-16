@@ -1,13 +1,13 @@
 import { useRef } from 'react';
+
 import styled from 'styled-components';
+import { FeedbackType } from 'types';
 
-import Input from './@commons/Input';
+import useFeedback from 'hooks/useFeedback';
+
 import Button from './@commons/Button';
+import Input from './@commons/Input';
 import { FeedbackAddContainer } from './@commons/Style';
-
-import useFeedback from '../hooks/useFeedback';
-
-import { FeedbackType } from '../types';
 
 const LevellogFeedback = () => {
   const { feedbackAdd } = useFeedback();

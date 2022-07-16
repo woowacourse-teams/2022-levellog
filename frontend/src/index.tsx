@@ -1,11 +1,12 @@
 import ReactDOM from 'react-dom/client';
-
 import { BrowserRouter } from 'react-router-dom';
+
 import { ThemeProvider } from 'styled-components';
+
+import { theme } from './styles/theme';
 
 import App from './App';
 import { UserProvider } from './contexts';
-import { theme } from './styles/Theme';
 
 if (process.env.NODE_ENV === 'development') {
   const { worker } = require('./mocks/browser');

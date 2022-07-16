@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { getUserAuthority } from '../apis/login';
-import { useUser } from '../hooks/useContext';
+import { useUser } from 'hooks/useUser';
+
+import { getUserAuthority } from 'apis/login';
 
 const Login = () => {
   const { profileUrlDispatch } = useUser();

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+import styled from 'styled-components';
+
+import useLevellog from 'hooks/useLevellog';
+
+import { ROUTES_PATH } from 'constants/constants';
+
 import Button from './@commons/Button';
-
-import useLevellog from '../hooks/useLevellog';
-
-import { ROUTES_PATH } from '../constants/constants';
 
 const LevellogModal = () => {
   const [levellog, setLevellog] = useState('');

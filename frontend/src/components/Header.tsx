@@ -1,7 +1,12 @@
 import { useState } from 'react';
+
 import styled from 'styled-components';
 
-import { useUser } from '../hooks/useContext';
+import { useUser } from 'hooks/useUser';
+
+import profileDefaultImage from 'assets/images/defaultProfile.png';
+import levellogLogo from 'assets/images/levellogLogo.png';
+
 import Button from './@commons/Button';
 import ProfileDropdown from './ProfileDropdown';
 
@@ -11,7 +16,7 @@ const Header = () => {
 
   const handleErrorProfileImage = (e: React.SyntheticEvent<EventTarget>) => {
     const target = e.target as HTMLImageElement;
-    target.src = 'http://localhost:3000/images/defaultProfile.png';
+    target.src = `${profileDefaultImage}`;
   };
 
   const handleClickLoginButton = () => {
@@ -25,7 +30,7 @@ const Header = () => {
 
   return (
     <HeaderStyle>
-      <LogoStyle src={'http://localhost:3000/images/levellog-logo.png'} alt="레벨로그 로고" />
+      <LogoStyle src={levellogLogo} alt="레벨로그 로고" />
       {profileUrl ? (
         <ProfileImageStyle
           onClick={handleClickProfileImage}
@@ -45,13 +50,13 @@ const Header = () => {
 };
 
 export const HeaderStyle = styled.div`
-  width: 100%;
   height: 70px;
   border-bottom: 1px solid #000000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
+  padding: 0 10rem;
 `;
 
 export const LogoStyle = styled.img`

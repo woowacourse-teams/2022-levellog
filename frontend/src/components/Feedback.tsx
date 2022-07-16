@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import useFeedback from '../hooks/useFeedback';
+import { FeedbackType } from 'types';
 
-import { FeedbackType } from '../types';
+import useFeedback from 'hooks/useFeedback';
+
 import Button from './@commons/Button';
 
 const Feedback = ({ userFeedback, requestFeedbackLookup }: FeedbackProps) => {

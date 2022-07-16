@@ -1,6 +1,5 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-
 import ProfileDropdown from './ProfileDropdown';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
   title: 'Component',

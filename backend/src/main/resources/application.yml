@@ -1,10 +1,10 @@
 spring:
   profiles:
     group:
-      "prod": "prod_db"
-      "dev":  "test_db, jpa_log"
-      "local": "local_db, jpa_log"
-      "default": "local_db, jpa_log"
+      "prod": "prod_db, mariadb_dialect"
+      "dev":  "test_db, jpa_log, mariadb_dialect"
+      "local": "local_db, jpa_log, mariadb_dialect"
+      "default": "local_db, jpa_log, mariadb_dialect"
 
 ---
 
@@ -20,9 +20,6 @@ spring:
   jpa:
     hibernate:
         ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MariaDBDialect
 
 ---
 
@@ -38,9 +35,6 @@ spring:
   jpa:
     hibernate:
         ddl-auto: create
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MariaDBDialect
 
 ---
 
@@ -57,6 +51,14 @@ spring:
   jpa:
     hibernate:
         ddl-auto: create
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "mariadb=dialect"
+  jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect

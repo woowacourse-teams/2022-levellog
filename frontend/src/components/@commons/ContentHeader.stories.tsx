@@ -1,7 +1,6 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-
-import ContentHeader from './ContentHeader';
 import Button from './Button';
+import ContentHeader from './ContentHeader';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
   title: 'ContentHeader',
@@ -12,19 +11,19 @@ const Template: ComponentStory<typeof ContentHeader> = (args) => (
   <ContentHeader {...args}></ContentHeader>
 );
 
-export const ContentHeaderWithButton = Template.bind({});
-ContentHeaderWithButton.args = {
+export const Base = Template.bind({});
+Base.args = {
+  title: '기본 컨텐트헤더',
+};
+
+export const WithButton = Template.bind({});
+WithButton.args = {
   title: '버튼 있는 컨텐트헤더',
   children: <Button>버튼</Button>,
 };
 
-export const BaseContentHeader = Template.bind({});
-BaseContentHeader.args = {
-  title: '기본 컨텐트헤더',
-};
-
-export const LevellogAddContentHeader = Template.bind({});
-LevellogAddContentHeader.args = {
+export const LevellogAdd = Template.bind({});
+LevellogAdd.args = {
   title: '레벨로그 작성',
   children: <Button>제출하기</Button>,
 };

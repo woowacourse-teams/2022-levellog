@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,25 +15,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Levellog {
+public class Participant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_levellog_author"))
-    private Member author;
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_participant_team"))
+    private Team team;
 
-    @Column(nullable = false)
-    @Lob
-    private String content;
-
-    public Levellog(final String content) {
-        this.content = content;
-    }
-
-    public void updateContent(final String content) {
-        this.content = content;
-    }
+    @ManyToOne
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_participant_member"))
+    private Member member;
 }

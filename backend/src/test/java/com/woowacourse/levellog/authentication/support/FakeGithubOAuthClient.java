@@ -11,7 +11,7 @@ public class FakeGithubOAuthClient implements OAuthClient {
             return "access_token";
         }
 
-        return null;
+        throw new IllegalStateException();
     }
 
     @Override
@@ -19,6 +19,7 @@ public class FakeGithubOAuthClient implements OAuthClient {
         if (accessToken.equals("access_token")) {
             return new GithubProfileResponse("0000000", "test", "profile_url");
         }
-        return null;
+
+        throw new IllegalStateException();
     }
 }

@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.acceptance;
 
+import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
+import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
@@ -33,6 +35,9 @@ abstract class AcceptanceTest {
         specification = new RequestSpecBuilder()
                 .addFilter(
                         documentationConfiguration(contextProvider)
+                                .snippets()
+                                .withDefaults(httpRequest(), httpResponse())
+                                .and()
                                 .operationPreprocessors()
                                 .withRequestDefaults(
                                         modifyUris()

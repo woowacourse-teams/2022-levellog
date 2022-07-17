@@ -98,7 +98,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .filter(document("feedback-delete"))
+                .filter(document("feedback/delete"))
                 .when()
                 .delete("/api/feedbacks/" + deleteId)
                 .then().log().all();
@@ -113,7 +113,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         return RestAssured.given(specification).log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("feedback-save"))
+                .filter(document("feedback/save"))
                 .when()
                 .post("/api/feedbacks")
                 .then().log().all();
@@ -121,7 +121,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
     private ValidatableResponse requestFindAllFeedbacks() {
         return RestAssured.given(specification).log().all()
-                .filter(document("feedback-find-all"))
+                .filter(document("feedback/find-all"))
                 .when()
                 .get("/api/feedbacks")
                 .then().log().all();

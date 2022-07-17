@@ -90,7 +90,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("levellog-update"))
+                .filter(document("levellog/update"))
                 .when()
                 .put("/api/levellogs/{id}", id)
                 .then().log().all();
@@ -116,7 +116,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .filter(document("levellog-delete"))
+                .filter(document("levellog/delete"))
                 .when()
                 .delete("/api/levellogs/{id}", id)
                 .then().log().all();
@@ -131,7 +131,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         return RestAssured.given(specification).log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("levellog-create"))
+                .filter(document("levellog/create"))
                 .when()
                 .post("/api/levellogs")
                 .then().log().all();
@@ -147,7 +147,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     private ValidatableResponse requestFindLevellog(final Long id) {
         return RestAssured.given(specification).log().all()
                 .accept(MediaType.ALL_VALUE)
-                .filter(document("levellog-find"))
+                .filter(document("levellog/find"))
                 .when()
                 .get("/api/levellogs/{id}", id)
                 .then().log().all();

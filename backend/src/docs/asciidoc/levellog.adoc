@@ -14,13 +14,7 @@ endif::[]
 [[create-success]]
 === 성공
 
-==== HTTP request
-
-include::{snippets}/levellog-create/http-request.adoc[]
-
-==== HTTP response
-
-include::{snippets}/levellog-create/http-response.adoc[]
+operation::levellog/create[]
 
 [[find]]
 == 상세 조회
@@ -28,13 +22,7 @@ include::{snippets}/levellog-create/http-response.adoc[]
 [[find-success]]
 === 성공
 
-==== HTTP request
-
-include::{snippets}/levellog-find/http-request.adoc[]
-
-==== HTTP response
-
-include::{snippets}/levellog-find/http-response.adoc[]
+operation::levellog/find[]
 
 [[update]]
 == 수정
@@ -42,13 +30,7 @@ include::{snippets}/levellog-find/http-response.adoc[]
 [[update-success]]
 === 성공
 
-==== HTTP request
-
-include::{snippets}/levellog-update/http-request.adoc[]
-
-==== HTTP response
-
-include::{snippets}/levellog-update/http-response.adoc[]
+operation::levellog/update[]
 
 [[delete]]
 == 삭제
@@ -56,10 +38,4 @@ include::{snippets}/levellog-update/http-response.adoc[]
 [[delete-success]]
 === 성공
 
-==== HTTP request
-
-include::{snippets}/levellog-delete/http-request.adoc[]
-
-==== HTTP response
-
-include::{snippets}/levellog-delete/http-response.adoc[]
+operation::levellog/delete[]

@@ -34,5 +34,4 @@ class OAuthControllerTest extends ControllerTest {
         // then
         perform.andExpect(status().isBadRequest());
     }
-
 }

@@ -8,6 +8,7 @@ endif::[]
 :sectlinks:
 :source-highlighter: highlightjs
 
-include::feedback.adoc[]
+== API Documents
 
-include::levellog.adoc[]
+* link:feedback.html[Feedback,window=_blank]
+* link:levellog.html[Levellog,window=_blank]

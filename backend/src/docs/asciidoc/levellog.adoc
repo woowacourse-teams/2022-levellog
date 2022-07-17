@@ -1,57 +1,65 @@
-== Levellog
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+= Levellog
+:toc: left
+:toclevels: 2
+:sectlinks:
+:source-highlighter: highlightjs
 
 [[create]]
-=== 작성
+== 작성
 
 [[create-success]]
-==== 성공
+=== 성공
 
-===== HTTP request
+==== HTTP request
 
 include::{snippets}/levellog-create/http-request.adoc[]
 
-===== HTTP response
+==== HTTP response
 
 include::{snippets}/levellog-create/http-response.adoc[]
 
 [[find]]
-=== 상세 조회
+== 상세 조회
 
 [[find-success]]
-==== 성공
+=== 성공
 
-===== HTTP request
+==== HTTP request
 
 include::{snippets}/levellog-find/http-request.adoc[]
 
-===== HTTP response
+==== HTTP response
 
 include::{snippets}/levellog-find/http-response.adoc[]
 
 [[update]]
-=== 수정
+== 수정
 
 [[update-success]]
-==== 성공
+=== 성공
 
-===== HTTP request
+==== HTTP request
 
 include::{snippets}/levellog-update/http-request.adoc[]
 
-===== HTTP response
+==== HTTP response
 
 include::{snippets}/levellog-update/http-response.adoc[]
 
 [[delete]]
-=== 삭제
+== 삭제
 
 [[delete-success]]
-==== 성공
+=== 성공
 
-===== HTTP request
+==== HTTP request
 
 include::{snippets}/levellog-delete/http-request.adoc[]
 
-===== HTTP response
+==== HTTP response
 
 include::{snippets}/levellog-delete/http-response.adoc[]

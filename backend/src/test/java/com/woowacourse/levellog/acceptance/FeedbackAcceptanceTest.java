@@ -1,8 +1,11 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.support.ApiDocumentUtil.getDocumentRequest;
+import static com.woowacourse.levellog.support.ApiDocumentUtil.getDocumentResponse;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.dto.FeedbackContentDto;
 import com.woowacourse.levellog.dto.FeedbackCreateRequest;
@@ -96,8 +99,13 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 .getId();
 
         // when
-        final ValidatableResponse response = RestAssured.given().log().all()
-                .when()
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .filter(
+                        document("feedback-delete",
+                                getDocumentRequest(),
+                                getDocumentResponse()
+                        )
+                ).when()
                 .delete("/api/feedbacks/" + deleteId)
                 .then().log().all();
 
@@ -108,17 +116,27 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     }
 
     private ValidatableResponse requestCreateFeedback(final FeedbackCreateRequest request) {
-        return RestAssured.given().log().all()
+        return RestAssured.given(specification).log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
+                .filter(
+                        document("feedback-save",
+                                getDocumentRequest(),
+                                getDocumentResponse()
+                        )
+                ).when()
                 .post("/api/feedbacks")
                 .then().log().all();
     }
 
     private ValidatableResponse requestFindAllFeedbacks() {
-        return RestAssured.given().log().all()
-                .when()
+        return RestAssured.given(specification).log().all()
+                .filter(
+                        document("feedback-find-all",
+                                getDocumentRequest(),
+                                getDocumentResponse()
+                        )
+                ).when()
                 .get("/api/feedbacks")
                 .then().log().all();
     }

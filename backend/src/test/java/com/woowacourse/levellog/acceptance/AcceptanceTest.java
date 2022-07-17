@@ -29,6 +29,11 @@ abstract class AcceptanceTest {
     @LocalServerPort
     private int port;
 
+    /**
+     * 기본 생성 snippet은 http-request.adoc, http-response.adoc입니다.
+     * Request host는 https://api.levellog.app입니다.
+     * 응답 헤더 중 Transfer-Encoding, Date, Keep-Alive, Connection은 제외됩니다.
+     */
     @BeforeEach
     public void setUp(final RestDocumentationContextProvider contextProvider) {
         RestAssured.port = port;

@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.authentication.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import com.woowacourse.levellog.application.MemberService;
 import com.woowacourse.levellog.authentication.domain.GithubOAuthClient;
@@ -45,8 +45,8 @@ class OAuthServiceTest {
         @DisplayName("첫 로그인 시 회원가입하고 토큰과 이미지 URL를 반환한다.")
         void loginFirst() {
             // given
-            when(githubOAuthClient.getGithubAccessToken("githubCode")).thenReturn("accessToken");
-            when(githubOAuthClient.getGithubProfile("accessToken")).thenReturn(
+            given(githubOAuthClient.getGithubAccessToken("githubCode")).willReturn("accessToken");
+            given(githubOAuthClient.getGithubProfile("accessToken")).willReturn(
                     new GithubProfileResponse("12345", "로마", "imageUrl"));
 
             // when
@@ -66,8 +66,8 @@ class OAuthServiceTest {
             // given
             final Long savedId = memberService.save(new MemberCreateDto("로마", 12345, "imageUrl"));
 
-            when(githubOAuthClient.getGithubAccessToken("githubCode")).thenReturn("accessToken");
-            when(githubOAuthClient.getGithubProfile("accessToken")).thenReturn(
+            given(githubOAuthClient.getGithubAccessToken("githubCode")).willReturn("accessToken");
+            given(githubOAuthClient.getGithubProfile("accessToken")).willReturn(
                     new GithubProfileResponse("12345", "로마", "imageUrl"));
 
             // when

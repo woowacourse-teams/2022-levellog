@@ -1,7 +1,5 @@
 package com.woowacourse.levellog.acceptance;
 
-import static com.woowacourse.levellog.support.ApiDocumentUtil.getDocumentRequest;
-import static com.woowacourse.levellog.support.ApiDocumentUtil.getDocumentResponse;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -100,12 +98,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .filter(
-                        document("feedback-delete",
-                                getDocumentRequest(),
-                                getDocumentResponse()
-                        )
-                ).when()
+                .filter(document("feedback-delete"))
+                .when()
                 .delete("/api/feedbacks/" + deleteId)
                 .then().log().all();
 
@@ -119,24 +113,16 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         return RestAssured.given(specification).log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(
-                        document("feedback-save",
-                                getDocumentRequest(),
-                                getDocumentResponse()
-                        )
-                ).when()
+                .filter(document("feedback-save"))
+                .when()
                 .post("/api/feedbacks")
                 .then().log().all();
     }
 
     private ValidatableResponse requestFindAllFeedbacks() {
         return RestAssured.given(specification).log().all()
-                .filter(
-                        document("feedback-find-all",
-                                getDocumentRequest(),
-                                getDocumentResponse()
-                        )
-                ).when()
+                .filter(document("feedback-find-all"))
+                .when()
                 .get("/api/feedbacks")
                 .then().log().all();
     }

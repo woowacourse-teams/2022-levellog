@@ -1,6 +1,9 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.support.ApiDocumentUtil.getDocumentRequest;
+import static com.woowacourse.levellog.support.ApiDocumentUtil.getDocumentResponse;
 import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.dto.LevellogCreateRequest;
 import io.restassured.RestAssured;
@@ -86,10 +89,15 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final LevellogCreateRequest request = new LevellogCreateRequest(updateContent);
 
         // when
-        final ValidatableResponse response = RestAssured.given().log().all()
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
+                .filter(
+                        document("levellog-update",
+                                getDocumentRequest(),
+                                getDocumentResponse()
+                        )
+                ).when()
                 .put("/api/levellogs/{id}", id)
                 .then().log().all();
 
@@ -113,8 +121,13 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final Long id = extractLevellogId(createResponse);
 
         // when
-        final ValidatableResponse response = RestAssured.given().log().all()
-                .when()
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .filter(
+                        document("levellog-delete",
+                                getDocumentRequest(),
+                                getDocumentResponse()
+                        )
+                ).when()
                 .delete("/api/levellogs/{id}", id)
                 .then().log().all();
 
@@ -125,10 +138,15 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     }
 
     private ValidatableResponse requestCreateLevellog(final LevellogCreateRequest request) {
-        return RestAssured.given().log().all()
+        return RestAssured.given(specification).log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
+                .filter(
+                        document("levellog-create",
+                                getDocumentRequest(),
+                                getDocumentResponse()
+                        )
+                ).when()
                 .post("/api/levellogs")
                 .then().log().all();
     }
@@ -141,9 +159,14 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     }
 
     private ValidatableResponse requestFindLevellog(final Long id) {
-        return RestAssured.given().log().all()
+        return RestAssured.given(specification).log().all()
                 .accept(MediaType.ALL_VALUE)
-                .when()
+                .filter(
+                        document("levellog-find",
+                                getDocumentRequest(),
+                                getDocumentResponse()
+                        )
+                ).when()
                 .get("/api/levellogs/{id}", id)
                 .then().log().all();
     }

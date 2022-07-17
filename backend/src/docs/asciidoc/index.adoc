@@ -1,0 +1,13 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+= Levellog API Spec
+:toc: left
+:toclevels: 2
+:sectlinks:
+:source-highlighter: highlightjs
+
+include::feedback.adoc[]
+
+include::levellog.adoc[]

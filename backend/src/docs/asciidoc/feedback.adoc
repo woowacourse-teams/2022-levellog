@@ -1,3 +1,7 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
 = Feedback
 :toc: left
 :toclevels: 1

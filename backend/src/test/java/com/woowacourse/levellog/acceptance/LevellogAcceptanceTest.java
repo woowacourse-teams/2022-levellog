@@ -24,10 +24,16 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 작성")
     void createLevellog() {
         // given
-        final LevellogCreateRequest request = new LevellogCreateRequest("heloo");
+        final LevellogCreateRequest request = new LevellogCreateRequest("Spring과 React를 학습했습니다.");
 
         // when
-        final ValidatableResponse response = requestCreateLevellog(request);
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("levellog/create"))
+                .when()
+                .post("/api/levellogs")
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.CREATED.value())
@@ -49,7 +55,12 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final Long id = extractLevellogId(requestCreateLevellog(request));
 
         // when
-        final ValidatableResponse response = requestFindLevellog(id);
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .accept(MediaType.ALL_VALUE)
+                .filter(document("levellog/find"))
+                .when()
+                .get("/api/levellogs/{id}", id)
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -128,10 +139,9 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     }
 
     private ValidatableResponse requestCreateLevellog(final LevellogCreateRequest request) {
-        return RestAssured.given(specification).log().all()
+        return RestAssured.given().log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("levellog/create"))
                 .when()
                 .post("/api/levellogs")
                 .then().log().all();
@@ -145,9 +155,8 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     }
 
     private ValidatableResponse requestFindLevellog(final Long id) {
-        return RestAssured.given(specification).log().all()
+        return RestAssured.given().log().all()
                 .accept(MediaType.ALL_VALUE)
-                .filter(document("levellog/find"))
                 .when()
                 .get("/api/levellogs/{id}", id)
                 .then().log().all();

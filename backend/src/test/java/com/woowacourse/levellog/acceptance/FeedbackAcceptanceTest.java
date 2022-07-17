@@ -32,7 +32,13 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요."));
 
         // when
-        final ValidatableResponse response = requestCreateFeedback(request);
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("feedback/save"))
+                .when()
+                .post("/api/feedbacks")
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.CREATED.value())
@@ -58,7 +64,11 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         requestCreateFeedback(request2);
 
         // when
-        final ValidatableResponse response = requestFindAllFeedbacks();
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .filter(document("feedback/find-all"))
+                .when()
+                .get("/api/feedbacks")
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -110,18 +120,16 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     }
 
     private ValidatableResponse requestCreateFeedback(final FeedbackCreateRequest request) {
-        return RestAssured.given(specification).log().all()
+        return RestAssured.given().log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("feedback/save"))
                 .when()
                 .post("/api/feedbacks")
                 .then().log().all();
     }
 
     private ValidatableResponse requestFindAllFeedbacks() {
-        return RestAssured.given(specification).log().all()
-                .filter(document("feedback/find-all"))
+        return RestAssured.given().log().all()
                 .when()
                 .get("/api/feedbacks")
                 .then().log().all();

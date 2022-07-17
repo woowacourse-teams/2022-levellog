@@ -1,0 +1,46 @@
+= Feedback
+:toc: left
+:toclevels: 1
+:sectlinks:
+
+[[save]]
+== 작성
+
+[[save-success]]
+=== 성공
+
+==== HTTP request
+
+include::{snippets}/feedback-save/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/feedback-save/http-response.adoc[]
+
+[[find-all]]
+== 목록 조회
+
+[[find-all-success]]
+=== 성공
+
+==== HTTP request
+
+include::{snippets}/feedback-find-all/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/feedback-find-all/http-response.adoc[]
+
+[[delete]]
+== 삭제
+
+[[delete-success]]
+=== 성공
+
+==== HTTP request
+
+include::{snippets}/feedback-delete/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/feedback-delete/http-response.adoc[]

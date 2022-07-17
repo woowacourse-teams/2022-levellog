@@ -2,6 +2,7 @@ package com.woowacourse.levellog.acceptance;
 
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 
 import io.restassured.RestAssured;
@@ -34,11 +35,19 @@ abstract class AcceptanceTest {
                         documentationConfiguration(contextProvider)
                                 .operationPreprocessors()
                                 .withRequestDefaults(
-                                        modifyUris().scheme("https")
+                                        modifyUris()
+                                                .scheme("https")
                                                 .host("api.levellog.app")
                                                 .removePort(),
                                         prettyPrint()
-                                ).withResponseDefaults(prettyPrint())
+                                ).withResponseDefaults(
+                                        removeHeaders(
+                                                "Transfer-Encoding",
+                                                "Date",
+                                                "Keep-Alive",
+                                                "Connection"),
+                                        prettyPrint()
+                                )
                 ).build();
     }
 }

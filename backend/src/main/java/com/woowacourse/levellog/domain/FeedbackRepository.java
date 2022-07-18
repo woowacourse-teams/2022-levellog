@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
     List<Feedback> findAllByLevellog(Levellog levellog);
+
+    List<Feedback> findAllByTo(Member member);
 }

@@ -43,14 +43,14 @@ public class FeedbackService {
 
     public FeedbacksResponse findAll(final Long levellogId) {
         final Levellog levellog = getLevellog(levellogId);
-        final List<FeedbackResponse> responses = feedbackRepository.findAllByLevellog(levellog).stream()
-                .map(it -> new FeedbackResponse(
-                        it.getId(),
-                        MemberResponse.from(levellog.getAuthor()),
-                        new FeedbackContentDto(it.getStudy(), it.getSpeak(), it.getEtc())))
-                .collect(Collectors.toList());
+        final List<FeedbackResponse> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
 
         return new FeedbacksResponse(responses);
+    }
+
+    public FeedbacksResponse findAllByTo(final Member member) {
+        final List<Feedback> feedbacks = feedbackRepository.findAllByTo(member);
+        return new FeedbacksResponse(getFeedbackResponses(feedbacks));
     }
 
     public void update(final Long id, final FeedbackRequest request) {
@@ -65,6 +65,15 @@ public class FeedbackService {
 
     public void deleteById(final Long id) {
         feedbackRepository.deleteById(id);
+    }
+
+    private List<FeedbackResponse> getFeedbackResponses(final List<Feedback> feedbacks) {
+        return feedbacks.stream()
+                .map(it -> new FeedbackResponse(
+                        it.getId(),
+                        MemberResponse.from(it.getFrom()),
+                        new FeedbackContentDto(it.getStudy(), it.getSpeak(), it.getEtc())))
+                .collect(Collectors.toList());
     }
 
     private Levellog getLevellog(final Long levellogId) {

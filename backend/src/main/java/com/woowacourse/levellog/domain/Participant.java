@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;

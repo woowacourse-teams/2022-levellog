@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.dto;
 
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

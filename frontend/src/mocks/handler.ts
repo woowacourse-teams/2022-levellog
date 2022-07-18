@@ -51,12 +51,13 @@ export const levellogGroupHandlers = [
     return res(ctx.status(200), ctx.json(levellogTeams));
   }),
 
-  rest.get('/api/teams/:teamID', (req, res, ctx) => {
-    const { groupId } = req.params;
-    const levellogGroup = levellogTeams.teams.find(
-      (levellogGroup) => levellogGroup.id === +groupId,
+  rest.get('/api/teams/:teamId', (req, res, ctx) => {
+    const { teamId } = req.params;
+
+    const chooselevellogTeam = levellogTeams.teams.find(
+      (levellogTeam) => +levellogTeam.id === +teamId,
     );
 
-    return res(ctx.status(200), ctx.json(levellogGroup));
+    return res(ctx.status(200), ctx.json(chooselevellogTeam));
   }),
 ];

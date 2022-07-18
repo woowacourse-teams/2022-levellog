@@ -4,6 +4,10 @@
 :sectlinks:
 :source-highlighter: highlightjs
 
+[[home]]
+== home
+* link:index.html[목록으로 가기]
+
 [[create]]
 == 작성
 

@@ -6,5 +6,5 @@
 
 == API Documents
 
-* link:feedback.html[Feedback,window=_blank]
-* link:levellog.html[Levellog,window=_blank]
+* link:feedback.html[Feedback]
+* link:levellog.html[Levellog]

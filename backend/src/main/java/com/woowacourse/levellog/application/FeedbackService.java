@@ -6,9 +6,11 @@ import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.dto.FeedbackContentDto;
-import com.woowacourse.levellog.dto.FeedbackCreateRequest;
+import com.woowacourse.levellog.dto.FeedbackRequest;
 import com.woowacourse.levellog.dto.FeedbackResponse;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
+import com.woowacourse.levellog.dto.MemberResponse;
+import com.woowacourse.levellog.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.exception.LevellogNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +26,7 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final LevellogRepository levellogRepository;
 
-    public Long save(final Long levellogId, final Member from, final FeedbackCreateRequest request) {
+    public Long save(final Long levellogId, final Member from, final FeedbackRequest request) {
         final FeedbackContentDto feedbackContent = request.getFeedback();
         final Levellog levellog = getLevellog(levellogId);
         final Feedback feedback = new Feedback(
@@ -44,11 +46,21 @@ public class FeedbackService {
         final List<FeedbackResponse> responses = feedbackRepository.findAllByLevellog(levellog).stream()
                 .map(it -> new FeedbackResponse(
                         it.getId(),
-                        it.getFrom().getNickname(),
+                        MemberResponse.from(levellog.getAuthor()),
                         new FeedbackContentDto(it.getStudy(), it.getSpeak(), it.getEtc())))
                 .collect(Collectors.toList());
 
         return new FeedbacksResponse(responses);
+    }
+
+    public void update(final Long id, final FeedbackRequest request) {
+        final Feedback feedback = feedbackRepository.findById(id)
+                .orElseThrow(FeedbackNotFoundException::new);
+
+        feedback.updateFeedback(
+                request.getFeedback().getStudy(),
+                request.getFeedback().getSpeak(),
+                request.getFeedback().getEtc());
     }
 
     public void deleteById(final Long id) {

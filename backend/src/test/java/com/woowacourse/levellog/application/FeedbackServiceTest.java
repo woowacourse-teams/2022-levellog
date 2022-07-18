@@ -11,7 +11,7 @@ import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.FeedbackContentDto;
-import com.woowacourse.levellog.dto.FeedbackCreateRequest;
+import com.woowacourse.levellog.dto.FeedbackRequest;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -47,7 +47,7 @@ class FeedbackServiceTest {
         // given
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-        final FeedbackCreateRequest request = new FeedbackCreateRequest("로마", feedbackContentDto);
+        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
         final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
         final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
         final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));

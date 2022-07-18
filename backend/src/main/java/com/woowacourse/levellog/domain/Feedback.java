@@ -51,4 +51,10 @@ public class Feedback {
         this.speak = speak;
         this.etc = etc;
     }
+
+    public void updateFeedback(final String study, final String speak, final String etc) {
+        this.study = study;
+        this.speak = speak;
+        this.etc = etc;
+    }
 }

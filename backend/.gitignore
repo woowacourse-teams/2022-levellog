@@ -39,3 +39,8 @@ out/
 
 ### Log ###
 logs/
+
+### Docker ###
+docker/db/data/
+docker/db/init/*
+!docker/db/init/init.sql

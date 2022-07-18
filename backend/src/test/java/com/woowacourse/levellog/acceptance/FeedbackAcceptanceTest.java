@@ -3,6 +3,7 @@ package com.woowacourse.levellog.acceptance;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.dto.FeedbackContentDto;
 import com.woowacourse.levellog.dto.FeedbackCreateRequest;
@@ -31,7 +32,13 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요."));
 
         // when
-        final ValidatableResponse response = requestCreateFeedback(request);
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("feedback/save"))
+                .when()
+                .post("/api/feedbacks")
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.CREATED.value())
@@ -57,7 +64,11 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         requestCreateFeedback(request2);
 
         // when
-        final ValidatableResponse response = requestFindAllFeedbacks();
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .filter(document("feedback/find-all"))
+                .when()
+                .get("/api/feedbacks")
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -96,7 +107,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 .getId();
 
         // when
-        final ValidatableResponse response = RestAssured.given().log().all()
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .filter(document("feedback/delete"))
                 .when()
                 .delete("/api/feedbacks/" + deleteId)
                 .then().log().all();

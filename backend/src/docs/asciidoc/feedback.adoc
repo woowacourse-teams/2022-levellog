@@ -1,0 +1,33 @@
+= Feedback
+:toc: left
+:toclevels: 2
+:sectlinks:
+:source-highlighter: highlightjs
+
+[[home]]
+== home
+* link:index.html[목록으로 가기]
+
+[[save]]
+== 작성
+
+[[save-success]]
+=== 성공
+
+operation::feedback/save[]
+
+[[find-all]]
+== 목록 조회
+
+[[find-all-success]]
+=== 성공
+
+operation::feedback/find-all[]
+
+[[delete]]
+== 삭제
+
+[[delete-success]]
+=== 성공
+
+operation::feedback/delete[]

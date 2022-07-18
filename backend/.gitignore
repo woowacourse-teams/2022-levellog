@@ -40,6 +40,9 @@ out/
 ### Log ###
 logs/
 
+### Docs ###
+src/main/resources/static/docs/
+
 ### Docker ###
 docker/db/data/
 docker/db/init/*

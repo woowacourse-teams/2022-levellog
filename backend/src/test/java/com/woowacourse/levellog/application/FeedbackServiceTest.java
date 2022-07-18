@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.domain.Feedback;
 import com.woowacourse.levellog.domain.FeedbackRepository;
@@ -78,6 +79,52 @@ class FeedbackServiceTest {
 
         // then
         assertThat(feedbacksResponse.getFeedbacks()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("findAllByTo 메서드는 요청된 member가 to인 모든 피드백을 조회한다.")
+    void findAllByTo() {
+        // given
+        final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
+        final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
+        final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
+        final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
+        final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
+        feedbackRepository.save(new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
+        feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
+        feedbackRepository.save(new Feedback(eve, roma, levellog, "이브 스터디", "이브 말하기", "이브 기타"));
+
+        // when
+        final FeedbacksResponse feedbacksResponse = feedbackService.findAllByTo(roma);
+
+        // then
+        assertThat(feedbacksResponse.getFeedbacks()).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("update 메서드는 피드백을 수정한다.")
+    void update() {
+        // given
+        final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
+        final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
+        final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
+        final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
+        final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
+        final Feedback feedback1 = feedbackRepository.save(
+                new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
+        feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
+
+        // when
+        feedbackService.update(feedback1.getId(),
+                new FeedbackRequest(new FeedbackContentDto("수정된 알린 스터디", "수정된 알린 말하기", "수정된 알린 기타")));
+
+        // then
+        final Feedback feedback = feedbackRepository.findById(feedback1.getId()).get();
+        assertAll(
+                () -> assertThat(feedback.getStudy()).contains("수정된"),
+                () -> assertThat(feedback.getSpeak()).contains("수정된"),
+                () -> assertThat(feedback.getEtc()).contains("수정된")
+        );
     }
 
     @Test

@@ -1,7 +1,8 @@
 import FeedbackAdd from 'pages/FeedbackAdd';
 import FeedbackList from 'pages/FeedbackList';
 import Home from 'pages/Home';
-import InterviewGroups from 'pages/InterviewGroups';
+import InterviewDetail from 'pages/InterviewDetail';
+import InterviewTeams from 'pages/InterviewTeams';
 import LevellogAdd from 'pages/LevellogAdd';
 import Login from 'pages/Login';
 
@@ -29,7 +30,11 @@ export const routes = [
     element: <LevellogAdd />,
   },
   {
-    path: ROUTES_PATH.INTERVIEW_GROUPS,
-    element: <InterviewGroups />,
+    path: ROUTES_PATH.INTERVIEW_TEAMS,
+    element: <InterviewTeams />,
+  },
+  {
+    path: ROUTES_PATH.INTERVIEW_TEAMS_DETAIL,
+    element: <InterviewDetail />,
   },
 ];

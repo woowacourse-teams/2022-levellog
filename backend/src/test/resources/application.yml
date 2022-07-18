@@ -1,0 +1,9 @@
+security:
+  github:
+    client-id: "github_client_Id"
+    client-secret: "github_secret"
+
+  jwt:
+    token:
+      secret-key: "testjwttoken_testjwttoken_testjwttoken"
+      expire-length: 36000000

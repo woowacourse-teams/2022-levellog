@@ -47,3 +47,5 @@ src/main/resources/static/docs/
 docker/db/data/
 docker/db/init/*
 !docker/db/init/init.sql
+
+application-auth.yml

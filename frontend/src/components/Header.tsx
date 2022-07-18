@@ -29,7 +29,7 @@ const Header = () => {
   };
 
   return (
-    <HeaderStyle>
+    <HeaderContainer>
       <LogoStyle src={levellogLogo} alt="레벨로그 로고" />
       {profileUrl ? (
         <ProfileImageStyle
@@ -45,18 +45,18 @@ const Header = () => {
         isProfileDropdownShow={isProfileDropdownShow}
         setIsProfileDropdownShow={setIsProfileDropdownShow}
       />
-    </HeaderStyle>
+    </HeaderContainer>
   );
 };
 
-export const HeaderStyle = styled.div`
-  height: 70px;
-  border-bottom: 1px solid #000000;
+export const HeaderContainer = styled.div`
   display: flex;
+  position: relative;
+  height: 70px;
+  padding: 0 10rem;
+  border-bottom: 1px solid #000000;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-  padding: 0 10rem;
 `;
 
 export const LogoStyle = styled.img`

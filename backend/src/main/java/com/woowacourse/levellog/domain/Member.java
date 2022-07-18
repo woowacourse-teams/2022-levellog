@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.domain;
 
-import com.woowacourse.levellog.common.BaseTimeEntity;
+import com.woowacourse.levellog.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Table(uniqueConstraints = {@UniqueConstraint(name = "uk_member_github_id", columnNames = {"githubId"})})
-public class Member extends BaseTimeEntity {
+public class Member extends BaseEntity {
 
     @Column(nullable = false, length = 50)
     private String nickname;

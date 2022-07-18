@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.domain;
 
-import com.woowacourse.levellog.common.BaseTimeEntity;
+import com.woowacourse.levellog.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class Levellog extends BaseTimeEntity {
+public class Levellog extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_levellog_author"))

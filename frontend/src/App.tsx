@@ -22,8 +22,10 @@ const App = () => {
 const PageContainer = styled.main`
   overflow: auto;
   overflow-x: hidden;
-  width: 80%;
-  margin: 5% 10% 0 10%;
+  @media (max-width: 520px) {
+    padding: 0 2.5rem;
+  }
+  padding: 0 10rem;
 `;
 
 export default App;

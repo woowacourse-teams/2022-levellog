@@ -8,7 +8,7 @@ import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
-import com.woowacourse.levellog.dto.LevellogCreateRequest;
+import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.dto.LevellogResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -44,7 +44,7 @@ class LevellogServiceTest {
     @DisplayName("save 메서드는 레벨로그를 저장한다.")
     void save() {
         // given
-        final LevellogCreateRequest request = new LevellogCreateRequest("굳굳");
+        final LevellogRequest request = new LevellogRequest("굳굳");
         final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
@@ -82,7 +82,7 @@ class LevellogServiceTest {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
         final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
-        final LevellogCreateRequest request = new LevellogCreateRequest("update content");
+        final LevellogRequest request = new LevellogRequest("update content");
 
         // when
         levellogService.update(levellog.getId(), request);

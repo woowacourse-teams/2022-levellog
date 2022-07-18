@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.dto.LevellogCreateRequest;
+import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.support.ControllerTest;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("내용으로 공백이나 null이 들어오면 예외를 던진다.")
         void nameNullOrEmpty_Exception(final String content) throws Exception {
             // given
-            final LevellogCreateRequest request = new LevellogCreateRequest(content);
+            final LevellogRequest request = new LevellogRequest(content);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -63,7 +63,7 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("내용으로 공백이나 null이 들어오면 예외를 던진다.")
         void nameNullOrEmpty_Exception(final String content) throws Exception {
             // given
-            final LevellogCreateRequest request = new LevellogCreateRequest(content);
+            final LevellogRequest request = new LevellogRequest(content);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when

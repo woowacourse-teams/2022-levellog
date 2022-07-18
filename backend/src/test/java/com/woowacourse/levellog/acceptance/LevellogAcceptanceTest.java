@@ -2,7 +2,7 @@ package com.woowacourse.levellog.acceptance;
 
 import static org.hamcrest.Matchers.equalTo;
 
-import com.woowacourse.levellog.dto.LevellogCreateRequest;
+import com.woowacourse.levellog.dto.LevellogRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.Disabled;
@@ -26,7 +26,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 작성")
     void createLevellog() {
         // given
-        final LevellogCreateRequest request = new LevellogCreateRequest("heloo");
+        final LevellogRequest request = new LevellogRequest("heloo");
 
         // when
         final ValidatableResponse response = requestCreateLevellog(request);
@@ -47,7 +47,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     void findLevellog() {
         // given
         final String content = "트렌젝션에 대해 학습함.";
-        final LevellogCreateRequest request = new LevellogCreateRequest(content);
+        final LevellogRequest request = new LevellogRequest(content);
         final Long id = extractLevellogId(requestCreateLevellog(request));
 
         // when
@@ -83,10 +83,10 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 수정")
     void updateLevellog() {
         // given
-        final ValidatableResponse createResponse = requestCreateLevellog(new LevellogCreateRequest("original content"));
+        final ValidatableResponse createResponse = requestCreateLevellog(new LevellogRequest("original content"));
         final Long id = extractLevellogId(createResponse);
         final String updateContent = "update content";
-        final LevellogCreateRequest request = new LevellogCreateRequest(updateContent);
+        final LevellogRequest request = new LevellogRequest(updateContent);
 
         // when
         final ValidatableResponse response = RestAssured.given().log().all()
@@ -112,7 +112,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 삭제")
     void deleteLevellog() {
         // given
-        final ValidatableResponse createResponse = requestCreateLevellog(new LevellogCreateRequest("original content"));
+        final ValidatableResponse createResponse = requestCreateLevellog(new LevellogRequest("original content"));
         final Long id = extractLevellogId(createResponse);
 
         // when
@@ -127,7 +127,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
-    private ValidatableResponse requestCreateLevellog(final LevellogCreateRequest request) {
+    private ValidatableResponse requestCreateLevellog(final LevellogRequest request) {
         return RestAssured.given().log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

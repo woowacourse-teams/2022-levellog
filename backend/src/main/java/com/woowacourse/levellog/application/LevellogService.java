@@ -5,7 +5,7 @@ import com.woowacourse.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
-import com.woowacourse.levellog.dto.LevellogCreateRequest;
+import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.dto.LevellogResponse;
 import com.woowacourse.levellog.exception.TeamNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class LevellogService {
     private final LevellogRepository levellogRepository;
     private final TeamRepository teamRepository;
 
-    public Long save(final Member author, final Long groupId, final LevellogCreateRequest request) {
+    public Long save(final Member author, final Long groupId, final LevellogRequest request) {
         final Team team = getTeam(groupId);
         final Levellog levellog = new Levellog(author, team, request.getContent());
 
@@ -34,7 +34,7 @@ public class LevellogService {
         return new LevellogResponse(levellog.getContent());
     }
 
-    public void update(final Long id, final LevellogCreateRequest request) {
+    public void update(final Long id, final LevellogRequest request) {
         final Levellog levellog = getById(id);
         levellog.updateContent(request.getContent());
     }

@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  db:
+    image: mariadb:10.6
+    platform: linux/amd64
+    restart: always
+    ports:
+      - "13306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: levellog
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      TZ: Asia/Seoul
+    volumes:
+      - ./db/data:/var/lib/mysql
+      - ./db/config:/etc/mysql/conf.d
+      - ./db/init:/docker-entrypoint-initdb.d

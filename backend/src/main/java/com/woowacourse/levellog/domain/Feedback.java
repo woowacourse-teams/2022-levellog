@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.domain;
 
+import com.woowacourse.levellog.common.BaseTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Feedback {
+public class Feedback extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

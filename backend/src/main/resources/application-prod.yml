@@ -1,0 +1,15 @@
+# DB
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${PROD_DB_NAME}
+    username: ${PROD_DB_USER_NAME}
+    password: ${PROD_DB_PASSWORD}
+
+# JPA
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect

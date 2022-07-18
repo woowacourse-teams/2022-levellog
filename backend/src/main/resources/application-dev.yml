@@ -2,9 +2,9 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:13306/levellog
-    username: root
-    password: root
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${TEST_DB_NAME}
+    username: ${TEST_DB_USER_NAME}
+    password: ${TEST_DB_PASSWORD}
 
 # JPA
   jpa:

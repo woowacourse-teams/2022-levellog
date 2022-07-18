@@ -42,3 +42,8 @@ logs/
 
 ### Docs ###
 src/main/resources/static/docs/
+
+### Docker ###
+docker/db/data/
+docker/db/init/*
+!docker/db/init/init.sql

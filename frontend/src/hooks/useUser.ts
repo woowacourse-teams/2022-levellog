@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { UserContext, UserDispatchContext } from '../contexts';
+import { UserContext, UserDispatchContext } from 'contexts';
 
 export const useUser = () => {
   const profileUrl = useContext(UserContext);

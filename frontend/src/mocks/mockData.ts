@@ -25,14 +25,14 @@ export const levellog = {
   contents: '내가 작성한 레벨로그입니다',
 };
 
-export const levellogGroups = {
-  group: [
+export const levellogTeams = {
+  teams: [
     {
       id: 1,
       title: '제이슨조',
       place: '잠실 트랙룸',
-      datetime: '2022-07-15',
-      groupImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
+      startAt: '2022-07-15',
+      teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
       hostId: 1,
       participants: [
         {
@@ -56,8 +56,8 @@ export const levellogGroups = {
       id: 2,
       title: '포코조',
       place: '잠실 나이스샷 강의장',
-      datetime: '2022-07-16',
-      groupImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
+      startAt: '2022-07-16',
+      teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
       hostId: 1,
       participants: [
         {
@@ -96,8 +96,8 @@ export const levellogGroups = {
       id: 3,
       title: '공원조',
       place: '선릉 안드로메다방',
-      datetime: '2022-07-17',
-      groupImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
+      startAt: '2022-07-17',
+      teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
       hostId: 1,
       participants: [
         {
@@ -127,8 +127,8 @@ export const levellogGroups = {
       id: 4,
       title: '구구조',
       place: '선릉 우리은하 강의실',
-      datetime: '2022-07-19',
-      groupImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
+      startAt: '2022-07-19',
+      teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
       hostId: 1,
       participants: [
         {
@@ -157,8 +157,8 @@ export const levellogGroups = {
       id: 5,
       title: '브리조',
       place: '선릉 우주정거장룸',
-      datetime: '2022-07-20',
-      groupImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
+      startAt: '2022-07-20',
+      teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
       hostId: 1,
       participants: [
         {

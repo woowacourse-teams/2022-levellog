@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { feedbacks, levellog, levellogGroups } from './mockData';
+import { feedbacks, levellog, levellogTeams } from './mockData';
 
 // 피드백 CRUD MOCKING
 export const feedbackHandlers = [
@@ -47,13 +47,13 @@ export const loginHandlers = [
 ];
 
 export const levellogGroupHandlers = [
-  rest.get('/api/groups', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(levellogGroups));
+  rest.get('/api/teams', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(levellogTeams));
   }),
 
-  rest.get('/api/groups/:groupId', (req, res, ctx) => {
+  rest.get('/api/teams/:teamID', (req, res, ctx) => {
     const { groupId } = req.params;
-    const levellogGroup = levellogGroups.group.find(
+    const levellogGroup = levellogTeams.teams.find(
       (levellogGroup) => levellogGroup.id === +groupId,
     );
 

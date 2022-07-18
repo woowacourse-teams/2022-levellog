@@ -1,10 +1,8 @@
 package com.woowacourse.levellog.authentication.config;
 
-import com.woowacourse.levellog.application.MemberService;
 import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
 import com.woowacourse.levellog.authentication.support.LoginMember;
-import com.woowacourse.levellog.domain.Member;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -18,7 +16,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class LoginMemberResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -27,13 +24,11 @@ public class LoginMemberResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Member resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
+    public Long resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
+                                final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
             throws Exception {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = AuthorizationExtractor.extract(request);
-        final Long memberId = Long.parseLong(jwtTokenProvider.getPayload(token));
-
-        return memberService.getById(memberId);
+        return Long.parseLong(jwtTokenProvider.getPayload(token));
     }
 }

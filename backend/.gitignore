@@ -36,3 +36,16 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Log ###
+logs/
+
+### Docs ###
+src/main/resources/static/docs/
+
+### Docker ###
+docker/db/data/
+docker/db/init/*
+!docker/db/init/init.sql
+
+application-auth.yml

@@ -1,6 +1,8 @@
 package com.woowacourse.levellog.authentication.domain;
 
 import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -45,6 +47,23 @@ public class JwtTokenProvider {
                     .getSubject();
         } catch (final JwtException e) {
             throw new InvalidTokenException();
+        }
+    }
+
+    public boolean validateToken(final String token) {
+        try {
+            final Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+
+            Long.parseLong(claims.getBody().getSubject());
+
+            return !claims.getBody()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (final JwtException | IllegalArgumentException e) {
+            return false;
         }
     }
 }

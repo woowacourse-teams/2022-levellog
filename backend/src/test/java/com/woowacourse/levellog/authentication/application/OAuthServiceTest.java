@@ -1,11 +1,11 @@
 package com.woowacourse.levellog.authentication.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import com.woowacourse.levellog.application.MemberService;
-import com.woowacourse.levellog.authentication.domain.GithubOAuthClient;
 import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
+import com.woowacourse.levellog.authentication.domain.OAuthClient;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 class OAuthServiceTest {
 
     @MockBean
-    private GithubOAuthClient githubOAuthClient;
+    private OAuthClient oAuthClient;
 
     @Autowired
     private MemberService memberService;
@@ -45,8 +45,8 @@ class OAuthServiceTest {
         @DisplayName("첫 로그인 시 회원가입하고 토큰과 이미지 URL를 반환한다.")
         void loginFirst() {
             // given
-            when(githubOAuthClient.getGithubAccessToken("githubCode")).thenReturn("accessToken");
-            when(githubOAuthClient.getGithubProfile("accessToken")).thenReturn(
+            given(oAuthClient.getAccessToken("githubCode")).willReturn("accessToken");
+            given(oAuthClient.getProfile("accessToken")).willReturn(
                     new GithubProfileResponse("12345", "로마", "imageUrl"));
 
             // when
@@ -66,8 +66,8 @@ class OAuthServiceTest {
             // given
             final Long savedId = memberService.save(new MemberCreateDto("로마", 12345, "imageUrl"));
 
-            when(githubOAuthClient.getGithubAccessToken("githubCode")).thenReturn("accessToken");
-            when(githubOAuthClient.getGithubProfile("accessToken")).thenReturn(
+            given(oAuthClient.getAccessToken("githubCode")).willReturn("accessToken");
+            given(oAuthClient.getProfile("accessToken")).willReturn(
                     new GithubProfileResponse("12345", "로마", "imageUrl"));
 
             // when
@@ -79,5 +79,4 @@ class OAuthServiceTest {
             assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
         }
     }
-
 }

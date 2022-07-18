@@ -5,17 +5,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.dto.MemberCreateDto;
+import com.woowacourse.levellog.dto.MembersResponse;
 import java.util.Optional;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
 @DisplayName("MemberService의")
-public class MemberServiceTest {
+class MemberServiceTest {
 
     @Autowired
     private MemberService memberService;
@@ -34,6 +35,20 @@ public class MemberServiceTest {
 
         // then
         assertThat(memberRepository.findById(id)).isPresent();
+    }
+
+    @Test
+    @DisplayName("findAll 메서드는 모든 멤버를 조회한다.")
+    void findAll() {
+        // given
+        memberRepository.save(new Member("로마", 1234, "image.png"));
+        memberRepository.save(new Member("페퍼", 1245, "image2.png"));
+
+        // when
+        final MembersResponse membersResponse = memberService.findAll();
+
+        // then
+        assertThat(membersResponse.getMembers()).hasSize(2);
     }
 
     @Test

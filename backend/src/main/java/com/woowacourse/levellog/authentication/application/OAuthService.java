@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.authentication.application;
 
 import com.woowacourse.levellog.application.MemberService;
-import com.woowacourse.levellog.authentication.domain.GithubOAuthClient;
 import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
+import com.woowacourse.levellog.authentication.domain.OAuthClient;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
@@ -18,16 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class OAuthService {
 
     private final MemberService memberService;
-
-    private final GithubOAuthClient githubOAuthClient;
-
+    private final OAuthClient oAuthClient;
     private final JwtTokenProvider jwtTokenProvider;
 
     public LoginResponse login(final GithubCodeRequest codeRequest) {
         final String code = codeRequest.getAuthorizationCode();
-        final String githubAccessToken = githubOAuthClient.getGithubAccessToken(code);
+        final String githubAccessToken = oAuthClient.getAccessToken(code);
 
-        final GithubProfileResponse githubProfile = githubOAuthClient.getGithubProfile(githubAccessToken);
+        final GithubProfileResponse githubProfile = oAuthClient.getProfile(githubAccessToken);
         final Long memberId = getMemberIdByGithubProfile(githubProfile);
 
         final String token = jwtTokenProvider.createToken(memberId.toString());

@@ -3,6 +3,7 @@ package com.woowacourse.levellog.authentication.presentation;
 import static org.springframework.web.cors.CorsUtils.isPreFlightRequest;
 
 import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
+import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +24,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         final String token = AuthorizationExtractor.extract(request);
 
-        jwtTokenProvider.getPayload(token);
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new InvalidTokenException();
+        }
+
         return true;
     }
 }

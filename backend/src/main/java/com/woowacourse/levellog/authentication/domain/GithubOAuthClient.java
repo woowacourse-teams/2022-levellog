@@ -4,16 +4,13 @@ import com.woowacourse.levellog.authentication.dto.GithubAccessTokenRequest;
 import com.woowacourse.levellog.authentication.dto.GithubAccessTokenResponse;
 import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import java.util.Objects;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-@Component
-public class GithubOAuthClient {
+public class GithubOAuthClient implements OAuthClient {
 
     private static final String TOKEN_URL = "https://github.com/login/oauth/access_token";
     private static final String USER_ACCESS_URL = "https://api.github.com/user";
@@ -21,13 +18,13 @@ public class GithubOAuthClient {
     private final String clientId;
     private final String clientSecret;
 
-    public GithubOAuthClient(@Value("${security.github.client-id}") final String clientId,
-                             @Value("${security.github.client-secret}") final String clientSecret) {
+    public GithubOAuthClient(final String clientId, final String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
     }
 
-    public String getGithubAccessToken(final String code) {
+    @Override
+    public String getAccessToken(final String code) {
         final GithubAccessTokenRequest githubAccessTokenRequest = new GithubAccessTokenRequest(clientId, clientSecret,
                 code);
         final HttpHeaders headers = new HttpHeaders();
@@ -47,7 +44,8 @@ public class GithubOAuthClient {
         return response.getAccessToken();
     }
 
-    public GithubProfileResponse getGithubProfile(final String accessToken) {
+    @Override
+    public GithubProfileResponse getProfile(final String accessToken) {
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "token " + accessToken);
 

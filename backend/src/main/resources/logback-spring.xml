@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <!-- 기본(default) profile Console 로그 설정 -->
-    <springProfile name="!prod">
+    <!-- Console 로그 설정 -->
+    <springProfile name="test, local, default">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <layout class="ch.qos.logback.classic.PatternLayout">
                 <pattern>%highlight([%-5level])[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread]%highlight([%logger{20}]) - %msg%n
@@ -14,10 +14,10 @@
             <appender-ref ref="STDOUT"/>
         </root>
     </springProfile>
-    <!-- 기본(default) profile Console 로그 설정 끝 -->
+    <!-- Console 로그 설정 끝 -->
 
-    <!-- 운영(prod) profile RollingFile 로그 설정 -->
-    <springProfile name="prod">
+    <!-- RollingFile 로그 설정 -->
+    <springProfile name="prod, dev">
         <property name="LOGS_ABSOLUTE_PATH" value="./logs"/>
         <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>./logs/info.log</file>
@@ -84,6 +84,6 @@
             <appender-ref ref="ERROR_LOG"/>
         </root>
     </springProfile>
-    <!-- 운영(prod) profile RollingFile 로그 설정 끝 -->
+    <!-- RollingFile 로그 설정 끝 -->
 
 </configuration>

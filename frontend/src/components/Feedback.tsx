@@ -1,11 +1,11 @@
-import React from 'react';
 import styled from 'styled-components';
-import useFeedback from '../hooks/useFeedback';
+import { FeedbackType } from 'types';
 
-import { FeedbackType } from '../types';
+import useFeedback from 'hooks/useFeedback';
+
 import Button from './@commons/Button';
 
-const Feedback = ({ userFeedback, requsetFeedbackLookup }: FeedbackProps) => {
+const Feedback = ({ userFeedback, requestFeedbackLookup }: FeedbackProps) => {
   const { feedbackDelete } = useFeedback();
   const {
     id,
@@ -15,7 +15,7 @@ const Feedback = ({ userFeedback, requsetFeedbackLookup }: FeedbackProps) => {
 
   const handleClickDeleteButton = async () => {
     await feedbackDelete(id);
-    requsetFeedbackLookup();
+    requestFeedbackLookup();
   };
 
   return (
@@ -37,7 +37,7 @@ const Feedback = ({ userFeedback, requsetFeedbackLookup }: FeedbackProps) => {
 
 interface FeedbackProps {
   userFeedback: FeedbackType;
-  requsetFeedbackLookup: Function;
+  requestFeedbackLookup: Function;
 }
 
 const FeedbackContent = styled.div`

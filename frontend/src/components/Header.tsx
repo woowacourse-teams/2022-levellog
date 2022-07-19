@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+
 import styled from 'styled-components';
 
+import { useUser } from 'hooks/useUser';
+
+import profileDefaultImage from 'assets/images/defaultProfile.png';
+import levellogLogo from 'assets/images/levellogLogo.png';
+
 import Button from './@commons/Button';
-
-import { useUser } from '../hooks/useContext';
-
 import ProfileDropdown from './ProfileDropdown';
 
 const Header = () => {
@@ -13,7 +16,7 @@ const Header = () => {
 
   const handleErrorProfileImage = (e: React.SyntheticEvent<EventTarget>) => {
     const target = e.target as HTMLImageElement;
-    target.src = 'http://localhost:3000/img/defaultProfile.png';
+    target.src = `${profileDefaultImage}`;
   };
 
   const handleClickLoginButton = () => {
@@ -26,8 +29,8 @@ const Header = () => {
   };
 
   return (
-    <HeaderStyle>
-      <LogoStyle src={'http://localhost:3000/img/levellog-logo.png'} alt="레벨로그 로고" />
+    <HeaderContainer>
+      <LogoStyle src={levellogLogo} alt="레벨로그 로고" />
       {profileUrl ? (
         <ProfileImageStyle
           onClick={handleClickProfileImage}
@@ -42,18 +45,18 @@ const Header = () => {
         isProfileDropdownShow={isProfileDropdownShow}
         setIsProfileDropdownShow={setIsProfileDropdownShow}
       />
-    </HeaderStyle>
+    </HeaderContainer>
   );
 };
 
-export const HeaderStyle = styled.div`
-  width: 100%;
-  height: 70px;
-  border-bottom: 1px solid #000000;
+export const HeaderContainer = styled.div`
   display: flex;
+  position: relative;
+  height: 70px;
+  padding: 0 10rem;
+  border-bottom: 1px solid #000000;
   justify-content: space-between;
   align-items: center;
-  position: relative;
 `;
 
 export const LogoStyle = styled.img`

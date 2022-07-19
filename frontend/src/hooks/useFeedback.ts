@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 
-import { deleteFeedbacks, getFeedbacks, postFeedback } from '../api/feedback';
-import { FeedbackType } from '../types';
+import { FeedbackType } from 'types';
+
+import { deleteFeedbacks, getFeedbacks, postFeedback } from 'apis/feedback';
 
 const useFeedback = () => {
   const navigate = useNavigate();

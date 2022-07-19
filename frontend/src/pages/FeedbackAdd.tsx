@@ -1,8 +1,7 @@
-import React from 'react';
 import styled from 'styled-components';
 
-import LevellogReport from '../components/LevellogReport';
-import LevellogFeedback from '../components/LevellogFeedback';
+import LevellogFeedback from 'components/LevellogFeedback';
+import LevellogReport from 'components/LevellogReport';
 
 const FeedbackAdd = () => {
   return (

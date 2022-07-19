@@ -1,9 +1,12 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
+import { ThemeProvider } from 'styled-components';
+
+import { theme } from './styles/theme';
+
 import App from './App';
-import { UserProvider } from './context';
+import { UserProvider } from './contexts';
 
 if (process.env.NODE_ENV === 'development') {
   const { worker } = require('./mocks/browser');
@@ -15,7 +18,9 @@ function main() {
   root.render(
     <BrowserRouter>
       <UserProvider>
-        <App />
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
       </UserProvider>
     </BrowserRouter>,
   );

@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { getUserAuthority } from '../api/login';
+import { useUser } from 'hooks/useUser';
 
-import { useUser } from '../hooks/useContext';
+import { getUserAuthority } from 'apis/login';
 
 const Login = () => {
-  // const profileUrlDispatch = useUserDispatch();
   const { profileUrlDispatch } = useUser();
   const navigate = useNavigate();
 

@@ -1,6 +1,6 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: './src/index.tsx',
@@ -9,22 +9,40 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
-        options: { presets: ['@babel/env'] },
+        use: ['babel-loader', 'ts-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'assets/images/[name].[ext]',
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'assets/fonts/[name].[ext]',
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
     ],
   },
-  resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+  resolve: {
+    modules: [path.resolve(__dirname, './src'), 'node_modules'],
+    extensions: ['.tsx', '.ts', '.js'],
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -34,9 +52,10 @@ module.exports = {
     static: {
       directory: path.join(__dirname, 'public'),
     },
+    hot: true,
     compress: true,
     port: 3000,
     historyApiFallback: true,
   },
-  plugins: [new HtmlWebpackPlugin({ template: 'public/index.html' })],
+  plugins: [new HtmlWebpackPlugin({ template: 'public/index.html' }), new CleanWebpackPlugin()],
 };

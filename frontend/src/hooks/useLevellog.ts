@@ -1,5 +1,6 @@
-import { getLevellog, postLevellog } from '../api/levellog';
-import { LevellogType } from '../types';
+import { LevellogType } from 'types';
+
+import { getLevellog, postLevellog } from 'apis/levellog';
 
 const useLevellog = () => {
   const stringToLevellog = (inputValue: string) => {

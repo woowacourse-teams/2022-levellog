@@ -35,9 +35,6 @@ abstract class AcceptanceTest {
     @LocalServerPort
     private int port;
 
-    @Autowired
-    protected ObjectMapper objectMapper;
-
     /*
      * 기본 생성 snippet은 http-request.adoc, http-response.adoc입니다.
      * Request host는 https://api.levellog.app입니다.

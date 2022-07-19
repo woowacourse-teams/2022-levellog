@@ -42,7 +42,7 @@ class OAuthServiceTest {
     class login {
 
         @Test
-        @DisplayName("첫 로그인 시 회원가입하고 토큰과 이미지 URL를 반환한다.")
+        @DisplayName("첫 로그인 시 회원가입하고 id, 토큰, 이미지 URL를 반환한다.")
         void loginFirst() {
             // given
             given(oAuthClient.getAccessToken("githubCode")).willReturn("accessToken");
@@ -58,6 +58,7 @@ class OAuthServiceTest {
             assertThat(savedMember).isPresent();
             assertThat(Long.parseLong(payload)).isEqualTo(savedMember.get().getId());
             assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
+            assertThat(tokenResponse.getId()).isNotNull();
         }
 
         @Test
@@ -77,6 +78,7 @@ class OAuthServiceTest {
             // then
             assertThat(Long.parseLong(payload)).isEqualTo(savedId);
             assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
+            assertThat(tokenResponse.getId()).isNotNull();
         }
     }
 }

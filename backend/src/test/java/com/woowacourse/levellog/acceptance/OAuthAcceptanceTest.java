@@ -39,7 +39,8 @@ class OAuthAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("accessToken", notNullValue())
-                .body("profileUrl", is("profile_url"));
+                .body("profileUrl", is("profile_url"))
+                .body("id", is(1));
     }
 
     private ValidatableResponse requestLogin(final GithubCodeRequest request) {

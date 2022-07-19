@@ -52,7 +52,7 @@ class LevellogServiceTest {
                 new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
 
         // when
-        final Long id = levellogService.save(author, team.getId(), request);
+        final Long id = levellogService.save(author.getId(), team.getId(), request);
 
         // then
         final Optional<Levellog> levellog = levellogRepository.findById(id);

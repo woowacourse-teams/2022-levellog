@@ -57,7 +57,7 @@ class FeedbackServiceTest {
         final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
 
         // when
-        final Long id = feedbackService.save(levellog.getId(), roma, request);
+        final Long id = feedbackService.save(levellog.getId(), roma.getId(), request);
 
         // then
         final Optional<Feedback> feedback = feedbackRepository.findById(id);
@@ -97,7 +97,7 @@ class FeedbackServiceTest {
         feedbackRepository.save(new Feedback(eve, roma, levellog, "이브 스터디", "이브 말하기", "이브 기타"));
 
         // when
-        final FeedbacksResponse feedbacksResponse = feedbackService.findAllByTo(roma);
+        final FeedbacksResponse feedbacksResponse = feedbackService.findAllByTo(roma.getId());
 
         // then
         assertThat(feedbacksResponse.getFeedbacks()).hasSize(1);

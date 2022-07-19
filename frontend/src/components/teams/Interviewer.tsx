@@ -45,6 +45,7 @@ const Interviewer = ({ id, levellogId, nickname, profileUrl }: ParticipantType) 
             <LevellogViewModal
               owner={true}
               nickname={nickname}
+              levellogId={levellogId}
               levellog={levellog}
               setIsOnModal={setIsOnModal}
             />
@@ -77,6 +78,7 @@ const Interviewer = ({ id, levellogId, nickname, profileUrl }: ParticipantType) 
             <LevellogViewModal
               owner={false}
               nickname={nickname}
+              levellogId={levellogId}
               levellog={levellog}
               setIsOnModal={setIsOnModal}
             />

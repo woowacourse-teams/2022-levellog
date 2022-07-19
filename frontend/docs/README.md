@@ -22,18 +22,34 @@
 ### 레벨로그 CRUD
 
 - [x] 레벨로그 등록하기
+
   - [x] `LevelLogAdd` 페이지에서 레벨로그를 작성할 수 있다.
-  - [ ] 레벨로그 작성 후 `제출하기` 버튼을 클릭해 서버에 `POST` 요청을 보낸다. (API 변경에 따라 수정)
+  - [x] 레벨로그 작성 후 `제출하기` 버튼을 클릭해 서버에 `POST` 요청을 보낸다. (API 변경에 따라 수정)
+    - [x] 요청이 성공하면 해당 팀의 `InterviewDetail` 페이지로 보낸다.
+    - [x] 요청이 실패하면 `Home` 페이지로 보낸다.
+  - [x] 올바른 `accessToken`을 가지고 있을 때만 레벨로그를 등록할 수 있다.
+
 - [x] 레벨로그 조회하기
+
   - [x] `LevellogViewModal` 모달을 열어 레벨로그를 조회할 수 있다.
   - [x] `InterviewDetail` 페이지에서 팀의 레벨로그를 `GET` 요청으로 조회한다.
+    - [x] 요청이 실패하면 `NotFound` 페이지로 보낸다.
   - [x] 조회한 팀의 레벨로그를 `Interviewer`의 props로 내려준다.
+
 - [ ] 레벨로그 수정하기
+
   - [ ] `InterviewDetail` 페이지에서 본인의 아이디에 따라 `Interviewer`를 렌더링한다.
   - [ ] `LevellogViewModal` 에서 본인의 레벨로그를 수정할 수 있다.
-- [ ] 레벨로그 삭제하기
-  - [ ] `InterviewDetail` 페이지에서 본인의 아이디에 따라 `Interviewer`를 렌더링한다.
-  - [ ] `LevellogViewModal` 에서 본인의 레벨로그를 삭제할 수 있다.
+  - [ ] 올바른 `accessToken`을 가지고 있을 때만 레벨로그를 수정할 수 있다.
+
+- [x] 레벨로그 삭제하기
+
+  - [x] `InterviewDetail` 페이지에서 본인의 아이디에 따라 `Interviewer`를 렌더링한다.
+  - [x] `LevellogViewModal` 에서 본인의 레벨로그를 `삭제하기` 버튼을 눌러삭제할 수 있다.
+    - [x] 요청이 성공하면 해당 팀의 `InterviewDetail` 페이지로 보낸다.
+    - [x] 요청이 실패하면 `NotFound` 페이지로 보낸다.
+  - [x] 올바른 `accessToken`을 가지고 있을 때만 레벨로그를 삭제할 수 있다.
+
 - [ ] 라우팅
   - [ ] 로그인 기능이 완료되면 `flow`에 맞게 라우팅한다.
   - [ ] 그룹 기능이 완료되면 `flow`에 맞게 라우팅한다.

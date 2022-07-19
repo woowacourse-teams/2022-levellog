@@ -1,12 +1,24 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
+
+import useLevellog from 'hooks/useLevellog';
 
 import { ROUTES_PATH } from 'constants/constants';
 
 import Button from '../@commons/Button';
 
-const LevellogViewModal = ({ owner, nickname, levellog, setIsOnModal }) => {
+const LevellogViewModal = ({ owner, nickname, levellogId, levellog, setIsOnModal }) => {
+  const { levellogModify, levellogDelete } = useLevellog();
+  const { teamId } = useParams();
+
+  const handleClickLevellogModify = () => {};
+
+  const handleClickLevellogDelete = async () => {
+    await levellogDelete(teamId, levellogId);
+    setIsOnModal(false);
+  };
+
   if (owner === false) {
     return (
       <LevellogModalStyle>
@@ -31,12 +43,10 @@ const LevellogViewModal = ({ owner, nickname, levellog, setIsOnModal }) => {
         </Header>
         <Levellog>{levellog}</Levellog>
         <Footer>
-          <Link to={ROUTES_PATH.HOME}>
-            <Button color="#FF0000">수정하기</Button>
-          </Link>
-          <Link to={ROUTES_PATH.HOME}>
-            <Button color="#FF0000">삭제하기</Button>
-          </Link>
+          <Button color="#FF0000">수정하기</Button>
+          <Button onClick={handleClickLevellogDelete} color="#FF0000">
+            삭제하기
+          </Button>
         </Footer>
       </LevellogModalStyle>
     );

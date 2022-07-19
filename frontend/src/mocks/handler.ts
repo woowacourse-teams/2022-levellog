@@ -41,6 +41,7 @@ export const levellogHandlers = [
     const teamId = +req.params.teamId;
     const levellogId = +req.params.id;
     const contents = req.body;
+
     console.log(contents);
 
     return res(ctx.status(204));

@@ -17,7 +17,7 @@ const LevellogAdd = () => {
 
   const handleSubmitLevellogForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    console.log(teamId);
     levellogAdd(teamId, levellogRef.current.value);
   };
 

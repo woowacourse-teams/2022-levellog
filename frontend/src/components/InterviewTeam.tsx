@@ -1,10 +1,18 @@
 import styled from 'styled-components';
-import { ParticipantType } from 'types';
+import { InterviewTeamType, ParticipantType } from 'types';
 
 import FlexBox from './@commons/FlexBox';
 import Image from './@commons/Image';
 
-const InterviewTeam = ({ id, teamImage, hostId, title, place, startAt, participants }) => {
+const InterviewTeam = ({
+  id,
+  teamImage,
+  hostId,
+  title,
+  place,
+  startAt,
+  participants,
+}: InterviewTeamType) => {
   return (
     <InterviewTeamContainer id={id}>
       <FlexBox gap={0.625}>

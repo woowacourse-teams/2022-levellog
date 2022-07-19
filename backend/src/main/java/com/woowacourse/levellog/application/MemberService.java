@@ -45,8 +45,7 @@ public class MemberService {
     }
 
     public void updateProfileUrl(final Long id, final String profileUrl) {
-        final Member member = memberRepository.findById(id)
-                .orElseThrow();
+        final Member member = getById(id);
         member.updateProfileUrl(profileUrl);
     }
 }

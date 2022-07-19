@@ -38,6 +38,20 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("findAll 메서드는 모든 멤버를 조회한다.")
+    void findAll() {
+        // given
+        memberRepository.save(new Member("로마", 1234, "image.png"));
+        memberRepository.save(new Member("페퍼", 1245, "image2.png"));
+
+        // when
+        final MembersResponse membersResponse = memberService.findAll();
+
+        // then
+        assertThat(membersResponse.getMembers()).hasSize(2);
+    }
+
+    @Test
     @DisplayName("findByGithubId 메서드는 Gtihub Id에 해당하는 멤버를 찾는다.")
     void findByGithubId() {
         // given
@@ -66,19 +80,5 @@ class MemberServiceTest {
         // then
         final Member updateMember = memberRepository.findById(id).orElseThrow();
         assertThat(updateMember.getProfileUrl()).isEqualTo(newProfileUrl);
-    }
-
-    @Test
-    @DisplayName("findAll 메서드는 모든 멤버를 조회한다.")
-    void findAll() {
-        // given
-        memberRepository.save(new Member("로마", 1234, "image.png"));
-        memberRepository.save(new Member("페퍼", 1245, "image2.png"));
-
-        // when
-        final MembersResponse membersResponse = memberService.findAll();
-
-        // then
-        assertThat(membersResponse.getMembers()).hasSize(2);
     }
 }

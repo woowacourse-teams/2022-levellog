@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class FeedbackResponse {
 
     private Long id;
-    private String name;
+    private MemberResponse from;
     private FeedbackContentDto feedback;
 }

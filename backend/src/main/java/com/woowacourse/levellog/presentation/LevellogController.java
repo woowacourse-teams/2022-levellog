@@ -1,7 +1,8 @@
 package com.woowacourse.levellog.presentation;
 
 import com.woowacourse.levellog.application.LevellogService;
-import com.woowacourse.levellog.dto.LevellogCreateRequest;
+import com.woowacourse.levellog.authentication.support.LoginMember;
+import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.dto.LevellogResponse;
 import java.net.URI;
 import javax.validation.Valid;
@@ -17,34 +18,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/levellogs")
+@RequestMapping("/api/teams/{teamId}/levellogs")
 @RequiredArgsConstructor
 public class LevellogController {
 
     private final LevellogService levellogService;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid final LevellogCreateRequest request) {
-        final Long id = levellogService.save(request);
-        return ResponseEntity.created(URI.create("/api/levellogs/" + id)).build();
+    public ResponseEntity<Void> save(@PathVariable final Long teamId,
+                                     @RequestBody @Valid final LevellogRequest request,
+                                     @LoginMember final Long authorId) {
+        final Long id = levellogService.save(authorId, teamId, request);
+        return ResponseEntity.created(URI.create("/api/teams/" + teamId + "/levellogs/" + id)).build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<LevellogResponse> find(@PathVariable final Long id) {
-        final LevellogResponse response = levellogService.findById(id);
+    @GetMapping("/{levellogId}")
+    public ResponseEntity<LevellogResponse> find(@PathVariable final Long teamId,
+                                                 @PathVariable final Long levellogId) {
+        final LevellogResponse response = levellogService.findById(levellogId);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable final Long id,
-                                       @RequestBody @Valid final LevellogCreateRequest request) {
-        levellogService.update(id, request);
+    @PutMapping("/{levellogId}")
+    public ResponseEntity<Void> update(@PathVariable final Long teamId,
+                                       @PathVariable final Long levellogId,
+                                       @RequestBody @Valid final LevellogRequest request) {
+        levellogService.update(levellogId, request);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        levellogService.deleteById(id);
+    @DeleteMapping("/{levellogId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long teamId,
+                                       @PathVariable final Long levellogId) {
+        levellogService.deleteById(levellogId);
         return ResponseEntity.noContent().build();
     }
 }

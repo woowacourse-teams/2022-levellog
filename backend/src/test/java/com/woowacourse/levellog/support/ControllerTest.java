@@ -8,16 +8,21 @@ import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.presentation.OAuthController;
 import com.woowacourse.levellog.presentation.FeedbackController;
+import com.woowacourse.levellog.presentation.LevellogController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest({FeedbackController.class, OAuthController.class})
+@WebMvcTest({
+        FeedbackController.class,
+        LevellogController.class,
+        OAuthController.class
+})
 public abstract class ControllerTest {
 
     @MockBean
-    private LevellogService levellogService;
+    protected LevellogService levellogService;
 
     @MockBean
     protected MemberService memberService;
@@ -36,4 +41,5 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
 }

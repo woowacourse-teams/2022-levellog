@@ -27,6 +27,14 @@ public class MemberService {
         return savedMember.getId();
     }
 
+    public MembersResponse findAll() {
+        final List<MemberResponse> responses = memberRepository.findAll().stream()
+                .map(it -> new MemberResponse(it.getId(), it.getNickname(), it.getProfileUrl()))
+                .collect(Collectors.toList());
+
+        return new MembersResponse(responses);
+    }
+
     public Optional<Member> findByGithubId(final int githubId) {
         return memberRepository.findByGithubId(githubId);
     }
@@ -40,13 +48,5 @@ public class MemberService {
         final Member member = memberRepository.findById(id)
                 .orElseThrow();
         member.updateProfileUrl(profileUrl);
-    }
-
-    public MembersResponse findAll() {
-        final List<MemberResponse> responses = memberRepository.findAll().stream()
-                .map(it -> new MemberResponse(it.getId(), it.getNickname(), it.getProfileUrl()))
-                .collect(Collectors.toList());
-
-        return new MembersResponse(responses);
     }
 }

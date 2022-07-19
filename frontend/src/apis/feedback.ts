@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { API_URL, SERVER_PATH } from '../constants/constants';
+
 import { FeedbackType } from '../types';
+
+import { SERVER_PATH } from '../constants/constants';
 
 export const postFeedback = (feedbackResult: Omit<FeedbackType, 'id'>) =>
   axios({

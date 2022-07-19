@@ -1,4 +1,4 @@
-export const API_URL = 'http://http://3.36.75.80:8080/api';
+export const API_URL = 'http://3.36.75.80:8080/api';
 
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',

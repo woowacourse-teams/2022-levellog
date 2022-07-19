@@ -29,14 +29,14 @@ public class FeedbackController {
     @PostMapping
     public ResponseEntity<Void> save(@RequestParam final Long levellogId,
                                      @RequestBody @Valid final FeedbackRequest request,
-                                     @LoginMember final Member member) {
-        final Long id = feedbackService.save(levellogId, member, request);
+                                     @LoginMember final Long memberId) {
+        final Long id = feedbackService.save(levellogId, memberId, request);
         return ResponseEntity.created(URI.create("/api/levellogs/" + levellogId + "/feedbacks/" + id)).build();
     }
 
     @GetMapping
     public ResponseEntity<FeedbacksResponse> findAll(@RequestParam final Long levellogId,
-                                                     @LoginMember final Member member) {
+                                                     @LoginMember final Long memberId) {
         final FeedbacksResponse response = feedbackService.findAll(levellogId);
         return ResponseEntity.ok(response);
     }

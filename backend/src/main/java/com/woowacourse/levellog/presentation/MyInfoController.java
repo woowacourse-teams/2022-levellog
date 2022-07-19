@@ -2,7 +2,6 @@ package com.woowacourse.levellog.presentation;
 
 import com.woowacourse.levellog.application.FeedbackService;
 import com.woowacourse.levellog.authentication.support.LoginMember;
-import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,8 @@ public class MyInfoController {
     private final FeedbackService feedbackService;
 
     @GetMapping("/feedbacks")
-    public ResponseEntity<FeedbacksResponse> findAllFeedbackToMe(@LoginMember final Member member) {
-        final FeedbacksResponse feedbacksResponse = feedbackService.findAllByTo(member);
+    public ResponseEntity<FeedbacksResponse> findAllFeedbackToMe(@LoginMember final Long memberId) {
+        final FeedbacksResponse feedbacksResponse = feedbackService.findAllByTo(memberId);
         return ResponseEntity.ok(feedbacksResponse);
     }
 }

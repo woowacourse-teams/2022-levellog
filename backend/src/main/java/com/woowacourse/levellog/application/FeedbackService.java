@@ -1,10 +1,12 @@
 package com.woowacourse.levellog.application;
 
+import com.woowacourse.levellog.authentication.exception.MemberNotFoundException;
 import com.woowacourse.levellog.domain.Feedback;
 import com.woowacourse.levellog.domain.FeedbackRepository;
 import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.domain.Member;
+import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.dto.FeedbackContentDto;
 import com.woowacourse.levellog.dto.FeedbackRequest;
 import com.woowacourse.levellog.dto.FeedbackResponse;
@@ -25,12 +27,14 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
     private final LevellogRepository levellogRepository;
+    private final MemberRepository memberRepository;
 
-    public Long save(final Long levellogId, final Member from, final FeedbackRequest request) {
+    public Long save(final Long levellogId, final Long fromMemberId, final FeedbackRequest request) {
         final FeedbackContentDto feedbackContent = request.getFeedback();
         final Levellog levellog = getLevellog(levellogId);
+        final Member member = getMember(fromMemberId);
         final Feedback feedback = new Feedback(
-                from,
+                member,
                 levellog.getAuthor(),
                 levellog,
                 feedbackContent.getStudy(),
@@ -48,7 +52,8 @@ public class FeedbackService {
         return new FeedbacksResponse(responses);
     }
 
-    public FeedbacksResponse findAllByTo(final Member member) {
+    public FeedbacksResponse findAllByTo(final Long memberId) {
+        final Member member = getMember(memberId);
         final List<Feedback> feedbacks = feedbackRepository.findAllByTo(member);
         return new FeedbacksResponse(getFeedbackResponses(feedbacks));
     }
@@ -74,6 +79,11 @@ public class FeedbackService {
                         MemberResponse.from(it.getFrom()),
                         new FeedbackContentDto(it.getStudy(), it.getSpeak(), it.getEtc())))
                 .collect(Collectors.toList());
+    }
+
+    private Member getMember(final Long memberId) {
+        return memberRepository
+                .findById(memberId).orElseThrow(MemberNotFoundException::new);
     }
 
     private Levellog getLevellog(final Long levellogId) {

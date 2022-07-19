@@ -27,10 +27,10 @@ public class LevellogController {
     private final LevellogService levellogService;
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestParam final Long teamId,
+    public ResponseEntity<Void> save(@RequestParam final Long teamId,
                                        @RequestBody @Valid final LevellogRequest request,
-                                       @LoginMember final Member author) {
-        final Long id = levellogService.save(author, teamId, request);
+                                       @LoginMember final Long authorId) {
+        final Long id = levellogService.save(authorId, teamId, request);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId + "/levellogs/" + id)).build();
     }
 

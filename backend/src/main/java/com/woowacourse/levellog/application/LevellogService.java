@@ -1,8 +1,10 @@
 package com.woowacourse.levellog.application;
 
+import com.woowacourse.levellog.authentication.exception.MemberNotFoundException;
 import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.domain.Member;
+import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.LevellogRequest;
@@ -19,9 +21,11 @@ public class LevellogService {
 
     private final LevellogRepository levellogRepository;
     private final TeamRepository teamRepository;
+    private final MemberRepository memberRepository;
 
-    public Long save(final Member author, final Long groupId, final LevellogRequest request) {
+    public Long save(final Long authorId, final Long groupId, final LevellogRequest request) {
         final Team team = getTeam(groupId);
+        final Member author = getMember(authorId);
         final Levellog levellog = new Levellog(author, team, request.getContent());
 
         final Levellog savedLevellog = levellogRepository.save(levellog);
@@ -49,5 +53,10 @@ public class LevellogService {
 
     private Team getTeam(final Long groupId) {
         return teamRepository.findById(groupId).orElseThrow(TeamNotFoundException::new);
+    }
+
+    private Member getMember(final Long memberId) {
+        return memberRepository
+                .findById(memberId).orElseThrow(MemberNotFoundException::new);
     }
 }

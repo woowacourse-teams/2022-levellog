@@ -1,10 +1,12 @@
 package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.dto.MemberCreateDto;
+import com.woowacourse.levellog.dto.MemberResponse;
 import com.woowacourse.levellog.dto.MembersResponse;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -49,6 +51,23 @@ class MemberServiceTest {
 
         // then
         assertThat(membersResponse.getMembers()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("findMemberById 메서드는 Id로 멤버의 정보를 조회한다.")
+    void findMemberById() {
+        // given
+        final Member roma = memberRepository.save(new Member("로마", 1234, "image.png"));
+
+        // when
+        final MemberResponse memberResponse = memberService.findMemberById(roma.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(memberResponse.getId()).isEqualTo(roma.getId()),
+                () -> assertThat(memberResponse.getNickname()).isEqualTo("로마"),
+                () -> assertThat(memberResponse.getProfileUrl()).isEqualTo("image.png")
+        );
     }
 
     @Test

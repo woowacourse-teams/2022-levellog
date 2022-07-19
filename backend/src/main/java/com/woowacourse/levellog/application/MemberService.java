@@ -27,6 +27,11 @@ public class MemberService {
         return savedMember.getId();
     }
 
+    public MemberResponse findMemberById(final Long memberId) {
+        final Member member = getById(memberId);
+        return MemberResponse.from(member);
+    }
+
     public MembersResponse findAll() {
         final List<MemberResponse> responses = memberRepository.findAll().stream()
                 .map(it -> new MemberResponse(it.getId(), it.getNickname(), it.getProfileUrl()))
@@ -39,7 +44,7 @@ public class MemberService {
         return memberRepository.findByGithubId(githubId);
     }
 
-    public Member getById(final Long id) {
+    private Member getById(final Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(MemberNotFoundException::new);
     }

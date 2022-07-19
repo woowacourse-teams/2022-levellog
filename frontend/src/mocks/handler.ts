@@ -20,14 +20,9 @@ export const feedbackHandlers = [
 export const levellogHandlers = [
   rest.post('/api/teams/:teamId/levellogs', (req, res, ctx) => {
     const teamId = +req.params.teamId;
-    const levellogId = +req.params.id;
-    const contents = String(req.body);
+    const contents = req.body;
 
-    levellogs.push({
-      teamId,
-      levellogId,
-      contents,
-    });
+    console.log(contents);
 
     return res(ctx.status(201));
   }),
@@ -38,14 +33,14 @@ export const levellogHandlers = [
     const levellog = levellogs.find(
       (levellog) => levellog.teamId === teamId && levellog.levellogId === levellogId,
     );
-    console.log(levellog);
+
     return res(ctx.status(200), ctx.json(levellog));
   }),
 
   rest.put(`/api/teams/:teamId/levellogs/:id`, (req, res, ctx) => {
     const teamId = +req.params.teamId;
     const levellogId = +req.params.id;
-    const contents = String(req.body);
+    const contents = req.body;
     console.log(contents);
 
     return res(ctx.status(204));

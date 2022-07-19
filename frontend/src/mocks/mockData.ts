@@ -28,11 +28,6 @@ export const levellog = {
 export const levellogs = [
   {
     teamId: 1,
-    levellogId: 1,
-    contents: '제이슨조 1번 유저의 레벨로그',
-  },
-  {
-    teamId: 1,
     levellogId: 2,
     contents: '제이슨조 2번 유저의 레벨로그',
   },
@@ -59,17 +54,17 @@ export const levellogs = [
   {
     teamId: 2,
     levellogId: 4,
-    contents: '포코조 1번 유저의 레벨로그',
+    contents: '포코조 4번 유저의 레벨로그',
   },
   {
     teamId: 2,
     levellogId: 5,
-    contents: '포코조 2번 유저의 레벨로그',
+    contents: '포코조 5번 유저의 레벨로그',
   },
   {
     teamId: 2,
     levellogId: 6,
-    contents: '포코조 3번 유저의 레벨로그',
+    contents: '포코조 6번 유저의 레벨로그',
   },
   {
     teamId: 3,
@@ -119,12 +114,12 @@ export const levellogs = [
   {
     teamId: 5,
     levellogId: 5,
-    contents: '브리조 1번 유저의 레벨로그',
+    contents: '브리조 2번 유저의 레벨로그',
   },
   {
     teamId: 5,
     levellogId: 6,
-    contents: '브리조 1번 유저의 레벨로그',
+    contents: '브리조 3번 유저의 레벨로그',
   },
 ];
 

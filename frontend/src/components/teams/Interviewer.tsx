@@ -61,7 +61,7 @@ const Interviewer = ({ id, levellogId, nickname, profileUrl }: ParticipantType) 
             {levellog ? (
               <p onClick={handleClickToggleModal}>레벨로그 보기</p>
             ) : (
-              <Link to={ROUTES_PATH.FEEDBACK_ADD}>
+              <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
                 <p>레벨로그 작성</p>
               </Link>
             )}

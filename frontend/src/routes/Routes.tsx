@@ -26,7 +26,7 @@ export const routes = [
     element: <Login />,
   },
   {
-    path: ROUTES_PATH.LEVELLOG_ADD,
+    path: `${ROUTES_PATH.LEVELLOG_ADD}/:teamId`,
     element: <LevellogAdd />,
   },
   {

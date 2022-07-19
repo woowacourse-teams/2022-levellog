@@ -7,17 +7,19 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.support.TestAuthenticationConfig;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -29,10 +31,14 @@ import org.springframework.test.context.ActiveProfiles;
 abstract class AcceptanceTest {
 
     protected RequestSpecification specification;
+
     @LocalServerPort
     private int port;
 
-    /**
+    @Autowired
+    protected ObjectMapper objectMapper;
+
+    /*
      * 기본 생성 snippet은 http-request.adoc, http-response.adoc입니다.
      * Request host는 https://api.levellog.app입니다.
      * 응답 헤더 중 Transfer-Encoding, Date, Keep-Alive, Connection은 제외됩니다.

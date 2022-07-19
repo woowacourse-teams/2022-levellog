@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -30,7 +31,9 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <LogoStyle src={levellogLogo} alt="레벨로그 로고" />
+      <Link to="/">
+        <LogoStyle src={levellogLogo} alt="레벨로그 로고" />
+      </Link>
       {profileUrl ? (
         <ProfileImageStyle
           onClick={handleClickProfileImage}

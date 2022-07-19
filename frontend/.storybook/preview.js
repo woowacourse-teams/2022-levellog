@@ -1,8 +1,8 @@
 import { BrowserRouter } from 'react-router-dom';
 
-import { UserProvider } from 'contexts';
 import { ThemeProvider } from 'styled-components';
 
+import { UserProvider } from '/contexts/userContext';
 import GlobalStyles from 'styles/GlobalStyle';
 import { theme } from 'styles/theme';
 

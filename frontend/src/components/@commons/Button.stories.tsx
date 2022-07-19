@@ -14,6 +14,6 @@ Base.args = {
 };
 
 export const Submit = Template.bind({});
-Base.args = {
+Submit.args = {
   children: '제출하기',
 };

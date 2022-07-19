@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import ModalPortal from 'modalPortal';
+import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 import { ParticipantType } from 'types';
 

@@ -11,7 +11,7 @@ const ProfileDropdown = ({
   setIsProfileDropdownShow,
 }: ProfileDropdownProps) => {
   const navigate = useNavigate();
-  const { profileUrlDispatch } = useUser();
+  const { userInfoDispatch } = useUser();
 
   const handleClickProfileButton = () => {
     // profile route가 들어가야 한다.
@@ -20,7 +20,7 @@ const ProfileDropdown = ({
 
   const handleClickLogoutButton = () => {
     localStorage.removeItem('accessToken');
-    profileUrlDispatch('');
+    userInfoDispatch({ id: '', profileUrl: '' });
     setIsProfileDropdownShow(false);
   };
 

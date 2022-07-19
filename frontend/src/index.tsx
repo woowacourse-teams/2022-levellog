@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from './styles/theme';
 
 import App from './App';
-import { UserProvider } from './contexts';
+import { UserProvider } from './contexts/userContext';
 
 if (process.env.NODE_ENV === 'development') {
   const { worker } = require('./mocks/browser');

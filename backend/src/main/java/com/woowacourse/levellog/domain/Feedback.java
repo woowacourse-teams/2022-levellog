@@ -1,25 +1,21 @@
 package com.woowacourse.levellog.domain;
 
+import com.woowacourse.levellog.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
-public class Feedback {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Feedback extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_from_member"))
@@ -41,16 +37,6 @@ public class Feedback {
 
     @Column(length = 1000)
     private String etc;
-
-    public Feedback(final Member from, final Member to, final Levellog levellog, final String study, final String speak,
-                    final String etc) {
-        this.from = from;
-        this.to = to;
-        this.levellog = levellog;
-        this.study = study;
-        this.speak = speak;
-        this.etc = etc;
-    }
 
     public void updateFeedback(final String study, final String speak, final String etc) {
         this.study = study;

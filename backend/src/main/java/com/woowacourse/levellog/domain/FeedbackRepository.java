@@ -9,5 +9,5 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
     List<Feedback> findAllByLevellog(Levellog levellog);
 
-    List<Feedback> findAllByTo(Member member);
+    List<Feedback> findAllByToOrderByUpdatedAtDesc(Member member);
 }

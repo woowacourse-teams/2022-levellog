@@ -3,8 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.tsx',
-  mode: 'development',
+  entry: '../src/index.tsx',
   module: {
     rules: [
       {
@@ -40,22 +39,13 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: [path.resolve(__dirname, './src'), 'node_modules'],
+    modules: [path.resolve(__dirname, '../src'), 'node_modules'],
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../dist'),
     filename: 'bundle.js',
     publicPath: '/',
-  },
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'public'),
-    },
-    hot: true,
-    compress: true,
-    port: 3000,
-    historyApiFallback: true,
   },
   plugins: [new HtmlWebpackPlugin({ template: 'public/index.html' }), new CleanWebpackPlugin()],
 };

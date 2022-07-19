@@ -77,7 +77,8 @@ public class FeedbackService {
                 .map(it -> new FeedbackResponse(
                         it.getId(),
                         MemberResponse.from(it.getFrom()),
-                        new FeedbackContentDto(it.getStudy(), it.getSpeak(), it.getEtc())))
+                        new FeedbackContentDto(it.getStudy(), it.getSpeak(), it.getEtc()),
+                        it.getUpdatedAt()))
                 .collect(Collectors.toList());
     }
 

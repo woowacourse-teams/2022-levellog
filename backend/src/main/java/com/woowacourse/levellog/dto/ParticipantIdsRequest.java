@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ParticipantIdsRequest extends Participant {
 
-    private List<Long> participantIds;
+    private List<Long> ids;
 }

@@ -3,16 +3,22 @@ package com.woowacourse.levellog.acceptance;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @DisplayName("깃허브 로그인 관련 기능")
 class OAuthAcceptanceTest extends AcceptanceTest {
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /*
      * Scenario: 깃허브 로그인
@@ -22,9 +28,10 @@ class OAuthAcceptanceTest extends AcceptanceTest {
      */
     @Test
     @DisplayName("깃허브 로그인")
-    void login() {
+    void login() throws Exception {
         // given
-        final GithubCodeRequest codeRequest = new GithubCodeRequest("github_auth_code");
+        final String code = objectMapper.writeValueAsString(new GithubProfileResponse("11111", "test", "profile_url"));
+        final GithubCodeRequest codeRequest = new GithubCodeRequest(code);
 
         // when
         final ValidatableResponse response = requestLogin(codeRequest);

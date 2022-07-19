@@ -13,9 +13,13 @@ import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.FeedbackContentDto;
 import com.woowacourse.levellog.dto.FeedbackRequest;
+import com.woowacourse.levellog.dto.FeedbackResponse;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
+import com.woowacourse.levellog.dto.MemberResponse;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,15 +96,24 @@ class FeedbackServiceTest {
         final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
         final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
         final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
-        feedbackRepository.save(new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
+        final Feedback feedback1 = feedbackRepository.save(new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
         feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
         feedbackRepository.save(new Feedback(eve, roma, levellog, "이브 스터디", "이브 말하기", "이브 기타"));
 
+        feedbackRepository.flush();
+
         // when
-        final FeedbacksResponse feedbacksResponse = feedbackService.findAllByTo(roma.getId());
+        feedbackService.update(feedback1.getId(),
+                new FeedbackRequest(new FeedbackContentDto("update", "update", "update")));
+        final List<String> fromNicknames = feedbackService.findAllByTo(eve.getId())
+                .getFeedbacks()
+                .stream()
+                .map(FeedbackResponse::getFrom)
+                .map(MemberResponse::getNickname)
+                .collect(Collectors.toList());
 
         // then
-        assertThat(feedbacksResponse.getFeedbacks()).hasSize(1);
+        assertThat(fromNicknames).containsExactly("로마", "알린");
     }
 
     @Test

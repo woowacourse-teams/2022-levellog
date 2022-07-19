@@ -54,7 +54,7 @@ public class FeedbackService {
 
     public FeedbacksResponse findAllByTo(final Long memberId) {
         final Member member = getMember(memberId);
-        final List<Feedback> feedbacks = feedbackRepository.findAllByTo(member);
+        final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(member);
         return new FeedbacksResponse(getFeedbackResponses(feedbacks));
     }
 

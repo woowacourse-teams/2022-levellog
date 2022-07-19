@@ -3,10 +3,12 @@ package com.woowacourse.levellog.presentation;
 import com.woowacourse.levellog.application.TeamService;
 import com.woowacourse.levellog.authentication.support.LoginMember;
 import com.woowacourse.levellog.dto.TeamRequest;
+import com.woowacourse.levellog.dto.TeamsResponse;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,5 +26,11 @@ public class TeamController {
                                      @LoginMember final Long hostId) {
         final Long id = teamService.save(hostId, teamRequest);
         return ResponseEntity.created(URI.create("/api/teams/" + id)).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<TeamsResponse> findAll() {
+        final TeamsResponse response = teamService.findAll();
+        return ResponseEntity.ok(response);
     }
 }

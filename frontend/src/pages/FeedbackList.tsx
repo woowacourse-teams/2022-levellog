@@ -9,7 +9,7 @@ import useFeedback from 'hooks/useFeedback';
 import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
-import Feedback from 'components/Feedback';
+import Feedback from 'components/feedbacks/Feedback';
 
 const FeedbackList = () => {
   const [feedbacks, setFeedbacks] = useState([]);

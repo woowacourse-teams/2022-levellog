@@ -5,9 +5,9 @@ import { FeedbackType } from 'types';
 
 import useFeedback from 'hooks/useFeedback';
 
-import Button from './@commons/Button';
-import Input from './@commons/Input';
-import { FeedbackAddContainer } from './@commons/Style';
+import Button from '../@commons/Button';
+import Input from '../@commons/Input';
+import { FeedbackAddContainer } from '../@commons/Style';
 
 const LevellogFeedback = () => {
   const { feedbackAdd } = useFeedback();

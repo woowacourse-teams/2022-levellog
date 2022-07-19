@@ -3,6 +3,8 @@ import { LevellogType } from 'types';
 import { getLevellog, postLevellog } from 'apis/levellog';
 
 const useLevellog = () => {
+  const accessToken = localStorage.getItem('accessToken');
+
   const stringToLevellog = (inputValue: string) => {
     const levellogContent: LevellogType = {
       content: inputValue,
@@ -10,17 +12,17 @@ const useLevellog = () => {
     return levellogContent;
   };
 
-  const levellogAdd = async (inputValue: string) => {
+  const levellogAdd = async (teamId: string, inputValue: string) => {
     try {
-      await postLevellog(stringToLevellog(inputValue));
+      await postLevellog(accessToken, teamId, stringToLevellog(inputValue));
     } catch (err) {
       console.log(err);
     }
   };
 
-  const levellogLookup = async (id: number) => {
+  const levellogLookup = async (teamId: string, id: string) => {
     try {
-      const res = await getLevellog(id);
+      const res = await getLevellog(accessToken, teamId, id);
       const levellog = res.data;
 
       return levellog;
@@ -28,6 +30,7 @@ const useLevellog = () => {
       console.log(err);
     }
   };
+
   return { levellogAdd, levellogLookup };
 };
 

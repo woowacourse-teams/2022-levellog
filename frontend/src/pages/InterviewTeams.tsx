@@ -8,7 +8,7 @@ import useTeams from 'hooks/useTeams';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
-import InterviewTeam from 'components/InterviewTeam';
+import InterviewTeam from 'components/teams/InterviewTeam';
 
 const InterviewTeams = () => {
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);

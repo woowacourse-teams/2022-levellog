@@ -1,33 +1,17 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useLevellog from 'hooks/useLevellog';
-
 import { ROUTES_PATH } from 'constants/constants';
 
-import Button from './@commons/Button';
+import Button from '../@commons/Button';
 
-const LevellogModal = () => {
-  const [levellog, setLevellog] = useState('');
-  const { levellogLookup } = useLevellog();
-  const dummyId = 1;
-
-  const requestLevellogLookup = async () => {
-    const res = await levellogLookup(dummyId);
-    setLevellog(res.contents);
-  };
-
-  useEffect(() => {
-    requestLevellogLookup();
-  }, []);
-
+const LevellogViewModal = ({ nickname, levellog, setIsOnModal }) => {
   return (
     <LevellogModalStyle>
       <Header>
-        <h3>유저의 Level log</h3>
-        <CloseButton>X</CloseButton>
+        <h3>{nickname}의 Levellog</h3>
+        <CloseButton onClick={setIsOnModal}>X</CloseButton>
       </Header>
       <Levellog>{levellog}</Levellog>
       <Footer>
@@ -86,4 +70,4 @@ const LevellogModalStyle = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-export default LevellogModal;
+export default LevellogViewModal;

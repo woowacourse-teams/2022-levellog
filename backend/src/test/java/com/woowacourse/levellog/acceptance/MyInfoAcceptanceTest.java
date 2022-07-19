@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 // FIXME : 팀 API 구현 후 수정
 @Disabled
 @DisplayName("MyInfo 관련 기능")
-public class MyInfoAcceptanceTest extends AcceptanceTest {
+class MyInfoAcceptanceTest extends AcceptanceTest {
 
     /*
      * Scenario: 내가 받은 피드백 모두 조회하기

@@ -6,21 +6,41 @@ import { ROUTES_PATH } from 'constants/constants';
 
 import Button from '../@commons/Button';
 
-const LevellogViewModal = ({ nickname, levellog, setIsOnModal }) => {
-  return (
-    <LevellogModalStyle>
-      <Header>
-        <h3>{nickname}의 Levellog</h3>
-        <CloseButton onClick={setIsOnModal}>X</CloseButton>
-      </Header>
-      <Levellog>{levellog}</Levellog>
-      <Footer>
-        <Link to={ROUTES_PATH.HOME}>
-          <Button color="#FF0000">사전 질문 작성</Button>
-        </Link>
-      </Footer>
-    </LevellogModalStyle>
-  );
+const LevellogViewModal = ({ owner, nickname, levellog, setIsOnModal }) => {
+  if (owner === false) {
+    return (
+      <LevellogModalStyle>
+        <Header>
+          <h3>{nickname}의 Levellog</h3>
+          <CloseButton onClick={setIsOnModal}>X</CloseButton>
+        </Header>
+        <Levellog>{levellog}</Levellog>
+        <Footer>
+          <Link to={ROUTES_PATH.HOME}>
+            <Button color="#FF0000">사전 질문 작성</Button>
+          </Link>
+        </Footer>
+      </LevellogModalStyle>
+    );
+  } else {
+    return (
+      <LevellogModalStyle>
+        <Header>
+          <h3>나의 Levellog</h3>
+          <CloseButton onClick={setIsOnModal}>X</CloseButton>
+        </Header>
+        <Levellog>{levellog}</Levellog>
+        <Footer>
+          <Link to={ROUTES_PATH.HOME}>
+            <Button color="#FF0000">수정하기</Button>
+          </Link>
+          <Link to={ROUTES_PATH.HOME}>
+            <Button color="#FF0000">삭제하기</Button>
+          </Link>
+        </Footer>
+      </LevellogModalStyle>
+    );
+  }
 };
 
 const Footer = styled.footer`

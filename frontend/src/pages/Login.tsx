@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useUser } from 'hooks/useUser';
+import useUser from 'hooks/useUser';
 
 import { getUserAuthority } from 'apis/login';
 

@@ -6,6 +6,9 @@ import styled from 'styled-components';
 import { ParticipantType } from 'types';
 
 import useLevellog from 'hooks/useLevellog';
+import useUser from 'hooks/useUser';
+
+import { ROUTES_PATH } from 'constants/constants';
 
 import Image from '../@commons/Image';
 import LevellogViewModal from '../levellogs/LevellogViewModal';
@@ -14,6 +17,7 @@ const Interviewer = ({ id, levellogId, nickname, profileUrl }: ParticipantType) 
   const [levellog, setLevellog] = useState('');
   const [isOnModal, setIsOnModal] = useState(false);
   const { levellogLookup } = useLevellog();
+  const { loginUserId } = useUser();
   const { teamId } = useParams();
 
   const requestLevellogLookup = async () => {
@@ -33,32 +37,71 @@ const Interviewer = ({ id, levellogId, nickname, profileUrl }: ParticipantType) 
     requestLevellogLookup();
   }, []);
 
-  return (
-    <>
-      {isOnModal === true && (
-        <ModalPortal>
-          <LevellogViewModal nickname={nickname} levellog={levellog} setIsOnModal={setIsOnModal} />
-        </ModalPortal>
-      )}
-      <InterviewerContainer>
-        <InterviewerStyle>
-          <Image src={profileUrl} sizes={'HUGE'} />
-          <NicknameStyle>
-            <p>{nickname}</p>
-          </NicknameStyle>
-        </InterviewerStyle>
-        <ContentStyle>
-          <p onClick={handleClickToggleModal}>레벨로그 보기</p>
-          <Link to="">
-            <p>사전 질문 작성</p>
-          </Link>
-          <Link to="/feedback">
-            <p>피드백</p>
-          </Link>
-        </ContentStyle>
-      </InterviewerContainer>
-    </>
-  );
+  if (id === loginUserId) {
+    return (
+      <>
+        {isOnModal === true && (
+          <ModalPortal>
+            <LevellogViewModal
+              owner={true}
+              nickname={nickname}
+              levellog={levellog}
+              setIsOnModal={setIsOnModal}
+            />
+          </ModalPortal>
+        )}
+        <InterviewerContainer>
+          <InterviewerStyle>
+            <Image src={profileUrl} sizes={'HUGE'} />
+            <NicknameStyle>
+              <p>{nickname}</p>
+            </NicknameStyle>
+          </InterviewerStyle>
+          <ContentStyle>
+            {levellog ? (
+              <p onClick={handleClickToggleModal}>레벨로그 보기</p>
+            ) : (
+              <Link to={ROUTES_PATH.FEEDBACK_ADD}>
+                <p>레벨로그 작성</p>
+              </Link>
+            )}
+          </ContentStyle>
+        </InterviewerContainer>
+      </>
+    );
+  } else {
+    return (
+      <>
+        {isOnModal === true && (
+          <ModalPortal>
+            <LevellogViewModal
+              owner={false}
+              nickname={nickname}
+              levellog={levellog}
+              setIsOnModal={setIsOnModal}
+            />
+          </ModalPortal>
+        )}
+        <InterviewerContainer>
+          <InterviewerStyle>
+            <Image src={profileUrl} sizes={'HUGE'} />
+            <NicknameStyle>
+              <p>{nickname}</p>
+            </NicknameStyle>
+          </InterviewerStyle>
+          <ContentStyle>
+            <p onClick={handleClickToggleModal}>레벨로그 보기</p>
+            <Link to="">
+              <p>사전 질문 작성</p>
+            </Link>
+            <Link to="/feedback">
+              <p>피드백</p>
+            </Link>
+          </ContentStyle>
+        </InterviewerContainer>
+      </>
+    );
+  }
 };
 
 const InterviewerContainer = styled.div`

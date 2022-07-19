@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import { useUser } from 'hooks/useUser';
+import useUser from 'hooks/useUser';
 
 import profileDefaultImage from 'assets/images/defaultProfile.png';
 import levellogLogo from 'assets/images/levellogLogo.png';
@@ -13,7 +13,7 @@ import ProfileDropdown from './ProfileDropdown';
 
 const Header = () => {
   const [isProfileDropdownShow, setIsProfileDropdownShow] = useState(false);
-  const { profileUrl } = useUser();
+  const { loginUserProfileUrl } = useUser();
 
   const handleErrorProfileImage = (e: React.SyntheticEvent<EventTarget>) => {
     const target = e.target as HTMLImageElement;
@@ -34,11 +34,11 @@ const Header = () => {
       <Link to="/">
         <LogoStyle src={levellogLogo} alt="레벨로그 로고" />
       </Link>
-      {profileUrl ? (
+      {loginUserProfileUrl ? (
         <ProfileImageStyle
           onClick={handleClickProfileImage}
           onError={handleErrorProfileImage}
-          src={profileUrl}
+          src={loginUserProfileUrl}
           alt="프로필 이미지"
         />
       ) : (

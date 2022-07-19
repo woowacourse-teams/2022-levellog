@@ -1,8 +1,7 @@
 import { rest } from 'msw';
 
-import { feedbacks, levellog, levellogTeams } from './mockData';
+import { feedbacks, levellogs, levellogTeams } from './mockData';
 
-// 피드백 CRUD MOCKING
 export const feedbackHandlers = [
   rest.post('/api/feedbacks', (req, res, ctx) => {
     return res(ctx.status(201));
@@ -18,15 +17,45 @@ export const feedbackHandlers = [
   }),
 ];
 
-// 레벨로그 CRUD MOCKING
 export const levellogHandlers = [
-  rest.post('/api/levellogs', (req, res, ctx) => {
+  rest.post('/api/teams/:teamId/levellogs', (req, res, ctx) => {
+    const teamId = +req.params.teamId;
+    const levellogId = +req.params.id;
+    const contents = String(req.body);
+
+    levellogs.push({
+      teamId,
+      levellogId,
+      contents,
+    });
+
     return res(ctx.status(201));
   }),
 
-  rest.get(`/api/levellogs/:id`, (req, res, ctx) => {
-    const id = +req.params.id;
+  rest.get(`/api/teams/:teamId/levellogs/:id`, (req, res, ctx) => {
+    const teamId = +req.params.teamId;
+    const levellogId = +req.params.id;
+    const levellog = levellogs.find(
+      (levellog) => levellog.teamId === teamId && levellog.levellogId === levellogId,
+    );
+    console.log(levellog);
     return res(ctx.status(200), ctx.json(levellog));
+  }),
+
+  rest.put(`/api/teams/:teamId/levellogs/:id`, (req, res, ctx) => {
+    const teamId = +req.params.teamId;
+    const levellogId = +req.params.id;
+    const contents = String(req.body);
+    console.log(contents);
+
+    return res(ctx.status(204));
+  }),
+
+  rest.delete(`/api/teams/:teamId/levellogs/:id`, (req, res, ctx) => {
+    const teamId = +req.params.teamId;
+    const levellogId = +req.params.id;
+
+    return res(ctx.status(204));
   }),
 ];
 
@@ -36,6 +65,7 @@ export const loginHandlers = [
       return res(
         ctx.status(200),
         ctx.json({
+          id: 300,
           accessToken: 'fflkmdsaklfmkals32$Rmksdlfmlksdm',
           profileUrl: 'https://avatars.githubusercontent.com/u/432423423?v=4',
         }),
@@ -53,7 +83,6 @@ export const levellogGroupHandlers = [
 
   rest.get('/api/teams/:teamId', (req, res, ctx) => {
     const { teamId } = req.params;
-
     const chooselevellogTeam = levellogTeams.teams.find(
       (levellogTeam) => +levellogTeam.id === +teamId,
     );

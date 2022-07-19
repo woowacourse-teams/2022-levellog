@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import { useUser } from 'hooks/useUser';
+import useUser from 'hooks/useUser';
 
 import Button from './@commons/Button';
 

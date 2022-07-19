@@ -2,9 +2,13 @@ import { useContext } from 'react';
 
 import { UserContext, UserDispatchContext } from 'contexts/userContext';
 
-export const useUser = () => {
+const useUser = () => {
   const { id, profileUrl } = useContext(UserContext);
+  const loginUserId = id;
+  const loginUserProfileUrl = profileUrl;
   const userInfoDispatch = useContext(UserDispatchContext);
 
-  return { id, profileUrl, userInfoDispatch };
+  return { loginUserId, loginUserProfileUrl, userInfoDispatch };
 };
+
+export default useUser;

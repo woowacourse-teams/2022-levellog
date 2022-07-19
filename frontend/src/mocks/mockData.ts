@@ -25,6 +25,109 @@ export const levellog = {
   contents: '내가 작성한 레벨로그입니다',
 };
 
+export const levellogs = [
+  {
+    teamId: 1,
+    levellogId: 1,
+    contents: '제이슨조 1번 유저의 레벨로그',
+  },
+  {
+    teamId: 1,
+    levellogId: 2,
+    contents: '제이슨조 2번 유저의 레벨로그',
+  },
+  {
+    teamId: 1,
+    levellogId: 3,
+    contents: '제이슨조 3번 유저의 레벨로그',
+  },
+  {
+    teamId: 2,
+    levellogId: 1,
+    contents: '포코조 1번 유저의 레벨로그',
+  },
+  {
+    teamId: 2,
+    levellogId: 2,
+    contents: '포코조 2번 유저의 레벨로그',
+  },
+  {
+    teamId: 2,
+    levellogId: 3,
+    contents: '포코조 3번 유저의 레벨로그',
+  },
+  {
+    teamId: 2,
+    levellogId: 4,
+    contents: '포코조 1번 유저의 레벨로그',
+  },
+  {
+    teamId: 2,
+    levellogId: 5,
+    contents: '포코조 2번 유저의 레벨로그',
+  },
+  {
+    teamId: 2,
+    levellogId: 6,
+    contents: '포코조 3번 유저의 레벨로그',
+  },
+  {
+    teamId: 3,
+    levellogId: 1,
+    contents: '공원조 1번 유저의 레벨로그',
+  },
+  {
+    teamId: 3,
+    levellogId: 3,
+    contents: '공원조 2번 유저의 레벨로그',
+  },
+  {
+    teamId: 3,
+    levellogId: 7,
+    contents: '공원조 3번 유저의 레벨로그',
+  },
+  {
+    teamId: 3,
+    levellogId: 5,
+    contents: '공원조 4번 유저의 레벨로그',
+  },
+  {
+    teamId: 4,
+    levellogId: 1,
+    contents: '구구조 1번 유저의 레벨로그',
+  },
+  {
+    teamId: 4,
+    levellogId: 4,
+    contents: '구구조 2번 유저의 레벨로그',
+  },
+  {
+    teamId: 4,
+    levellogId: 7,
+    contents: '구구조 3번 유저의 레벨로그',
+  },
+  {
+    teamId: 4,
+    levellogId: 5,
+    contents: '구구조 4번 유저의 레벨로그',
+  },
+  {
+    teamId: 5,
+    levellogId: 4,
+    contents: '브리조 1번 유저의 레벨로그',
+  },
+  {
+    teamId: 5,
+    levellogId: 5,
+    contents: '브리조 1번 유저의 레벨로그',
+  },
+  {
+    teamId: 5,
+    levellogId: 6,
+    contents: '브리조 1번 유저의 레벨로그',
+  },
+];
+
 export const levellogTeams = {
   teams: [
     {
@@ -33,10 +136,10 @@ export const levellogTeams = {
       place: '잠실 트랙룸',
       startAt: '2022-07-15',
       teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
-      hostId: 1,
+      hostId: 300,
       participants: [
         {
-          id: 1,
+          id: 300,
           levellogId: 1,
           nickname: '페퍼',
           profileUrl: 'https://avatars.githubusercontent.com/u/28749734?v=4',
@@ -61,10 +164,10 @@ export const levellogTeams = {
       place: '잠실 나이스샷 강의장',
       startAt: '2022-07-16',
       teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
-      hostId: 1,
+      hostId: 300,
       participants: [
         {
-          id: 1,
+          id: 300,
           levellogId: 1,
           nickname: '페퍼',
           profileUrl: 'https://avatars.githubusercontent.com/u/28749734?v=4',
@@ -107,10 +210,10 @@ export const levellogTeams = {
       place: '선릉 안드로메다방',
       startAt: '2022-07-17',
       teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
-      hostId: 1,
+      hostId: 300,
       participants: [
         {
-          id: 1,
+          id: 300,
           levellogId: 1,
           nickname: '페퍼',
           profileUrl: 'https://avatars.githubusercontent.com/u/28749734?v=4',
@@ -142,10 +245,10 @@ export const levellogTeams = {
       place: '선릉 우리은하 강의실',
       startAt: '2022-07-19',
       teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
-      hostId: 1,
+      hostId: 300,
       participants: [
         {
-          id: 1,
+          id: 300,
           levellogId: 1,
           nickname: '페퍼',
           profileUrl: 'https://avatars.githubusercontent.com/u/28749734?v=4',
@@ -176,7 +279,7 @@ export const levellogTeams = {
       place: '선릉 우주정거장룸',
       startAt: '2022-07-20',
       teamImage: 'https://avatars.githubusercontent.com/u/81607552?v=4',
-      hostId: 1,
+      hostId: 300,
       participants: [
         {
           id: 4,

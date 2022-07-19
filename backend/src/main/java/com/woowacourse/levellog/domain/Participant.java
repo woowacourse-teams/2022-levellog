@@ -27,4 +27,6 @@ public class Participant {
     @ManyToOne
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_participant_member"))
     private Member member;
+
+    private boolean isHost;
 }

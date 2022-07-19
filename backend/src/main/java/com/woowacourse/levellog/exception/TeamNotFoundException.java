@@ -1,14 +1,16 @@
 package com.woowacourse.levellog.exception;
 
-public class TeamNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class TeamNotFoundException extends LevellogException {
 
     private static final String ERROR_MESSAGE = "팀이 존재하지 않습니다.";
 
     public TeamNotFoundException(final String message) {
-        super(message);
+        super(message, HttpStatus.NOT_FOUND);
     }
 
     public TeamNotFoundException() {
-        super(ERROR_MESSAGE);
+        super(ERROR_MESSAGE, HttpStatus.NOT_FOUND);
     }
 }

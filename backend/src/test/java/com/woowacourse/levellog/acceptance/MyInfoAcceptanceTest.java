@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@Disabled
 @DisplayName("MyInfo 관련 기능")
 class MyInfoAcceptanceTest extends AcceptanceTest {
 
@@ -38,7 +37,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("myinfo/update-nickname"))
                 .when()
-                .get("/api/myinfo")
+                .get("/api/myInfo")
                 .then().log().all();
 
         // then

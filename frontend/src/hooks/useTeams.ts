@@ -4,7 +4,7 @@ const useTeams = () => {
   const teamsLookup = async () => {
     try {
       const res = await getTeams();
-      const teams = await res?.data?.teams;
+      const teams = await res.data?.teams;
 
       return teams ? teams : [];
     } catch (err) {

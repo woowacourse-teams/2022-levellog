@@ -1,4 +1,4 @@
-name: earth-github-action-test CI
+name: backend CI
 
 # 하기 내용에 해당하는 이벤트 발생 시 github action 동작
 on:
@@ -13,7 +13,7 @@ on:
 # push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.
 
 jobs:
-  build: 
+  test:
     runs-on: ubuntu-22.04 # 실행 환경 지정
 
     steps:

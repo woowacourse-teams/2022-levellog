@@ -1,8 +1,9 @@
 package com.woowacourse.levellog.domain;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface LevellogRepository extends JpaRepository<Levellog, Long> {
+
+    Optional<Levellog> findByAuthorId(Long authorId);
 }

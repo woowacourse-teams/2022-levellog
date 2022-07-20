@@ -37,4 +37,10 @@ public class Team {
         this.startAt = startAt;
         this.profileUrl = profileUrl;
     }
+
+    public void update(final String title, final String place, final LocalDateTime startAt) {
+        this.title = title;
+        this.place = place;
+        this.startAt = startAt;
+    }
 }

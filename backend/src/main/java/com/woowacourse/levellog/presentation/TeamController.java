@@ -10,6 +10,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +49,13 @@ public class TeamController {
     public ResponseEntity<Void> update(@PathVariable final Long id,
                                        @RequestBody @Valid final TeamUpdateRequest request) {
         teamService.update(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@LoginMember final Long memberId,
+                                       @PathVariable final Long id) {
+        teamService.deleteById(memberId, id);
         return ResponseEntity.noContent().build();
     }
 }

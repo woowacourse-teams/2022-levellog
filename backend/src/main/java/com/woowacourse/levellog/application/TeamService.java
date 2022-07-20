@@ -108,7 +108,8 @@ public class TeamService {
     }
 
     private Long getLevellog(final Participant participant) {
-        final Levellog levellog = levellogRepository.findByAuthorId(participant.getMember().getId())
+        final Levellog levellog = levellogRepository
+                .findByAuthorIdAndTeamId(participant.getMember().getId(), participant.getTeam().getId())
                 .orElse(null);
 
         if (levellog == null) {

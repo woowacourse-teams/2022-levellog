@@ -29,10 +29,17 @@ public class MemberService {
 
     public MembersResponse findAll() {
         final List<MemberResponse> responses = memberRepository.findAll().stream()
-                .map(it -> new MemberResponse(it.getId(), it.getNickname(), it.getProfileUrl()))
+                .map(MemberResponse::from)
                 .collect(Collectors.toList());
 
         return new MembersResponse(responses);
+    }
+
+    public MembersResponse findAllByNicknameContains(final String nickname) {
+        final List<MemberResponse> memberResponses = memberRepository.findAllByNicknameContains(nickname).stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
+        return new MembersResponse(memberResponses);
     }
 
     public Optional<Member> findByGithubId(final int githubId) {

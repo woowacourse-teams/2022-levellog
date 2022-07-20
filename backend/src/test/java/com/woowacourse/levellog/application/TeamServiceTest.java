@@ -1,6 +1,8 @@
 package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.MemberRepository;
@@ -14,12 +16,14 @@ import com.woowacourse.levellog.dto.TeamRequest;
 import com.woowacourse.levellog.dto.TeamResponse;
 import com.woowacourse.levellog.dto.TeamUpdateRequest;
 import com.woowacourse.levellog.dto.TeamsResponse;
+import com.woowacourse.levellog.exception.HostUnauthorizedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -152,5 +156,46 @@ class TeamServiceTest {
         assertThat(actualTeam.getTitle()).isEqualTo(request.getTitle());
         assertThat(actualTeam.getPlace()).isEqualTo(request.getPlace());
         assertThat(actualTeam.getStartAt()).isEqualTo(request.getStartAt());
+    }
+
+    @Nested
+    @DisplayName("delete 메서드는")
+    class delete {
+
+        @Test
+        @DisplayName("delete 메서드는 id에 해당하는 팀을 삭제한다.")
+        void success() {
+            // given
+            final Member member1 = getMember("릭");
+            final Member member2 = getMember("페퍼");
+            final Team team = getTeam("잠실 제이슨조");
+
+            participantRepository.save(new Participant(team, member1, true));
+            participantRepository.save(new Participant(team, member2, false));
+
+            // when
+            teamService.deleteById(member1.getId(), team.getId());
+
+            // then
+            assertTrue(teamRepository.findById(team.getId()).isEmpty());
+        }
+
+        @Test
+        @DisplayName("delete 메서드는 호스트가 아닌 멤버가 팀을 삭제하는 경우 예외를 던진다.")
+        void hostUnauthorized_Exception() {
+            // given
+            final Member member1 = getMember("릭");
+            final Member member2 = getMember("페퍼");
+            final Team team = getTeam("잠실 제이슨조");
+
+            participantRepository.save(new Participant(team, member1, true));
+            participantRepository.save(new Participant(team, member2, false));
+
+            // when, then
+            final Long memberId = member2.getId();
+            final Long teamId = team.getId();
+            assertThatThrownBy(() -> teamService.deleteById(memberId, teamId))
+                    .isInstanceOf(HostUnauthorizedException.class);
+        }
     }
 }

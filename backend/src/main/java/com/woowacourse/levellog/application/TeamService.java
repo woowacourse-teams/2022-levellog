@@ -15,6 +15,7 @@ import com.woowacourse.levellog.dto.TeamRequest;
 import com.woowacourse.levellog.dto.TeamResponse;
 import com.woowacourse.levellog.dto.TeamUpdateRequest;
 import com.woowacourse.levellog.dto.TeamsResponse;
+import com.woowacourse.levellog.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.exception.TeamNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,5 +122,16 @@ public class TeamService {
         final Team team = teamRepository.findById(id)
                 .orElseThrow(TeamNotFoundException::new);
         team.update(request.getTitle(), request.getPlace(), request.getStartAt());
+    }
+
+    public void deleteById(final Long memberId, final Long id) {
+        final Team team = teamRepository.findById(id).orElseThrow(TeamNotFoundException::new);
+        final List<Participant> participants = participantRepository.findByTeam(team);
+        final Long hostId = getHostId(participants);
+
+        if (!memberId.equals(hostId)) {
+            throw new HostUnauthorizedException();
+        }
+        teamRepository.deleteById(id);
     }
 }

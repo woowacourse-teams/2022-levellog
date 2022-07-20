@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-import { LevellogType } from '../types';
+import { LevellogType } from 'types';
 
 export const postLevellog = (
   accessToken: string,
@@ -22,7 +21,7 @@ export const getLevellog = (accessToken: string, teamId: string, id: string) =>
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
-export const putLevellog = (
+export const modifyLevellog = (
   accessToken: string,
   teamId: string,
   id: string,

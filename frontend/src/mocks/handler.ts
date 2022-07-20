@@ -20,9 +20,17 @@ export const feedbackHandlers = [
 export const levellogHandlers = [
   rest.post('/api/teams/:teamId/levellogs', (req, res, ctx) => {
     const teamId = +req.params.teamId;
-    const contents = req.body;
-
-    console.log(contents);
+    const contents = req.body as any;
+    const randomId = Math.random();
+    const levellog = {
+      teamId: teamId,
+      levellogId: randomId,
+      content: contents.content,
+    };
+    levellogs.push(levellog);
+    levellogTeams.teams.find(
+      (team) => team.id === teamId && (team.participants[0].levellogId = randomId),
+    );
 
     return res(ctx.status(201));
   }),
@@ -40,16 +48,36 @@ export const levellogHandlers = [
   rest.put(`/api/teams/:teamId/levellogs/:id`, (req, res, ctx) => {
     const teamId = +req.params.teamId;
     const levellogId = +req.params.id;
-    const contents = req.body;
+    const contents = req.body as any;
 
-    console.log(contents);
+    levellogs.find(
+      (levellog) =>
+        levellog.teamId === teamId &&
+        levellog.levellogId === levellogId &&
+        (levellog.content = contents.content),
+    );
 
     return res(ctx.status(204));
   }),
 
-  rest.delete(`/api/teams/:teamId/levellogs/:id`, (req, res, ctx) => {
+  rest.delete(`/api/teams/:teamId/levellogs/:levellogId`, (req, res, ctx) => {
     const teamId = +req.params.teamId;
-    const levellogId = +req.params.id;
+    const levellogId = +req.params.levellogId;
+    const index = levellogs.findIndex(
+      (levellog) => levellog.teamId === teamId && levellog.levellogId === levellogId,
+    );
+    levellogs.splice(index, 1);
+
+    levellogTeams.teams.find((team) => {
+      if (team.id === teamId) {
+        team.participants.find(
+          (participant) =>
+            participant.levellogId === levellogId &&
+            participant.id === 300 &&
+            (participant.levellogId = null),
+        );
+      }
+    });
 
     return res(ctx.status(204));
   }),
@@ -79,10 +107,10 @@ export const levellogGroupHandlers = [
 
   rest.get('/api/teams/:teamId', (req, res, ctx) => {
     const { teamId } = req.params;
-    const chooselevellogTeam = levellogTeams.teams.find(
+    const chooseLevellogTeam = levellogTeams.teams.find(
       (levellogTeam) => +levellogTeam.id === +teamId,
     );
 
-    return res(ctx.status(200), ctx.json(chooselevellogTeam));
+    return res(ctx.status(200), ctx.json(chooseLevellogTeam));
   }),
 ];

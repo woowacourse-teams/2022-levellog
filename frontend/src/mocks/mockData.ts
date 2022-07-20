@@ -22,104 +22,104 @@ export const feedbacks = {
 };
 
 export const levellog = {
-  contents: '내가 작성한 레벨로그입니다',
+  content: '내가 작성한 레벨로그입니다',
 };
 
 export const levellogs = [
   {
     teamId: 1,
     levellogId: 2,
-    contents: '제이슨조 2번 유저의 레벨로그',
+    content: '제이슨조 2번 유저의 레벨로그',
   },
   {
     teamId: 1,
     levellogId: 3,
-    contents: '제이슨조 3번 유저의 레벨로그',
+    content: '제이슨조 3번 유저의 레벨로그',
   },
   {
     teamId: 2,
     levellogId: 1,
-    contents: '포코조 1번 유저의 레벨로그',
+    content: '포코조 1번 유저의 레벨로그',
   },
   {
     teamId: 2,
     levellogId: 2,
-    contents: '포코조 2번 유저의 레벨로그',
+    content: '포코조 2번 유저의 레벨로그',
   },
   {
     teamId: 2,
     levellogId: 3,
-    contents: '포코조 3번 유저의 레벨로그',
+    content: '포코조 3번 유저의 레벨로그',
   },
   {
     teamId: 2,
     levellogId: 4,
-    contents: '포코조 4번 유저의 레벨로그',
+    content: '포코조 4번 유저의 레벨로그',
   },
   {
     teamId: 2,
     levellogId: 5,
-    contents: '포코조 5번 유저의 레벨로그',
+    content: '포코조 5번 유저의 레벨로그',
   },
   {
     teamId: 2,
     levellogId: 6,
-    contents: '포코조 6번 유저의 레벨로그',
+    content: '포코조 6번 유저의 레벨로그',
   },
   {
     teamId: 3,
     levellogId: 1,
-    contents: '공원조 1번 유저의 레벨로그',
+    content: '공원조 1번 유저의 레벨로그',
   },
   {
     teamId: 3,
     levellogId: 3,
-    contents: '공원조 2번 유저의 레벨로그',
+    content: '공원조 2번 유저의 레벨로그',
   },
   {
     teamId: 3,
     levellogId: 7,
-    contents: '공원조 3번 유저의 레벨로그',
+    content: '공원조 3번 유저의 레벨로그',
   },
   {
     teamId: 3,
     levellogId: 5,
-    contents: '공원조 4번 유저의 레벨로그',
+    content: '공원조 4번 유저의 레벨로그',
   },
   {
     teamId: 4,
     levellogId: 1,
-    contents: '구구조 1번 유저의 레벨로그',
+    content: '구구조 1번 유저의 레벨로그',
   },
   {
     teamId: 4,
     levellogId: 4,
-    contents: '구구조 2번 유저의 레벨로그',
+    content: '구구조 2번 유저의 레벨로그',
   },
   {
     teamId: 4,
     levellogId: 7,
-    contents: '구구조 3번 유저의 레벨로그',
+    content: '구구조 3번 유저의 레벨로그',
   },
   {
     teamId: 4,
     levellogId: 5,
-    contents: '구구조 4번 유저의 레벨로그',
+    content: '구구조 4번 유저의 레벨로그',
   },
   {
     teamId: 5,
     levellogId: 4,
-    contents: '브리조 1번 유저의 레벨로그',
+    content: '브리조 1번 유저의 레벨로그',
   },
   {
     teamId: 5,
     levellogId: 5,
-    contents: '브리조 2번 유저의 레벨로그',
+    content: '브리조 2번 유저의 레벨로그',
   },
   {
     teamId: 5,
     levellogId: 6,
-    contents: '브리조 3번 유저의 레벨로그',
+    content: '브리조 3번 유저의 레벨로그',
   },
 ];
 

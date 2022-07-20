@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.application;
 
 import com.woowacourse.levellog.authentication.exception.MemberNotFoundException;
-import com.woowacourse.levellog.common.BaseEntity;
+import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.MemberRepository;
@@ -108,10 +108,13 @@ public class TeamService {
     }
 
     private Long getLevellog(final Participant participant) {
-        final Long id = null;
-        levellogRepository.findByAuthorId(participant.getMember().getId())
-                .ifPresent(BaseEntity::getId);
-        return id;
+        final Levellog levellog = levellogRepository.findByAuthorId(participant.getMember().getId())
+                .orElse(null);
+
+        if (levellog == null) {
+            return null;
+        }
+        return levellog.getId();
     }
 
     public void update(final Long id, final TeamUpdateRequest request) {

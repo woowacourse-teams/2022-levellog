@@ -65,7 +65,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("myinfo/update-nickname"))
                 .when()
-                .put("/api/myinfo")
+                .put("/api/myInfo")
                 .then().log().all();
 
         // then

@@ -9,7 +9,7 @@ import useTeams from 'hooks/useTeams';
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
-import Interviewer from 'components/Interviewer';
+import Interviewer from 'components/teams/Interviewer';
 
 const InterviewDetail = () => {
   const { teamId } = useParams();

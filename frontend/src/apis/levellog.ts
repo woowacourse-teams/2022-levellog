@@ -1,17 +1,45 @@
 import axios from 'axios';
-import { SERVER_PATH } from '../constants/constants';
+
 import { LevellogType } from '../types';
 
-export const postLevellog = (levellogContent: LevellogType) => {
+export const postLevellog = (
+  accessToken: string,
+  teamId: string,
+  levellogContent: LevellogType,
+) => {
   axios({
     method: 'post',
-    url: SERVER_PATH.LEVELLOGS,
+    url: `/api/teams/${teamId}/levellogs`,
+    headers: { Authorization: `Bearer ${accessToken}` },
     data: levellogContent,
   });
 };
 
-export const getLevellog = (id: number) =>
+export const getLevellog = (accessToken: string, teamId: string, id: string) =>
   axios({
     method: 'get',
-    url: `${SERVER_PATH.LEVELLOGS}/${id}`,
+    url: `/api/teams/${teamId}/levellogs/${id}`,
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
+
+export const putLevellog = (
+  accessToken: string,
+  teamId: string,
+  id: string,
+  levellogContent: LevellogType,
+) => {
+  axios({
+    method: 'put',
+    url: `/api/teams/${teamId}/levellogs/${id}`,
+    headers: { Authorization: `Bearer ${accessToken}` },
+    data: levellogContent,
+  });
+};
+
+export const deleteLevellog = (accessToken: string, teamId: string, id: string) => {
+  axios({
+    method: 'delete',
+    url: `/api/teams/${teamId}/levellogs/${id}`,
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+};

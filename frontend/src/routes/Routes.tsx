@@ -1,12 +1,15 @@
-import FeedbackAdd from 'pages/FeedbackAdd';
-import FeedbackList from 'pages/FeedbackList';
 import Home from 'pages/Home';
-import InterviewDetail from 'pages/InterviewDetail';
-import InterviewTeams from 'pages/InterviewTeams';
-import LevellogAdd from 'pages/LevellogAdd';
 import Login from 'pages/Login';
+import NotFound from 'pages/NotFound';
+import FeedbackAdd from 'pages/feedback/FeedbackAdd';
+import FeedbackList from 'pages/feedback/FeedbackList';
+import LevellogAdd from 'pages/levellogs/LevellogAdd';
+import InterviewDetail from 'pages/teams/InterviewDetail';
+import InterviewTeams from 'pages/teams/InterviewTeams';
 
 import { ROUTES_PATH } from 'constants/constants';
+
+import RequireAuth from 'components/RequireAuth';
 
 export const routes = [
   {
@@ -26,8 +29,12 @@ export const routes = [
     element: <Login />,
   },
   {
-    path: ROUTES_PATH.LEVELLOG_ADD,
-    element: <LevellogAdd />,
+    path: ROUTES_PATH.LEVELLOG_ADD_DETAIL,
+    element: (
+      <RequireAuth>
+        <LevellogAdd />,
+      </RequireAuth>
+    ),
   },
   {
     path: ROUTES_PATH.INTERVIEW_TEAMS,
@@ -36,5 +43,9 @@ export const routes = [
   {
     path: ROUTES_PATH.INTERVIEW_TEAMS_DETAIL,
     element: <InterviewDetail />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ];

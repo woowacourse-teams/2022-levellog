@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -12,11 +13,11 @@ import { SubTitleLabel } from 'components/@commons/Label';
 const LevellogAdd = () => {
   const levellogRef = useRef(null);
   const { levellogAdd } = useLevellog();
+  const { teamId } = useParams();
 
   const handleSubmitLevellogForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    levellogAdd(levellogRef.current.value);
+    levellogAdd(teamId, levellogRef.current.value);
   };
 
   return (

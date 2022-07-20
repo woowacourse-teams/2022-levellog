@@ -39,7 +39,6 @@ public class MyInfoController {
     public ResponseEntity<Void> updateNickname(@LoginMember final Long memberId,
                                                @RequestBody @Valid final NicknameUpdateDto nicknameUpdateDto) {
         memberService.updateNickname(memberId, nicknameUpdateDto);
-        System.out.println("happy");
         return ResponseEntity.noContent().build();
     }
 }

@@ -10,7 +10,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpHeaders;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -35,7 +34,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("myinfo/update-nickname"))
+                .filter(document("myinfo/read"))
                 .when()
                 .get("/api/myInfo")
                 .then().log().all();

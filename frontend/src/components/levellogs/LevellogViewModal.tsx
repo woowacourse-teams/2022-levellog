@@ -6,16 +6,22 @@ import useLevellog from 'hooks/useLevellog';
 
 import { ROUTES_PATH } from 'constants/constants';
 
-import Button from '../@commons/Button';
+import Button from 'components/@commons/Button';
 
-const LevellogViewModal = ({ owner, nickname, levellogId, levellog, setIsOnModal }) => {
-  const { levellogModify, levellogDelete } = useLevellog();
+const LevellogViewModal = ({
+  owner,
+  nickname,
+  levellogId,
+  levellog,
+  setIsOnModal,
+  requestInterviewTeam,
+}) => {
+  const { levellogDelete } = useLevellog();
   const { teamId } = useParams();
-
-  const handleClickLevellogModify = () => {};
 
   const handleClickLevellogDelete = async () => {
     await levellogDelete(teamId, levellogId);
+    requestInterviewTeam();
     setIsOnModal(false);
   };
 
@@ -24,7 +30,7 @@ const LevellogViewModal = ({ owner, nickname, levellogId, levellog, setIsOnModal
       <LevellogModalStyle>
         <Header>
           <h3>{nickname}의 Levellog</h3>
-          <CloseButton onClick={setIsOnModal}>X</CloseButton>
+          <CloseButton onClick={() => setIsOnModal(false)}>X</CloseButton>
         </Header>
         <Levellog>{levellog}</Levellog>
         <Footer>
@@ -34,26 +40,28 @@ const LevellogViewModal = ({ owner, nickname, levellogId, levellog, setIsOnModal
         </Footer>
       </LevellogModalStyle>
     );
-  } else {
-    return (
-      <LevellogModalStyle>
-        <Header>
-          <h3>나의 Levellog</h3>
-          <CloseButton onClick={setIsOnModal}>X</CloseButton>
-        </Header>
-        <Levellog>{levellog}</Levellog>
-        <Footer>
-          <Button color="#FF0000">수정하기</Button>
-          <Button onClick={handleClickLevellogDelete} color="#FF0000">
-            삭제하기
-          </Button>
-        </Footer>
-      </LevellogModalStyle>
-    );
   }
+
+  return (
+    <LevellogModalStyle>
+      <Header>
+        <h3>나의 Levellog</h3>
+        <CloseButton onClick={() => setIsOnModal(false)}>X</CloseButton>
+      </Header>
+      <Levellog>{levellog}</Levellog>
+      <Footer>
+        <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
+          <Button color="#FF0000">수정하기</Button>
+        </Link>
+        <Button onClick={handleClickLevellogDelete} color="#FF0000">
+          삭제하기
+        </Button>
+      </Footer>
+    </LevellogModalStyle>
+  );
 };
 
-const Footer = styled.footer`
+const Footer = styled.div`
   width: 100%;
   height: 10%;
   box-sizing: border-box;
@@ -69,7 +77,7 @@ const Levellog = styled.div`
   background-color: white;
 `;
 
-const Header = styled.header`
+const Header = styled.div`
   width: 100%;
   height: 10%;
   box-sizing: border-box;

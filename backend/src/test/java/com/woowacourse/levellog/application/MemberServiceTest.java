@@ -8,6 +8,7 @@ import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.dto.MemberCreateDto;
 import com.woowacourse.levellog.dto.MemberResponse;
 import com.woowacourse.levellog.dto.MembersResponse;
+import com.woowacourse.levellog.dto.NicknameUpdateDto;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -99,5 +100,21 @@ class MemberServiceTest {
         // then
         final Member updateMember = memberRepository.findById(id).orElseThrow();
         assertThat(updateMember.getProfileUrl()).isEqualTo(newProfileUrl);
+    }
+
+    @Test
+    @DisplayName("updateNickname 메서드는 닉네임을 업데이트한다.")
+    void updateNickname() {
+        // given
+        final Member savedMember = memberRepository.save(new Member("로마", 1234567, "profileUrl.image"));
+        final Long id = savedMember.getId();
+        final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto("알린");
+
+        // when
+        memberService.updateNickname(id, nicknameUpdateDto);
+
+        // then
+        final Member updateMember = memberRepository.findById(id).orElseThrow();
+        assertThat(updateMember.getNickname()).isEqualTo("알린");
     }
 }

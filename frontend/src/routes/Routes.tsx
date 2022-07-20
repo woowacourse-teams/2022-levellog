@@ -4,6 +4,7 @@ import NotFound from 'pages/NotFound';
 import FeedbackAdd from 'pages/feedback/FeedbackAdd';
 import FeedbackList from 'pages/feedback/FeedbackList';
 import LevellogAdd from 'pages/levellogs/LevellogAdd';
+import LevellogModify from 'pages/levellogs/LevellogModify';
 import InterviewDetail from 'pages/teams/InterviewDetail';
 import InterviewTeams from 'pages/teams/InterviewTeams';
 
@@ -29,12 +30,16 @@ export const routes = [
     element: <Login />,
   },
   {
-    path: ROUTES_PATH.LEVELLOG_ADD_DETAIL,
+    path: ROUTES_PATH.LEVELLOG_ADD_ROUTE,
     element: (
       <RequireAuth>
         <LevellogAdd />,
       </RequireAuth>
     ),
+  },
+  {
+    path: ROUTES_PATH.LEVELLOG_MODIFY,
+    element: <LevellogModify />,
   },
   {
     path: ROUTES_PATH.INTERVIEW_TEAMS,

@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
 import { ROUTES_PATH } from '../constants/constants';

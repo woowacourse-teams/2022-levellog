@@ -1,0 +1,25 @@
+= MyInfo
+:toc: left
+:toclevels: 2
+:sectlinks:
+:source-highlighter: highlightjs
+
+[[home]]
+== home
+* link:index.html[목록으로 가기]
+
+[[read]]
+== 내 정보 조회
+
+[[read-success]]
+=== 성공
+
+operation::myinfo/read[]
+
+[[update-nickname]]
+== 닉네임 변경
+
+[[update-nickname-success]]
+=== 성공
+
+operation::myinfo/update-nickname[]

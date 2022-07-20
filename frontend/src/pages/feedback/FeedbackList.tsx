@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import Feedback from '../components/Feedback';
-import Button from '../components/@commons/Button';
+import styled from 'styled-components';
+import { FeedbackType } from 'types';
 
-import useFeedback from '../hooks/useFeedback';
+import useFeedback from 'hooks/useFeedback';
 
-import { ROUTES_PATH } from '../constants/constants';
-import { FeedbackType } from '../types';
-import { useEffect } from 'react';
+import { ROUTES_PATH } from 'constants/constants';
+
+import Button from 'components/@commons/Button';
+import Feedback from 'components/feedbacks/Feedback';
 
 const FeedbackList = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -36,7 +36,7 @@ const FeedbackList = () => {
             <Feedback
               key={feedback.id}
               userFeedback={feedback}
-              requsetFeedbackLookup={requestFeedbackLookup}
+              requestFeedbackLookup={requestFeedbackLookup}
             />
           ))}
       </FeedbacksContainer>

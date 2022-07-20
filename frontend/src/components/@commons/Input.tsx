@@ -1,5 +1,3 @@
-
-import React from 'react';
 import styled from 'styled-components';
 
 const Input = ({ width = '300px', height = '40px', inputRef, ...props }: InputProps) => {

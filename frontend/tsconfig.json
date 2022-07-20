@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
-    "noImplicitAny": true,
-    "module": "commonjs",
-    "esModuleInterop": true,
     "target": "es6",
-    "jsx": "react-jsx"
-  },
-  "include": ["./src"]
+    "module": "es2020",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "baseUrl": "src"
+  }
 }

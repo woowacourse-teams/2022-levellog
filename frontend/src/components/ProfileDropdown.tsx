@@ -1,17 +1,17 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import styled from 'styled-components';
 
-import Button from './@commons/Button';
+import useUser from 'hooks/useUser';
 
-import { useUser } from '../hooks/useContext';
+import Button from './@commons/Button';
 
 const ProfileDropdown = ({
   isProfileDropdownShow,
   setIsProfileDropdownShow,
 }: ProfileDropdownProps) => {
   const navigate = useNavigate();
-  const { profileUrlDispatch } = useUser();
+  const { userInfoDispatch } = useUser();
 
   const handleClickProfileButton = () => {
     // profile route가 들어가야 한다.
@@ -20,7 +20,7 @@ const ProfileDropdown = ({
 
   const handleClickLogoutButton = () => {
     localStorage.removeItem('accessToken');
-    profileUrlDispatch('');
+    userInfoDispatch({ id: '', profileUrl: '' });
     setIsProfileDropdownShow(false);
   };
 

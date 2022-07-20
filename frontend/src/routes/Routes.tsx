@@ -1,12 +1,15 @@
-import React from 'react';
+import Home from 'pages/Home';
+import Login from 'pages/Login';
+import NotFound from 'pages/NotFound';
+import FeedbackAdd from 'pages/feedback/FeedbackAdd';
+import FeedbackList from 'pages/feedback/FeedbackList';
+import LevellogAdd from 'pages/levellogs/LevellogAdd';
+import InterviewDetail from 'pages/teams/InterviewDetail';
+import InterviewTeams from 'pages/teams/InterviewTeams';
 
-import FeedbackList from '../pages/FeedbackList';
-import FeedbackAdd from '../pages/FeedbackAdd';
-import Login from '../pages/Login';
-import LevellogAdd from '../pages/LevellogAdd';
-import Home from '../pages/Home';
+import { ROUTES_PATH } from 'constants/constants';
 
-import { ROUTES_PATH } from '../constants/constants';
+import RequireAuth from 'components/RequireAuth';
 
 export const routes = [
   {
@@ -24,9 +27,25 @@ export const routes = [
   {
     path: ROUTES_PATH.LOGIN,
     element: <Login />,
-   },
-   {
-    path: ROUTES_PATH.LEVELLOG_ADD,
-    element: <LevellogAdd />,
+  },
+  {
+    path: ROUTES_PATH.LEVELLOG_ADD_DETAIL,
+    element: (
+      <RequireAuth>
+        <LevellogAdd />,
+      </RequireAuth>
+    ),
+  },
+  {
+    path: ROUTES_PATH.INTERVIEW_TEAMS,
+    element: <InterviewTeams />,
+  },
+  {
+    path: ROUTES_PATH.INTERVIEW_TEAMS_DETAIL,
+    element: <InterviewDetail />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ];

@@ -1,6 +1,21 @@
 module.exports = {
   printWidth: 100,
   singleQuote: true,
-  trailingComma: "all",
-  endOfLine: "auto",
+  trailingComma: 'all',
+  endOfLine: 'lf',
+  importOrder: [
+    '^(react)',
+    '^((?!/).)*$',
+    '^((.*)/types)(.*|$)',
+    '^((hooks))(.*|$)',
+    '^(./@commons)*$',
+    '^(./components|components)*$',
+    '^(./components)(.*|$)',
+    '^(pages)(.*|$)',
+    '^((assets|constants))(.*|$)',
+    '^(./styles)(.*|$)',
+    '^(.)(.*|$)',
+    '^(..)(.*|$)',
+  ],
+  importOrderSeparation: true,
 };

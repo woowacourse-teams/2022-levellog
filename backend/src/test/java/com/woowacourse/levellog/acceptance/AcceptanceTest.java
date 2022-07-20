@@ -15,9 +15,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -29,10 +29,11 @@ import org.springframework.test.context.ActiveProfiles;
 abstract class AcceptanceTest {
 
     protected RequestSpecification specification;
+
     @LocalServerPort
     private int port;
 
-    /**
+    /*
      * 기본 생성 snippet은 http-request.adoc, http-response.adoc입니다.
      * Request host는 https://api.levellog.app입니다.
      * 응답 헤더 중 Transfer-Encoding, Date, Keep-Alive, Connection은 제외됩니다.

@@ -9,6 +9,7 @@ import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.dto.LevellogResponse;
+import com.woowacourse.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.exception.TeamNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class LevellogService {
     }
 
     private Levellog getById(final Long id) {
-        return levellogRepository.findById(id).orElseThrow();
+        return levellogRepository.findById(id).orElseThrow(LevellogNotFoundException::new);
     }
 
     private Team getTeam(final Long groupId) {

@@ -1,4 +1,15 @@
 import { setupWorker } from 'msw';
-import { handlers, loginHandler } from './handler';
 
-export const worker = setupWorker(...handlers, ...loginHandler);
+import {
+  feedbackHandlers,
+  levellogHandlers,
+  loginHandlers,
+  levellogGroupHandlers,
+} from './handler';
+
+export const worker = setupWorker(
+  ...feedbackHandlers,
+  ...levellogHandlers,
+  ...loginHandlers,
+  ...levellogGroupHandlers,
+);

@@ -1,7 +1,6 @@
-import React from 'react';
 import styled from 'styled-components';
 
-const Button = ({ children, onClick, ...props }: ButtonProps) => {
+const Button = ({ children, onClick, color, ...props }: ButtonProps) => {
   return (
     <ButtonStyle onClick={onClick} color={color} {...props}>
       {children}
@@ -15,12 +14,11 @@ interface ButtonProps {
   color?: string;
 }
 
-
-const StyledButton = styled.button`
+const ButtonStyle = styled.button`
   width: fit-content;
   cursor: pointer;
-  background-color: #b4b4b4;
-  border-style: none;
+  background-color: none;
+  border: 2px solid ${(props) => props.theme.default.BLACK};
   font-size: 22px;
   font-weight: 500;
 `;

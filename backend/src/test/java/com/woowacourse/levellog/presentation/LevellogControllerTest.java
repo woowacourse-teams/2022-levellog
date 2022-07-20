@@ -7,27 +7,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.support.ControllerTest;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-// FIXME : 팀 API 구현 후 수정
-@Disabled
-@WebMvcTest(LevellogController.class)
 @DisplayName("LevellogController의")
 class LevellogControllerTest extends ControllerTest {
-
-    // FIXME : 팀 API 구현 후 수정
-    @Test
-    void test() {
-    }
 
     @Nested
     @DisplayName("save 메서드는")
@@ -39,11 +28,12 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("내용으로 공백이나 null이 들어오면 예외를 던진다.")
         void nameNullOrEmpty_Exception(final String content) throws Exception {
             // given
+            Long teamId = 1L;
             final LevellogRequest request = new LevellogRequest(content);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/levellogs")
+            final ResultActions perform = mockMvc.perform(post("/api/teams/{teamId}/levellogs", teamId)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))
                     .andDo(print());
@@ -63,11 +53,13 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("내용으로 공백이나 null이 들어오면 예외를 던진다.")
         void nameNullOrEmpty_Exception(final String content) throws Exception {
             // given
+            Long teamId = 1L;
+            Long levellogId = 2L;
             final LevellogRequest request = new LevellogRequest(content);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/levellogs/1")
+            final ResultActions perform = mockMvc.perform(put("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))
                     .andDo(print());

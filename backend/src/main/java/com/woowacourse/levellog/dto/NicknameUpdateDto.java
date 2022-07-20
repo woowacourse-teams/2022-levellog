@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.dto;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class NicknameUpdateDto {
 
+    @NotBlank
     private String nickname;
 }

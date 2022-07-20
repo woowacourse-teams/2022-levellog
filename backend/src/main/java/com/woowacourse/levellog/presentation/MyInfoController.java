@@ -5,9 +5,13 @@ import com.woowacourse.levellog.application.MemberService;
 import com.woowacourse.levellog.authentication.support.LoginMember;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
 import com.woowacourse.levellog.dto.MemberResponse;
+import com.woowacourse.levellog.dto.NicknameUpdateDto;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +33,13 @@ public class MyInfoController {
     public ResponseEntity<MemberResponse> myInfo(@LoginMember final Long memberId) {
         final MemberResponse memberResponse = memberService.findMemberById(memberId);
         return ResponseEntity.ok(memberResponse);
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateNickname(@LoginMember final Long memberId,
+                                               @RequestBody @Valid final NicknameUpdateDto nicknameUpdateDto) {
+        memberService.updateNickname(memberId, nicknameUpdateDto);
+        System.out.println("happy");
+        return ResponseEntity.noContent().build();
     }
 }

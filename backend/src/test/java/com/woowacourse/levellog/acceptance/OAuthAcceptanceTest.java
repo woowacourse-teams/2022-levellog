@@ -2,6 +2,7 @@ package com.woowacourse.levellog.acceptance;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
@@ -34,7 +35,13 @@ class OAuthAcceptanceTest extends AcceptanceTest {
         final GithubCodeRequest codeRequest = new GithubCodeRequest(code);
 
         // when
-        final ValidatableResponse response = requestLogin(codeRequest);
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .body(codeRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("auth/login"))
+                .when()
+                .post("/api/auth/login")
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -43,12 +50,4 @@ class OAuthAcceptanceTest extends AcceptanceTest {
                 .body("id", notNullValue());
     }
 
-    private ValidatableResponse requestLogin(final GithubCodeRequest request) {
-        return RestAssured.given().log().all()
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/auth/login")
-                .then().log().all();
-    }
 }

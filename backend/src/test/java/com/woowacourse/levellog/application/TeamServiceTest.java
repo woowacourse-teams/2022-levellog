@@ -201,7 +201,7 @@ class TeamServiceTest {
             participantRepository.save(new Participant(team, member2, false));
 
             // when
-            teamService.deleteById(member1.getId(), team.getId());
+            teamService.deleteById(team.getId(), member1.getId());
 
             // then
             assertTrue(teamRepository.findById(team.getId()).isEmpty());
@@ -221,7 +221,7 @@ class TeamServiceTest {
             // when, then
             final Long memberId = member2.getId();
             final Long teamId = team.getId();
-            assertThatThrownBy(() -> teamService.deleteById(memberId, teamId))
+            assertThatThrownBy(() -> teamService.deleteById(teamId, memberId))
                     .isInstanceOf(HostUnauthorizedException.class);
         }
     }

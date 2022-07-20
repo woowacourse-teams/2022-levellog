@@ -54,9 +54,8 @@ public class TeamController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@LoginMember final Long memberId,
-                                       @PathVariable final Long id) {
-        teamService.deleteById(memberId, id);
+    public ResponseEntity<Void> delete(@PathVariable final Long id, @LoginMember final Long memberId) {
+        teamService.deleteById(id, memberId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -129,7 +129,7 @@ public class TeamService {
         team.update(request.getTitle(), request.getPlace(), request.getStartAt());
     }
 
-    public void deleteById(final Long memberId, final Long id) {
+    public void deleteById(final Long id, final Long memberId) {
         final Team team = findTeam(id);
         final List<Participant> participants = participantRepository.findByTeam(team);
         final Long hostId = getHostId(participants);

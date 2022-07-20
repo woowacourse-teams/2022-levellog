@@ -64,11 +64,11 @@ class TeamServiceTest {
     @DisplayName("findAll 메서드는 전체 팀 목록을 조회한다.")
     void findAll() {
         //given
-        Member member1 = getMember("릭");
-        Member member2 = getMember("페퍼");
+        final Member member1 = getMember("릭");
+        final Member member2 = getMember("페퍼");
 
-        Team team1 = getTeam("잠실 제이슨조");
-        Team team2 = getTeam("선릉 브라운조");
+        final Team team1 = getTeam("잠실 제이슨조");
+        final Team team2 = getTeam("선릉 브라운조");
 
         participantRepository.save(new Participant(team1, member1, true));
         participantRepository.save(new Participant(team1, member2, false));
@@ -78,17 +78,17 @@ class TeamServiceTest {
         //when
         final TeamsResponse response = teamService.findAll();
 
-        List<String> actualTitles = response.getTeams()
+        final List<String> actualTitles = response.getTeams()
                 .stream()
                 .map(TeamResponse::getTitle)
                 .collect(Collectors.toList());
 
-        List<Long> actualHostIds = response.getTeams()
+        final List<Long> actualHostIds = response.getTeams()
                 .stream()
                 .map(TeamResponse::getHostId)
                 .collect(Collectors.toList());
 
-        List<Integer> actualParticipantSizes = response.getTeams()
+        final List<Integer> actualParticipantSizes = response.getTeams()
                 .stream()
                 .map(TeamResponse::getParticipants)
                 .map(ParticipantsResponse::getParticipants)
@@ -102,11 +102,32 @@ class TeamServiceTest {
         assertThat(response.getTeams()).hasSize(2);
     }
 
-    private Member getMember(String nickname) {
+    private Member getMember(final String nickname) {
         return memberRepository.save(new Member(nickname, (int) System.currentTimeMillis(), "profile.png"));
     }
 
     private Team getTeam(final String title) {
         return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now(), "jason.png"));
+    }
+
+    @Test
+    @DisplayName("findById 메서드는 id에 해당하는 팀을 조회한다.")
+    void findById() {
+        //given
+        final Member member1 = getMember("릭");
+        final Member member2 = getMember("페퍼");
+
+        final Team team = getTeam("잠실 제이슨조");
+
+        participantRepository.save(new Participant(team, member1, true));
+        participantRepository.save(new Participant(team, member2, false));
+
+        //when
+        final TeamResponse response = teamService.findById(team.getId());
+
+        //then
+        assertThat(response.getTitle()).isEqualTo(team.getTitle());
+        assertThat(response.getHostId()).isEqualTo(member1.getId());
+        assertThat(response.getParticipants().getParticipants()).hasSize(2);
     }
 }

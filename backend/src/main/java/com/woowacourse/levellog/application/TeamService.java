@@ -14,6 +14,7 @@ import com.woowacourse.levellog.dto.ParticipantsResponse;
 import com.woowacourse.levellog.dto.TeamRequest;
 import com.woowacourse.levellog.dto.TeamResponse;
 import com.woowacourse.levellog.dto.TeamsResponse;
+import com.woowacourse.levellog.exception.TeamNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,8 +58,14 @@ public class TeamService {
     }
 
     public TeamsResponse findAll() {
-        List<Team> teams = teamRepository.findAll();
+        final List<Team> teams = teamRepository.findAll();
         return new TeamsResponse(getTeamResponses(teams));
+    }
+
+    public TeamResponse findById(final Long id) {
+        final Team team = teamRepository.findById(id)
+                .orElseThrow(TeamNotFoundException::new);
+        return getTeam(team);
     }
 
     private List<TeamResponse> getTeamResponses(final List<Team> teams) {
@@ -89,7 +96,7 @@ public class TeamService {
     }
 
     private ParticipantsResponse getParticipantsResponse(final List<Participant> participants) {
-        List<ParticipantResponse> participantResponses = participants.stream()
+        final List<ParticipantResponse> participantResponses = participants.stream()
                 .map(it -> new ParticipantResponse(
                         it.getId(),
                         getLevellog(it),
@@ -100,7 +107,7 @@ public class TeamService {
     }
 
     private Long getLevellog(final Participant participant) {
-        Long id = null;
+        final Long id = null;
         levellogRepository.findByAuthorId(participant.getMember().getId())
                 .ifPresent(BaseEntity::getId);
         return id;

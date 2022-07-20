@@ -13,6 +13,7 @@ import com.woowacourse.levellog.dto.ParticipantResponse;
 import com.woowacourse.levellog.dto.ParticipantsResponse;
 import com.woowacourse.levellog.dto.TeamRequest;
 import com.woowacourse.levellog.dto.TeamResponse;
+import com.woowacourse.levellog.dto.TeamUpdateRequest;
 import com.woowacourse.levellog.dto.TeamsResponse;
 import com.woowacourse.levellog.exception.TeamNotFoundException;
 import java.util.ArrayList;
@@ -111,5 +112,11 @@ public class TeamService {
         levellogRepository.findByAuthorId(participant.getMember().getId())
                 .ifPresent(BaseEntity::getId);
         return id;
+    }
+
+    public void update(final Long id, final TeamUpdateRequest request) {
+        final Team team = teamRepository.findById(id)
+                .orElseThrow(TeamNotFoundException::new);
+        team.update(request.getTitle(), request.getPlace(), request.getStartAt());
     }
 }

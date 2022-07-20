@@ -12,6 +12,7 @@ import com.woowacourse.levellog.dto.ParticipantIdsRequest;
 import com.woowacourse.levellog.dto.ParticipantsResponse;
 import com.woowacourse.levellog.dto.TeamRequest;
 import com.woowacourse.levellog.dto.TeamResponse;
+import com.woowacourse.levellog.dto.TeamUpdateRequest;
 import com.woowacourse.levellog.dto.TeamsResponse;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -116,7 +117,6 @@ class TeamServiceTest {
         //given
         final Member member1 = getMember("릭");
         final Member member2 = getMember("페퍼");
-
         final Team team = getTeam("잠실 제이슨조");
 
         participantRepository.save(new Participant(team, member1, true));
@@ -129,5 +129,28 @@ class TeamServiceTest {
         assertThat(response.getTitle()).isEqualTo(team.getTitle());
         assertThat(response.getHostId()).isEqualTo(member1.getId());
         assertThat(response.getParticipants().getParticipants()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("update 메서드는 id에 해당하는 팀 정보를 변경한다.")
+    void update() {
+        // given
+        final Member member1 = getMember("릭");
+        final Member member2 = getMember("페퍼");
+        final Team team = getTeam("잠실 제이슨조");
+
+        participantRepository.save(new Participant(team, member1, true));
+        participantRepository.save(new Participant(team, member2, false));
+
+        final TeamUpdateRequest request = new TeamUpdateRequest("잠실 네오조", "트랙룸", LocalDateTime.now());
+
+        // when
+        teamService.update(team.getId(), request);
+
+        // then
+        final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
+        assertThat(actualTeam.getTitle()).isEqualTo(request.getTitle());
+        assertThat(actualTeam.getPlace()).isEqualTo(request.getPlace());
+        assertThat(actualTeam.getStartAt()).isEqualTo(request.getStartAt());
     }
 }

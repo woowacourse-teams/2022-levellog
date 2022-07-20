@@ -65,8 +65,7 @@ public class TeamService {
     }
 
     public TeamResponse findById(final Long id) {
-        final Team team = teamRepository.findById(id)
-                .orElseThrow(TeamNotFoundException::new);
+        final Team team = findTeam(id);
         return getTeam(team);
     }
 
@@ -118,14 +117,20 @@ public class TeamService {
         return levellog.getId();
     }
 
-    public void update(final Long id, final TeamUpdateRequest request) {
-        final Team team = teamRepository.findById(id)
-                .orElseThrow(TeamNotFoundException::new);
+    public void update(final Long id, final TeamUpdateRequest request, final Long memberId) {
+        final Team team = findTeam(id);
+        final List<Participant> participants = participantRepository.findByTeam(team);
+        final Long hostId = getHostId(participants);
+
+        if (!memberId.equals(hostId)) {
+            throw new HostUnauthorizedException();
+        }
+
         team.update(request.getTitle(), request.getPlace(), request.getStartAt());
     }
 
     public void deleteById(final Long memberId, final Long id) {
-        final Team team = teamRepository.findById(id).orElseThrow(TeamNotFoundException::new);
+        final Team team = findTeam(id);
         final List<Participant> participants = participantRepository.findByTeam(team);
         final Long hostId = getHostId(participants);
 
@@ -133,5 +138,10 @@ public class TeamService {
             throw new HostUnauthorizedException();
         }
         teamRepository.deleteById(id);
+    }
+
+    private Team findTeam(final Long id) {
+        return teamRepository.findById(id)
+                .orElseThrow(TeamNotFoundException::new);
     }
 }

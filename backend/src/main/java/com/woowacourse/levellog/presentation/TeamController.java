@@ -47,8 +47,9 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable final Long id,
-                                       @RequestBody @Valid final TeamUpdateRequest request) {
-        teamService.update(id, request);
+                                       @RequestBody @Valid final TeamUpdateRequest request,
+                                       @LoginMember final Long memberId) {
+        teamService.update(id, request, memberId);
         return ResponseEntity.noContent().build();
     }
 

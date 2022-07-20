@@ -135,28 +135,55 @@ class TeamServiceTest {
         assertThat(response.getParticipants().getParticipants()).hasSize(2);
     }
 
-    @Test
-    @DisplayName("update 메서드는 id에 해당하는 팀 정보를 변경한다.")
-    void update() {
-        // given
-        final Member member1 = getMember("릭");
-        final Member member2 = getMember("페퍼");
-        final Team team = getTeam("잠실 제이슨조");
+    @Nested
+    @DisplayName("update 메서드는")
+    class update {
 
-        participantRepository.save(new Participant(team, member1, true));
-        participantRepository.save(new Participant(team, member2, false));
+        @Test
+        @DisplayName("id에 해당하는 팀 정보를 변경한다.")
+        void update() {
+            // given
+            final Member member1 = getMember("릭");
+            final Member member2 = getMember("페퍼");
+            final Team team = getTeam("잠실 제이슨조");
 
-        final TeamUpdateRequest request = new TeamUpdateRequest("잠실 네오조", "트랙룸", LocalDateTime.now());
+            participantRepository.save(new Participant(team, member1, true));
+            participantRepository.save(new Participant(team, member2, false));
 
-        // when
-        teamService.update(team.getId(), request);
+            final TeamUpdateRequest request = new TeamUpdateRequest("잠실 네오조", "트랙룸", LocalDateTime.now());
 
-        // then
-        final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
-        assertThat(actualTeam.getTitle()).isEqualTo(request.getTitle());
-        assertThat(actualTeam.getPlace()).isEqualTo(request.getPlace());
-        assertThat(actualTeam.getStartAt()).isEqualTo(request.getStartAt());
+            // when
+            teamService.update(team.getId(), request, member1.getId());
+
+            // then
+            final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
+            assertThat(actualTeam.getTitle()).isEqualTo(request.getTitle());
+            assertThat(actualTeam.getPlace()).isEqualTo(request.getPlace());
+            assertThat(actualTeam.getStartAt()).isEqualTo(request.getStartAt());
+        }
+
+        @Test
+        @DisplayName("호스트가 아닌 멤버가 팀을 수정하는 경우 예외를 던진다.")
+        void hostUnauthorized_Exception() {
+            // given
+            final Member member1 = getMember("릭");
+            final Member member2 = getMember("페퍼");
+            final Team team = getTeam("잠실 제이슨조");
+
+            participantRepository.save(new Participant(team, member1, true));
+            participantRepository.save(new Participant(team, member2, false));
+
+            final TeamUpdateRequest request = new TeamUpdateRequest("잠실 네오조", "트랙룸", LocalDateTime.now());
+
+            // when, then
+            final Long memberId = member2.getId();
+            final Long teamId = team.getId();
+            assertThatThrownBy(() -> teamService.update(teamId, request, memberId))
+                    .isInstanceOf(HostUnauthorizedException.class);
+        }
     }
+
+
 
     @Nested
     @DisplayName("delete 메서드는")

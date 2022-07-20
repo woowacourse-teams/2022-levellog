@@ -7,15 +7,34 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import com.woowacourse.levellog.authentication.support.TestAuthenticationConfig;
+import com.woowacourse.levellog.dto.FeedbackContentDto;
+import com.woowacourse.levellog.dto.FeedbackRequest;
+import com.woowacourse.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.dto.ParticipantIdsRequest;
+import com.woowacourse.levellog.dto.TeamRequest;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.response.ValidatableResponse;
+import io.restassured.response.ValidatableResponseOptions;
 import io.restassured.specification.RequestSpecification;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.annotation.DirtiesContext;
@@ -28,7 +47,13 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 abstract class AcceptanceTest {
 
+    protected static final String MASTER = "토미";
+
+    protected String masterToken;
     protected RequestSpecification specification;
+    protected Long masterId;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @LocalServerPort
     private int port;
@@ -63,5 +88,23 @@ abstract class AcceptanceTest {
                                         prettyPrint()
                                 )
                 ).build();
+    }
+
+    protected ValidatableResponse login(final String nickname) {
+        try {
+            final GithubProfileResponse response = new GithubProfileResponse(String.valueOf(
+                    ((int) System.currentTimeMillis())), nickname,
+                    nickname + ".com");
+            final String code = objectMapper.writeValueAsString(response);
+            return RestAssured.given().log().all()
+                    .body(new GithubCodeRequest(code))
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when()
+                    .post("/api/auth/login")
+                    .then().log().all();
+        } catch (final JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

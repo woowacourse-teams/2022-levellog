@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,5 +20,5 @@ public class TeamResponse {
     private LocalDateTime startAt;
     private String teamImage;
     private Long hostId;
-    private ParticipantsResponse participants;
+    private List<ParticipantResponse> participants;
 }

@@ -96,7 +96,6 @@ class TeamServiceTest {
         final List<Integer> actualParticipantSizes = response.getTeams()
                 .stream()
                 .map(TeamResponse::getParticipants)
-                .map(ParticipantsResponse::getParticipants)
                 .map(List::size)
                 .collect(Collectors.toList());
         //then
@@ -132,7 +131,7 @@ class TeamServiceTest {
         //then
         assertThat(response.getTitle()).isEqualTo(team.getTitle());
         assertThat(response.getHostId()).isEqualTo(member1.getId());
-        assertThat(response.getParticipants().getParticipants()).hasSize(2);
+        assertThat(response.getParticipants()).hasSize(2);
     }
 
     @Nested

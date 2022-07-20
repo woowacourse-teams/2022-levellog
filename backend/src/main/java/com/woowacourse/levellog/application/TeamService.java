@@ -10,7 +10,6 @@ import com.woowacourse.levellog.domain.ParticipantRepository;
 import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.ParticipantResponse;
-import com.woowacourse.levellog.dto.ParticipantsResponse;
 import com.woowacourse.levellog.dto.TeamRequest;
 import com.woowacourse.levellog.dto.TeamResponse;
 import com.woowacourse.levellog.dto.TeamUpdateRequest;
@@ -96,15 +95,14 @@ public class TeamService {
                 .getId();
     }
 
-    private ParticipantsResponse getParticipantsResponse(final List<Participant> participants) {
-        final List<ParticipantResponse> participantResponses = participants.stream()
+    private List<ParticipantResponse> getParticipantsResponse(final List<Participant> participants) {
+        return participants.stream()
                 .map(it -> new ParticipantResponse(
                         it.getId(),
                         getLevellog(it),
                         it.getMember().getNickname(),
                         it.getMember().getProfileUrl()))
                 .collect(Collectors.toList());
-        return new ParticipantsResponse(participantResponses);
     }
 
     private Long getLevellog(final Participant participant) {
@@ -138,6 +136,8 @@ public class TeamService {
         if (!memberId.equals(hostId)) {
             throw new HostUnauthorizedException();
         }
+
+        participantRepository.deleteByTeam(team);
         teamRepository.deleteById(id);
     }
 

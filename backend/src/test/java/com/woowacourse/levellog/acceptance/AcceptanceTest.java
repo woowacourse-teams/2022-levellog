@@ -5,7 +5,6 @@ import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
-import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +13,8 @@ import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import com.woowacourse.levellog.authentication.support.TestAuthenticationConfig;
+import com.woowacourse.levellog.dto.FeedbackContentDto;
+import com.woowacourse.levellog.dto.FeedbackRequest;
 import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.dto.ParticipantIdsRequest;
 import com.woowacourse.levellog.dto.TeamRequest;
@@ -49,10 +50,8 @@ abstract class AcceptanceTest {
     protected static final String MASTER = "토미";
 
     protected String masterToken;
-    private Long masterId;
-
     protected RequestSpecification specification;
-
+    private Long masterId;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -153,14 +152,21 @@ abstract class AcceptanceTest {
                 .split("/api/teams/")[1];
     }
 
+    protected ValidatableResponse requestCreateLevellog(final String content, final String title, final String host,
+                                                        final String... participants) {
+        final ValidatableResponse teamResponse = requestCreateTeam(title, host, participants);
+        final String teamId = getTeamId(teamResponse);
+
+        return requestCreateLevellog(teamId, content);
+    }
+
     protected ValidatableResponse requestCreateLevellog(final String teamId, final String content) {
         final LevellogRequest request = new LevellogRequest(content);
 
-        return RestAssured.given(specification).log().all()
+        return RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("levellog/create"))
                 .when()
                 .post("/api/teams/{teamId}/levellogs", teamId)
                 .then().log().all();
@@ -171,5 +177,23 @@ abstract class AcceptanceTest {
                 .extract()
                 .header(HttpHeaders.LOCATION)
                 .split("/levellogs/")[1];
+    }
+
+    protected ValidatableResponse requestCreateFeedback(final String levellogId, final String content, final String from) {
+        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("study - " + content,
+                "speak - " + content,
+                "etc - " + content);
+        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+
+        final ValidatableResponse loginResponse = login(from);
+        final String token = getToken(loginResponse);
+
+        return RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/levellogs/{levellogId}/feedbacks", levellogId)
+                .then().log().all();
     }
 }

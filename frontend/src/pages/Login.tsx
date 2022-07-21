@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import useUser from 'hooks/useUser';
 
-import { getUserLogin } from 'apis/login';
+import { getUserAuthority, getUserLogin } from 'apis/login';
 
 const Login = () => {
   const { userInfoDispatch } = useUser();
@@ -14,7 +14,19 @@ const Login = () => {
     const loginGithub = async () => {
       const params = new URL(window.location.href).searchParams;
       const code = params.get('code');
+      const accessToken = localStorage.getItem('accessToken');
       try {
+        if (accessToken) {
+          const res = (await getUserAuthority(accessToken)) as any;
+          const data = await res.data;
+          userInfoDispatch({
+            id: res.data.id,
+            profileUrl: res.data.profileUrl,
+          });
+
+          return;
+        }
+
         const res = await getUserLogin(code);
         localStorage.setItem('accessToken', res.data.accessToken);
         userInfoDispatch({

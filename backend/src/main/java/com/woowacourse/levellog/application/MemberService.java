@@ -6,6 +6,7 @@ import com.woowacourse.levellog.domain.MemberRepository;
 import com.woowacourse.levellog.dto.MemberCreateDto;
 import com.woowacourse.levellog.dto.MemberResponse;
 import com.woowacourse.levellog.dto.MembersResponse;
+import com.woowacourse.levellog.dto.NicknameUpdateDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +28,11 @@ public class MemberService {
         return savedMember.getId();
     }
 
+    public MemberResponse findMemberById(final Long memberId) {
+        final Member member = getById(memberId);
+        return MemberResponse.from(member);
+    }
+
     public MembersResponse findAll() {
         final List<MemberResponse> responses = memberRepository.findAll().stream()
                 .map(MemberResponse::from)
@@ -46,13 +52,18 @@ public class MemberService {
         return memberRepository.findByGithubId(githubId);
     }
 
-    public Member getById(final Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(MemberNotFoundException::new);
-    }
-
     public void updateProfileUrl(final Long id, final String profileUrl) {
         final Member member = getById(id);
         member.updateProfileUrl(profileUrl);
+    }
+
+    public void updateNickname(final Long memberId, final NicknameUpdateDto nicknameUpdateDto) {
+        final Member member = getById(memberId);
+        member.updateNickname(nicknameUpdateDto.getNickname());
+    }
+
+    private Member getById(final Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(MemberNotFoundException::new);
     }
 }

@@ -13,16 +13,10 @@ import Interviewer from 'components/teams/Interviewer';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 
 const InterviewDetail = () => {
-  const { teamId } = useParams();
   const location = useLocation();
   const team = useContext(TeamContext);
   const teamInfoDispatch = useContext(TeamDispatchContext);
-  const { teamLookup } = useTeams();
-
-  const requestInterviewTeam = async () => {
-    const res = await teamLookup(teamId);
-    teamInfoDispatch(res.data);
-  };
+  const { teamRequestAndDispatch } = useTeams();
 
   useEffect(() => {
     const interviewTeam = location.state as InterviewTeamType;
@@ -31,8 +25,7 @@ const InterviewDetail = () => {
 
       return;
     }
-
-    requestInterviewTeam();
+    teamRequestAndDispatch();
   }, []);
 
   if (Object.keys(team).length === 0) return;

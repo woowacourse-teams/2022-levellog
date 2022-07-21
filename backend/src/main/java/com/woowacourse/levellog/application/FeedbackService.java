@@ -80,7 +80,15 @@ public class FeedbackService {
                 request.getFeedback().getEtc());
     }
 
-    public void deleteById(final Long id) {
+    public void deleteById(final Long id, final Long memberId) {
+        final Feedback feedback = feedbackRepository.findById(id)
+                .orElseThrow(FeedbackNotFoundException::new);
+
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+        if (!feedback.isAssociatedWith(member)) {
+            throw new InvalidFeedbackException("자신이 남기거나 받은 피드백만 삭제할 수 있습니다.");
+        }
         feedbackRepository.deleteById(id);
     }
 

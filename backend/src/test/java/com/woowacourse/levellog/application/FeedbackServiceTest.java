@@ -127,28 +127,74 @@ class FeedbackServiceTest {
         );
     }
 
-    @Test
-    @DisplayName("delete 메서드는 피드백을 삭제한다.")
-    void delete() {
-        // given
-        final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-        final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
-        final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
-        final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
-        final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
+    @Nested
+    @DisplayName("delete 메서드는")
+    class delete {
 
-        feedbackRepository.save(new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
-        final Feedback alienFeedback = feedbackRepository.save(
-                new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
-        final Feedback savedFeedback = feedbackRepository.save(alienFeedback);
-        final Long id = savedFeedback.getId();
+        @Test
+        @DisplayName("자신이 남긴 피드백을 삭제한다.")
+        void delete_fromEqualsMe_success() {
+            // given
+            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
+            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
+            final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
+            final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
 
-        // when
-        feedbackService.deleteById(id);
+            final Feedback alienFeedback = feedbackRepository.save(
+                    new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
+            final Feedback savedFeedback = feedbackRepository.save(alienFeedback);
+            final Long id = savedFeedback.getId();
 
-        // then
-        final Optional<Feedback> deletedFeedback = feedbackRepository.findById(id);
-        assertThat(deletedFeedback).isEmpty();
+            // when
+            feedbackService.deleteById(id, alien.getId());
+
+            // then
+            final Optional<Feedback> deletedFeedback = feedbackRepository.findById(id);
+            assertThat(deletedFeedback).isEmpty();
+        }
+
+        @Test
+        @DisplayName("자신이 받은 남긴 피드백을 삭제한다.")
+        void delete_toEqualsMe_success() {
+            // given
+            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
+            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
+            final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
+            final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
+
+            final Feedback alienFeedback = feedbackRepository.save(
+                    new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
+            final Feedback savedFeedback = feedbackRepository.save(alienFeedback);
+            final Long id = savedFeedback.getId();
+
+            // when
+            feedbackService.deleteById(id, eve.getId());
+
+            // then
+            final Optional<Feedback> deletedFeedback = feedbackRepository.findById(id);
+            assertThat(deletedFeedback).isEmpty();
+        }
+
+        @Test
+        @DisplayName("피드백에 관련이 없는 멤버가 삭제하면 예외를 던진다.")
+        void delete_otherMember_exceptionThrown() {
+            // given
+            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
+            final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
+            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
+            final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
+            final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
+
+            final Feedback alienFeedback = feedbackRepository.save(
+                    new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
+            final Feedback savedFeedback = feedbackRepository.save(alienFeedback);
+            final Long id = savedFeedback.getId();
+
+            // when, then
+            assertThatThrownBy(() -> feedbackService.deleteById(id, roma.getId()))
+                    .isInstanceOf(InvalidFeedbackException.class)
+                    .hasMessage("자신이 남기거나 받은 피드백만 삭제할 수 있습니다.");
+        }
     }
 
     @Nested

@@ -2,8 +2,8 @@ import { useRoutes } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import Header from './components/Header';
-
+import Footer from 'components/Footer';
+import Header from 'components/Header';
 import { routes } from 'routes/Routes';
 import GlobalStyles from 'styles/GlobalStyle';
 
@@ -15,6 +15,7 @@ const App = () => {
       <GlobalStyles />
       <Header />
       <PageContainer>{content}</PageContainer>
+      <Footer />
     </>
   );
 };
@@ -22,10 +23,15 @@ const App = () => {
 const PageContainer = styled.main`
   overflow: auto;
   overflow-x: hidden;
-  @media (max-width: 520px) {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 10rem;
+  @media (max-width: 1024px) {
+    padding: 0 5rem;
+  }
+  @media (max-width: 560px) {
     padding: 0 2.5rem;
   }
-  padding: 0 10rem;
 `;
 
 export default App;

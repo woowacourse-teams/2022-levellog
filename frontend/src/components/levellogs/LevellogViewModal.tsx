@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 
+import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
@@ -27,85 +28,141 @@ const LevellogViewModal = ({
 
   if (owner === false) {
     return (
-      <LevellogModalStyle>
-        <Header>
-          <h3>{nickname}의 Levellog</h3>
-          <CloseButton onClick={() => setIsOnModal(false)}>X</CloseButton>
-        </Header>
-        <Levellog>{levellog}</Levellog>
-        <Footer>
-          <Link to={ROUTES_PATH.HOME}>
-            <Button color="#FF0000">사전 질문 작성</Button>
-          </Link>
-        </Footer>
-      </LevellogModalStyle>
+      <ModalPortal>
+        <Dimmer onClick={() => setIsOnModal(false)}>
+          <LevellogModalStyle>
+            <Header>
+              <ModalTitle>{nickname}의 Levellog</ModalTitle>
+              <CloseButton onClick={() => setIsOnModal(false)}>X</CloseButton>
+            </Header>
+            <Levellog>{levellog}</Levellog>
+            <Footer>
+              <Link to={ROUTES_PATH.HOME}>
+                <Button>사전 질문 작성</Button>
+              </Link>
+            </Footer>
+          </LevellogModalStyle>
+        </Dimmer>
+      </ModalPortal>
     );
   }
 
   return (
-    <LevellogModalStyle>
-      <Header>
-        <h3>나의 Levellog</h3>
-        <CloseButton onClick={() => setIsOnModal(false)}>X</CloseButton>
-      </Header>
-      <Levellog>{levellog}</Levellog>
-      <Footer>
-        <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
-          <Button color="#FF0000">수정하기</Button>
-        </Link>
-        <Button onClick={handleClickLevellogDelete} color="#FF0000">
-          삭제하기
-        </Button>
-      </Footer>
-    </LevellogModalStyle>
+    <ModalPortal>
+      <Dimmer onClick={() => setIsOnModal(false)}>
+        <LevellogModalStyle>
+          <Header>
+            <ModalTitle>나의 Levellog</ModalTitle>
+            <CloseButton onClick={() => setIsOnModal(false)}>X</CloseButton>
+          </Header>
+          <Levellog>{levellog}</Levellog>
+          <Footer>
+            <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
+              <Button>수정하기</Button>
+            </Link>
+            <Button onClick={handleClickLevellogDelete}>삭제하기</Button>
+          </Footer>
+        </LevellogModalStyle>
+      </Dimmer>
+    </ModalPortal>
   );
 };
 
-const Footer = styled.div`
+const Dimmer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 10%;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  height: 100%;
+  background-color: ${(props) => props.theme.default.OPACITY_BLACK};
 `;
 
-const Levellog = styled.div`
-  height: 80%;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: white;
+// 모바일 화면 padding 조절?
+const LevellogModalStyle = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 46.375rem;
+  height: 51.25rem;
+  padding: 0.75rem 1.875rem 2.375rem 1.875rem;
+  border-radius: 0.5rem;
+  background-color: ${(props) => props.theme.default.GRAY};
+  transform: translate(-50%, -50%);
+  @media (max-width: 51.875rem) {
+    width: 35rem;
+  }
+  @media (max-height: 51.875rem) {
+    height: 35rem;
+  }
+  @media (max-width: 35rem) {
+    width: 20rem;
+    height: 25rem;
+  }
+  @media (max-height: 35rem) {
+    width: 20rem;
+    height: 25rem;
+  }
 `;
 
 const Header = styled.div`
-  width: 100%;
-  height: 10%;
-  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  width: 100%;
+  height: 3.625rem;
+  box-sizing: border-box;
+`;
+
+const ModalTitle = styled.h1`
+  height: 2.375rem;
+  font-size: 1.875rem;
+  @media (max-width: 35rem) {
+    font-size: 1.25rem;
+  }
+  @media (max-height: 35rem) {
+    font-size: 1.2rem;
+  }
 `;
 
 const CloseButton = styled.button`
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  background-color: rgba(255, 255, 255, 0);
+  width: 1.125rem;
+  height: 1.125rem;
   border-style: none;
-  font-size: 22px;
+  background-color: rgba(255, 255, 255, 0);
+  font-size: 1.375rem;
   font-weight: 800;
+  cursor: pointer;
 `;
 
-const LevellogModalStyle = styled.div`
-  padding: 0 20px;
-  width: 820px;
-  height: 720px;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+// 모바일 화면 padding 조절?
+const Levellog = styled.div`
+  box-sizing: border-box;
+  width: 42.5rem;
+  height: 40.5rem;
+  background-color: white;
+  @media (max-width: 51.875rem) {
+    width: 31.25rem;
+  }
+  @media (max-height: 51.875rem) {
+    width: 31.25rem;
+  }
+  @media (max-width: 35rem) {
+    width: 16.25rem;
+    height: 14.375rem;
+  }
+  @media (max-height: 35rem) {
+    width: 16.25rem;
+    height: 14.375rem;
+  }
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 3rem;
+  padding-top: 1.875rem;
 `;
 
 export default LevellogViewModal;

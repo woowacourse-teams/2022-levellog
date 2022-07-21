@@ -1,7 +1,4 @@
 import axios from 'axios';
-import { FeedbackPostType } from 'types';
-
-import { SERVER_PATH } from 'constants/constants';
 
 export const postFeedback = (accessToken: string, { feedbackResult, levellogId }: any) =>
   axios({

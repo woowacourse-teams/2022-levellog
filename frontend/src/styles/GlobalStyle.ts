@@ -4,8 +4,8 @@ import NanumFont from 'assets/fonts/NanumSquare_ac.woff';
 
 const GlobalStyles = createGlobalStyle` 
   #root {
-    width: 100%;
     height: 100%;
+    width: 100%;
     margin: 0;
   }
 
@@ -34,12 +34,24 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  html {
+    height: 100%;
+    width: 100%;
+  }
+
   body {
+    height: 100%;
+    width: 100%;
+    background-color: #F1F1F1;
     font-family: 'Font_Regular';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     outline: 0;
     font-style: normal;
+  }
+
+  p {
+    word-break: break-all;
   }
 
   /* HTML5 display-role reset for older browsers */

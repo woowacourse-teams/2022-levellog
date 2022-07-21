@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ParticipantIdsRequest extends Participant {
+public class ParticipantIdsRequest {
 
     private List<Long> ids;
 }

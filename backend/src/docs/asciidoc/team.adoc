@@ -1,0 +1,49 @@
+= Team
+:toc: left
+:toclevels: 2
+:sectlinks:
+:source-highlighter: highlightjs
+
+[[home]]
+== home
+* link:index.html[목록으로 가기]
+
+[[create]]
+== 생성
+
+[[create-success]]
+=== 성공
+
+operation::team/create[]
+
+[[findAll]]
+== 목록 조회
+
+[[findAll-success]]
+=== 성공
+
+operation::team/findAll[]
+
+[[find]]
+== 상세 조회
+
+[[find-success]]
+=== 성공
+
+operation::team/find[]
+
+[[update]]
+== 수정
+
+[[update-success]]
+=== 성공
+
+operation::team/update[]
+
+[[delete]]
+== 삭제
+
+[[delete-success]]
+=== 성공
+
+operation::team/delete[]

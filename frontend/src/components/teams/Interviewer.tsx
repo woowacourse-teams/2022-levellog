@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
-import { ParticipantType } from 'types';
 
 import useLevellog from 'hooks/useLevellog';
 import useUser from 'hooks/useUser';
@@ -42,16 +40,14 @@ const Interviewer = ({
     return (
       <>
         {isOnModal === true && (
-          <ModalPortal>
-            <LevellogViewModal
-              owner={true}
-              nickname={nickname}
-              levellogId={levellogId}
-              levellog={levellog}
-              setIsOnModal={setIsOnModal}
-              requestInterviewTeam={requestInterviewTeam}
-            />
-          </ModalPortal>
+          <LevellogViewModal
+            owner={true}
+            nickname={nickname}
+            levellogId={levellogId}
+            levellog={levellog}
+            setIsOnModal={setIsOnModal}
+            requestInterviewTeam={requestInterviewTeam}
+          />
         )}
         <InterviewerContainer>
           <InterviewerStyle>
@@ -77,16 +73,14 @@ const Interviewer = ({
   return (
     <>
       {isOnModal === true && (
-        <ModalPortal>
-          <LevellogViewModal
-            owner={false}
-            nickname={nickname}
-            levellogId={levellogId}
-            levellog={levellog}
-            setIsOnModal={setIsOnModal}
-            requestInterviewTeam={requestInterviewTeam}
-          />
-        </ModalPortal>
+        <LevellogViewModal
+          owner={false}
+          nickname={nickname}
+          levellogId={levellogId}
+          levellog={levellog}
+          setIsOnModal={setIsOnModal}
+          requestInterviewTeam={requestInterviewTeam}
+        />
       )}
       <InterviewerContainer>
         <InterviewerStyle>
@@ -96,11 +90,11 @@ const Interviewer = ({
           </NicknameStyle>
         </InterviewerStyle>
         <ContentStyle>
-          <p onClick={handleClickToggleModal}>레벨로그 보기</p>
+          <a onClick={handleClickToggleModal}>레벨로그 보기</a>
           <Link to="">
             <p>사전 질문 작성</p>
           </Link>
-          <Link to="/feedback">
+          <Link to={`/levellogs/${levellogId}/feedbacks`}>
             <p>피드백</p>
           </Link>
         </ContentStyle>
@@ -133,6 +127,8 @@ const InterviewerStyle = styled.div`
   height: 130px;
   margin: 0 auto;
 `;
+
+const InterviewerButton = styled.button``;
 
 const NicknameStyle = styled.div`
   display: flex;

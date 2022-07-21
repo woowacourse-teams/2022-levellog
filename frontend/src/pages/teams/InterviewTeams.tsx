@@ -51,6 +51,9 @@ const InterviewTeamsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
+  @media (max-width: 560px) {
+    justify-content: center;
+  }
 `;
 
 export default InterviewTeams;

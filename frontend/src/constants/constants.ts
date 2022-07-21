@@ -2,8 +2,8 @@ export const API_URL = 'https://levellog.app/api';
 
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',
-  FEEDBACK: '/feedback',
-  FEEDBACK_ADD: '/feedback/add',
+  FEEDBACK_ROUTE: '/levellogs/:levellogId/feedbacks',
+  FEEDBACK_ADD: `/levellogs/:levellogId/feedbacks/add`,
   LOGIN: '/login',
   LEVELLOG: '/levellog',
   LEVELLOG_ADD: '/levellog/add',

@@ -17,19 +17,19 @@ const InterviewTeam = ({
     <InterviewTeamContainer id={id}>
       <FlexBox gap={0.625}>
         <Image src={teamImage} sizes={'LARGE'} />
-        <FlexBox flexFlow="column" gap={0.625}>
-          <h3 id={id}>{title}</h3>
+        <FlexBox flexFlow="column wrap" gap={0.625}>
+          <InterviewTeamTitle id={id}>{title}</InterviewTeamTitle>
           <p>{'dm 주소'}</p>
         </FlexBox>
       </FlexBox>
       <FlexBox flexFlow="row">
         <InterviewInfoStyle>
           <NoticeStyle>Where</NoticeStyle>
-          <p>{place}</p>
+          <NoticeContentStyle>{place}</NoticeContentStyle>
         </InterviewInfoStyle>
         <InterviewInfoStyle>
           <NoticeStyle>When</NoticeStyle>
-          <p>{startAt}</p>
+          <NoticeContentStyle>{startAt}</NoticeContentStyle>
         </InterviewInfoStyle>
       </FlexBox>
       <FlexBox>
@@ -53,6 +53,11 @@ const InterviewTeamContainer = styled.div`
   cursor: pointer;
 `;
 
+const InterviewTeamTitle = styled.h3`
+  width: 11.5rem;
+  word-break: break-all;
+`;
+
 const InterviewInfoStyle = styled.div`
   display: flex;
   width: 138px;
@@ -62,7 +67,11 @@ const InterviewInfoStyle = styled.div`
 `;
 
 const NoticeStyle = styled.p`
-  color: ${(props) => props.theme.default.GREY};
+  color: ${(props) => props.theme.default.DARK_GRAY};
+`;
+
+const NoticeContentStyle = styled.p`
+  font-size: 0.875rem;
 `;
 
 export default InterviewTeam;

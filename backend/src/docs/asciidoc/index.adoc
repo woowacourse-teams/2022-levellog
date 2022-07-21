@@ -8,3 +8,6 @@
 
 * link:feedback.html[Feedback]
 * link:levellog.html[Levellog]
+* link:team.html[Team]
+* link:auth.html[Auth]
+* link:myinfo.html[MyInfo]

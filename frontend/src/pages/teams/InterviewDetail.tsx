@@ -28,7 +28,7 @@ const InterviewDetail = () => {
     teamRequestAndDispatch();
   }, []);
 
-  if (Object.keys(team).length === 0) return;
+  if (Object.keys(team).length === 0 || !team) return;
 
   return (
     <FlexBox gap={4.375}>

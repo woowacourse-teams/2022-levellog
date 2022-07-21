@@ -17,6 +17,7 @@ const FeedbackList = () => {
 
   const requestFeedbackLookup = async () => {
     const res = await feedbackLookup(levellogId);
+    console.log(res);
     if (res) {
       setFeedbacks(res.feedbacks);
     }

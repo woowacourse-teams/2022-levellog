@@ -21,7 +21,7 @@ const LevellogViewModal = ({
 
   const handleClickLevellogDelete = async () => {
     await levellogDelete(teamId, levellogId);
-    requestInterviewTeam();
+    await requestInterviewTeam();
     setIsOnModal(false);
   };
 

@@ -11,13 +11,7 @@ import { ROUTES_PATH } from 'constants/constants';
 import Image from 'components/@commons/Image';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 
-const Interviewer = ({
-  requestInterviewTeam,
-  id,
-  levellogId,
-  nickname,
-  profileUrl,
-}: InterviewerProps) => {
+const Interviewer = ({ id, levellogId, nickname, profileUrl }: InterviewerProps) => {
   const [levellog, setLevellog] = useState('');
   const [isOnModal, setIsOnModal] = useState(false);
   const { levellogLookup } = useLevellog();
@@ -31,7 +25,7 @@ const Interviewer = ({
 
   const handleClickToggleModal = () => {
     setIsOnModal((prev) => !prev);
-    if (!levellog) {
+    if (!levellog && levellogId) {
       requestLevellogLookup();
     }
   };
@@ -46,7 +40,6 @@ const Interviewer = ({
             levellogId={levellogId}
             levellog={levellog}
             setIsOnModal={setIsOnModal}
-            requestInterviewTeam={requestInterviewTeam}
           />
         )}
         <InterviewerContainer>
@@ -79,7 +72,6 @@ const Interviewer = ({
           levellogId={levellogId}
           levellog={levellog}
           setIsOnModal={setIsOnModal}
-          requestInterviewTeam={requestInterviewTeam}
         />
       )}
       <InterviewerContainer>
@@ -104,7 +96,6 @@ const Interviewer = ({
 };
 
 interface InterviewerProps {
-  requestInterviewTeam: () => Promise<void>;
   id: string;
   levellogId: string;
   nickname: string;

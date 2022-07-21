@@ -44,9 +44,49 @@ public class TeamService {
         return savedTeam.getId();
     }
 
+    public TeamsResponse findAll() {
+        final List<Team> teams = teamRepository.findAll();
+        return new TeamsResponse(getTeamResponses(teams));
+    }
+
+    public TeamResponse findById(final Long id) {
+        final Team team = getTeam(id);
+        return getTeamResponse(team);
+    }
+
+    public void update(final Long id, final TeamUpdateRequest request, final Long memberId) {
+        final Team team = getTeam(id);
+        final List<Participant> participants = participantRepository.findByTeam(team);
+        final Long hostId = getHostId(participants);
+
+        if (!memberId.equals(hostId)) {
+            throw new HostUnauthorizedException();
+        }
+
+        team.update(request.getTitle(), request.getPlace(), request.getStartAt());
+    }
+
+    public void deleteById(final Long id, final Long memberId) {
+        final Team team = getTeam(id);
+        final List<Participant> participants = participantRepository.findByTeam(team);
+        final Long hostId = getHostId(participants);
+
+        if (!memberId.equals(hostId)) {
+            throw new HostUnauthorizedException();
+        }
+
+        participantRepository.deleteByTeam(team);
+        teamRepository.deleteById(id);
+    }
+
     private Member getMember(final Long hostId) {
         return memberRepository.findById(hostId)
                 .orElseThrow(MemberNotFoundException::new);
+    }
+
+    private Team getTeam(final Long id) {
+        return teamRepository.findById(id)
+                .orElseThrow(TeamNotFoundException::new);
     }
 
     private List<Participant> getParticipants(final Long hostId, final List<Long> memberIds, final Team team) {
@@ -65,23 +105,13 @@ public class TeamService {
         participants.add(new Participant(team, member, isHost));
     }
 
-    public TeamsResponse findAll() {
-        final List<Team> teams = teamRepository.findAll();
-        return new TeamsResponse(getTeamResponses(teams));
-    }
-
-    public TeamResponse findById(final Long id) {
-        final Team team = findTeam(id);
-        return getTeam(team);
-    }
-
     private List<TeamResponse> getTeamResponses(final List<Team> teams) {
         return teams.stream()
-                .map(this::getTeam)
+                .map(this::getTeamResponse)
                 .collect(Collectors.toList());
     }
 
-    private TeamResponse getTeam(final Team team) {
+    private TeamResponse getTeamResponse(final Team team) {
         final List<Participant> participants = participantRepository.findByTeam(team);
         return new TeamResponse(
                 team.getId(),
@@ -106,13 +136,13 @@ public class TeamService {
         return participants.stream()
                 .map(it -> new ParticipantResponse(
                         it.getMember().getId(),
-                        getLevellog(it),
+                        getLevellogId(it),
                         it.getMember().getNickname(),
                         it.getMember().getProfileUrl()))
                 .collect(Collectors.toList());
     }
 
-    private Long getLevellog(final Participant participant) {
+    private Long getLevellogId(final Participant participant) {
         final Levellog levellog = levellogRepository
                 .findByAuthorIdAndTeamId(participant.getMember().getId(), participant.getTeam().getId())
                 .orElse(null);
@@ -121,35 +151,5 @@ public class TeamService {
             return null;
         }
         return levellog.getId();
-    }
-
-    public void update(final Long id, final TeamUpdateRequest request, final Long memberId) {
-        final Team team = findTeam(id);
-        final List<Participant> participants = participantRepository.findByTeam(team);
-        final Long hostId = getHostId(participants);
-
-        if (!memberId.equals(hostId)) {
-            throw new HostUnauthorizedException();
-        }
-
-        team.update(request.getTitle(), request.getPlace(), request.getStartAt());
-    }
-
-    public void deleteById(final Long id, final Long memberId) {
-        final Team team = findTeam(id);
-        final List<Participant> participants = participantRepository.findByTeam(team);
-        final Long hostId = getHostId(participants);
-
-        if (!memberId.equals(hostId)) {
-            throw new HostUnauthorizedException();
-        }
-
-        participantRepository.deleteByTeam(team);
-        teamRepository.deleteById(id);
-    }
-
-    private Team findTeam(final Long id) {
-        return teamRepository.findById(id)
-                .orElseThrow(TeamNotFoundException::new);
     }
 }

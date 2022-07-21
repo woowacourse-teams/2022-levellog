@@ -10,10 +10,9 @@ import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import Feedback from 'components/feedbacks/Feedback';
 
-// 레벨로그 작성한 유저의 닉네임 가져오기
 const FeedbackList = () => {
   const [feedbacks, setFeedbacks] = useState([]);
-  const { levellogId } = useParams();
+  const { levellogId, teamId } = useParams();
   const { feedbackLookup } = useFeedback();
 
   const requestFeedbackLookup = async () => {
@@ -28,7 +27,7 @@ const FeedbackList = () => {
   return (
     <>
       <ContentHeader title={'레벨로그 피드백'}>
-        <Link to={`/levellogs/${levellogId}/feedbacks/add`}>
+        <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}>
           <Button>추가하기</Button>
         </Link>
       </ContentHeader>

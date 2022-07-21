@@ -12,9 +12,12 @@ import com.woowacourse.levellog.dto.FeedbackRequest;
 import com.woowacourse.levellog.dto.FeedbackResponse;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
 import com.woowacourse.levellog.dto.MemberResponse;
+import com.woowacourse.levellog.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.exception.FeedbackNotFoundException;
+import com.woowacourse.levellog.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.exception.LevellogNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,12 @@ public class FeedbackService {
     private final MemberRepository memberRepository;
 
     public Long save(final Long levellogId, final Long fromMemberId, final FeedbackRequest request) {
+        final Optional<Feedback> possibleFeedback = feedbackRepository.findByLevellogIdAndFromId(levellogId,
+                fromMemberId);
+        if (possibleFeedback.isPresent()) {
+            throw new FeedbackAlreadyExistException(levellogId);
+        }
+
         final FeedbackContentDto feedbackContent = request.getFeedback();
         final Levellog levellog = getLevellog(levellogId);
         final Member member = getMember(fromMemberId);

@@ -36,11 +36,11 @@
     - [x] 요청이 실패하면 `NotFound` 페이지로 보낸다.
   - [x] 조회한 팀의 레벨로그를 `Interviewer`의 props로 내려준다.
 
-- [ ] 레벨로그 수정하기
+- [x] 레벨로그 수정하기
 
-  - [ ] `InterviewDetail` 페이지에서 본인의 아이디에 따라 `Interviewer`를 렌더링한다.
-  - [ ] `LevellogViewModal` 에서 본인의 레벨로그를 수정할 수 있다.
-  - [ ] 올바른 `accessToken`을 가지고 있을 때만 레벨로그를 수정할 수 있다.
+  - [x] `InterviewDetail` 페이지에서 본인의 아이디에 따라 `Interviewer`를 렌더링한다.
+  - [x] `LevellogViewModal` 에서 본인의 레벨로그를 수정할 수 있다.
+  - [x] 올바른 `accessToken`을 가지고 있을 때만 레벨로그를 수정할 수 있다.
 
 - [x] 레벨로그 삭제하기
 

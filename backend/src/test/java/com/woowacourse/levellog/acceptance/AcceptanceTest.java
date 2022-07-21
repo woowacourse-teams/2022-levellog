@@ -51,7 +51,7 @@ abstract class AcceptanceTest {
 
     protected String masterToken;
     protected RequestSpecification specification;
-    protected Long masterId;
+    private Long masterId;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -88,6 +88,31 @@ abstract class AcceptanceTest {
                                         prettyPrint()
                                 )
                 ).build();
+
+        masterToken = getToken(login(MASTER));
+        masterId = getMemberId(login(MASTER));
+    }
+
+    protected ValidatableResponse requestCreateTeam(final String title, final String host,
+                                                    final String... participants) {
+        final List<Long> participantIds = Arrays.stream(participants)
+                .map(this::login)
+                .map(ValidatableResponseOptions::extract)
+                .map(it -> it.as(LoginResponse.class))
+                .map(LoginResponse::getId)
+                .collect(Collectors.toList());
+        final ParticipantIdsRequest participantIdsRequest = new ParticipantIdsRequest(participantIds);
+        final TeamRequest request = new TeamRequest(title, title + "place", LocalDateTime.now(), participantIdsRequest);
+
+        final String token = getToken(login(host));
+
+        return RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/teams")
+                .then().log().all();
     }
 
     protected ValidatableResponse login(final String nickname) {
@@ -106,5 +131,69 @@ abstract class AcceptanceTest {
             e.printStackTrace();
         }
         return null;
+    }
+
+    protected String getToken(final ValidatableResponse loginResponse) {
+        return loginResponse.extract()
+                .as(LoginResponse.class)
+                .getAccessToken();
+    }
+
+    protected Long getMemberId(final ValidatableResponse loginResponse) {
+        return loginResponse.extract()
+                .as(LoginResponse.class)
+                .getId();
+    }
+
+    protected String getTeamId(final ValidatableResponse teamResponse) {
+        return teamResponse
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split("/api/teams/")[1];
+    }
+
+    protected ValidatableResponse requestCreateLevellog(final String content, final String title, final String host,
+                                                        final String... participants) {
+        final ValidatableResponse teamResponse = requestCreateTeam(title, host, participants);
+        final String teamId = getTeamId(teamResponse);
+
+        return requestCreateLevellog(teamId, content);
+    }
+
+    protected ValidatableResponse requestCreateLevellog(final String teamId, final String content) {
+        final LevellogRequest request = new LevellogRequest(content);
+
+        return RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/teams/{teamId}/levellogs", teamId)
+                .then().log().all();
+    }
+
+    protected String getLevellogId(final ValidatableResponse levellogResponse) {
+        return levellogResponse
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split("/levellogs/")[1];
+    }
+
+    protected ValidatableResponse requestCreateFeedback(final String levellogId, final String content, final String from) {
+        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("study - " + content,
+                "speak - " + content,
+                "etc - " + content);
+        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+
+        final ValidatableResponse loginResponse = login(from);
+        final String token = getToken(loginResponse);
+
+        return RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/levellogs/{levellogId}/feedbacks", levellogId)
+                .then().log().all();
     }
 }

@@ -52,7 +52,7 @@ const Header = () => {
   );
 };
 
-export const HeaderContainer = styled.div`
+export const HeaderContainer = styled.header`
   display: flex;
   position: relative;
   height: 70px;

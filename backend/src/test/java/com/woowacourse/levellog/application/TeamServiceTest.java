@@ -32,7 +32,7 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("LevellogService의")
+@DisplayName("TeamService의")
 class TeamServiceTest {
 
     @Autowired
@@ -109,7 +109,7 @@ class TeamServiceTest {
     }
 
     private Member getMember(final String nickname) {
-        return memberRepository.save(new Member(nickname, (int) System.currentTimeMillis(), "profile.png"));
+        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
     }
 
     private Team getTeam(final String title) {

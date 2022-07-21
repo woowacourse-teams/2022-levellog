@@ -5,8 +5,8 @@ const Input = ({ width = '300px', height = '40px', inputRef, ...props }: InputPr
 };
 
 interface InputProps {
-  height?: string;
   width?: string;
+  height?: string;
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
@@ -14,7 +14,7 @@ export const InputStyle = styled.input`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   font-size: 1.2rem;
-  background-color: #f1f1f1;
+  background-color: ${(props) => props.theme.WHITE};
   border-style: none;
   border-radius: 5px;
   box-sizing: border-box;

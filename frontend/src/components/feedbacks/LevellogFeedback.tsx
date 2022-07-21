@@ -1,70 +1,40 @@
-import { useRef } from 'react';
-
 import styled from 'styled-components';
-import { FeedbackType } from 'types';
 
-import useFeedback from 'hooks/useFeedback';
+import Input from 'components/@commons/Input';
+import { FeedbackContainer, FeedbackTitle } from 'components/@commons/Style';
 
-import Button from '../@commons/Button';
-import Input from '../@commons/Input';
-import { FeedbackAddContainer } from '../@commons/Style';
-
-const LevellogFeedback = () => {
-  const { feedbackAdd } = useFeedback();
-  const feedbackRef = useRef([]);
-
-  const handleSubmitFeedbackForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const [name, study, speak, etc] = feedbackRef.current;
-    const feedbackResult: Omit<FeedbackType, 'id'> = {
-      name: name.value,
-      feedback: {
-        study: study.value,
-        speak: speak.value,
-        etc: etc.value,
-      },
-    };
-
-    feedbackAdd(feedbackResult);
-  };
-
+const LevellogFeedback = ({ feedbackRef, handleSubmitFeedbackForm }: any) => {
   return (
-    <FeedbackAddContainer>
-      <h2>피드백 입력화면</h2>
+    <FeedbackContainer>
+      <FeedbackTitle>Feedback</FeedbackTitle>
       <FormStyle onSubmit={handleSubmitFeedbackForm}>
-        <label>You?</label>
-        <Input
-          width="600px"
-          height="60px"
-          inputRef={(el: HTMLInputElement) => (feedbackRef.current[0] = el)}
-        />
         <label>학습 측면에서 좋은 점과 부족한 점은?</label>
         <Input
-          width="600px"
-          height="60px"
+          width="100%"
+          height="300px"
           inputRef={(el: HTMLInputElement) => (feedbackRef.current[1] = el)}
         />
         <label>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</label>
         <Input
-          width="600px"
-          height="60px"
+          width="100%"
+          height="300px"
           inputRef={(el: HTMLInputElement) => (feedbackRef.current[2] = el)}
         />
         <label>기타 피드백 (위 2 질문 외에 다른 피드백도 주세요.)</label>
         <Input
-          width="600px"
-          height="60px"
+          width="100%"
+          height="200px"
           inputRef={(el: HTMLInputElement) => (feedbackRef.current[3] = el)}
         />
-        <Button>등록!</Button>
       </FormStyle>
-    </FeedbackAddContainer>
+    </FeedbackContainer>
   );
 };
 
 const FormStyle = styled.form`
   display: flex;
+  width: 100%;
+  gap: 1.5rem;
   flex-direction: column;
   align-content: space-between;
 `;

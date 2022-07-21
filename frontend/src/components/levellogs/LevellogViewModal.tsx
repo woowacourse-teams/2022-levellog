@@ -143,7 +143,7 @@ const Levellog = styled.div`
     width: 31.25rem;
   }
   @media (max-height: 51.875rem) {
-    width: 31.25rem;
+    height: 31.25rem;
   }
   @media (max-width: 35rem) {
     width: 16.25rem;

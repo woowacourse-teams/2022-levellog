@@ -1,4 +1,4 @@
-export const API_URL = '/api';
+export const API_URL = 'https://levellog.app/api';
 
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',

@@ -6,7 +6,7 @@ export const getUserAuthority = (code: string) =>
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    url: '/api/auth/login',
+    url: 'https://levellog.app/api/auth/login',
     data: {
       authorizationCode: code,
     },

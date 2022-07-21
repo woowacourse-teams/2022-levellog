@@ -105,7 +105,7 @@ public class TeamService {
     private List<ParticipantResponse> getParticipantsResponse(final List<Participant> participants) {
         return participants.stream()
                 .map(it -> new ParticipantResponse(
-                        it.getId(),
+                        it.getMember().getId(),
                         getLevellog(it),
                         it.getMember().getNickname(),
                         it.getMember().getProfileUrl()))

@@ -195,5 +195,23 @@ class FeedbackServiceTest {
             assertThatThrownBy(() -> feedbackService.save(levellog.getId(), roma.getId(), request))
                     .isInstanceOf(FeedbackAlreadyExistException.class);
         }
+
+        @Test
+        @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
+        void save_selfFeedback_exceptionThrown() {
+            // given
+            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
+            final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
+            final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
+
+            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
+                    "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+            final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+
+            // when, then
+            assertThatThrownBy(() -> feedbackService.save(levellog.getId(), eve.getId(), request))
+                    .isInstanceOf(InvalidFeedbackException.class)
+                    .hasMessage("자기 자신에게 피드백을 할 수 없습니다.");
+        }
     }
 }

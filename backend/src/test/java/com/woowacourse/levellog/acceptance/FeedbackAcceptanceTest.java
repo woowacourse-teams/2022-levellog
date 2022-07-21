@@ -8,6 +8,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import com.woowacourse.levellog.dto.FeedbackContentDto;
 import com.woowacourse.levellog.dto.FeedbackRequest;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
+import com.woowacourse.levellog.dto.LevellogRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -28,8 +29,25 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 작성")
     void createFeedback() {
         // given
-        final ValidatableResponse levellogResponse = requestCreateLevellog("트렌젝션에 대해 학습함.", "제이슨조", MASTER, MASTER,
-                "릭", "로마");
+        final ValidatableResponse hostLoginResponse = login("릭");
+        final Long rick_id = getMemberId(hostLoginResponse);
+        final String rickToken = getToken(hostLoginResponse);
+
+        final ValidatableResponse romaLoginResponse = login("로마");
+        final Long roma_id = getMemberId(romaLoginResponse);
+        final String romaToken = getToken(romaLoginResponse);
+
+        final ValidatableResponse teamResponse = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id);
+        final String teamId = getTeamId(teamResponse);
+
+        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final ValidatableResponse levellogResponse = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + rickToken)
+                .body(levellogRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/teams/{teamId}/levellogs", teamId)
+                .then().log().all();
         final String levellogId = getLevellogId(levellogResponse);
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
@@ -39,7 +57,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("feedback/save"))
@@ -79,7 +97,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body(  "feedbacks.feedback.study", contains("study - 로마가 쓴", "study - 알린이 쓴"),
+                .body("feedbacks.feedback.study", contains("study - 로마가 쓴", "study - 알린이 쓴"),
                         "feedbacks.feedback.speak", contains("speak - 로마가 쓴", "speak - 알린이 쓴"),
                         "feedbacks.feedback.etc", contains("etc - 로마가 쓴", "etc - 알린이 쓴")
                 );

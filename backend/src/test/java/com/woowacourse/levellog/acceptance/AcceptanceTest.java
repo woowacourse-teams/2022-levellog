@@ -115,6 +115,20 @@ abstract class AcceptanceTest {
                 .then().log().all();
     }
 
+    protected ValidatableResponse requestCreateTeam(final String title, final String token,
+                                                    final Long... participantIds) {
+        final ParticipantIdsRequest participantIdsRequest = new ParticipantIdsRequest(List.of(participantIds));
+        final TeamRequest request = new TeamRequest(title, title + "place", LocalDateTime.now(), participantIdsRequest);
+
+        return RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/teams")
+                .then().log().all();
+    }
+
     protected ValidatableResponse login(final String nickname) {
         try {
             final GithubProfileResponse response = new GithubProfileResponse(String.valueOf(

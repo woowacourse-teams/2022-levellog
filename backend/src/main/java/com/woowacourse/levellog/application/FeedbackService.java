@@ -42,6 +42,11 @@ public class FeedbackService {
         final FeedbackContentDto feedbackContent = request.getFeedback();
         final Levellog levellog = getLevellog(levellogId);
         final Member member = getMember(fromMemberId);
+
+        if (levellog.getAuthor().equals(member)) {
+            throw new InvalidFeedbackException("자기 자신에게 피드백을 할 수 없습니다.");
+        }
+
         final Feedback feedback = new Feedback(
                 member,
                 levellog.getAuthor(),

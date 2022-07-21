@@ -2,6 +2,7 @@ package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.domain.Member;
@@ -11,7 +12,6 @@ import com.woowacourse.levellog.domain.ParticipantRepository;
 import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.ParticipantIdsRequest;
-import com.woowacourse.levellog.dto.ParticipantsResponse;
 import com.woowacourse.levellog.dto.TeamRequest;
 import com.woowacourse.levellog.dto.TeamResponse;
 import com.woowacourse.levellog.dto.TeamUpdateRequest;
@@ -98,12 +98,14 @@ class TeamServiceTest {
                 .map(TeamResponse::getParticipants)
                 .map(List::size)
                 .collect(Collectors.toList());
-        //then
-        assertThat(actualTitles).containsExactly(team1.getTitle(), team2.getTitle());
-        assertThat(actualHostIds).containsExactly(member1.getId(), member2.getId());
-        assertThat(actualParticipantSizes).containsExactly(2, 2);
 
-        assertThat(response.getTeams()).hasSize(2);
+        //then
+        assertAll(
+                () -> assertThat(actualTitles).containsExactly(team1.getTitle(), team2.getTitle()),
+                () -> assertThat(actualHostIds).containsExactly(member1.getId(), member2.getId()),
+                () -> assertThat(actualParticipantSizes).containsExactly(2, 2),
+                () -> assertThat(response.getTeams()).hasSize(2)
+        );
     }
 
     private Member getMember(final String nickname) {
@@ -140,7 +142,7 @@ class TeamServiceTest {
 
         @Test
         @DisplayName("id에 해당하는 팀 정보를 변경한다.")
-        void update() {
+        void success() {
             // given
             final Member member1 = getMember("릭");
             final Member member2 = getMember("페퍼");
@@ -181,7 +183,6 @@ class TeamServiceTest {
                     .isInstanceOf(HostUnauthorizedException.class);
         }
     }
-
 
 
     @Nested

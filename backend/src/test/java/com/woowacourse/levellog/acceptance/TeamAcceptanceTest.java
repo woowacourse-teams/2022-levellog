@@ -65,10 +65,10 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final LoginResponse loginResponse2 = login("이브").extract().as(LoginResponse.class);
         final LoginResponse loginResponse3 = login("릭").extract().as(LoginResponse.class);
         final TeamRequest teamRequest1 = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse1.getId(), loginResponse2.getId())));
+                new ParticipantIdsRequest(List.of(loginResponse2.getId())));
         final TeamRequest teamRequest2 = new TeamRequest("잠실 브리조", "톱오브스윙방", LocalDateTime.now(),
                 new ParticipantIdsRequest(
-                        List.of(loginResponse1.getId(), loginResponse2.getId(), loginResponse3.getId())));
+                        List.of(loginResponse1.getId(), loginResponse3.getId())));
         requestCreateTeam(loginResponse1, teamRequest1);
         requestCreateTeam(loginResponse2, teamRequest2);
 
@@ -84,7 +84,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"),
                         "teams.hostId", contains(loginResponse1.getId().intValue(), loginResponse2.getId().intValue()),
-                        "teams.participants.nickname", contains(List.of("페퍼", "이브"), List.of("페퍼", "이브", "릭"))
+                        "teams.participants.nickname", contains(List.of("페퍼", "이브"), List.of("이브", "페퍼", "릭"))
                 );
     }
 
@@ -101,7 +101,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final LoginResponse loginResponse1 = login("페퍼").extract().as(LoginResponse.class);
         final LoginResponse loginResponse2 = login("이브").extract().as(LoginResponse.class);
         final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse1.getId(), loginResponse2.getId())));
+                new ParticipantIdsRequest(List.of(loginResponse2.getId())));
         final Long id = getTeamId(loginResponse1, teamRequest);
 
         // when

@@ -3,6 +3,7 @@ package com.woowacourse.levellog.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacourse.levellog.config.JpaConfig;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,5 +30,25 @@ class MemberRepositoryTest {
 
         // then
         assertThat(actual).hasValue(member);
+    }
+
+    @Test
+    @DisplayName("findAllByNicknameContains 메서드는 입력한 문자열이 포함된 nickname을 가진 멤버를 모두 조회한다.")
+    void findAllByNicknameContains() {
+        // given
+        final Member roma = memberRepository.save(new Member("roma", 10, "roma.img"));
+        final Member pepper = memberRepository.save(new Member("pepper", 20, "pepper.img"));
+        final Member alien = memberRepository.save(new Member("alien", 30, "alien.img"));
+        final Member rick = memberRepository.save(new Member("rick", 40, "rick.img"));
+        final Member eve = memberRepository.save(new Member("eve", 50, "eve.img"));
+        final Member kyul = memberRepository.save(new Member("kyul", 60, "kyul.img"));
+        final Member harry = memberRepository.save(new Member("harry", 70, "harry.img"));
+
+        // when
+        final List<Member> actual = memberRepository.findAllByNicknameContains("ali");
+
+        // then
+        assertThat(actual).hasSize(1)
+                .contains(alien);
     }
 }

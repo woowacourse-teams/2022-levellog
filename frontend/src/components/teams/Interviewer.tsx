@@ -94,7 +94,7 @@ const Interviewer = ({
           <Link to="">
             <p>사전 질문 작성</p>
           </Link>
-          <Link to={`/levellogs/${levellogId}/feedbacks`}>
+          <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks`}>
             <p>피드백</p>
           </Link>
         </ContentStyle>

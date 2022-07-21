@@ -115,6 +115,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/update"))
@@ -146,6 +147,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .filter(document("levellog/delete"))
                 .when()
                 .delete("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)

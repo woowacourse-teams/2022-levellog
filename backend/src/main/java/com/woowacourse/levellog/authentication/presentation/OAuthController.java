@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.authentication.presentation;
 
 import com.woowacourse.levellog.authentication.application.OAuthService;
+import com.woowacourse.levellog.authentication.config.NoAuthentication;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import javax.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
+@NoAuthentication
 public class OAuthController {
 
     private final OAuthService oAuthService;

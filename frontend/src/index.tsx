@@ -7,6 +7,7 @@ import { theme } from './styles/theme';
 
 import App from './App';
 import { UserProvider } from './contexts/userContext';
+import { TeamProvider } from 'contexts/teamContext';
 
 const main = () => {
   if (process.env.NODE_ENV === 'development') {
@@ -18,9 +19,11 @@ const main = () => {
   root.render(
     <BrowserRouter>
       <UserProvider>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
+        <TeamProvider>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </TeamProvider>
       </UserProvider>
     </BrowserRouter>,
   );

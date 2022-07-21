@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { FeedbackPostType } from 'types';
@@ -9,9 +9,10 @@ import useFeedback from 'hooks/useFeedback';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
-import LevellogFeedback from 'components/feedbacks/LevellogFeedback';
-import LevellogReport from 'components/feedbacks/LevellogReport';
+import LevellogForm from 'components/feedbacks/FeedbackForm';
+import LevellogReport from 'components/levellogs/LevellogReport';
 
+// 레벨로그 작성한 유저의 닉네임 가져오기
 const FeedbackAdd = () => {
   const { levellogId } = useParams();
   const { feedbackAdd } = useFeedback();
@@ -38,7 +39,7 @@ const FeedbackAdd = () => {
       </ContentHeader>
       <FeedbackAddContainer>
         <LevellogReport />
-        <LevellogFeedback
+        <LevellogForm
           feedbackRef={feedbackRef}
           handleSubmitFeedbackForm={handleSubmitFeedbackForm}
         />

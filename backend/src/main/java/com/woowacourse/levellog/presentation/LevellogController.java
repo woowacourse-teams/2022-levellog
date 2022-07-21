@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.presentation;
 
 import com.woowacourse.levellog.application.LevellogService;
+import com.woowacourse.levellog.authentication.config.NoAuthentication;
 import com.woowacourse.levellog.authentication.support.LoginMember;
 import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.dto.LevellogResponse;
@@ -33,6 +34,7 @@ public class LevellogController {
     }
 
     @GetMapping("/{levellogId}")
+    @NoAuthentication
     public ResponseEntity<LevellogResponse> find(@PathVariable final Long teamId,
                                                  @PathVariable final Long levellogId) {
         final LevellogResponse response = levellogService.findById(levellogId);

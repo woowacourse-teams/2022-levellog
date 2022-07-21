@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
@@ -10,11 +11,13 @@ import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.dto.LevellogResponse;
+import com.woowacourse.levellog.exception.LevellogAlreadyExistException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,23 +43,6 @@ class LevellogServiceTest {
     void tearDown() {
         memberRepository.deleteAll();
         teamRepository.deleteAll();
-    }
-
-    @Test
-    @DisplayName("save 메서드는 레벨로그를 저장한다.")
-    void save() {
-        // given
-        final LevellogRequest request = new LevellogRequest("굳굳");
-        final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
-
-        // when
-        final Long id = levellogService.save(author.getId(), team.getId(), request);
-
-        // then
-        final Optional<Levellog> levellog = levellogRepository.findById(id);
-        assertThat(levellog).isPresent();
     }
 
     @Test
@@ -109,5 +95,43 @@ class LevellogServiceTest {
         // then
         final Optional<Levellog> actual = levellogRepository.findById(levellog.getId());
         assertThat(actual).isEmpty();
+    }
+
+    @Nested
+    @DisplayName("save 메서드는")
+    class save {
+
+        @Test
+        @DisplayName("레벨로그를 저장한다.")
+        void save() {
+            // given
+            final LevellogRequest request = new LevellogRequest("굳굳");
+            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+
+            // when
+            final Long id = levellogService.save(author.getId(), team.getId(), request);
+
+            // then
+            final Optional<Levellog> levellog = levellogRepository.findById(id);
+            assertThat(levellog).isPresent();
+        }
+
+        @Test
+        @DisplayName("팀에 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
+        void save_alreadyExist_exceptionThrown() {
+            // given
+            final LevellogRequest request = new LevellogRequest("굳굳");
+            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+
+            levellogRepository.save(new Levellog(author, team, "굳굳굳"));
+
+            // when, then
+            assertThatThrownBy(() -> levellogService.save(author.getId(), team.getId(), request))
+                    .isInstanceOf(LevellogAlreadyExistException.class);
+        }
     }
 }

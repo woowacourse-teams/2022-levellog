@@ -12,6 +12,7 @@ import com.woowacourse.levellog.dto.FeedbackRequest;
 import com.woowacourse.levellog.dto.FeedbackResponse;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
 import com.woowacourse.levellog.dto.MemberResponse;
+import com.woowacourse.levellog.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.exception.LevellogNotFoundException;
@@ -31,9 +32,19 @@ public class FeedbackService {
     private final MemberRepository memberRepository;
 
     public Long save(final Long levellogId, final Long fromMemberId, final FeedbackRequest request) {
+        feedbackRepository.findByLevellogIdAndFromId(levellogId, fromMemberId)
+                .ifPresent(it -> {
+                    throw new FeedbackAlreadyExistException(levellogId);
+                });
+
         final FeedbackContentDto feedbackContent = request.getFeedback();
         final Levellog levellog = getLevellog(levellogId);
         final Member member = getMember(fromMemberId);
+
+        if (levellog.getAuthor().equals(member)) {
+            throw new InvalidFeedbackException("자기 자신에게 피드백을 할 수 없습니다.");
+        }
+
         final Feedback feedback = new Feedback(
                 member,
                 levellog.getAuthor(),

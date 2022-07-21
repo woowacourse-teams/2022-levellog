@@ -1,24 +1,27 @@
 import { useNavigate } from 'react-router-dom';
 
-import { FeedbackType } from 'types';
+import { FeedbackPostType } from 'types';
+
+import { ROUTES_PATH } from 'constants/constants';
 
 import { deleteFeedbacks, getFeedbacks, postFeedback } from 'apis/feedback';
 
 const useFeedback = () => {
+  const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
-  const feedbackAdd = async (feedbackResult: Omit<FeedbackType, 'id'>) => {
+  const feedbackAdd = async ({ feedbackResult, levellogId }: any) => {
     try {
-      await postFeedback(feedbackResult);
-      navigate('/');
+      await postFeedback(accessToken, { feedbackResult, levellogId });
+      navigate(ROUTES_PATH.HOME);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const feedbackLookup = async () => {
+  const feedbackLookup = async (levellogId: string) => {
     try {
-      const res = await getFeedbacks();
+      const res = await getFeedbacks(accessToken, levellogId);
       const feedbacks = res.data;
 
       return feedbacks;
@@ -27,9 +30,9 @@ const useFeedback = () => {
     }
   };
 
-  const feedbackDelete = async (id: number) => {
+  const feedbackDelete = async (levellogId: string, feedbackId: string) => {
     try {
-      await deleteFeedbacks(id);
+      await deleteFeedbacks(accessToken, levellogId, feedbackId);
     } catch (err) {
       console.log(err);
     }

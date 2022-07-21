@@ -21,12 +21,11 @@ const FeedbackAdd = () => {
 
   const handleSubmitFeedbackForm = async (e: any) => {
     e.preventDefault();
-    const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackPostType = {
       feedback: {
-        study: study.value,
-        speak: speak.value,
-        etc: etc.value,
+        study: feedbackRef.current[1].value,
+        speak: feedbackRef.current[2].value,
+        etc: feedbackRef.current[3].value,
       },
     };
 

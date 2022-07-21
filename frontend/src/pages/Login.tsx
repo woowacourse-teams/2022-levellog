@@ -18,7 +18,6 @@ const Login = () => {
       try {
         if (accessToken) {
           const res = (await getUserAuthority(accessToken)) as any;
-          const data = await res.data;
           userInfoDispatch({
             id: res.data.id,
             profileUrl: res.data.profileUrl,

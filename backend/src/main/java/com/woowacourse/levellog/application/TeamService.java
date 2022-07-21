@@ -51,11 +51,18 @@ public class TeamService {
 
     private List<Participant> getParticipants(final Long hostId, final List<Long> memberIds, final Team team) {
         final List<Participant> participants = new ArrayList<>();
+        addMemberToParticipants(hostId, participants, team, true);
         for (final Long memberId : memberIds) {
-            final Member member = getMember(memberId);
-            participants.add(new Participant(team, member, hostId.equals(memberId)));
+            addMemberToParticipants(memberId, participants, team, false);
         }
+
         return participants;
+    }
+
+    private void addMemberToParticipants(final Long memberId, final List<Participant> participants, final Team team,
+                                         final boolean isHost) {
+        final Member member = getMember(memberId);
+        participants.add(new Participant(team, member, isHost));
     }
 
     public TeamsResponse findAll() {

@@ -90,7 +90,7 @@ public class TeamService {
                 team.getStartAt(),
                 team.getProfileUrl(),
                 getHostId(participants),
-                getParticipantsResponse(participants));
+                getParticipantResponses(participants));
     }
 
     private Long getHostId(final List<Participant> participants) {
@@ -102,7 +102,7 @@ public class TeamService {
                 .getId();
     }
 
-    private List<ParticipantResponse> getParticipantsResponse(final List<Participant> participants) {
+    private List<ParticipantResponse> getParticipantResponses(final List<Participant> participants) {
         return participants.stream()
                 .map(it -> new ParticipantResponse(
                         it.getMember().getId(),

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
 
-    List<Participant> findByTeam(Team team);
+    List<Participant> findAllByTeam(Team team);
 
     void deleteByTeam(Team team);
 }

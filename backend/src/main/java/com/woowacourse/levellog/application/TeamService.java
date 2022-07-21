@@ -56,7 +56,7 @@ public class TeamService {
 
     public void update(final Long id, final TeamUpdateRequest request, final Long memberId) {
         final Team team = getTeam(id);
-        final List<Participant> participants = participantRepository.findByTeam(team);
+        final List<Participant> participants = participantRepository.findAllByTeam(team);
         final Long hostId = getHostId(participants);
 
         if (!memberId.equals(hostId)) {
@@ -68,7 +68,7 @@ public class TeamService {
 
     public void deleteById(final Long id, final Long memberId) {
         final Team team = getTeam(id);
-        final List<Participant> participants = participantRepository.findByTeam(team);
+        final List<Participant> participants = participantRepository.findAllByTeam(team);
         final Long hostId = getHostId(participants);
 
         if (!memberId.equals(hostId)) {
@@ -112,7 +112,7 @@ public class TeamService {
     }
 
     private TeamResponse getTeamResponse(final Team team) {
-        final List<Participant> participants = participantRepository.findByTeam(team);
+        final List<Participant> participants = participantRepository.findAllByTeam(team);
         return new TeamResponse(
                 team.getId(),
                 team.getTitle(),

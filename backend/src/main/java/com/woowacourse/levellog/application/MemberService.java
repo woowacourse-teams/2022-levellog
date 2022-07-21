@@ -45,11 +45,6 @@ public class MemberService {
         return memberRepository.findByGithubId(githubId);
     }
 
-    private Member getById(final Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(MemberNotFoundException::new);
-    }
-
     public void updateProfileUrl(final Long id, final String profileUrl) {
         final Member member = getById(id);
         member.updateProfileUrl(profileUrl);
@@ -58,5 +53,10 @@ public class MemberService {
     public void updateNickname(final Long memberId, final NicknameUpdateDto nicknameUpdateDto) {
         final Member member = getById(memberId);
         member.updateNickname(nicknameUpdateDto.getNickname());
+    }
+
+    private Member getById(final Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(MemberNotFoundException::new);
     }
 }

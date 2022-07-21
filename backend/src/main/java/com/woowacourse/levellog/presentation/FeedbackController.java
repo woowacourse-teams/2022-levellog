@@ -49,8 +49,9 @@ public class FeedbackController {
 
     @DeleteMapping("/{feedbackId}")
     public ResponseEntity<Void> delete(@PathVariable final Long levellogId,
-                                       @PathVariable final Long feedbackId) {
-        feedbackService.deleteById(feedbackId);
+                                       @PathVariable final Long feedbackId,
+                                       @LoginMember final Long memberId) {
+        feedbackService.deleteById(feedbackId, memberId);
         return ResponseEntity.noContent().build();
     }
 }

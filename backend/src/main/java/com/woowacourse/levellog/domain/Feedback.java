@@ -43,4 +43,8 @@ public class Feedback extends BaseEntity {
         this.speak = speak;
         this.etc = etc;
     }
+
+    public boolean isAssociatedWith(final Member member) {
+        return from.equals(member) || to.equals(member);
+    }
 }

@@ -24,16 +24,22 @@ const Interviewer = ({
   const { loginUserId } = useUser();
   const { teamId } = useParams();
 
-  const requestLevellogLookup = async () => {
-    const res = await levellogLookup(teamId, levellogId);
-    setLevellog(res.content);
-  };
-
   const handleClickToggleModal = () => {
+    if (!levellog) {
+      alert('레벨로그가 존재하지 않습니다.');
+      return;
+    }
     setIsOnModal((prev) => !prev);
     if (!levellog) {
       requestLevellogLookup();
     }
+  };
+
+  const handleClickLevellog = () => {};
+
+  const requestLevellogLookup = async () => {
+    const res = await levellogLookup(teamId, levellogId);
+    setLevellog(res.content);
   };
 
   if (id === loginUserId) {

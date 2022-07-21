@@ -17,8 +17,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class AuthenticationConfig implements WebMvcConfigurer {
 
+    private final LoginInterceptor loginInterceptor;
     private final LoginMemberResolver loginMemberResolver;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public OAuthClient oAuthClient(@Value("${security.github.client-id}") final String clientId,
@@ -28,9 +28,8 @@ public class AuthenticationConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor(jwtTokenProvider))
-                .excludePathPatterns("/api/auth/**", "/api/feedback/**", "/api/levellogs/**")
-                .addPathPatterns("/api/members");
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/api/**");
     }
 
     @Override

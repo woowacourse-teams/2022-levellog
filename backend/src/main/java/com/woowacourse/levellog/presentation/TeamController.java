@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.presentation;
 
 import com.woowacourse.levellog.application.TeamService;
+import com.woowacourse.levellog.authentication.config.NoAuthentication;
 import com.woowacourse.levellog.authentication.support.LoginMember;
 import com.woowacourse.levellog.dto.TeamRequest;
 import com.woowacourse.levellog.dto.TeamResponse;
@@ -34,12 +35,14 @@ public class TeamController {
     }
 
     @GetMapping
+    @NoAuthentication
     public ResponseEntity<TeamsResponse> findAll() {
         final TeamsResponse response = teamService.findAll();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
+    @NoAuthentication
     public ResponseEntity<TeamResponse> findById(@PathVariable final Long id) {
         final TeamResponse response = teamService.findById(id);
         return ResponseEntity.ok(response);

@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class MemberCreateDto {
+
     private String nickname;
-
     private Integer githubId;
-
     private String profileUrl;
 }

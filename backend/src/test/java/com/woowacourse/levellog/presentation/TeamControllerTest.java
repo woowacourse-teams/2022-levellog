@@ -1,11 +1,13 @@
 package com.woowacourse.levellog.presentation;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.dto.ParticipantIdsRequest;
 import com.woowacourse.levellog.dto.TeamRequest;
+import com.woowacourse.levellog.dto.TeamUpdateRequest;
 import com.woowacourse.levellog.support.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -90,6 +92,92 @@ class TeamControllerTest extends ControllerTest {
         void participantsNull_Exception() throws Exception {
             // given
             final TeamRequest request = new TeamRequest("잠실 준조", "트랙룸", LocalDateTime.now(), null);
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    @DisplayName("update 메서드는")
+    class update {
+
+        // TODO: Authorization 헤더 추가
+
+        @ParameterizedTest
+        @ValueSource(strings = {" "})
+        @NullAndEmptySource
+        @DisplayName("팀 명으로 공백이나 null이 들어오면 예외를 던진다.")
+        void titleNullOrEmpty_Exception(final String title) throws Exception {
+            // given
+            final ParticipantIdsRequest participantIds = new ParticipantIdsRequest(List.of(1L, 2L));
+            final TeamRequest teamRequest = new TeamRequest("잠실 네오조", "트랙룸", LocalDateTime.now(), participantIds);
+            final String teamRequestContent = objectMapper.writeValueAsString(teamRequest);
+            mockMvc.perform(post("/api/teams")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(teamRequestContent))
+                    .andDo(print());
+
+            final TeamUpdateRequest request = new TeamUpdateRequest(title, "트랙룸", LocalDateTime.now());
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            // when
+            final ResultActions perform = mockMvc.perform(put("/api/teams/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isBadRequest());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {" "})
+        @NullAndEmptySource
+        @DisplayName("인터뷰 장소로 공백이나 null이 들어오면 예외를 던진다.")
+        void placeNullOrEmpty_Exception(final String place) throws Exception {
+            // given
+            final ParticipantIdsRequest participantIds = new ParticipantIdsRequest(List.of(1L, 2L));
+            final TeamRequest teamRequest = new TeamRequest("잠실 네오조", "트랙룸", LocalDateTime.now(), participantIds);
+            final String teamRequestContent = objectMapper.writeValueAsString(teamRequest);
+            mockMvc.perform(post("/api/teams")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(teamRequestContent))
+                    .andDo(print());
+
+            final TeamUpdateRequest request = new TeamUpdateRequest("잠실 제이슨조", place, LocalDateTime.now());
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 시간으로 null이 들어오면 예외를 던진다.")
+        void startAtNull_Exception() throws Exception {
+            // given
+            final ParticipantIdsRequest participantIds = new ParticipantIdsRequest(List.of(1L, 2L));
+            final TeamRequest teamRequest = new TeamRequest("잠실 네오조", "트랙룸", LocalDateTime.now(), participantIds);
+            final String teamRequestContent = objectMapper.writeValueAsString(teamRequest);
+            mockMvc.perform(post("/api/teams")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(teamRequestContent))
+                    .andDo(print());
+
+            final TeamUpdateRequest request = new TeamUpdateRequest("잠실 제이슨조", "트랙룸", null);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when

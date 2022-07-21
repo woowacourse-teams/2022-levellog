@@ -9,6 +9,7 @@ import profileDefaultImage from 'assets/images/defaultProfile.png';
 import levellogLogo from 'assets/images/levellogLogo.png';
 
 import Button from './@commons/Button';
+import { LogoStyle } from './@commons/Style';
 import ProfileDropdown from './ProfileDropdown';
 
 const Header = () => {
@@ -55,19 +56,20 @@ const Header = () => {
 export const HeaderContainer = styled.header`
   display: flex;
   position: relative;
-  height: 70px;
+  height: 4.375rem;
   padding: 0 10rem;
   border-bottom: 1px solid #000000;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: 1024px) {
+    padding: 0 5rem;
+  }
+  @media (max-width: 560px) {
+    padding: 0 2.5rem;
+  }
 `;
 
-export const LogoStyle = styled.img`
-  width: 40px;
-  height: 42px;
-`;
-
-export const ProfileImageStyle = styled.img`
+const ProfileImageStyle = styled.img`
   width: 44px;
   height: 44px;
   border-radius: 22px;

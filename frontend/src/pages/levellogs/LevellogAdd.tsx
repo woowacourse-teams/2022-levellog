@@ -27,7 +27,7 @@ const LevellogAdd = () => {
       </ContentHeader>
       <MainContainer>
         <SubTitleLabel>Level Log</SubTitleLabel>
-        <Input width="100%" height="500px" inputRef={levellogRef} />
+        <Input width="100%" height="50rem" inputRef={levellogRef} />
       </MainContainer>
     </form>
   );

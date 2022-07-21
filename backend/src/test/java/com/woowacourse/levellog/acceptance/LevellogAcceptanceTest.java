@@ -1,20 +1,18 @@
 package com.woowacourse.levellog.acceptance;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.dto.LevellogRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-// FIXME : 팀 API 구현 후 수정
-@Disabled
 @DisplayName("레벨로그 관련 기능")
 class LevellogAcceptanceTest extends AcceptanceTest {
 
@@ -27,20 +25,24 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 작성")
     void createLevellog() {
         // given
+        final ValidatableResponse teamResponse = requestCreateTeam("레벨로그팀", MASTER, MASTER, "로마", "알린");
+        final String teamId = getTeamId(teamResponse);
+
         final LevellogRequest request = new LevellogRequest("Spring과 React를 학습했습니다.");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/create"))
                 .when()
-                .post("/api/levellogs")
+                .post("/api/teams/{teamId}/levellogs", teamId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, equalTo("/api/levellogs/1"));
+                .header(HttpHeaders.LOCATION, notNullValue());
     }
 
     /*
@@ -53,21 +55,23 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 상세 조회")
     void findLevellog() {
         // given
-        final String content = "트렌젝션에 대해 학습함.";
-        final LevellogRequest request = new LevellogRequest(content);
-        final Long id = extractLevellogId(requestCreateLevellog(request));
+        final ValidatableResponse teamResponse = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브");
+        final String teamId = getTeamId(teamResponse);
+
+        final ValidatableResponse levellogResponse = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.");
+        final String levellogId = getLevellogId(levellogResponse);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .accept(MediaType.ALL_VALUE)
                 .filter(document("levellog/find"))
                 .when()
-                .get("/api/levellogs/{id}", id)
+                .get("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("content", equalTo(content));
+                .body("content", equalTo("트렌젝션에 대해 학습함."));
     }
 
     /*
@@ -78,11 +82,16 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @Test
     @DisplayName("존재하지 않는 레벨로그 상세 조회")
     void findLevellog_notExistId_500() {
+        // given
+        final ValidatableResponse teamResponse = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브");
+        final String teamId = getTeamId(teamResponse);
+
         // when
-        final ValidatableResponse response = requestFindLevellog(999L);
+        final ValidatableResponse response = requestFindLevellog(Long.parseLong(teamId), 999L);
 
         // then
-        response.statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.statusCode(HttpStatus.NOT_FOUND.value())
+                .body("message", equalTo("레벨로그가 존재하지 않습니다."));
     }
 
     /*
@@ -95,8 +104,12 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 수정")
     void updateLevellog() {
         // given
-        final ValidatableResponse createResponse = requestCreateLevellog(new LevellogRequest("original content"));
-        final Long id = extractLevellogId(createResponse);
+        final ValidatableResponse teamResponse = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브");
+        final String teamId = getTeamId(teamResponse);
+
+        final ValidatableResponse levellogResponse = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.");
+        final String levellogId = getLevellogId(levellogResponse);
+
         final String updateContent = "update content";
         final LevellogRequest request = new LevellogRequest(updateContent);
 
@@ -106,12 +119,12 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/update"))
                 .when()
-                .put("/api/levellogs/{id}", id)
+                .put("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindLevellog(id)
+        requestFindLevellog(Long.parseLong(teamId), Long.parseLong(levellogId))
                 .body("content", equalTo(updateContent));
     }
 
@@ -125,43 +138,31 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 삭제")
     void deleteLevellog() {
         // given
-        final ValidatableResponse createResponse = requestCreateLevellog(new LevellogRequest("original content"));
-        final Long id = extractLevellogId(createResponse);
+        final ValidatableResponse teamResponse = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브");
+        final String teamId = getTeamId(teamResponse);
+
+        final ValidatableResponse levellogResponse = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.");
+        final String levellogId = getLevellogId(levellogResponse);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .filter(document("levellog/delete"))
                 .when()
-                .delete("/api/levellogs/{id}", id)
+                .delete("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindLevellog(id)
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        requestFindLevellog(Long.parseLong(teamId), Long.parseLong(levellogId))
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body("message", equalTo("레벨로그가 존재하지 않습니다."));
     }
 
-    private ValidatableResponse requestCreateLevellog(final LevellogRequest request) {
-        return RestAssured.given().log().all()
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/levellogs")
-                .then().log().all();
-    }
-
-    private Long extractLevellogId(final ValidatableResponse response) {
-        return Long.valueOf(response
-                .extract()
-                .header(HttpHeaders.LOCATION)
-                .split("/api/levellogs/")[1]);
-    }
-
-    private ValidatableResponse requestFindLevellog(final Long id) {
+    private ValidatableResponse requestFindLevellog(final Long teamId, final Long levellogId) {
         return RestAssured.given().log().all()
                 .accept(MediaType.ALL_VALUE)
                 .when()
-                .get("/api/levellogs/{id}", id)
+                .get("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
                 .then().log().all();
     }
 }

@@ -26,6 +26,10 @@ const FeedbackList = () => {
     requestFeedbackLookup();
   }, []);
 
+  if (!levellogId) {
+    <h3>레벨로그가 작성되지 않아 피드백을 작성할 수 없습니다</h3>;
+  }
+
   return (
     <>
       <ContentHeader title={'레벨로그 피드백'}>

@@ -8,7 +8,7 @@ export const postLevellog = (
 ) => {
   axios({
     method: 'post',
-    url: `https://levellog.app/api/teams/${teamId}/levellogs`,
+    url: `https://dev.levellog.app/api/teams/${teamId}/levellogs`,
     headers: { Authorization: `Bearer ${accessToken}` },
     data: levellogContent,
   });
@@ -17,7 +17,7 @@ export const postLevellog = (
 export const getLevellog = (accessToken: string, teamId: string, id: string) =>
   axios({
     method: 'get',
-    url: `https://levellog.app/api/teams/${teamId}/levellogs/${id}`,
+    url: `https://dev.levellog.app/api/teams/${teamId}/levellogs/${id}`,
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
@@ -29,7 +29,7 @@ export const modifyLevellog = (
 ) => {
   axios({
     method: 'put',
-    url: `https://levellog.app/api/teams/${teamId}/levellogs/${id}`,
+    url: `https://dev.levellog.app/api/teams/${teamId}/levellogs/${id}`,
     headers: { Authorization: `Bearer ${accessToken}` },
     data: levellogContent,
   });

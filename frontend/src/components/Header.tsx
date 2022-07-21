@@ -23,7 +23,7 @@ const Header = () => {
 
   const handleClickLoginButton = () => {
     window.location.href =
-      'https://github.com/login/oauth/authorize?client_id=fc4c9ab6e6d189931371&redirect_uri=https://https://levellog.app//login';
+      'https://github.com/login/oauth/authorize?client_id=fc4c9ab6e6d189931371&redirect_uri=https://levellog.app/login';
   };
 
   const handleClickProfileImage = () => {

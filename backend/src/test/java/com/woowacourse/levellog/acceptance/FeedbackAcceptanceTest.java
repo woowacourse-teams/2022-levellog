@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.acceptance;
 
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.dto.FeedbackContentDto;
@@ -10,15 +10,12 @@ import com.woowacourse.levellog.dto.FeedbackRequest;
 import com.woowacourse.levellog.dto.FeedbacksResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-// FIXME : 팀 API 구현 후 수정
-@Disabled
 @DisplayName("피드백 관련 기능")
 class FeedbackAcceptanceTest extends AcceptanceTest {
 
@@ -31,21 +28,28 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 작성")
     void createFeedback() {
         // given
-        final FeedbackRequest request = new FeedbackRequest(
-                new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요."));
+        final ValidatableResponse levellogResponse = requestCreateLevellog("트렌젝션에 대해 학습함.", "제이슨조", MASTER, MASTER,
+                "릭", "로마");
+        final String levellogId = getLevellogId(levellogResponse);
+
+        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
+                "아이 컨텍이 좋습니다.",
+                "윙크하지 마세요.");
+        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("feedback/save"))
                 .when()
-                .post("/api/feedbacks")
+                .post("/api/levellogs/{levellogId}/feedbacks", levellogId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, equalTo("/api/feedbacks"));
+                .header(HttpHeaders.LOCATION, notNullValue());
     }
 
     /*
@@ -58,27 +62,26 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 조회")
     void findAllFeedbacks() {
         // given
-        final FeedbackRequest request1 = new FeedbackRequest(
-                new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타"));
-        final FeedbackRequest request2 = new FeedbackRequest(
-                new FeedbackContentDto("알린 스터디", "알린 말하기", "알린 기타"));
+        final ValidatableResponse levellogResponse = requestCreateLevellog("트렌젝션에 대해 학습함.", "제이슨조", MASTER, MASTER,
+                "릭", "로마");
+        final String levellogId = getLevellogId(levellogResponse);
 
-        requestCreateFeedback(request1);
-        requestCreateFeedback(request2);
+        requestCreateFeedback(levellogId, "로마가 쓴", "로마");
+        requestCreateFeedback(levellogId, "알린이 쓴", "알린");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .filter(document("feedback/find-all"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .when()
-                .get("/api/feedbacks")
+                .get("/api/levellogs/{levellogId}/feedbacks", levellogId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("feedbacks.name", contains("로마", "알린"),
-                        "feedbacks.feedback.study", contains("로마 스터디", "알린 스터디"),
-                        "feedbacks.feedback.speak", contains("로마 말하기", "알린 말하기"),
-                        "feedbacks.feedback.etc", contains("로마 기타", "알린 기타")
+                .body(  "feedbacks.feedback.study", contains("study - 로마가 쓴", "study - 알린이 쓴"),
+                        "feedbacks.feedback.speak", contains("speak - 로마가 쓴", "speak - 알린이 쓴"),
+                        "feedbacks.feedback.etc", contains("etc - 로마가 쓴", "etc - 알린이 쓴")
                 );
     }
 
@@ -94,15 +97,14 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 삭제")
     void deleteFeedback() {
         // given
-        final FeedbackRequest request1 = new FeedbackRequest(
-                new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타"));
-        final FeedbackRequest request2 = new FeedbackRequest(
-                new FeedbackContentDto("알린 스터디", "알린 말하기", "알린 기타"));
+        final ValidatableResponse levellogResponse = requestCreateLevellog("트렌젝션에 대해 학습함.", "제이슨조", MASTER, MASTER,
+                "릭", "로마");
+        final String levellogId = getLevellogId(levellogResponse);
 
-        requestCreateFeedback(request1);
-        requestCreateFeedback(request2);
+        requestCreateFeedback(levellogId, "로마가 쓴", "로마");
+        requestCreateFeedback(levellogId, "알린이 쓴", "알린");
 
-        final Long deleteId = requestFindAllFeedbacks()
+        final Long deleteId = requestFindAllFeedbacks(levellogId)
                 .extract()
                 .as(FeedbacksResponse.class)
                 .getFeedbacks()
@@ -111,30 +113,23 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .filter(document("feedback/delete"))
                 .when()
-                .delete("/api/feedbacks/" + deleteId)
+                .delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, deleteId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-
-        requestFindAllFeedbacks().body("feedbacks.id", not(contains(deleteId)));
+        requestFindAllFeedbacks(levellogId)
+                .body("feedbacks.id", not(contains(deleteId)));
     }
 
-    private ValidatableResponse requestCreateFeedback(final FeedbackRequest request) {
+    private ValidatableResponse requestFindAllFeedbacks(final String levellogId) {
         return RestAssured.given().log().all()
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .when()
-                .post("/api/feedbacks")
-                .then().log().all();
-    }
-
-    private ValidatableResponse requestFindAllFeedbacks() {
-        return RestAssured.given().log().all()
-                .when()
-                .get("/api/feedbacks")
+                .get("/api/levellogs/{levellogId}/feedbacks", levellogId)
                 .then().log().all();
     }
 }

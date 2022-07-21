@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { FeedbackPostType } from 'types';
 
 import useFeedback from 'hooks/useFeedback';
+import useTeams from 'hooks/useTeams';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -15,9 +16,10 @@ import LevellogReport from 'components/feedbacks/LevellogReport';
 const FeedbackAdd = () => {
   const { levellogId } = useParams();
   const { feedbackAdd } = useFeedback();
+  const { teamRequestAndDispatch } = useTeams();
   const feedbackRef = useRef([]);
 
-  const handleSubmitFeedbackForm = (e: any) => {
+  const handleSubmitFeedbackForm = async (e: any) => {
     e.preventDefault();
     const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackPostType = {
@@ -28,7 +30,9 @@ const FeedbackAdd = () => {
       },
     };
 
-    feedbackAdd({ feedbackResult, levellogId });
+    await feedbackAdd({ feedbackResult, levellogId });
+    // 혹시 몰라서 호출하지만, TeamDetail 페이지로 라우팅했을 때 오류 안 날 경우 제거.
+    teamRequestAndDispatch();
   };
 
   return (

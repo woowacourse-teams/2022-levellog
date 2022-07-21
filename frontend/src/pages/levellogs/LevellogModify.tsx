@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
+import useTeams from 'hooks/useTeams';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -13,11 +14,13 @@ import { SubTitleLabel } from 'components/@commons/Label';
 const LevellogModify = () => {
   const levellogRef = useRef(null);
   const { levellogModify, levellogLookup } = useLevellog();
+  const { teamRequestAndDispatch } = useTeams();
   const { teamId, levellogId } = useParams();
 
-  const handleSubmitLevellogForm = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitLevellogForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    levellogModify(teamId, levellogId, levellogRef.current.value);
+    await levellogModify(teamId, levellogId, levellogRef.current.value);
+    teamRequestAndDispatch();
   };
 
   const requestLevellogLookup = async () => {

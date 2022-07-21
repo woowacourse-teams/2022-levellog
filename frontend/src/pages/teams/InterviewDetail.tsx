@@ -54,11 +54,7 @@ const InterviewDetail = () => {
       </InterviewDetailHeader>
       <InterviewDetailContainer>
         {team.participants.map((participant: ParticipantType) => (
-          <Interviewer
-            key={participant.id}
-            requestInterviewTeam={requestInterviewTeam}
-            {...participant}
-          />
+          <Interviewer key={participant.id} {...participant} />
         ))}
       </InterviewDetailContainer>
     </FlexBox>

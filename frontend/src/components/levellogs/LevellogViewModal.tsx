@@ -4,25 +4,20 @@ import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
+import useTeams from 'hooks/useTeams';
 
 import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 
-const LevellogViewModal = ({
-  owner,
-  nickname,
-  levellogId,
-  levellog,
-  setIsOnModal,
-  requestInterviewTeam,
-}) => {
+const LevellogViewModal = ({ owner, nickname, levellogId, levellog, setIsOnModal }) => {
   const { levellogDelete } = useLevellog();
+  const { teamRequestAndDispatch } = useTeams();
   const { teamId } = useParams();
 
   const handleClickLevellogDelete = async () => {
     await levellogDelete(teamId, levellogId);
-    requestInterviewTeam();
+    teamRequestAndDispatch();
     setIsOnModal(false);
   };
 

@@ -25,8 +25,8 @@ const Interviewer = ({
   const { teamId } = useParams();
 
   const handleClickToggleModal = () => {
-    if (!levellog) {
-      alert('레벨로그가 존재하지 않습니다.');
+    if (!levellogId) {
+      alert('레벨로그가 아직 작성되지 않았습니다.');
       return;
     }
     setIsOnModal((prev) => !prev);
@@ -34,8 +34,6 @@ const Interviewer = ({
       requestLevellogLookup();
     }
   };
-
-  const handleClickLevellog = () => {};
 
   const requestLevellogLookup = async () => {
     const res = await levellogLookup(teamId, levellogId);

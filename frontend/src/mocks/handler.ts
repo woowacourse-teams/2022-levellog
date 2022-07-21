@@ -3,16 +3,15 @@ import { rest } from 'msw';
 import { feedbacks, levellogs, levellogTeams } from './mockData';
 
 export const feedbackHandlers = [
-  rest.post('/api/feedbacks', (req, res, ctx) => {
+  rest.post('/api/levellogs/:levellogId/feedbacks', (req, res, ctx) => {
     return res(ctx.status(201));
   }),
 
-  rest.get('/api/feedbacks', (req, res, ctx) => {
+  rest.get('/api/levellogs/:levellogId/feedbacks', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(feedbacks));
   }),
 
-  rest.delete('/api/feedbacks/:id', (req, res, ctx) => {
-    const id = +req.params.id;
+  rest.delete('/api/levellogs/:levellogId/feedbacks/:feedbackId', (req, res, ctx) => {
     return res(ctx.status(204));
   }),
 ];

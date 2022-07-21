@@ -6,8 +6,6 @@ import { FeedbackType } from 'types';
 
 import useFeedback from 'hooks/useFeedback';
 
-import { ROUTES_PATH } from 'constants/constants';
-
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import Feedback from 'components/feedbacks/Feedback';
@@ -19,18 +17,19 @@ const FeedbackList = () => {
 
   const requestFeedbackLookup = async () => {
     const res = await feedbackLookup(levellogId);
-    setFeedbacks(res.feedbacks);
+    if (res) {
+      setFeedbacks(res.feedbacks);
+    }
   };
 
   useEffect(() => {
-    if (levellogId) {
-      requestFeedbackLookup();
+    if (levellogId === 'null') {
+      return;
     }
+    requestFeedbackLookup();
   }, []);
 
-  if (!levellogId) {
-    return <h3>레벨로그가 작성되지 않아 피드백을 작성할 수 없습니다</h3>;
-  }
+  if (levellogId === 'null') return <h3>레벨로그가 작성되지 않아 피드백을 작성할 수 없습니다</h3>;
 
   return (
     <>

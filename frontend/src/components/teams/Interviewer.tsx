@@ -25,7 +25,7 @@ const Interviewer = ({ id, levellogId, nickname, profileUrl }: InterviewerProps)
 
   const handleClickToggleModal = () => {
     setIsOnModal((prev) => !prev);
-    if (!levellog && levellogId) {
+    if (levellogId) {
       requestLevellogLookup();
     }
   };
@@ -86,9 +86,13 @@ const Interviewer = ({ id, levellogId, nickname, profileUrl }: InterviewerProps)
           <Link to="">
             <p>사전 질문 작성</p>
           </Link>
-          <Link to={`/levellogs/${levellogId}/feedbacks`}>
-            <p>피드백</p>
-          </Link>
+          {levellogId ? (
+            <Link to={`/levellogs/${levellogId}/feedbacks`}>
+              <p>피드백</p>
+            </Link>
+          ) : (
+            <p></p>
+          )}
         </ContentStyle>
       </InterviewerContainer>
     </>

@@ -128,8 +128,6 @@ const InterviewerStyle = styled.div`
   margin: 0 auto;
 `;
 
-const InterviewerButton = styled.button``;
-
 const NicknameStyle = styled.div`
   display: flex;
   position: absolute;

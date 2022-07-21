@@ -15,14 +15,16 @@ import RequireAuth from 'components/RequireAuth';
 export const routes = [
   {
     path: ROUTES_PATH.HOME,
-    element: <Home />,
+    element: <InterviewTeams />,
   },
   {
-    path: ROUTES_PATH.FEEDBACK,
+    path: ROUTES_PATH.FEEDBACK_ROUTE,
+    // RequireAuth 추가
     element: <FeedbackList />,
   },
   {
     path: ROUTES_PATH.FEEDBACK_ADD,
+    // RequireAuth 추가
     element: <FeedbackAdd />,
   },
   {
@@ -39,6 +41,7 @@ export const routes = [
   },
   {
     path: ROUTES_PATH.LEVELLOG_MODIFY,
+    // RequireAuth 추가
     element: <LevellogModify />,
   },
   {

@@ -1,9 +1,9 @@
-export const API_URL = 'http://3.36.75.80:8080/api';
+export const API_URL = '/api';
 
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',
-  FEEDBACK: '/feedback',
-  FEEDBACK_ADD: '/feedback/add',
+  FEEDBACK_ROUTE: '/levellogs/:levellogId/feedbacks',
+  FEEDBACK_ADD: `/levellogs/:levellogId/feedbacks/add`,
   LOGIN: '/login',
   LEVELLOG: '/levellog',
   LEVELLOG_ADD: '/levellog/add',

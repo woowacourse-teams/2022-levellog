@@ -12,7 +12,6 @@ import com.woowacourse.levellog.dto.LevellogResponse;
 import com.woowacourse.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.exception.TeamNotFoundException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +26,10 @@ public class LevellogService {
     private final MemberRepository memberRepository;
 
     public Long save(final Long authorId, final Long groupId, final LevellogRequest request) {
-        final Optional<Levellog> possibleLevellog = levellogRepository.findByAuthorIdAndTeamId(authorId, groupId);
-        if (possibleLevellog.isPresent()) {
-            throw new LevellogAlreadyExistException();
-        }
+        levellogRepository.findByAuthorIdAndTeamId(authorId, groupId)
+                .ifPresent(it -> {
+                    throw new LevellogAlreadyExistException();
+                });
 
         final Team team = getTeam(groupId);
         final Member author = getMember(authorId);

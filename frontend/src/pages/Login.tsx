@@ -20,7 +20,7 @@ const Login = () => {
           id: res.data.id,
           profileUrl: res.data.profileUrl,
         });
-        navigate('https://levellog.app/');
+        navigate('/');
       } catch (err) {
         console.log(err);
       }

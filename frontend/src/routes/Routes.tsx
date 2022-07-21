@@ -11,7 +11,6 @@ import InterviewTeams from 'pages/teams/InterviewTeams';
 import { ROUTES_PATH } from 'constants/constants';
 
 import Auth from './Auth';
-import RequireAuth from 'components/RequireAuth';
 
 export const routes = [
   {

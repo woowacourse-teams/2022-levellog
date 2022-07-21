@@ -1,4 +1,5 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
@@ -15,7 +16,6 @@ const LevellogViewModal = ({
   setIsOnModal,
   requestInterviewTeam,
 }) => {
-  const navigate = useNavigate();
   const { levellogDelete } = useLevellog();
   const { teamId } = useParams();
 
@@ -23,10 +23,6 @@ const LevellogViewModal = ({
     await levellogDelete(teamId, levellogId);
     requestInterviewTeam();
     setIsOnModal(false);
-  };
-
-  const handleClickModifyButton = () => {
-    navigate(`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`);
   };
 
   const handleClickCloseModal = () => {
@@ -62,7 +58,9 @@ const LevellogViewModal = ({
           </Header>
           <Levellog>{levellog}</Levellog>
           <Footer>
-            <Button onClick={handleClickModifyButton}>수정하기</Button>
+            <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
+              <Button>수정하기</Button>
+            </Link>
             <Button onClick={handleClickLevellogDelete}>삭제하기</Button>
           </Footer>
         </LevellogModalStyle>

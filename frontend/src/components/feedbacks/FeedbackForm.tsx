@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Input from 'components/@commons/Input';
 import { FeedbackContainer, FeedbackTitle } from 'components/@commons/Style';
 
-const LevellogFeedback = ({ feedbackRef, handleSubmitFeedbackForm }: any) => {
+const FeedbackForm = ({ feedbackRef, handleSubmitFeedbackForm }: any) => {
   return (
     <FeedbackContainer>
       <FeedbackTitle>Feedback</FeedbackTitle>
@@ -39,4 +39,4 @@ const FormStyle = styled.form`
   align-content: space-between;
 `;
 
-export default LevellogFeedback;
+export default FeedbackForm;

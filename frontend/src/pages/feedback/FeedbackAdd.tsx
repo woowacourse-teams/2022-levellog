@@ -1,21 +1,23 @@
-import { useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { FeedbackPostType } from 'types';
 
 import useFeedback from 'hooks/useFeedback';
+import useLevellog from 'hooks/useLevellog';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
-import LevellogForm from 'components/feedbacks/FeedbackForm';
+import FeedbackForm from 'components/feedbacks/FeedbackForm';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
-// 레벨로그 작성한 유저의 닉네임 가져오기
 const FeedbackAdd = () => {
-  const { levellogId } = useParams();
+  const { levellogId, teamId } = useParams();
   const { feedbackAdd } = useFeedback();
+  const { levellogLookup } = useLevellog();
+  const [levellog, setLevellog] = useState();
   const feedbackRef = useRef([]);
 
   const handleSubmitFeedbackForm = (e: any) => {
@@ -32,14 +34,23 @@ const FeedbackAdd = () => {
     feedbackAdd({ feedbackResult, levellogId });
   };
 
+  const requestLevellog = async () => {
+    const res = await levellogLookup(teamId, levellogId);
+    setLevellog(res.content);
+  };
+
+  useEffect(() => {
+    requestLevellog();
+  }, []);
+
   return (
     <FlexBox gap={1.875}>
       <ContentHeader title={'레벨로그 피드백'}>
         <Button onClick={handleSubmitFeedbackForm}>등록하기</Button>
       </ContentHeader>
       <FeedbackAddContainer>
-        <LevellogReport />
-        <LevellogForm
+        <LevellogReport levellog={levellog} />
+        <FeedbackForm
           feedbackRef={feedbackRef}
           handleSubmitFeedbackForm={handleSubmitFeedbackForm}
         />

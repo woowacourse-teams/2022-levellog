@@ -115,7 +115,7 @@ abstract class AcceptanceTest {
                 .then().log().all();
     }
 
-    private ValidatableResponse login(final String nickname) {
+    protected ValidatableResponse login(final String nickname) {
         try {
             final GithubProfileResponse response = new GithubProfileResponse(String.valueOf(
                     ((int) System.currentTimeMillis())), nickname,
@@ -133,7 +133,7 @@ abstract class AcceptanceTest {
         return null;
     }
 
-    private String getToken(final ValidatableResponse loginResponse) {
+    protected String getToken(final ValidatableResponse loginResponse) {
         return loginResponse.extract()
                 .as(LoginResponse.class)
                 .getAccessToken();

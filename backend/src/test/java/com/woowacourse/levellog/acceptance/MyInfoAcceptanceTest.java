@@ -3,9 +3,7 @@ package com.woowacourse.levellog.acceptance;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import com.woowacourse.levellog.dto.NicknameUpdateDto;
-import com.woowacourse.levellog.fixture.RequestFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpHeaders;
@@ -26,13 +24,14 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
      */
     @Test
     @DisplayName("내 정보 조회")
-    void readMyInfo() throws Exception {
+    void readMyInfo() {
         // given
-        final LoginResponse loginResponse = RequestFixture.login("123456", "로마", "image.url");
+        final ValidatableResponse loginResponse = login("로마");
+        final String token = getToken(loginResponse);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("myinfo/read"))
                 .when()
@@ -42,7 +41,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // then
         response.body("id", Matchers.notNullValue(),
                 "nickname", equalTo("로마"),
-                "profileUrl", equalTo("image.url"));
+                "profileUrl", equalTo("로마.com"));
     }
 
     /*
@@ -53,14 +52,16 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
      */
     @Test
     @DisplayName("내 닉네임 변경하기")
-    void updateMyNickname() throws Exception {
+    void updateMyNickname() {
         // given
-        final LoginResponse loginResponse = RequestFixture.login("123456", "로마", "image.url");
+        final ValidatableResponse loginResponse = login("로마");
+        final String token = getToken(loginResponse);
+
         final NicknameUpdateDto nicknameDto = new NicknameUpdateDto("새이름");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .body(nicknameDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("myinfo/update-nickname"))

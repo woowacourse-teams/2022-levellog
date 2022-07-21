@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { LevellogType } from 'types';
 
+import { API_URL } from 'constants/constants';
+
 export const postLevellog = (
   accessToken: string,
   teamId: string,
@@ -8,7 +10,7 @@ export const postLevellog = (
 ) => {
   axios({
     method: 'post',
-    url: `https://levellog.app/api/teams/${teamId}/levellogs`,
+    url: `${API_URL}/teams/${teamId}/levellogs`,
     headers: { Authorization: `Bearer ${accessToken}` },
     data: levellogContent,
   });
@@ -17,7 +19,7 @@ export const postLevellog = (
 export const getLevellog = (accessToken: string, teamId: string, id: string) =>
   axios({
     method: 'get',
-    url: `https://levellog.app/api/teams/${teamId}/levellogs/${id}`,
+    url: `${API_URL}/teams/${teamId}/levellogs/${id}`,
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
@@ -29,7 +31,7 @@ export const modifyLevellog = (
 ) => {
   axios({
     method: 'put',
-    url: `https://levellog.app/api/teams/${teamId}/levellogs/${id}`,
+    url: `${API_URL}/teams/${teamId}/levellogs/${id}`,
     headers: { Authorization: `Bearer ${accessToken}` },
     data: levellogContent,
   });
@@ -38,7 +40,7 @@ export const modifyLevellog = (
 export const deleteLevellog = (accessToken: string, teamId: string, id: string) => {
   axios({
     method: 'delete',
-    url: `https://levellog.app/api/teams/${teamId}/levellogs/${id}`,
+    url: `${API_URL}/teams/${teamId}/levellogs/${id}`,
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 };

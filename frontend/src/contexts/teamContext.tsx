@@ -4,7 +4,7 @@ import { InterviewTeamType } from 'types/index';
 
 // type TeamDispatchType = Dispatch<SetStateAction<InterviewTeamType>>;
 
-const teamInfo = {
+export const teamInfo = {
   id: '',
   title: '',
   place: '',

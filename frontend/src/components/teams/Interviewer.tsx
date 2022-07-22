@@ -24,10 +24,10 @@ const Interviewer = ({ id, levellogId, nickname, profileUrl }: InterviewerProps)
   };
 
   const handleClickToggleModal = () => {
-    if (levellogId) {
+    if (levellogId && teamId) {
       requestLevellogLookup();
     }
-    if (!levellogId) {
+    if (!levellogId || !teamId) {
       alert('작성된 레벨로그가 없습니다.');
       return;
     }

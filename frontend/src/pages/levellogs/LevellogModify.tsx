@@ -15,8 +15,7 @@ const LevellogModify = () => {
   const { levellogModify, levellogLookup } = useLevellog();
   const { teamId, levellogId } = useParams();
 
-  const handleSubmitLevellogForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleClickLevellogForm = (e: any) => {
     levellogModify(teamId, levellogId, levellogRef.current.value);
   };
 
@@ -30,9 +29,9 @@ const LevellogModify = () => {
   }, []);
 
   return (
-    <form onSubmit={handleSubmitLevellogForm}>
+    <form>
       <ContentHeader title="레벨로그 수정">
-        <Button>수정하기</Button>
+        <Button onClick={handleClickLevellogForm}>수정하기</Button>
       </ContentHeader>
       <MainContainer>
         <SubTitleLabel>Level Log</SubTitleLabel>

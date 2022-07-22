@@ -16,7 +16,6 @@ const LevellogAdd = () => {
   const { teamId } = useParams();
 
   const handleClickLevellogForm = (e: any) => {
-    e.preventDefault();
     levellogAdd(teamId, levellogRef.current.value);
   };
 

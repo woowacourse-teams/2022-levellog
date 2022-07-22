@@ -21,13 +21,8 @@ const Feedback = ({ feedbackId, userFeedback, requestFeedbackLookup }: FeedbackP
   } = userFeedback;
 
   const handleClickDeleteButton = async () => {
-    if (+id !== +loginUserId) {
-      alert('자신이 남기거나 받은 피드백만 삭제할 수 있습니다.');
-
-      return;
-    }
-
-    await feedbackDelete(levellogId, feedbackId);
+    const res = (await feedbackDelete(levellogId, feedbackId)) as any;
+    alert(res.message);
     requestFeedbackLookup();
   };
 

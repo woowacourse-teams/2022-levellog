@@ -8,4 +8,6 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     List<Participant> findByTeam(Team team);
 
     void deleteByTeam(Team team);
+
+    boolean existsByMemberAndTeam(Member member, Team team);
 }

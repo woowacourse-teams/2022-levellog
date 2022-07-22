@@ -116,7 +116,7 @@ const CloseButton = styled.button`
 `;
 
 const Levellog = styled.div`
-  overflow: scroll;
+  overflow: auto;
   width: 42.5rem;
   height: 40.5rem;
   padding: 1rem;

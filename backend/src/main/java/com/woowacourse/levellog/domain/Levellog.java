@@ -33,4 +33,8 @@ public class Levellog extends BaseEntity {
     public void updateContent(final String content) {
         this.content = content;
     }
+
+    public boolean isAuthorId(final Long memberId) {
+        return author.getId().equals(memberId);
+    }
 }

@@ -53,8 +53,9 @@ public class LevellogController {
 
     @DeleteMapping("/{levellogId}")
     public ResponseEntity<Void> delete(@PathVariable final Long teamId,
-                                       @PathVariable final Long levellogId) {
-        levellogService.deleteById(levellogId);
+                                       @PathVariable final Long levellogId,
+                                       @LoginMember final Long memberId) {
+        levellogService.deleteById(levellogId, memberId);
         return ResponseEntity.noContent().build();
     }
 }

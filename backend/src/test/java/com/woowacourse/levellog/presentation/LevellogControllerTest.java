@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -110,18 +111,18 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("작성하지 않은 레벨로그를 수정하려는 경우 예외를 던진다.")
+        @DisplayName("본인이 작성하지 않은 레벨로그를 수정하려는 경우 예외를 던진다.")
         void unauthorized_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            doThrow(new UnauthorizedException("레벨로그를 수정할 권한이 없습니다.")).when(levellogService)
+                    .update(anyLong(), anyLong(), any());
 
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final LevellogRequest request = new LevellogRequest("content");
             final String requestContent = objectMapper.writeValueAsString(request);
-            doThrow(new UnauthorizedException("레벨로그를 수정할 권한이 없습니다.")).when(levellogService)
-                    .update(anyLong(), anyLong(), any());
 
             // when
             final ResultActions perform = mockMvc.perform(
@@ -129,6 +130,33 @@ class LevellogControllerTest extends ControllerTest {
                                     .header(HttpHeaders.AUTHORIZATION, "Bearer: token")
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isUnauthorized());
+        }
+    }
+
+    @Nested
+    @DisplayName("delete 메서드는")
+    class delete {
+
+        @Test
+        @DisplayName("본인이 작성하지 않은 레벨로그를 삭제하려는 경우 예외를 던진다.")
+        void nameNullOrEmpty_Exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
+            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            doThrow(new UnauthorizedException("레벨로그를 삭제할 권한이 없습니다.")).when(levellogService)
+                    .deleteById(anyLong(), anyLong());
+
+            final Long teamId = 1L;
+            final Long levellogId = 2L;
+
+            // when
+            final ResultActions perform = mockMvc.perform(
+                            delete("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer: token"))
                     .andDo(print());
 
             // then

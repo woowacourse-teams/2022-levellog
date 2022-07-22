@@ -48,14 +48,20 @@ public class LevellogService {
 
     public void update(final Long levellogId, final Long memberId, final LevellogRequest request) {
         final Levellog levellog = getById(levellogId);
-        if (!levellog.getAuthor().getId().equals(memberId)) {
-            throw new UnauthorizedException("레벨로그를 수정할 권한이 없습니다.");
-        }
+        validateAuthor(levellog, memberId, "레벨로그를 수정할 권한이 없습니다.");
         levellog.updateContent(request.getContent());
     }
 
-    public void deleteById(final Long id) {
-        levellogRepository.deleteById(id);
+    public void deleteById(final Long levellogId, final Long memberId) {
+        final Levellog levellog = getById(levellogId);
+        validateAuthor(levellog, memberId, "레벨로그를 삭제할 권한이 없습니다.");
+        levellogRepository.deleteById(levellogId);
+    }
+
+    private void validateAuthor(final Levellog levellog, final Long memberId, final String message) {
+        if (!levellog.isAuthorId(memberId)) {
+            throw new UnauthorizedException(message);
+        }
     }
 
     private Levellog getById(final Long id) {

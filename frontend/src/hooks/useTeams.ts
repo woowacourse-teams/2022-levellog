@@ -16,7 +16,11 @@ const useTeams = () => {
       const res = await teamLookup(currentTeam.id);
       console.log('res:', res);
       teamInfoDispatch(res);
-    } catch (err) {}
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   };
 
   const teamsLookup = async () => {

@@ -22,18 +22,12 @@ const InterviewDetail = () => {
   useEffect(() => {
     const interviewTeam = location.state as InterviewTeamType;
     if (interviewTeam) {
-      console.log(interviewTeam);
       teamInfoDispatch(interviewTeam);
-
-      return;
     }
-    teamRequestAndDispatch(teamId);
+    if (!interviewTeam) {
+      teamRequestAndDispatch(teamId);
+    }
   }, []);
-
-  console.log(team);
-  if (Object.keys(team).length === 0) return;
-  if (team === undefined) return;
-  if (team === null) return;
 
   return (
     <FlexBox gap={4.375}>

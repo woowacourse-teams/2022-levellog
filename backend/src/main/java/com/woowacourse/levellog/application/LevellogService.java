@@ -12,6 +12,7 @@ import com.woowacourse.levellog.dto.LevellogResponse;
 import com.woowacourse.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.exception.TeamNotFoundException;
+import com.woowacourse.levellog.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,8 +46,11 @@ public class LevellogService {
         return new LevellogResponse(levellog.getContent());
     }
 
-    public void update(final Long id, final LevellogRequest request) {
-        final Levellog levellog = getById(id);
+    public void update(final Long levellogId, final Long memberId, final LevellogRequest request) {
+        final Levellog levellog = getById(levellogId);
+        if (!levellog.getAuthor().getId().equals(memberId)) {
+            throw new UnauthorizedException("레벨로그를 수정할 권한이 없습니다.");
+        }
         levellog.updateContent(request.getContent());
     }
 

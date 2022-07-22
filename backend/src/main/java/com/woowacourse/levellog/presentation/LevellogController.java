@@ -44,8 +44,10 @@ public class LevellogController {
     @PutMapping("/{levellogId}")
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @PathVariable final Long levellogId,
-                                       @RequestBody @Valid final LevellogRequest request) {
-        levellogService.update(levellogId, request);
+                                       @LoginMember final Long memberId,
+                                       @RequestBody @Valid final LevellogRequest request
+    ) {
+        levellogService.update(levellogId, memberId, request);
         return ResponseEntity.noContent().build();
     }
 

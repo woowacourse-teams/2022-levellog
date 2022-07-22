@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -34,6 +34,19 @@ const FeedbackAdd = () => {
     feedbackAdd({ feedbackResult, levellogId });
   };
 
+  const handleClickFeedbackForm = (e: any) => {
+    const [study, speak, etc] = feedbackRef.current;
+    const feedbackResult: FeedbackPostType = {
+      feedback: {
+        study: study.value,
+        speak: speak.value,
+        etc: etc.value,
+      },
+    };
+
+    feedbackAdd({ feedbackResult, levellogId });
+  };
+
   const requestLevellog = async () => {
     const res = await levellogLookup(teamId, levellogId);
     setLevellog(res.content);
@@ -46,7 +59,7 @@ const FeedbackAdd = () => {
   return (
     <FlexBox gap={1.875}>
       <ContentHeader title={'레벨로그 피드백'}>
-        <Button onClick={handleSubmitFeedbackForm}>등록하기</Button>
+        <Button onClick={handleClickFeedbackForm}>등록하기</Button>
       </ContentHeader>
       <FeedbackAddContainer>
         <LevellogReport levellog={levellog} />

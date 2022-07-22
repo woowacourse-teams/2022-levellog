@@ -14,10 +14,9 @@ export const getUserLogin = (code: string) =>
     },
   });
 
-export const getUserAuthority = (accessToken: string) => {
+export const getUserAuthority = (accessToken: string) =>
   axios({
     method: 'get',
     url: `${API_URL}/myInfo`,
     headers: { Authorization: `Bearer ${accessToken}` },
   });
-};

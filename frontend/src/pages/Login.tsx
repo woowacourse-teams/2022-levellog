@@ -14,17 +14,18 @@ const Login = () => {
     const loginGithub = async () => {
       const params = new URL(window.location.href).searchParams;
       const code = params.get('code');
+      const state = location.state as any;
       const accessToken = localStorage.getItem('accessToken');
       try {
-        // if (accessToken) {
-        //   const res = await getUserAuthority(accessToken);
-        // userInfoDispatch({
-        //   id: res.data.id,
-        //   profileUrl: res.data.profileUrl,
-        // });
-
-        // return;
-        // }
+        if (accessToken) {
+          const res = await getUserAuthority(accessToken);
+          userInfoDispatch({
+            id: res.data.id,
+            profileUrl: res.data.profileUrl,
+          });
+          navigate(state.pathname);
+          return;
+        }
 
         const res = await getUserLogin(code);
         localStorage.setItem('accessToken', res.data.accessToken);
@@ -32,8 +33,6 @@ const Login = () => {
           id: res.data.id,
           profileUrl: res.data.profileUrl,
         });
-
-        const state = location.state as any;
 
         if (state?.pathname) {
           if (location.pathname === '/login') {

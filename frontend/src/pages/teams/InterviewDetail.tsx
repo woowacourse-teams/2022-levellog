@@ -31,7 +31,7 @@ const InterviewDetail = () => {
     }
 
     requestInterviewTeam();
-  }, []);
+  }, [location.state]);
 
   if (Object.keys(team).length === 0) return;
 

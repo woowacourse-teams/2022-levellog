@@ -41,6 +41,11 @@ const Interviewer = ({
       alert('레벨로그가 아직 작성되지 않았습니다.');
       return;
     }
+
+    if (!loginUserId) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
     navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 

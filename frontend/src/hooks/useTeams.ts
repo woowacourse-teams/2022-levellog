@@ -8,13 +8,15 @@ const useTeams = () => {
   const teamInfoDispatch = useContext(TeamDispatchContext);
 
   // 하위 컴포넌트에 팀 정보를 수정할 때 호출
-  const teamRequestAndDispatch = async () => {
+  const teamRequestAndDispatch = async (teamId = null) => {
+    if (teamId !== null) {
+      currentTeam.id === teamId;
+    }
     try {
       const res = await teamLookup(currentTeam.id);
+      console.log('res:', res);
       teamInfoDispatch(res);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const teamsLookup = async () => {
@@ -32,7 +34,7 @@ const useTeams = () => {
     try {
       const res = await getTeam(teamId);
 
-      return res;
+      return res.data;
     } catch (err) {
       console.log(err);
     }

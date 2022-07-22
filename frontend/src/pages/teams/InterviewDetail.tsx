@@ -14,6 +14,7 @@ import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 
 const InterviewDetail = () => {
   const location = useLocation();
+  const { teamId } = useParams();
   const team = useContext(TeamContext);
   const teamInfoDispatch = useContext(TeamDispatchContext);
   const { teamRequestAndDispatch } = useTeams();
@@ -21,11 +22,12 @@ const InterviewDetail = () => {
   useEffect(() => {
     const interviewTeam = location.state as InterviewTeamType;
     if (interviewTeam) {
+      console.log(interviewTeam);
       teamInfoDispatch(interviewTeam);
 
       return;
     }
-    teamRequestAndDispatch();
+    teamRequestAndDispatch(teamId);
   }, []);
 
   console.log(team);

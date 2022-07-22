@@ -15,7 +15,7 @@ const teamInfo = {
 };
 
 // TeamDispatchContext 타입 고치기
-export const TeamContext = createContext<InterviewTeamType>(teamInfo);
+export const TeamContext = createContext<InterviewTeamType>(null);
 export const TeamDispatchContext = createContext<any>(() => {});
 
 export const TeamProvider = ({ children }: { children: JSX.Element }) => {

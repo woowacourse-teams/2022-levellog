@@ -82,14 +82,16 @@ const Interviewer = ({ id, levellogId, nickname, profileUrl }: InterviewerProps)
           </NicknameStyle>
         </InterviewerStyle>
         <ContentStyle>
-          <a onClick={handleClickToggleModal}>레벨로그 보기</a>
-          <Link to="">
-            <p>사전 질문 작성</p>
-          </Link>
           {levellogId ? (
-            <Link to={`/levellogs/${levellogId}/feedbacks`}>
-              <p>피드백</p>
-            </Link>
+            <>
+              <a onClick={handleClickToggleModal}>레벨로그 보기</a>
+              <Link to="">
+                <p>사전 질문 작성</p>
+              </Link>
+              <Link to={`/levellogs/${levellogId}/feedbacks`}>
+                <p>피드백</p>
+              </Link>
+            </>
           ) : (
             <p></p>
           )}

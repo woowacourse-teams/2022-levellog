@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { FeedbackPostType } from 'types';
@@ -14,6 +14,7 @@ import FeedbackForm from 'components/feedbacks/FeedbackForm';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
 const FeedbackAdd = () => {
+  const navigator = useNavigate();
   const { levellogId, teamId } = useParams();
   const { feedbackAdd } = useFeedback();
   const { levellogLookup } = useLevellog();
@@ -32,8 +33,9 @@ const FeedbackAdd = () => {
     };
 
     const res = await feedbackAdd({ feedbackResult, levellogId });
-    const { message } = (await res) as any;
+    const { message } = (await res.data) as any;
     alert(message);
+    navigator('/');
   };
 
   const handleClickFeedbackForm = async (e: any) => {

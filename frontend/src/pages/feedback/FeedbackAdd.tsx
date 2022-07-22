@@ -33,8 +33,7 @@ const FeedbackAdd = () => {
     };
 
     const res = await feedbackAdd({ feedbackResult, levellogId });
-    const { message } = (await res.data) as any;
-    alert(message);
+    alert(res.data.message);
     navigator('/');
   };
 
@@ -49,8 +48,7 @@ const FeedbackAdd = () => {
     };
 
     const res = await feedbackAdd({ feedbackResult, levellogId });
-    const { message } = (await res) as any;
-    alert(message);
+    alert(res.data.message);
   };
 
   const requestLevellog = async () => {

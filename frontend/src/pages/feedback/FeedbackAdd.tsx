@@ -20,7 +20,7 @@ const FeedbackAdd = () => {
   const [levellog, setLevellog] = useState();
   const feedbackRef = useRef([]);
 
-  const handleSubmitFeedbackForm = (e: any) => {
+  const handleSubmitFeedbackForm = async (e: any) => {
     e.preventDefault();
     const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackPostType = {
@@ -31,10 +31,12 @@ const FeedbackAdd = () => {
       },
     };
 
-    feedbackAdd({ feedbackResult, levellogId });
+    const res = await feedbackAdd({ feedbackResult, levellogId });
+    const { message } = (await res) as any;
+    alert(message);
   };
 
-  const handleClickFeedbackForm = (e: any) => {
+  const handleClickFeedbackForm = async (e: any) => {
     const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackPostType = {
       feedback: {
@@ -44,7 +46,9 @@ const FeedbackAdd = () => {
       },
     };
 
-    feedbackAdd({ feedbackResult, levellogId });
+    const res = await feedbackAdd({ feedbackResult, levellogId });
+    const { message } = (await res) as any;
+    alert(message);
   };
 
   const requestLevellog = async () => {

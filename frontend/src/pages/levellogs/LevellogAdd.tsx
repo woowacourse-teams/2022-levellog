@@ -15,13 +15,13 @@ const LevellogAdd = () => {
   const { levellogAdd } = useLevellog();
   const { teamId } = useParams();
 
-  const handleSubmitLevellogForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    levellogAdd(teamId, levellogRef.current.value);
-  };
+  // const handleSubmitLevellogForm = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   levellogAdd(teamId, levellogRef.current.value);
+  // };
 
   return (
-    <form onSubmit={handleSubmitLevellogForm}>
+    <form>
       <ContentHeader title="레벨로그 작성">
         <Button>제출하기</Button>
       </ContentHeader>

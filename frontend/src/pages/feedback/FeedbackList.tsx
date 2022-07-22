@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { FeedbackType } from 'types';
@@ -12,6 +12,7 @@ import Feedback from 'components/feedbacks/Feedback';
 
 const FeedbackList = () => {
   const [feedbacks, setFeedbacks] = useState([]);
+  const location = useLocation();
   const { levellogId, teamId } = useParams();
   const { feedbackLookup } = useFeedback();
 
@@ -22,7 +23,7 @@ const FeedbackList = () => {
 
   useEffect(() => {
     requestFeedbackLookup();
-  }, []);
+  }, [location]);
 
   return (
     <>

@@ -32,8 +32,8 @@ const FeedbackAdd = () => {
       },
     };
 
-    await feedbackAdd({ feedbackResult, levellogId });
-    navigator('/');
+    feedbackAdd({ feedbackResult, levellogId });
+    navigator(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 
   const handleClickFeedbackForm = async (e: any) => {
@@ -46,7 +46,8 @@ const FeedbackAdd = () => {
       },
     };
 
-    await feedbackAdd({ feedbackResult, levellogId });
+    feedbackAdd({ feedbackResult, levellogId });
+    navigator(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 
   const requestLevellog = async () => {

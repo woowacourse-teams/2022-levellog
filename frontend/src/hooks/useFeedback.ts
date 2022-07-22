@@ -13,9 +13,9 @@ const useFeedback = () => {
   const feedbackAdd = async ({ feedbackResult, levellogId }: any) => {
     try {
       await postFeedback(accessToken, { feedbackResult, levellogId });
-      // navigate(ROUTES_PATH.HOME);
     } catch (err) {
       alert(err.response.data.message);
+      navigate(ROUTES_PATH.HOME);
     }
   };
 
@@ -36,6 +36,7 @@ const useFeedback = () => {
       return res.data;
     } catch (err) {
       alert(err.response.data.message);
+      navigate(ROUTES_PATH.HOME);
     }
   };
 

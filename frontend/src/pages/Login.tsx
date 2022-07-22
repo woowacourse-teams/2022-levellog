@@ -16,15 +16,15 @@ const Login = () => {
       const code = params.get('code');
       const accessToken = localStorage.getItem('accessToken');
       try {
-        if (accessToken) {
-          const res = (await getUserAuthority(accessToken)) as any;
-          userInfoDispatch({
-            id: res.data.id,
-            profileUrl: res.data.profileUrl,
-          });
+        // if (accessToken) {
+        //   const res = await getUserAuthority(accessToken);
+        // userInfoDispatch({
+        //   id: res.data.id,
+        //   profileUrl: res.data.profileUrl,
+        // });
 
-          return;
-        }
+        // return;
+        // }
 
         const res = await getUserLogin(code);
         localStorage.setItem('accessToken', res.data.accessToken);
@@ -36,7 +36,14 @@ const Login = () => {
         const state = location.state as any;
 
         if (state?.pathname) {
+          if (location.pathname === '/login') {
+            navigate(state.pathname);
+
+            return;
+          }
+
           navigate(state.pathname);
+
           return;
         }
 

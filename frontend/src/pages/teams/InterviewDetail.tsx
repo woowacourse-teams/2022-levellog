@@ -10,7 +10,7 @@ import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import Interviewer from 'components/teams/Interviewer';
-import { TeamContext, TeamDispatchContext, teamInfo } from 'contexts/teamContext';
+import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 
 const InterviewDetail = () => {
   const location = useLocation();
@@ -21,7 +21,7 @@ const InterviewDetail = () => {
 
   useEffect(() => {
     const interviewTeam = location.state as InterviewTeamType;
-    if (interviewTeam && team === teamInfo) {
+    if (interviewTeam || !team) {
       teamInfoDispatch(interviewTeam);
     }
     if (!interviewTeam) {

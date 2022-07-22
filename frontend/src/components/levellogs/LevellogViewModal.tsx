@@ -5,27 +5,26 @@ import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
+import useTeams from 'hooks/useTeams';
 
 import Button from 'components/@commons/Button';
 
-const LevellogViewModal = ({
-  owner,
-  nickname,
-  levellogId,
-  levellog,
-  setIsOnModal,
-  requestInterviewTeam,
-}) => {
+const LevellogViewModal = ({ owner, nickname, levellogId, levellog, setIsOnModal }) => {
   const { levellogDelete } = useLevellog();
+  const { teamRequestAndDispatch } = useTeams();
   const { teamId } = useParams();
 
   const handleClickLevellogDelete = async () => {
     await levellogDelete(teamId, levellogId);
+/////
     await requestInterviewTeam();
     setIsOnModal(false);
   };
 
   const handleClickCloseModal = () => {
+////
+    teamRequestAndDispatch();
+    ///
     setIsOnModal(false);
   };
 
@@ -128,7 +127,7 @@ const Levellog = styled.div`
     width: 31.25rem;
   }
   @media (max-height: 51.875rem) {
-    height: 31.875rem;
+    height: 31.25rem;
   }
   @media (max-width: 35rem) {
     width: 16.25rem;

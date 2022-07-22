@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
 import styled, { CSSProperties } from 'styled-components';
@@ -10,30 +10,24 @@ import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import Interviewer from 'components/teams/Interviewer';
+import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 
 const InterviewDetail = () => {
-  const { teamId } = useParams();
   const location = useLocation();
-  const [team, setTeam] = useState<{ [key: string]: any }>({});
-  const { teamLookup } = useTeams();
-
-  const requestInterviewTeam = async () => {
-    const res = await teamLookup(teamId);
-    setTeam(res.data);
-  };
+  const { teamId } = useParams();
+  const team = useContext(TeamContext);
+  const teamInfoDispatch = useContext(TeamDispatchContext);
+  const { teamRequestAndDispatch } = useTeams();
 
   useEffect(() => {
     const interviewTeam = location.state as InterviewTeamType;
-    if (interviewTeam) {
-      setTeam(interviewTeam);
-
-      return;
+    if (interviewTeam || !team) {
+      teamInfoDispatch(interviewTeam);
     }
-
-    requestInterviewTeam();
+    if (!interviewTeam) {
+      teamRequestAndDispatch(teamId);
+    }
   }, []);
-
-  if (Object.keys(team).length === 0) return;
 
   return (
     <FlexBox gap={4.375}>
@@ -54,11 +48,7 @@ const InterviewDetail = () => {
       </InterviewDetailHeader>
       <InterviewDetailContainer>
         {team.participants.map((participant: ParticipantType) => (
-          <Interviewer
-            key={participant.id}
-            requestInterviewTeam={requestInterviewTeam}
-            {...participant}
-          />
+          <Interviewer key={participant.id} {...participant} />
         ))}
       </InterviewDetailContainer>
     </FlexBox>

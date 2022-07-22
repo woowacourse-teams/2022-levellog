@@ -19,7 +19,7 @@ export const postLevellog = (
 export const getLevellog = (accessToken: string, teamId: string, levellogId: string) =>
   axios({
     method: 'get',
-    url: `${API_URL}/teams/${teamId}/levellogs/${levellogId}`,
+    url: `${API_URL}/teams/${teamId}/levellogs/${id}`,
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 

@@ -11,13 +11,7 @@ import { ROUTES_PATH } from 'constants/constants';
 import Image from 'components/@commons/Image';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 
-const Interviewer = ({
-  requestInterviewTeam,
-  id,
-  levellogId,
-  nickname,
-  profileUrl,
-}: InterviewerProps) => {
+const Interviewer = ({ id, levellogId, nickname, profileUrl }: InterviewerProps) => {
   const [levellog, setLevellog] = useState('');
   const [isOnModal, setIsOnModal] = useState(false);
   const navigate = useNavigate();
@@ -26,14 +20,23 @@ const Interviewer = ({
   const { teamId } = useParams();
 
   const handleClickToggleModal = () => {
+/////
     if (!levellogId) {
       alert('레벨로그가 아직 작성되지 않았습니다.');
       return;
     }
     setIsOnModal((prev) => !prev);
     if (!levellog) {
+/////
+    if (levellogId && teamId) {
+/////
       requestLevellogLookup();
     }
+    if (!levellogId || !teamId) {
+      alert('작성된 레벨로그가 없습니다.');
+      return;
+    }
+    setIsOnModal((prev) => !prev);
   };
 
   const handleClickFeedbackButton = () => {
@@ -64,7 +67,6 @@ const Interviewer = ({
             levellogId={levellogId}
             levellog={levellog}
             setIsOnModal={setIsOnModal}
-            requestInterviewTeam={requestInterviewTeam}
           />
         )}
         <InterviewerContainer>
@@ -97,7 +99,6 @@ const Interviewer = ({
           levellogId={levellogId}
           levellog={levellog}
           setIsOnModal={setIsOnModal}
-          requestInterviewTeam={requestInterviewTeam}
         />
       )}
       <InterviewerContainer>
@@ -112,11 +113,21 @@ const Interviewer = ({
           <Link to="">
             <p>사전 질문 작성</p>
           </Link>
+////
           {/* <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks`}> */}
           <div onClick={handleClickFeedbackButton}>
             <a>피드백</a>
           </div>
           {/* </Link> */}
+/////
+          {levellogId ? (
+            <Link to={`/levellogs/${levellogId}/feedbacks`}>
+              <p>피드백</p>
+            </Link>
+          ) : (
+            <p></p>
+          )}
+/////
         </ContentStyle>
       </InterviewerContainer>
     </>
@@ -124,7 +135,6 @@ const Interviewer = ({
 };
 
 interface InterviewerProps {
-  requestInterviewTeam: () => Promise<void>;
   id: string;
   levellogId: string;
   nickname: string;

@@ -17,12 +17,20 @@ const FeedbackList = () => {
 
   const requestFeedbackLookup = async () => {
     const res = await feedbackLookup(levellogId);
-    setFeedbacks(res.feedbacks);
+    console.log(res);
+    if (res) {
+      setFeedbacks(res.feedbacks);
+    }
   };
 
   useEffect(() => {
+    if (levellogId === 'null') {
+      return;
+    }
     requestFeedbackLookup();
   }, []);
+
+  if (levellogId === 'null') return <h3>레벨로그가 작성되지 않아 피드백을 작성할 수 없습니다</h3>;
 
   return (
     <>

@@ -22,6 +22,7 @@ const useFeedback = () => {
   const feedbackLookup = async (levellogId: string) => {
     try {
       const res = await getFeedbacks(accessToken, levellogId);
+      console.log(res);
       const feedbacks = res.data;
 
       return feedbacks;

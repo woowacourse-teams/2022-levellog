@@ -19,6 +19,9 @@ const FeedbackList = () => {
   const requestFeedbackLookup = async () => {
     const res = await feedbackLookup(levellogId);
     setFeedbacks(res.feedbacks);
+    setTimeout(() => {
+      requestFeedbackLookup();
+    }, 500);
   };
 
   useEffect(() => {

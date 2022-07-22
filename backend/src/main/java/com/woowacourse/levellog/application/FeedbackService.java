@@ -7,6 +7,8 @@ import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.MemberRepository;
+import com.woowacourse.levellog.domain.ParticipantRepository;
+import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.dto.FeedbackContentDto;
 import com.woowacourse.levellog.dto.FeedbackRequest;
 import com.woowacourse.levellog.dto.FeedbackResponse;
@@ -30,6 +32,7 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final LevellogRepository levellogRepository;
     private final MemberRepository memberRepository;
+    private final ParticipantRepository participantRepository;
 
     public Long save(final Long levellogId, final Long fromMemberId, final FeedbackRequest request) {
         feedbackRepository.findByLevellogIdAndFromId(levellogId, fromMemberId)
@@ -37,9 +40,11 @@ public class FeedbackService {
                     throw new FeedbackAlreadyExistException(levellogId);
                 });
 
+        final Member member = getMember(fromMemberId);
         final FeedbackContentDto feedbackContent = request.getFeedback();
         final Levellog levellog = getLevellog(levellogId);
-        final Member member = getMember(fromMemberId);
+
+        validateTeamMember(levellogId, member);
 
         if (levellog.getAuthor().equals(member)) {
             throw new InvalidFeedbackException("자기 자신에게 피드백을 할 수 없습니다.");
@@ -55,6 +60,20 @@ public class FeedbackService {
 
         final Feedback savedFeedback = feedbackRepository.save(feedback);
         return savedFeedback.getId();
+    }
+
+    private void validateTeamMember(Long levellogId, Member member) {
+        final Team team = getTeam(levellogId);
+
+        if (!participantRepository.existsByMemberAndTeam(member, team)) {
+            throw new InvalidFeedbackException("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
+        }
+    }
+
+    private Team getTeam(Long levellogId) {
+        return levellogRepository.findById(levellogId)
+                .map(Levellog::getTeam)
+                .orElseThrow(LevellogNotFoundException::new);
     }
 
     public FeedbacksResponse findAll(final Long levellogId) {

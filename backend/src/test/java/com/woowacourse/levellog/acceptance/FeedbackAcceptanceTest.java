@@ -80,12 +80,40 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 조회")
     void findAllFeedbacks() {
         // given
-        final ValidatableResponse levellogResponse = requestCreateLevellog("트렌젝션에 대해 학습함.", "제이슨조", MASTER, MASTER,
-                "릭", "로마");
+        final ValidatableResponse hostLoginResponse = login("릭");
+        final Long rick_id = getMemberId(hostLoginResponse);
+        final String rickToken = getToken(hostLoginResponse);
+
+        final ValidatableResponse romaLoginResponse = login("로마");
+        final Long roma_id = getMemberId(romaLoginResponse);
+        final String romaToken = getToken(romaLoginResponse);
+
+        final ValidatableResponse teamResponse = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id);
+        final String teamId = getTeamId(teamResponse);
+
+        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final ValidatableResponse levellogResponse = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + rickToken)
+                .body(levellogRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/teams/{teamId}/levellogs", teamId)
+                .then().log().all();
         final String levellogId = getLevellogId(levellogResponse);
 
-        requestCreateFeedback(levellogId, "로마가 쓴", "로마");
-        requestCreateFeedback(levellogId, "알린이 쓴", "알린");
+        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
+                "아이 컨텍이 좋습니다.",
+                "윙크하지 마세요.");
+        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+
+        RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("feedback/save"))
+                .when()
+                .post("/api/levellogs/{levellogId}/feedbacks", levellogId)
+                .then().log().all();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -97,9 +125,9 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("feedbacks.feedback.study", contains("study - 로마가 쓴", "study - 알린이 쓴"),
-                        "feedbacks.feedback.speak", contains("speak - 로마가 쓴", "speak - 알린이 쓴"),
-                        "feedbacks.feedback.etc", contains("etc - 로마가 쓴", "etc - 알린이 쓴")
+                .body("feedbacks.feedback.study", contains("Spring에 대한 학습을 충분히 하였습니다."),
+                        "feedbacks.feedback.speak", contains("아이 컨텍이 좋습니다."),
+                        "feedbacks.feedback.etc", contains("윙크하지 마세요.")
                 );
     }
 
@@ -115,14 +143,43 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 삭제")
     void deleteFeedback() {
         // given
-        final ValidatableResponse levellogResponse = requestCreateLevellog("트렌젝션에 대해 학습함.", "제이슨조", MASTER, MASTER,
-                "릭", "로마");
-        final String levellogId = getLevellogId(levellogResponse);
+        // given
+        final ValidatableResponse hostLoginResponse = login("릭");
+        final Long rick_id = getMemberId(hostLoginResponse);
+        final String rickToken = getToken(hostLoginResponse);
 
-        requestCreateFeedback(levellogId, "로마가 쓴", "로마");
-        requestCreateFeedback(levellogId, "알린이 쓴", "알린");
+        final ValidatableResponse romaLoginResponse = login("로마");
+        final Long roma_id = getMemberId(romaLoginResponse);
+        final String romaToken = getToken(romaLoginResponse);
 
-        final Long deleteId = requestFindAllFeedbacks(levellogId)
+        final ValidatableResponse teamResponse = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id);
+        final String teamId = getTeamId(teamResponse);
+
+        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final ValidatableResponse levellogResponse = RestAssured.given().log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + rickToken)
+                .body(levellogRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/teams/{teamId}/levellogs", teamId)
+                .then().log().all();
+        final String rick_levellogId = getLevellogId(levellogResponse);
+
+        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
+                "아이 컨텍이 좋습니다.",
+                "윙크하지 마세요.");
+        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+
+        RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("feedback/save"))
+                .when()
+                .post("/api/levellogs/{levellogId}/feedbacks", rick_levellogId)
+                .then().log().all();
+
+        final Long deleteId = requestFindAllFeedbacks(rick_levellogId)
                 .extract()
                 .as(FeedbacksResponse.class)
                 .getFeedbacks()
@@ -131,15 +188,15 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
                 .filter(document("feedback/delete"))
                 .when()
-                .delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, deleteId)
+                .delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", rick_levellogId, deleteId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindAllFeedbacks(levellogId)
+        requestFindAllFeedbacks(rick_levellogId)
                 .body("feedbacks.id", not(contains(deleteId)));
     }
 

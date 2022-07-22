@@ -10,6 +10,8 @@ import com.woowacourse.levellog.domain.Levellog;
 import com.woowacourse.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.domain.Member;
 import com.woowacourse.levellog.domain.MemberRepository;
+import com.woowacourse.levellog.domain.Participant;
+import com.woowacourse.levellog.domain.ParticipantRepository;
 import com.woowacourse.levellog.domain.Team;
 import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.FeedbackContentDto;
@@ -52,6 +54,9 @@ class FeedbackServiceTest {
     @Autowired
     private TeamRepository teamRepository;
 
+    @Autowired
+    private ParticipantRepository participantRepository;
+
     @Test
     @DisplayName("findAll 메서드는 모든 피드백을 조회한다.")
     void findAll() {
@@ -90,12 +95,8 @@ class FeedbackServiceTest {
         // when
         feedbackService.update(feedback1.getId(),
                 new FeedbackRequest(new FeedbackContentDto("update", "update", "update")));
-        final List<String> fromNicknames = feedbackService.findAllByTo(eve.getId())
-                .getFeedbacks()
-                .stream()
-                .map(FeedbackResponse::getFrom)
-                .map(MemberResponse::getNickname)
-                .collect(Collectors.toList());
+        final List<String> fromNicknames = feedbackService.findAllByTo(eve.getId()).getFeedbacks().stream()
+                .map(FeedbackResponse::getFrom).map(MemberResponse::getNickname).collect(Collectors.toList());
 
         // then
         assertThat(fromNicknames).containsExactly("로마", "알린");
@@ -120,11 +121,9 @@ class FeedbackServiceTest {
 
         // then
         final Feedback feedback = feedbackRepository.findById(feedback1.getId()).get();
-        assertAll(
-                () -> assertThat(feedback.getStudy()).contains("수정된"),
+        assertAll(() -> assertThat(feedback.getStudy()).contains("수정된"),
                 () -> assertThat(feedback.getSpeak()).contains("수정된"),
-                () -> assertThat(feedback.getEtc()).contains("수정된")
-        );
+                () -> assertThat(feedback.getEtc()).contains("수정된"));
     }
 
     @Nested
@@ -191,9 +190,8 @@ class FeedbackServiceTest {
             final Long id = savedFeedback.getId();
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.deleteById(id, roma.getId()))
-                    .isInstanceOf(InvalidFeedbackException.class)
-                    .hasMessage("자신이 남기거나 받은 피드백만 삭제할 수 있습니다.");
+            assertThatThrownBy(() -> feedbackService.deleteById(id, roma.getId())).isInstanceOf(
+                    InvalidFeedbackException.class).hasMessage("자신이 남기거나 받은 피드백만 삭제할 수 있습니다.");
         }
     }
 
@@ -212,6 +210,8 @@ class FeedbackServiceTest {
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
             final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
+            participantRepository.save(new Participant(team, eve, true));
+            participantRepository.save(new Participant(team, roma, true));
 
             // when
             final Long id = feedbackService.save(levellog.getId(), roma.getId(), request);
@@ -238,8 +238,8 @@ class FeedbackServiceTest {
             final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(levellog.getId(), roma.getId(), request))
-                    .isInstanceOf(FeedbackAlreadyExistException.class);
+            assertThatThrownBy(() -> feedbackService.save(levellog.getId(), roma.getId(), request)).isInstanceOf(
+                    FeedbackAlreadyExistException.class);
         }
 
         @Test
@@ -248,6 +248,7 @@ class FeedbackServiceTest {
             // given
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
+            participantRepository.save(new Participant(team, eve, true));
             final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
 
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
@@ -255,9 +256,28 @@ class FeedbackServiceTest {
             final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(levellog.getId(), eve.getId(), request))
-                    .isInstanceOf(InvalidFeedbackException.class)
-                    .hasMessage("자기 자신에게 피드백을 할 수 없습니다.");
+            assertThatThrownBy(() -> feedbackService.save(levellog.getId(), eve.getId(), request)).isInstanceOf(
+                    InvalidFeedbackException.class).hasMessage("자기 자신에게 피드백을 할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
+        void save_otherMember_exceptionThrown() {
+            // given
+            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
+            final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
+            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
+
+            final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img"));
+            participantRepository.save(new Participant(team, eve, true));
+            participantRepository.save(new Participant(team, alien, true));
+
+            final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
+
+            // when, then
+            assertThatThrownBy(() -> feedbackService.save(levellog.getId(), roma.getId(),
+                    new FeedbackRequest(new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타"))))
+                    .isInstanceOf(InvalidFeedbackException.class);
         }
     }
 }

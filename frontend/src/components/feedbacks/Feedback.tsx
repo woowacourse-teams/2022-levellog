@@ -22,7 +22,7 @@ const Feedback = ({ feedbackId, userFeedback, requestFeedbackLookup }: FeedbackP
 
   const handleClickDeleteButton = async () => {
     const res = (await feedbackDelete(levellogId, feedbackId)) as any;
-    alert(res.data.message);
+    alert(res.message);
     await requestFeedbackLookup();
   };
 

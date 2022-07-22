@@ -12,10 +12,10 @@ import com.woowacourse.levellog.domain.TeamRepository;
 import com.woowacourse.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.dto.LevellogResponse;
 import com.woowacourse.levellog.exception.LevellogAlreadyExistException;
+import com.woowacourse.levellog.exception.UnauthorizedException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.transaction.Transactional;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,21 +29,18 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @DisplayName("LevellogService의")
 class LevellogServiceTest {
+
     @Autowired
     private LevellogService levellogService;
+
     @Autowired
     private LevellogRepository levellogRepository;
+
     @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
     private TeamRepository teamRepository;
-
-    @AfterEach
-    void tearDown() {
-        memberRepository.deleteAll();
-        teamRepository.deleteAll();
-    }
 
     @Test
     @DisplayName("findById 메서드는 id에 해당하는 레벨로그를 조회한다.")
@@ -62,39 +59,78 @@ class LevellogServiceTest {
         assertThat(response.getContent()).isEqualTo(content);
     }
 
-    @Test
-    @DisplayName("update 메서드는 id에 해당하는 레벨로그를 변경한다.")
-    void update() {
-        // given
-        final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
-        final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
-        final LevellogRequest request = new LevellogRequest("update content");
+    @Nested
+    @DisplayName("update 메서드는")
+    class update {
 
-        // when
-        levellogService.update(levellog.getId(), request);
+        @Test
+        @DisplayName("id에 해당하는 레벨로그를 변경한다.")
+        void success() {
+            // given
+            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+            final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
+            final LevellogRequest request = new LevellogRequest("update content");
 
-        // then
-        final Levellog actual = levellogRepository.findById(levellog.getId()).orElseThrow();
-        assertThat(actual.getContent()).isEqualTo(request.getContent());
+            // when
+            levellogService.update(levellog.getId(), author.getId(), request);
+
+            // then
+            final Levellog actual = levellogRepository.findById(levellog.getId()).orElseThrow();
+            assertThat(actual.getContent()).isEqualTo(request.getContent());
+        }
+
+        @Test
+        @DisplayName("작성자의 id와 로그인한 id가 다를 경우 권한 없음 예외를 던진다.")
+        void unAuthorize_Exception() {
+            // given
+            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+            final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
+            final LevellogRequest request = new LevellogRequest("update content");
+
+            // when & then
+            assertThatThrownBy(() -> levellogService.update(levellog.getId(), 100L, request))
+                    .isInstanceOf(UnauthorizedException.class);
+        }
     }
 
-    @Test
-    @DisplayName("deleteById 메서드는 id에 해당하는 레벨로그를 삭제한다.")
-    void deleteById() {
-        // given
-        final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
-        final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
+    @Nested
+    @DisplayName("deleteById 메서드는")
+    class deleteById {
 
-        // when
-        levellogService.deleteById(levellog.getId());
+        @Test
+        @DisplayName("id에 해당하는 레벨로그를 삭제한다.")
+        void success() {
+            // given
+            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+            final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
 
-        // then
-        final Optional<Levellog> actual = levellogRepository.findById(levellog.getId());
-        assertThat(actual).isEmpty();
+            // when
+            levellogService.deleteById(levellog.getId(), author.getId());
+
+            // then
+            final Optional<Levellog> actual = levellogRepository.findById(levellog.getId());
+            assertThat(actual).isEmpty();
+        }
+
+        @Test
+        @DisplayName("작성자의 id와 로그인한 id가 다를 경우 권한 없음 예외를 던진다.")
+        void unAuthorize_Exception() {
+            // given
+            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+            final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
+
+            // when & then
+            assertThatThrownBy(() -> levellogService.deleteById(levellog.getId(), 12345L))
+                    .isInstanceOf(UnauthorizedException.class);
+        }
     }
 
     @Nested

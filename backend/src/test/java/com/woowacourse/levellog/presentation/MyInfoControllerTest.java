@@ -40,6 +40,8 @@ class MyInfoControllerTest extends ControllerTest {
         void nicknameInvalidLength_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
+            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+
             doThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다.", BAD_REQUEST))
                     .when(memberService)
                     .updateNickname(any(), any());
@@ -68,6 +70,7 @@ class MyInfoControllerTest extends ControllerTest {
         void nicknameNullAndEmpty_Exception(final String invalidNickname) throws Exception {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
+            given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
             final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto(invalidNickname);
             final String requestContent = objectMapper.writeValueAsString(nicknameUpdateDto);

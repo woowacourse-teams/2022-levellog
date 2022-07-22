@@ -44,15 +44,18 @@ public class LevellogController {
     @PutMapping("/{levellogId}")
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @PathVariable final Long levellogId,
-                                       @RequestBody @Valid final LevellogRequest request) {
-        levellogService.update(levellogId, request);
+                                       @LoginMember final Long memberId,
+                                       @RequestBody @Valid final LevellogRequest request
+    ) {
+        levellogService.update(levellogId, memberId, request);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{levellogId}")
     public ResponseEntity<Void> delete(@PathVariable final Long teamId,
-                                       @PathVariable final Long levellogId) {
-        levellogService.deleteById(levellogId);
+                                       @PathVariable final Long levellogId,
+                                       @LoginMember final Long memberId) {
+        levellogService.deleteById(levellogId, memberId);
         return ResponseEntity.noContent().build();
     }
 }

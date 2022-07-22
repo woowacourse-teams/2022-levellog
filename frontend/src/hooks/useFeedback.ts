@@ -12,11 +12,10 @@ const useFeedback = () => {
 
   const feedbackAdd = async ({ feedbackResult, levellogId }: any) => {
     try {
-      const res = await postFeedback(accessToken, { feedbackResult, levellogId });
-      return res.data;
+      await postFeedback(accessToken, { feedbackResult, levellogId });
       // navigate(ROUTES_PATH.HOME);
     } catch (err) {
-      console.log(err);
+      alert(err.response.data.message);
     }
   };
 
@@ -36,7 +35,7 @@ const useFeedback = () => {
       const res = await deleteFeedbacks(accessToken, levellogId, feedbackId);
       return res.data;
     } catch (err) {
-      console.log(err);
+      alert(err.response.data.message);
     }
   };
 

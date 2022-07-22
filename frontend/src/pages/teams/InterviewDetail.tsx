@@ -21,6 +21,7 @@ const InterviewDetail = () => {
 
   useEffect(() => {
     const interviewTeam = location.state as InterviewTeamType;
+    console.log(interviewTeam);
     if (interviewTeam) {
       teamInfoDispatch(interviewTeam);
     }

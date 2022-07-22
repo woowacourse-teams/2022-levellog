@@ -29,8 +29,9 @@ const InterviewDetail = () => {
 
       return;
     }
-
-    requestInterviewTeam();
+    setTimeout(() => {
+      requestInterviewTeam();
+    }, 500);
   }, [location.state]);
 
   if (Object.keys(team).length === 0) return;

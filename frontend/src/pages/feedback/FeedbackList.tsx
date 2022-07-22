@@ -22,7 +22,9 @@ const FeedbackList = () => {
   };
 
   useEffect(() => {
-    requestFeedbackLookup();
+    setTimeout(() => {
+      requestFeedbackLookup();
+    }, 500);
   }, [location]);
 
   return (

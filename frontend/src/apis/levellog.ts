@@ -16,10 +16,10 @@ export const postLevellog = (
   });
 };
 
-export const getLevellog = (accessToken: string, teamId: string, id: string) =>
+export const getLevellog = (accessToken: string, teamId: string, levellogId: string) =>
   axios({
     method: 'get',
-    url: `${API_URL}/teams/${teamId}/levellogs/${id}`,
+    url: `${API_URL}/teams/${teamId}/levellogs/${levellogId}`,
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 

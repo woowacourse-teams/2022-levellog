@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { FeedbackType } from 'types';
 
 import useFeedback from 'hooks/useFeedback';
+import useUser from 'hooks/useUser';
 
 import Button from '../@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -11,6 +12,7 @@ import FlexBox from 'components/@commons/FlexBox';
 const Feedback = ({ feedbackId, userFeedback, requestFeedbackLookup }: FeedbackProps) => {
   const { levellogId } = useParams();
   const { feedbackDelete } = useFeedback();
+  const { loginUserId } = useUser();
   const {
     id,
     updatedAt,
@@ -19,6 +21,12 @@ const Feedback = ({ feedbackId, userFeedback, requestFeedbackLookup }: FeedbackP
   } = userFeedback;
 
   const handleClickDeleteButton = async () => {
+    if (+id !== +loginUserId) {
+      alert('자신이 남기거나 받은 피드백만 삭제할 수 있습니다.');
+
+      return;
+    }
+
     await feedbackDelete(levellogId, feedbackId);
     requestFeedbackLookup();
   };

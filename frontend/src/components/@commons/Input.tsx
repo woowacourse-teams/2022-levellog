@@ -13,11 +13,12 @@ interface InputProps {
 export const InputStyle = styled.input`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
-  font-size: 1.2rem;
-  background-color: ${(props) => props.theme.WHITE};
+  padding: 1rem;
   border-style: none;
   border-radius: 5px;
-  box-sizing: border-box;
+  background-color: ${(props) => props.theme.default.WHITE};
+  font-size: 1.2rem;
+  word-wrap: break-word;
 `;
 
 export default Input;

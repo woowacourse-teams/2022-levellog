@@ -10,50 +10,53 @@ import InterviewTeams from 'pages/teams/InterviewTeams';
 
 import { ROUTES_PATH } from 'constants/constants';
 
-import RequireAuth from 'components/RequireAuth';
+import Auth from './Auth';
 
 export const routes = [
   {
-    path: ROUTES_PATH.HOME,
-    element: <InterviewTeams />,
+    element: <Auth needLogin={true} />,
+    children: [
+      {
+        path: ROUTES_PATH.FEEDBACK_ROUTE,
+        element: <FeedbackList />,
+      },
+      {
+        path: ROUTES_PATH.FEEDBACK_ADD,
+        element: <FeedbackAdd />,
+      },
+      {
+        path: ROUTES_PATH.LEVELLOG_ADD_ROUTE,
+        element: <LevellogAdd />,
+      },
+      {
+        path: ROUTES_PATH.LEVELLOG_MODIFY,
+        element: <LevellogModify />,
+      },
+    ],
   },
   {
-    path: ROUTES_PATH.FEEDBACK_ROUTE,
-    // RequireAuth 추가
-    element: <FeedbackList />,
-  },
-  {
-    path: ROUTES_PATH.FEEDBACK_ADD,
-    // RequireAuth 추가
-    element: <FeedbackAdd />,
-  },
-  {
-    path: ROUTES_PATH.LOGIN,
-    element: <Login />,
-  },
-  {
-    path: ROUTES_PATH.LEVELLOG_ADD_ROUTE,
-    element: (
-      <RequireAuth>
-        <LevellogAdd />,
-      </RequireAuth>
-    ),
-  },
-  {
-    path: ROUTES_PATH.LEVELLOG_MODIFY,
-    // RequireAuth 추가
-    element: <LevellogModify />,
-  },
-  {
-    path: ROUTES_PATH.INTERVIEW_TEAMS,
-    element: <InterviewTeams />,
-  },
-  {
-    path: ROUTES_PATH.INTERVIEW_TEAMS_DETAIL,
-    element: <InterviewDetail />,
-  },
-  {
-    path: '*',
-    element: <NotFound />,
+    element: <Auth needLogin={false} />,
+    children: [
+      {
+        path: ROUTES_PATH.HOME,
+        element: <InterviewTeams />,
+      },
+      {
+        path: ROUTES_PATH.LOGIN,
+        element: <Login />,
+      },
+      {
+        path: ROUTES_PATH.INTERVIEW_TEAMS,
+        element: <InterviewTeams />,
+      },
+      {
+        path: ROUTES_PATH.INTERVIEW_TEAMS_DETAIL,
+        element: <InterviewDetail />,
+      },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
+    ],
   },
 ];

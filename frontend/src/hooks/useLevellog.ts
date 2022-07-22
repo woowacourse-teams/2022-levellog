@@ -27,9 +27,9 @@ const useLevellog = () => {
     }
   };
 
-  const levellogLookup = async (teamId: string, id: string) => {
+  const levellogLookup = async (teamId: string, levellogId: string) => {
     try {
-      const res = await getLevellog(accessToken, teamId, id);
+      const res = await getLevellog(accessToken, teamId, levellogId);
       const levellog = res.data;
 
       return levellog;

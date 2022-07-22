@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { FeedbackType } from 'types';
@@ -12,7 +12,7 @@ import Feedback from 'components/feedbacks/Feedback';
 
 const FeedbackList = () => {
   const [feedbacks, setFeedbacks] = useState([]);
-  const { levellogId } = useParams();
+  const { levellogId, teamId } = useParams();
   const { feedbackLookup } = useFeedback();
 
   const requestFeedbackLookup = async () => {
@@ -35,7 +35,7 @@ const FeedbackList = () => {
   return (
     <>
       <ContentHeader title={'레벨로그 피드백'}>
-        <Link to={`/levellogs/${levellogId}/feedbacks/add`}>
+        <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}>
           <Button>추가하기</Button>
         </Link>
       </ContentHeader>

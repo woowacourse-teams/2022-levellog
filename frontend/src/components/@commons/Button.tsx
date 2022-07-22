@@ -25,7 +25,7 @@ const ButtonStyle = styled.button`
   cursor: pointer;
 `;
 
-const ButtonContent = styled.a`
+const ButtonContent = styled.p`
   white-space: pre;
 `;
 

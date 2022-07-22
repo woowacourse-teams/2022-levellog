@@ -33,6 +33,8 @@ const InterviewTeams = () => {
     requestGroups();
   }, []);
 
+  if (!teams) return;
+
   return (
     <>
       <ContentHeader title={'Interview Group'}>

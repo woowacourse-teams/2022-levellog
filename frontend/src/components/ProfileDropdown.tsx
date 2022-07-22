@@ -4,8 +4,6 @@ import styled from 'styled-components';
 
 import useUser from 'hooks/useUser';
 
-import Button from './@commons/Button';
-
 const ProfileDropdown = ({
   isProfileDropdownShow,
   setIsProfileDropdownShow,
@@ -14,7 +12,6 @@ const ProfileDropdown = ({
   const { userInfoDispatch } = useUser();
 
   const handleClickProfileButton = () => {
-    // profile route가 들어가야 한다.
     navigate('');
   };
 
@@ -52,6 +49,7 @@ const ProfileDropdownContainer = styled.div`
   transition: all 0.2s;
   display: ${(props: Omit<ProfileDropdownProps, 'setIsProfileDropdownShow'>) =>
     props.isProfileDropdownShow ? 'block' : 'none'};
+  z-index: 10;
   @media (max-width: 1024px) {
     right: 5rem;
   }

@@ -10,7 +10,7 @@ export const getTeams = (): AxiosPromise<Record<'teams', InterviewTeamType[]>> =
     url: `${API_URL}/teams`,
   });
 
-export const getTeam = (teamId: string): AxiosPromise<InterviewTeamType> =>
+export const getTeam = (teamId: string): AxiosPromise<any> =>
   axios({
     method: 'get',
     url: `${API_URL}/teams/${teamId}`,

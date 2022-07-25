@@ -5,10 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.dto.ParticipantIdsRequest;
-import com.woowacourse.levellog.dto.TeamRequest;
-import com.woowacourse.levellog.dto.TeamUpdateRequest;
-import com.woowacourse.levellog.support.ControllerTest;
+import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
+import com.woowacourse.levellog.team.dto.TeamRequest;
+import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

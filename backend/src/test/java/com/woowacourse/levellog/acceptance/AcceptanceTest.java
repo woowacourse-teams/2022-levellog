@@ -12,12 +12,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
-import com.woowacourse.levellog.authentication.support.TestAuthenticationConfig;
-import com.woowacourse.levellog.dto.FeedbackContentDto;
-import com.woowacourse.levellog.dto.FeedbackRequest;
-import com.woowacourse.levellog.dto.LevellogRequest;
-import com.woowacourse.levellog.dto.ParticipantIdsRequest;
-import com.woowacourse.levellog.dto.TeamRequest;
+import com.woowacourse.levellog.config.TestAuthenticationConfig;
+import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
+import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
+import com.woowacourse.levellog.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
+import com.woowacourse.levellog.team.dto.TeamRequest;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.ValidatableResponse;
@@ -193,7 +193,8 @@ abstract class AcceptanceTest {
                 .split("/levellogs/")[1];
     }
 
-    protected ValidatableResponse requestCreateFeedback(final String levellogId, final String content, final String from) {
+    protected ValidatableResponse requestCreateFeedback(final String levellogId, final String content,
+                                                        final String from) {
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("study - " + content,
                 "speak - " + content,
                 "etc - " + content);

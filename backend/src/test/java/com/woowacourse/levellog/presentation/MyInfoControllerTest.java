@@ -9,9 +9,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.authentication.exception.InvalidFieldException;
-import com.woowacourse.levellog.dto.NicknameUpdateDto;
-import com.woowacourse.levellog.support.ControllerTest;
+import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+import com.woowacourse.levellog.member.exception.InvalidFieldException;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

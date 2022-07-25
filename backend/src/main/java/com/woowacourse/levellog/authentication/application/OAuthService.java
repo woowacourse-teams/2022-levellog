@@ -1,13 +1,13 @@
 package com.woowacourse.levellog.authentication.application;
 
-import com.woowacourse.levellog.application.MemberService;
-import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.domain.OAuthClient;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
-import com.woowacourse.levellog.domain.Member;
-import com.woowacourse.levellog.dto.MemberCreateDto;
+import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.member.application.MemberService;
+import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -15,6 +15,7 @@ import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import com.woowacourse.levellog.config.TestAuthenticationConfig;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
+import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
 import com.woowacourse.levellog.team.dto.TeamRequest;
@@ -34,7 +35,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.annotation.DirtiesContext;
@@ -106,13 +106,7 @@ abstract class AcceptanceTest {
 
         final String token = getToken(login(host));
 
-        return RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/teams")
-                .then().log().all();
+        return RestAssuredTemplate.post("/api/teams", token, request);
     }
 
     protected ValidatableResponse requestCreateTeam(final String title, final String token,
@@ -120,13 +114,7 @@ abstract class AcceptanceTest {
         final ParticipantIdsRequest participantIdsRequest = new ParticipantIdsRequest(List.of(participantIds));
         final TeamRequest request = new TeamRequest(title, title + "place", LocalDateTime.now(), participantIdsRequest);
 
-        return RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/teams")
-                .then().log().all();
+        return RestAssuredTemplate.post("/api/teams", token, request);
     }
 
     protected ValidatableResponse login(final String nickname) {
@@ -135,12 +123,7 @@ abstract class AcceptanceTest {
                     ((int) System.currentTimeMillis())), nickname,
                     nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);
-            return RestAssured.given().log().all()
-                    .body(new GithubCodeRequest(code))
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .when()
-                    .post("/api/auth/login")
-                    .then().log().all();
+            return RestAssuredTemplate.post("/api/auth/login", new GithubCodeRequest(code));
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -177,13 +160,7 @@ abstract class AcceptanceTest {
     protected ValidatableResponse requestCreateLevellog(final String teamId, final String content) {
         final LevellogRequest request = new LevellogRequest(content);
 
-        return RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/teams/{teamId}/levellogs", teamId)
-                .then().log().all();
+        return RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", masterToken, request);
     }
 
     protected String getLevellogId(final ValidatableResponse levellogResponse) {
@@ -203,12 +180,6 @@ abstract class AcceptanceTest {
         final ValidatableResponse loginResponse = login(from);
         final String token = getToken(loginResponse);
 
-        return RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                .then().log().all();
+        return RestAssuredTemplate.post("/api/levellogs/" + levellogId + "/feedbacks", token, request);
     }
 }

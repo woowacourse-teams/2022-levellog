@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.authentication.config;
 
-import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
+import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.support.LoginMember;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

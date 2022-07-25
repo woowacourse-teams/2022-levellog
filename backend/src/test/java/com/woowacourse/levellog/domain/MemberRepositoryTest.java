@@ -2,7 +2,9 @@ package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowacourse.levellog.config.JpaConfig;
+import com.woowacourse.levellog.common.config.JpaConfig;
+import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.domain.MemberRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

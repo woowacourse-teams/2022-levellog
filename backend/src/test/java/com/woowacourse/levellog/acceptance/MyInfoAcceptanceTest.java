@@ -3,7 +3,7 @@ package com.woowacourse.levellog.acceptance;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.dto.NicknameUpdateDto;
+import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpHeaders;

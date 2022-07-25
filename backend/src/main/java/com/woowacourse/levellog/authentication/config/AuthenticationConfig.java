@@ -1,9 +1,7 @@
 package com.woowacourse.levellog.authentication.config;
 
 import com.woowacourse.levellog.authentication.domain.GithubOAuthClient;
-import com.woowacourse.levellog.authentication.domain.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.domain.OAuthClient;
-import com.woowacourse.levellog.authentication.presentation.LoginInterceptor;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class AuthenticationConfig implements WebMvcConfigurer {
 
-    private final LoginInterceptor loginInterceptor;
+    private final AuthInterceptor authInterceptor;
     private final LoginMemberResolver loginMemberResolver;
 
     @Bean
@@ -28,7 +26,7 @@ public class AuthenticationConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor)
+        registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/api/**");
     }
 

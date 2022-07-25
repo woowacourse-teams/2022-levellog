@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.authentication.exception;
 
-import com.woowacourse.levellog.exception.LevellogException;
+import com.woowacourse.levellog.common.exception.LevellogException;
 import org.springframework.http.HttpStatus;
 
 /**

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -20,20 +20,38 @@ const Interviewer = ({
 }: InterviewerProps) => {
   const [levellog, setLevellog] = useState('');
   const [isOnModal, setIsOnModal] = useState(false);
+  const navigate = useNavigate();
   const { levellogLookup } = useLevellog();
   const { loginUserId } = useUser();
   const { teamId } = useParams();
 
-  const requestLevellogLookup = async () => {
-    const res = await levellogLookup(teamId, levellogId);
-    setLevellog(res.content);
-  };
-
   const handleClickToggleModal = () => {
+    if (!levellogId) {
+      alert('레벨로그가 아직 작성되지 않았습니다.');
+      return;
+    }
     setIsOnModal((prev) => !prev);
     if (!levellog) {
       requestLevellogLookup();
     }
+  };
+
+  const handleClickFeedbackButton = () => {
+    if (!levellogId) {
+      alert('레벨로그가 아직 작성되지 않았습니다.');
+      return;
+    }
+
+    if (!loginUserId) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
+  };
+
+  const requestLevellogLookup = async () => {
+    const res = await levellogLookup(teamId, levellogId);
+    setLevellog(res.content);
   };
 
   if (id === loginUserId) {
@@ -94,9 +112,11 @@ const Interviewer = ({
           <Link to="">
             <p>사전 질문 작성</p>
           </Link>
-          <Link to={`/levellogs/${levellogId}/feedbacks`}>
-            <p>피드백</p>
-          </Link>
+          {/* <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks`}> */}
+          <div onClick={handleClickFeedbackButton}>
+            <a>피드백</a>
+          </div>
+          {/* </Link> */}
         </ContentStyle>
       </InterviewerContainer>
     </>
@@ -127,8 +147,6 @@ const InterviewerStyle = styled.div`
   height: 130px;
   margin: 0 auto;
 `;
-
-const InterviewerButton = styled.button``;
 
 const NicknameStyle = styled.div`
   display: flex;

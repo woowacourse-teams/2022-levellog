@@ -10,7 +10,7 @@ const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
-        <FooterTitle>@2020 Level Log</FooterTitle>
+        <FooterTitle>@2022 Level Log</FooterTitle>
         <Link to="/">
           <LogoStyle src={levellogLogo} alt="레벨로그 로고" />
         </Link>

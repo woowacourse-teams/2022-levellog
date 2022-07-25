@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { FeedbackType } from 'types';
 
 import useFeedback from 'hooks/useFeedback';
+import useUser from 'hooks/useUser';
 
 import Button from '../@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -11,6 +12,7 @@ import FlexBox from 'components/@commons/FlexBox';
 const Feedback = ({ feedbackId, userFeedback, requestFeedbackLookup }: FeedbackProps) => {
   const { levellogId } = useParams();
   const { feedbackDelete } = useFeedback();
+  const { loginUserId } = useUser();
   const {
     id,
     updatedAt,
@@ -19,8 +21,9 @@ const Feedback = ({ feedbackId, userFeedback, requestFeedbackLookup }: FeedbackP
   } = userFeedback;
 
   const handleClickDeleteButton = async () => {
-    await feedbackDelete(levellogId, feedbackId);
-    requestFeedbackLookup();
+    const res = (await feedbackDelete(levellogId, feedbackId)) as any;
+    alert(res.data.message);
+    await requestFeedbackLookup();
   };
 
   return (

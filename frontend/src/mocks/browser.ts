@@ -1,15 +1,10 @@
 import { setupWorker } from 'msw';
 
-import {
-  feedbackHandlers,
-  levellogHandlers,
-  loginHandlers,
-  levellogGroupHandlers,
-} from './handler';
+import { feedbackHandlers, levellogHandlers, authHandlers, levellogGroupHandlers } from './handler';
 
 export const worker = setupWorker(
   ...feedbackHandlers,
   ...levellogHandlers,
-  ...loginHandlers,
+  ...authHandlers,
   ...levellogGroupHandlers,
 );

@@ -82,7 +82,7 @@ export const levellogHandlers = [
   }),
 ];
 
-export const loginHandlers = [
+export const authHandlers = [
   rest.post('/api/auth/login', (req, res, ctx) => {
     if (Object.keys(req.body).includes('authorizationCode')) {
       return res(
@@ -96,6 +96,21 @@ export const loginHandlers = [
     }
 
     return res(ctx.status(403));
+  }),
+
+  rest.get('/api/myInfo', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        id: 300,
+        nickname: '페퍼',
+        accessToken: 'fflkmdsaklfmkals32$Rmksdlfmlksdm',
+        profileUrl: 'https://avatars.githubusercontent.com/u/432423423?v=4',
+      }),
+    );
+    // }
+
+    // return res(ctx.status(403));
   }),
 ];
 

@@ -40,7 +40,8 @@ class MemberTest {
             final String invalidNickname = "a".repeat(51);
 
             // when & then
-            assertThatThrownBy(() -> member.updateNickname(invalidNickname)).isInstanceOf(InvalidFieldException.class);
+            assertThatThrownBy(() -> member.updateNickname(invalidNickname))
+                    .isInstanceOf(InvalidFieldException.class);
         }
 
         @ParameterizedTest
@@ -52,7 +53,8 @@ class MemberTest {
             final Member member = new Member("로마", 123456, "image.png");
 
             // when & then
-            assertThatThrownBy(() -> member.updateNickname(invalidNickname)).isInstanceOf(InvalidFieldException.class);
+            assertThatThrownBy(() -> member.updateNickname(invalidNickname))
+                    .isInstanceOf(InvalidFieldException.class);
         }
     }
 }

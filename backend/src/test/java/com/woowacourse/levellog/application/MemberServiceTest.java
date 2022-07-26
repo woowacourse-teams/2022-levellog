@@ -105,7 +105,8 @@ class MemberServiceTest {
         memberService.updateNickname(id, nicknameUpdateDto);
 
         // then
-        final Member updateMember = memberRepository.findById(id).orElseThrow();
+        final Member updateMember = memberRepository.findById(id)
+                .orElseThrow();
         assertThat(updateMember.getNickname()).isEqualTo("알린");
     }
 }

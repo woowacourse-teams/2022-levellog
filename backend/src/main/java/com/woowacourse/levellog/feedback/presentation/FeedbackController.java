@@ -28,7 +28,7 @@ public class FeedbackController {
     public ResponseEntity<Void> save(@PathVariable final Long levellogId,
                                      @RequestBody @Valid final FeedbackRequest request,
                                      @Authentic final Long memberId) {
-        final Long id = feedbackService.save(levellogId, memberId, request);
+        final Long id = feedbackService.save(request, levellogId, memberId);
         return ResponseEntity.created(URI.create("/api/levellogs/" + levellogId + "/feedbacks/" + id)).build();
     }
 
@@ -43,7 +43,7 @@ public class FeedbackController {
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
                                        @RequestBody @Valid final FeedbackRequest request,
                                        @PathVariable final Long feedbackId) {
-        feedbackService.update(feedbackId, request);
+        feedbackService.update(request, feedbackId);
         return ResponseEntity.noContent().build();
     }
 

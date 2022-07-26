@@ -35,7 +35,7 @@ public class FeedbackService {
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public Long save(final Long levellogId, final Long fromMemberId, final FeedbackRequest request) {
+    public Long save(final FeedbackRequest request, final Long levellogId, final Long fromMemberId) {
         feedbackRepository.findByLevellogIdAndFromId(levellogId, fromMemberId)
                 .ifPresent(it -> {
                     throw new FeedbackAlreadyExistException(levellogId);
@@ -91,8 +91,8 @@ public class FeedbackService {
     }
 
     @Transactional
-    public void update(final Long id, final FeedbackRequest request) {
-        final Feedback feedback = feedbackRepository.findById(id)
+    public void update(final FeedbackRequest request, final Long feedbackId) {
+        final Feedback feedback = feedbackRepository.findById(feedbackId)
                 .orElseThrow(FeedbackNotFoundException::new);
 
         feedback.updateFeedback(
@@ -102,8 +102,8 @@ public class FeedbackService {
     }
 
     @Transactional
-    public void deleteById(final Long id, final Long memberId) {
-        final Feedback feedback = feedbackRepository.findById(id)
+    public void deleteById(final Long feedbackId, final Long memberId) {
+        final Feedback feedback = feedbackRepository.findById(feedbackId)
                 .orElseThrow(FeedbackNotFoundException::new);
 
         final Member member = memberRepository.findById(memberId)
@@ -111,7 +111,7 @@ public class FeedbackService {
         if (!feedback.isAssociatedWith(member)) {
             throw new InvalidFeedbackException("자신이 남기거나 받은 피드백만 삭제할 수 있습니다.");
         }
-        feedbackRepository.deleteById(id);
+        feedbackRepository.deleteById(feedbackId);
     }
 
     private List<FeedbackResponse> getFeedbackResponses(final List<Feedback> feedbacks) {

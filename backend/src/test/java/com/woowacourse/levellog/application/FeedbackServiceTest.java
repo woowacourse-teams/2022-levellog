@@ -63,8 +63,8 @@ class FeedbackServiceTest extends ServiceTest {
         feedbackRepository.flush();
 
         // when
-        feedbackService.update(feedback1.getId(),
-                new FeedbackRequest(new FeedbackContentDto("update", "update", "update")));
+        feedbackService.update(new FeedbackRequest(new FeedbackContentDto("update", "update", "update")),
+                feedback1.getId());
         final List<String> fromNicknames = feedbackService.findAllByTo(eve.getId()).getFeedbacks().stream()
                 .map(FeedbackResponse::getFrom).map(MemberDto::getNickname).collect(Collectors.toList());
 
@@ -86,8 +86,8 @@ class FeedbackServiceTest extends ServiceTest {
         feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
 
         // when
-        feedbackService.update(feedback1.getId(),
-                new FeedbackRequest(new FeedbackContentDto("수정된 알린 스터디", "수정된 알린 말하기", "수정된 알린 기타")));
+        feedbackService.update(new FeedbackRequest(new FeedbackContentDto("수정된 알린 스터디", "수정된 알린 말하기", "수정된 알린 기타")),
+                feedback1.getId());
 
         // then
         final Feedback feedback = feedbackRepository.findById(feedback1.getId()).get();
@@ -171,7 +171,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("피드백을 저장한다.")
-        void save() {
+        void save_feedback_success() {
             // given
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                     "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
@@ -184,7 +184,7 @@ class FeedbackServiceTest extends ServiceTest {
             participantRepository.save(new Participant(team, roma, true));
 
             // when
-            final Long id = feedbackService.save(levellog.getId(), roma.getId(), request);
+            final Long id = feedbackService.save(request, levellog.getId(), roma.getId());
 
             // then
             final Optional<Feedback> feedback = feedbackRepository.findById(id);
@@ -208,7 +208,7 @@ class FeedbackServiceTest extends ServiceTest {
             final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(levellog.getId(), roma.getId(), request)).isInstanceOf(
+            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId())).isInstanceOf(
                     FeedbackAlreadyExistException.class);
         }
 
@@ -226,7 +226,7 @@ class FeedbackServiceTest extends ServiceTest {
             final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(levellog.getId(), eve.getId(), request)).isInstanceOf(
+            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), eve.getId())).isInstanceOf(
                     InvalidFeedbackException.class).hasMessage("자기 자신에게 피드백을 할 수 없습니다.");
         }
 
@@ -245,8 +245,8 @@ class FeedbackServiceTest extends ServiceTest {
             final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(levellog.getId(), roma.getId(),
-                    new FeedbackRequest(new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타"))))
+            assertThatThrownBy(() -> feedbackService.save(new FeedbackRequest(new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타")),
+                    levellog.getId(), roma.getId()))
                     .isInstanceOf(InvalidFeedbackException.class);
         }
     }

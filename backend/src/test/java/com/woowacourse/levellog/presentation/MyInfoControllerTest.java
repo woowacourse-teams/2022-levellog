@@ -4,13 +4,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
-import com.woowacourse.levellog.member.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +40,7 @@ class MyInfoControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
-            doThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다.", BAD_REQUEST))
+            doThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다."))
                     .when(memberService)
                     .updateNickname(any(), any());
             final String invalidNickname = "a".repeat(51);

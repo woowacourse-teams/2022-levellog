@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FeedbackService {
 
@@ -34,6 +34,7 @@ public class FeedbackService {
     private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
 
+    @Transactional
     public Long save(final Long levellogId, final Long fromMemberId, final FeedbackRequest request) {
         feedbackRepository.findByLevellogIdAndFromId(levellogId, fromMemberId)
                 .ifPresent(it -> {
@@ -89,6 +90,7 @@ public class FeedbackService {
         return new FeedbacksResponse(getFeedbackResponses(feedbacks));
     }
 
+    @Transactional
     public void update(final Long id, final FeedbackRequest request) {
         final Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(FeedbackNotFoundException::new);
@@ -99,6 +101,7 @@ public class FeedbackService {
                 request.getFeedback().getEtc());
     }
 
+    @Transactional
     public void deleteById(final Long id, final Long memberId) {
         final Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(FeedbackNotFoundException::new);

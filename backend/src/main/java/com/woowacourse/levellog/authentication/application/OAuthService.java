@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OAuthService {
 
@@ -19,6 +19,7 @@ public class OAuthService {
     private final OAuthClient oAuthClient;
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Transactional
     public LoginDto login(final GithubCodeDto request) {
         final String code = request.getAuthorizationCode();
         final String githubAccessToken = oAuthClient.getAccessToken(code);

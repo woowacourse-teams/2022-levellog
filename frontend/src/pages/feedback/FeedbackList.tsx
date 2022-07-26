@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { FeedbackType } from 'types';
@@ -11,24 +11,11 @@ import ContentHeader from 'components/@commons/ContentHeader';
 import Feedback from 'components/feedbacks/Feedback';
 
 const FeedbackList = () => {
-  const [feedbacks, setFeedbacks] = useState([]);
-  const location = useLocation();
-  const { levellogId, teamId } = useParams();
-  const { feedbackLookup } = useFeedback();
-
-  const requestFeedbackLookup = async () => {
-    const res = await feedbackLookup(levellogId);
-    setFeedbacks(res.feedbacks);
-    setTimeout(() => {
-      requestFeedbackLookup();
-    }, 500);
-  };
+  const { feedbacks, levellogId, teamId, getFeedbacksInTeam, onClickDeleteButton } = useFeedback();
 
   useEffect(() => {
-    setTimeout(() => {
-      requestFeedbackLookup();
-    }, 500);
-  }, [location]);
+    getFeedbacksInTeam();
+  }, []);
 
   return (
     <>
@@ -39,12 +26,11 @@ const FeedbackList = () => {
       </ContentHeader>
       <FeedbacksContainer>
         {feedbacks.length !== 0 &&
-          feedbacks.map((feedback: FeedbackType) => (
+          feedbacks.map((feedbackInfo: FeedbackType) => (
             <Feedback
-              key={feedback.id}
-              feedbackId={String(feedback.id)}
-              userFeedback={feedback}
-              requestFeedbackLookup={requestFeedbackLookup}
+              key={feedbackInfo.id}
+              feedbackInfo={feedbackInfo}
+              onClickDeleteButton={onClickDeleteButton}
             />
           ))}
       </FeedbacksContainer>

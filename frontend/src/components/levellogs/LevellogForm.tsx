@@ -5,8 +5,7 @@ import ContentHeader from 'components/@commons/ContentHeader';
 import Input from 'components/@commons/Input';
 import { SubTitleLabel } from 'components/@commons/Label';
 
-// levellogAdd, levellogModify 페이지에서 재사용
-const LevellogForm = (handleSubmitLevellogForm, levellogRef, title, buttonValue) => {
+const LevellogForm = ({ handleSubmitLevellogForm, levellogRef, title, buttonValue }: any) => {
   return (
     <form onSubmit={handleSubmitLevellogForm}>
       <ContentHeader title={title}>

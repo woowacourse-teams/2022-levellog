@@ -14,14 +14,14 @@ const LevellogViewModal = ({
   levellogId,
   levellog,
   setIsOnModal,
-  requestInterviewTeam,
-}) => {
-  const { levellogDelete } = useLevellog();
+  getTeam,
+}: any) => {
+  const { deleteLevellog } = useLevellog();
   const { teamId } = useParams();
 
   const handleClickLevellogDelete = async () => {
-    await levellogDelete(teamId, levellogId);
-    await requestInterviewTeam();
+    await deleteLevellog();
+    getTeam();
     setIsOnModal(false);
   };
 

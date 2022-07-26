@@ -11,17 +11,11 @@ import { ROUTES_PATH } from 'constants/constants';
 import Image from 'components/@commons/Image';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 
-const Interviewer = ({
-  requestInterviewTeam,
-  id,
-  levellogId,
-  nickname,
-  profileUrl,
-}: InterviewerProps) => {
+const Interviewer = ({ getTeam, id, levellogId, nickname, profileUrl }: InterviewerProps) => {
   const [levellog, setLevellog] = useState('');
   const [isOnModal, setIsOnModal] = useState(false);
   const navigate = useNavigate();
-  const { levellogLookup } = useLevellog();
+  // const { levellogLookup } = useLevellog();
   const { loginUserId } = useUser();
   const { teamId } = useParams();
 
@@ -50,8 +44,8 @@ const Interviewer = ({
   };
 
   const requestLevellogLookup = async () => {
-    const res = await levellogLookup(teamId, levellogId);
-    setLevellog(res.content);
+    // const res = await levellogLookup(teamId, levellogId);
+    // setLevellog(res.content);
   };
 
   if (id === loginUserId) {
@@ -64,7 +58,7 @@ const Interviewer = ({
             levellogId={levellogId}
             levellog={levellog}
             setIsOnModal={setIsOnModal}
-            requestInterviewTeam={requestInterviewTeam}
+            getTeam={getTeam}
           />
         )}
         <InterviewerContainer>
@@ -97,7 +91,7 @@ const Interviewer = ({
           levellogId={levellogId}
           levellog={levellog}
           setIsOnModal={setIsOnModal}
-          requestInterviewTeam={requestInterviewTeam}
+          getTeam={getTeam}
         />
       )}
       <InterviewerContainer>
@@ -124,7 +118,7 @@ const Interviewer = ({
 };
 
 interface InterviewerProps {
-  requestInterviewTeam: () => Promise<void>;
+  getTeam: () => Promise<void>;
   id: string;
   levellogId: string;
   nickname: string;

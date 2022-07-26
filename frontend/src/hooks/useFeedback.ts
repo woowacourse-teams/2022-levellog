@@ -1,46 +1,88 @@
-import { useNavigate } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { FeedbackPostType } from 'types';
 
-import { ROUTES_PATH } from 'constants/constants';
-
-import { deleteFeedbacks, getFeedbacks, postFeedback } from 'apis/feedback';
+import {
+  requestPostFeedback,
+  requestGetFeedbacksInTeam,
+  requestEditFeedback,
+  requestDeleteFeedback,
+} from 'apis/feedback';
 
 const useFeedback = () => {
-  const accessToken = localStorage.getItem('accessToken');
-  const navigate = useNavigate();
+  const [feedbacks, setFeedbacks] = useState([]);
+  const feedbackRef = useRef([]);
+  const { levellogId, teamId, feedbackId } = useParams();
+  const accessToken = localStorage.getItem('accessToken') as string;
+  const navigator = useNavigate();
 
-  const feedbackAdd = async ({ feedbackResult, levellogId }: any) => {
+  const postFeedback = async ({ feedbackResult }: any) => {
     try {
-      await postFeedback(accessToken, { feedbackResult, levellogId });
+      await requestPostFeedback({ accessToken, levellogId, feedbackResult });
     } catch (err) {
-      alert(err.response.data.message);
-      navigate(ROUTES_PATH.HOME);
+      if (err instanceof Error) alert(err.message);
     }
   };
 
-  const feedbackLookup = async (levellogId: string) => {
+  const getFeedbacksInTeam = async () => {
     try {
-      const res = await getFeedbacks(accessToken, levellogId);
-      const feedbacks = res.data;
+      const res = await requestGetFeedbacksInTeam({ accessToken, levellogId });
+      const feedbacks = res.data.feedbacks;
 
-      return feedbacks;
+      setFeedbacks(feedbacks);
     } catch (err) {
-      console.log(err);
+      if (err instanceof Error) alert(err.message);
     }
   };
 
-  const feedbackDelete = async (levellogId: string, feedbackId: string) => {
+  const editFeedback = async ({ feedbackResult }: any) => {
     try {
-      const res = await deleteFeedbacks(accessToken, levellogId, feedbackId);
-      return res.data;
+      await requestEditFeedback({ accessToken, levellogId, feedbackId, feedbackResult });
     } catch (err) {
-      alert(err.response.data.message);
-      navigate(ROUTES_PATH.HOME);
+      if (err instanceof Error) alert(err.message);
     }
   };
 
-  return { feedbackAdd, feedbackLookup, feedbackDelete };
+  const deleteFeedback = async ({ feedbackId }) => {
+    try {
+      await requestDeleteFeedback({ accessToken, levellogId, feedbackId });
+    } catch (err) {
+      if (err instanceof Error) alert(err.message);
+    }
+  };
+
+  const onClickDeleteButton = async (feedbackInfo: any) => {
+    await deleteFeedback({ feedbackId: feedbackInfo.id });
+    await getFeedbacksInTeam();
+  };
+
+  const handleSubmitFeedbackForm = async (e: any) => {
+    e.preventDefault();
+    const [study, speak, etc] = feedbackRef.current;
+    const feedbackResult: FeedbackPostType = {
+      feedback: {
+        study: study.value,
+        speak: speak.value,
+        etc: etc.value,
+      },
+    };
+
+    postFeedback({ feedbackResult, levellogId });
+    navigator(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
+  };
+
+  return {
+    feedbacks,
+    feedbackRef,
+    levellogId,
+    teamId,
+    getFeedbacksInTeam,
+    postFeedback,
+    editFeedback,
+    onClickDeleteButton,
+    handleSubmitFeedbackForm,
+  };
 };
 
 export default useFeedback;

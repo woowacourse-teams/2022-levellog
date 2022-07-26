@@ -21,7 +21,8 @@ const useFeedback = () => {
     try {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
     } catch (err) {
-      if (err instanceof Error) alert(err.message);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
     }
   };
 
@@ -32,7 +33,8 @@ const useFeedback = () => {
 
       setFeedbacks(feedbacks);
     } catch (err) {
-      if (err instanceof Error) alert(err.message);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
     }
   };
 
@@ -40,7 +42,8 @@ const useFeedback = () => {
     try {
       await requestEditFeedback({ accessToken, levellogId, feedbackId, feedbackResult });
     } catch (err) {
-      if (err instanceof Error) alert(err.message);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
     }
   };
 
@@ -48,7 +51,8 @@ const useFeedback = () => {
     try {
       await requestDeleteFeedback({ accessToken, levellogId, feedbackId });
     } catch (err) {
-      if (err instanceof Error) alert(err.message);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
     }
   };
 
@@ -68,7 +72,7 @@ const useFeedback = () => {
       },
     };
 
-    postFeedback({ feedbackResult, levellogId });
+    postFeedback({ feedbackResult });
     navigator(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 

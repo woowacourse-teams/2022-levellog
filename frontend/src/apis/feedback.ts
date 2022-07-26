@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { API_URL } from 'constants/constants';
 
-export const requestPostFeedback = ({ accessToken, feedbackResult, levellogId }) => {
+export const requestPostFeedback = ({ accessToken, feedbackResult, levellogId }: any) => {
   return axios({
     method: 'post',
     url: `${API_URL}/levellogs/${levellogId}/feedbacks`,
@@ -11,7 +11,7 @@ export const requestPostFeedback = ({ accessToken, feedbackResult, levellogId })
   });
 };
 
-export const requestGetFeedbacksInTeam = ({ accessToken, levellogId }) => {
+export const requestGetFeedbacksInTeam = ({ accessToken, levellogId }: any) => {
   return axios({
     method: 'get',
     url: `${API_URL}/levellogs/${levellogId}/feedbacks`,
@@ -33,7 +33,7 @@ export const requestEditFeedback = ({
   });
 };
 
-export const requestDeleteFeedback = ({ accessToken, levellogId, feedbackId }) => {
+export const requestDeleteFeedback = ({ accessToken, levellogId, feedbackId }: any) => {
   return axios({
     method: 'delete',
     url: `${API_URL}/levellogs/${levellogId}/feedbacks/${feedbackId}`,

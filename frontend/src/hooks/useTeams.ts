@@ -17,7 +17,8 @@ export const useTeams = () => {
 
       setTeams(teams);
     } catch (err) {
-      if (err instanceof Error) alert(err.message);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
     }
   };
 
@@ -47,7 +48,8 @@ export const useTeam = () => {
 
       setTeam(res.data);
     } catch (err) {
-      if (err instanceof Error) alert(err.message);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
     }
   };
 

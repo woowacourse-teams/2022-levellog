@@ -9,7 +9,7 @@ const LevellogForm = ({ handleSubmitLevellogForm, levellogRef, title, buttonValu
   return (
     <form onSubmit={handleSubmitLevellogForm}>
       <ContentHeader title={title}>
-        <Button>{buttonValue}</Button>
+        <Button onClick={handleSubmitLevellogForm}>{buttonValue}</Button>
       </ContentHeader>
       <MainContainer>
         <SubTitleLabel>Level Log</SubTitleLabel>

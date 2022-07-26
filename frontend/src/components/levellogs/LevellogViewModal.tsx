@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
-import useLevellog from 'hooks/useLevellog';
-
 import Button from 'components/@commons/Button';
 
 const LevellogViewModal = ({
@@ -15,12 +13,12 @@ const LevellogViewModal = ({
   levellog,
   setIsOnModal,
   getTeam,
+  deleteLevellog,
 }: any) => {
-  const { deleteLevellog } = useLevellog();
   const { teamId } = useParams();
 
   const handleClickLevellogDelete = async () => {
-    await deleteLevellog();
+    await deleteLevellog({ teamId, levellogId });
     getTeam();
     setIsOnModal(false);
   };
@@ -68,6 +66,8 @@ const LevellogViewModal = ({
     </ModalPortal>
   );
 };
+
+//   <Levellog>{levellog}</Levellog> 추가
 
 const Dimmer = styled.div`
   position: fixed;

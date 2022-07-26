@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { LevellogType } from 'types';
 
@@ -13,7 +13,6 @@ import {
 } from 'apis/levellog';
 
 const useLevellog = () => {
-  const { teamId, levellogId } = useParams();
   const [levellog, setLevellog] = useState('');
   const levellogRef = useRef(null);
   const accessToken = localStorage.getItem('accessToken');
@@ -26,7 +25,7 @@ const useLevellog = () => {
     return levellogContent;
   };
 
-  const postLevellog = async ({ inputValue }: any) => {
+  const postLevellog = async ({ teamId, inputValue }: any) => {
     try {
       await requestPostLevellog({
         accessToken,
@@ -35,33 +34,36 @@ const useLevellog = () => {
       });
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err) {
-      console.log(err);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
       navigate(ROUTES_PATH.HOME);
     }
   };
 
-  const getLevellog = async () => {
+  const getLevellog = async ({ teamId, levellogId }) => {
     try {
       const res = await requestGetLevellog({ accessToken, teamId, levellogId });
-      setLevellog(res.data);
-      return res.data;
+      setLevellog(res.data.content);
+      return res.data.content;
     } catch (err) {
-      console.log(err);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
       navigate(ROUTES_PATH.HOME);
     }
   };
 
-  const deleteLevellog = async () => {
+  const deleteLevellog = async ({ teamId, levellogId }) => {
     try {
       await requestDeleteLevellog({ accessToken, teamId, levellogId });
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err) {
-      console.log(err);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
       navigate(ROUTES_PATH.NOT_FOUND);
     }
   };
 
-  const editLevellog = async ({ inputValue }: any) => {
+  const editLevellog = async ({ teamId, levellogId, inputValue }: any) => {
     try {
       await requestEditLevellog({
         accessToken,
@@ -71,22 +73,23 @@ const useLevellog = () => {
       });
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err) {
-      console.log(err);
+      const res = err.response as any;
+      if (err instanceof Error) alert(res.data.message);
       navigate(ROUTES_PATH.NOT_FOUND);
     }
   };
 
-  const handleSubmitLevellogEditForm = (e: any) => {
-    editLevellog({ inputValue: levellogRef.current.value });
+  const onSubmitLevellogEditForm = ({ teamId, levellogId }) => {
+    editLevellog({ teamId, levellogId, inputValue: levellogRef.current.value });
   };
 
-  const handleSubmitLevellogPostForm = (e: any) => {
-    postLevellog({ inputValue: levellogRef.current.value });
+  const onSubmitLevellogPostForm = ({ teamId }) => {
+    postLevellog({ teamId, inputValue: levellogRef.current.value });
   };
 
-  const getLevellogOnRef = async () => {
-    const res = await getLevellog();
-    levellogRef.current.value = res.content;
+  const getLevellogOnRef = async ({ teamId, levellogId }) => {
+    const levellog = await getLevellog({ teamId, levellogId });
+    levellogRef.current.value = levellog;
   };
 
   return {
@@ -97,8 +100,8 @@ const useLevellog = () => {
     editLevellog,
     deleteLevellog,
     getLevellogOnRef,
-    handleSubmitLevellogEditForm,
-    handleSubmitLevellogPostForm,
+    onSubmitLevellogEditForm,
+    onSubmitLevellogPostForm,
   };
 };
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { API_URL } from 'constants/constants';
 
-export const getUserLogin = ({ code }) => {
+export const getUserLogin = ({ code }: any) => {
   return axios({
     method: 'post',
     headers: {
@@ -15,7 +15,7 @@ export const getUserLogin = ({ code }) => {
   });
 };
 
-export const getUserAuthority = ({ accessToken }) => {
+export const getUserAuthority = ({ accessToken }: any) => {
   return axios({
     method: 'get',
     url: `${API_URL}/myInfo`,

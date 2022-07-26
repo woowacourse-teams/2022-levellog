@@ -19,19 +19,19 @@ export const requestGetLevellog = ({ accessToken, teamId, levellogId }: any) => 
   });
 };
 
-export const requestEditLevellog = ({ accessToken, teamId, id, levellogContent }: any) => {
+export const requestEditLevellog = ({ accessToken, teamId, levellogId, levellogContent }: any) => {
   return axios({
     method: 'put',
-    url: `${API_URL}/teams/${teamId}/levellogs/${id}`,
+    url: `${API_URL}/teams/${teamId}/levellogs/${levellogId}`,
     headers: { Authorization: `Bearer ${accessToken}` },
     data: levellogContent,
   });
 };
 
-export const requestDeleteLevellog = ({ accessToken, teamId, id }: any) => {
+export const requestDeleteLevellog = ({ accessToken, teamId, levellogId }: any) => {
   return axios({
     method: 'delete',
-    url: `${API_URL}/teams/${teamId}/levellogs/${id}`,
+    url: `${API_URL}/teams/${teamId}/levellogs/${levellogId}`,
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 };

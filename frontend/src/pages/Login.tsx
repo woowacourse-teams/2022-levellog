@@ -18,7 +18,7 @@ const Login = () => {
       const accessToken = localStorage.getItem('accessToken');
       try {
         if (accessToken) {
-          const res = await getUserAuthority(accessToken);
+          const res = await getUserAuthority({ accessToken });
           userInfoDispatch({
             id: res.data.id,
             profileUrl: res.data.profileUrl,
@@ -27,7 +27,7 @@ const Login = () => {
           return;
         }
 
-        const res = await getUserLogin(code);
+        const res = await getUserLogin({ code });
         localStorage.setItem('accessToken', res.data.accessToken);
         userInfoDispatch({
           id: res.data.id,
@@ -40,16 +40,12 @@ const Login = () => {
 
             return;
           }
-
           navigate(state.pathname);
 
           return;
         }
-
         navigate('/');
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
 
     loginGithub();

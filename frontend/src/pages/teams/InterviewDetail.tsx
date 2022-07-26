@@ -15,10 +15,10 @@ const InterviewDetail = () => {
   const { teamLocationState, team, getTeam } = useTeam();
 
   useEffect(() => {
-    if (teamLocationState) {
+    if (!teamLocationState) {
       getTeam();
     }
-  }, [teamLocationState]);
+  }, []);
 
   if (Object.keys(team).length === 0) return <div></div>;
 

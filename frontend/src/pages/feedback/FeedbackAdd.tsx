@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -14,9 +15,10 @@ import LevellogReport from 'components/levellogs/LevellogReport';
 const FeedbackAdd = () => {
   const { feedbackRef, handleSubmitFeedbackForm } = useFeedback();
   const { levellog, getLevellog } = useLevellog();
+  const { teamId, levellogId } = useParams();
 
   useEffect(() => {
-    getLevellog();
+    getLevellog({ teamId, levellogId });
   }, []);
 
   return (

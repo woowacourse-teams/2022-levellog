@@ -11,13 +11,12 @@ import { ROUTES_PATH } from 'constants/constants';
 import Image from 'components/@commons/Image';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 
-const Interviewer = ({ getTeam, id, levellogId, nickname, profileUrl }: InterviewerProps) => {
-  const [levellog, setLevellog] = useState('');
+const Interviewer = ({ getTeam, id, levellogId, nickname, profileUrl }: any) => {
+  const { teamId } = useParams();
+  const { levellog, getLevellog, deleteLevellog } = useLevellog();
   const [isOnModal, setIsOnModal] = useState(false);
   const navigate = useNavigate();
-  // const { levellogLookup } = useLevellog();
   const { loginUserId } = useUser();
-  const { teamId } = useParams();
 
   const handleClickToggleModal = () => {
     if (!levellogId) {
@@ -26,7 +25,7 @@ const Interviewer = ({ getTeam, id, levellogId, nickname, profileUrl }: Intervie
     }
     setIsOnModal((prev) => !prev);
     if (!levellog) {
-      requestLevellogLookup();
+      getLevellog({ teamId, levellogId });
     }
   };
 
@@ -43,11 +42,6 @@ const Interviewer = ({ getTeam, id, levellogId, nickname, profileUrl }: Intervie
     navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 
-  const requestLevellogLookup = async () => {
-    // const res = await levellogLookup(teamId, levellogId);
-    // setLevellog(res.content);
-  };
-
   if (id === loginUserId) {
     return (
       <>
@@ -59,6 +53,7 @@ const Interviewer = ({ getTeam, id, levellogId, nickname, profileUrl }: Intervie
             levellog={levellog}
             setIsOnModal={setIsOnModal}
             getTeam={getTeam}
+            deleteLevellog={deleteLevellog}
           />
         )}
         <InterviewerContainer>
@@ -92,6 +87,7 @@ const Interviewer = ({ getTeam, id, levellogId, nickname, profileUrl }: Intervie
           levellog={levellog}
           setIsOnModal={setIsOnModal}
           getTeam={getTeam}
+          deleteLevellog={deleteLevellog}
         />
       )}
       <InterviewerContainer>

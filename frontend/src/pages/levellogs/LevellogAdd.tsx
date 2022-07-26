@@ -1,13 +1,21 @@
+import { useParams } from 'react-router-dom';
+
 import useLevellog from 'hooks/useLevellog';
 
 import LevellogForm from 'components/levellogs/LevellogForm';
 
 const LevellogAdd = () => {
-  const { levellogRef, handleSubmitLevellogPostForm } = useLevellog();
+  const { levellogRef, onSubmitLevellogPostForm } = useLevellog();
+  const { teamId } = useParams();
+
+  const handleSubmitLevellogForm = (e: any) => {
+    e.preventDefault();
+    onSubmitLevellogPostForm({ teamId });
+  };
 
   return (
     <LevellogForm
-      handelSubmitLevellogPostForm={handleSubmitLevellogPostForm}
+      handleSubmitLevellogForm={handleSubmitLevellogForm}
       levellogRef={levellogRef}
       title="레벨로그 작성"
       buttonValue="제출하기"

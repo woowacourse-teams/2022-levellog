@@ -1,10 +1,10 @@
 package com.woowacourse.levellog.authentication.domain;
 
-import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 
 public interface OAuthClient {
 
     String getAccessToken(String code);
 
-    GithubProfileResponse getProfile(String accessToken);
+    GithubProfileDto getProfile(String accessToken);
 }

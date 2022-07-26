@@ -2,7 +2,7 @@ package com.woowacourse.levellog.authentication.domain;
 
 import com.woowacourse.levellog.authentication.dto.GithubAccessTokenRequest;
 import com.woowacourse.levellog.authentication.dto.GithubAccessTokenResponse;
-import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import java.util.Objects;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -45,13 +45,13 @@ public class GithubOAuthClient implements OAuthClient {
     }
 
     @Override
-    public GithubProfileResponse getProfile(final String accessToken) {
+    public GithubProfileDto getProfile(final String accessToken) {
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "token " + accessToken);
 
         final HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
         return new RestTemplate()
-                .exchange(USER_ACCESS_URL, HttpMethod.GET, httpEntity, GithubProfileResponse.class)
+                .exchange(USER_ACCESS_URL, HttpMethod.GET, httpEntity, GithubProfileDto.class)
                 .getBody();
     }
 }

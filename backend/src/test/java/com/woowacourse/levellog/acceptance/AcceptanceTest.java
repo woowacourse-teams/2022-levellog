@@ -11,7 +11,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
-import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.config.TestAuthenticationConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.levellog.dto.LevellogRequest;
@@ -115,7 +115,7 @@ abstract class AcceptanceTest {
 
     protected RestAssuredResponse login(final String nickname) {
         try {
-            final GithubProfileResponse response = new GithubProfileResponse(String.valueOf(
+            final GithubProfileDto response = new GithubProfileDto(String.valueOf(
                     ((int) System.currentTimeMillis())), nickname,
                     nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);

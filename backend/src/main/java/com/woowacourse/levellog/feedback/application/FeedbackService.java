@@ -14,7 +14,7 @@ import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.member.dto.MemberResponse;
+import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
@@ -115,7 +115,7 @@ public class FeedbackService {
         return feedbacks.stream()
                 .map(it -> new FeedbackResponse(
                         it.getId(),
-                        MemberResponse.from(it.getFrom()),
+                        MemberDto.from(it.getFrom()),
                         new FeedbackContentDto(it.getStudy(), it.getSpeak(), it.getEtc()),
                         it.getUpdatedAt()))
                 .collect(Collectors.toList());

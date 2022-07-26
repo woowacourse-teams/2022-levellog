@@ -3,7 +3,7 @@ package com.woowacourse.levellog.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.domain.OAuthClient;
-import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 
 public class FakeGithubOAuthClient implements OAuthClient {
 
@@ -22,9 +22,9 @@ public class FakeGithubOAuthClient implements OAuthClient {
     }
 
     @Override
-    public GithubProfileResponse getProfile(final String accessToken) {
+    public GithubProfileDto getProfile(final String accessToken) {
         try {
-            return objectMapper.readValue(accessToken, GithubProfileResponse.class);
+            return objectMapper.readValue(accessToken, GithubProfileDto.class);
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("[TEST] 로그인 code에는 원하는 GithubProfilerResponse를 json 형식으로 보내야합니다.");
         }

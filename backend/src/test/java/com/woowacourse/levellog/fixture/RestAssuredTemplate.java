@@ -7,52 +7,58 @@ import org.springframework.http.MediaType;
 
 public class RestAssuredTemplate {
 
-    public static ValidatableResponse get(final String url) {
-        return RestAssured.given().log().all()
+    public static RestAssuredResponse get(final String url) {
+        final ValidatableResponse response = RestAssured.given().log().all()
                 .when()
                 .get(url)
                 .then().log().all();
+        return new RestAssuredResponse(response);
     }
 
-    public static ValidatableResponse get(final String url, final String token) {
-        return RestAssured.given().log().all()
+    public static RestAssuredResponse get(final String url, final String token) {
+        final ValidatableResponse response = RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .when()
                 .get(url)
                 .then().log().all();
+        return new RestAssuredResponse(response);
     }
 
-    public static ValidatableResponse post(final String url) {
-        return RestAssured.given().log().all()
+    public static RestAssuredResponse post(final String url) {
+        final ValidatableResponse response = RestAssured.given().log().all()
                 .when()
                 .post(url)
                 .then().log().all();
+        return new RestAssuredResponse(response);
     }
 
-    public static ValidatableResponse post(final String url, final String token) {
-        return RestAssured.given().log().all()
+    public static RestAssuredResponse post(final String url, final String token) {
+        final ValidatableResponse response = RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .when()
                 .post(url)
                 .then().log().all();
+        return new RestAssuredResponse(response);
     }
 
-    public static ValidatableResponse post(final String url, final Object body) {
-        return RestAssured.given().log().all()
+    public static RestAssuredResponse post(final String url, final Object body) {
+        final ValidatableResponse response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
                 .when()
                 .post(url)
                 .then().log().all();
+        return new RestAssuredResponse(response);
     }
 
-    public static ValidatableResponse post(final String url, final String token, final Object body) {
-        return RestAssured.given().log().all()
+    public static RestAssuredResponse post(final String url, final String token, final Object body) {
+        final ValidatableResponse response = RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
                 .when()
                 .post(url)
                 .then().log().all();
+        return new RestAssuredResponse(response);
     }
 }

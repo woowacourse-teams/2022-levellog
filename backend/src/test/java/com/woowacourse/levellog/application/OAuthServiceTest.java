@@ -3,38 +3,16 @@ package com.woowacourse.levellog.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import com.woowacourse.levellog.authentication.application.OAuthService;
-import com.woowacourse.levellog.authentication.domain.OAuthClient;
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.authentication.dto.LoginDto;
-import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
-import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
 @DisplayName("OAuthService의")
-class OAuthServiceTest {
-
-    @MockBean
-    private OAuthClient oAuthClient;
-
-    @Autowired
-    private MemberService memberService;
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    private OAuthService oAuthService;
+class OAuthServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("login 메서드는")

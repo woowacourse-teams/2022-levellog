@@ -1,11 +1,11 @@
 package com.woowacourse.levellog.member.application;
 
-import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
-import com.woowacourse.levellog.member.dto.MemberResponse;
-import com.woowacourse.levellog.member.dto.MembersResponse;
+import com.woowacourse.levellog.member.dto.MemberDto;
+import com.woowacourse.levellog.member.dto.MembersDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import java.util.List;
@@ -30,13 +30,13 @@ public class MemberService {
     }
 
     @Transactional
-    public Long saveIfNotExist(final GithubProfileResponse githubProfile, final int githubId) {
+    public Long saveIfNotExist(final GithubProfileDto request, final int githubId) {
         final boolean isExist = memberRepository.existsByGithubId(githubId);
         if (isExist) {
             return getByGithubId(githubId).getId();
         }
 
-        return save(new MemberCreateDto(githubProfile.getNickname(), githubId, githubProfile.getProfileUrl()));
+        return save(new MemberCreateDto(request.getNickname(), githubId, request.getProfileUrl()));
     }
 
     private Member getByGithubId(final int githubId) {
@@ -44,28 +44,28 @@ public class MemberService {
                 .orElseThrow(MemberNotFoundException::new);
     }
 
-    public MemberResponse findMemberById(final Long memberId) {
+    public MemberDto findMemberById(final Long memberId) {
         final Member member = getById(memberId);
 
-        return MemberResponse.from(member);
+        return MemberDto.from(member);
     }
 
-    public MembersResponse findAll() {
-        final List<MemberResponse> responses = memberRepository.findAll()
+    public MembersDto findAll() {
+        final List<MemberDto> responses = memberRepository.findAll()
                 .stream()
-                .map(MemberResponse::from)
+                .map(MemberDto::from)
                 .collect(Collectors.toList());
 
-        return new MembersResponse(responses);
+        return new MembersDto(responses);
     }
 
-    public MembersResponse searchByNickname(final String nickname) {
-        final List<MemberResponse> responses = memberRepository.findAllByNicknameContains(nickname)
+    public MembersDto searchByNickname(final String nickname) {
+        final List<MemberDto> responses = memberRepository.findAllByNicknameContains(nickname)
                 .stream()
-                .map(MemberResponse::from)
+                .map(MemberDto::from)
                 .collect(Collectors.toList());
 
-        return new MembersResponse(responses);
+        return new MembersDto(responses);
     }
 
     @Transactional

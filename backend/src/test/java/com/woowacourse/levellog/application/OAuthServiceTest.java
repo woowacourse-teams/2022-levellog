@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.domain.OAuthClient;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
-import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.member.application.MemberService;
@@ -46,7 +46,7 @@ class OAuthServiceTest {
             // given
             given(oAuthClient.getAccessToken("githubCode")).willReturn("accessToken");
             given(oAuthClient.getProfile("accessToken")).willReturn(
-                    new GithubProfileResponse("12345", "로마", "imageUrl"));
+                    new GithubProfileDto("12345", "로마", "imageUrl"));
 
             // when
             final LoginResponse tokenResponse = oAuthService.login(new GithubCodeRequest("githubCode"));
@@ -68,7 +68,7 @@ class OAuthServiceTest {
 
             given(oAuthClient.getAccessToken("githubCode")).willReturn("accessToken");
             given(oAuthClient.getProfile("accessToken")).willReturn(
-                    new GithubProfileResponse("12345", "로마", "imageUrl"));
+                    new GithubProfileDto("12345", "로마", "imageUrl"));
 
             // when
             final LoginResponse tokenResponse = oAuthService.login(new GithubCodeRequest("githubCode"));

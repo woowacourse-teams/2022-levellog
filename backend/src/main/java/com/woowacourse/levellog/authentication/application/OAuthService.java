@@ -2,7 +2,7 @@ package com.woowacourse.levellog.authentication.application;
 
 import com.woowacourse.levellog.authentication.domain.OAuthClient;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
-import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.member.application.MemberService;
@@ -23,7 +23,7 @@ public class OAuthService {
         final String code = codeRequest.getAuthorizationCode();
         final String githubAccessToken = oAuthClient.getAccessToken(code);
 
-        final GithubProfileResponse githubProfile = oAuthClient.getProfile(githubAccessToken);
+        final GithubProfileDto githubProfile = oAuthClient.getProfile(githubAccessToken);
         final Long memberId = getMemberIdByGithubProfile(githubProfile);
 
         final String token = jwtTokenProvider.createToken(memberId.toString());
@@ -31,7 +31,7 @@ public class OAuthService {
         return new LoginResponse(memberId, token, githubProfile.getProfileUrl());
     }
 
-    private Long getMemberIdByGithubProfile(final GithubProfileResponse githubProfile) {
+    private Long getMemberIdByGithubProfile(final GithubProfileDto githubProfile) {
         final int githubId = Integer.parseInt(githubProfile.getGithubId());
 
         return memberService.saveIfNotExist(githubProfile, githubId);

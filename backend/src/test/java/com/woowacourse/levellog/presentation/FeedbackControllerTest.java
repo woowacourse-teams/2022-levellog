@@ -5,9 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.dto.FeedbackContentDto;
-import com.woowacourse.levellog.dto.FeedbackRequest;
-import com.woowacourse.levellog.support.ControllerTest;
+import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
+import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,7 +27,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("피드백 내용으로 null이 들어오면 예외를 던진다.")
         void feedbackContentNull_Exception(final FeedbackContentDto feedbackContentDto) throws Exception {
             // given
-            Long levellogId = 1L;
+            final Long levellogId = 1L;
             final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
@@ -47,7 +46,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("피드백 내용의 항목으로 null이 들어오면 예외를 던진다.")
         void feedbackContentNull_Exception(final String study, final String speak, final String etc) throws Exception {
             // given
-            Long levellogId = 1L;
+            final Long levellogId = 1L;
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(study, speak, etc);
             final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
@@ -72,15 +71,16 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("피드백 내용으로 null이 들어오면 예외를 던진다.")
         void feedbackContentNull_Exception(final FeedbackContentDto feedbackContentDto) throws Exception {
             // given
-            Long levellogId = 1L;
-            Long feedbackId = 2L;
+            final Long levellogId = 1L;
+            final Long feedbackId = 2L;
             final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
+            final ResultActions perform = mockMvc.perform(
+                            put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestContent))
                     .andDo(print());
 
             // then
@@ -92,16 +92,17 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("피드백 내용의 항목으로 null이 들어오면 예외를 던진다.")
         void feedbackContentNull_Exception(final String study, final String speak, final String etc) throws Exception {
             // given
-            Long levellogId = 1L;
-            Long feedbackId = 2L;
+            final Long levellogId = 1L;
+            final Long feedbackId = 2L;
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(study, speak, etc);
             final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
+            final ResultActions perform = mockMvc.perform(
+                            put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestContent))
                     .andDo(print());
 
             // then

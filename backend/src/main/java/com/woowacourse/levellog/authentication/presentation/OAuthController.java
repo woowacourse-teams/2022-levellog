@@ -1,9 +1,9 @@
 package com.woowacourse.levellog.authentication.presentation;
 
 import com.woowacourse.levellog.authentication.application.OAuthService;
-import com.woowacourse.levellog.authentication.config.NoAuthentication;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
+import com.woowacourse.levellog.authentication.support.NoAuthentication;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

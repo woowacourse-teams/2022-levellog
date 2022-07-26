@@ -5,9 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
-import com.woowacourse.levellog.dto.ParticipantIdsRequest;
-import com.woowacourse.levellog.dto.TeamRequest;
-import com.woowacourse.levellog.dto.TeamUpdateRequest;
+import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
+import com.woowacourse.levellog.team.dto.TeamRequest;
+import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.time.LocalDateTime;

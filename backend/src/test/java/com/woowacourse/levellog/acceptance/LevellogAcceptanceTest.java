@@ -25,8 +25,8 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 작성")
     void createLevellog() {
         // given
-        final ValidatableResponse teamResponse = requestCreateTeam("레벨로그팀", MASTER, MASTER, "로마", "알린");
-        final String teamId = getTeamId(teamResponse);
+        final String teamId = requestCreateTeam("레벨로그팀", MASTER, MASTER, "로마", "알린")
+                .getTeamId();
 
         final LevellogRequest request = new LevellogRequest("Spring과 React를 학습했습니다.");
 
@@ -55,11 +55,11 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 상세 조회")
     void findLevellog() {
         // given
-        final ValidatableResponse teamResponse = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브");
-        final String teamId = getTeamId(teamResponse);
+        final String teamId = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브")
+                .getTeamId();
 
-        final ValidatableResponse levellogResponse = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.");
-        final String levellogId = getLevellogId(levellogResponse);
+        final String levellogId = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.")
+                .getLevellogId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -84,11 +84,11 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 수정")
     void updateLevellog() {
         // given
-        final ValidatableResponse teamResponse = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브");
-        final String teamId = getTeamId(teamResponse);
+        final String teamId = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브")
+                .getTeamId();
 
-        final ValidatableResponse levellogResponse = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.");
-        final String levellogId = getLevellogId(levellogResponse);
+        final String levellogId = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.")
+                .getLevellogId();
 
         final String updateContent = "update content";
         final LevellogRequest request = new LevellogRequest(updateContent);
@@ -119,11 +119,11 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 삭제")
     void deleteLevellog() {
         // given
-        final ValidatableResponse teamResponse = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브");
-        final String teamId = getTeamId(teamResponse);
+        final String teamId = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브")
+                .getTeamId();
 
-        final ValidatableResponse levellogResponse = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.");
-        final String levellogId = getLevellogId(levellogResponse);
+        final String levellogId = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.")
+                .getLevellogId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

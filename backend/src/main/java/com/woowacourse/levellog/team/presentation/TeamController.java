@@ -3,10 +3,10 @@ package com.woowacourse.levellog.team.presentation;
 import com.woowacourse.levellog.authentication.support.LoginMember;
 import com.woowacourse.levellog.authentication.support.NoAuthentication;
 import com.woowacourse.levellog.team.application.TeamService;
-import com.woowacourse.levellog.team.dto.TeamRequest;
-import com.woowacourse.levellog.team.dto.TeamResponse;
-import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
-import com.woowacourse.levellog.team.dto.TeamsResponse;
+import com.woowacourse.levellog.team.dto.TeamCreateDto;
+import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamUpdateDto;
+import com.woowacourse.levellog.team.dto.TeamsDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,29 +28,29 @@ public class TeamController {
     private final TeamService teamService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid final TeamRequest teamRequest,
+    public ResponseEntity<Void> save(@RequestBody @Valid final TeamCreateDto teamCreateDto,
                                      @LoginMember final Long hostId) {
-        final Long id = teamService.save(hostId, teamRequest);
+        final Long id = teamService.save(hostId, teamCreateDto);
         return ResponseEntity.created(URI.create("/api/teams/" + id)).build();
     }
 
     @GetMapping
     @NoAuthentication
-    public ResponseEntity<TeamsResponse> findAll() {
-        final TeamsResponse response = teamService.findAll();
+    public ResponseEntity<TeamsDto> findAll() {
+        final TeamsDto response = teamService.findAll();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     @NoAuthentication
-    public ResponseEntity<TeamResponse> findById(@PathVariable final Long id) {
-        final TeamResponse response = teamService.findById(id);
+    public ResponseEntity<TeamDto> findById(@PathVariable final Long id) {
+        final TeamDto response = teamService.findById(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable final Long id,
-                                       @RequestBody @Valid final TeamUpdateRequest request,
+                                       @RequestBody @Valid final TeamUpdateDto request,
                                        @LoginMember final Long memberId) {
         teamService.update(id, request, memberId);
         return ResponseEntity.noContent().build();

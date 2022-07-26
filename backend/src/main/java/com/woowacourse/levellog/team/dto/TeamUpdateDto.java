@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
-public class TeamUpdateRequest {
+public class TeamUpdateDto {
 
     @NotBlank
     private String title;

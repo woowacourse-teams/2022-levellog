@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ParticipantIdsRequest {
+public class ParticipantIdsDto {
 
     private List<Long> ids;
 }

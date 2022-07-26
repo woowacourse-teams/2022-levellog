@@ -12,11 +12,11 @@ import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
-import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
-import com.woowacourse.levellog.team.dto.TeamRequest;
-import com.woowacourse.levellog.team.dto.TeamResponse;
-import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
-import com.woowacourse.levellog.team.dto.TeamsResponse;
+import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
+import com.woowacourse.levellog.team.dto.TeamCreateDto;
+import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamUpdateDto;
+import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,11 +55,11 @@ class TeamServiceTest {
         final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
         final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
         final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
-        final TeamRequest teamRequest = new TeamRequest("잠실 준조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(participant1, participant2, participant3)));
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now(),
+                new ParticipantIdsDto(List.of(participant1, participant2, participant3)));
 
         //when
-        final Long id = teamService.save(participant1, teamRequest);
+        final Long id = teamService.save(participant1, teamCreateDto);
 
         //then
         final Optional<Team> team = teamRepository.findById(id);
@@ -82,21 +82,21 @@ class TeamServiceTest {
         participantRepository.save(new Participant(team2, member2, true));
 
         //when
-        final TeamsResponse response = teamService.findAll();
+        final TeamsDto response = teamService.findAll();
 
         final List<String> actualTitles = response.getTeams()
                 .stream()
-                .map(TeamResponse::getTitle)
+                .map(TeamDto::getTitle)
                 .collect(Collectors.toList());
 
         final List<Long> actualHostIds = response.getTeams()
                 .stream()
-                .map(TeamResponse::getHostId)
+                .map(TeamDto::getHostId)
                 .collect(Collectors.toList());
 
         final List<Integer> actualParticipantSizes = response.getTeams()
                 .stream()
-                .map(TeamResponse::getParticipants)
+                .map(TeamDto::getParticipants)
                 .map(List::size)
                 .collect(Collectors.toList());
 
@@ -129,7 +129,7 @@ class TeamServiceTest {
         participantRepository.save(new Participant(team, member2, false));
 
         //when
-        final TeamResponse response = teamService.findById(team.getId());
+        final TeamDto response = teamService.findById(team.getId());
 
         //then
         assertThat(response.getTitle()).isEqualTo(team.getTitle());
@@ -152,7 +152,7 @@ class TeamServiceTest {
             participantRepository.save(new Participant(team, member1, true));
             participantRepository.save(new Participant(team, member2, false));
 
-            final TeamUpdateRequest request = new TeamUpdateRequest("잠실 네오조", "트랙룸", LocalDateTime.now());
+            final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now());
 
             // when
             teamService.update(team.getId(), request, member1.getId());
@@ -175,7 +175,7 @@ class TeamServiceTest {
             participantRepository.save(new Participant(team, member1, true));
             participantRepository.save(new Participant(team, member2, false));
 
-            final TeamUpdateRequest request = new TeamUpdateRequest("잠실 네오조", "트랙룸", LocalDateTime.now());
+            final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now());
 
             // when, then
             final Long memberId = member2.getId();

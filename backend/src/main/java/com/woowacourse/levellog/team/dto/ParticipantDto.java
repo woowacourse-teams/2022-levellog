@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.team.dto;
 
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +10,10 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @ToString
-public class TeamsResponse {
+public class ParticipantDto {
 
-    private List<TeamResponse> teams;
+    private Long id;
+    private Long levellogId;
+    private String nickname;
+    private String profileUrl;
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TeamRequest {
+public class TeamCreateDto {
 
     @NotBlank
     private String title;
@@ -23,5 +23,5 @@ public class TeamRequest {
     private LocalDateTime startAt;
 
     @NotNull
-    private ParticipantIdsRequest participants;
+    private ParticipantIdsDto participants;
 }

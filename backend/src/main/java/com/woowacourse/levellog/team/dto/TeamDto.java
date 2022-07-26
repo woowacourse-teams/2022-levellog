@@ -12,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @ToString
-public class TeamResponse {
+public class TeamDto {
 
     private Long id;
     private String title;
@@ -20,5 +20,5 @@ public class TeamResponse {
     private LocalDateTime startAt;
     private String teamImage;
     private Long hostId;
-    private List<ParticipantResponse> participants;
+    private List<ParticipantDto> participants;
 }

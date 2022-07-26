@@ -39,11 +39,6 @@ public class MemberService {
         return save(new MemberCreateDto(request.getNickname(), githubId, request.getProfileUrl()));
     }
 
-    private Member getByGithubId(final int githubId) {
-        return memberRepository.findByGithubId(githubId)
-                .orElseThrow(MemberNotFoundException::new);
-    }
-
     public MemberDto findMemberById(final Long memberId) {
         final Member member = getById(memberId);
 
@@ -76,6 +71,11 @@ public class MemberService {
 
     private Member getById(final Long memberId) {
         return memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
+    private Member getByGithubId(final int githubId) {
+        return memberRepository.findByGithubId(githubId)
                 .orElseThrow(MemberNotFoundException::new);
     }
 }

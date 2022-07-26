@@ -10,7 +10,6 @@ import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import com.woowacourse.levellog.member.dto.MemberResponse;
 import com.woowacourse.levellog.member.dto.MembersResponse;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,21 +72,6 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("findByGithubId 메서드는 Gtihub Id에 해당하는 멤버를 찾는다.")
-    void findByGithubId() {
-        // given
-        final int githubId = 12345678;
-        memberRepository.save(new Member("로마", githubId, "profileUrl.image"));
-
-        // when
-        final Optional<Member> findMember = memberService.findByGithubId(githubId);
-
-        // then
-        assertThat(findMember).isPresent();
-        assertThat(findMember.get().getGithubId()).isEqualTo(githubId);
-    }
-
-    @Test
     @DisplayName("findAllByNicknameContains 메서드는 입력한 문자열이 포함된 nickname을 가진 멤버를 모두 조회한다.")
     void findAllByNicknameContains() {
         // given
@@ -100,29 +84,13 @@ class MemberServiceTest {
         final Member harry = memberRepository.save(new Member("harry", 70, "harry.img"));
 
         // when
-        final MembersResponse members = memberService.findAllByNicknameContains("ali");
+        final MembersResponse members = memberService.searchByNickname("ali");
 
         // then
         assertAll(
                 () -> assertThat(members.getMembers()).hasSize(1),
                 () -> assertThat(members.getMembers().get(0).getId()).isEqualTo(alien.getId())
         );
-    }
-
-    @Test
-    @DisplayName("updateProfileUrl 메서드는 Gtihub Id에 해당하는 멤버 정보를 업데이트한다.")
-    void updateProfileUrl() {
-        // given
-        final Member savedMember = memberRepository.save(new Member("로마", 1234567, "profileUrl.image"));
-        final Long id = savedMember.getId();
-        final String newProfileUrl = "newProfile.image";
-
-        // when
-        memberService.updateProfileUrl(id, newProfileUrl);
-
-        // then
-        final Member updateMember = memberRepository.findById(id).orElseThrow();
-        assertThat(updateMember.getProfileUrl()).isEqualTo(newProfileUrl);
     }
 
     @Test

@@ -6,8 +6,6 @@ import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.member.application.MemberService;
-import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,13 +34,6 @@ public class OAuthService {
     private Long getMemberIdByGithubProfile(final GithubProfileResponse githubProfile) {
         final int githubId = Integer.parseInt(githubProfile.getGithubId());
 
-        return memberService.findByGithubId(githubId)
-                .map(Member::getId)
-                .orElseGet(() -> registerMember(githubProfile, githubId));
-    }
-
-    private Long registerMember(final GithubProfileResponse githubProfile, final int githubId) {
-        return memberService.save(
-                new MemberCreateDto(githubProfile.getNickname(), githubId, githubProfile.getProfileUrl()));
+        return memberService.saveIfNotExist(githubProfile, githubId);
     }
 }

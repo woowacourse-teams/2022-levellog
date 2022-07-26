@@ -22,9 +22,9 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(params = {"search"})
-    public ResponseEntity<MembersResponse> searchNickname(@RequestParam final String search) {
-        final MembersResponse response = memberService.findAllByNicknameContains(search);
+    @GetMapping(params = "nickname")
+    public ResponseEntity<MembersResponse> searchBy(@RequestParam final String nickname) {
+        final MembersResponse response = memberService.searchByNickname(nickname);
         return ResponseEntity.ok(response);
     }
 }

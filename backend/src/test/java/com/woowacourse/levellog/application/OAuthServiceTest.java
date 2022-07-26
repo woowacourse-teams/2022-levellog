@@ -10,9 +10,7 @@ import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.LoginResponse;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.member.application.MemberService;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,11 +51,11 @@ class OAuthServiceTest {
             // when
             final LoginResponse tokenResponse = oAuthService.login(new GithubCodeRequest("githubCode"));
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
-            final Optional<Member> savedMember = memberService.findByGithubId(12345);
+            final Long savedMemberId = memberService.findMemberById(Long.parseLong(payload))
+                    .getId();
 
             // then
-            assertThat(savedMember).isPresent();
-            assertThat(Long.parseLong(payload)).isEqualTo(savedMember.get().getId());
+            assertThat(Long.parseLong(payload)).isEqualTo(savedMemberId);
             assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
             assertThat(tokenResponse.getId()).isNotNull();
         }

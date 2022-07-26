@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
-public class GithubCodeRequest {
+public class GithubCodeDto {
 
     @NotBlank
     private String authorizationCode;

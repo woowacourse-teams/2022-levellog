@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
@@ -32,11 +32,11 @@ class OAuthAcceptanceTest extends AcceptanceTest {
     void login() throws Exception {
         // given
         final String code = objectMapper.writeValueAsString(new GithubProfileDto("11111", "test", "profile_url"));
-        final GithubCodeRequest codeRequest = new GithubCodeRequest(code);
+        final GithubCodeDto request = new GithubCodeDto(code);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .body(codeRequest)
+                .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("auth/login"))
                 .when()

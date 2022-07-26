@@ -4,7 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -21,7 +21,7 @@ class OAuthControllerTest extends ControllerTest {
     @DisplayName("login 메서드는 코드에 공백이나 null이 들어오면 예외를 던진다.")
     void login(final String code) throws Exception {
         // given
-        final GithubCodeRequest request = new GithubCodeRequest(code);
+        final GithubCodeDto request = new GithubCodeDto(code);
         final String requestContent = objectMapper.writeValueAsString(request);
 
         // when

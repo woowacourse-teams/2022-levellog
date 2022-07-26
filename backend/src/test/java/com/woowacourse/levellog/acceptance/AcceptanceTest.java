@@ -10,7 +10,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.config.TestAuthenticationConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
@@ -119,7 +119,7 @@ abstract class AcceptanceTest {
                     ((int) System.currentTimeMillis())), nickname,
                     nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);
-            return post("/api/auth/login", new GithubCodeRequest(code));
+            return post("/api/auth/login", new GithubCodeDto(code));
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }

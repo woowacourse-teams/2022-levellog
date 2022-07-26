@@ -1,9 +1,9 @@
 package com.woowacourse.levellog.authentication.application;
 
 import com.woowacourse.levellog.authentication.domain.OAuthClient;
-import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.authentication.dto.LoginResponse;
+import com.woowacourse.levellog.authentication.dto.LoginDto;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.member.application.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,8 @@ public class OAuthService {
     private final OAuthClient oAuthClient;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public LoginResponse login(final GithubCodeRequest codeRequest) {
-        final String code = codeRequest.getAuthorizationCode();
+    public LoginDto login(final GithubCodeDto request) {
+        final String code = request.getAuthorizationCode();
         final String githubAccessToken = oAuthClient.getAccessToken(code);
 
         final GithubProfileDto githubProfile = oAuthClient.getProfile(githubAccessToken);
@@ -28,7 +28,7 @@ public class OAuthService {
 
         final String token = jwtTokenProvider.createToken(memberId.toString());
 
-        return new LoginResponse(memberId, token, githubProfile.getProfileUrl());
+        return new LoginDto(memberId, token, githubProfile.getProfileUrl());
     }
 
     private Long getMemberIdByGithubProfile(final GithubProfileDto githubProfile) {

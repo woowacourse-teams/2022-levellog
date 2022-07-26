@@ -5,9 +5,9 @@ import static org.mockito.BDDMockito.given;
 
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.domain.OAuthClient;
-import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.authentication.dto.LoginResponse;
+import com.woowacourse.levellog.authentication.dto.LoginDto;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
@@ -49,7 +49,7 @@ class OAuthServiceTest {
                     new GithubProfileDto("12345", "로마", "imageUrl"));
 
             // when
-            final LoginResponse tokenResponse = oAuthService.login(new GithubCodeRequest("githubCode"));
+            final LoginDto tokenResponse = oAuthService.login(new GithubCodeDto("githubCode"));
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
             final Long savedMemberId = memberService.findMemberById(Long.parseLong(payload))
                     .getId();
@@ -71,7 +71,7 @@ class OAuthServiceTest {
                     new GithubProfileDto("12345", "로마", "imageUrl"));
 
             // when
-            final LoginResponse tokenResponse = oAuthService.login(new GithubCodeRequest("githubCode"));
+            final LoginDto tokenResponse = oAuthService.login(new GithubCodeDto("githubCode"));
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
 
             // then

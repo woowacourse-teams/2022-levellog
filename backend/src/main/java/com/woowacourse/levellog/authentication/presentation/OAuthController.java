@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.authentication.presentation;
 
 import com.woowacourse.levellog.authentication.application.OAuthService;
-import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
-import com.woowacourse.levellog.authentication.dto.LoginResponse;
+import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
+import com.woowacourse.levellog.authentication.dto.LoginDto;
 import com.woowacourse.levellog.authentication.support.NoAuthentication;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class OAuthController {
 
     @CrossOrigin
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid final GithubCodeRequest request) {
+    public ResponseEntity<LoginDto> login(@RequestBody @Valid final GithubCodeDto request) {
         return ResponseEntity.ok(oAuthService.login(request));
     }
 }

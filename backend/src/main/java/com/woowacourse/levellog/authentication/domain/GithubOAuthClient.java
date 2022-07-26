@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.authentication.domain;
 
-import com.woowacourse.levellog.authentication.dto.GithubAccessTokenRequest;
-import com.woowacourse.levellog.authentication.dto.GithubAccessTokenResponse;
+import com.woowacourse.levellog.authentication.dto.GithubAccessTokenDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
+import com.woowacourse.levellog.authentication.dto.TokenDto;
 import java.util.Objects;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,16 +25,14 @@ public class GithubOAuthClient implements OAuthClient {
 
     @Override
     public String getAccessToken(final String code) {
-        final GithubAccessTokenRequest githubAccessTokenRequest = new GithubAccessTokenRequest(clientId, clientSecret,
-                code);
+        final GithubAccessTokenDto githubAccessTokenDto = new GithubAccessTokenDto(clientId, clientSecret, code);
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 
-        final HttpEntity<GithubAccessTokenRequest> httpEntity =
-                new HttpEntity<>(githubAccessTokenRequest, headers);
+        final HttpEntity<GithubAccessTokenDto> httpEntity = new HttpEntity<>(githubAccessTokenDto, headers);
 
-        final GithubAccessTokenResponse response = new RestTemplate()
-                .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, GithubAccessTokenResponse.class)
+        final TokenDto response = new RestTemplate()
+                .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, TokenDto.class)
                 .getBody();
 
         if (Objects.isNull(response)) {

@@ -8,9 +8,17 @@ import org.springframework.http.HttpStatus;
 public abstract class LevellogException extends RuntimeException {
 
     private final HttpStatus httpStatus;
+    private final String clientMessage;
 
     protected LevellogException(final String message, final HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
+        this.clientMessage = null;
+    }
+
+    protected LevellogException(final String message, final HttpStatus httpStatus, final String clientMessage) {
+        super(message);
+        this.httpStatus = httpStatus;
+        this.clientMessage = clientMessage;
     }
 }

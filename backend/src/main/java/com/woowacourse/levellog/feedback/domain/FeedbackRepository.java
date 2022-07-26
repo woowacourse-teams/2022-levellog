@@ -14,5 +14,5 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
     List<Feedback> findAllByToOrderByUpdatedAtDesc(Member member);
 
-    Optional<Feedback> findByLevellogIdAndFromId(Long levellogId, Long fromId);
+    boolean existsByLevellogIdAndFromId(Long levellogId, Long fromId);
 }

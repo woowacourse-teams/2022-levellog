@@ -56,15 +56,6 @@ public class MemberService {
         return MemberDto.from(member);
     }
 
-    public MembersDto findAll() {
-        final List<MemberDto> responses = memberRepository.findAll()
-                .stream()
-                .map(MemberDto::from)
-                .collect(Collectors.toList());
-
-        return new MembersDto(responses);
-    }
-
     public MembersDto searchByNickname(final String nickname) {
         final List<MemberDto> responses = memberRepository.findAllByNicknameContains(nickname)
                 .stream()

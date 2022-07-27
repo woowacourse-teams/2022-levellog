@@ -81,7 +81,7 @@ public class TeamService {
 
     private Member getMember(final Long hostId) {
         return memberRepository.findById(hostId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + hostId + "]"));
     }
 
     private Team getTeam(final Long id) {
@@ -127,7 +127,7 @@ public class TeamService {
         return participants.stream()
                 .filter(Participant::isHost)
                 .findAny()
-                .orElseThrow(MemberNotFoundException::new)
+                .orElseThrow(() -> new MemberNotFoundException("호스트 존재 안함"))
                 .getMember()
                 .getId();
     }

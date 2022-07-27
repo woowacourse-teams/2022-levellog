@@ -71,11 +71,11 @@ public class MemberService {
 
     private Member getById(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
     }
 
     private Member getByGithubId(final int githubId) {
         return memberRepository.findByGithubId(githubId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [githubId : " + githubId + "]"));
     }
 }

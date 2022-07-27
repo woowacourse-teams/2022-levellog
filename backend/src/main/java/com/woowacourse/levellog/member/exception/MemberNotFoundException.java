@@ -13,8 +13,4 @@ public class MemberNotFoundException extends LevellogException {
     public MemberNotFoundException(final String message) {
         super(message, HttpStatus.NOT_FOUND);
     }
-
-    public MemberNotFoundException() {
-        super(ERROR_MESSAGE, HttpStatus.NOT_FOUND);
-    }
 }

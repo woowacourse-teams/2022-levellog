@@ -1,6 +1,8 @@
 package com.woowacourse.levellog.feedback.dto;
 
 import com.woowacourse.levellog.feedback.domain.Feedback;
+import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.member.domain.Member;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,5 +25,9 @@ public class FeedbackContentDto {
 
     public static FeedbackContentDto from(final Feedback feedback) {
         return new FeedbackContentDto(feedback.getStudy(), feedback.getSpeak(), feedback.getEtc());
+    }
+
+    public Feedback toEntity(final Member member, final Levellog levellog) {
+        return new Feedback(member, levellog.getAuthor(), levellog, study, speak, etc);
     }
 }

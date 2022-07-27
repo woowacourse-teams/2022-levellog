@@ -53,11 +53,6 @@ public class Feedback extends BaseEntity {
         this.etc = etc;
     }
 
-    public static Feedback of(final Member member, final Levellog levellog, final FeedbackContentDto feedbackContent) {
-        return new Feedback(member, levellog.getAuthor(), levellog, feedbackContent.getStudy(),
-                feedbackContent.getSpeak(), feedbackContent.getEtc());
-    }
-
     private void validateFeedback(final String study, final String speak, final String etc) {
         validateFeedbackLength(study);
         validateFeedbackLength(speak);

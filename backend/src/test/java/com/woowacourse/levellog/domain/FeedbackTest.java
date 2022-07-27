@@ -31,7 +31,7 @@ class FeedbackTest {
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
             final Levellog levellog = new Levellog(eve, team, "레벨로그 작성 내용");
 
-            Assertions.assertThatThrownBy(() -> Feedback.of(roma, levellog, feedbackContentDto))
+            Assertions.assertThatThrownBy(() -> feedbackContentDto.toEntity(roma, levellog))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("피드백은 1000자 이하여야 합니다.");
         }
@@ -48,7 +48,7 @@ class FeedbackTest {
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
             final Levellog levellog = new Levellog(eve, team, "레벨로그 작성 내용");
 
-            Assertions.assertThatThrownBy(() -> Feedback.of(roma, levellog, feedbackContentDto))
+            Assertions.assertThatThrownBy(() -> feedbackContentDto.toEntity(roma, levellog))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("피드백은 1000자 이하여야 합니다.");
         }
@@ -65,7 +65,7 @@ class FeedbackTest {
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
             final Levellog levellog = new Levellog(eve, team, "레벨로그 작성 내용");
 
-            Assertions.assertThatThrownBy(() -> Feedback.of(roma, levellog, feedbackContentDto))
+            Assertions.assertThatThrownBy(() -> feedbackContentDto.toEntity(roma, levellog))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("피드백은 1000자 이하여야 합니다.");
         }

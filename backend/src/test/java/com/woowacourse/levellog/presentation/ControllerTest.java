@@ -1,5 +1,12 @@
 package com.woowacourse.levellog.presentation;
 
+import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
+import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.presentation.OAuthController;
@@ -12,10 +19,17 @@ import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.presentation.MyInfoController;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.presentation.TeamController;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 @WebMvcTest({
         FeedbackController.class,
@@ -24,6 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
         OAuthController.class,
         MyInfoController.class
 })
+@ExtendWith(RestDocumentationExtension.class)
 public abstract class ControllerTest {
 
     @MockBean
@@ -39,9 +54,6 @@ public abstract class ControllerTest {
     protected TeamService teamService;
 
     @MockBean
-    private OAuthService oAuthService;
-
-    @MockBean
     protected JwtTokenProvider jwtTokenProvider;
 
     @Autowired
@@ -50,4 +62,32 @@ public abstract class ControllerTest {
     @Autowired
     protected ObjectMapper objectMapper;
 
+    @MockBean
+    private OAuthService oAuthService;
+
+    @BeforeEach
+    void setUp(final WebApplicationContext context, final RestDocumentationContextProvider provider) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                .apply(documentationConfiguration(provider)
+                        .snippets()
+                        .withDefaults(httpRequest(), httpResponse())
+                        .and()
+                        .operationPreprocessors()
+                        .withRequestDefaults(
+                                modifyUris()
+                                        .scheme("https")
+                                        .host("api.levellog.app")
+                                        .removePort(),
+                                prettyPrint()
+                        ).withResponseDefaults(
+                                removeHeaders(
+                                        "Transfer-Encoding",
+                                        "Date",
+                                        "Keep-Alive",
+                                        "Connection"),
+                                prettyPrint()
+                        )
+                ).addFilters(new CharacterEncodingFilter("UTF-8", true)) // 한글 깨짐 방지
+                .build();
+    }
 }

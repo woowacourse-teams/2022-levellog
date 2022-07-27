@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.team.dto;
 
+import com.woowacourse.levellog.team.domain.Team;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,4 +27,8 @@ public class TeamCreateDto {
 
     @NotNull
     private ParticipantIdsDto participants;
+
+    public Team toEntity(final String profileUrl) {
+        return new Team(title, place, startAt, profileUrl);
+    }
 }

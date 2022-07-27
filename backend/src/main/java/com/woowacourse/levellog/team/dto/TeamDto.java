@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.team.dto;
 
+import com.woowacourse.levellog.team.domain.Team;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -23,4 +24,16 @@ public class TeamDto {
     private String teamImage;
     private Long hostId;
     private List<ParticipantDto> participants;
+
+    public static TeamDto from(final Team team, final Long hostId, final List<ParticipantDto> participantResponses) {
+        return new TeamDto(
+                team.getId(),
+                team.getTitle(),
+                team.getPlace(),
+                team.getStartAt(),
+                team.getProfileUrl(),
+                hostId,
+                participantResponses
+        );
+    }
 }

@@ -36,7 +36,7 @@ public class TeamService {
     @Transactional
     public Long save(final TeamCreateDto request, final Long hostId) {
         final Member host = getMember(hostId);
-        final Team team = new Team(request.getTitle(), request.getPlace(), request.getStartAt(), host.getProfileUrl());
+        final Team team = request.toEntity(host.getProfileUrl());
         final List<Participant> participants = getParticipants(team, hostId, request.getParticipants().getIds());
 
         final Team savedTeam = teamRepository.save(team);
@@ -116,14 +116,7 @@ public class TeamService {
 
     private TeamDto getTeamResponse(final Team team) {
         final List<Participant> participants = participantRepository.findByTeam(team);
-        return new TeamDto(
-                team.getId(),
-                team.getTitle(),
-                team.getPlace(),
-                team.getStartAt(),
-                team.getProfileUrl(),
-                getHostId(participants),
-                getParticipantResponses(participants));
+        return TeamDto.from(team, getHostId(participants), getParticipantResponses(participants));
     }
 
     private Long getHostId(final List<Participant> participants) {
@@ -137,11 +130,7 @@ public class TeamService {
 
     private List<ParticipantDto> getParticipantResponses(final List<Participant> participants) {
         return participants.stream()
-                .map(it -> new ParticipantDto(
-                        it.getMember().getId(),
-                        getLevellogId(it),
-                        it.getMember().getNickname(),
-                        it.getMember().getProfileUrl()))
+                .map(it -> ParticipantDto.from(it, getLevellogId(it)))
                 .collect(Collectors.toList());
     }
 

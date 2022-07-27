@@ -34,10 +34,10 @@ public class TeamService {
     private final LevellogRepository levellogRepository;
 
     @Transactional
-    public Long save(final Long hostId, final TeamCreateDto request) {
+    public Long save(final TeamCreateDto request, final Long hostId) {
         final Member host = getMember(hostId);
         final Team team = new Team(request.getTitle(), request.getPlace(), request.getStartAt(), host.getProfileUrl());
-        final List<Participant> participants = getParticipants(hostId, request.getParticipants().getIds(), team);
+        final List<Participant> participants = getParticipants(team, hostId, request.getParticipants().getIds());
 
         participantRepository.saveAll(participants);
 
@@ -53,7 +53,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void update(final Long teamId, final TeamUpdateDto request, final Long memberId) {
+    public void update(final TeamUpdateDto request, final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         final List<Participant> participants = participantRepository.findByTeam(team);
         final Long hostId = getHostId(participants);
@@ -89,17 +89,19 @@ public class TeamService {
                 .orElseThrow(TeamNotFoundException::new);
     }
 
-    private List<Participant> getParticipants(final Long hostId, final List<Long> memberIds, final Team team) {
+    private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         final List<Participant> participants = new ArrayList<>();
-        addMemberToParticipants(hostId, participants, team, true);
+        addMemberToParticipants(team, hostId, participants, true);
         for (final Long memberId : memberIds) {
-            addMemberToParticipants(memberId, participants, team, false);
+            addMemberToParticipants(team, memberId, participants, false);
         }
 
         return participants;
     }
 
-    private void addMemberToParticipants(final Long memberId, final List<Participant> participants, final Team team,
+    private void addMemberToParticipants(final Team team,
+                                         final Long memberId,
+                                         final List<Participant> participants,
                                          final boolean isHost) {
         final Member member = getMember(memberId);
         participants.add(new Participant(team, member, isHost));

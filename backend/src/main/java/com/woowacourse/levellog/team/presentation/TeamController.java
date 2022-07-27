@@ -30,7 +30,7 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid final TeamCreateDto teamCreateDto,
                                      @LoginMember final Long memberId) {
-        final Long teamId = teamService.save(memberId, teamCreateDto);
+        final Long teamId = teamService.save(teamCreateDto, memberId);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId)).build();
     }
 
@@ -52,7 +52,7 @@ public class TeamController {
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @RequestBody @Valid final TeamUpdateDto request,
                                        @LoginMember final Long memberId) {
-        teamService.update(teamId, request, memberId);
+        teamService.update(request, teamId, memberId);
         return ResponseEntity.noContent().build();
     }
 

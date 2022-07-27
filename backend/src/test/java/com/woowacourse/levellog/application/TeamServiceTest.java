@@ -59,7 +59,7 @@ class TeamServiceTest {
                 new ParticipantIdsDto(List.of(participant1, participant2, participant3)));
 
         //when
-        final Long id = teamService.save(participant1, teamCreateDto);
+        final Long id = teamService.save(teamCreateDto, participant1);
 
         //then
         final Optional<Team> team = teamRepository.findById(id);
@@ -155,7 +155,7 @@ class TeamServiceTest {
             final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now());
 
             // when
-            teamService.update(team.getId(), request, member1.getId());
+            teamService.update(request, team.getId(), member1.getId());
 
             // then
             final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
@@ -180,7 +180,7 @@ class TeamServiceTest {
             // when, then
             final Long memberId = member2.getId();
             final Long teamId = team.getId();
-            assertThatThrownBy(() -> teamService.update(teamId, request, memberId))
+            assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
                     .isInstanceOf(HostUnauthorizedException.class);
         }
     }

@@ -4,7 +4,7 @@ import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 
 public interface OAuthClient {
 
-    String getAccessToken(String code);
+    String getAccessToken(String authorizationCode);
 
     GithubProfileDto getProfile(String accessToken);
 }

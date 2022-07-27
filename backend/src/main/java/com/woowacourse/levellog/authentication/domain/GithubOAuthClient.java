@@ -23,19 +23,18 @@ public class GithubOAuthClient implements OAuthClient {
     }
 
     @Override
-    public String getAccessToken(final String code) {
-        final GithubAccessTokenDto githubAccessTokenDto = new GithubAccessTokenDto(clientId, clientSecret, code);
+    public String getAccessToken(final String authorizationCode) {
+        final GithubAccessTokenDto request = new GithubAccessTokenDto(clientId, clientSecret, authorizationCode);
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 
-        final HttpEntity<GithubAccessTokenDto> httpEntity = new HttpEntity<>(githubAccessTokenDto, headers);
-
+        final HttpEntity<GithubAccessTokenDto> httpEntity = new HttpEntity<>(request, headers);
         final TokenDto response = new RestTemplate()
                 .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, TokenDto.class)
                 .getBody();
 
         if (response == null) {
-            throw new IllegalStateException("Github 로그인 요청 실패 - authorizationCode:" + code);
+            throw new IllegalStateException("Github 로그인 요청 실패 - authorizationCode:" + authorizationCode);
         }
 
         return response.getAccessToken();

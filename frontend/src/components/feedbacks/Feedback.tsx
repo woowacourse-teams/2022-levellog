@@ -2,10 +2,11 @@ import styled from 'styled-components';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
+import { levellog } from 'mocks/mockData';
 
-const Feedback = ({ feedbackInfo, onClickDeleteButton }: FeedbackProps) => {
+const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackProps) => {
   const handleClickDeleteButton = () => {
-    onClickDeleteButton(feedbackInfo);
+    onClickDeleteButton({ feedbackInfo, levellogId });
   };
 
   return (
@@ -34,6 +35,7 @@ const Feedback = ({ feedbackInfo, onClickDeleteButton }: FeedbackProps) => {
 
 interface FeedbackProps {
   feedbackInfo: any;
+  levellogId: string;
   onClickDeleteButton: Function;
 }
 

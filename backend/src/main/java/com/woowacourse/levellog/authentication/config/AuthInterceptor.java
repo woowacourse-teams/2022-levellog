@@ -40,8 +40,11 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private boolean isPublicAPI(final HandlerMethod handler) {
         final PublicAPI classTypePublicAPI = handler.getBeanType().getAnnotation(PublicAPI.class);
-        final PublicAPI methodPublicAPI = handler.getMethodAnnotation(PublicAPI.class);
+        final boolean isPublicClass = classTypePublicAPI != null;
 
-        return classTypePublicAPI == null && methodPublicAPI == null;
+        final PublicAPI methodPublicAPI = handler.getMethodAnnotation(PublicAPI.class);
+        final boolean isPublicMethod = methodPublicAPI != null;
+
+        return isPublicClass || isPublicMethod;
     }
 }

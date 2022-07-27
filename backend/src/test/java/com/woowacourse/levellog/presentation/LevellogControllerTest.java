@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -50,6 +51,9 @@ class LevellogControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isBadRequest());
+
+            // docs
+            perform.andDo(document("levellogs/save/exception-contents"));
         }
     }
 
@@ -76,6 +80,9 @@ class LevellogControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isNotFound());
+
+            // docs
+            perform.andDo(document("levellogs/find/exception-exist"));
         }
     }
 
@@ -107,6 +114,9 @@ class LevellogControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isBadRequest());
+
+            // docs
+            perform.andDo(document("levellogs/update/exception-contents"));
         }
 
         @Test
@@ -133,6 +143,9 @@ class LevellogControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isUnauthorized());
+
+            // docs
+            perform.andDo(document("levellogs/update/exception-author"));
         }
     }
 
@@ -160,6 +173,9 @@ class LevellogControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isUnauthorized());
+
+            // docs
+            perform.andDo(document("levellogs/delete/exception-author"));
         }
     }
 }

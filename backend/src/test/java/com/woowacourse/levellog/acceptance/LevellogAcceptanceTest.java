@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.acceptance;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -137,7 +138,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.NO_CONTENT.value());
         requestFindLevellog(Long.parseLong(teamId), Long.parseLong(levellogId))
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message", equalTo("레벨로그가 존재하지 않습니다."));
+                .body("message", equalTo("레벨로그가 존재하지 않습니다. id : " + levellogId));
     }
 
     private ValidatableResponse requestFindLevellog(final Long teamId, final Long levellogId) {

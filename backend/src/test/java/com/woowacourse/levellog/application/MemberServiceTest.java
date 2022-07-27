@@ -108,7 +108,7 @@ class MemberServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("saveIfNotExist 메서드는")
-    class saveIfNotExist {
+    class SaveIfNotExist {
 
         @Test
         @DisplayName("saveIfNotExist 메서드는 깃허브 아이디로 저장된 멤버가 있으면 가입된 멤버의 ID를 반환한다.")

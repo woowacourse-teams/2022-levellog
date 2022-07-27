@@ -17,7 +17,7 @@ class MemberTest {
 
     @Nested
     @DisplayName("생성자는")
-    class constructor {
+    class Constructor {
 
         @Test
         @DisplayName("닉네임이 50자를 초과할 경우 예외를 던진다.")
@@ -77,7 +77,7 @@ class MemberTest {
 
     @Nested
     @DisplayName("updateNickname 메서드는")
-    class updateNickname {
+    class UpdateNickname {
 
         @Test
         @DisplayName("닉네임을 변경한다.")

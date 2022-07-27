@@ -3,7 +3,7 @@ package com.woowacourse.levellog.levellog.presentation;
 import com.woowacourse.levellog.authentication.support.LoginMember;
 import com.woowacourse.levellog.authentication.support.NoAuthentication;
 import com.woowacourse.levellog.levellog.application.LevellogService;
-import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import java.net.URI;
 import javax.validation.Valid;
@@ -27,7 +27,7 @@ public class LevellogController {
 
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long teamId,
-                                     @RequestBody @Valid final LevellogCreateDto request,
+                                     @RequestBody @Valid final LevellogWriteDto request,
                                      @LoginMember final Long authorId) {
         final Long id = levellogService.save(request, authorId, teamId);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId + "/levellogs/" + id)).build();
@@ -45,7 +45,7 @@ public class LevellogController {
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @PathVariable final Long levellogId,
                                        @LoginMember final Long memberId,
-                                       @RequestBody @Valid final LevellogCreateDto request) {
+                                       @RequestBody @Valid final LevellogWriteDto request) {
         levellogService.update(request, levellogId, memberId);
         return ResponseEntity.noContent().build();
     }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LevellogCreateDto {
+public class LevellogWriteDto {
 
     @NotBlank
     private String content;

@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("레벨로그팀", MASTER, MASTER, "로마", "알린")
                 .getTeamId();
 
-        final LevellogCreateDto request = new LevellogCreateDto("Spring과 React를 학습했습니다.");
+        final LevellogWriteDto request = new LevellogWriteDto("Spring과 React를 학습했습니다.");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -92,7 +92,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .getLevellogId();
 
         final String updateContent = "update content";
-        final LevellogCreateDto request = new LevellogCreateDto(updateContent);
+        final LevellogWriteDto request = new LevellogWriteDto(updateContent);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

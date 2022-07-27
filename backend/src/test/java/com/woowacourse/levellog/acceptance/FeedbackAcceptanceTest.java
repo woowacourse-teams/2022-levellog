@@ -10,7 +10,7 @@ import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
 import com.woowacourse.levellog.feedback.dto.FeedbacksResponse;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +42,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
                 .getTeamId();
 
-        final LevellogCreateDto levellogRequest = new LevellogCreateDto("레벨로그");
+        final LevellogWriteDto levellogRequest = new LevellogWriteDto("레벨로그");
         final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
                 .getLevellogId();
 
@@ -87,7 +87,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
                 .getTeamId();
 
-        final LevellogCreateDto levellogRequest = new LevellogCreateDto("레벨로그");
+        final LevellogWriteDto levellogRequest = new LevellogWriteDto("레벨로그");
         final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
                 .getLevellogId();
 
@@ -144,7 +144,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
                 .getTeamId();
 
-        final LevellogCreateDto levellogRequest = new LevellogCreateDto("레벨로그");
+        final LevellogWriteDto levellogRequest = new LevellogWriteDto("레벨로그");
         final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
                 .getLevellogId();
 

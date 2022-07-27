@@ -45,17 +45,17 @@ public class Levellog extends BaseEntity {
         }
     }
 
-    public void updateContent(final Member member, final String content) {
-        validateContent(content);
-        validateAuthor(member, "레벨로그를 수정할 권한이 없습니다. memberId : " + member.getId() + " levellogId : " + getId());
-        this.content = content;
-    }
-
     private void validateAuthor(final Member member, final String errorMessage) {
         final boolean isNotAuthor = !author.equals(member);
         if (isNotAuthor) {
             throw new UnauthorizedException(errorMessage);
         }
+    }
+
+    public void updateContent(final Member member, final String content) {
+        validateAuthor(member, "레벨로그를 수정할 권한이 없습니다. memberId : " + member.getId() + " levellogId : " + getId());
+        validateContent(content);
+        this.content = content;
     }
 
     public boolean isAuthor(final Member member) {

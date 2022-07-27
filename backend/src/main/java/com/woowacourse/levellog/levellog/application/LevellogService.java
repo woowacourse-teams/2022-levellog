@@ -28,18 +28,18 @@ public class LevellogService {
 
     @Transactional
     public Long save(final LevellogCreateDto request, final Long authorId, final Long teamId) {
-        validateLevelogExistence(authorId, teamId);
         final Team team = getTeam(teamId);
         final Member author = getMember(authorId);
-        final Levellog levellog = new Levellog(author, team, request.getContent());
+        validateLevelogExistence(authorId, teamId);
 
+        final Levellog levellog = new Levellog(author, team, request.getContent());
         final Levellog savedLevellog = levellogRepository.save(levellog);
 
         return savedLevellog.getId();
     }
 
-    public LevellogDto findById(final Long teamId) {
-        final Levellog levellog = getById(teamId);
+    public LevellogDto findById(final Long levellogId) {
+        final Levellog levellog = getById(levellogId);
 
         return LevellogDto.from(levellog);
     }
@@ -79,7 +79,7 @@ public class LevellogService {
     private void validateLevelogExistence(final Long authorId, final Long teamId) {
         final boolean isExists = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
         if (isExists) {
-            throw new LevellogAlreadyExistException();
+            throw new LevellogAlreadyExistException("레벨로그를 이미 작성하였습니다. authorId : " + authorId + " teamId : " + teamId);
         }
     }
 

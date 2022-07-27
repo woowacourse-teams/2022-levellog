@@ -7,6 +7,7 @@ import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.MembersDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,14 +24,24 @@ public class MemberService {
 
     @Transactional
     public Long save(final MemberCreateDto request) {
+        checkSameGithubId(request);
+
         final Member member = new Member(request.getNickname(), request.getGithubId(), request.getProfileUrl());
         final Member savedMember = memberRepository.save(member);
 
         return savedMember.getId();
     }
 
+    private void checkSameGithubId(final MemberCreateDto request) {
+        final boolean isExistSameGithubId = memberRepository.existsByGithubId(request.getGithubId());
+        if (isExistSameGithubId) {
+            throw new MemberAlreadyExistException("멤버 중복 [githubId : " + request.getGithubId() + "]");
+        }
+    }
+
     @Transactional
     public Long saveIfNotExist(final GithubProfileDto request, final int githubId) {
+        // TODO githubId를 안받아도 될듯? GithubProfileDto에 이미 정보가 존재함. + save의 예외 발생을 이용하면 로직 간단해질듯
         final boolean isExist = memberRepository.existsByGithubId(githubId);
         if (isExist) {
             return getByGithubId(githubId).getId();

@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.member.domain.Member;
@@ -8,23 +9,45 @@ import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.MembersDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("MemberService의")
 class MemberServiceTest extends ServiceTest {
 
-    @Test
-    @DisplayName("save 메서드는 새로운 멤버를 저장한다.")
-    void save() {
-        // given
-        final MemberCreateDto memberCreateDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
+    @Nested
+    @DisplayName("save 메서드는")
+    class Save {
 
-        // when
-        final Long id = memberService.save(memberCreateDto);
+        @Test
+        @DisplayName("새로운 멤버를 저장한다.")
+        void success() {
+            // given
+            final MemberCreateDto memberCreateDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
 
-        // then
-        assertThat(memberRepository.findById(id)).isPresent();
+            // when
+            final Long id = memberService.save(memberCreateDto);
+
+            // then
+            assertThat(memberRepository.findById(id)).isPresent();
+        }
+
+        @Test
+        @DisplayName("동일한 깃허브로 가입한 멤버가 존재하면 예외를 던진다.")
+        void memberAlreadyExist_exception() {
+            // given
+            final MemberCreateDto beforeSavedDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
+            memberService.save(beforeSavedDto);
+
+            final MemberCreateDto newSaveDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
+
+            // when & then
+            assertThatThrownBy(() -> memberService.save(newSaveDto))
+                    .isInstanceOf(MemberAlreadyExistException.class)
+                    .hasMessageContainingAll("멤버 중복", String.valueOf(newSaveDto.getGithubId()));
+        }
     }
 
     @Test

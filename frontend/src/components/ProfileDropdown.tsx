@@ -1,37 +1,16 @@
-import { useNavigate } from 'react-router-dom';
-
 import styled from 'styled-components';
 
-import useUser from 'hooks/useUser';
-
-const ProfileDropdown = ({
-  isProfileDropdownShow,
-  setIsProfileDropdownShow,
-}: ProfileDropdownProps) => {
-  const navigate = useNavigate();
-  const { userInfoDispatch } = useUser();
-
-  const handleClickProfileButton = () => {
-    navigate('');
-  };
-
-  const handleClickLogoutButton = () => {
-    localStorage.removeItem('accessToken');
-    userInfoDispatch({ id: '', profileUrl: '' });
-    setIsProfileDropdownShow(false);
-  };
-
+const ProfileDropdown = ({ isShowProfileDropdown, handleClickLogoutButton }: any) => {
   return (
-    <ProfileDropdownContainer isProfileDropdownShow={isProfileDropdownShow}>
-      <ProfileDropdownContent onClick={handleClickProfileButton}>프로필</ProfileDropdownContent>
+    <ProfileDropdownContainer isShowProfileDropdown={isShowProfileDropdown}>
+      <ProfileDropdownContent>프로필</ProfileDropdownContent>
       <ProfileDropdownContent onClick={handleClickLogoutButton}>로그아웃</ProfileDropdownContent>
     </ProfileDropdownContainer>
   );
 };
 
 interface ProfileDropdownProps {
-  isProfileDropdownShow: boolean;
-  setIsProfileDropdownShow: any;
+  isShowProfileDropdown: boolean;
 }
 
 const ProfileDropdownContainer = styled.div`
@@ -47,8 +26,7 @@ const ProfileDropdownContainer = styled.div`
   justify-content: space-around;
   border-radius: 8px;
   transition: all 0.2s;
-  display: ${(props: Omit<ProfileDropdownProps, 'setIsProfileDropdownShow'>) =>
-    props.isProfileDropdownShow ? 'block' : 'none'};
+  display: ${(props: ProfileDropdownProps) => (props.isShowProfileDropdown ? 'block' : 'none')};
   z-index: 10;
   @media (max-width: 1024px) {
     right: 5rem;

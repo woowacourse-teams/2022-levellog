@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { FeedbackType } from 'types';
@@ -11,10 +11,11 @@ import ContentHeader from 'components/@commons/ContentHeader';
 import Feedback from 'components/feedbacks/Feedback';
 
 const FeedbackList = () => {
-  const { feedbacks, levellogId, teamId, getFeedbacksInTeam, onClickDeleteButton } = useFeedback();
+  const { feedbacks, getFeedbacksInTeam, onClickDeleteButton } = useFeedback();
+  const { teamId, levellogId } = useParams();
 
   useEffect(() => {
-    getFeedbacksInTeam();
+    getFeedbacksInTeam({ levellogId });
   }, []);
 
   return (

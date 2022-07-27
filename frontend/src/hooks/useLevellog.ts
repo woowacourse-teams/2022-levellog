@@ -79,17 +79,17 @@ const useLevellog = () => {
     }
   };
 
+  const getLevellogOnRef = async ({ teamId, levellogId }) => {
+    const levellog = await getLevellog({ teamId, levellogId });
+    levellogRef.current.value = levellog;
+  };
+
   const onSubmitLevellogEditForm = ({ teamId, levellogId }) => {
     editLevellog({ teamId, levellogId, inputValue: levellogRef.current.value });
   };
 
   const onSubmitLevellogPostForm = ({ teamId }) => {
     postLevellog({ teamId, inputValue: levellogRef.current.value });
-  };
-
-  const getLevellogOnRef = async ({ teamId, levellogId }) => {
-    const levellog = await getLevellog({ teamId, levellogId });
-    levellogRef.current.value = levellog;
   };
 
   return {

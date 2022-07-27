@@ -7,7 +7,6 @@ import { requestGetTeams, requestGetTeam } from 'apis/teams';
 
 export const useTeams = () => {
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);
-
   const navigate = useNavigate();
 
   const getTeams = async () => {
@@ -36,10 +35,8 @@ export const useTeams = () => {
 
 export const useTeam = () => {
   const [team, setTeam] = useState<{ [key: string]: any }>({});
-
   const location = useLocation();
   const { teamId } = useParams();
-
   const teamLocationState = location.state;
 
   const getTeam = async () => {

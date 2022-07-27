@@ -13,9 +13,14 @@ import FeedbackForm from 'components/feedbacks/FeedbackForm';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
 const FeedbackAdd = () => {
-  const { feedbackRef, handleSubmitFeedbackForm } = useFeedback();
+  const { feedbackRef, onSubmitFeedbackForm } = useFeedback();
   const { levellog, getLevellog } = useLevellog();
   const { teamId, levellogId } = useParams();
+
+  const handleSubmitFeedbackForm = (e: any) => {
+    e.preventDefault();
+    onSubmitFeedbackForm({ teamId, levellogId });
+  };
 
   useEffect(() => {
     getLevellog({ teamId, levellogId });

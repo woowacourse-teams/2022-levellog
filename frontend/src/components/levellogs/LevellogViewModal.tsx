@@ -4,41 +4,41 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
+import useUser from 'hooks/useUser';
+
 import Button from 'components/@commons/Button';
 
 const LevellogViewModal = ({
-  owner,
-  nickname,
-  levellogId,
+  participant,
   levellog,
-  setIsOnModal,
   getTeam,
-  deleteLevellog,
+  onClickLevellogDelete,
+  handleClickCloseLevellogModal,
 }: any) => {
+  const { id, levellogId, nickname } = participant;
   const { teamId } = useParams();
+  const { loginUserId } = useUser();
 
   const handleClickLevellogDelete = async () => {
-    await deleteLevellog({ teamId, levellogId });
+    await onClickLevellogDelete({ teamId, levellogId });
     getTeam();
-    setIsOnModal(false);
   };
 
-  const handleClickCloseModal = () => {
-    setIsOnModal(false);
-  };
-
-  if (owner === false) {
+  if (id === loginUserId) {
     return (
       <ModalPortal>
-        <Dimmer onClick={handleClickCloseModal}>
+        <Dimmer onClick={handleClickCloseLevellogModal}>
           <LevellogModalStyle>
             <Header>
               <ModalTitle>{nickname}의 Levellog</ModalTitle>
-              <CloseButton onClick={handleClickCloseModal}>X</CloseButton>
+              <CloseButton onClick={handleClickCloseLevellogModal}>X</CloseButton>
             </Header>
             <Levellog>{levellog}</Levellog>
             <Footer>
-              <Button>사전 질문 작성</Button>
+              <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
+                <Button>수정하기</Button>
+              </Link>
+              <Button onClick={handleClickLevellogDelete}>삭제하기</Button>
             </Footer>
           </LevellogModalStyle>
         </Dimmer>
@@ -48,26 +48,21 @@ const LevellogViewModal = ({
 
   return (
     <ModalPortal>
-      <Dimmer onClick={handleClickCloseModal}>
+      <Dimmer onClick={handleClickCloseLevellogModal}>
         <LevellogModalStyle>
           <Header>
-            <ModalTitle>나의 Levellog</ModalTitle>
-            <CloseButton onClick={handleClickCloseModal}>X</CloseButton>
+            <ModalTitle>{nickname}의 Levellog</ModalTitle>
+            <CloseButton onClick={handleClickCloseLevellogModal}>X</CloseButton>
           </Header>
           <Levellog>{levellog}</Levellog>
           <Footer>
-            <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
-              <Button>수정하기</Button>
-            </Link>
-            <Button onClick={handleClickLevellogDelete}>삭제하기</Button>
+            <Button>사전 질문 작성</Button>
           </Footer>
         </LevellogModalStyle>
       </Dimmer>
     </ModalPortal>
   );
 };
-
-//   <Levellog>{levellog}</Levellog> 추가
 
 const Dimmer = styled.div`
   position: fixed;

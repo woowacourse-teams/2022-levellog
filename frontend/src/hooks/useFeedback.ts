@@ -13,11 +13,10 @@ import {
 const useFeedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const feedbackRef = useRef([]);
-  const { levellogId, teamId, feedbackId } = useParams();
   const accessToken = localStorage.getItem('accessToken') as string;
   const navigator = useNavigate();
 
-  const postFeedback = async ({ feedbackResult }: any) => {
+  const postFeedback = async ({ levellogId, feedbackResult }: any) => {
     try {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
     } catch (err) {
@@ -26,7 +25,7 @@ const useFeedback = () => {
     }
   };
 
-  const getFeedbacksInTeam = async () => {
+  const getFeedbacksInTeam = async ({ levellogId }: any) => {
     try {
       const res = await requestGetFeedbacksInTeam({ accessToken, levellogId });
       const feedbacks = res.data.feedbacks;
@@ -38,7 +37,7 @@ const useFeedback = () => {
     }
   };
 
-  const editFeedback = async ({ feedbackResult }: any) => {
+  const editFeedback = async ({ levellogId, feedbackId, feedbackResult }: any) => {
     try {
       await requestEditFeedback({ accessToken, levellogId, feedbackId, feedbackResult });
     } catch (err) {
@@ -47,7 +46,7 @@ const useFeedback = () => {
     }
   };
 
-  const deleteFeedback = async ({ feedbackId }) => {
+  const deleteFeedback = async ({ levellogId, feedbackId }) => {
     try {
       await requestDeleteFeedback({ accessToken, levellogId, feedbackId });
     } catch (err) {
@@ -56,13 +55,14 @@ const useFeedback = () => {
     }
   };
 
-  const onClickDeleteButton = async (feedbackInfo: any) => {
-    await deleteFeedback({ feedbackId: feedbackInfo.id });
-    await getFeedbacksInTeam();
+  const onClickDeleteButton = async ({ feedbackInfo, levellogId }: any) => {
+    const feedbackId = feedbackInfo.id;
+
+    await deleteFeedback({ levellogId, feedbackId });
+    await getFeedbacksInTeam({ levellogId });
   };
 
-  const handleSubmitFeedbackForm = async (e: any) => {
-    e.preventDefault();
+  const onSubmitFeedbackForm = async ({ teamId, levellogId }: any) => {
     const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackPostType = {
       feedback: {
@@ -72,20 +72,18 @@ const useFeedback = () => {
       },
     };
 
-    postFeedback({ feedbackResult });
+    await postFeedback({ feedbackResult });
     navigator(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 
   return {
     feedbacks,
     feedbackRef,
-    levellogId,
-    teamId,
     getFeedbacksInTeam,
     postFeedback,
     editFeedback,
     onClickDeleteButton,
-    handleSubmitFeedbackForm,
+    onSubmitFeedbackForm,
   };
 };
 

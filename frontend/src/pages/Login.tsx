@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import useUser from 'hooks/useUser';
 
+import { ROUTES_PATH } from 'constants/constants';
+
 import { getUserAuthority, getUserLogin } from 'apis/login';
 
 const Login = () => {
@@ -35,7 +37,7 @@ const Login = () => {
         });
 
         if (state?.pathname) {
-          if (location.pathname === '/login') {
+          if (location.pathname === ROUTES_PATH.LOGIN) {
             navigate(state.pathname);
 
             return;
@@ -44,7 +46,7 @@ const Login = () => {
 
           return;
         }
-        navigate('/');
+        navigate(ROUTES_PATH.HOME);
       } catch (err) {}
     };
 

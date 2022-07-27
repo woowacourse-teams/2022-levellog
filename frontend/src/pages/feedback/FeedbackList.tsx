@@ -30,6 +30,7 @@ const FeedbackList = () => {
           feedbacks.map((feedbackInfo: FeedbackType) => (
             <Feedback
               key={feedbackInfo.id}
+              levellogId={levellogId}
               feedbackInfo={feedbackInfo}
               onClickDeleteButton={onClickDeleteButton}
             />

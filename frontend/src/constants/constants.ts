@@ -1,4 +1,6 @@
 export const API_URL = 'https://dev.levellog.app/api';
+export const LOGIN_URL =
+  'https://github.com/login/oauth/authorize?client_id=fc4c9ab6e6d189931371&redirect_uri=';
 
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',
@@ -12,6 +14,10 @@ export const ROUTES_PATH = Object.freeze({
   INTERVIEW_TEAMS: '/interview/teams',
   INTERVIEW_TEAMS_DETAIL: '/interview/teams/:teamId',
   NOT_FOUND: '*',
+});
+
+export const LOGIN_PATH = Object.freeze({
+  LOCAL_HOST: `${LOGIN_URL}https://test.levellog.app/login`,
 });
 
 export const SERVER_PATH = Object.freeze({

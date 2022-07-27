@@ -6,8 +6,7 @@ const useAuth = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const requestMyInfo = async () => {
-    const res = await getUserAuthority(accessToken);
-    console.log('requestMyInfo', res);
+    const res = await getUserAuthority({ accessToken });
     // userInfoDispatch()
   };
 

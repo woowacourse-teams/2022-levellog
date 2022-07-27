@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import useUser from 'hooks/useUser';
 
+import { ROUTES_PATH } from 'constants/constants';
+
 import { getUserAuthority, getUserLogin } from 'apis/login';
 
 const Login = () => {
@@ -18,7 +20,7 @@ const Login = () => {
       const accessToken = localStorage.getItem('accessToken');
       try {
         if (accessToken) {
-          const res = await getUserAuthority(accessToken);
+          const res = await getUserAuthority({ accessToken });
           userInfoDispatch({
             id: res.data.id,
             profileUrl: res.data.profileUrl,
@@ -27,7 +29,7 @@ const Login = () => {
           return;
         }
 
-        const res = await getUserLogin(code);
+        const res = await getUserLogin({ code });
         localStorage.setItem('accessToken', res.data.accessToken);
         userInfoDispatch({
           id: res.data.id,
@@ -35,21 +37,17 @@ const Login = () => {
         });
 
         if (state?.pathname) {
-          if (location.pathname === '/login') {
+          if (location.pathname === ROUTES_PATH.LOGIN) {
             navigate(state.pathname);
 
             return;
           }
-
           navigate(state.pathname);
 
           return;
         }
-
-        navigate('/');
-      } catch (err) {
-        console.log(err);
-      }
+        navigate(ROUTES_PATH.HOME);
+      } catch (err) {}
     };
 
     loginGithub();

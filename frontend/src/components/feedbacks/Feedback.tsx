@@ -1,49 +1,31 @@
-import { useParams } from 'react-router-dom';
-
 import styled from 'styled-components';
-import { FeedbackType } from 'types';
 
-import useFeedback from 'hooks/useFeedback';
-import useUser from 'hooks/useUser';
-
-import Button from '../@commons/Button';
+import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 
-const Feedback = ({ feedbackId, userFeedback, requestFeedbackLookup }: FeedbackProps) => {
-  const { levellogId } = useParams();
-  const { feedbackDelete } = useFeedback();
-  const { loginUserId } = useUser();
-  const {
-    id,
-    updatedAt,
-    from,
-    feedback: { study, speak, etc },
-  } = userFeedback;
-
-  const handleClickDeleteButton = async () => {
-    const res = (await feedbackDelete(levellogId, feedbackId)) as any;
-    alert(res.data.message);
-    await requestFeedbackLookup();
+const Feedback = ({ feedbackInfo, onClickDeleteButton }: FeedbackProps) => {
+  const handleClickDeleteButton = () => {
+    onClickDeleteButton(feedbackInfo);
   };
 
   return (
     <FeedbackContainer>
       <FeedbackHeader>
-        <h3>{from.nickname}의 피드백</h3>
+        <h3>{feedbackInfo.from.nickname}의 피드백</h3>
         <Button onClick={handleClickDeleteButton}>삭제하기</Button>
       </FeedbackHeader>
       <FlexBox gap={1.5}>
         <FlexBox flexFlow={'column'} gap={1.25}>
           <h3>학습 측면에서 좋은 점과 부족한 점은?</h3>
-          <FeedbackContent>{study}</FeedbackContent>
+          <FeedbackContent>{feedbackInfo.feedback.study}</FeedbackContent>
         </FlexBox>
         <FlexBox flexFlow={'column'} gap={1.25}>
           <h3>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</h3>
-          <FeedbackContent>{speak}</FeedbackContent>
+          <FeedbackContent>{feedbackInfo.feedback.speak}</FeedbackContent>
         </FlexBox>
         <FlexBox flexFlow={'column'} gap={1.25}>
           <h3>기타 피드백 (위 2 질문 외에 다른 피드백을 주세요.)</h3>
-          <FeedbackContent>{etc}</FeedbackContent>
+          <FeedbackContent>{feedbackInfo.feedback.etc}</FeedbackContent>
         </FlexBox>
       </FlexBox>
     </FeedbackContainer>
@@ -51,9 +33,8 @@ const Feedback = ({ feedbackId, userFeedback, requestFeedbackLookup }: FeedbackP
 };
 
 interface FeedbackProps {
-  feedbackId: string;
-  userFeedback: FeedbackType;
-  requestFeedbackLookup: Function;
+  feedbackInfo: any;
+  onClickDeleteButton: Function;
 }
 
 const FeedbackContainer = styled.div`

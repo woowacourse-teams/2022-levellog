@@ -119,4 +119,37 @@ class MemberServiceTest extends ServiceTest {
                 .orElseThrow();
         assertThat(updateMember.getNickname()).isEqualTo("알린");
     }
+
+    @Nested
+    @DisplayName("saveIfNotExist 메서드는")
+    class saveIfNotExist {
+
+        @Test
+        @DisplayName("saveIfNotExist 메서드는 깃허브 아이디로 저장된 멤버가 있으면 가입된 멤버의 ID를 반환한다.")
+        void ifExist_returnSavedId() {
+            // given
+            final Member savedMember = memberRepository.save(new Member("로마", 123456, "profileUrl.image"));
+
+            // when
+            final Long id = memberService.saveIfNotExist(new GithubProfileDto("123456", "test", "test.image"), 123456);
+
+            // then
+            assertThat(savedMember.getId()).isEqualTo(id);
+        }
+
+        @Test
+        @DisplayName("saveIfNotExist 메서드는 깃허브 아이디로 저장된 멤버가 없으면 새 멤버를 저장하고 멤버의 ID를 반환한다.")
+        void ifNotExist_saveAndReturnSavedId() {
+            // given
+            final Member savedMember = memberRepository.save(new Member("로마", 123456, "profileUrl.image"));
+
+            // when
+            final Long id = memberService.saveIfNotExist(new GithubProfileDto("100", "test", "test.image"), 100);
+
+            // then
+            assertThat(id).isEqualTo(savedMember.getId() + 1);
+        }
+    }
+
+
 }

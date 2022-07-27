@@ -18,6 +18,7 @@ import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
+import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -109,24 +110,40 @@ class TeamServiceTest {
         );
     }
 
-    @Test
-    @DisplayName("findById 메서드는 id에 해당하는 팀을 조회한다.")
-    void findById() {
-        //given
-        final Member member1 = getMember("릭");
-        final Member member2 = getMember("페퍼");
-        final Team team = getTeam("잠실 제이슨조");
+    @Nested
+    @DisplayName("findById 메서드는")
+    class findById {
 
-        participantRepository.save(new Participant(team, member1, true));
-        participantRepository.save(new Participant(team, member2, false));
+        @Test
+        @DisplayName("id에 해당하는 팀을 조회한다.")
+        void findById() {
+            //given
+            final Member member1 = getMember("릭");
+            final Member member2 = getMember("페퍼");
+            final Team team = getTeam("잠실 제이슨조");
 
-        //when
-        final TeamDto response = teamService.findById(team.getId());
+            participantRepository.save(new Participant(team, member1, true));
+            participantRepository.save(new Participant(team, member2, false));
 
-        //then
-        assertThat(response.getTitle()).isEqualTo(team.getTitle());
-        assertThat(response.getHostId()).isEqualTo(member1.getId());
-        assertThat(response.getParticipants()).hasSize(2);
+            //when
+            final TeamDto response = teamService.findById(team.getId());
+
+            //then
+            assertThat(response.getTitle()).isEqualTo(team.getTitle());
+            assertThat(response.getHostId()).isEqualTo(member1.getId());
+            assertThat(response.getParticipants()).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
+        void teamNotFound_Exception() {
+            //given
+
+            //when & then
+            assertThatThrownBy(() -> teamService.findById(1000L))
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("");
+        }
     }
 
     @Nested
@@ -176,6 +193,21 @@ class TeamServiceTest {
                     .isInstanceOf(HostUnauthorizedException.class)
                     .hasMessageContaining("호스트 권한이 없습니다.");
         }
+
+        @Test
+        @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
+        void teamNotFound_Exception() {
+            //given
+            final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3));
+            final Member member = getMember("릭");
+            final Team team = getTeam("잠실 제이슨조");
+            participantRepository.save(new Participant(team, member, true));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.update(request, 1000L, member.getId()))
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("");
+        }
     }
 
     @Nested
@@ -217,6 +249,20 @@ class TeamServiceTest {
             assertThatThrownBy(() -> teamService.deleteById(teamId, memberId))
                     .isInstanceOf(HostUnauthorizedException.class)
                     .hasMessageContaining("호스트 권한이 없습니다.");
+        }
+
+        @Test
+        @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
+        void teamNotFound_Exception() {
+            //given
+            final Member member = getMember("릭");
+            final Team team = getTeam("잠실 제이슨조");
+            participantRepository.save(new Participant(team, member, true));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.deleteById(1000L, member.getId()))
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("");
         }
     }
 

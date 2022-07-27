@@ -4,22 +4,17 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @DisplayName("깃허브 로그인 관련 기능")
 class OAuthAcceptanceTest extends AcceptanceTest {
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     /*
      * Scenario: 깃허브 로그인
@@ -49,5 +44,4 @@ class OAuthAcceptanceTest extends AcceptanceTest {
                 .body("profileUrl", is("profile_url"))
                 .body("id", notNullValue());
     }
-
 }

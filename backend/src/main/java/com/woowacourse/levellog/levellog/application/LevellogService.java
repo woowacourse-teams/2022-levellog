@@ -32,7 +32,7 @@ public class LevellogService {
         final Member author = getMember(authorId);
         validateLevelogExistence(authorId, teamId);
 
-        final Levellog levellog = new Levellog(author, team, request.getContent());
+        final Levellog levellog = request.toLevellog(author, team);
         final Levellog savedLevellog = levellogRepository.save(levellog);
 
         return savedLevellog.getId();

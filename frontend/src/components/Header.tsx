@@ -1,11 +1,9 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
 import useUser from 'hooks/useUser';
 
-import profileDefaultImage from 'assets/images/defaultProfile.png';
 import levellogLogo from 'assets/images/levellogLogo.png';
 
 import Button from './@commons/Button';
@@ -13,22 +11,14 @@ import { LogoStyle } from './@commons/Style';
 import ProfileDropdown from './ProfileDropdown';
 
 const Header = () => {
-  const [isProfileDropdownShow, setIsProfileDropdownShow] = useState(false);
-  const { loginUserProfileUrl } = useUser();
-
-  const handleErrorProfileImage = (e: React.SyntheticEvent<EventTarget>) => {
-    const target = e.target as HTMLImageElement;
-    target.src = `${profileDefaultImage}`;
-  };
-
-  const handleClickLoginButton = () => {
-    window.location.href =
-      'https://github.com/login/oauth/authorize?client_id=fc4c9ab6e6d189931371&redirect_uri=https://levellog.app/login';
-  };
-
-  const handleClickProfileImage = () => {
-    setIsProfileDropdownShow((prev) => !prev);
-  };
+  const {
+    loginUserProfileUrl,
+    isShowProfileDropdown,
+    handleClickLogoutButton,
+    handleClickProfileImage,
+    handleClickLoginButton,
+    handleErrorProfileImage,
+  } = useUser();
 
   return (
     <HeaderContainer>
@@ -46,8 +36,8 @@ const Header = () => {
         <Button onClick={handleClickLoginButton}>로그인</Button>
       )}
       <ProfileDropdown
-        isProfileDropdownShow={isProfileDropdownShow}
-        setIsProfileDropdownShow={setIsProfileDropdownShow}
+        isShowProfileDropdown={isShowProfileDropdown}
+        handleClickLogoutButton={handleClickLogoutButton}
       />
     </HeaderContainer>
   );

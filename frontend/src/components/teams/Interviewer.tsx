@@ -1,85 +1,38 @@
-import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useLevellog from 'hooks/useLevellog';
 import useUser from 'hooks/useUser';
 
 import { ROUTES_PATH } from 'constants/constants';
 
+import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
-import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 
-const Interviewer = ({
-  requestInterviewTeam,
-  id,
-  levellogId,
-  nickname,
-  profileUrl,
-}: InterviewerProps) => {
-  const [levellog, setLevellog] = useState('');
-  const [isOnModal, setIsOnModal] = useState(false);
-  const navigate = useNavigate();
-  const { levellogLookup } = useLevellog();
-  const { loginUserId } = useUser();
+const Interviewer = ({ participant, onClickToggleModal }: any) => {
   const { teamId } = useParams();
+  const { loginUserId } = useUser();
 
   const handleClickToggleModal = () => {
-    if (!levellogId) {
-      alert('레벨로그가 아직 작성되지 않았습니다.');
-      return;
-    }
-    setIsOnModal((prev) => !prev);
-    if (!levellog) {
-      requestLevellogLookup();
-    }
+    onClickToggleModal({ teamId, participant });
   };
 
-  const handleClickFeedbackButton = () => {
-    if (!levellogId) {
-      alert('레벨로그가 아직 작성되지 않았습니다.');
-      return;
-    }
-
-    if (!loginUserId) {
-      alert('로그인이 필요합니다.');
-      return;
-    }
-    navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
-  };
-
-  const requestLevellogLookup = async () => {
-    const res = await levellogLookup(teamId, levellogId);
-    setLevellog(res.content);
-  };
-
-  if (id === loginUserId) {
+  if (participant.id === loginUserId) {
     return (
       <>
-        {isOnModal === true && (
-          <LevellogViewModal
-            owner={true}
-            nickname={nickname}
-            levellogId={levellogId}
-            levellog={levellog}
-            setIsOnModal={setIsOnModal}
-            requestInterviewTeam={requestInterviewTeam}
-          />
-        )}
         <InterviewerContainer>
           <InterviewerStyle>
-            <Image src={profileUrl} sizes={'HUGE'} />
+            <Image src={participant.profileUrl} sizes={'HUGE'} />
             <NicknameStyle>
-              <p>{nickname}</p>
+              <p>{participant.nickname}</p>
             </NicknameStyle>
           </InterviewerStyle>
           <ContentStyle>
-            {levellogId ? (
-              <p onClick={handleClickToggleModal}>레벨로그 보기</p>
+            {participant.levellogId ? (
+              <InterviewerButton onClick={handleClickToggleModal}>레벨로그 보기</InterviewerButton>
             ) : (
               <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
-                <p>레벨로그 작성</p>
+                <InterviewerButton>레벨로그 작성</InterviewerButton>
               </Link>
             )}
           </ContentStyle>
@@ -90,33 +43,23 @@ const Interviewer = ({
 
   return (
     <>
-      {isOnModal === true && (
-        <LevellogViewModal
-          owner={false}
-          nickname={nickname}
-          levellogId={levellogId}
-          levellog={levellog}
-          setIsOnModal={setIsOnModal}
-          requestInterviewTeam={requestInterviewTeam}
-        />
-      )}
       <InterviewerContainer>
         <InterviewerStyle>
-          <Image src={profileUrl} sizes={'HUGE'} />
+          <Image src={participant.profileUrl} sizes={'HUGE'} />
           <NicknameStyle>
-            <p>{nickname}</p>
+            <p>{participant.nickname}</p>
           </NicknameStyle>
         </InterviewerStyle>
         <ContentStyle>
-          <a onClick={handleClickToggleModal}>레벨로그 보기</a>
+          <InterviewerButton disabled={!participant.levellogId} onClick={handleClickToggleModal}>
+            레벨로그 보기
+          </InterviewerButton>
           <Link to="">
-            <p>사전 질문 작성</p>
+            <InterviewerButton disabled={!participant.levellogId}>사전 질문 작성</InterviewerButton>
           </Link>
-          {/* <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks`}> */}
-          <div onClick={handleClickFeedbackButton}>
-            <a>피드백</a>
-          </div>
-          {/* </Link> */}
+          <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
+            <InterviewerButton disabled={!participant.levellogId}>피드백</InterviewerButton>
+          </Link>
         </ContentStyle>
       </InterviewerContainer>
     </>
@@ -124,12 +67,19 @@ const Interviewer = ({
 };
 
 interface InterviewerProps {
-  requestInterviewTeam: () => Promise<void>;
+  getTeam: () => Promise<void>;
   id: string;
   levellogId: string;
   nickname: string;
   profileUrl: string;
 }
+
+const InterviewerButton = styled(Button)`
+  padding: 0;
+  background-color: ${(props) => props.theme.default.INVISIBLE};
+  font-size: 1.125rem;
+  font-weight: 400;
+`;
 
 const InterviewerContainer = styled.div`
   display: flex;
@@ -164,7 +114,7 @@ const NicknameStyle = styled.div`
 const ContentStyle = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.125rem;
 `;
 
 export default Interviewer;

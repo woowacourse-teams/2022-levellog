@@ -1,14 +1,14 @@
-import ProfileDropdown from './ProfileDropdown';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+// import ProfileDropdown from './ProfileDropdown';
+// import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-export default {
-  title: 'ProfileDropdown',
-  component: ProfileDropdown,
-  parameters: {
-    isProfileDropdownShow: true,
-  },
-} as ComponentMeta<typeof ProfileDropdown>;
+// export default {
+//   title: 'ProfileDropdown',
+//   component: ProfileDropdown,
+//   parameters: {
+//     isProfileDropdownShow: true,
+//   },
+// } as ComponentMeta<typeof ProfileDropdown>;
 
-const Template: ComponentStory<typeof ProfileDropdown> = (args) => <ProfileDropdown {...args} />;
+// const Template: ComponentStory<typeof ProfileDropdown> = () => <ProfileDropdown />;
 
-export const Base = Template.bind({});
+// export const Base = Template.bind({});

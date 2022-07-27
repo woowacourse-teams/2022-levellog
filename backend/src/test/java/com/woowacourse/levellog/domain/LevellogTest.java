@@ -33,7 +33,7 @@ class LevellogTest {
             final String content = "Spring을 학습하였습니다";
 
             // when & then
-            assertDoesNotThrow(() -> new Levellog(author, team, content));
+            assertDoesNotThrow(() -> Levellog.of(author, team, content));
         }
 
         @ParameterizedTest
@@ -46,7 +46,7 @@ class LevellogTest {
             final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now(), "jamsil_trackroom.png");
 
             //  when & then
-            assertThatThrownBy(() -> new Levellog(author, team, invalidContent))
+            assertThatThrownBy(() -> Levellog.of(author, team, invalidContent))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
@@ -62,7 +62,7 @@ class LevellogTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now(), "jamsil_trackroom.png");
-            final Levellog levellog = new Levellog(author, team, "content");
+            final Levellog levellog = Levellog.of(author, team, "content");
             final String updatedContent = "updated content";
 
             // when
@@ -79,7 +79,7 @@ class LevellogTest {
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member member = new Member("알린", 2222, "alien.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now(), "jamsil_trackroom.png");
-            final Levellog levellog = new Levellog(author, team, "content");
+            final Levellog levellog = Levellog.of(author, team, "content");
 
             //  when & then
             assertThatThrownBy(() -> levellog.updateContent(member, "update content"))
@@ -97,7 +97,7 @@ class LevellogTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now(), "jamsil_trackroom.png");
-            final Levellog levellog = new Levellog(author, team, "content");
+            final Levellog levellog = Levellog.of(author, team, "content");
 
             //  when & then
             assertThatThrownBy(() -> levellog.updateContent(author, invalidContent))

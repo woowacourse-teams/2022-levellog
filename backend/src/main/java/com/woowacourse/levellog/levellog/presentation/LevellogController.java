@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.levellog.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
-import com.woowacourse.levellog.authentication.support.NoAuthentication;
+import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.levellog.dto.LevellogResponse;
@@ -34,7 +34,7 @@ public class LevellogController {
     }
 
     @GetMapping("/{levellogId}")
-    @NoAuthentication
+    @PublicAPI
     public ResponseEntity<LevellogResponse> find(@PathVariable final Long teamId,
                                                  @PathVariable final Long levellogId) {
         final LevellogResponse response = levellogService.findById(levellogId);

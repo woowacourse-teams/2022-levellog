@@ -43,7 +43,7 @@ public class LevellogService {
     @Transactional(readOnly = true)
     public LevellogDto findById(final Long id) {
         final Levellog levellog = getById(id);
-        return new LevellogDto(levellog.getContent());
+        return LevellogDto.from(levellog);
     }
 
     public void update(final Long levellogId, final Long memberId, final LevellogCreateDto request) {

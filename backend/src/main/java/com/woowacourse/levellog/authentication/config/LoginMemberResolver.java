@@ -2,7 +2,7 @@ package com.woowacourse.levellog.authentication.config;
 
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
-import com.woowacourse.levellog.authentication.support.LoginMember;
+import com.woowacourse.levellog.authentication.support.Authentic;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -20,7 +20,7 @@ public class LoginMemberResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(LoginMember.class);
+        return parameter.hasParameterAnnotation(Authentic.class);
     }
 
     @Override

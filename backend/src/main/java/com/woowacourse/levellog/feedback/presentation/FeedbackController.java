@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.feedback.presentation;
 
-import com.woowacourse.levellog.authentication.support.LoginMember;
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
 import com.woowacourse.levellog.feedback.dto.FeedbacksResponse;
@@ -27,14 +27,14 @@ public class FeedbackController {
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long levellogId,
                                      @RequestBody @Valid final FeedbackRequest request,
-                                     @LoginMember final Long memberId) {
+                                     @Authentic final Long memberId) {
         final Long id = feedbackService.save(levellogId, memberId, request);
         return ResponseEntity.created(URI.create("/api/levellogs/" + levellogId + "/feedbacks/" + id)).build();
     }
 
     @GetMapping
     public ResponseEntity<FeedbacksResponse> findAll(@PathVariable final Long levellogId,
-                                                     @LoginMember final Long memberId) {
+                                                     @Authentic final Long memberId) {
         final FeedbacksResponse response = feedbackService.findAll(levellogId);
         return ResponseEntity.ok(response);
     }
@@ -50,7 +50,7 @@ public class FeedbackController {
     @DeleteMapping("/{feedbackId}")
     public ResponseEntity<Void> delete(@PathVariable final Long levellogId,
                                        @PathVariable final Long feedbackId,
-                                       @LoginMember final Long memberId) {
+                                       @Authentic final Long memberId) {
         feedbackService.deleteById(feedbackId, memberId);
         return ResponseEntity.noContent().build();
     }

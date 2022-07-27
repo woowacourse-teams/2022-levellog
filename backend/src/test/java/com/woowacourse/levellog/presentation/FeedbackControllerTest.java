@@ -34,7 +34,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
         void save_alreadyExist_exceptionThrown() throws Exception {
             // given
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
@@ -66,7 +66,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
         void save_selfFeedback_exceptionThrown() throws Exception {
             // given
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
@@ -98,7 +98,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
         void save_otherMember_exceptionThrown() throws Exception {
             // given
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
@@ -135,7 +135,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("피드백에 관련이 없는 멤버가 피드백을 수정하면 예외가 발생한다.")
         void delete_otherMember_exceptionThrown() throws Exception {
             // given
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
@@ -174,7 +174,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("피드백에 관련이 없는 멤버가 삭제를 요청하면 예외가 발생한다.")
         void delete_otherMember_exceptionThrown() throws Exception {
             // given
-            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 

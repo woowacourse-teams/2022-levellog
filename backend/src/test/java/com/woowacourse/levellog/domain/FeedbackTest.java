@@ -1,6 +1,7 @@
-package com.woowacourse.levellog.feedback.domain;
+package com.woowacourse.levellog.domain;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;

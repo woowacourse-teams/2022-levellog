@@ -21,7 +21,7 @@ public class FeedbackContentDto {
     @NotNull
     private String etc;
 
-    public static FeedbackContentDto from(Feedback feedback) {
+    public static FeedbackContentDto from(final Feedback feedback) {
         return new FeedbackContentDto(feedback.getStudy(), feedback.getSpeak(), feedback.getEtc());
     }
 }

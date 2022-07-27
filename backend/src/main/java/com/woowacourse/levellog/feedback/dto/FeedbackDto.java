@@ -18,7 +18,8 @@ public class FeedbackDto {
     private FeedbackContentDto feedback;
     private LocalDateTime updatedAt;
 
-    public static FeedbackDto from(Feedback feedback) {
-        return new FeedbackDto(feedback.getId(), MemberDto.from(feedback.getFrom()), FeedbackContentDto.from(feedback), feedback.getUpdatedAt());
+    public static FeedbackDto from(final Feedback feedback) {
+        return new FeedbackDto(feedback.getId(), MemberDto.from(feedback.getFrom()), FeedbackContentDto.from(feedback),
+                feedback.getUpdatedAt());
     }
 }

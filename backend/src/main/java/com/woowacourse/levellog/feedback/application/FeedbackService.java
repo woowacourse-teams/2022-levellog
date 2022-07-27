@@ -2,8 +2,8 @@ package com.woowacourse.levellog.feedback.application;
 
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
+import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
@@ -86,7 +86,7 @@ public class FeedbackService {
         feedbackRepository.deleteById(feedbackId);
     }
 
-    private void validateExistence(Long levellogId, Long fromMemberId) {
+    private void validateExistence(final Long levellogId, final Long fromMemberId) {
         if (feedbackRepository.existsByLevellogIdAndFromId(levellogId, fromMemberId)) {
             throw new FeedbackAlreadyExistException(levellogId);
         }
@@ -100,13 +100,13 @@ public class FeedbackService {
         }
     }
 
-    private void validateSelfFeedback(Member member, Levellog levellog) {
+    private void validateSelfFeedback(final Member member, final Levellog levellog) {
         if (levellog.getAuthor().equals(member)) {
             throw new InvalidFeedbackException("자기 자신에게 피드백을 할 수 없습니다.");
         }
     }
 
-    private void validateAuthor(Feedback feedback, Member member, String message) {
+    private void validateAuthor(final Feedback feedback, final Member member, final String message) {
         if (!feedback.isAssociatedWith(member)) {
             throw new InvalidFeedbackException(
                     message + " feeadbackId : " + feedback.getId() + ", memberId : " + member.getId());
@@ -130,7 +130,7 @@ public class FeedbackService {
                 .orElseThrow(() -> new LevellogNotFoundException("존재하지 않는 레벨로그. levellogId : " + levellogId));
     }
 
-    private Feedback getFeedback(Long feedbackId) {
+    private Feedback getFeedback(final Long feedbackId) {
         return feedbackRepository.findById(feedbackId)
                 .orElseThrow(() -> new FeedbackNotFoundException("존재하지 않는 피드백. feedbackId : " + feedbackId));
     }

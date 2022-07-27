@@ -43,7 +43,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 .getTeamId();
 
         final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
-        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
+        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
+                        levellogRequest)
                 .getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
@@ -88,7 +89,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 .getTeamId();
 
         final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
-        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
+        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
+                        levellogRequest)
                 .getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
@@ -143,7 +145,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id).getTeamId();
 
         final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
-        final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
+        final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
+                        levellogRequest)
                 .getLevellogId();
 
         final FeedbackContentDto givenFeedbackContentDto = new FeedbackContentDto(
@@ -184,9 +187,9 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.NO_CONTENT.value());
         requestFindAllFeedbacks(rick_levellogId)
                 .body("feedbacks.feedback.study", contains("수정된 Study 피드백"),
-                "feedbacks.feedback.speak", contains("수정된 Speak 피드백"),
-                "feedbacks.feedback.etc", contains("수정된 Etc 피드백")
-        );
+                        "feedbacks.feedback.speak", contains("수정된 Speak 피드백"),
+                        "feedbacks.feedback.etc", contains("수정된 Etc 피드백")
+                );
     }
 
     /*
@@ -212,7 +215,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 .getTeamId();
 
         final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
-        final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
+        final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
+                        levellogRequest)
                 .getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",

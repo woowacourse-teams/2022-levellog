@@ -42,12 +42,7 @@ public class Feedback extends BaseEntity {
     @Column(length = 1000)
     private String etc;
 
-    public static Feedback of(Member member, Levellog levellog, FeedbackContentDto feedbackContent) {
-        return new Feedback(member, levellog.getAuthor(), levellog, feedbackContent.getStudy(),
-                feedbackContent.getSpeak(), feedbackContent.getEtc());
-    }
-
-    public Feedback(Member from, Member to, Levellog levellog, String study, String speak, String etc) {
+    public Feedback(final Member from, final Member to, final Levellog levellog, final String study, final String speak, final String etc) {
         validateFeedback(study, speak, etc);
 
         this.from = from;
@@ -58,13 +53,18 @@ public class Feedback extends BaseEntity {
         this.etc = etc;
     }
 
-    private void validateFeedback(String study, String speak, String etc) {
+    public static Feedback of(final Member member, final Levellog levellog, final FeedbackContentDto feedbackContent) {
+        return new Feedback(member, levellog.getAuthor(), levellog, feedbackContent.getStudy(),
+                feedbackContent.getSpeak(), feedbackContent.getEtc());
+    }
+
+    private void validateFeedback(final String study, final String speak, final String etc) {
         validateFeedbackLength(study);
         validateFeedbackLength(speak);
         validateFeedbackLength(etc);
     }
 
-    private void validateFeedbackLength(String feedbackContent) {
+    private void validateFeedbackLength(final String feedbackContent) {
         if (feedbackContent.length() > FEEDBACK_CONTENT_MAX_LENGTH) {
             throw new InvalidFieldException("피드백은 " + FEEDBACK_CONTENT_MAX_LENGTH + "자 이하여야 합니다.");
         }

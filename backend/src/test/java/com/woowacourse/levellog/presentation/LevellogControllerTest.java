@@ -116,7 +116,7 @@ class LevellogControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
             doThrow(new UnauthorizedException("레벨로그를 수정할 권한이 없습니다.")).when(levellogService)
-                    .update(anyLong(), anyLong(), any());
+                    .update(any(), anyLong(), anyLong());
 
             final Long teamId = 1L;
             final Long levellogId = 2L;

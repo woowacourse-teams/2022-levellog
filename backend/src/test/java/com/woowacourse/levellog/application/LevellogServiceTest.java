@@ -61,6 +61,46 @@ class LevellogServiceTest {
     }
 
     @Nested
+    @DisplayName("save 메서드는")
+    class save {
+
+        @Test
+        @DisplayName("레벨로그를 저장한다.")
+        void save() {
+            // given
+            final LevellogCreateDto request = new LevellogCreateDto("굳굳");
+            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+
+            // when
+            final Long id = levellogService.save(request, author.getId(), team.getId());
+
+            // then
+            final Optional<Levellog> levellog = levellogRepository.findById(id);
+            assertThat(levellog).isPresent();
+        }
+
+        @Test
+        @DisplayName("팀에 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
+        void save_alreadyExist_exceptionThrown() {
+            // given
+            final LevellogCreateDto request = new LevellogCreateDto("굳굳");
+            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+            final Long authorId = author.getId();
+            final Long teamId = team.getId();
+
+            levellogRepository.save(new Levellog(author, team, "굳굳굳"));
+
+            // when & then
+            assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
+                    .isInstanceOf(LevellogAlreadyExistException.class);
+        }
+    }
+
+    @Nested
     @DisplayName("update 메서드는")
     class update {
 
@@ -75,7 +115,7 @@ class LevellogServiceTest {
             final LevellogCreateDto request = new LevellogCreateDto("update content");
 
             // when
-            levellogService.update(levellog.getId(), author.getId(), request);
+            levellogService.update(request, levellog.getId(), author.getId());
 
             // then
             final Levellog actual = levellogRepository.findById(levellog.getId()).orElseThrow();
@@ -84,16 +124,17 @@ class LevellogServiceTest {
 
         @Test
         @DisplayName("작성자의 id와 로그인한 id가 다를 경우 권한 없음 예외를 던진다.")
-        void unAuthorize_Exception() {
+        void update_Unauthorized_Exception() {
             // given
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Long memberId = memberRepository.save(new Member("페퍼", 1111, "pepper.img")).getId();
+            final Member author = memberRepository.save(new Member("알린", 2222, "alien.img"));
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
-            final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
+            final Long levellogId = levellogRepository.save(new Levellog(author, team, "original content")).getId();
             final LevellogCreateDto request = new LevellogCreateDto("update content");
 
             // when & then
-            assertThatThrownBy(() -> levellogService.update(levellog.getId(), 100L, request))
+            assertThatThrownBy(() -> levellogService.update(request, levellogId, memberId))
                     .isInstanceOf(UnauthorizedException.class);
         }
     }
@@ -123,52 +164,15 @@ class LevellogServiceTest {
         @DisplayName("작성자의 id와 로그인한 id가 다를 경우 권한 없음 예외를 던진다.")
         void unAuthorize_Exception() {
             // given
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Long memberId = memberRepository.save(new Member("페퍼", 1111, "pepper.img")).getId();
+            final Member author = memberRepository.save(new Member("알린", 2222, "alien.img"));
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
-            final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
+            final Long levellogId = levellogRepository.save(new Levellog(author, team, "original content")).getId();
 
             // when & then
-            assertThatThrownBy(() -> levellogService.deleteById(levellog.getId(), 12345L))
+            assertThatThrownBy(() -> levellogService.deleteById(levellogId, memberId))
                     .isInstanceOf(UnauthorizedException.class);
-        }
-    }
-
-    @Nested
-    @DisplayName("save 메서드는")
-    class save {
-
-        @Test
-        @DisplayName("레벨로그를 저장한다.")
-        void save() {
-            // given
-            final LevellogCreateDto request = new LevellogCreateDto("굳굳");
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
-
-            // when
-            final Long id = levellogService.save(author.getId(), team.getId(), request);
-
-            // then
-            final Optional<Levellog> levellog = levellogRepository.findById(id);
-            assertThat(levellog).isPresent();
-        }
-
-        @Test
-        @DisplayName("팀에 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
-        void save_alreadyExist_exceptionThrown() {
-            // given
-            final LevellogCreateDto request = new LevellogCreateDto("굳굳");
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
-
-            levellogRepository.save(new Levellog(author, team, "굳굳굳"));
-
-            // when, then
-            assertThatThrownBy(() -> levellogService.save(author.getId(), team.getId(), request))
-                    .isInstanceOf(LevellogAlreadyExistException.class);
         }
     }
 }

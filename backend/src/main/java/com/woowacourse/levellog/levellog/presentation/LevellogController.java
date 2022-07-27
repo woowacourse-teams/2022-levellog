@@ -29,7 +29,7 @@ public class LevellogController {
     public ResponseEntity<Void> save(@PathVariable final Long teamId,
                                      @RequestBody @Valid final LevellogCreateDto request,
                                      @LoginMember final Long authorId) {
-        final Long id = levellogService.save(authorId, teamId, request);
+        final Long id = levellogService.save(request, authorId, teamId);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId + "/levellogs/" + id)).build();
     }
 
@@ -47,7 +47,7 @@ public class LevellogController {
                                        @LoginMember final Long memberId,
                                        @RequestBody @Valid final LevellogCreateDto request
     ) {
-        levellogService.update(levellogId, memberId, request);
+        levellogService.update(request, levellogId, memberId);
         return ResponseEntity.noContent().build();
     }
 

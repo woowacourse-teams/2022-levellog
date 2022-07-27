@@ -2,6 +2,7 @@ package com.woowacourse.levellog.levellog.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.levellog.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import javax.persistence.Column;
@@ -62,12 +63,20 @@ public class Levellog extends BaseEntity {
         }
     }
 
-    public void updateContent(final String content) {
+    public void updateContent(final Member member, final String content) {
         validateContent(content);
+        validateAuthor(member, "레벨로그를 수정할 권한이 없습니다.");
         this.content = content;
     }
 
-    public boolean isAuthorId(final Long memberId) {
-        return author.getId().equals(memberId);
+    private void validateAuthor(final Member member, final String errorMessage) {
+        final boolean isNotAuthor = !author.equals(member);
+        if (isNotAuthor) {
+            throw new UnauthorizedException(errorMessage);
+        }
+    }
+
+    public boolean isAuthor(final Member member) {
+        return author.equals(member);
     }
 }

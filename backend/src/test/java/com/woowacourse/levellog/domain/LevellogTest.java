@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
@@ -59,20 +58,5 @@ class LevellogTest {
             assertThatThrownBy(() -> new Levellog(author, team, invalidContent))
                     .isInstanceOf(InvalidFieldException.class);
         }
-    }
-
-    @Test
-    @DisplayName("updateContent 메서드는 레벨로그 내용을 변경한다.")
-    void updateContent() {
-        // given
-        final Member author = new Member("페퍼", 1111, "pepper.png");
-        final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now(), "jamsil_trackroom.png");
-        final Levellog levellog = new Levellog(author, team, "JPA에 대해 학습함");
-
-        // when
-        levellog.updateContent("Java 제네릭에 대해 학습함.");
-
-        // then
-        assertThat(levellog.getContent()).isEqualTo("Java 제네릭에 대해 학습함.");
     }
 }

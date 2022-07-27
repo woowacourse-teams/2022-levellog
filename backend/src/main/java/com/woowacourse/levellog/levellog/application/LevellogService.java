@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class LevellogService {
 
@@ -26,54 +26,67 @@ public class LevellogService {
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
 
-    public Long save(final Long authorId, final Long groupId, final LevellogCreateDto request) {
-        levellogRepository.findByAuthorIdAndTeamId(authorId, groupId)
-                .ifPresent(it -> {
-                    throw new LevellogAlreadyExistException();
-                });
-
-        final Team team = getTeam(groupId);
+    @Transactional
+    public Long save(final LevellogCreateDto request, final Long authorId, final Long teamId) {
+        validateLevelogExistence(authorId, teamId);
+        final Team team = getTeam(teamId);
         final Member author = getMember(authorId);
         final Levellog levellog = new Levellog(author, team, request.getContent());
 
         final Levellog savedLevellog = levellogRepository.save(levellog);
+
         return savedLevellog.getId();
     }
 
-    @Transactional(readOnly = true)
-    public LevellogDto findById(final Long id) {
-        final Levellog levellog = getById(id);
+    public LevellogDto findById(final Long teamId) {
+        final Levellog levellog = getById(teamId);
+
         return LevellogDto.from(levellog);
     }
 
-    public void update(final Long levellogId, final Long memberId, final LevellogCreateDto request) {
+    @Transactional
+    public void update(final LevellogCreateDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
-        validateAuthor(levellog, memberId, "레벨로그를 수정할 권한이 없습니다.");
-        levellog.updateContent(request.getContent());
+        final Member member = getMember(memberId);
+
+        levellog.updateContent(member, request.getContent());
     }
 
+    @Transactional
     public void deleteById(final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
-        validateAuthor(levellog, memberId, "레벨로그를 삭제할 권한이 없습니다.");
+        final Member member = getMember(memberId);
+        validateAuthor(member, "레벨로그를 삭제할 권한이 없습니다.", levellog);
+
         levellogRepository.deleteById(levellogId);
     }
 
-    private void validateAuthor(final Levellog levellog, final Long memberId, final String message) {
-        if (!levellog.isAuthorId(memberId)) {
-            throw new UnauthorizedException(message);
-        }
+    private Levellog getById(final Long levellogId) {
+        return levellogRepository.findById(levellogId)
+                .orElseThrow(LevellogNotFoundException::new);
     }
 
-    private Levellog getById(final Long id) {
-        return levellogRepository.findById(id).orElseThrow(LevellogNotFoundException::new);
-    }
-
-    private Team getTeam(final Long groupId) {
-        return teamRepository.findById(groupId).orElseThrow(TeamNotFoundException::new);
+    private Team getTeam(final Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(TeamNotFoundException::new);
     }
 
     private Member getMember(final Long memberId) {
-        return memberRepository
-                .findById(memberId).orElseThrow(MemberNotFoundException::new);
+        return memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
+    private void validateLevelogExistence(final Long authorId, final Long teamId) {
+        final boolean isExists = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
+        if (isExists) {
+            throw new LevellogAlreadyExistException();
+        }
+    }
+
+    private void validateAuthor(final Member member, final String message, final Levellog levellog) {
+        final boolean isNotAuthor = !levellog.isAuthor(member);
+        if (isNotAuthor) {
+            throw new UnauthorizedException(message);
+        }
     }
 }

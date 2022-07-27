@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.presentation;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +32,7 @@ class OAuthControllerTest extends ControllerTest {
                 .andDo(print());
 
         // then
-        perform.andExpect(status().isBadRequest());
+        perform.andExpect(status().isBadRequest())
+                .andDo(document("auth/login/null"));
     }
 }

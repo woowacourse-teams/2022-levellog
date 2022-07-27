@@ -12,6 +12,11 @@
 == 로그인
 
 [[login-success]]
-=== 성공
+=== 로그인 성공
 
 operation::auth/login[]
+
+[[login-fail-blank-token]]
+=== 로그인 실패 - 유효하지 않은 authorizationCode
+
+operation::auth/login/null[]

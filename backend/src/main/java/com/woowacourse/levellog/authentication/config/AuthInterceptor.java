@@ -6,7 +6,6 @@ import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
-import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +26,11 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if (isAnnotatedNoAuthentication((HandlerMethod) handler)) {
+        if (isPublicAPI((HandlerMethod) handler)) {
             return true;
         }
 
         final String token = AuthorizationExtractor.extract(request);
-
         if (!jwtTokenProvider.validateToken(token)) {
             throw new InvalidTokenException("토큰 인증 실패 - token:" + token);
         }
@@ -40,10 +38,10 @@ public class AuthInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private boolean isAnnotatedNoAuthentication(final HandlerMethod handler) {
+    private boolean isPublicAPI(final HandlerMethod handler) {
         final PublicAPI classTypePublicAPI = handler.getBeanType().getAnnotation(PublicAPI.class);
         final PublicAPI methodPublicAPI = handler.getMethodAnnotation(PublicAPI.class);
 
-        return !Objects.isNull(classTypePublicAPI) || !Objects.isNull(methodPublicAPI);
+        return classTypePublicAPI == null && methodPublicAPI == null;
     }
 }

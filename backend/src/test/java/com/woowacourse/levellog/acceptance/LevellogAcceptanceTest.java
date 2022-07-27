@@ -36,7 +36,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("levellog/create"))
+                .filter(document("levellog/save"))
                 .when()
                 .post("/api/teams/{teamId}/levellogs", teamId)
                 .then().log().all();

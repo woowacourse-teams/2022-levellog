@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -15,7 +16,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
+import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
+import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
+import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -125,6 +129,37 @@ class FeedbackControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("feedback/save/exception-team"));
         }
+
+        @Test
+        @DisplayName("존재하지 않는 레벨로그 정보로 피드백 작성을 요청하면 예외가 발생한다.")
+        void save_notFoundLevellog_exceptionThrown() throws Exception {
+            // given
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+
+            final Long levellogId = 20000000L;
+            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+                    "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            given(feedbackService.save(any(CreateFeedbackDto.class), anyLong(), anyLong()))
+                    .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
+
+            // when
+            final ResultActions performCreate = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            performCreate.andExpect(status().isNotFound());
+
+            // docs
+            performCreate.andDo(document("feedback/save/exception-levellog"));
+        }
     }
 
     @Nested
@@ -164,6 +199,40 @@ class FeedbackControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("feedback/update/exception-author"));
         }
+
+        @Test
+        @DisplayName("존재하지 않는 피드백 정보로 피드백 수정을 요청하면 예외가 발생한다.")
+        void update_notFoundFeedback_exceptionThrown() throws Exception {
+            // given
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+
+            final Long levellogId = 1L;
+            final Long feedbackId = 1000000L;
+            doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
+                    .when(feedbackService)
+                    .update(any(CreateFeedbackDto.class), anyLong(), anyLong());
+
+            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+                    "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            // when
+            final ResultActions perform = mockMvc.perform(
+                            put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isNotFound());
+
+            // docs
+            perform.andDo(document("feedback/update/exception-feedback"));
+        }
     }
 
     @Nested
@@ -195,6 +264,90 @@ class FeedbackControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("feedback/delete/exception-author"));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 피드백 정보로 피드백 삭제를 요청하면 예외가 발생한다.")
+        void delete_notFoundFeedback_exceptionThrown() throws Exception {
+            // given
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+
+            final Long levellogId = 1L;
+            final Long feedbackId = 2000000L;
+            doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
+                    .when(feedbackService)
+                    .deleteById(anyLong(), anyLong());
+
+            // when
+            final ResultActions perform = mockMvc.perform(
+                            delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isNotFound());
+
+            // docs
+            perform.andDo(document("feedback/delete/exception-feedback"));
+        }
+    }
+
+    @Nested
+    @DisplayName("findAll 메서드는")
+    class findAll {
+
+        @Test
+        @DisplayName("존재하지 않는 멤버에 대한 피드백 목록 조회를 요청하면 예외가 발생한다.")
+        void findAll_notFoundMember_exceptionThrown() throws Exception {
+            // given
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+
+            final Long levellogId = 1L;
+
+            given(feedbackService.findAll(anyLong()))
+                    .willThrow(new MemberNotFoundException("존재하지 않는 멤버"));
+
+            // when
+            final ResultActions perform = mockMvc.perform(
+                            get("/api/levellogs/{levellogId}/feedbacks", levellogId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isNotFound());
+
+            // docs
+            perform.andDo(document("feedback/find-all/exception-member"));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
+        void findAll_notFoundLevellog_exceptionThrown() throws Exception {
+            // given
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
+            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+
+            final Long levellogId = 200000L;
+
+            given(feedbackService.findAll(anyLong()))
+                    .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
+
+            // when
+            final ResultActions performFindAll = mockMvc.perform(
+                            get("/api/levellogs/{levellogId}/feedbacks", levellogId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                    .andDo(print());
+
+            // then
+            performFindAll.andExpect(status().isNotFound());
+
+            // docs
+            performFindAll.andDo(document("feedback/find-all/exception-levellog"));
         }
     }
 }

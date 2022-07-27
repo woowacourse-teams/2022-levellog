@@ -47,7 +47,7 @@ class FeedbackControllerTest extends ControllerTest {
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
 
-            given(feedbackService.save(any(CreateFeedbackDto.class), anyLong(), anyLong()))
+            given(feedbackService.save(request, levellogId, 1L))
                     .willThrow(new FeedbackAlreadyExistException(levellogId));
 
             final String requestContent = objectMapper.writeValueAsString(request);
@@ -79,7 +79,7 @@ class FeedbackControllerTest extends ControllerTest {
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
 
-            given(feedbackService.save(any(CreateFeedbackDto.class), anyLong(), anyLong()))
+            given(feedbackService.save(request, levellogId, 1L))
                     .willThrow(new InvalidFeedbackException("자기 자신에게 피드백을 할 수 없습니다."));
 
             final String requestContent = objectMapper.writeValueAsString(request);
@@ -111,7 +111,7 @@ class FeedbackControllerTest extends ControllerTest {
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
 
-            given(feedbackService.save(any(CreateFeedbackDto.class), anyLong(), anyLong()))
+            given(feedbackService.save(request, levellogId, 1L))
                     .willThrow(new InvalidFeedbackException("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다."));
 
             final String requestContent = objectMapper.writeValueAsString(request);
@@ -144,14 +144,15 @@ class FeedbackControllerTest extends ControllerTest {
             final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
-            given(feedbackService.save(any(CreateFeedbackDto.class), anyLong(), anyLong()))
+            given(feedbackService.save(request, levellogId, 1L))
                     .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
 
             // when
-            final ResultActions performCreate = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
+            final ResultActions performCreate = mockMvc.perform(
+                            post("/api/levellogs/{levellogId}/feedbacks", levellogId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestContent))
                     .andDo(print());
 
             // then
@@ -176,14 +177,15 @@ class FeedbackControllerTest extends ControllerTest {
 
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-            doThrow(new InvalidFeedbackException("자신이 남긴 피드백만 수정할 수 있습니다."))
-                    .when(feedbackService)
-                    .update(any(CreateFeedbackDto.class), anyLong(), anyLong());
 
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
+
+            doThrow(new InvalidFeedbackException("자신이 남긴 피드백만 수정할 수 있습니다."))
+                    .when(feedbackService)
+                    .update(request, feedbackId, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(
@@ -210,14 +212,15 @@ class FeedbackControllerTest extends ControllerTest {
 
             final Long levellogId = 1L;
             final Long feedbackId = 1000000L;
-            doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
-                    .when(feedbackService)
-                    .update(any(CreateFeedbackDto.class), anyLong(), anyLong());
 
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
+
+            doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
+                    .when(feedbackService)
+                    .update(request, feedbackId, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(

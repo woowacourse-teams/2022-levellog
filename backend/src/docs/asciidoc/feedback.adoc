@@ -16,6 +16,18 @@
 
 operation::feedback/save[]
 
+[[save-exception]]
+=== 예외
+
+==== 요청을 보낸 사용자가 해당 레벨로그에 작성한 피드백이 이미 존재하는 경우
+include::{snippets}/feedback/save/exception-exist/http-response.adoc[]
+
+==== 자신의 레벨로그에 피드백을 남기려는 경우
+include::{snippets}/feedback/save/exception-self/http-response.adoc[]
+
+==== 팀에 속하지 않은 멤버가 피드백을 작성하려는 경우
+include::{snippets}/feedback/save/exception-team/http-response.adoc[]
+
 [[find-all]]
 == 피드백 목록 조회
 
@@ -39,3 +51,9 @@ operation::feedback/update[]
 === 성공
 
 operation::feedback/delete[]
+
+[[delete-exception]]
+=== 예외
+
+==== 다른 사용자가 작성한 피드백을 삭제하려는 경우
+include::{snippets}/feedback/delete/exception-author/http-response.adoc[]

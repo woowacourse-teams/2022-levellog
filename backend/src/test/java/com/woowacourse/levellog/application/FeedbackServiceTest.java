@@ -160,8 +160,9 @@ class FeedbackServiceTest extends ServiceTest {
             final Long id = savedFeedback.getId();
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.deleteById(id, roma.getId())).isInstanceOf(
-                    InvalidFeedbackException.class).hasMessage("자신이 남기거나 받은 피드백만 삭제할 수 있습니다.");
+            assertThatThrownBy(() -> feedbackService.deleteById(id, roma.getId()))
+                    .isInstanceOf(InvalidFeedbackException.class)
+                    .hasMessageContaining("자신이 남기거나 받은 피드백만 삭제할 수 있습니다.");
         }
     }
 
@@ -208,8 +209,9 @@ class FeedbackServiceTest extends ServiceTest {
             final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId())).isInstanceOf(
-                    FeedbackAlreadyExistException.class);
+            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
+                    .isInstanceOf(FeedbackAlreadyExistException.class)
+                    .hasMessageContaining("이미 피드백이 존재합니다. LevellogId : " + levellog.getId());
         }
 
         @Test
@@ -227,7 +229,8 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), eve.getId())).isInstanceOf(
-                    InvalidFeedbackException.class).hasMessage("자기 자신에게 피드백을 할 수 없습니다.");
+                            InvalidFeedbackException.class)
+                    .hasMessageContaining("자기 자신에게 피드백을 할 수 없습니다.");
         }
 
         @Test
@@ -245,9 +248,11 @@ class FeedbackServiceTest extends ServiceTest {
             final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(new CreateFeedbackDto(new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타")),
+            assertThatThrownBy(() -> feedbackService.save(new CreateFeedbackDto(
+                            new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타")),
                     levellog.getId(), roma.getId()))
-                    .isInstanceOf(InvalidFeedbackException.class);
+                    .isInstanceOf(InvalidFeedbackException.class)
+                    .hasMessageContaining("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
         }
     }
 }

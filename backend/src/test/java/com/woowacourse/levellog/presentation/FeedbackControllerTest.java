@@ -5,9 +5,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,9 +19,6 @@ import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -32,56 +29,11 @@ class FeedbackControllerTest extends ControllerTest {
     @DisplayName("save 메서드는")
     class save {
 
-        @ParameterizedTest
-        @NullSource
-        @DisplayName("피드백 내용으로 null이 들어오면 예외를 던진다.")
-        void feedback_contentNull_exceptionThrown(final FeedbackContentDto feedbackContentDto) throws Exception {
-            // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-
-            final Long levellogId = 1L;
-            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
-            final String requestContent = objectMapper.writeValueAsString(request);
-
-            // when
-            final ResultActions perform = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer token")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestContent));
-
-            // then
-            perform.andExpect(status().isBadRequest());
-        }
-
-        @ParameterizedTest
-        @CsvSource(value = {"null,speak,etc", "study,null,etc", "study,speak,null"}, nullValues = {"null"})
-        @DisplayName("피드백 내용의 항목으로 null이 들어오면 예외를 던진다.")
-        void feedbackContentNull_Exception(final String study, final String speak, final String etc) throws Exception {
-            // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-
-            final Long levellogId = 1L;
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(study, speak, etc);
-            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
-            final String requestContent = objectMapper.writeValueAsString(request);
-
-            // when
-            final ResultActions perform = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer token")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
-
-            // then
-            perform.andExpect(status().isBadRequest());
-        }
-
         @Test
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
         void save_alreadyExist_exceptionThrown() throws Exception {
             // given
+            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
@@ -96,19 +48,23 @@ class FeedbackControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer token")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))
                     .andDo(print());
 
             // then
             perform.andExpect(status().isBadRequest());
+
+            // docs
+            perform.andDo(document("feedback/save/exception-exist"));
         }
 
         @Test
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
         void save_selfFeedback_exceptionThrown() throws Exception {
             // given
+            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
@@ -123,19 +79,23 @@ class FeedbackControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer token")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))
                     .andDo(print());
 
             // then
             perform.andExpect(status().isBadRequest());
+
+            // docs
+            perform.andDo(document("feedback/save/exception-self"));
         }
 
         @Test
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
         void save_otherMember_exceptionThrown() throws Exception {
             // given
+            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
@@ -150,70 +110,22 @@ class FeedbackControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer token")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))
                     .andDo(print());
 
             // then
             perform.andExpect(status().isBadRequest());
+
+            // docs
+            perform.andDo(document("feedback/save/exception-team"));
         }
     }
 
     @Nested
     @DisplayName("update 메서드는")
     class update {
-
-        @ParameterizedTest
-        @NullSource
-        @DisplayName("피드백 내용으로 null이 들어오면 예외를 던진다.")
-        void feedbackContentNull_Exception(final FeedbackContentDto feedbackContentDto) throws Exception {
-            // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-
-            final Long levellogId = 1L;
-            final Long feedbackId = 2L;
-            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
-            final String requestContent = objectMapper.writeValueAsString(request);
-
-            // when
-            final ResultActions perform = mockMvc.perform(
-                            put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer token")
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(requestContent))
-                    .andDo(print());
-
-            // then
-            perform.andExpect(status().isBadRequest());
-        }
-
-        @ParameterizedTest
-        @CsvSource(value = {"null,speak,etc", "study,null,etc", "study,speak,null"}, nullValues = {"null"})
-        @DisplayName("피드백 내용의 항목으로 null이 들어오면 예외를 던진다.")
-        void feedbackContentNull_Exception(final String study, final String speak, final String etc) throws Exception {
-            // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-
-            final Long levellogId = 1L;
-            final Long feedbackId = 2L;
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(study, speak, etc);
-            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
-            final String requestContent = objectMapper.writeValueAsString(request);
-
-            // when
-            final ResultActions perform = mockMvc.perform(
-                            put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer token")
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(requestContent))
-                    .andDo(print());
-
-            // then
-            perform.andExpect(status().isBadRequest());
-        }
     }
 
     @Nested
@@ -222,7 +134,9 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("피드백에 관련이 없는 멤버가 삭제를 요청하면 예외가 발생한다.")
-        void delete_otherMember_exceptionThrown() throws Exception {// given
+        void delete_otherMember_exceptionThrown() throws Exception {
+            // given
+            String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
@@ -235,11 +149,14 @@ class FeedbackControllerTest extends ControllerTest {
             // when
             final ResultActions perform = mockMvc.perform(
                             delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                     .andDo(print());
 
             // then
             perform.andExpect(status().isBadRequest());
+
+            // docs
+            perform.andDo(document("feedback/delete/exception-author"));
         }
     }
 }

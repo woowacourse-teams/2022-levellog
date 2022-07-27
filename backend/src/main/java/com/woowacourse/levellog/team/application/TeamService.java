@@ -39,9 +39,10 @@ public class TeamService {
         final Team team = new Team(request.getTitle(), request.getPlace(), request.getStartAt(), host.getProfileUrl());
         final List<Participant> participants = getParticipants(team, hostId, request.getParticipants().getIds());
 
+        final Team savedTeam = teamRepository.save(team);
         participantRepository.saveAll(participants);
 
-        return teamRepository.save(team).getId();
+        return savedTeam.getId();
     }
 
     public TeamsDto findAll() {

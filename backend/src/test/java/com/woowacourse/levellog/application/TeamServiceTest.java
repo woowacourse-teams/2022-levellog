@@ -55,7 +55,7 @@ class TeamServiceTest {
         final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
         final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
         final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now(),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(participant1, participant2, participant3)));
 
         //when
@@ -114,7 +114,7 @@ class TeamServiceTest {
     }
 
     private Team getTeam(final String title) {
-        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now(), "jason.png"));
+        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png"));
     }
 
     @Test
@@ -152,7 +152,7 @@ class TeamServiceTest {
             participantRepository.save(new Participant(team, member1, true));
             participantRepository.save(new Participant(team, member2, false));
 
-            final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now());
+            final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3));
 
             // when
             teamService.update(request, team.getId(), member1.getId());
@@ -175,7 +175,7 @@ class TeamServiceTest {
             participantRepository.save(new Participant(team, member1, true));
             participantRepository.save(new Participant(team, member2, false));
 
-            final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now());
+            final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3));
 
             // when, then
             final Long memberId = member2.getId();

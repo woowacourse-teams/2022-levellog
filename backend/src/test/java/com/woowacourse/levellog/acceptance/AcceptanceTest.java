@@ -97,7 +97,7 @@ abstract class AcceptanceTest {
                 .map(RestAssuredResponse::getMemberId)
                 .collect(Collectors.toList());
         final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
-        final TeamCreateDto request = new TeamCreateDto(title, title + "place", LocalDateTime.now(), participantIdsDto);
+        final TeamCreateDto request = new TeamCreateDto(title, title + "place", LocalDateTime.now().plusDays(3), participantIdsDto);
 
         final String token = login(host)
                 .getToken();
@@ -108,7 +108,7 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse requestCreateTeam(final String title, final String token,
                                                     final Long... participantIds) {
         final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(List.of(participantIds));
-        final TeamCreateDto request = new TeamCreateDto(title, title + "place", LocalDateTime.now(), participantIdsDto);
+        final TeamCreateDto request = new TeamCreateDto(title, title + "place", LocalDateTime.now().plusDays(3), participantIdsDto);
 
         return post("/api/teams", token, request);
     }

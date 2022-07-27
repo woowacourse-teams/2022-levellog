@@ -49,7 +49,7 @@ class LevellogServiceTest {
         // given
         final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
         final Team team = teamRepository.save(
-                new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+                new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now().plusDays(3), "profileUrl"));
         final String content = "content";
         final Levellog levellog = levellogRepository.save(new Levellog(author, team, content));
 
@@ -70,7 +70,7 @@ class LevellogServiceTest {
             // given
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now().plusDays(3), "profileUrl"));
             final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
             final LevellogRequest request = new LevellogRequest("update content");
 
@@ -88,7 +88,7 @@ class LevellogServiceTest {
             // given
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now().plusDays(3), "profileUrl"));
             final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
             final LevellogRequest request = new LevellogRequest("update content");
 
@@ -108,7 +108,7 @@ class LevellogServiceTest {
             // given
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now().plusDays(3), "profileUrl"));
             final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
 
             // when
@@ -125,7 +125,7 @@ class LevellogServiceTest {
             // given
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now().plusDays(3), "profileUrl"));
             final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
 
             // when & then
@@ -145,7 +145,7 @@ class LevellogServiceTest {
             final LevellogRequest request = new LevellogRequest("굳굳");
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now().plusDays(3), "profileUrl"));
 
             // when
             final Long id = levellogService.save(author.getId(), team.getId(), request);
@@ -162,7 +162,7 @@ class LevellogServiceTest {
             final LevellogRequest request = new LevellogRequest("굳굳");
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
+                    new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now().plusDays(3), "profileUrl"));
 
             levellogRepository.save(new Levellog(author, team, "굳굳굳"));
 

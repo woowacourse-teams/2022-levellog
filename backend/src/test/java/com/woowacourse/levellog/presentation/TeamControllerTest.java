@@ -35,7 +35,7 @@ class TeamControllerTest extends ControllerTest {
         void titleNullOrEmpty_Exception(final String title) throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 2L));
-            final TeamCreateDto request = new TeamCreateDto(title, "트랙룸", LocalDateTime.now(), participantIds);
+            final TeamCreateDto request = new TeamCreateDto(title, "트랙룸", LocalDateTime.now().plusDays(3), participantIds);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -55,7 +55,7 @@ class TeamControllerTest extends ControllerTest {
         void placeNullOrEmpty_Exception(final String place) throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 2L));
-            final TeamCreateDto request = new TeamCreateDto("잠실 준조", place, LocalDateTime.now(), participantIds);
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", place, LocalDateTime.now().plusDays(3), participantIds);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -90,7 +90,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
         void participantsNull_Exception() throws Exception {
             // given
-            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now(), null);
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3), null);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -117,14 +117,14 @@ class TeamControllerTest extends ControllerTest {
         void titleNullOrEmpty_Exception(final String title) throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 2L));
-            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 네오조", "트랙룸", LocalDateTime.now(), participantIds);
+            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), participantIds);
             final String teamRequestContent = objectMapper.writeValueAsString(teamCreateDto);
             mockMvc.perform(post("/api/teams")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(teamRequestContent))
                     .andDo(print());
 
-            final TeamUpdateDto request = new TeamUpdateDto(title, "트랙룸", LocalDateTime.now());
+            final TeamUpdateDto request = new TeamUpdateDto(title, "트랙룸", LocalDateTime.now().plusDays(3));
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -144,14 +144,14 @@ class TeamControllerTest extends ControllerTest {
         void placeNullOrEmpty_Exception(final String place) throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 2L));
-            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 네오조", "트랙룸", LocalDateTime.now(), participantIds);
+            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), participantIds);
             final String teamRequestContent = objectMapper.writeValueAsString(teamCreateDto);
             mockMvc.perform(post("/api/teams")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(teamRequestContent))
                     .andDo(print());
 
-            final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", place, LocalDateTime.now());
+            final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", place, LocalDateTime.now().plusDays(3));
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -169,7 +169,7 @@ class TeamControllerTest extends ControllerTest {
         void startAtNull_Exception() throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 2L));
-            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 네오조", "트랙룸", LocalDateTime.now(), participantIds);
+            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), participantIds);
             final String teamRequestContent = objectMapper.writeValueAsString(teamCreateDto);
             mockMvc.perform(post("/api/teams")
                             .contentType(MediaType.APPLICATION_JSON)

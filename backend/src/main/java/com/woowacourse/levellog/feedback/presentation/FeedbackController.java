@@ -41,8 +41,9 @@ public class FeedbackController {
     @PutMapping("/{feedbackId}")
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
                                        @RequestBody @Valid final CreateFeedbackDto request,
-                                       @PathVariable final Long feedbackId) {
-        feedbackService.update(request, feedbackId);
+                                       @PathVariable final Long feedbackId,
+                                       @Authentic final Long memberId) {
+        feedbackService.update(request, feedbackId, memberId);
         return ResponseEntity.noContent().build();
     }
 

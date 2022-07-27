@@ -44,6 +44,13 @@ operation::feedback/find-all[]
 
 operation::feedback/update[]
 
+[[update-exception]]
+=== 예외
+
+==== 다른 사용자가 작성한 피드백을 수정하려는 경우
+include::{snippets}/feedback/update/exception-author/http-response.adoc[]
+
+
 [[delete]]
 == 피드백 삭제
 

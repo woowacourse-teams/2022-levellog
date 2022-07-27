@@ -42,7 +42,7 @@ public class FeedbackService {
         final Levellog levellog = getLevellog(levellogId);
 
         validateTeamMember(levellogId, member);
-        validateAuthor(member, levellog);
+        validateSelfFeedback(member, levellog);
 
         final Feedback feedback = Feedback.of(member, levellog, feedbackContent);
 
@@ -64,8 +64,11 @@ public class FeedbackService {
     }
 
     @Transactional
-    public void update(final CreateFeedbackDto request, final Long feedbackId) {
+    public void update(final CreateFeedbackDto request, final Long feedbackId, final Long memberId) {
         final Feedback feedback = getFeedback(feedbackId);
+        final Member member = getMember(memberId);
+
+        validateAuthor(feedback, member, "자신이 남긴 피드백만 수정할 수 있습니다.");
 
         feedback.updateFeedback(
                 request.getFeedback().getStudy(),
@@ -77,7 +80,8 @@ public class FeedbackService {
     public void deleteById(final Long feedbackId, final Long memberId) {
         final Feedback feedback = getFeedback(feedbackId);
         final Member member = getMember(memberId);
-        validateAssociatedMember(feedback, member);
+
+        validateAuthor(feedback, member, "자신이 남긴 피드백만 삭제할 수 있습니다.");
 
         feedbackRepository.deleteById(feedbackId);
     }
@@ -96,15 +100,16 @@ public class FeedbackService {
         }
     }
 
-    private void validateAuthor(Member member, Levellog levellog) {
+    private void validateSelfFeedback(Member member, Levellog levellog) {
         if (levellog.getAuthor().equals(member)) {
             throw new InvalidFeedbackException("자기 자신에게 피드백을 할 수 없습니다.");
         }
     }
 
-    private void validateAssociatedMember(Feedback feedback, Member member) {
+    private void validateAuthor(Feedback feedback, Member member, String message) {
         if (!feedback.isAssociatedWith(member)) {
-            throw new InvalidFeedbackException("자신이 남기거나 받은 피드백만 삭제할 수 있습니다.");
+            throw new InvalidFeedbackException(
+                    message + " feeadbackId : " + feedback.getId() + ", memberId : " + member.getId());
         }
     }
 

@@ -109,14 +109,6 @@ class TeamServiceTest {
         );
     }
 
-    private Member getMember(final String nickname) {
-        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
-    }
-
-    private Team getTeam(final String title) {
-        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png"));
-    }
-
     @Test
     @DisplayName("findById 메서드는 id에 해당하는 팀을 조회한다.")
     void findById() {
@@ -181,10 +173,10 @@ class TeamServiceTest {
             final Long memberId = member2.getId();
             final Long teamId = team.getId();
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
-                    .isInstanceOf(HostUnauthorizedException.class);
+                    .isInstanceOf(HostUnauthorizedException.class)
+                    .hasMessageContaining("호스트 권한이 없습니다.");
         }
     }
-
 
     @Nested
     @DisplayName("delete 메서드는")
@@ -223,7 +215,16 @@ class TeamServiceTest {
             final Long memberId = member2.getId();
             final Long teamId = team.getId();
             assertThatThrownBy(() -> teamService.deleteById(teamId, memberId))
-                    .isInstanceOf(HostUnauthorizedException.class);
+                    .isInstanceOf(HostUnauthorizedException.class)
+                    .hasMessageContaining("호스트 권한이 없습니다.");
         }
+    }
+
+    private Member getMember(final String nickname) {
+        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
+    }
+
+    private Team getTeam(final String title) {
+        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png"));
     }
 }

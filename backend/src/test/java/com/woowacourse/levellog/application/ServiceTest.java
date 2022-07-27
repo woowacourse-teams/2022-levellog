@@ -1,8 +1,9 @@
 package com.woowacourse.levellog.application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.application.OAuthService;
-import com.woowacourse.levellog.authentication.domain.OAuthClient;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.config.TestAuthenticationConfig;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.levellog.application.LevellogService;
@@ -14,17 +15,18 @@ import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
+@Import(TestAuthenticationConfig.class)
 abstract class ServiceTest {
 
-    @MockBean
-    protected OAuthClient oAuthClient;
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;

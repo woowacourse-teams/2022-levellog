@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
@@ -20,36 +19,32 @@ class OAuthServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("첫 로그인 시 회원가입하고 id, 토큰, 이미지 URL를 반환한다.")
-        void loginFirst() {
-            // given
-            given(oAuthClient.getAccessToken("githubCode")).willReturn("accessToken");
-            given(oAuthClient.getProfile("accessToken")).willReturn(
-                    new GithubProfileDto("12345", "로마", "imageUrl"));
-
+        void login_first_signUp() throws Exception {
             // when
-            final LoginDto tokenResponse = oAuthService.login(new GithubCodeDto("githubCode"));
+            final GithubProfileDto request = new GithubProfileDto("1234", "릭", "rick.org");
+            final LoginDto tokenResponse = oAuthService.login(
+                    new GithubCodeDto(objectMapper.writeValueAsString(request)));
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
             final Long savedMemberId = memberService.findMemberById(Long.parseLong(payload))
                     .getId();
 
             // then
             assertThat(Long.parseLong(payload)).isEqualTo(savedMemberId);
-            assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
+            assertThat(tokenResponse.getProfileUrl()).isEqualTo("rick.org");
             assertThat(tokenResponse.getId()).isNotNull();
         }
 
         @Test
         @DisplayName("첫 로그인이 아닌 경우 회원가입 하지 않고 토큰과 이미지 URL를 반환한다.")
-        void loginNotFirst() {
+        void login_notFirst_signIn() throws Exception {
             // given
             final Long savedId = memberService.save(new MemberCreateDto("로마", 12345, "imageUrl"));
 
-            given(oAuthClient.getAccessToken("githubCode")).willReturn("accessToken");
-            given(oAuthClient.getProfile("accessToken")).willReturn(
-                    new GithubProfileDto("12345", "로마", "imageUrl"));
+            final GithubProfileDto request = new GithubProfileDto("12345", "로마", "imageUrl");
 
             // when
-            final LoginDto tokenResponse = oAuthService.login(new GithubCodeDto("githubCode"));
+            final LoginDto tokenResponse = oAuthService.login(
+                    new GithubCodeDto(objectMapper.writeValueAsString(request)));
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
 
             // then

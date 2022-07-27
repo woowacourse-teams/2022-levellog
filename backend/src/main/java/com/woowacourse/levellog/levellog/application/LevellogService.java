@@ -1,12 +1,12 @@
 package com.woowacourse.levellog.levellog.application;
 
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.levellog.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
@@ -56,24 +56,24 @@ public class LevellogService {
     public void deleteById(final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
         final Member member = getMember(memberId);
-        validateAuthor(member, "레벨로그를 삭제할 권한이 없습니다.", levellog);
+        validateAuthor(member, levellog);
 
         levellogRepository.deleteById(levellogId);
     }
 
     private Levellog getById(final Long levellogId) {
         return levellogRepository.findById(levellogId)
-                .orElseThrow(LevellogNotFoundException::new);
+                .orElseThrow(() -> new LevellogNotFoundException("레벨로그가 존재하지 않습니다. id : " + levellogId));
     }
 
     private Team getTeam(final Long teamId) {
         return teamRepository.findById(teamId)
-                .orElseThrow(TeamNotFoundException::new);
+                .orElseThrow(() -> new TeamNotFoundException("팀이 존재하지 않습니다. id : " + teamId));
     }
 
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않습니다. id : " + memberId));
     }
 
     private void validateLevelogExistence(final Long authorId, final Long teamId) {
@@ -83,10 +83,11 @@ public class LevellogService {
         }
     }
 
-    private void validateAuthor(final Member member, final String message, final Levellog levellog) {
+    private void validateAuthor(final Member member, final Levellog levellog) {
         final boolean isNotAuthor = !levellog.isAuthor(member);
         if (isNotAuthor) {
-            throw new UnauthorizedException(message);
+            throw new UnauthorizedException("레벨로그를 삭제할 권한이 없습니다. memberId : " + member.getId()
+                    + " levellogId: " + levellog.getId());
         }
     }
 }

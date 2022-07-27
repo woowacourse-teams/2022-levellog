@@ -1,6 +1,5 @@
-package com.woowacourse.levellog.levellog.exception;
+package com.woowacourse.levellog.common.exception;
 
-import com.woowacourse.levellog.common.exception.LevellogException;
 import org.springframework.http.HttpStatus;
 
 public class UnauthorizedException extends LevellogException {

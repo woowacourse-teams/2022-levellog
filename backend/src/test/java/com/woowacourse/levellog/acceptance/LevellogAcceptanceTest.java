@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.acceptance;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;

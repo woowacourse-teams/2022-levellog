@@ -39,7 +39,8 @@ class LevellogRepositoryTest {
     void findByAuthorIdAndTeamId() {
         // given
         final Member author = memberRepository.save(new Member("pepper", 1111, "pepper.png"));
-        final Team team = teamRepository.save(new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png"));
+        final Team team = teamRepository.save(
+                new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png"));
         final Levellog levellog = levellogRepository.save(new Levellog(author, team, "Spring을 학습하였습니다."));
 
         final Long authorId = author.getId();
@@ -60,7 +61,8 @@ class LevellogRepositoryTest {
         void exists() {
             // given
             final Member author = memberRepository.save(new Member("pepper", 1111, "pepper.png"));
-            final Team team = teamRepository.save(new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png"));
+            final Team team = teamRepository.save(
+                    new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png"));
             levellogRepository.save(new Levellog(author, team, "Spring을 학습하였습니다."));
 
             final Long authorId = author.getId();
@@ -78,7 +80,8 @@ class LevellogRepositoryTest {
         void notExists() {
             // given
             final Member author = memberRepository.save(new Member("pepper", 1111, "pepper.png"));
-            final Team team = teamRepository.save(new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png"));
+            final Team team = teamRepository.save(
+                    new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png"));
             levellogRepository.save(new Levellog(author, team, "Spring을 학습하였습니다."));
 
             final Long anotherAuthorId = author.getId() + 1;

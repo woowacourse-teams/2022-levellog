@@ -38,7 +38,7 @@ public class MyInfoController {
     @PutMapping
     public ResponseEntity<Void> updateNickname(@Authentic final Long memberId,
                                                @RequestBody @Valid final NicknameUpdateDto nicknameUpdateDto) {
-        memberService.updateNickname(memberId, nicknameUpdateDto);
+        memberService.updateNickname(nicknameUpdateDto, memberId);
         return ResponseEntity.noContent().build();
     }
 }

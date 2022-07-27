@@ -89,7 +89,7 @@ class MemberServiceTest extends ServiceTest {
         final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto("알린");
 
         // when
-        memberService.updateNickname(id, nicknameUpdateDto);
+        memberService.updateNickname(nicknameUpdateDto, id);
 
         // then
         final Member updateMember = memberRepository.findById(id)

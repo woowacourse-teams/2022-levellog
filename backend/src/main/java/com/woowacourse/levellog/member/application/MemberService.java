@@ -64,7 +64,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateNickname(final Long memberId, final NicknameUpdateDto request) {
+    public void updateNickname(final NicknameUpdateDto request, final Long memberId) {
         final Member member = getById(memberId);
         member.updateNickname(request.getNickname());
     }

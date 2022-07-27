@@ -43,13 +43,19 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 abstract class AcceptanceTest {
 
+    @Deprecated
     protected static final String MASTER = "토미";
 
+    @Deprecated
     protected String masterToken;
+
     protected RequestSpecification specification;
-    private Long masterId;
+
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Deprecated
+    private Long masterId;
 
     @LocalServerPort
     private int port;
@@ -91,6 +97,7 @@ abstract class AcceptanceTest {
                 .getMemberId();
     }
 
+    @Deprecated
     protected RestAssuredResponse requestCreateTeam(final String title, final String host,
                                                     final String... participants) {
         final List<Long> participantIds = Arrays.stream(participants)
@@ -106,6 +113,7 @@ abstract class AcceptanceTest {
         return post("/api/teams", token, request);
     }
 
+    @Deprecated
     protected RestAssuredResponse requestCreateTeam(final String title, final String token,
                                                     final Long... participantIds) {
         final ParticipantIdsRequest participantIdsRequest = new ParticipantIdsRequest(List.of(participantIds));
@@ -114,6 +122,7 @@ abstract class AcceptanceTest {
         return post("/api/teams", token, request);
     }
 
+    @Deprecated
     protected RestAssuredResponse login(final String nickname) {
         try {
             final GithubProfileDto response = new GithubProfileDto(String.valueOf(
@@ -127,6 +136,7 @@ abstract class AcceptanceTest {
         return null;
     }
 
+    @Deprecated
     protected RestAssuredResponse requestCreateLevellog(final String teamId, final String content) {
         final LevellogRequest request = new LevellogRequest(content);
 

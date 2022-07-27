@@ -8,6 +8,8 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
 import com.woowacourse.levellog.feedback.dto.FeedbacksResponse;
+import com.woowacourse.levellog.fixture.RestAssuredResponse;
+import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.levellog.dto.LevellogRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
@@ -29,26 +31,20 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 작성")
     void createFeedback() {
         // given
-        final ValidatableResponse hostLoginResponse = login("릭");
-        final Long rick_id = getMemberId(hostLoginResponse);
-        final String rickToken = getToken(hostLoginResponse);
+        final RestAssuredResponse hostLoginResponse = login("릭");
+        final Long rick_id = hostLoginResponse.getMemberId();
+        final String rickToken = hostLoginResponse.getToken();
 
-        final ValidatableResponse romaLoginResponse = login("로마");
-        final Long roma_id = getMemberId(romaLoginResponse);
-        final String romaToken = getToken(romaLoginResponse);
+        final RestAssuredResponse romaLoginResponse = login("로마");
+        final Long roma_id = romaLoginResponse.getMemberId();
+        final String romaToken = romaLoginResponse.getToken();
 
-        final ValidatableResponse teamResponse = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id);
-        final String teamId = getTeamId(teamResponse);
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
+                .getTeamId();
 
         final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
-        final ValidatableResponse levellogResponse = RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + rickToken)
-                .body(levellogRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/teams/{teamId}/levellogs", teamId)
-                .then().log().all();
-        final String levellogId = getLevellogId(levellogResponse);
+        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
+                .getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
@@ -80,26 +76,20 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 조회")
     void findAllFeedbacks() {
         // given
-        final ValidatableResponse hostLoginResponse = login("릭");
-        final Long rick_id = getMemberId(hostLoginResponse);
-        final String rickToken = getToken(hostLoginResponse);
+        final RestAssuredResponse hostLoginResponse = login("릭");
+        final Long rick_id = hostLoginResponse.getMemberId();
+        final String rickToken = hostLoginResponse.getToken();
 
-        final ValidatableResponse romaLoginResponse = login("로마");
-        final Long roma_id = getMemberId(romaLoginResponse);
-        final String romaToken = getToken(romaLoginResponse);
+        final RestAssuredResponse romaLoginResponse = login("로마");
+        final Long roma_id = romaLoginResponse.getMemberId();
+        final String romaToken = romaLoginResponse.getToken();
 
-        final ValidatableResponse teamResponse = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id);
-        final String teamId = getTeamId(teamResponse);
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
+                .getTeamId();
 
         final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
-        final ValidatableResponse levellogResponse = RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + rickToken)
-                .body(levellogRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/teams/{teamId}/levellogs", teamId)
-                .then().log().all();
-        final String levellogId = getLevellogId(levellogResponse);
+        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
+                .getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
@@ -143,27 +133,20 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 삭제")
     void deleteFeedback() {
         // given
-        // given
-        final ValidatableResponse hostLoginResponse = login("릭");
-        final Long rick_id = getMemberId(hostLoginResponse);
-        final String rickToken = getToken(hostLoginResponse);
+        final RestAssuredResponse hostLoginResponse = login("릭");
+        final Long rick_id = hostLoginResponse.getMemberId();
+        final String rickToken = hostLoginResponse.getToken();
 
-        final ValidatableResponse romaLoginResponse = login("로마");
-        final Long roma_id = getMemberId(romaLoginResponse);
-        final String romaToken = getToken(romaLoginResponse);
+        final RestAssuredResponse romaLoginResponse = login("로마");
+        final Long roma_id = romaLoginResponse.getMemberId();
+        final String romaToken = romaLoginResponse.getToken();
 
-        final ValidatableResponse teamResponse = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id);
-        final String teamId = getTeamId(teamResponse);
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
+                .getTeamId();
 
         final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
-        final ValidatableResponse levellogResponse = RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + rickToken)
-                .body(levellogRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/teams/{teamId}/levellogs", teamId)
-                .then().log().all();
-        final String rick_levellogId = getLevellogId(levellogResponse);
+        final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
+                .getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",

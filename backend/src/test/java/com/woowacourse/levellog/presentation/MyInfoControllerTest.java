@@ -4,15 +4,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
-import com.woowacourse.levellog.member.exception.InvalidFieldException;
 import org.apache.http.HttpHeaders;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,12 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 class MyInfoControllerTest extends ControllerTest {
-
-    // FIXME : 팀 API 구현 후 수정
-    @Disabled
-    @Test
-    void findAllMyFeedback() {
-    }
 
     @Nested
     @DisplayName("updateNickname 메서드는 ")
@@ -41,7 +33,7 @@ class MyInfoControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
-            doThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다.", BAD_REQUEST))
+            doThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다."))
                     .when(memberService)
                     .updateNickname(any(), any());
             final String invalidNickname = "a".repeat(51);
@@ -53,7 +45,7 @@ class MyInfoControllerTest extends ControllerTest {
             final ResultActions perform = mockMvc.perform(put("/api/myInfo")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer: token"))
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
                     .andDo(print());
 
             // then

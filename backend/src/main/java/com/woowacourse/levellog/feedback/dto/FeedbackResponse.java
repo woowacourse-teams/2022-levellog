@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.feedback.dto;
 
-import com.woowacourse.levellog.member.dto.MemberResponse;
+import com.woowacourse.levellog.member.dto.MemberDto;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class FeedbackResponse {
 
     private Long id;
-    private MemberResponse from;
+    private MemberDto from;
     private FeedbackContentDto feedback;
     private LocalDateTime updatedAt;
 }

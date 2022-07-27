@@ -4,7 +4,8 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.authentication.dto.LoginResponse;
+import com.woowacourse.levellog.fixture.RestAssuredResponse;
+import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
 import com.woowacourse.levellog.team.dto.TeamRequest;
 import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
@@ -31,14 +32,14 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 팀 생성하기")
     void createTeam() {
         // given
-        final LoginResponse loginResponse1 = login("페퍼").extract().as(LoginResponse.class);
-        final LoginResponse loginResponse2 = login("이브").extract().as(LoginResponse.class);
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
         final TeamRequest request = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse1.getId(), loginResponse2.getId())));
+                new ParticipantIdsRequest(List.of(loginResponse1.getMemberId(), loginResponse2.getMemberId())));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getAccessToken())
+                .auth().oauth2(loginResponse1.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/create"))
@@ -61,16 +62,17 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 팀 목록 조회하기")
     void findAllTeam() {
         // given
-        final LoginResponse loginResponse1 = login("페퍼").extract().as(LoginResponse.class);
-        final LoginResponse loginResponse2 = login("이브").extract().as(LoginResponse.class);
-        final LoginResponse loginResponse3 = login("릭").extract().as(LoginResponse.class);
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
+        final RestAssuredResponse loginResponse3 = login("릭");
         final TeamRequest teamRequest1 = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse2.getId())));
+                new ParticipantIdsRequest(List.of(loginResponse2.getMemberId())));
         final TeamRequest teamRequest2 = new TeamRequest("잠실 브리조", "톱오브스윙방", LocalDateTime.now(),
                 new ParticipantIdsRequest(
-                        List.of(loginResponse1.getId(), loginResponse3.getId())));
-        requestCreateTeam(loginResponse1, teamRequest1);
-        requestCreateTeam(loginResponse2, teamRequest2);
+                        List.of(loginResponse1.getMemberId(), loginResponse3.getMemberId())));
+
+        RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamRequest1);
+        RestAssuredTemplate.post("/api/teams", loginResponse2.getToken(), teamRequest2);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -83,7 +85,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"),
-                        "teams.hostId", contains(loginResponse1.getId().intValue(), loginResponse2.getId().intValue()),
+                        "teams.hostId", contains(loginResponse1.getMemberId().intValue(), loginResponse2.getMemberId().intValue()),
                         "teams.participants.nickname", contains(List.of("페퍼", "이브"), List.of("이브", "페퍼", "릭"))
                 );
     }
@@ -98,11 +100,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 팀 상세 조회하기")
     void findTeam() {
         // given
-        final LoginResponse loginResponse1 = login("페퍼").extract().as(LoginResponse.class);
-        final LoginResponse loginResponse2 = login("이브").extract().as(LoginResponse.class);
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
         final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse2.getId())));
-        final Long id = getTeamId(loginResponse1, teamRequest);
+                new ParticipantIdsRequest(List.of(loginResponse2.getMemberId())));
+
+        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamRequest)
+                .getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -130,16 +134,17 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 팀 정보 수정하기")
     void update() {
         // given
-        final LoginResponse loginResponse1 = login("페퍼").extract().as(LoginResponse.class);
-        final LoginResponse loginResponse2 = login("이브").extract().as(LoginResponse.class);
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
         final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse1.getId(), loginResponse2.getId())));
-        final Long id = getTeamId(loginResponse1, teamRequest);
+                new ParticipantIdsRequest(List.of(loginResponse1.getMemberId(), loginResponse2.getMemberId())));
+        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamRequest)
+                .getTeamId();
         final TeamUpdateRequest request = new TeamUpdateRequest("선릉 브리조", "수성방", LocalDateTime.now());
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getAccessToken())
+                .auth().oauth2(loginResponse1.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/update"))
@@ -161,15 +166,15 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 팀 삭제하기")
     void delete() {
         // given
-        final LoginResponse loginResponse1 = login("페퍼").extract().as(LoginResponse.class);
-        final LoginResponse loginResponse2 = login("이브").extract().as(LoginResponse.class);
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
         final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse1.getId(), loginResponse2.getId())));
-        final Long id = getTeamId(loginResponse1, teamRequest);
-
+                new ParticipantIdsRequest(List.of(loginResponse1.getMemberId(), loginResponse2.getMemberId())));
+        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamRequest)
+                .getTeamId();
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getAccessToken())
+                .auth().oauth2(loginResponse1.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/delete"))
                 .when()
@@ -178,23 +183,5 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    private ValidatableResponse requestCreateTeam(final LoginResponse loginResponse1, final TeamRequest request) {
-        return RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getAccessToken())
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/create"))
-                .when()
-                .post("/api/teams")
-                .then().log().all();
-    }
-
-    private Long getTeamId(final LoginResponse loginResponse1, final TeamRequest teamRequest) {
-        return Long.valueOf(requestCreateTeam(loginResponse1, teamRequest)
-                .extract()
-                .header(HttpHeaders.LOCATION)
-                .split("/api/teams/")[1]);
     }
 }

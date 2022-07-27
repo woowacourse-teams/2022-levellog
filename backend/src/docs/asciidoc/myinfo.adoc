@@ -23,3 +23,11 @@ operation::myinfo/read[]
 === 성공
 
 operation::myinfo/update-nickname[]
+
+[[findAllToMe]]
+== 받은 피드백 전체 조회
+
+[[findAllToMe-success]]
+=== 성공
+
+operation::myinfo/findAllToMe[]

@@ -10,7 +10,7 @@ import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
 import com.woowacourse.levellog.feedback.dto.FeedbacksResponse;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +42,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
                 .getTeamId();
 
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final LevellogCreateDto levellogRequest = new LevellogCreateDto("레벨로그");
         final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
                 .getLevellogId();
 
@@ -87,18 +87,18 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
                 .getTeamId();
 
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final LevellogCreateDto levellogRequest = new LevellogCreateDto("레벨로그");
         final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
                 .getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
                 "윙크하지 마세요.");
-        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+        final FeedbackRequest feedbackRequest = new FeedbackRequest(feedbackContentDto);
 
         RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
-                .body(request)
+                .body(feedbackRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("feedback/save"))
                 .when()
@@ -144,18 +144,18 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
                 .getTeamId();
 
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final LevellogCreateDto levellogRequest = new LevellogCreateDto("레벨로그");
         final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken, levellogRequest)
                 .getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
                 "윙크하지 마세요.");
-        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+        final FeedbackRequest feedbackRequest = new FeedbackRequest(feedbackContentDto);
 
         RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
-                .body(request)
+                .body(feedbackRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("feedback/save"))
                 .when()

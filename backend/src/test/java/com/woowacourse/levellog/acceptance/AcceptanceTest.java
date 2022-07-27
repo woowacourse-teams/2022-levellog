@@ -14,7 +14,7 @@ import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.config.TestAuthenticationConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
 import com.woowacourse.levellog.team.dto.TeamRequest;
 import io.restassured.RestAssured;
@@ -127,7 +127,7 @@ abstract class AcceptanceTest {
     }
 
     protected RestAssuredResponse requestCreateLevellog(final String teamId, final String content) {
-        final LevellogRequest request = new LevellogRequest(content);
+        final LevellogCreateDto request = new LevellogCreateDto(content);
 
         return post("/api/teams/" + teamId + "/levellogs", masterToken, request);
     }

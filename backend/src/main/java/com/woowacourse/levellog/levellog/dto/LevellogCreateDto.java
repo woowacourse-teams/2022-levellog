@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LevellogRequest {
+public class LevellogCreateDto {
 
     @NotBlank
     private String content;

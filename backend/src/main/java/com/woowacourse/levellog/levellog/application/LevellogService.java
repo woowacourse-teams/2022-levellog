@@ -2,8 +2,8 @@ package com.woowacourse.levellog.levellog.application;
 
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
-import com.woowacourse.levellog.levellog.dto.LevellogResponse;
+import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.levellog.exception.UnauthorizedException;
@@ -26,7 +26,7 @@ public class LevellogService {
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
 
-    public Long save(final Long authorId, final Long groupId, final LevellogRequest request) {
+    public Long save(final Long authorId, final Long groupId, final LevellogCreateDto request) {
         levellogRepository.findByAuthorIdAndTeamId(authorId, groupId)
                 .ifPresent(it -> {
                     throw new LevellogAlreadyExistException();
@@ -41,12 +41,12 @@ public class LevellogService {
     }
 
     @Transactional(readOnly = true)
-    public LevellogResponse findById(final Long id) {
+    public LevellogDto findById(final Long id) {
         final Levellog levellog = getById(id);
-        return new LevellogResponse(levellog.getContent());
+        return new LevellogDto(levellog.getContent());
     }
 
-    public void update(final Long levellogId, final Long memberId, final LevellogRequest request) {
+    public void update(final Long levellogId, final Long memberId, final LevellogCreateDto request) {
         final Levellog levellog = getById(levellogId);
         validateAuthor(levellog, memberId, "레벨로그를 수정할 권한이 없습니다.");
         levellog.updateContent(request.getContent());

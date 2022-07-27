@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
-import com.woowacourse.levellog.levellog.dto.LevellogResponse;
+import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -54,7 +54,7 @@ class LevellogServiceTest {
         final Levellog levellog = levellogRepository.save(new Levellog(author, team, content));
 
         // when
-        final LevellogResponse response = levellogService.findById(levellog.getId());
+        final LevellogDto response = levellogService.findById(levellog.getId());
 
         // then
         assertThat(response.getContent()).isEqualTo(content);
@@ -72,7 +72,7 @@ class LevellogServiceTest {
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
             final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
-            final LevellogRequest request = new LevellogRequest("update content");
+            final LevellogCreateDto request = new LevellogCreateDto("update content");
 
             // when
             levellogService.update(levellog.getId(), author.getId(), request);
@@ -90,7 +90,7 @@ class LevellogServiceTest {
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
             final Levellog levellog = levellogRepository.save(new Levellog(author, team, "original content"));
-            final LevellogRequest request = new LevellogRequest("update content");
+            final LevellogCreateDto request = new LevellogCreateDto("update content");
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(levellog.getId(), 100L, request))
@@ -142,7 +142,7 @@ class LevellogServiceTest {
         @DisplayName("레벨로그를 저장한다.")
         void save() {
             // given
-            final LevellogRequest request = new LevellogRequest("굳굳");
+            final LevellogCreateDto request = new LevellogCreateDto("굳굳");
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));
@@ -159,7 +159,7 @@ class LevellogServiceTest {
         @DisplayName("팀에 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
         void save_alreadyExist_exceptionThrown() {
             // given
-            final LevellogRequest request = new LevellogRequest("굳굳");
+            final LevellogCreateDto request = new LevellogCreateDto("굳굳");
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", LocalDateTime.now(), "profileUrl"));

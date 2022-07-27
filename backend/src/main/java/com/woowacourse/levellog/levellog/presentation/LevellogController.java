@@ -3,8 +3,8 @@ package com.woowacourse.levellog.levellog.presentation;
 import com.woowacourse.levellog.authentication.support.LoginMember;
 import com.woowacourse.levellog.authentication.support.NoAuthentication;
 import com.woowacourse.levellog.levellog.application.LevellogService;
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
-import com.woowacourse.levellog.levellog.dto.LevellogResponse;
+import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class LevellogController {
 
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long teamId,
-                                     @RequestBody @Valid final LevellogRequest request,
+                                     @RequestBody @Valid final LevellogCreateDto request,
                                      @LoginMember final Long authorId) {
         final Long id = levellogService.save(authorId, teamId, request);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId + "/levellogs/" + id)).build();
@@ -35,9 +35,9 @@ public class LevellogController {
 
     @GetMapping("/{levellogId}")
     @NoAuthentication
-    public ResponseEntity<LevellogResponse> find(@PathVariable final Long teamId,
-                                                 @PathVariable final Long levellogId) {
-        final LevellogResponse response = levellogService.findById(levellogId);
+    public ResponseEntity<LevellogDto> find(@PathVariable final Long teamId,
+                                            @PathVariable final Long levellogId) {
+        final LevellogDto response = levellogService.findById(levellogId);
         return ResponseEntity.ok(response);
     }
 
@@ -45,7 +45,7 @@ public class LevellogController {
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @PathVariable final Long levellogId,
                                        @LoginMember final Long memberId,
-                                       @RequestBody @Valid final LevellogRequest request
+                                       @RequestBody @Valid final LevellogCreateDto request
     ) {
         levellogService.update(levellogId, memberId, request);
         return ResponseEntity.noContent().build();

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LevellogResponse {
+public class LevellogDto {
 
     private final String content;
 }

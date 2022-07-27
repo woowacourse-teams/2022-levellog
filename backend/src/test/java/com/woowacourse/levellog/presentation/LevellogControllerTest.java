@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.levellog.dto.LevellogCreateDto;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.levellog.exception.UnauthorizedException;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ class LevellogControllerTest extends ControllerTest {
         void nameNullOrEmpty_Exception(final String content) throws Exception {
             // given
             final Long teamId = 1L;
-            final LevellogRequest request = new LevellogRequest(content);
+            final LevellogCreateDto request = new LevellogCreateDto(content);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -94,7 +94,7 @@ class LevellogControllerTest extends ControllerTest {
 
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final LevellogRequest request = new LevellogRequest(content);
+            final LevellogCreateDto request = new LevellogCreateDto(content);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -120,7 +120,7 @@ class LevellogControllerTest extends ControllerTest {
 
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final LevellogRequest request = new LevellogRequest("content");
+            final LevellogCreateDto request = new LevellogCreateDto("content");
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when

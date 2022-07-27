@@ -1,12 +1,13 @@
 package com.woowacourse.levellog.presentation;
 
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
-import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
+import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,14 +29,13 @@ class FeedbackControllerTest extends ControllerTest {
         void feedbackContentNull_Exception(final FeedbackContentDto feedbackContentDto) throws Exception {
             // given
             final Long levellogId = 1L;
-            final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+                            .content(requestContent));
 
             // then
             perform.andExpect(status().isBadRequest());
@@ -48,7 +48,7 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long levellogId = 1L;
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(study, speak, etc);
-            final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -73,7 +73,7 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-            final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -95,7 +95,7 @@ class FeedbackControllerTest extends ControllerTest {
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(study, speak, etc);
-            final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when

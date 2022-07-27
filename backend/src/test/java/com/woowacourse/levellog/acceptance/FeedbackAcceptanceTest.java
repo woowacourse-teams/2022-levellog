@@ -5,9 +5,9 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
+import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
-import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
-import com.woowacourse.levellog.feedback.dto.FeedbacksResponse;
+import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.levellog.dto.LevellogRequest;
@@ -49,7 +49,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
                 "윙크하지 마세요.");
-        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+        final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -94,7 +94,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
                 "윙크하지 마세요.");
-        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+        final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
 
         RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
@@ -151,7 +151,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
                 "윙크하지 마세요.");
-        final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+        final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
 
         RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
@@ -164,7 +164,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         final Long deleteId = requestFindAllFeedbacks(rick_levellogId)
                 .extract()
-                .as(FeedbacksResponse.class)
+                .as(FeedbacksDto.class)
                 .getFeedbacks()
                 .get(0)
                 .getId();

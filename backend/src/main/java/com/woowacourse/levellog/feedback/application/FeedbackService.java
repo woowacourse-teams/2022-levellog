@@ -3,9 +3,9 @@ package com.woowacourse.levellog.feedback.application;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
-import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
-import com.woowacourse.levellog.feedback.dto.FeedbackResponse;
-import com.woowacourse.levellog.feedback.dto.FeedbacksResponse;
+import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
+import com.woowacourse.levellog.feedback.dto.FeedbackDto;
+import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
@@ -34,7 +34,7 @@ public class FeedbackService {
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public Long save(final FeedbackRequest request, final Long levellogId, final Long fromMemberId) {
+    public Long save(final CreateFeedbackDto request, final Long levellogId, final Long fromMemberId) {
         validateExistence(levellogId, fromMemberId);
 
         final Member member = getMember(fromMemberId);
@@ -44,33 +44,27 @@ public class FeedbackService {
         validateTeamMember(levellogId, member);
         validateAuthor(member, levellog);
 
-        final Feedback feedback = new Feedback(
-                member,
-                levellog.getAuthor(),
-                levellog,
-                feedbackContent.getStudy(),
-                feedbackContent.getSpeak(),
-                feedbackContent.getEtc());
+        final Feedback feedback = Feedback.of(member, levellog, feedbackContent);
 
         return feedbackRepository.save(feedback).getId();
     }
 
-    public FeedbacksResponse findAll(final Long levellogId) {
+    public FeedbacksDto findAll(final Long levellogId) {
         final Levellog levellog = getLevellog(levellogId);
-        final List<FeedbackResponse> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
+        final List<FeedbackDto> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
 
-        return new FeedbacksResponse(responses);
+        return new FeedbacksDto(responses);
     }
 
-    public FeedbacksResponse findAllByTo(final Long memberId) {
+    public FeedbacksDto findAllByTo(final Long memberId) {
         final Member member = getMember(memberId);
         final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(member);
 
-        return new FeedbacksResponse(getFeedbackResponses(feedbacks));
+        return new FeedbacksDto(getFeedbackResponses(feedbacks));
     }
 
     @Transactional
-    public void update(final FeedbackRequest request, final Long feedbackId) {
+    public void update(final CreateFeedbackDto request, final Long feedbackId) {
         final Feedback feedback = getFeedback(feedbackId);
 
         feedback.updateFeedback(
@@ -95,7 +89,7 @@ public class FeedbackService {
     }
 
     private void validateTeamMember(final Long levellogId, final Member member) {
-        final Team team = getTeam(levellogId);
+        final Team team = getLevellog(levellogId).getTeam();
 
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
             throw new InvalidFeedbackException("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
@@ -114,16 +108,10 @@ public class FeedbackService {
         }
     }
 
-    private List<FeedbackResponse> getFeedbackResponses(final List<Feedback> feedbacks) {
+    private List<FeedbackDto> getFeedbackResponses(final List<Feedback> feedbacks) {
         return feedbacks.stream()
-                .map(FeedbackResponse::from)
+                .map(FeedbackDto::from)
                 .collect(Collectors.toList());
-    }
-
-    private Team getTeam(final Long levellogId) {
-        return levellogRepository.findById(levellogId)
-                .map(Levellog::getTeam)
-                .orElseThrow(LevellogNotFoundException::new);
     }
 
     private Member getMember(final Long memberId) {
@@ -134,11 +122,11 @@ public class FeedbackService {
 
     private Levellog getLevellog(final Long levellogId) {
         return levellogRepository.findById(levellogId)
-                .orElseThrow(LevellogNotFoundException::new);
+                .orElseThrow(() -> new LevellogNotFoundException("존재하지 않는 레벨로그. levellogId : " + levellogId));
     }
 
     private Feedback getFeedback(Long feedbackId) {
         return feedbackRepository.findById(feedbackId)
-                .orElseThrow(FeedbackNotFoundException::new);
+                .orElseThrow(() -> new FeedbackNotFoundException("존재하지 않는 피드백. feedbackId : " + feedbackId));
     }
 }

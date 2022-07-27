@@ -2,6 +2,7 @@ package com.woowacourse.levellog.feedback.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Column;
@@ -40,6 +41,11 @@ public class Feedback extends BaseEntity {
 
     @Column(length = 1000)
     private String etc;
+
+    public static Feedback of(Member member, Levellog levellog, FeedbackContentDto feedbackContent) {
+        return new Feedback(member, levellog.getAuthor(), levellog, feedbackContent.getStudy(),
+                feedbackContent.getSpeak(), feedbackContent.getEtc());
+    }
 
     public Feedback(Member from, Member to, Levellog levellog, String study, String speak, String etc) {
         validateFeedback(study, speak, etc);

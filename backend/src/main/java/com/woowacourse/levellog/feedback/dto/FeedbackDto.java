@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class FeedbackResponse {
+public class FeedbackDto {
 
     private Long id;
     private MemberDto from;
     private FeedbackContentDto feedback;
     private LocalDateTime updatedAt;
 
-    public static FeedbackResponse from(Feedback feedback) {
-        return new FeedbackResponse(feedback.getId(), MemberDto.from(feedback.getFrom()), FeedbackContentDto.from(feedback), feedback.getUpdatedAt());
+    public static FeedbackDto from(Feedback feedback) {
+        return new FeedbackDto(feedback.getId(), MemberDto.from(feedback.getFrom()), FeedbackContentDto.from(feedback), feedback.getUpdatedAt());
     }
 }

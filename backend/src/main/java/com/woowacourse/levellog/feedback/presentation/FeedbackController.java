@@ -2,8 +2,8 @@ package com.woowacourse.levellog.feedback.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
-import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
-import com.woowacourse.levellog.feedback.dto.FeedbacksResponse;
+import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
+import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,22 +26,21 @@ public class FeedbackController {
 
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long levellogId,
-                                     @RequestBody @Valid final FeedbackRequest request,
+                                     @RequestBody @Valid final CreateFeedbackDto request,
                                      @Authentic final Long memberId) {
         final Long id = feedbackService.save(request, levellogId, memberId);
         return ResponseEntity.created(URI.create("/api/levellogs/" + levellogId + "/feedbacks/" + id)).build();
     }
 
     @GetMapping
-    public ResponseEntity<FeedbacksResponse> findAll(@PathVariable final Long levellogId,
-                                                     @Authentic final Long memberId) {
-        final FeedbacksResponse response = feedbackService.findAll(levellogId);
+    public ResponseEntity<FeedbacksDto> findAll(@PathVariable final Long levellogId) {
+        final FeedbacksDto response = feedbackService.findAll(levellogId);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{feedbackId}")
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
-                                       @RequestBody @Valid final FeedbackRequest request,
+                                       @RequestBody @Valid final CreateFeedbackDto request,
                                        @PathVariable final Long feedbackId) {
         feedbackService.update(request, feedbackId);
         return ResponseEntity.noContent().build();

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FeedbackRequest {
+public class CreateFeedbackDto {
 
     @NotNull
     @Valid

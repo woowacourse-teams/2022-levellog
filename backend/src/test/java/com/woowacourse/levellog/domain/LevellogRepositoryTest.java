@@ -53,7 +53,7 @@ class LevellogRepositoryTest {
     }
 
     @Nested
-    class existsByAuthorIdAndTeamId {
+    class ExistsByAuthorIdAndTeamIdTest {
 
         @Test
         @DisplayName("memberId와 teamId이 모두 일치하는 레벨로그가 존재하는 경우 true를 반환한다.")

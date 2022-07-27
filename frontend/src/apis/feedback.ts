@@ -27,7 +27,7 @@ export const requestEditFeedback = ({
 }: any) => {
   return axios({
     method: 'put',
-    url: `/api/levellogs/${levellogId}/feedbacks/${feedbackId}`,
+    url: `${API_URL}/levellogs/${levellogId}/feedbacks/${feedbackId}`,
     headers: { Authorization: `Bearer ${accessToken}` },
     data: { ...feedbackResult },
   });

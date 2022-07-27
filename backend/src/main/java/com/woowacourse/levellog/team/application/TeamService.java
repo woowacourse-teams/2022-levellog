@@ -33,30 +33,28 @@ public class TeamService {
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
 
+    @Transactional
     public Long save(final Long hostId, final TeamCreateDto request) {
         final Member host = getMember(hostId);
         final Team team = new Team(request.getTitle(), request.getPlace(), request.getStartAt(), host.getProfileUrl());
         final List<Participant> participants = getParticipants(hostId, request.getParticipants().getIds(), team);
 
-        final Team savedTeam = teamRepository.save(team);
         participantRepository.saveAll(participants);
 
-        return savedTeam.getId();
+        return teamRepository.save(team).getId();
     }
 
     public TeamsDto findAll() {
-        final List<Team> teams = teamRepository.findAll();
-        return new TeamsDto(getTeamResponses(teams));
+        return new TeamsDto(getTeamResponses(teamRepository.findAll()));
     }
 
-    public TeamDto findById(final Long id) {
-        final Team team = getTeam(id);
-        return getTeamResponse(team);
+    public TeamDto findById(final Long teamId) {
+        return getTeamResponse(getTeam(teamId));
     }
 
     @Transactional
-    public void update(final Long id, final TeamUpdateDto request, final Long memberId) {
-        final Team team = getTeam(id);
+    public void update(final Long teamId, final TeamUpdateDto request, final Long memberId) {
+        final Team team = getTeam(teamId);
         final List<Participant> participants = participantRepository.findByTeam(team);
         final Long hostId = getHostId(participants);
 
@@ -68,8 +66,8 @@ public class TeamService {
     }
 
     @Transactional
-    public void deleteById(final Long id, final Long memberId) {
-        final Team team = getTeam(id);
+    public void deleteById(final Long teamId, final Long memberId) {
+        final Team team = getTeam(teamId);
         final List<Participant> participants = participantRepository.findByTeam(team);
         final Long hostId = getHostId(participants);
 
@@ -78,16 +76,16 @@ public class TeamService {
         }
 
         participantRepository.deleteByTeam(team);
-        teamRepository.deleteById(id);
+        teamRepository.deleteById(teamId);
     }
 
-    private Member getMember(final Long hostId) {
-        return memberRepository.findById(hostId)
+    private Member getMember(final Long memberId) {
+        return memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
     }
 
-    private Team getTeam(final Long id) {
-        return teamRepository.findById(id)
+    private Team getTeam(final Long teamId) {
+        return teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
     }
 

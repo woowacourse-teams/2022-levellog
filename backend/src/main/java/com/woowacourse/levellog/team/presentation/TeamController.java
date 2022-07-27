@@ -29,9 +29,9 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid final TeamCreateDto teamCreateDto,
-                                     @LoginMember final Long hostId) {
-        final Long id = teamService.save(hostId, teamCreateDto);
-        return ResponseEntity.created(URI.create("/api/teams/" + id)).build();
+                                     @LoginMember final Long memberId) {
+        final Long teamId = teamService.save(memberId, teamCreateDto);
+        return ResponseEntity.created(URI.create("/api/teams/" + teamId)).build();
     }
 
     @GetMapping
@@ -41,24 +41,24 @@ public class TeamController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{teamId}")
     @NoAuthentication
-    public ResponseEntity<TeamDto> findById(@PathVariable final Long id) {
-        final TeamDto response = teamService.findById(id);
+    public ResponseEntity<TeamDto> findById(@PathVariable final Long teamId) {
+        final TeamDto response = teamService.findById(teamId);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable final Long id,
+    @PutMapping("/{teamId}")
+    public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @RequestBody @Valid final TeamUpdateDto request,
                                        @LoginMember final Long memberId) {
-        teamService.update(id, request, memberId);
+        teamService.update(teamId, request, memberId);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable final Long id, @LoginMember final Long memberId) {
-        teamService.deleteById(id, memberId);
+    @DeleteMapping("/{teamId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long teamId, @LoginMember final Long memberId) {
+        teamService.deleteById(teamId, memberId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -26,8 +26,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 조회")
     void readMyInfo() {
         // given
-        final ValidatableResponse loginResponse = login("로마");
-        final String token = getToken(loginResponse);
+        final String token = login("로마")
+                .getToken();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -54,8 +54,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 닉네임 변경하기")
     void updateMyNickname() {
         // given
-        final ValidatableResponse loginResponse = login("로마");
-        final String token = getToken(loginResponse);
+        final String token = login("로마")
+                .getToken();
 
         final NicknameUpdateDto nicknameDto = new NicknameUpdateDto("새이름");
 

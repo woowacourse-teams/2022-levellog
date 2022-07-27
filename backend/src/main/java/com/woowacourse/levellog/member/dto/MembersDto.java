@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class MembersResponse {
+public class MembersDto {
 
-    private List<MemberResponse> members;
+    private List<MemberDto> members;
 }

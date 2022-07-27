@@ -17,7 +17,7 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.member.dto.MemberResponse;
+import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
@@ -97,7 +97,7 @@ class FeedbackServiceTest {
         feedbackService.update(feedback1.getId(),
                 new FeedbackRequest(new FeedbackContentDto("update", "update", "update")));
         final List<String> fromNicknames = feedbackService.findAllByTo(eve.getId()).getFeedbacks().stream()
-                .map(FeedbackResponse::getFrom).map(MemberResponse::getNickname).collect(Collectors.toList());
+                .map(FeedbackResponse::getFrom).map(MemberDto::getNickname).collect(Collectors.toList());
 
         // then
         assertThat(fromNicknames).containsExactly("로마", "알린");

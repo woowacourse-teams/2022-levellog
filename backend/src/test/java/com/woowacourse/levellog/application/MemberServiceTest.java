@@ -7,10 +7,9 @@ import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
-import com.woowacourse.levellog.member.dto.MemberResponse;
-import com.woowacourse.levellog.member.dto.MembersResponse;
+import com.woowacourse.levellog.member.dto.MemberDto;
+import com.woowacourse.levellog.member.dto.MembersDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +48,10 @@ class MemberServiceTest {
         memberRepository.save(new Member("페퍼", 1245, "image2.png"));
 
         // when
-        final MembersResponse membersResponse = memberService.findAll();
+        final MembersDto membersDto = memberService.findAll();
 
         // then
-        assertThat(membersResponse.getMembers()).hasSize(2);
+        assertThat(membersDto.getMembers()).hasSize(2);
     }
 
     @Test
@@ -62,29 +61,14 @@ class MemberServiceTest {
         final Member roma = memberRepository.save(new Member("로마", 1234, "image.png"));
 
         // when
-        final MemberResponse memberResponse = memberService.findMemberById(roma.getId());
+        final MemberDto memberDto = memberService.findMemberById(roma.getId());
 
         // then
         assertAll(
-                () -> assertThat(memberResponse.getId()).isEqualTo(roma.getId()),
-                () -> assertThat(memberResponse.getNickname()).isEqualTo("로마"),
-                () -> assertThat(memberResponse.getProfileUrl()).isEqualTo("image.png")
+                () -> assertThat(memberDto.getId()).isEqualTo(roma.getId()),
+                () -> assertThat(memberDto.getNickname()).isEqualTo("로마"),
+                () -> assertThat(memberDto.getProfileUrl()).isEqualTo("image.png")
         );
-    }
-
-    @Test
-    @DisplayName("findByGithubId 메서드는 Gtihub Id에 해당하는 멤버를 찾는다.")
-    void findByGithubId() {
-        // given
-        final int githubId = 12345678;
-        memberRepository.save(new Member("로마", githubId, "profileUrl.image"));
-
-        // when
-        final Optional<Member> findMember = memberService.findByGithubId(githubId);
-
-        // then
-        assertThat(findMember).isPresent();
-        assertThat(findMember.get().getGithubId()).isEqualTo(githubId);
     }
 
     @Test
@@ -100,29 +84,13 @@ class MemberServiceTest {
         final Member harry = memberRepository.save(new Member("harry", 70, "harry.img"));
 
         // when
-        final MembersResponse members = memberService.findAllByNicknameContains("ali");
+        final MembersDto members = memberService.searchByNickname("ali");
 
         // then
         assertAll(
                 () -> assertThat(members.getMembers()).hasSize(1),
                 () -> assertThat(members.getMembers().get(0).getId()).isEqualTo(alien.getId())
         );
-    }
-
-    @Test
-    @DisplayName("updateProfileUrl 메서드는 Gtihub Id에 해당하는 멤버 정보를 업데이트한다.")
-    void updateProfileUrl() {
-        // given
-        final Member savedMember = memberRepository.save(new Member("로마", 1234567, "profileUrl.image"));
-        final Long id = savedMember.getId();
-        final String newProfileUrl = "newProfile.image";
-
-        // when
-        memberService.updateProfileUrl(id, newProfileUrl);
-
-        // then
-        final Member updateMember = memberRepository.findById(id).orElseThrow();
-        assertThat(updateMember.getProfileUrl()).isEqualTo(newProfileUrl);
     }
 
     @Test
@@ -137,7 +105,8 @@ class MemberServiceTest {
         memberService.updateNickname(id, nicknameUpdateDto);
 
         // then
-        final Member updateMember = memberRepository.findById(id).orElseThrow();
+        final Member updateMember = memberRepository.findById(id)
+                .orElseThrow();
         assertThat(updateMember.getNickname()).isEqualTo("알린");
     }
 }

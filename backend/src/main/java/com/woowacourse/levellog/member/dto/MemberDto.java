@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class MemberResponse {
+public class MemberDto {
 
     private Long id;
     private String nickname;
     private String profileUrl;
 
-    public static MemberResponse from(final Member member) {
-        return new MemberResponse(member.getId(), member.getNickname(), member.getProfileUrl());
+    public static MemberDto from(final Member member) {
+        return new MemberDto(member.getId(), member.getNickname(), member.getProfileUrl());
     }
 }

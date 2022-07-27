@@ -4,7 +4,7 @@ import com.woowacourse.levellog.authentication.support.LoginMember;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.dto.FeedbacksResponse;
 import com.woowacourse.levellog.member.application.MemberService;
-import com.woowacourse.levellog.member.dto.MemberResponse;
+import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +30,9 @@ public class MyInfoController {
     }
 
     @GetMapping
-    public ResponseEntity<MemberResponse> myInfo(@LoginMember final Long memberId) {
-        final MemberResponse memberResponse = memberService.findMemberById(memberId);
-        return ResponseEntity.ok(memberResponse);
+    public ResponseEntity<MemberDto> myInfo(@LoginMember final Long memberId) {
+        final MemberDto memberDto = memberService.findMemberById(memberId);
+        return ResponseEntity.ok(memberDto);
     }
 
     @PutMapping

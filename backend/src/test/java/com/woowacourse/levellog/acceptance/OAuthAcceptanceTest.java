@@ -6,7 +6,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
-import com.woowacourse.levellog.authentication.dto.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +31,7 @@ class OAuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("깃허브 로그인")
     void login() throws Exception {
         // given
-        final String code = objectMapper.writeValueAsString(new GithubProfileResponse("11111", "test", "profile_url"));
+        final String code = objectMapper.writeValueAsString(new GithubProfileDto("11111", "test", "profile_url"));
         final GithubCodeRequest codeRequest = new GithubCodeRequest(code);
 
         // when

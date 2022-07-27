@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,8 @@ class MemberTest {
             final String invalidNickname = "a".repeat(51);
 
             // when & then
-            assertThatThrownBy(() -> member.updateNickname(invalidNickname)).isInstanceOf(InvalidFieldException.class);
+            assertThatThrownBy(() -> member.updateNickname(invalidNickname))
+                    .isInstanceOf(InvalidFieldException.class);
         }
 
         @ParameterizedTest
@@ -52,7 +53,8 @@ class MemberTest {
             final Member member = new Member("로마", 123456, "image.png");
 
             // when & then
-            assertThatThrownBy(() -> member.updateNickname(invalidNickname)).isInstanceOf(InvalidFieldException.class);
+            assertThatThrownBy(() -> member.updateNickname(invalidNickname))
+                    .isInstanceOf(InvalidFieldException.class);
         }
     }
 }

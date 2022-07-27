@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.member.presentation;
 
 import com.woowacourse.levellog.member.application.MemberService;
-import com.woowacourse.levellog.member.dto.MembersResponse;
+import com.woowacourse.levellog.member.dto.MembersDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,14 +17,14 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public ResponseEntity<MembersResponse> findAll() {
-        final MembersResponse response = memberService.findAll();
+    public ResponseEntity<MembersDto> findAll() {
+        final MembersDto response = memberService.findAll();
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(params = {"search"})
-    public ResponseEntity<MembersResponse> searchNickname(@RequestParam final String search) {
-        final MembersResponse response = memberService.findAllByNicknameContains(search);
+    @GetMapping(params = "nickname")
+    public ResponseEntity<MembersDto> searchBy(@RequestParam final String nickname) {
+        final MembersDto response = memberService.searchByNickname(nickname);
         return ResponseEntity.ok(response);
     }
 }

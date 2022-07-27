@@ -1,9 +1,7 @@
 package com.woowacourse.levellog.member.domain;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-
 import com.woowacourse.levellog.common.domain.BaseEntity;
-import com.woowacourse.levellog.member.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -31,10 +29,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 2048)
     private String profileUrl;
 
-    public void updateProfileUrl(final String profileUrl) {
-        this.profileUrl = profileUrl;
-    }
-
     public void updateNickname(final String nickname) {
         validateNickname(nickname);
         this.nickname = nickname;
@@ -47,13 +41,13 @@ public class Member extends BaseEntity {
 
     private void validateBlank(final String nickname) {
         if (nickname == null || nickname.isBlank()) {
-            throw new InvalidFieldException("닉네임은 공백이나 null일 수 없습니다.", BAD_REQUEST);
+            throw new InvalidFieldException("닉네임은 공백이나 null일 수 없습니다.");
         }
     }
 
     private void validateNicknameLength(final String nickname) {
         if (nickname.length() > NICKNAME_MAX_LENGTH) {
-            throw new InvalidFieldException("닉네임은 " + NICKNAME_MAX_LENGTH + "자 이하여야합니다.", BAD_REQUEST);
+            throw new InvalidFieldException("닉네임은 " + NICKNAME_MAX_LENGTH + "자 이하여야합니다.");
         }
     }
 }

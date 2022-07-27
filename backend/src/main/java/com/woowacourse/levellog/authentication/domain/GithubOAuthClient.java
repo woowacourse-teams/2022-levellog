@@ -3,7 +3,6 @@ package com.woowacourse.levellog.authentication.domain;
 import com.woowacourse.levellog.authentication.dto.GithubAccessTokenDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.authentication.dto.TokenDto;
-import java.util.Objects;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,8 +34,8 @@ public class GithubOAuthClient implements OAuthClient {
                 .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, TokenDto.class)
                 .getBody();
 
-        if (Objects.isNull(response)) {
-            throw new IllegalStateException("Github 요청에 실패했습니다.");
+        if (response == null) {
+            throw new IllegalStateException("Github 로그인 요청 실패 - authorizationCode:" + code);
         }
 
         return response.getAccessToken();

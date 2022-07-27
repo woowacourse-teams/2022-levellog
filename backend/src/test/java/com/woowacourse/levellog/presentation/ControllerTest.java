@@ -62,7 +62,7 @@ public abstract class ControllerTest {
     protected ObjectMapper objectMapper;
 
     @MockBean
-    private OAuthService oAuthService;
+    protected OAuthService oAuthService;
 
     @BeforeEach
     void setUp(final WebApplicationContext context, final RestDocumentationContextProvider provider) {

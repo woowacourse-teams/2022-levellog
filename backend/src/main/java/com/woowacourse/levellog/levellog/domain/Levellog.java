@@ -33,28 +33,10 @@ public class Levellog extends BaseEntity {
     private String content;
 
     public Levellog(final Member author, final Team team, final String content) {
-        validate(author, team, content);
+        validateContent(content);
         this.author = author;
         this.team = team;
         this.content = content;
-    }
-
-    private void validate(final Member author, final Team team, final String content) {
-        validateAuthor(author);
-        validateTeam(team);
-        validateContent(content);
-    }
-
-    private void validateAuthor(final Member author) {
-        if (author == null) {
-            throw new InvalidFieldException("레벨로그의 작성자는 null일 수 없습니다.");
-        }
-    }
-
-    private void validateTeam(final Team team) {
-        if (team == null) {
-            throw new InvalidFieldException("레벨로그의 팀은 null일 수 없습니다.");
-        }
     }
 
     private void validateContent(final String content) {

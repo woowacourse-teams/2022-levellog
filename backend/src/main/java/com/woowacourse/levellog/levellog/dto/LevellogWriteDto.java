@@ -20,6 +20,6 @@ public class LevellogWriteDto {
     private String content;
 
     public Levellog toLevellog(final Member author, final Team team) {
-        return new Levellog(author, team, content);
+        return Levellog.of(author, team, content);
     }
 }

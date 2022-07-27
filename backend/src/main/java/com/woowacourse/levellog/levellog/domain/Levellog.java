@@ -32,11 +32,15 @@ public class Levellog extends BaseEntity {
     @Lob
     private String content;
 
-    public Levellog(final Member author, final Team team, final String content) {
+    private Levellog(final Member author, final Team team, final String content) {
         validateContent(content);
         this.author = author;
         this.team = team;
         this.content = content;
+    }
+
+    public static Levellog of(final Member author, final Team team, final String content) {
+        return new Levellog(author, team, content);
     }
 
     private void validateContent(final String content) {

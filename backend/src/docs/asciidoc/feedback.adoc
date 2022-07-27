@@ -9,7 +9,7 @@
 * link:index.html[목록으로 가기]
 
 [[save]]
-== 작성
+== 피드백 작성
 
 [[save-success]]
 === 성공
@@ -17,15 +17,23 @@
 operation::feedback/save[]
 
 [[find-all]]
-== 목록 조회
+== 피드백 목록 조회
 
 [[find-all-success]]
 === 성공
 
 operation::feedback/find-all[]
 
+[[update]]
+== 피드백 수정
+
+[[update-success]]
+=== 성공
+
+operation::feedback/update[]
+
 [[delete]]
-== 삭제
+== 피드백 삭제
 
 [[delete-success]]
 === 성공

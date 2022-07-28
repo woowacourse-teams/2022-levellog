@@ -79,9 +79,9 @@ class TeamServiceTest extends ServiceTest {
                 .map(List::size)
                 .collect(Collectors.toList());
         assertAll(
-                () -> assertThat(actualTitles).containsExactly(team1.getTitle(), team2.getTitle()),
-                () -> assertThat(actualHostIds).containsExactly(member1.getId(), member2.getId()),
-                () -> assertThat(actualParticipantSizes).containsExactly(2, 2),
+                () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
+                () -> assertThat(actualHostIds).contains(member1.getId(), member2.getId()),
+                () -> assertThat(actualParticipantSizes).contains(2, 2),
                 () -> assertThat(response.getTeams()).hasSize(2)
         );
     }

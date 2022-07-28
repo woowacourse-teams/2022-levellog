@@ -5,10 +5,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
-import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
+import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
@@ -106,7 +106,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String team2Id = requestCreateTeam("릭,로마,페퍼", romaToken, rick_id, roma_id, pepper_id).getTeamId();
 
         // 레벨로그 생성
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그1,2 내용");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그1,2 내용");
         final String levellogId1 = RestAssuredTemplate.post("/api/teams/" + team1Id + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();
@@ -119,8 +119,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
                 "로마 etc 리뷰");
         final FeedbackContentDto feedbackContentDto2 = new FeedbackContentDto("페퍼 study 리뷰", "페퍼 speak 리뷰",
                 "페퍼 etc 리뷰");
-        final FeedbackRequest request1 = new FeedbackRequest(feedbackContentDto1);
-        final FeedbackRequest request2 = new FeedbackRequest(feedbackContentDto2);
+        final FeedbackWriteDto request1 = new FeedbackWriteDto(feedbackContentDto1);
+        final FeedbackWriteDto request2 = new FeedbackWriteDto(feedbackContentDto2);
         RestAssuredTemplate.post("/api/levellogs/" + levellogId1 + "/feedbacks", romaToken, request1); // 로마 -> 릭 리뷰
         RestAssuredTemplate.post("/api/levellogs/" + levellogId2 + "/feedbacks", pepperToken, request2); // 페퍼 -> 릭 리뷰
 

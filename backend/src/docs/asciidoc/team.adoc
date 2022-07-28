@@ -12,12 +12,12 @@
 == 팀 생성
 
 [[create-success]]
-=== 성공
+=== 팀 생성 성공
 
 operation::team/create[]
 
 [[create-exception]]
-=== 예외
+=== 팀 생성 예외
 
 [[create-exception-title-null]]
 ==== 저장 시 title이 null 또는 공백인 경우
@@ -58,7 +58,7 @@ operation::team/create/exception/participants/null[]
 == 팀 목록 조회
 
 [[findAll-success]]
-=== 성공
+=== 팀 목록 조회 성공
 
 operation::team/findAll[]
 
@@ -66,12 +66,12 @@ operation::team/findAll[]
 == 팀 상세 조회
 
 [[find-success]]
-=== 성공
+=== 팀 상세 조회 성공
 
 operation::team/find[]
 
 [[find-exception]]
-=== 예외
+=== 팀 상세 조회 예외
 
 [[update-exception-title-null]]
 ==== 없는 팀을 상세 조회하는 경우
@@ -82,12 +82,12 @@ operation::team/findbyid/exception/notfound[]
 == 팀 수정
 
 [[update-success]]
-=== 성공
+=== 팀 수정 성공
 
 operation::team/update[]
 
 [[update-exception]]
-=== 예외
+=== 팀 수정 예외
 
 [[update-exception-title-null]]
 ==== 수정 시 title이 null 또는 공백인 경우
@@ -128,12 +128,12 @@ operation::team/update/exception/notfound[]
 == 팀 삭제
 
 [[delete-success]]
-=== 성공
+=== 팀 삭제 성공
 
 operation::team/delete[]
 
 [[delete-exception]]
-=== 예외
+=== 팀 삭제 예외
 
 [[delete-exception-notfound]]
 ==== 없는 팀을 삭제하는 경우

@@ -8,8 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Github OAuth로부터 access token을 받기 위한 dto
- * 더 적절한 이름있으면 고쳐주세요.
+ * Github OAuth로부터 access token을 받기 위한 dto 더 적절한 이름있으면 고쳐주세요.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor

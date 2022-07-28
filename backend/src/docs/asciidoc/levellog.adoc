@@ -8,34 +8,64 @@
 == home
 * link:index.html[목록으로 가기]
 
-[[create]]
-== 작성
+[[save]]
+== 레벨로그 작성
 
-[[create-success]]
-=== 성공
+[[save-success]]
+=== 레벨로그 작성 성공
 
-operation::levellog/create[]
+operation::levellog/save[]
+
+[[save-exception]]
+=== 레벨로그 작성 실패
+
+==== 이미 작성한 레벨로그가 존재하는 경우
+operation::levellog/save/exception-already-exists[]
+
+==== 레벨로그 내용이 공백인 경우
+operation::levellog/save/exception-contents[]
 
 [[find]]
-== 상세 조회
+== 레벨로그 상세 조회
 
 [[find-success]]
-=== 성공
+=== 레벨로그 상세 조회 성공
 
 operation::levellog/find[]
 
+[[find-exception]]
+=== 레벨로그 조회 실패
+
+==== 레벨로그가 존재하지 않는 경우
+operation::levellog/find/exception-exist[]
+
 [[update]]
-== 수정
+== 레벨로그 수정
 
 [[update-success]]
-=== 성공
+=== 레벨로그 수정 성공
 
 operation::levellog/update[]
 
+[[update-exception]]
+=== 레벨로그 수정 실패
+
+==== 작성자가 아닌 멤버가 수정하려는 경우
+operation::levellog/update/exception-author[]
+
+==== 레벨로그 내용이 공백인 경우
+operation::levellog/update/exception-contents[]
+
 [[delete]]
-== 삭제
+== 레벨로그 삭제
 
 [[delete-success]]
-=== 성공
+=== 레벨로그 삭제 성공
 
 operation::levellog/delete[]
+
+[[delete-exception]]
+=== 레벨로그 삭제 실패
+
+==== 작성자가 아닌 멤버가 삭제하려는 경우
+operation::levellog/delete/exception-author[]

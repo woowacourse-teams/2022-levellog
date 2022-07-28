@@ -7,7 +7,6 @@ import com.woowacourse.levellog.authentication.support.PublicAPI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,6 @@ public class OAuthController {
 
     private final OAuthService oAuthService;
 
-    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<LoginDto> login(@RequestBody @Valid final GithubCodeDto request) {
         return ResponseEntity.ok(oAuthService.login(request));

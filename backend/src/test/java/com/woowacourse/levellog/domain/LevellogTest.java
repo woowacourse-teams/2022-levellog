@@ -40,7 +40,7 @@ class LevellogTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("레벨로그 내용이 공백이나 null일 경우 예외를 던진다.")
-        void newLevellog_contentBlank_Exception(final String invalidContent) {
+        void newLevellog_contentBlank_exception(final String invalidContent) {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now(), "jamsil_trackroom.png");
@@ -74,7 +74,7 @@ class LevellogTest {
 
         @Test
         @DisplayName("작성자가 아닌 경우 권한 없음 예외를 던진다.")
-        void updateContent_unauthorized_Exception() {
+        void updateContent_unauthorized_exception() {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member member = new Member("알린", 2222, "alien.png");
@@ -84,8 +84,8 @@ class LevellogTest {
             //  when & then
             assertThatThrownBy(() -> levellog.updateContent(member, "update content"))
                     .isInstanceOf(UnauthorizedException.class)
-                    .hasMessage(
-                            "레벨로그를 수정할 권한이 없습니다. memberId : " + member.getId() + " levellogId : " + levellog.getId());
+                    .hasMessageContainingAll("레벨로그를 수정할 권한이 없습니다.", String.valueOf(member.getId()),
+                            String.valueOf(levellog.getId()));
 
         }
 
@@ -93,7 +93,7 @@ class LevellogTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("레벨로그 내용이 공백이나 null일 경우 예외를 던진다.")
-        void updateContent_contentBlank_Exception(final String invalidContent) {
+        void updateContent_contentBlank_exception(final String invalidContent) {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now(), "jamsil_trackroom.png");

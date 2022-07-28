@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
@@ -17,9 +18,6 @@ import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -51,27 +49,31 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestSaveLevellog(teamId, requestContent);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("팀에 레벨로그를 이미 작성했습니다."));
 
             // docs
             perform.andDo(document("levellog/save/exception-already-exists"));
         }
 
-        @ParameterizedTest
-        @ValueSource(strings = {" "})
-        @NullAndEmptySource
-        @DisplayName("내용으로 공백이나 null이 들어오면 예외를 던진다.")
-        void save_nameNullOrEmpty_Exception(final String content) throws Exception {
+        @Test
+        @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
+        void save_nameNullOrEmpty_Exception() throws Exception {
             // given
             final Long teamId = 1L;
-            final LevellogDto request = LevellogDto.from(content);
+            final Long authorId = 1L;
+            final LevellogDto request = LevellogDto.from(" ");
             final String requestContent = objectMapper.writeValueAsString(request);
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
 
             // when
             final ResultActions perform = requestSaveLevellog(teamId, requestContent);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("content must not be blank"));
 
             // docs
             perform.andDo(document("levellog/save/exception-contents"));
@@ -108,7 +110,8 @@ class LevellogControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpect(status().isNotFound())
+                    .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
 
             // docs
             perform.andDo(document("levellog/find/exception-exist"));
@@ -119,25 +122,24 @@ class LevellogControllerTest extends ControllerTest {
     @DisplayName("update 메서드는")
     class UpdateTest {
 
-        @ParameterizedTest
-        @ValueSource(strings = {" "})
-        @NullAndEmptySource
-        @DisplayName("내용으로 공백이나 null이 들어오면 예외를 던진다.")
-        void update_nameNullOrEmpty_Exception(final String content) throws Exception {
+        @Test
+        @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
+        void update_nameNullOrEmpty_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final LevellogDto request = LevellogDto.from(content);
+            final LevellogDto request = LevellogDto.from(" ");
             final String requestContent = objectMapper.writeValueAsString(request);
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
 
             // when
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, requestContent);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("content must not be blank"));
 
             // docs
             perform.andDo(document("levellog/update/exception-contents"));
@@ -162,7 +164,8 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, requestContent);
 
             // then
-            perform.andExpect(status().isUnauthorized());
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message").value("권한이 없습니다."));
 
             // docs
             perform.andDo(document("levellog/update/exception-author"));
@@ -204,7 +207,8 @@ class LevellogControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isUnauthorized());
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message").value("권한이 없습니다."));
 
             // docs
             perform.andDo(document("levellog/delete/exception-author"));

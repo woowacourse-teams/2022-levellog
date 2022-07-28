@@ -129,9 +129,11 @@ class TeamServiceTest {
             final TeamDto response = teamService.findById(team.getId());
 
             //then
-            assertThat(response.getTitle()).isEqualTo(team.getTitle());
-            assertThat(response.getHostId()).isEqualTo(member1.getId());
-            assertThat(response.getParticipants()).hasSize(2);
+            assertAll(
+                    () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                    () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
+                    () -> assertThat(response.getParticipants()).hasSize(2)
+            );
         }
 
         @Test
@@ -168,9 +170,11 @@ class TeamServiceTest {
 
             // then
             final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
-            assertThat(actualTeam.getTitle()).isEqualTo(request.getTitle());
-            assertThat(actualTeam.getPlace()).isEqualTo(request.getPlace());
-            assertThat(actualTeam.getStartAt()).isEqualTo(request.getStartAt());
+            assertAll(
+                    () -> assertThat(actualTeam.getTitle()).isEqualTo(request.getTitle()),
+                    () -> assertThat(actualTeam.getPlace()).isEqualTo(request.getPlace()),
+                    () -> assertThat(actualTeam.getStartAt()).isEqualTo(request.getStartAt())
+            );
         }
 
         @Test

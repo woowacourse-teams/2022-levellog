@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 
 import com.woowacourse.levellog.authentication.application.OAuthService;
@@ -55,9 +56,11 @@ class OAuthServiceTest {
                     .getId();
 
             // then
-            assertThat(Long.parseLong(payload)).isEqualTo(savedMemberId);
-            assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
-            assertThat(tokenResponse.getId()).isNotNull();
+            assertAll(
+                    () -> assertThat(Long.parseLong(payload)).isEqualTo(savedMemberId),
+                    () -> assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl"),
+                    () -> assertThat(tokenResponse.getId()).isNotNull()
+            );
         }
 
         @Test
@@ -75,9 +78,11 @@ class OAuthServiceTest {
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
 
             // then
-            assertThat(Long.parseLong(payload)).isEqualTo(savedId);
-            assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
-            assertThat(tokenResponse.getId()).isNotNull();
+            assertAll(
+                    () -> assertThat(Long.parseLong(payload)).isEqualTo(savedId),
+                    () -> assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl"),
+                    () -> assertThat(tokenResponse.getId()).isNotNull()
+            );
         }
     }
 }

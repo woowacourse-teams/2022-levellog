@@ -11,6 +11,7 @@ import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.MembersDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
+import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -127,7 +128,7 @@ class MemberServiceTest extends ServiceTest {
     class SaveIfNotExist {
 
         @Test
-        @DisplayName("saveIfNotExist 메서드는 깃허브 아이디로 저장된 멤버가 있으면 가입된 멤버의 ID를 반환한다.")
+        @DisplayName("깃허브 아이디로 저장된 멤버가 있으면 가입된 멤버의 ID를 반환한다.")
         void ifExist_returnSavedId() {
             // given
             final Member savedMember = memberRepository.save(new Member("로마", 123456, "profileUrl.image"));
@@ -140,7 +141,7 @@ class MemberServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("saveIfNotExist 메서드는 깃허브 아이디로 저장된 멤버가 없으면 새 멤버를 저장하고 멤버의 ID를 반환한다.")
+        @DisplayName("깃허브 아이디로 저장된 멤버가 없으면 새 멤버를 저장하고 멤버의 ID를 반환한다.")
         void ifNotExist_saveAndReturnSavedId() {
             // given
             final Member savedMember = memberRepository.save(new Member("로마", 123456, "profileUrl.image"));
@@ -152,6 +153,4 @@ class MemberServiceTest extends ServiceTest {
             assertThat(id).isEqualTo(savedMember.getId() + 1);
         }
     }
-
-
 }

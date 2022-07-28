@@ -60,8 +60,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 닉네임 변경")
     void updateMyNickname() {
         // given
-        final String token = login("로마")
-                .getToken();
+        final String token = login("로마").getToken();
 
         final NicknameUpdateDto nicknameDto = new NicknameUpdateDto("새이름");
 

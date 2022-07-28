@@ -32,13 +32,6 @@ public class MemberService {
         return savedMember.getId();
     }
 
-    private void checkSameGithubId(final MemberCreateDto request) {
-        final boolean isExistSameGithubId = memberRepository.existsByGithubId(request.getGithubId());
-        if (isExistSameGithubId) {
-            throw new MemberAlreadyExistException("멤버 중복 [githubId : " + request.getGithubId() + "]");
-        }
-    }
-
     @Transactional
     public Long saveIfNotExist(final GithubProfileDto request, final int githubId) {
         // TODO githubId를 안받아도 될듯? GithubProfileDto에 이미 정보가 존재함. + save의 예외 발생을 이용하면 로직 간단해질듯
@@ -69,6 +62,13 @@ public class MemberService {
     public void updateNickname(final NicknameUpdateDto request, final Long memberId) {
         final Member member = getById(memberId);
         member.updateNickname(request.getNickname());
+    }
+
+    private void checkSameGithubId(final MemberCreateDto request) {
+        final boolean isExistSameGithubId = memberRepository.existsByGithubId(request.getGithubId());
+        if (isExistSameGithubId) {
+            throw new MemberAlreadyExistException("멤버 중복 [githubId : " + request.getGithubId() + "]");
+        }
     }
 
     private Member getById(final Long memberId) {

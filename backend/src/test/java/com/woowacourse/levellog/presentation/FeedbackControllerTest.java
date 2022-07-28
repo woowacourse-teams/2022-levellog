@@ -109,7 +109,8 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(" [levellogId : " + levellogId + "]", "자기 자신에게 피드백을 할 수 없습니다."));
+                    .willThrow(new InvalidFeedbackException(
+                            " [memberId :" + memberId + "]", "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다."));
 
             final String requestContent = objectMapper.writeValueAsString(request);
 
@@ -166,7 +167,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("피드백에 관련이 없는 멤버가 피드백을 수정하면 예외가 발생한다.")
-        void delete_otherMember_exceptionThrown() throws Exception {
+        void update_otherMember_exceptionThrown() throws Exception {
             // given
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
@@ -181,7 +182,7 @@ class FeedbackControllerTest extends ControllerTest {
             final String requestContent = objectMapper.writeValueAsString(request);
 
             doThrow(new InvalidFeedbackException(
-                    " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]", "자신이 남긴 피드백만 삭제할 수 있습니다."))
+                    " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]", "자신이 남긴 피드백만 수정할 수 있습니다."))
                     .when(feedbackService)
                     .update(request, feedbackId, memberId);
 

@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { FeedbackType } from 'types';
 
 import useFeedback from 'hooks/useFeedback';
+
+import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -13,6 +15,14 @@ import Feedback from 'components/feedbacks/Feedback';
 const FeedbackList = () => {
   const { feedbacks, getFeedbacksInTeam, onClickDeleteButton } = useFeedback();
   const { teamId, levellogId } = useParams();
+  const navigate = useNavigate();
+
+  if (typeof levellogId !== 'string') {
+    alert('잘못된 접근입니다.');
+    navigate(ROUTES_PATH.HOME);
+
+    return;
+  }
 
   useEffect(() => {
     getFeedbacksInTeam({ levellogId });

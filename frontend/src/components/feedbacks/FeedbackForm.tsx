@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import Input from 'components/@commons/Input';
 import { FeedbackContainer, FeedbackTitle } from 'components/@commons/Style';
 
-const FeedbackForm = ({ feedbackRef, handleSubmitFeedbackForm }: any) => {
+const FeedbackForm = ({ feedbackRef }: FeedbackFormProps) => {
   return (
     <FeedbackContainer>
       <FeedbackTitle>Feedback</FeedbackTitle>
-      <FormStyle onSubmit={handleSubmitFeedbackForm}>
+      <ContentStyle>
         <label>학습 측면에서 좋은 점과 부족한 점은?</label>
         <Input
           width="100%"
@@ -26,12 +26,16 @@ const FeedbackForm = ({ feedbackRef, handleSubmitFeedbackForm }: any) => {
           height="200px"
           inputRef={(el: HTMLInputElement) => (feedbackRef.current[2] = el)}
         />
-      </FormStyle>
+      </ContentStyle>
     </FeedbackContainer>
   );
 };
 
-const FormStyle = styled.form`
+interface FeedbackFormProps {
+  feedbackRef: React.RefObject<HTMLInputElement[]>;
+}
+
+const ContentStyle = styled.div`
   display: flex;
   width: 100%;
   gap: 1.5rem;

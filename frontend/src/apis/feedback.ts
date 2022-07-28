@@ -1,6 +1,12 @@
-import axios from 'axios';
+import axios, { AxiosPromise } from 'axios';
 
-export const requestPostFeedback = ({ accessToken, feedbackResult, levellogId }: any) => {
+import { FeedbackApiType, FeedbackInfoType } from 'types/feedback';
+
+export const requestPostFeedback = ({
+  accessToken,
+  levellogId,
+  feedbackResult,
+}: Omit<FeedbackApiType, 'feedbackId'>): AxiosPromise<void> => {
   return axios({
     method: 'post',
     url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks`,
@@ -9,7 +15,12 @@ export const requestPostFeedback = ({ accessToken, feedbackResult, levellogId }:
   });
 };
 
-export const requestGetFeedbacksInTeam = ({ accessToken, levellogId }: any) => {
+export const requestGetFeedbacksInTeam = ({
+  accessToken,
+  levellogId,
+}: Pick<FeedbackApiType, 'accessToken' | 'levellogId'>): AxiosPromise<
+  Record<'feedbacks', FeedbackInfoType[]>
+> => {
   return axios({
     method: 'get',
     url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks`,
@@ -22,7 +33,7 @@ export const requestEditFeedback = ({
   levellogId,
   feedbackId,
   feedbackResult,
-}: any) => {
+}: FeedbackApiType): AxiosPromise<void> => {
   return axios({
     method: 'put',
     url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks/${feedbackId}`,
@@ -31,7 +42,11 @@ export const requestEditFeedback = ({
   });
 };
 
-export const requestDeleteFeedback = ({ accessToken, levellogId, feedbackId }: any) => {
+export const requestDeleteFeedback = ({
+  accessToken,
+  levellogId,
+  feedbackId,
+}: Omit<FeedbackApiType, 'feedbackResult'>): AxiosPromise<void> => {
   return axios({
     method: 'delete',
     url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks/${feedbackId}`,

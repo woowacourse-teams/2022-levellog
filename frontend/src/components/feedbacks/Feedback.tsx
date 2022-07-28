@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
+import { FeedbackInfoType } from 'types/feedback';
 
 const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackProps) => {
   const handleClickDeleteButton = () => {
@@ -33,7 +34,7 @@ const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackPro
 };
 
 interface FeedbackProps {
-  feedbackInfo: any;
+  feedbackInfo: FeedbackInfoType;
   levellogId: string;
   onClickDeleteButton: Function;
 }

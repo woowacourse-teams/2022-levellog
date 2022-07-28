@@ -6,12 +6,24 @@
 
 [[home]]
 == home
+
 * link:index.html[목록으로 가기]
 
 [[login]]
 == 로그인
 
 [[login-success]]
-=== 성공
+=== 깃허브 로그인 성공
 
 operation::auth/login[]
+
+[[login-exception]]
+=== 깃허브 로그인 예외
+
+==== 유효하지 않은 authorizationCode
+
+operation::auth/login/null[]
+
+==== 깃허브에서 토큰 받아오기 실패
+
+operation::auth/login/github-fail[]

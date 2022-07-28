@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.member.presentation;
 
-import com.woowacourse.levellog.authentication.support.LoginMember;
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.dto.FeedbacksResponse;
 import com.woowacourse.levellog.member.application.MemberService;
@@ -24,21 +24,24 @@ public class MyInfoController {
     private final MemberService memberService;
 
     @GetMapping("/feedbacks")
-    public ResponseEntity<FeedbacksResponse> findAllFeedbackToMe(@LoginMember final Long memberId) {
+    public ResponseEntity<FeedbacksResponse> findAllFeedbackToMe(@Authentic final Long memberId) {
         final FeedbacksResponse feedbacksResponse = feedbackService.findAllByTo(memberId);
+
         return ResponseEntity.ok(feedbacksResponse);
     }
 
     @GetMapping
-    public ResponseEntity<MemberDto> myInfo(@LoginMember final Long memberId) {
+    public ResponseEntity<MemberDto> myInfo(@Authentic final Long memberId) {
         final MemberDto memberDto = memberService.findMemberById(memberId);
+
         return ResponseEntity.ok(memberDto);
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateNickname(@LoginMember final Long memberId,
-                                               @RequestBody @Valid final NicknameUpdateDto nicknameUpdateDto) {
-        memberService.updateNickname(memberId, nicknameUpdateDto);
+    public ResponseEntity<Void> updateNickname(@Authentic final Long memberId,
+                                               @RequestBody @Valid final NicknameUpdateDto request) {
+        memberService.updateNickname(request, memberId);
+
         return ResponseEntity.noContent().build();
     }
 }

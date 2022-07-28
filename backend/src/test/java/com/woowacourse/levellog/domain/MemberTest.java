@@ -16,12 +16,72 @@ import org.junit.jupiter.params.provider.ValueSource;
 class MemberTest {
 
     @Nested
+    @DisplayName("생성자는")
+    class Constructor {
+
+        @Test
+        @DisplayName("닉네임이 50자를 초과할 경우 예외를 던진다.")
+        void nicknameInvalidLength_exception() {
+            // given
+            final String invalidNickname = "a".repeat(51);
+
+            // when & then
+            assertThatThrownBy(() -> new Member(invalidNickname, 123456, "validProfileUrl"))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContainingAll("닉네임은 50자 이하여야합니다.", String.valueOf(invalidNickname.length()));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {" "})
+        @NullAndEmptySource
+        @DisplayName("닉네임이 공백이나 null일 경우 예외를 던진다.")
+        void nicknameBlank_exception(final String invalidNickname) {
+            // when & then
+            assertThatThrownBy(() -> new Member(invalidNickname, 123456, "validProfileUrl"))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessage("닉네임은 공백이나 null일 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("githubId가 null일 경우 예외를 던진다.")
+        void githubIdNull_exception() {
+            // when & then
+            assertThatThrownBy(() -> new Member("test", null, "validProfileUrl"))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessage("깃허브 ID는 null일 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("프로필 url은 2048자를 초과할 경우 예외를 던진다.")
+        void profileUrlInvalidLength_exception() {
+            // given
+            final String invalidProfileUrl = "a".repeat(2049);
+
+            // when & then
+            assertThatThrownBy(() -> new Member("test", 123456, invalidProfileUrl))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContainingAll("프로필 url은 2048자 이하여야합니다.", String.valueOf(invalidProfileUrl.length()));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {" "})
+        @NullAndEmptySource
+        @DisplayName("프로필 url이 공백이나 null일 경우 예외를 던진다.")
+        void profileUrlBlank_exception(final String invalidProfileUrl) {
+            // when & then
+            assertThatThrownBy(() -> new Member("test", 123456, invalidProfileUrl))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessage("프로필 url은 공백이나 null일 수 없습니다.");
+        }
+    }
+
+    @Nested
     @DisplayName("updateNickname 메서드는")
-    class updateNickname {
+    class UpdateNickname {
 
         @Test
         @DisplayName("닉네임을 변경한다.")
-        void updateNickname() {
+        void success() {
             // given
             final Member member = new Member("로마", 123456, "image.png");
 
@@ -34,27 +94,29 @@ class MemberTest {
 
         @Test
         @DisplayName("닉네임이 50자를 초과할 경우 예외를 던진다.")
-        void nicknameInvalidLength_Exception() {
+        void nicknameInvalidLength_exception() {
             // given
             final Member member = new Member("로마", 123456, "image.png");
             final String invalidNickname = "a".repeat(51);
 
             // when & then
             assertThatThrownBy(() -> member.updateNickname(invalidNickname))
-                    .isInstanceOf(InvalidFieldException.class);
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContainingAll("닉네임은 50자 이하여야합니다.", String.valueOf(invalidNickname.length()));
         }
 
         @ParameterizedTest
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("닉네임이 공백이나 null일 경우 예외를 던진다.")
-        void nicknameBlank_Exception(final String invalidNickname) {
+        void nicknameBlank_exception(final String invalidNickname) {
             // given
             final Member member = new Member("로마", 123456, "image.png");
 
             // when & then
             assertThatThrownBy(() -> member.updateNickname(invalidNickname))
-                    .isInstanceOf(InvalidFieldException.class);
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessage("닉네임은 공백이나 null일 수 없습니다.");
         }
     }
 }

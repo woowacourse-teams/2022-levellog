@@ -3,45 +3,21 @@ package com.woowacourse.levellog.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogRequest;
 import com.woowacourse.levellog.levellog.dto.LevellogResponse;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.domain.TeamRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-
-@SpringBootTest
-@Transactional
-@ActiveProfiles("test")
 @DisplayName("LevellogService의")
-class LevellogServiceTest {
-
-    @Autowired
-    private LevellogService levellogService;
-
-    @Autowired
-    private LevellogRepository levellogRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private TeamRepository teamRepository;
+class LevellogServiceTest extends ServiceTest {
 
     @Test
     @DisplayName("findById 메서드는 id에 해당하는 레벨로그를 조회한다.")

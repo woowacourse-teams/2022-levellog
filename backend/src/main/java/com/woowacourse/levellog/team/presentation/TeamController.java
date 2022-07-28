@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.team.presentation;
 
-import com.woowacourse.levellog.authentication.support.LoginMember;
-import com.woowacourse.levellog.authentication.support.NoAuthentication;
+import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
@@ -29,20 +29,20 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid final TeamCreateDto teamCreateDto,
-                                     @LoginMember final Long memberId) {
+                                     @Authentic final Long memberId) {
         final Long teamId = teamService.save(teamCreateDto, memberId);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId)).build();
     }
 
     @GetMapping
-    @NoAuthentication
+    @PublicAPI
     public ResponseEntity<TeamsDto> findAll() {
         final TeamsDto response = teamService.findAll();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{teamId}")
-    @NoAuthentication
+    @PublicAPI
     public ResponseEntity<TeamDto> findById(@PathVariable final Long teamId) {
         final TeamDto response = teamService.findById(teamId);
         return ResponseEntity.ok(response);
@@ -51,13 +51,13 @@ public class TeamController {
     @PutMapping("/{teamId}")
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @RequestBody @Valid final TeamUpdateDto request,
-                                       @LoginMember final Long memberId) {
+                                       @Authentic final Long memberId) {
         teamService.update(request, teamId, memberId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{teamId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long teamId, @LoginMember final Long memberId) {
+    public ResponseEntity<Void> delete(@PathVariable final Long teamId, @Authentic final Long memberId) {
         teamService.deleteById(teamId, memberId);
         return ResponseEntity.noContent().build();
     }

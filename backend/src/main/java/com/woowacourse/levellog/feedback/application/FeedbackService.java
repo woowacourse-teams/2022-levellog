@@ -104,7 +104,7 @@ public class FeedbackService {
                 .orElseThrow(FeedbackNotFoundException::new);
 
         final Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
         if (!feedback.isAssociatedWith(member)) {
             throw new InvalidFeedbackException("자신이 남기거나 받은 피드백만 삭제할 수 있습니다.");
         }
@@ -123,7 +123,8 @@ public class FeedbackService {
 
     private Member getMember(final Long memberId) {
         return memberRepository
-                .findById(memberId).orElseThrow(MemberNotFoundException::new);
+                .findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
     }
 
     private Levellog getLevellog(final Long levellogId) {

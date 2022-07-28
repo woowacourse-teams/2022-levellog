@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack-dev-server --config .webpack/webpack.dev.js --mode development --entry ./src/index.tsx",
-    "build": "webpack --config .webpack/webpack.prod.js --mode production --entry ./src/index.tsx",
+    "local": "webpack-dev-server --config .webpack/webpack.js --mode none --entry ./src/index.tsx",
+    "build-dev": "webpack --config .webpack/webpack.dev.js --mode development --entry ./src/index.tsx",
+    "build-prod": "webpack --config .webpack/webpack.prod.js  --mode production --entry ./src/index.tsx",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },

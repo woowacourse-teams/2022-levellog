@@ -61,7 +61,6 @@ class LevellogControllerTest extends ControllerTest {
         void save_nameNullOrEmpty_Exception() throws Exception {
             // given
             final Long teamId = 1L;
-            final Long authorId = 1L;
             final LevellogDto request = LevellogDto.from(" ");
             final String requestContent = objectMapper.writeValueAsString(request);
 

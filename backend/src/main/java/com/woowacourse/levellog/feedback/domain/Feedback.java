@@ -19,9 +19,9 @@ import lombok.NoArgsConstructor;
 public class Feedback extends BaseEntity {
 
     private static final int FEEDBACK_CONTENT_MAX_LENGTH = 1000;
-    private static final String CONTENT_TYPE_STUDY = "Study";
     public static final String CONTENT_TYPE_SPEAK = "Speak";
     public static final String CONTENT_TYPE_ETC = "Etc";
+    private static final String CONTENT_TYPE_STUDY = "Study";
 
     @ManyToOne
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_from_member"))

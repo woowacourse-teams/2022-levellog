@@ -7,7 +7,6 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
-import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.levellog.dto.LevellogRequest;
@@ -146,7 +145,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
         final FeedbackWriteDto givenRequest = new FeedbackWriteDto(givenFeedbackContentDto);
 
-        final RestAssuredResponse saveResponse = RestAssuredTemplate.post("/api/levellogs/" + rick_levellogId + "/feedbacks",
+        final RestAssuredResponse saveResponse = RestAssuredTemplate.post(
+                "/api/levellogs/" + rick_levellogId + "/feedbacks",
                 romaToken, givenRequest);
 
         final Long updateId = Long.parseLong(saveResponse.getResponse()

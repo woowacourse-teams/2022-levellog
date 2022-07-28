@@ -56,12 +56,7 @@ public class TeamService {
     @Transactional
     public void update(final TeamUpdateDto request, final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
-        final List<Participant> participants = participantRepository.findByTeam(team);
-        final Long hostId = getHostId(participants);
-
-        if (!memberId.equals(hostId)) {
-            throw new HostUnauthorizedException("호스트 권한이 없습니다. 입력한 memberId : [" + memberId + "]");
-        }
+        validateHost(memberId, team);
 
         team.update(request.getTitle(), request.getPlace(), request.getStartAt());
     }
@@ -69,12 +64,7 @@ public class TeamService {
     @Transactional
     public void deleteById(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
-        final List<Participant> participants = participantRepository.findByTeam(team);
-        final Long hostId = getHostId(participants);
-
-        if (!memberId.equals(hostId)) {
-            throw new HostUnauthorizedException("호스트 권한이 없습니다. 입력한 memberId : [" + memberId + "]");
-        }
+        validateHost(memberId, team);
 
         participantRepository.deleteByTeam(team);
         teamRepository.deleteById(teamId);
@@ -87,7 +77,8 @@ public class TeamService {
 
     private Team getTeam(final Long teamId) {
         return teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
+                .orElseThrow(
+                        () -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
     }
 
     private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
@@ -139,5 +130,14 @@ public class TeamService {
             return null;
         }
         return levellog.getId();
+    }
+
+    private void validateHost(final Long memberId, final Team team) {
+        final List<Participant> participants = participantRepository.findByTeam(team);
+        final Long hostId = getHostId(participants);
+
+        if (!memberId.equals(hostId)) {
+            throw new HostUnauthorizedException("호스트 권한이 없습니다. 입력한 memberId : [" + memberId + "]");
+        }
     }
 }

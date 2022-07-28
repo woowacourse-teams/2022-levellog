@@ -85,7 +85,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"),
-                        "teams.hostId", contains(loginResponse1.getMemberId().intValue(), loginResponse2.getMemberId().intValue()),
+                        "teams.hostId",
+                        contains(loginResponse1.getMemberId().intValue(), loginResponse2.getMemberId().intValue()),
                         "teams.participants.nickname", contains(List.of("페퍼", "이브"), List.of("이브", "페퍼", "릭"))
                 );
     }

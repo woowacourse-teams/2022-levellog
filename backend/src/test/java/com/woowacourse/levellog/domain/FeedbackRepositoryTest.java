@@ -53,7 +53,7 @@ class FeedbackRepositoryTest {
         participantRepository.save(new Participant(team, eve, true));
         participantRepository.save(new Participant(team, rick, false));
         participantRepository.save(new Participant(team, toMember, false));
-        final Levellog levellog = levellogRepository.save(new Levellog(toMember, team, "levellog"));
+        final Levellog levellog = levellogRepository.save(Levellog.of(toMember, team, "levellog"));
 
         final Feedback savedFeedback1 = feedbackRepository.save(
                 new Feedback(eve, toMember, levellog, "study", "speak", "etc"));
@@ -79,7 +79,7 @@ class FeedbackRepositoryTest {
         participantRepository.save(new Participant(team, eve, true));
         participantRepository.save(new Participant(team, rick, false));
         participantRepository.save(new Participant(team, toMember, false));
-        final Levellog levellog = levellogRepository.save(new Levellog(toMember, team, "levellog"));
+        final Levellog levellog = levellogRepository.save(Levellog.of(toMember, team, "levellog"));
 
         final Feedback savedFeedback1 = feedbackRepository.save(
                 new Feedback(eve, toMember, levellog, "study", "speak", "etc"));
@@ -105,7 +105,7 @@ class FeedbackRepositoryTest {
         final Team team = teamRepository.save(new Team("잠실 네오조", "작은 강의실", LocalDateTime.now(), "team.img"));
         participantRepository.save(new Participant(team, fromMember, true));
         participantRepository.save(new Participant(team, toMember, false));
-        final Levellog levellog = levellogRepository.save(new Levellog(toMember, team, "levellog"));
+        final Levellog levellog = levellogRepository.save(Levellog.of(toMember, team, "levellog"));
 
         feedbackRepository.save(new Feedback(fromMember, toMember, levellog, "study", "speak", "etc"));
 

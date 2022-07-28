@@ -152,7 +152,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.NO_CONTENT.value());
         requestFindLevellog(Long.parseLong(teamId), Long.parseLong(levellogId))
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message", equalTo("레벨로그가 존재하지 않습니다. id : " + levellogId));
+                .body("message", equalTo("레벨로그가 존재하지 않습니다."));
     }
 
     private ValidatableResponse requestFindLevellog(final Long teamId, final Long levellogId) {

@@ -5,35 +5,23 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
-import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-
-@SpringBootTest
-@Transactional
-@ActiveProfiles("test")
 @DisplayName("LevellogService의")
 class LevellogServiceTest extends ServiceTest {
 
@@ -91,7 +79,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, memberId, teamId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage("멤버가 존재하지 않습니다. id : " + memberId);
+                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(memberId));
         }
 
         @Test
@@ -224,7 +212,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, memberId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage("멤버가 존재하지 않습니다. id : " + memberId);
+                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(memberId));
         }
 
         @Test
@@ -314,7 +302,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.deleteById(levellogId, memberId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage("멤버가 존재하지 않습니다. id : " + memberId);
+                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(memberId));
         }
 
         @Test

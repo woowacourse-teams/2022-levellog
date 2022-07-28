@@ -99,7 +99,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final Long levellogId = 1000L;
 
-            doThrow(new LevellogNotFoundException())
+            doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
                     .when(levellogService)
                     .findById(levellogId);
 

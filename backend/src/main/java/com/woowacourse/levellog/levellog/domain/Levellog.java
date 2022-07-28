@@ -13,13 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 public class Levellog extends BaseEntity {
 
@@ -70,7 +68,7 @@ public class Levellog extends BaseEntity {
     }
 
     public void validateSelfFeedback(final Member member) {
-        if (isAuthorId(member.getId())) {
+        if (isAuthor(member)) {
             throw new InvalidFeedbackException(" [levellogId : " + getId() + "]", "자기 자신에게 피드백을 할 수 없습니다.");
         }
     }

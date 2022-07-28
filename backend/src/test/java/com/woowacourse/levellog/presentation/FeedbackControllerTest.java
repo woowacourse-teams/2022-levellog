@@ -78,7 +78,8 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(" [levellogId : " + levellogId + "]", "자기 자신에게 피드백을 할 수 없습니다."));
+                    .willThrow(new InvalidFeedbackException(" [levellogId : " + levellogId + "]",
+                            "자기 자신에게 피드백을 할 수 없습니다."));
 
             final String requestContent = objectMapper.writeValueAsString(request);
 

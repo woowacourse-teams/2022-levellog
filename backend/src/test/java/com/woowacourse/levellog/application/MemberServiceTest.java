@@ -19,6 +19,45 @@ import org.junit.jupiter.api.Test;
 @DisplayName("MemberService의")
 class MemberServiceTest extends ServiceTest {
 
+    @Test
+    @DisplayName("findAllByNicknameContains 메서드는 입력한 문자열이 포함된 nickname을 가진 멤버를 모두 조회한다.")
+    void findAllByNicknameContains() {
+        // given
+        final Member roma = memberRepository.save(new Member("roma", 10, "roma.img"));
+        final Member pepper = memberRepository.save(new Member("pepper", 20, "pepper.img"));
+        final Member alien = memberRepository.save(new Member("alien", 30, "alien.img"));
+        final Member rick = memberRepository.save(new Member("rick", 40, "rick.img"));
+        final Member eve = memberRepository.save(new Member("eve", 50, "eve.img"));
+        final Member kyul = memberRepository.save(new Member("kyul", 60, "kyul.img"));
+        final Member harry = memberRepository.save(new Member("harry", 70, "harry.img"));
+
+        // when
+        final MembersDto members = memberService.searchByNickname("ali");
+
+        // then
+        assertAll(
+                () -> assertThat(members.getMembers()).hasSize(1),
+                () -> assertThat(members.getMembers().get(0).getId()).isEqualTo(alien.getId())
+        );
+    }
+
+    @Test
+    @DisplayName("updateNickname 메서드는 닉네임을 업데이트한다.")
+    void updateNickname() {
+        // given
+        final Member savedMember = memberRepository.save(new Member("로마", 1234567, "profileUrl.image"));
+        final Long id = savedMember.getId();
+        final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto("알린");
+
+        // when
+        memberService.updateNickname(nicknameUpdateDto, id);
+
+        // then
+        final Member updateMember = memberRepository.findById(id)
+                .orElseThrow();
+        assertThat(updateMember.getNickname()).isEqualTo("알린");
+    }
+
     @Nested
     @DisplayName("save 메서드는")
     class Save {
@@ -82,45 +121,6 @@ class MemberServiceTest extends ServiceTest {
                     .hasMessageContainingAll("멤버가 존재하지 않음", "1000");
         }
 
-    }
-
-    @Test
-    @DisplayName("findAllByNicknameContains 메서드는 입력한 문자열이 포함된 nickname을 가진 멤버를 모두 조회한다.")
-    void findAllByNicknameContains() {
-        // given
-        final Member roma = memberRepository.save(new Member("roma", 10, "roma.img"));
-        final Member pepper = memberRepository.save(new Member("pepper", 20, "pepper.img"));
-        final Member alien = memberRepository.save(new Member("alien", 30, "alien.img"));
-        final Member rick = memberRepository.save(new Member("rick", 40, "rick.img"));
-        final Member eve = memberRepository.save(new Member("eve", 50, "eve.img"));
-        final Member kyul = memberRepository.save(new Member("kyul", 60, "kyul.img"));
-        final Member harry = memberRepository.save(new Member("harry", 70, "harry.img"));
-
-        // when
-        final MembersDto members = memberService.searchByNickname("ali");
-
-        // then
-        assertAll(
-                () -> assertThat(members.getMembers()).hasSize(1),
-                () -> assertThat(members.getMembers().get(0).getId()).isEqualTo(alien.getId())
-        );
-    }
-
-    @Test
-    @DisplayName("updateNickname 메서드는 닉네임을 업데이트한다.")
-    void updateNickname() {
-        // given
-        final Member savedMember = memberRepository.save(new Member("로마", 1234567, "profileUrl.image"));
-        final Long id = savedMember.getId();
-        final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto("알린");
-
-        // when
-        memberService.updateNickname(nicknameUpdateDto, id);
-
-        // then
-        final Member updateMember = memberRepository.findById(id)
-                .orElseThrow();
-        assertThat(updateMember.getNickname()).isEqualTo("알린");
     }
 
     @Nested

@@ -138,7 +138,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id).getTeamId();
 
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
         final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();

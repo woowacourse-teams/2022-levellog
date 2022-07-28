@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 public abstract class LevellogException extends RuntimeException {
 
-    private final HttpStatus httpStatus;
     private final String clientMessage;
+    private final HttpStatus httpStatus;
 
-    // TODO: 2022/07/28 삭제되어야함 
+    // TODO: 2022/07/28 삭제되어야함
     @Deprecated
     protected LevellogException(final String message, final HttpStatus httpStatus) {
         super(message);
@@ -19,9 +19,9 @@ public abstract class LevellogException extends RuntimeException {
         this.clientMessage = null;
     }
 
-    protected LevellogException(final String message, final HttpStatus httpStatus, final String clientMessage) {
+    protected LevellogException(final String message, final String clientMessage, final HttpStatus httpStatus) {
         super(message);
-        this.httpStatus = httpStatus;
         this.clientMessage = clientMessage;
+        this.httpStatus = httpStatus;
     }
 }

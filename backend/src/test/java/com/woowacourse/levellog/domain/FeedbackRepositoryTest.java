@@ -86,7 +86,6 @@ class FeedbackRepositoryTest {
                 new Feedback(fromMember2, toMember, levellog, "study", "speak", "etc"));
 
         savedFeedback2.updateFeedback("update", "update", "update");
-        feedbackRepository.flush();
 
         // when
         final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(toMember);

@@ -29,7 +29,7 @@ public class LevellogService {
     public Long save(final LevellogDto request, final Long authorId, final Long teamId) {
         final Team team = getTeam(teamId);
         final Member author = getMember(authorId);
-        validateLevelogExistence(authorId, teamId);
+        validateLevellogExistence(authorId, teamId);
 
         final Levellog levellog = request.toLevellog(author, team);
         final Levellog savedLevellog = levellogRepository.save(levellog);
@@ -62,12 +62,12 @@ public class LevellogService {
 
     private Levellog getById(final Long levellogId) {
         return levellogRepository.findById(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException("레벨로그가 존재하지 않습니다. id : " + levellogId));
+                .orElseThrow(() -> new LevellogNotFoundException("레벨로그가 존재하지 않습니다. levellogId : " + levellogId));
     }
 
     private Team getTeam(final Long teamId) {
         return teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException("팀이 존재하지 않습니다. id : " + teamId));
+                .orElseThrow(() -> new TeamNotFoundException("팀이 존재하지 않습니다. teamId : " + teamId));
     }
 
     private Member getMember(final Long memberId) {
@@ -76,7 +76,7 @@ public class LevellogService {
                 .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
     }
 
-    private void validateLevelogExistence(final Long authorId, final Long teamId) {
+    private void validateLevellogExistence(final Long authorId, final Long teamId) {
         final boolean isExists = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
         if (isExists) {
             throw new LevellogAlreadyExistException("레벨로그를 이미 작성하였습니다. authorId : " + authorId + " teamId : " + teamId);

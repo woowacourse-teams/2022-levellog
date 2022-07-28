@@ -63,7 +63,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, memberId, teamId))
                     .isInstanceOf(TeamNotFoundException.class)
-                    .hasMessage("팀이 존재하지 않습니다. id : " + teamId);
+                    .hasMessageContainingAll("팀이 존재하지 않습니다.", String.valueOf(teamId));
         }
 
         @Test
@@ -98,7 +98,9 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, memberId, teamId))
                     .isInstanceOf(LevellogAlreadyExistException.class)
-                    .hasMessage("레벨로그를 이미 작성하였습니다. authorId : " + memberId + " teamId : " + teamId);
+                    .hasMessageContainingAll("레벨로그를 이미 작성하였습니다.", "teamId",
+                            String.valueOf(memberId),
+                            String.valueOf(teamId));
         }
 
         @ParameterizedTest
@@ -153,7 +155,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.findById(levellogId))
                     .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessage("레벨로그가 존재하지 않습니다. id : " + levellogId);
+                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(levellogId));
         }
     }
 
@@ -194,7 +196,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, memberId))
                     .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessage("레벨로그가 존재하지 않습니다. id : " + levellogId);
+                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(levellogId));
         }
 
         @Test
@@ -285,7 +287,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.deleteById(levellogId, memberId))
                     .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessage("레벨로그가 존재하지 않습니다. id : " + levellogId);
+                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(levellogId));
         }
 
         @Test

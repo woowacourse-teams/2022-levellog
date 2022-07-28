@@ -41,8 +41,8 @@ public class FeedbackService {
         final FeedbackContentDto feedbackContent = request.getFeedback();
         final Levellog levellog = getLevellog(levellogId);
 
+        levellog.validateSelfFeedback(member);
         validateTeamMember(levellogId, member);
-        validateSelfFeedback(member, levellog);
 
         final Feedback feedback = feedbackContent.toFeedback(member, levellog);
 
@@ -69,7 +69,7 @@ public class FeedbackService {
         final Feedback feedback = getFeedback(feedbackId);
         final Member member = getMember(memberId);
 
-        validateAuthor(feedback, member, "자신이 남긴 피드백만 수정할 수 있습니다.");
+        feedback.validateAuthor(member, "자신이 남긴 피드백만 수정할 수 있습니다.");
 
         feedback.updateFeedback(
                 request.getFeedback().getStudy(),
@@ -82,7 +82,7 @@ public class FeedbackService {
         final Feedback feedback = getFeedback(feedbackId);
         final Member member = getMember(memberId);
 
-        validateAuthor(feedback, member, "자신이 남긴 피드백만 삭제할 수 있습니다.");
+        feedback.validateAuthor(member, "자신이 남긴 피드백만 삭제할 수 있습니다.");
 
         feedbackRepository.deleteById(feedbackId);
     }
@@ -99,19 +99,6 @@ public class FeedbackService {
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
             throw new InvalidFeedbackException(
                     "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다. memberId :" + member.getId() + " teamId : " + team.getId());
-        }
-    }
-
-    private void validateSelfFeedback(final Member member, final Levellog levellog) {
-        if (levellog.getAuthor().equals(member)) {
-            throw new InvalidFeedbackException("자기 자신에게 피드백을 할 수 없습니다.");
-        }
-    }
-
-    private void validateAuthor(final Feedback feedback, final Member member, final String message) {
-        if (!feedback.isAuthor(member)) {
-            throw new InvalidFeedbackException(
-                    message + " feedbackId : " + feedback.getId() + ", memberId : " + member.getId());
         }
     }
 

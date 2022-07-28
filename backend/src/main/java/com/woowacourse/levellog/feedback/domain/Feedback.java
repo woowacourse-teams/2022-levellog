@@ -2,6 +2,7 @@ package com.woowacourse.levellog.feedback.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Column;
@@ -76,7 +77,10 @@ public class Feedback extends BaseEntity {
         this.etc = etc;
     }
 
-    public boolean isAuthor(final Member member) {
-        return from.equals(member);
+    public void validateAuthor(final Member member, final String message) {
+        if (!from.equals(member)) {
+            throw new InvalidFeedbackException(
+                    message + " feedbackId : " + getId() + ", memberId : " + member.getId());
+        }
     }
 }

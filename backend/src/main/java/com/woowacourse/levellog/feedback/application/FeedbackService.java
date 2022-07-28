@@ -44,7 +44,7 @@ public class FeedbackService {
         validateTeamMember(levellogId, member);
         validateSelfFeedback(member, levellog);
 
-        final Feedback feedback = feedbackContent.toEntity(member, levellog);
+        final Feedback feedback = feedbackContent.toFeedback(member, levellog);
 
         return feedbackRepository.save(feedback)
                 .getId();

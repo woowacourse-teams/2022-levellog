@@ -29,7 +29,7 @@ public class FeedbackContentDto {
         return new FeedbackContentDto(feedback.getStudy(), feedback.getSpeak(), feedback.getEtc());
     }
 
-    public Feedback toEntity(final Member member, final Levellog levellog) {
+    public Feedback toFeedback(final Member member, final Levellog levellog) {
         return new Feedback(member, levellog.getAuthor(), levellog, study, speak, etc);
     }
 }

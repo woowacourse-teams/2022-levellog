@@ -9,11 +9,11 @@ import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
-import com.woowacourse.levellog.team.dto.ParticipantResponse;
-import com.woowacourse.levellog.team.dto.TeamRequest;
-import com.woowacourse.levellog.team.dto.TeamResponse;
-import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
-import com.woowacourse.levellog.team.dto.TeamsResponse;
+import com.woowacourse.levellog.team.dto.ParticipantDto;
+import com.woowacourse.levellog.team.dto.TeamCreateDto;
+import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamUpdateDto;
+import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TeamService {
 
@@ -33,10 +33,11 @@ public class TeamService {
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
 
-    public Long save(final Long hostId, final TeamRequest request) {
+    @Transactional
+    public Long save(final TeamCreateDto request, final Long hostId) {
         final Member host = getMember(hostId);
-        final Team team = new Team(request.getTitle(), request.getPlace(), request.getStartAt(), host.getProfileUrl());
-        final List<Participant> participants = getParticipants(hostId, request.getParticipants().getIds(), team);
+        final Team team = request.toEntity(host.getProfileUrl());
+        final List<Participant> participants = getParticipants(team, hostId, request.getParticipants().getIds());
 
         final Team savedTeam = teamRepository.save(team);
         participantRepository.saveAll(participants);
@@ -44,101 +45,79 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    public TeamsResponse findAll() {
-        final List<Team> teams = teamRepository.findAll();
-        return new TeamsResponse(getTeamResponses(teams));
+    public TeamsDto findAll() {
+        return new TeamsDto(getTeamResponses(teamRepository.findAll()));
     }
 
-    public TeamResponse findById(final Long id) {
-        final Team team = getTeam(id);
-        return getTeamResponse(team);
+    public TeamDto findById(final Long teamId) {
+        return getTeamResponse(getTeam(teamId));
     }
 
-    public void update(final Long id, final TeamUpdateRequest request, final Long memberId) {
-        final Team team = getTeam(id);
-        final List<Participant> participants = participantRepository.findByTeam(team);
-        final Long hostId = getHostId(participants);
-
-        if (!memberId.equals(hostId)) {
-            throw new HostUnauthorizedException();
-        }
+    @Transactional
+    public void update(final TeamUpdateDto request, final Long teamId, final Long memberId) {
+        final Team team = getTeam(teamId);
+        validateHost(memberId, team);
 
         team.update(request.getTitle(), request.getPlace(), request.getStartAt());
     }
 
-    public void deleteById(final Long id, final Long memberId) {
-        final Team team = getTeam(id);
-        final List<Participant> participants = participantRepository.findByTeam(team);
-        final Long hostId = getHostId(participants);
-
-        if (!memberId.equals(hostId)) {
-            throw new HostUnauthorizedException();
-        }
+    @Transactional
+    public void deleteById(final Long teamId, final Long memberId) {
+        final Team team = getTeam(teamId);
+        validateHost(memberId, team);
 
         participantRepository.deleteByTeam(team);
-        teamRepository.deleteById(id);
+        teamRepository.deleteById(teamId);
     }
 
-    private Member getMember(final Long hostId) {
-        return memberRepository.findById(hostId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + hostId + "]"));
+    private Member getMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
     }
 
-    private Team getTeam(final Long id) {
-        return teamRepository.findById(id)
-                .orElseThrow(TeamNotFoundException::new);
+    private Team getTeam(final Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(
+                        () -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
     }
 
-    private List<Participant> getParticipants(final Long hostId, final List<Long> memberIds, final Team team) {
+    private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         final List<Participant> participants = new ArrayList<>();
-        addMemberToParticipants(hostId, participants, team, true);
-        for (final Long memberId : memberIds) {
-            addMemberToParticipants(memberId, participants, team, false);
-        }
+        participants.add(new Participant(team, getMember(hostId), true));
+        participants.addAll(toParticipants(team, memberIds));
 
         return participants;
     }
 
-    private void addMemberToParticipants(final Long memberId, final List<Participant> participants, final Team team,
-                                         final boolean isHost) {
-        final Member member = getMember(memberId);
-        participants.add(new Participant(team, member, isHost));
+    private List<Participant> toParticipants(final Team team, final List<Long> memberIds) {
+        return memberIds.stream()
+                .map(it -> new Participant(team, getMember(it), false))
+                .collect(Collectors.toList());
     }
 
-    private List<TeamResponse> getTeamResponses(final List<Team> teams) {
+    private List<TeamDto> getTeamResponses(final List<Team> teams) {
         return teams.stream()
                 .map(this::getTeamResponse)
                 .collect(Collectors.toList());
     }
 
-    private TeamResponse getTeamResponse(final Team team) {
+    private TeamDto getTeamResponse(final Team team) {
         final List<Participant> participants = participantRepository.findByTeam(team);
-        return new TeamResponse(
-                team.getId(),
-                team.getTitle(),
-                team.getPlace(),
-                team.getStartAt(),
-                team.getProfileUrl(),
-                getHostId(participants),
-                getParticipantResponses(participants));
+        return TeamDto.from(team, getHostId(participants), getParticipantResponses(participants));
     }
 
     private Long getHostId(final List<Participant> participants) {
         return participants.stream()
                 .filter(Participant::isHost)
                 .findAny()
-                .orElseThrow(() -> new MemberNotFoundException("호스트 존재 안함"))
+                .orElseThrow(() -> new MemberNotFoundException("모든 참가자 중 호스트가 존재하지 않습니다."))
                 .getMember()
                 .getId();
     }
 
-    private List<ParticipantResponse> getParticipantResponses(final List<Participant> participants) {
+    private List<ParticipantDto> getParticipantResponses(final List<Participant> participants) {
         return participants.stream()
-                .map(it -> new ParticipantResponse(
-                        it.getMember().getId(),
-                        getLevellogId(it),
-                        it.getMember().getNickname(),
-                        it.getMember().getProfileUrl()))
+                .map(it -> ParticipantDto.from(it, getLevellogId(it)))
                 .collect(Collectors.toList());
     }
 
@@ -151,5 +130,14 @@ public class TeamService {
             return null;
         }
         return levellog.getId();
+    }
+
+    private void validateHost(final Long memberId, final Team team) {
+        final List<Participant> participants = participantRepository.findByTeam(team);
+        final Long hostId = getHostId(participants);
+
+        if (!memberId.equals(hostId)) {
+            throw new HostUnauthorizedException("호스트 권한이 없습니다. 입력한 memberId : [" + memberId + "]");
+        }
     }
 }

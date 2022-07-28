@@ -30,7 +30,7 @@ class FeedbackTest {
 
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
+            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img");
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             // when & then
@@ -49,7 +49,7 @@ class FeedbackTest {
 
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
+            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img");
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             // when & then
@@ -68,7 +68,7 @@ class FeedbackTest {
 
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
+            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img");
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             // when & then
@@ -90,7 +90,7 @@ class FeedbackTest {
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
+            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img");
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentDto.toFeedback(roma, levellog);
@@ -111,7 +111,7 @@ class FeedbackTest {
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
+            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img");
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentDto.toFeedback(roma, levellog);
@@ -132,7 +132,7 @@ class FeedbackTest {
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
+            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img");
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentDto.toFeedback(roma, levellog);

@@ -5,13 +5,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TeamRequest {
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode
+public class TeamUpdateDto {
 
     @NotBlank
     private String title;
@@ -21,7 +23,4 @@ public class TeamRequest {
 
     @NotNull
     private LocalDateTime startAt;
-
-    @NotNull
-    private ParticipantIdsRequest participants;
 }

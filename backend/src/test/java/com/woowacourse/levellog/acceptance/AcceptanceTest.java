@@ -15,8 +15,8 @@ import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.config.TestAuthenticationConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
-import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
-import com.woowacourse.levellog.team.dto.TeamRequest;
+import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
+import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
@@ -104,8 +104,9 @@ abstract class AcceptanceTest {
                 .map(this::login)
                 .map(RestAssuredResponse::getMemberId)
                 .collect(Collectors.toList());
-        final ParticipantIdsRequest participantIdsRequest = new ParticipantIdsRequest(participantIds);
-        final TeamRequest request = new TeamRequest(title, title + "place", LocalDateTime.now(), participantIdsRequest);
+        final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
+        final TeamCreateDto request = new TeamCreateDto(title, title + "place", LocalDateTime.now().plusDays(3),
+                participantIdsDto);
 
         final String token = login(host)
                 .getToken();
@@ -116,8 +117,9 @@ abstract class AcceptanceTest {
     @Deprecated
     protected RestAssuredResponse requestCreateTeam(final String title, final String token,
                                                     final Long... participantIds) {
-        final ParticipantIdsRequest participantIdsRequest = new ParticipantIdsRequest(List.of(participantIds));
-        final TeamRequest request = new TeamRequest(title, title + "place", LocalDateTime.now(), participantIdsRequest);
+        final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(List.of(participantIds));
+        final TeamCreateDto request = new TeamCreateDto(title, title + "place", LocalDateTime.now().plusDays(3),
+                participantIdsDto);
 
         return post("/api/teams", token, request);
     }

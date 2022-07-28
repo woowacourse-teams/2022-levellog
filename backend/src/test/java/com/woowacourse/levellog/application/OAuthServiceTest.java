@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
@@ -27,14 +28,15 @@ class OAuthServiceTest extends ServiceTest {
             final LoginDto tokenResponse = oAuthService.login(
                     new GithubCodeDto(objectMapper.writeValueAsString(request)));
 
+            // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
             final Long savedMemberId = memberService.findMemberById(Long.parseLong(payload))
                     .getId();
-
-            // then
-            assertThat(Long.parseLong(payload)).isEqualTo(savedMemberId);
-            assertThat(tokenResponse.getProfileUrl()).isEqualTo("rick.org");
-            assertThat(tokenResponse.getId()).isNotNull();
+            assertAll(
+                    () -> assertThat(Long.parseLong(payload)).isEqualTo(savedMemberId),
+                    () -> assertThat(tokenResponse.getProfileUrl()).isEqualTo("rick.org"),
+                    () -> assertThat(tokenResponse.getId()).isNotNull()
+            );
         }
 
         @Test
@@ -48,12 +50,14 @@ class OAuthServiceTest extends ServiceTest {
             // when
             final LoginDto tokenResponse = oAuthService.login(
                     new GithubCodeDto(objectMapper.writeValueAsString(request)));
-            final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
 
             // then
-            assertThat(Long.parseLong(payload)).isEqualTo(savedId);
-            assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl");
-            assertThat(tokenResponse.getId()).isNotNull();
+            final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
+            assertAll(
+                    () -> assertThat(Long.parseLong(payload)).isEqualTo(savedId),
+                    () -> assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl"),
+                    () -> assertThat(tokenResponse.getId()).isNotNull()
+            );
         }
     }
 }

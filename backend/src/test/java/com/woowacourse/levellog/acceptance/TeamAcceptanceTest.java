@@ -6,9 +6,9 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
-import com.woowacourse.levellog.team.dto.TeamRequest;
-import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
+import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
+import com.woowacourse.levellog.team.dto.TeamCreateDto;
+import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.time.LocalDateTime;
@@ -34,12 +34,12 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamRequest request = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse1.getMemberId(), loginResponse2.getMemberId())));
+        final TeamCreateDto request = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/create"))
@@ -65,14 +65,14 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
         final RestAssuredResponse loginResponse3 = login("릭");
-        final TeamRequest teamRequest1 = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse2.getMemberId())));
-        final TeamRequest teamRequest2 = new TeamRequest("잠실 브리조", "톱오브스윙방", LocalDateTime.now(),
-                new ParticipantIdsRequest(
+        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
+        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(
                         List.of(loginResponse1.getMemberId(), loginResponse3.getMemberId())));
 
-        RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamRequest1);
-        RestAssuredTemplate.post("/api/teams", loginResponse2.getToken(), teamRequest2);
+        RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto1);
+        RestAssuredTemplate.post("/api/teams", loginResponse2.getToken(), teamCreateDto2);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -103,10 +103,10 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse2.getMemberId())));
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
 
-        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamRequest)
+        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
 
         // when
@@ -121,6 +121,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("title", equalTo("잠실 제이슨조"),
                         "place", equalTo("트랙룸"),
+                        "hostId", equalTo(loginResponse1.getMemberId().intValue()),
                         "participants.nickname", contains("페퍼", "이브")
                 );
     }
@@ -137,15 +138,15 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse1.getMemberId(), loginResponse2.getMemberId())));
-        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamRequest)
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
+        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
-        final TeamUpdateRequest request = new TeamUpdateRequest("선릉 브리조", "수성방", LocalDateTime.now());
+        final TeamUpdateDto request = new TeamUpdateDto("선릉 브리조", "수성방", LocalDateTime.now().plusDays(3));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/update"))
@@ -169,13 +170,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now(),
-                new ParticipantIdsRequest(List.of(loginResponse1.getMemberId(), loginResponse2.getMemberId())));
-        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamRequest)
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
+        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/delete"))
                 .when()

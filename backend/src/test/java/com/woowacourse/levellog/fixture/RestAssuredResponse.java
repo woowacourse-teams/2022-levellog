@@ -8,7 +8,7 @@ public class RestAssuredResponse {
 
     private final ValidatableResponse response;
 
-    public RestAssuredResponse(ValidatableResponse response) {
+    public RestAssuredResponse(final ValidatableResponse response) {
         this.response = response;
     }
 

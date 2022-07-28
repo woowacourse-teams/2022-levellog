@@ -49,7 +49,7 @@ class FeedbackRepositoryTest {
         final Member eve = memberRepository.save(new Member("eve", 111, "profile.img"));
         final Member rick = memberRepository.save(new Member("rick", 222, "profile.img"));
         final Member toMember = memberRepository.save(new Member("toMember", 333, "profile.img"));
-        final Team team = teamRepository.save(new Team("잠실 네오조", "작은 강의실", LocalDateTime.now(), "team.img"));
+        final Team team = teamRepository.save(new Team("잠실 네오조", "작은 강의실", LocalDateTime.now().plusDays(3), "team.img"));
         participantRepository.save(new Participant(team, eve, true));
         participantRepository.save(new Participant(team, rick, false));
         participantRepository.save(new Participant(team, toMember, false));
@@ -75,7 +75,7 @@ class FeedbackRepositoryTest {
         final Member eve = memberRepository.save(new Member("eve", 111, "profile.img"));
         final Member rick = memberRepository.save(new Member("rick", 222, "profile.img"));
         final Member toMember = memberRepository.save(new Member("toMember", 333, "profile.img"));
-        final Team team = teamRepository.save(new Team("잠실 네오조", "작은 강의실", LocalDateTime.now(), "team.img"));
+        final Team team = teamRepository.save(new Team("잠실 네오조", "작은 강의실", LocalDateTime.now().plusDays(3), "team.img"));
         participantRepository.save(new Participant(team, eve, true));
         participantRepository.save(new Participant(team, rick, false));
         participantRepository.save(new Participant(team, toMember, false));
@@ -102,7 +102,7 @@ class FeedbackRepositoryTest {
         // given
         final Member fromMember = memberRepository.save(new Member("fromMember", 111, "profile.img"));
         final Member toMember = memberRepository.save(new Member("toMember", 333, "profile.img"));
-        final Team team = teamRepository.save(new Team("잠실 네오조", "작은 강의실", LocalDateTime.now(), "team.img"));
+        final Team team = teamRepository.save(new Team("잠실 네오조", "작은 강의실", LocalDateTime.now().plusDays(3), "team.img"));
         participantRepository.save(new Participant(team, fromMember, true));
         participantRepository.save(new Participant(team, toMember, false));
         final Levellog levellog = levellogRepository.save(Levellog.of(toMember, team, "levellog"));

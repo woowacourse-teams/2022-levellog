@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.domain;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
@@ -31,7 +31,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
-            final Levellog levellog = new Levellog(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             // when & then
             assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma, levellog))
@@ -50,7 +50,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
-            final Levellog levellog = new Levellog(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             // when & then
             assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma, levellog))
@@ -69,7 +69,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
-            final Levellog levellog = new Levellog(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             // when & then
             assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma, levellog))
@@ -91,7 +91,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
-            final Levellog levellog = new Levellog(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentDto.toFeedback(roma, levellog);
 
@@ -112,7 +112,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
-            final Levellog levellog = new Levellog(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentDto.toFeedback(roma, levellog);
 
@@ -133,7 +133,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now(), "progile.img");
-            final Levellog levellog = new Levellog(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentDto.toFeedback(roma, levellog);
 

@@ -8,7 +8,7 @@ import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
@@ -106,7 +106,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String team2Id = requestCreateTeam("릭,로마,페퍼", romaToken, rick_id, roma_id, pepper_id).getTeamId();
 
         // 레벨로그 생성
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그1,2 내용");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그1,2 내용");
         final String levellogId1 = RestAssuredTemplate.post("/api/teams/" + team1Id + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();

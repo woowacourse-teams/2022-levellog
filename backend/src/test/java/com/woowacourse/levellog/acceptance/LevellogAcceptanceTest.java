@@ -1,13 +1,18 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.fixture.RestAssuredResponse;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
+import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
+import com.woowacourse.levellog.team.dto.TeamRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import org.junit.jupiter.api.Disabled;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -26,17 +31,19 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 작성")
     void createLevellog() {
         // given
-        final String teamId = requestCreateTeam("레벨로그팀", MASTER, MASTER, "로마", "알린")
-                .getTeamId();
-
-        final LevellogRequest request = new LevellogRequest("Spring과 React를 학습했습니다.");
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
+        final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsRequest(List.of(loginResponse2.getMemberId())));
+        final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
+        final LevellogDto request = LevellogDto.from("Spring과 React를 학습했습니다.");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("levellog/create"))
+                .filter(document("levellog/save"))
                 .when()
                 .post("/api/teams/{teamId}/levellogs", teamId)
                 .then().log().all();
@@ -56,10 +63,13 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 상세 조회")
     void findLevellog() {
         // given
-        final String teamId = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브")
-                .getTeamId();
-
-        final String levellogId = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.")
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
+        final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsRequest(List.of(loginResponse2.getMemberId())));
+        final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
+        final LevellogDto request = LevellogDto.from("Spring과 React를 학습했습니다.");
+        final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(), request)
                 .getLevellogId();
 
         // when
@@ -72,7 +82,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("content", equalTo("트렌젝션에 대해 학습함."));
+                .body("content", equalTo("Spring과 React를 학습했습니다."));
     }
 
     /*
@@ -85,18 +95,20 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 수정")
     void updateLevellog() {
         // given
-        final String teamId = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브")
-                .getTeamId();
-
-        final String levellogId = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.")
-                .getLevellogId();
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
+        final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsRequest(List.of(loginResponse2.getMemberId())));
+        final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
+        final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
+                LevellogDto.from("Spring과 React를 학습했습니다.")).getLevellogId();
 
         final String updateContent = "update content";
-        final LevellogRequest request = new LevellogRequest(updateContent);
+        final LevellogDto request = LevellogDto.from(updateContent);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/update"))
@@ -116,20 +128,21 @@ class LevellogAcceptanceTest extends AcceptanceTest {
      *   when: 레벨로그를 삭제한다.
      *   then: 204 No Content 상태 코드를 응답 받는다.
      */
-    @Disabled // TODO: 2022/07/26 Delete before merge
     @Test
     @DisplayName("레벨로그 삭제")
     void deleteLevellog() {
         // given
-        final String teamId = requestCreateTeam("레벨로그팀", MASTER, MASTER, "클레이", "이브")
-                .getTeamId();
-
-        final String levellogId = requestCreateLevellog(teamId, "트렌젝션에 대해 학습함.")
-                .getLevellogId();
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
+        final TeamRequest teamRequest = new TeamRequest("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsRequest(List.of(loginResponse2.getMemberId())));
+        final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
+        final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
+                LevellogDto.from("Spring과 React를 학습했습니다.")).getLevellogId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .filter(document("levellog/delete"))
                 .when()
                 .delete("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)

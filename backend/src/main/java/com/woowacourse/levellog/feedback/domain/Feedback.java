@@ -19,9 +19,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Feedback extends BaseEntity {
 
-    private static final int FEEDBACK_CONTENT_MAX_LENGTH = 1000;
     public static final String CONTENT_TYPE_SPEAK = "Speak";
     public static final String CONTENT_TYPE_ETC = "Etc";
+    private static final int FEEDBACK_CONTENT_MAX_LENGTH = 1000;
     private static final String CONTENT_TYPE_STUDY = "Study";
 
     @ManyToOne
@@ -79,7 +79,8 @@ public class Feedback extends BaseEntity {
 
     public void validateAuthor(final Member member, final String message) {
         if (!from.equals(member)) {
-            throw new InvalidFeedbackException(" [feedbackId : " + getId() + ", memberId : " + member.getId() + "]", message);
+            throw new InvalidFeedbackException(" [feedbackId : " + getId() + ", memberId : " + member.getId() + "]",
+                    message);
         }
     }
 }

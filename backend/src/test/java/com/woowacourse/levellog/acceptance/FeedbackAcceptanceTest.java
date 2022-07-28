@@ -9,7 +9,7 @@ import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +41,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
                 .getTeamId();
 
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
         final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();
@@ -87,7 +87,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
                 .getTeamId();
 
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
         final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();
@@ -138,7 +138,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id).getTeamId();
 
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
         final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();
@@ -186,6 +186,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
      *   when: 조회한 피드백을 삭제한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
+
     @Test
     @DisplayName("피드백 삭제")
     void deleteFeedback() {
@@ -201,7 +202,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
                 .getTeamId();
 
-        final LevellogRequest levellogRequest = new LevellogRequest("레벨로그");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
         final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();

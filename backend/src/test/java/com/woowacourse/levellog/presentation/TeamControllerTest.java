@@ -60,7 +60,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("title must not be blank");
 
             // docs
             perform.andDo(document("team/create/exception/title/null-and-blank"));
@@ -92,7 +93,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("잘못된 팀 이름을 입력했습니다.");
 
             // docs
             perform.andDo(document("team/create/exception/title/length"));
@@ -121,7 +123,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("place must not be blank");
 
             // docs
             perform.andDo(document("team/create/exception/place/null-and-blank"));
@@ -153,7 +156,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("잘못된 장소를 입력했습니다.");
 
             // docs
             perform.andDo(document("team/create/exception/place/length"));
@@ -179,7 +183,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("startAt must not be null");
 
             // docs
             perform.andDo(document("team/create/exception/startat/null"));
@@ -211,7 +216,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("잘못된 시작 시간을 입력했습니다.");
 
             // docs
             perform.andDo(document("team/create/exception/startat/past"));
@@ -236,7 +242,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("participants must not be null");
 
             // docs
             perform.andDo(document("team/create/exception/participants/null"));
@@ -280,7 +287,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("팀 이름이 null 또는 공백입니다.");
 
             // docs
             perform.andDo(document("team/update/exception/title/null-and-blank"));
@@ -307,7 +315,7 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
             final long id = getIdInLocation(savePerform);
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
-            String title = "네오".repeat(128);
+            final String title = "네오".repeat(128);
             final TeamUpdateDto request = new TeamUpdateDto(title, "트랙룸", LocalDateTime.now().plusDays(3));
             final String content = objectMapper.writeValueAsString(request);
 
@@ -323,7 +331,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("잘못된 팀 이름을 입력했습니다.");
 
             // docs
             perform.andDo(document("team/update/exception/title/length"));
@@ -362,7 +371,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("장소가 null 또는 공백입니다.");
 
             // docs
             perform.andDo(document("team/update/exception/place/null-and-blank"));
@@ -405,7 +415,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("잘못된 장소를 입력했습니다.");
 
             // docs
             perform.andDo(document("team/update/exception/place/length"));
@@ -442,7 +453,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("시작 시간이 없습니다.");
 
             // docs
             perform.andDo(document("team/update/exception/startat/null"));
@@ -483,7 +495,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("잘못된 시작 시간을 입력했습니다.");
 
             // docs
             perform.andDo(document("team/update/exception/startat/past"));
@@ -512,7 +525,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(10));
             final String content = objectMapper.writeValueAsString(request);
 
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]"))
+            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .when(teamService)
                     .update(request, 10000000L, 4L);
 
@@ -524,7 +537,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpect(status().isNotFound())
+                    .andReturn().getResponse().getContentAsString().contains("팀이 존재하지 않습니다.");
 
             // docs
             perform.andDo(document("team/update/exception/notfound"));
@@ -539,7 +553,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("없는 팀을 제거하려고 하면 예외를 던진다.")
         void teamNotFound_Exception() throws Exception {
             // given
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]"))
+            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .when(teamService)
                     .findById(10000000L);
 
@@ -549,7 +563,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpect(status().isNotFound())
+                    .andReturn().getResponse().getContentAsString().contains("팀이 존재하지 않습니다.");
 
             // docs
             perform.andDo(document("team/findbyid/exception/notfound"));
@@ -579,7 +594,7 @@ class TeamControllerTest extends ControllerTest {
                             .content(requestContent))
                     .andDo(print());
 
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]"))
+            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .when(teamService)
                     .deleteById(10000000L, 4L);
 
@@ -590,7 +605,8 @@ class TeamControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpect(status().isNotFound())
+                    .andReturn().getResponse().getContentAsString().contains("팀이 존재하지 않습니다.");
 
             // docs
             perform.andDo(document("team/delete/exception/notfound"));

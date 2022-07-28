@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public class TeamNotFoundException extends LevellogException {
 
-    public TeamNotFoundException(final String message) {
-        super(message, HttpStatus.NOT_FOUND);
+    public TeamNotFoundException(final String message, final String clientMessage) {
+        super(message, clientMessage, HttpStatus.NOT_FOUND);
     }
 }

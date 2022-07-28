@@ -69,7 +69,8 @@ public class LevellogService {
     }
 
     private Team getTeam(final Long teamId) {
-        return teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]"));
+        return teamRepository.findById(teamId).orElseThrow(() ->
+                new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
     }
 
     private Member getMember(final Long memberId) {

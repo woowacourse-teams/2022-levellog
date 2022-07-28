@@ -18,7 +18,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Feedback extends BaseEntity {
 
-    public static final int FEEDBACK_CONTENT_MAX_LENGTH = 1000;
+    private static final int FEEDBACK_CONTENT_MAX_LENGTH = 1000;
+    private static final String CONTENT_TYPE_STUDY = "Study";
+    public static final String CONTENT_TYPE_SPEAK = "Speak";
+    public static final String CONTENT_TYPE_ETC = "Etc";
 
     @ManyToOne
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_from_member"))
@@ -32,13 +35,13 @@ public class Feedback extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_levellog"))
     private Levellog levellog;
 
-    @Column(length = 1000)
+    @Column(length = FEEDBACK_CONTENT_MAX_LENGTH)
     private String study;
 
-    @Column(length = 1000)
+    @Column(length = FEEDBACK_CONTENT_MAX_LENGTH)
     private String speak;
 
-    @Column(length = 1000)
+    @Column(length = FEEDBACK_CONTENT_MAX_LENGTH)
     private String etc;
 
     public Feedback(final Member from, final Member to, final Levellog levellog, final String study, final String speak,
@@ -54,14 +57,14 @@ public class Feedback extends BaseEntity {
     }
 
     private void validateFeedback(final String study, final String speak, final String etc) {
-        validateFeedbackLength(study);
-        validateFeedbackLength(speak);
-        validateFeedbackLength(etc);
+        validateFeedbackLength(study, CONTENT_TYPE_STUDY);
+        validateFeedbackLength(speak, CONTENT_TYPE_SPEAK);
+        validateFeedbackLength(etc, CONTENT_TYPE_ETC);
     }
 
-    private void validateFeedbackLength(final String feedbackContent) {
+    private void validateFeedbackLength(final String feedbackContent, final String contentType) {
         if (feedbackContent.length() > FEEDBACK_CONTENT_MAX_LENGTH) {
-            throw new InvalidFieldException("피드백은 " + FEEDBACK_CONTENT_MAX_LENGTH + "자 이하여야 합니다.");
+            throw new InvalidFieldException(contentType + " 피드백은 " + FEEDBACK_CONTENT_MAX_LENGTH + "자 이하여야 합니다.");
         }
     }
 

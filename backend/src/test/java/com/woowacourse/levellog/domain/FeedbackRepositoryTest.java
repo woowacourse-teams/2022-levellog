@@ -63,7 +63,8 @@ class FeedbackRepositoryTest {
         final List<Feedback> feedbacks = feedbackRepository.findAllByLevellog(levellog);
 
         // then
-        assertThat(feedbacks).hasSize(2).contains(savedFeedback1, savedFeedback2);
+        assertThat(feedbacks).hasSize(2)
+                .contains(savedFeedback1, savedFeedback2);
     }
 
     @Test
@@ -91,7 +92,8 @@ class FeedbackRepositoryTest {
         final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(toMember);
 
         // then
-        assertThat(feedbacks).hasSize(2).containsExactly(savedFeedback2, savedFeedback1);
+        assertThat(feedbacks).hasSize(2)
+                .containsExactly(savedFeedback2, savedFeedback1);
     }
 
     @Test

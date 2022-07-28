@@ -46,7 +46,8 @@ public class FeedbackService {
 
         final Feedback feedback = feedbackContent.toEntity(member, levellog);
 
-        return feedbackRepository.save(feedback).getId();
+        return feedbackRepository.save(feedback)
+                .getId();
     }
 
     public FeedbacksDto findAll(final Long levellogId) {
@@ -88,7 +89,7 @@ public class FeedbackService {
 
     private void validateExistence(final Long levellogId, final Long fromMemberId) {
         if (feedbackRepository.existsByLevellogIdAndFromId(levellogId, fromMemberId)) {
-            throw new FeedbackAlreadyExistException(levellogId);
+            throw new FeedbackAlreadyExistException("피드백이 이미 존재합니다. levellogId : " + levellogId);
         }
     }
 
@@ -96,7 +97,8 @@ public class FeedbackService {
         final Team team = getLevellog(levellogId).getTeam();
 
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
-            throw new InvalidFeedbackException("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
+            throw new InvalidFeedbackException(
+                    "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다. memberId :" + member.getId() + " teamId : " + team.getId());
         }
     }
 
@@ -109,7 +111,7 @@ public class FeedbackService {
     private void validateAuthor(final Feedback feedback, final Member member, final String message) {
         if (!feedback.isAssociatedWith(member)) {
             throw new InvalidFeedbackException(
-                    message + " feeadbackId : " + feedback.getId() + ", memberId : " + member.getId());
+                    message + " feedbackId : " + feedback.getId() + ", memberId : " + member.getId());
         }
     }
 

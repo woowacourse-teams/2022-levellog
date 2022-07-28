@@ -47,7 +47,7 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new FeedbackAlreadyExistException(levellogId));
+                    .willThrow(new FeedbackAlreadyExistException("피드백이 이미 존재합니다."));
 
             final String requestContent = objectMapper.writeValueAsString(request);
 

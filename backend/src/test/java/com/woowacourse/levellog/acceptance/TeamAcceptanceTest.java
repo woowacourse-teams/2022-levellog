@@ -39,7 +39,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/create"))
@@ -146,7 +146,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/update"))
@@ -176,7 +176,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .getTeamId();
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .auth().oauth2(loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/delete"))
                 .when()

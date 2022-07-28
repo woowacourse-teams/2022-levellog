@@ -51,21 +51,36 @@ class MemberServiceTest extends ServiceTest {
         }
     }
 
-    @Test
-    @DisplayName("findMemberById 메서드는 Id로 멤버의 정보를 조회한다.")
-    void findMemberById() {
-        // given
-        final Member roma = memberRepository.save(new Member("로마", 1234, "image.png"));
+    @Nested
+    @DisplayName("findMemberById 메서드는")
+    class FindMemberById {
 
-        // when
-        final MemberDto memberDto = memberService.findMemberById(roma.getId());
+        @Test
+        @DisplayName("Id로 멤버의 정보를 조회한다.")
+        void success() {
+            // given
+            final Member roma = memberRepository.save(new Member("로마", 1234, "image.png"));
 
-        // then
-        assertAll(
-                () -> assertThat(memberDto.getId()).isEqualTo(roma.getId()),
-                () -> assertThat(memberDto.getNickname()).isEqualTo("로마"),
-                () -> assertThat(memberDto.getProfileUrl()).isEqualTo("image.png")
-        );
+            // when
+            final MemberDto memberDto = memberService.findMemberById(roma.getId());
+
+            // then
+            assertAll(
+                    () -> assertThat(memberDto.getId()).isEqualTo(roma.getId()),
+                    () -> assertThat(memberDto.getNickname()).isEqualTo("로마"),
+                    () -> assertThat(memberDto.getProfileUrl()).isEqualTo("image.png")
+            );
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 Id로 요청을 보낼 경우 예외를 던진다.")
+        void memberNotFound_exception() {
+            // when & then
+            assertThatThrownBy(() -> memberService.findMemberById(1000L))
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessageContainingAll("멤버가 존재하지 않음", "1000");
+        }
+
     }
 
     @Test

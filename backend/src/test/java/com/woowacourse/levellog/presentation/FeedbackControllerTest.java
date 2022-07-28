@@ -1,8 +1,5 @@
 package com.woowacourse.levellog.presentation;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -30,6 +27,9 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("FeedbackController의")
 class FeedbackControllerTest extends ControllerTest {
 
+    private final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+    private final Long memberId = 1L;
+
     @Nested
     @DisplayName("save 메서드는")
     class save {
@@ -38,16 +38,15 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
         void save_alreadyExist_exceptionThrown() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 1L;
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
-            given(feedbackService.save(request, levellogId, 1L))
+            given(feedbackService.save(request, levellogId, memberId))
                     .willThrow(new FeedbackAlreadyExistException(levellogId));
 
             final String requestContent = objectMapper.writeValueAsString(request);
@@ -70,16 +69,15 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
         void save_selfFeedback_exceptionThrown() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 1L;
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
-            given(feedbackService.save(request, levellogId, 1L))
+            given(feedbackService.save(request, levellogId, memberId))
                     .willThrow(new InvalidFeedbackException("자기 자신에게 피드백을 할 수 없습니다."));
 
             final String requestContent = objectMapper.writeValueAsString(request);
@@ -102,16 +100,15 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
         void save_otherMember_exceptionThrown() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 1L;
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
-            given(feedbackService.save(request, levellogId, 1L))
+            given(feedbackService.save(request, levellogId, memberId))
                     .willThrow(new InvalidFeedbackException("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다."));
 
             final String requestContent = objectMapper.writeValueAsString(request);
@@ -135,8 +132,8 @@ class FeedbackControllerTest extends ControllerTest {
         void save_notFoundLevellog_exceptionThrown() throws Exception {
             // given
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 20000000L;
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
@@ -144,7 +141,7 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
-            given(feedbackService.save(request, levellogId, 1L))
+            given(feedbackService.save(request, levellogId, memberId))
                     .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
 
             // when
@@ -172,8 +169,8 @@ class FeedbackControllerTest extends ControllerTest {
         void delete_otherMember_exceptionThrown() throws Exception {
             // given
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
@@ -185,7 +182,7 @@ class FeedbackControllerTest extends ControllerTest {
 
             doThrow(new InvalidFeedbackException("자신이 남긴 피드백만 수정할 수 있습니다."))
                     .when(feedbackService)
-                    .update(request, feedbackId, 1L);
+                    .update(request, feedbackId, memberId);
 
             // when
             final ResultActions perform = mockMvc.perform(
@@ -207,8 +204,8 @@ class FeedbackControllerTest extends ControllerTest {
         void update_notFoundFeedback_exceptionThrown() throws Exception {
             // given
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 1L;
             final Long feedbackId = 1000000L;
@@ -220,7 +217,7 @@ class FeedbackControllerTest extends ControllerTest {
 
             doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
                     .when(feedbackService)
-                    .update(request, feedbackId, 1L);
+                    .update(request, feedbackId, memberId);
 
             // when
             final ResultActions perform = mockMvc.perform(
@@ -247,14 +244,14 @@ class FeedbackControllerTest extends ControllerTest {
         void delete_otherMember_exceptionThrown() throws Exception {
             // given
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
             doThrow(new InvalidFeedbackException("자신이 남긴 피드백만 삭제할 수 있습니다."))
                     .when(feedbackService)
-                    .deleteById(anyLong(), anyLong());
+                    .deleteById(feedbackId, memberId);
 
             // when
             final ResultActions perform = mockMvc.perform(
@@ -274,14 +271,14 @@ class FeedbackControllerTest extends ControllerTest {
         void delete_notFoundFeedback_exceptionThrown() throws Exception {
             // given
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 1L;
             final Long feedbackId = 2000000L;
             doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
                     .when(feedbackService)
-                    .deleteById(anyLong(), anyLong());
+                    .deleteById(feedbackId, memberId);
 
             // when
             final ResultActions perform = mockMvc.perform(
@@ -306,12 +303,12 @@ class FeedbackControllerTest extends ControllerTest {
         void findAll_notFoundMember_exceptionThrown() throws Exception {
             // given
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 1L;
 
-            given(feedbackService.findAll(anyLong()))
+            given(feedbackService.findAll(1L))
                     .willThrow(new MemberNotFoundException("존재하지 않는 멤버"));
 
             // when
@@ -332,12 +329,12 @@ class FeedbackControllerTest extends ControllerTest {
         void findAll_notFoundLevellog_exceptionThrown() throws Exception {
             // given
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("1");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
             final Long levellogId = 200000L;
 
-            given(feedbackService.findAll(anyLong()))
+            given(feedbackService.findAll(levellogId))
                     .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
 
             // when

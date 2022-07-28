@@ -2,7 +2,7 @@ package com.woowacourse.levellog.feedback.application;
 
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
-import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
+import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
@@ -34,7 +34,7 @@ public class FeedbackService {
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public Long save(final CreateFeedbackDto request, final Long levellogId, final Long fromMemberId) {
+    public Long save(final FeedbackWriteDto request, final Long levellogId, final Long fromMemberId) {
         validateExistence(levellogId, fromMemberId);
 
         final Member member = getMember(fromMemberId);
@@ -64,7 +64,7 @@ public class FeedbackService {
     }
 
     @Transactional
-    public void update(final CreateFeedbackDto request, final Long feedbackId, final Long memberId) {
+    public void update(final FeedbackWriteDto request, final Long feedbackId, final Long memberId) {
         final Feedback feedback = getFeedback(feedbackId);
         final Member member = getMember(memberId);
 

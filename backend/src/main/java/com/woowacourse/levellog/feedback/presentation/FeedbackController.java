@@ -2,7 +2,7 @@ package com.woowacourse.levellog.feedback.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
-import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
+import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import java.net.URI;
 import javax.validation.Valid;
@@ -26,7 +26,7 @@ public class FeedbackController {
 
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long levellogId,
-                                     @RequestBody @Valid final CreateFeedbackDto request,
+                                     @RequestBody @Valid final FeedbackWriteDto request,
                                      @Authentic final Long memberId) {
         final Long id = feedbackService.save(request, levellogId, memberId);
         return ResponseEntity.created(URI.create("/api/levellogs/" + levellogId + "/feedbacks/" + id)).build();
@@ -40,7 +40,7 @@ public class FeedbackController {
 
     @PutMapping("/{feedbackId}")
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
-                                       @RequestBody @Valid final CreateFeedbackDto request,
+                                       @RequestBody @Valid final FeedbackWriteDto request,
                                        @PathVariable final Long feedbackId,
                                        @Authentic final Long memberId) {
         feedbackService.update(request, feedbackId, memberId);

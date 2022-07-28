@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.feedback.domain.Feedback;
+import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
-import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
@@ -90,7 +90,7 @@ class FeedbackServiceTest extends ServiceTest {
                     new Feedback(roma, eve, levellog, "로마가 이브에게 스터디", "로마가 이브에게 말하기", "로마가 이브에게 기타"));
 
             // when
-            feedbackService.update(new CreateFeedbackDto(
+            feedbackService.update(new FeedbackWriteDto(
                             new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
                     feedback1.getId(), roma.getId());
 
@@ -116,7 +116,7 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() ->
-                    feedbackService.update(new CreateFeedbackDto(
+                    feedbackService.update(new FeedbackWriteDto(
                                     new FeedbackContentDto("수정된 스터디", "수정된 말하기", "수정된 기타")),
                             feedback1.getId(), alien.getId()))
                     .isInstanceOf(InvalidFeedbackException.class)
@@ -187,7 +187,7 @@ class FeedbackServiceTest extends ServiceTest {
 
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
+            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             // when
             final Long id = feedbackService.save(request, levellog.getId(), roma.getId());
@@ -210,7 +210,7 @@ class FeedbackServiceTest extends ServiceTest {
 
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
+            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
@@ -229,7 +229,7 @@ class FeedbackServiceTest extends ServiceTest {
 
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
+            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), eve.getId()))
@@ -252,7 +252,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Levellog levellog = levellogRepository.save(new Levellog(eve, team, "이브의 레벨로그"));
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(new CreateFeedbackDto(
+            assertThatThrownBy(() -> feedbackService.save(new FeedbackWriteDto(
                             new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타")),
                     levellog.getId(), roma.getId()))
                     .isInstanceOf(InvalidFeedbackException.class)

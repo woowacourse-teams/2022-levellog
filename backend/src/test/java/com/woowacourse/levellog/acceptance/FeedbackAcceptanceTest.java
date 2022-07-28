@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.feedback.dto.CreateFeedbackDto;
+import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
@@ -50,7 +50,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
                 "윙크하지 마세요.");
-        final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
+        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -96,7 +96,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
                 "윙크하지 마세요.");
-        final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
+        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
         RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
@@ -151,7 +151,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         final FeedbackContentDto givenFeedbackContentDto = new FeedbackContentDto(
                 "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-        final CreateFeedbackDto givenRequest = new CreateFeedbackDto(givenFeedbackContentDto);
+        final FeedbackWriteDto givenRequest = new FeedbackWriteDto(givenFeedbackContentDto);
 
         RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
@@ -172,7 +172,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         // when
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                 "수정된 Study 피드백", "수정된 Speak 피드백", "수정된 Etc 피드백");
-        final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
+        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
@@ -222,7 +222,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
                 "윙크하지 마세요.");
-        final CreateFeedbackDto request = new CreateFeedbackDto(feedbackContentDto);
+        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
         RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)

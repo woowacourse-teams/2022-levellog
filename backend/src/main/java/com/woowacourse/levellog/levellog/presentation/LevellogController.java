@@ -4,7 +4,6 @@ import com.woowacourse.levellog.authentication.support.LoginMember;
 import com.woowacourse.levellog.authentication.support.NoAuthentication;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class LevellogController {
 
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long teamId,
-                                     @RequestBody @Valid final LevellogWriteDto request,
+                                     @RequestBody @Valid final LevellogDto request,
                                      @LoginMember final Long authorId) {
         final Long id = levellogService.save(request, authorId, teamId);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId + "/levellogs/" + id)).build();
@@ -45,7 +44,7 @@ public class LevellogController {
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @PathVariable final Long levellogId,
                                        @LoginMember final Long memberId,
-                                       @RequestBody @Valid final LevellogWriteDto request) {
+                                       @RequestBody @Valid final LevellogDto request) {
         levellogService.update(request, levellogId, memberId);
         return ResponseEntity.noContent().build();
     }

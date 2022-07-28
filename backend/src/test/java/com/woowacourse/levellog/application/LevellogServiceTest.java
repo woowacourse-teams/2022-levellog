@@ -9,7 +9,6 @@ import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -62,7 +61,7 @@ class LevellogServiceTest {
         @DisplayName("레벨로그를 저장한다.")
         void success() {
             // given
-            final LevellogWriteDto request = new LevellogWriteDto("Spring을 학습하였습니다.");
+            final LevellogDto request = LevellogDto.from("Spring을 학습하였습니다.");
             final Member member = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl"));
@@ -79,7 +78,7 @@ class LevellogServiceTest {
         @DisplayName("레벨로그의 팀이 존재하지 않는 경우 예외를 던진다.")
         void save_teamNotFound_exception() {
             // given
-            final LevellogWriteDto request = new LevellogWriteDto("스프링에 대해 학습하였습니다.");
+            final LevellogDto request = LevellogDto.from("스프링에 대해 학습하였습니다.");
             final Long memberId = memberRepository.save(new Member("알린", 1111, "alien.img")).getId();
             final Long teamId = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl")).getId();
@@ -95,7 +94,7 @@ class LevellogServiceTest {
         @DisplayName("레벨로그의 작성자가 존재하지 않는 경우 예외를 던진다.")
         void save_memberNotFound_exception() {
             // given
-            final LevellogWriteDto request = new LevellogWriteDto("스프링에 대해 학습하였습니다.");
+            final LevellogDto request = LevellogDto.from("스프링에 대해 학습하였습니다.");
             final Long teamId = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl")).getId();
             final Long memberId = memberRepository.save(new Member("알린", 1111, "alien.img")).getId();
@@ -111,7 +110,7 @@ class LevellogServiceTest {
         @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
         void save_alreadyExist_exception() {
             // given
-            final LevellogWriteDto request = new LevellogWriteDto("굳굳");
+            final LevellogDto request = LevellogDto.from("굳굳");
             final Member member = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl"));
@@ -132,7 +131,7 @@ class LevellogServiceTest {
         @DisplayName("레벨로그 내용이 공백이나 null일 경우 예외를 던진다.")
         void save_contentBlank_exception(final String invalidContent) {
             // given
-            final LevellogWriteDto request = new LevellogWriteDto(invalidContent);
+            final LevellogDto request = LevellogDto.from(invalidContent);
             final Long memberId = memberRepository.save(new Member("알린", 1111, "alien.img")).getId();
             final Long teamId = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl")).getId();
@@ -194,7 +193,7 @@ class LevellogServiceTest {
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl"));
             final Levellog levellog = levellogRepository.save(Levellog.of(member, team, "original content"));
-            final LevellogWriteDto request = new LevellogWriteDto("update content");
+            final LevellogDto request = LevellogDto.from("update content");
 
             // when
             levellogService.update(request, levellog.getId(), member.getId());
@@ -208,7 +207,7 @@ class LevellogServiceTest {
         @DisplayName("id에 해당하는 레벨로그가 존재하지 않는 경우 예외를 던진다.")
         void update_notFound_exception() {
             // given
-            final LevellogWriteDto request = new LevellogWriteDto("update content");
+            final LevellogDto request = LevellogDto.from("update content");
             final Member member = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl"));
@@ -230,7 +229,7 @@ class LevellogServiceTest {
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl"));
             final Long levellogId = levellogRepository.save(Levellog.of(member, team, "Spring을 학습하였습니다.")).getId();
-            final LevellogWriteDto request = new LevellogWriteDto("JPA를 학습하였습니다.");
+            final LevellogDto request = LevellogDto.from("JPA를 학습하였습니다.");
             final Long memberId = member.getId();
             memberRepository.deleteById(memberId);
 
@@ -249,7 +248,7 @@ class LevellogServiceTest {
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl"));
             final Long levellogId = levellogRepository.save(Levellog.of(member, team, "original content")).getId();
-            final LevellogWriteDto request = new LevellogWriteDto("update content");
+            final LevellogDto request = LevellogDto.from("update content");
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, memberId))
@@ -262,7 +261,7 @@ class LevellogServiceTest {
         @DisplayName("수정한 레벨로그의 내용이 공백이나 null일 경우 예외를 던진다.")
         void update_contentBlank_Exception(final String invalidContent) {
             // given
-            final LevellogWriteDto request = new LevellogWriteDto(invalidContent);
+            final LevellogDto request = LevellogDto.from(invalidContent);
             final Member member = memberRepository.save(new Member("알린", 1111, "alien.img"));
             final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt(), "profileUrl"));
             final Long levellogId = levellogRepository.save(Levellog.of(member, team, "original content")).getId();

@@ -28,11 +28,10 @@ class OAuthServiceTest extends ServiceTest {
             final LoginDto tokenResponse = oAuthService.login(
                     new GithubCodeDto(objectMapper.writeValueAsString(request)));
 
+            // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
             final Long savedMemberId = memberService.findMemberById(Long.parseLong(payload))
                     .getId();
-
-            // then
             assertAll(
                     () -> assertThat(Long.parseLong(payload)).isEqualTo(savedMemberId),
                     () -> assertThat(tokenResponse.getProfileUrl()).isEqualTo("rick.org"),
@@ -51,9 +50,9 @@ class OAuthServiceTest extends ServiceTest {
             // when
             final LoginDto tokenResponse = oAuthService.login(
                     new GithubCodeDto(objectMapper.writeValueAsString(request)));
-            final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
 
             // then
+            final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
             assertAll(
                     () -> assertThat(Long.parseLong(payload)).isEqualTo(savedId),
                     () -> assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl"),

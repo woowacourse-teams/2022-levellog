@@ -62,6 +62,7 @@ class TeamServiceTest extends ServiceTest {
         //when
         final TeamsDto response = teamService.findAll();
 
+        //then
         final List<String> actualTitles = response.getTeams()
                 .stream()
                 .map(TeamDto::getTitle)
@@ -77,8 +78,6 @@ class TeamServiceTest extends ServiceTest {
                 .map(TeamDto::getParticipants)
                 .map(List::size)
                 .collect(Collectors.toList());
-
-        //then
         assertAll(
                 () -> assertThat(actualTitles).containsExactly(team1.getTitle(), team2.getTitle()),
                 () -> assertThat(actualHostIds).containsExactly(member1.getId(), member2.getId()),

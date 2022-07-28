@@ -19,28 +19,23 @@ public class Member extends BaseEntity {
     private static final int NICKNAME_MAX_LENGTH = 50;
     private static final int PROFILE_URL_MAX_LENGTH = 2048;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = NICKNAME_MAX_LENGTH)
     private String nickname;
 
     @Column(nullable = false)
     private Integer githubId;
 
-    @Column(nullable = false, length = 2048)
+    @Column(nullable = false, length = PROFILE_URL_MAX_LENGTH)
     private String profileUrl;
 
     public Member(final String nickname, final Integer githubId, final String profileUrl) {
+        validateNickname(nickname);
+        validateGithubId(githubId);
+        validateProfileUrl(profileUrl);
+
         this.nickname = nickname;
         this.githubId = githubId;
         this.profileUrl = profileUrl;
-
-        validateNickname(this.nickname);
-        validateGithubId(this.githubId);
-        validateProfileUrl(this.profileUrl);
-    }
-
-    public void updateNickname(final String nickname) {
-        this.nickname = nickname;
-        validateNickname(this.nickname);
     }
 
     private void validateNickname(final String nickname) {
@@ -75,5 +70,10 @@ public class Member extends BaseEntity {
         if (target == null) {
             throw new InvalidFieldException(message);
         }
+    }
+
+    public void updateNickname(final String nickname) {
+        validateNickname(nickname);
+        this.nickname = nickname;
     }
 }

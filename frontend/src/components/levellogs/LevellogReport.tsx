@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FeedbackContainer, FeedbackTitle } from 'components/@commons/Style';
 
 // 레벨로그 작성한 유저의 닉네임 가져오기
-const LevellogReport = ({ levellog }) => {
+const LevellogReport = ({ levellog }: LevellogReportProps) => {
   return (
     <FeedbackContainer>
       <FeedbackTitle>레벨로그</FeedbackTitle>
@@ -11,6 +11,10 @@ const LevellogReport = ({ levellog }) => {
     </FeedbackContainer>
   );
 };
+
+interface LevellogReportProps {
+  levellog: string;
+}
 
 const LevellogContainer = styled.div`
   overflow: hidden;

@@ -14,7 +14,7 @@ const LevellogViewModal = ({
   getTeam,
   onClickLevellogDelete,
   handleClickCloseLevellogModal,
-}: any) => {
+}) => {
   const { id, levellogId, nickname } = participant;
   const { teamId } = useParams();
   const { loginUserId } = useUser();

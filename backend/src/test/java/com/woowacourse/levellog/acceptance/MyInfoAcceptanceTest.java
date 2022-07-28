@@ -70,7 +70,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .body(nicknameDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("myinfo/update-nickname"))
+                .filter(document("myinfo/update/nickname"))
                 .when()
                 .put("/api/myInfo")
                 .then().log().all();

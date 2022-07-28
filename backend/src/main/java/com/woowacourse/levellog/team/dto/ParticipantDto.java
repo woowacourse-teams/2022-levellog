@@ -15,14 +15,14 @@ import lombok.ToString;
 @ToString
 public class ParticipantDto {
 
-    private Long id;
+    private Long memberId;
     private Long levellogId;
     private String nickname;
     private String profileUrl;
 
     public static ParticipantDto from(final Participant participant, final Long levellogId) {
         return new ParticipantDto(
-                participant.getId(),
+                participant.getMember().getId(),
                 levellogId,
                 participant.getMember().getNickname(),
                 participant.getMember().getProfileUrl());

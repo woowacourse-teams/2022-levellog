@@ -92,20 +92,16 @@ public class TeamService {
 
     private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         final List<Participant> participants = new ArrayList<>();
-        addMemberToParticipants(team, hostId, participants, true);
-        for (final Long memberId : memberIds) {
-            addMemberToParticipants(team, memberId, participants, false);
-        }
+        participants.add(new Participant(team, getMember(hostId), true));
+        participants.addAll(toParticipants(team, memberIds));
 
         return participants;
     }
 
-    private void addMemberToParticipants(final Team team,
-                                         final Long memberId,
-                                         final List<Participant> participants,
-                                         final boolean isHost) {
-        final Member member = getMember(memberId);
-        participants.add(new Participant(team, member, isHost));
+    private List<Participant> toParticipants(final Team team, final List<Long> memberIds) {
+        return memberIds.stream()
+                .map(it -> new Participant(team, getMember(it), false))
+                .collect(Collectors.toList());
     }
 
     private List<TeamDto> getTeamResponses(final List<Team> teams) {

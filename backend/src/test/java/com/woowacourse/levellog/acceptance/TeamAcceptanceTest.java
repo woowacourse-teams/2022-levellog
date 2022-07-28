@@ -35,7 +35,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
         final TeamCreateDto request = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(loginResponse1.getMemberId(), loginResponse2.getMemberId())));
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -120,6 +120,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("title", equalTo("잠실 제이슨조"),
                         "place", equalTo("트랙룸"),
+                        "hostId", equalTo(loginResponse1.getMemberId().intValue()),
                         "participants.nickname", contains("페퍼", "이브")
                 );
     }
@@ -137,7 +138,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(loginResponse1.getMemberId(), loginResponse2.getMemberId())));
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
         final TeamUpdateDto request = new TeamUpdateDto("선릉 브리조", "수성방", LocalDateTime.now().plusDays(3));
@@ -169,7 +170,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(loginResponse1.getMemberId(), loginResponse2.getMemberId())));
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
         // when

@@ -215,7 +215,7 @@ class FeedbackServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
                     .isInstanceOf(FeedbackAlreadyExistException.class)
-                    .hasMessageContaining("이미 피드백이 존재합니다. LevellogId : " + levellog.getId());
+                    .hasMessageContaining("피드백이 이미 존재합니다. levellogId : " + levellog.getId());
         }
 
         @Test

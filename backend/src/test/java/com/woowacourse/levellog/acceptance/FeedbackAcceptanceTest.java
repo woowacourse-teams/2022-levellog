@@ -5,8 +5,8 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
+import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
@@ -98,14 +98,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 "윙크하지 마세요.");
         final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
-        RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("feedback/save"))
-                .when()
-                .post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                .then().log().all();
+        RestAssuredTemplate.post("/api/levellogs/" + levellogId + "/feedbacks", romaToken, request);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -153,21 +146,13 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
         final FeedbackWriteDto givenRequest = new FeedbackWriteDto(givenFeedbackContentDto);
 
-        RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
-                .body(givenRequest)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("feedback/save"))
-                .when()
-                .post("/api/levellogs/{levellogId}/feedbacks", rick_levellogId)
-                .then().log().all();
+        final RestAssuredResponse saveResponse = RestAssuredTemplate.post("/api/levellogs/" + rick_levellogId + "/feedbacks",
+                romaToken, givenRequest);
 
-        final Long updateId = requestFindAllFeedbacks(rick_levellogId)
+        final Long updateId = Long.parseLong(saveResponse.getResponse()
                 .extract()
-                .as(FeedbacksDto.class)
-                .getFeedbacks()
-                .get(0)
-                .getId();
+                .header(HttpHeaders.LOCATION)
+                .split("/")[5]);
 
         // when
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
@@ -224,21 +209,13 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 "윙크하지 마세요.");
         final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
-        RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("feedback/save"))
-                .when()
-                .post("/api/levellogs/{levellogId}/feedbacks", rick_levellogId)
-                .then().log().all();
+        final RestAssuredResponse saveResponse = RestAssuredTemplate
+                .post("/api/levellogs/" + rick_levellogId + "/feedbacks", romaToken, request);
 
-        final Long deleteId = requestFindAllFeedbacks(rick_levellogId)
+        final Long deleteId = Long.parseLong(saveResponse.getResponse()
                 .extract()
-                .as(FeedbacksDto.class)
-                .getFeedbacks()
-                .get(0)
-                .getId();
+                .header(HttpHeaders.LOCATION)
+                .split("/")[5]);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

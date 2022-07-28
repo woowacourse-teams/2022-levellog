@@ -83,7 +83,7 @@ public class ParticipantRepositoryTest {
     }
 
     @Test
-    @DisplayName("existsByMemberAndTeam는 멤버와 팀이 일치하는지 반환한다.")
+    @DisplayName("existsByMemberAndTeam는 멤버와 팀이 일치 여부를 반환한다.")
     void existsByMemberAndTeam() {
         // given
         final Team team = teamRepository.save(new Team(

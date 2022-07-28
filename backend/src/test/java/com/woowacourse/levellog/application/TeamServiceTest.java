@@ -139,9 +139,7 @@ class TeamServiceTest {
         @Test
         @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
         void teamNotFound_Exception() {
-            //given
-
-            //when & then
+            // when & then
             assertThatThrownBy(() -> teamService.findById(1000L))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("");

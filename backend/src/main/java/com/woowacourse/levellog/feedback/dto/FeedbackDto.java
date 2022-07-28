@@ -17,11 +17,12 @@ public class FeedbackDto {
 
     private Long id;
     private MemberDto from;
+    private MemberDto to;
     private FeedbackContentDto feedback;
     private LocalDateTime updatedAt;
 
     public static FeedbackDto from(final Feedback feedback) {
-        return new FeedbackDto(feedback.getId(), MemberDto.from(feedback.getFrom()), FeedbackContentDto.from(feedback),
-                feedback.getUpdatedAt());
+        return new FeedbackDto(feedback.getId(), MemberDto.from(feedback.getFrom()), MemberDto.from(feedback.getTo()),
+                FeedbackContentDto.from(feedback), feedback.getUpdatedAt());
     }
 }

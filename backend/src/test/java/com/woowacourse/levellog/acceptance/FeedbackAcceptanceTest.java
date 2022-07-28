@@ -109,7 +109,9 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("feedbacks.feedback.study", contains("Spring에 대한 학습을 충분히 하였습니다."),
+                .body("feedbacks.from.nickname", contains("로마"),
+                        "feedbacks.to.nickname", contains("릭"),
+                        "feedbacks.feedback.study", contains("Spring에 대한 학습을 충분히 하였습니다."),
                         "feedbacks.feedback.speak", contains("아이 컨텍이 좋습니다."),
                         "feedbacks.feedback.etc", contains("윙크하지 마세요.")
                 );

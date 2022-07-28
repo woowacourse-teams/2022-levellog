@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 
 import profileDefaultImage from 'assets/images/defaultProfile.png';
-import { LOGIN_PATH } from 'constants/constants';
+import { GITHUB_LOGIN_URL } from 'constants/constants';
 
 import { UserContext, UserDispatchContext } from 'contexts/userContext';
 
@@ -26,7 +26,7 @@ const useUser = () => {
   };
 
   const handleClickLoginButton = () => {
-    window.location.href = LOGIN_PATH.LOCAL_HOST;
+    window.location.href = GITHUB_LOGIN_URL;
   };
 
   return {

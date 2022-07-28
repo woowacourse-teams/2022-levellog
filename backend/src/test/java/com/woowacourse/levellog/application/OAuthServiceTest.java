@@ -20,10 +20,13 @@ class OAuthServiceTest extends ServiceTest {
         @Test
         @DisplayName("첫 로그인 시 회원가입하고 id, 토큰, 이미지 URL를 반환한다.")
         void login_first_signUp() throws Exception {
-            // when
+            // given
             final GithubProfileDto request = new GithubProfileDto("1234", "릭", "rick.org");
+
+            // when
             final LoginDto tokenResponse = oAuthService.login(
                     new GithubCodeDto(objectMapper.writeValueAsString(request)));
+
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
             final Long savedMemberId = memberService.findMemberById(Long.parseLong(payload))
                     .getId();

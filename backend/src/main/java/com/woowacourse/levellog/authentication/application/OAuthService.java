@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OAuthService {
 
-    private final MemberService memberService;
     private final OAuthClient oAuthClient;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberService memberService;
 
     @Transactional
     public LoginDto login(final GithubCodeDto request) {

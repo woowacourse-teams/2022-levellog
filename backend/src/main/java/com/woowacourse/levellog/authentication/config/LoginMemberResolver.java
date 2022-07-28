@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.authentication.config;
 
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
-import com.woowacourse.levellog.authentication.support.Authentic;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -25,10 +25,10 @@ public class LoginMemberResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Long resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
-            throws Exception {
+                                final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = AuthorizationExtractor.extract(request);
+
         return Long.parseLong(jwtTokenProvider.getPayload(token));
     }
 }

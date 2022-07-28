@@ -23,7 +23,7 @@ class OAuthControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("login 메서드는")
-    class login {
+    class Login {
 
         @ParameterizedTest
         @ValueSource(strings = {" "})

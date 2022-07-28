@@ -4,8 +4,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
@@ -24,7 +26,7 @@ class MyInfoControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("updateNickname 메서드는 ")
-    class updateNickname {
+    class UpdateNickname {
 
         @Test
         @DisplayName("닉네임에 50자를 초과한 문자열이 들어올 경우 예외를 던진다.")
@@ -49,9 +51,11 @@ class MyInfoControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(
-                    status().isBadRequest()
-            );
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("닉네임은 50자 이하여야합니다."));
+
+            // docs
+            perform.andDo(document("myinfo/update/nickname-invalid-length"));
         }
 
         @ParameterizedTest
@@ -70,13 +74,16 @@ class MyInfoControllerTest extends ControllerTest {
             final ResultActions perform = mockMvc.perform(put("/api/myInfo")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer: token"))
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
                     .andDo(print());
 
             // then
             perform.andExpect(
                     status().isBadRequest()
             );
+
+            // docs
+            perform.andDo(document("myinfo/update/nickname-blank"));
         }
     }
 }

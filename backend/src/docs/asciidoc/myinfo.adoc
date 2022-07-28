@@ -22,4 +22,22 @@ operation::myinfo/read[]
 [[update-nickname-success]]
 === 성공
 
-operation::myinfo/update-nickname[]
+operation::myinfo/update/nickname[]
+
+[[update-nickname-fail]]
+=== 실패
+
+50자를 초과한 닉네임으로 요청 보낼 경우
+
+operation::myinfo/update/nickname-invalid-length[]
+
+빈 문자열 혹은 공백으로 요청 보낼 경우
+
+operation::myinfo/update/nickname-blank[]
+[[findAllToMe]]
+== 받은 피드백 전체 조회
+
+[[findAllToMe-success]]
+=== 성공
+
+operation::myinfo/findAllToMe[]

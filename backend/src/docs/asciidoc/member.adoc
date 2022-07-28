@@ -1,0 +1,19 @@
+= MyInfo
+:toc: left
+:toclevels: 2
+:sectlinks:
+:source-highlighter: highlightjs
+
+[[home]]
+== home
+
+* link:index.html[목록으로 가기]
+
+[[search]]
+== 멤버 검색
+
+[[search-success]]
+=== 성공
+
+operation::member/search[]
+

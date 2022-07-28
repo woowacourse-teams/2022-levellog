@@ -119,7 +119,7 @@ public class TeamService {
         return participants.stream()
                 .filter(Participant::isHost)
                 .findAny()
-                .orElseThrow(() -> new MemberNotFoundException("호스트 존재 안함"))
+                .orElseThrow(() -> new MemberNotFoundException("모든 참가자 중 호스트가 존재하지 않습니다."))
                 .getMember()
                 .getId();
     }

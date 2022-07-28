@@ -9,7 +9,7 @@ import App from './App';
 import { UserProvider } from './contexts/userContext';
 
 const main = () => {
-  if (process.env.NODE_ENV === 'development') {
+  if (!process.env.NODE_ENV) {
     const { worker } = require('./mocks/browser');
     // worker.start();
   }

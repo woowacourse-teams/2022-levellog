@@ -48,11 +48,11 @@ class TeamServiceTest extends ServiceTest {
     @DisplayName("findAll 메서드는 전체 팀 목록을 조회한다.")
     void findAll() {
         //given
-        final Member member1 = getMember("릭");
-        final Member member2 = getMember("페퍼");
+        final Member member1 = saveAndGetMember("릭");
+        final Member member2 = saveAndGetMember("페퍼");
 
-        final Team team1 = getTeam("잠실 제이슨조");
-        final Team team2 = getTeam("선릉 브라운조");
+        final Team team1 = saveAndGetTeam("잠실 제이슨조");
+        final Team team2 = saveAndGetTeam("선릉 브라운조");
 
         participantRepository.save(new Participant(team1, member1, true));
         participantRepository.save(new Participant(team1, member2, false));
@@ -95,9 +95,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 팀을 조회한다.")
         void findById() {
             //given
-            final Member member1 = getMember("릭");
-            final Member member2 = getMember("페퍼");
-            final Team team = getTeam("잠실 제이슨조");
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Team team = saveAndGetTeam("잠실 제이슨조");
 
             participantRepository.save(new Participant(team, member1, true));
             participantRepository.save(new Participant(team, member2, false));
@@ -131,9 +131,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 팀 정보를 변경한다.")
         void success() {
             // given
-            final Member member1 = getMember("릭");
-            final Member member2 = getMember("페퍼");
-            final Team team = getTeam("잠실 제이슨조");
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Team team = saveAndGetTeam("잠실 제이슨조");
 
             participantRepository.save(new Participant(team, member1, true));
             participantRepository.save(new Participant(team, member2, false));
@@ -156,9 +156,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트가 아닌 멤버가 팀을 수정하는 경우 예외를 던진다.")
         void hostUnauthorized_Exception() {
             // given
-            final Member member1 = getMember("릭");
-            final Member member2 = getMember("페퍼");
-            final Team team = getTeam("잠실 제이슨조");
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Team team = saveAndGetTeam("잠실 제이슨조");
 
             participantRepository.save(new Participant(team, member1, true));
             participantRepository.save(new Participant(team, member2, false));
@@ -178,8 +178,8 @@ class TeamServiceTest extends ServiceTest {
         void teamNotFound_Exception() {
             //given
             final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3));
-            final Member member = getMember("릭");
-            final Team team = getTeam("잠실 제이슨조");
+            final Member member = saveAndGetMember("릭");
+            final Team team = saveAndGetTeam("잠실 제이슨조");
             participantRepository.save(new Participant(team, member, true));
 
             //when & then
@@ -197,9 +197,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("delete 메서드는 id에 해당하는 팀을 삭제한다.")
         void success() {
             // given
-            final Member member1 = getMember("릭");
-            final Member member2 = getMember("페퍼");
-            final Team team = getTeam("잠실 제이슨조");
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Team team = saveAndGetTeam("잠실 제이슨조");
 
             participantRepository.save(new Participant(team, member1, true));
             participantRepository.save(new Participant(team, member2, false));
@@ -215,9 +215,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("delete 메서드는 호스트가 아닌 멤버가 팀을 삭제하는 경우 예외를 던진다.")
         void hostUnauthorized_Exception() {
             // given
-            final Member member1 = getMember("릭");
-            final Member member2 = getMember("페퍼");
-            final Team team = getTeam("잠실 제이슨조");
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Team team = saveAndGetTeam("잠실 제이슨조");
 
             participantRepository.save(new Participant(team, member1, true));
             participantRepository.save(new Participant(team, member2, false));
@@ -234,8 +234,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
         void teamNotFound_Exception() {
             //given
-            final Member member = getMember("릭");
-            final Team team = getTeam("잠실 제이슨조");
+            final Member member = saveAndGetMember("릭");
+            final Team team = saveAndGetTeam("잠실 제이슨조");
             participantRepository.save(new Participant(team, member, true));
 
             //when & then
@@ -245,11 +245,11 @@ class TeamServiceTest extends ServiceTest {
         }
     }
 
-    private Member getMember(final String nickname) {
+    private Member saveAndGetMember(final String nickname) {
         return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
     }
 
-    private Team getTeam(final String title) {
+    private Team saveAndGetTeam(final String title) {
         return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png"));
     }
 }

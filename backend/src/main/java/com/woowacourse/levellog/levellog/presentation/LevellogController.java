@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.levellog.presentation;
 
-import com.woowacourse.levellog.authentication.support.LoginMember;
-import com.woowacourse.levellog.authentication.support.NoAuthentication;
+import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import java.net.URI;
@@ -26,9 +26,9 @@ public class LevellogController {
 
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long teamId,
-                                     @RequestBody @Valid final LevellogDto request,
-                                     @LoginMember final Long authorId) {
-        final Long id = levellogService.save(request, authorId, teamId);
+                                     @RequestBody @Valid final LevellogRequest request,
+                                     @Authentic final Long authorId) {
+        final Long id = levellogService.save(authorId, teamId, request);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId + "/levellogs/" + id)).build();
     }
 
@@ -43,8 +43,9 @@ public class LevellogController {
     @PutMapping("/{levellogId}")
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @PathVariable final Long levellogId,
-                                       @LoginMember final Long memberId,
-                                       @RequestBody @Valid final LevellogDto request) {
+                                       @Authentic final Long memberId,
+                                       @RequestBody @Valid final LevellogRequest request
+    ) {
         levellogService.update(request, levellogId, memberId);
         return ResponseEntity.noContent().build();
     }
@@ -52,7 +53,7 @@ public class LevellogController {
     @DeleteMapping("/{levellogId}")
     public ResponseEntity<Void> delete(@PathVariable final Long teamId,
                                        @PathVariable final Long levellogId,
-                                       @LoginMember final Long memberId) {
+                                       @Authentic final Long memberId) {
         levellogService.deleteById(levellogId, memberId);
         return ResponseEntity.noContent().build();
     }

@@ -72,7 +72,7 @@ const useFeedback = () => {
       },
     };
 
-    await postFeedback({ feedbackResult });
+    await postFeedback({ levellogId, feedbackResult });
     navigator(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 

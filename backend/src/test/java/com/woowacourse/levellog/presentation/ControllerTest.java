@@ -53,6 +53,9 @@ public abstract class ControllerTest {
     protected TeamService teamService;
 
     @MockBean
+    protected OAuthService oAuthService;
+
+    @MockBean
     protected JwtTokenProvider jwtTokenProvider;
 
     @Autowired
@@ -60,9 +63,6 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
-
-    @MockBean
-    private OAuthService oAuthService;
 
     @BeforeEach
     void setUp(final WebApplicationContext context, final RestDocumentationContextProvider provider) {

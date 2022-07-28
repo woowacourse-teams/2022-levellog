@@ -8,13 +8,9 @@ import org.springframework.http.HttpStatus;
  */
 public class InvalidTokenException extends LevellogException {
 
-    private static final String ERROR_MESSAGE = "유효하지 않은 토큰입니다.";
-
-    public InvalidTokenException() {
-        super(ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
-    }
+    private static final String CLIENT_MESSAGE = "유효하지 않은 토큰입니다.";
 
     public InvalidTokenException(final String message) {
-        super(message, HttpStatus.BAD_REQUEST);
+        super(message, CLIENT_MESSAGE, HttpStatus.BAD_REQUEST);
     }
 }

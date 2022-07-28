@@ -1,14 +1,12 @@
 import axios from 'axios';
 
-import { API_URL } from 'constants/constants';
-
 export const getUserLogin = ({ code }: any) => {
   return axios({
     method: 'post',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    url: `${API_URL}/auth/login`,
+    url: `${process.env.API_URI}/auth/login`,
     data: {
       authorizationCode: code,
     },
@@ -18,7 +16,7 @@ export const getUserLogin = ({ code }: any) => {
 export const getUserAuthority = ({ accessToken }: any) => {
   return axios({
     method: 'get',
-    url: `${API_URL}/myInfo`,
+    url: `${process.env.API_URI}/myInfo`,
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 };

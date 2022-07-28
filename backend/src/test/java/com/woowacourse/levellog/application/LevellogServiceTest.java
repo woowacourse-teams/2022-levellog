@@ -35,19 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Transactional
 @ActiveProfiles("test")
 @DisplayName("LevellogService의")
-class LevellogServiceTest {
-
-    @Autowired
-    private LevellogService levellogService;
-
-    @Autowired
-    private LevellogRepository levellogRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private TeamRepository teamRepository;
+class LevellogServiceTest extends ServiceTest {
 
     private LocalDateTime setTeamStartAt() {
         return LocalDateTime.now().plusDays(1);

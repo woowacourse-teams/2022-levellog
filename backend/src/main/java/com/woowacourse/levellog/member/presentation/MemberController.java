@@ -17,13 +17,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public ResponseEntity<MembersDto> findAll() {
-        final MembersDto response = memberService.findAll();
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping(params = "nickname")
-    public ResponseEntity<MembersDto> searchBy(@RequestParam final String nickname) {
+    public ResponseEntity<MembersDto> searchBy(@RequestParam(defaultValue = "") final String nickname) {
         final MembersDto response = memberService.searchByNickname(nickname);
         return ResponseEntity.ok(response);
     }

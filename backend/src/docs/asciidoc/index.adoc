@@ -11,3 +11,4 @@
 * link:team.html[Team]
 * link:auth.html[Auth]
 * link:myinfo.html[MyInfo]
+* link:member.html[Member]

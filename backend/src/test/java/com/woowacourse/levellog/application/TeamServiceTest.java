@@ -142,7 +142,7 @@ class TeamServiceTest {
             // when & then
             assertThatThrownBy(() -> teamService.findById(1000L))
                     .isInstanceOf(TeamNotFoundException.class)
-                    .hasMessageContaining("");
+                    .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }
     }
 
@@ -208,7 +208,7 @@ class TeamServiceTest {
             //when & then
             assertThatThrownBy(() -> teamService.update(request, 1000L, member.getId()))
                     .isInstanceOf(TeamNotFoundException.class)
-                    .hasMessageContaining("");
+                    .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }
     }
 
@@ -264,7 +264,7 @@ class TeamServiceTest {
             //when & then
             assertThatThrownBy(() -> teamService.deleteById(1000L, member.getId()))
                     .isInstanceOf(TeamNotFoundException.class)
-                    .hasMessageContaining("");
+                    .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }
     }
 

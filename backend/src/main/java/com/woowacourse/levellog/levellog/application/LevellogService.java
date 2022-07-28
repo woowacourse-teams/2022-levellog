@@ -26,13 +26,13 @@ public class LevellogService {
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
 
-    public Long save(final Long authorId, final Long groupId, final LevellogRequest request) {
-        levellogRepository.findByAuthorIdAndTeamId(authorId, groupId)
+    public Long save(final Long authorId, final Long teamId, final LevellogRequest request) {
+        levellogRepository.findByAuthorIdAndTeamId(authorId, teamId)
                 .ifPresent(it -> {
                     throw new LevellogAlreadyExistException();
                 });
 
-        final Team team = getTeam(groupId);
+        final Team team = getTeam(teamId);
         final Member author = getMember(authorId);
         final Levellog levellog = new Levellog(author, team, request.getContent());
 
@@ -68,8 +68,8 @@ public class LevellogService {
         return levellogRepository.findById(id).orElseThrow(LevellogNotFoundException::new);
     }
 
-    private Team getTeam(final Long groupId) {
-        return teamRepository.findById(groupId).orElseThrow(TeamNotFoundException::new);
+    private Team getTeam(final Long teamId) {
+        return teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]"));
     }
 
     private Member getMember(final Long memberId) {

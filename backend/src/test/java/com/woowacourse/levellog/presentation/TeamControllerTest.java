@@ -629,7 +629,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(10));
             final String content = objectMapper.writeValueAsString(request);
 
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다."))
+            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]"))
                     .when(teamService)
                     .update(request, 10000000L, 4L);
 
@@ -656,7 +656,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("없는 팀을 제거하려고 하면 예외를 던진다.")
         void teamNotFound_Exception() throws Exception {
             // given
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다."))
+            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]"))
                     .when(teamService)
                     .findById(10000000L);
 
@@ -696,7 +696,7 @@ class TeamControllerTest extends ControllerTest {
                             .content(requestContent))
                     .andDo(print());
 
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다."))
+            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]"))
                     .when(teamService)
                     .deleteById(10000000L, 4L);
 

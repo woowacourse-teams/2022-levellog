@@ -109,7 +109,7 @@ public class FeedbackService {
     }
 
     private void validateAuthor(final Feedback feedback, final Member member, final String message) {
-        if (!feedback.isAssociatedWith(member)) {
+        if (!feedback.isAuthor(member)) {
             throw new InvalidFeedbackException(
                     message + " feedbackId : " + feedback.getId() + ", memberId : " + member.getId());
         }

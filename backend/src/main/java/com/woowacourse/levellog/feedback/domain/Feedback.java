@@ -69,12 +69,14 @@ public class Feedback extends BaseEntity {
     }
 
     public void updateFeedback(final String study, final String speak, final String etc) {
+        validateFeedback(study, speak, etc);
+
         this.study = study;
         this.speak = speak;
         this.etc = etc;
     }
 
-    public boolean isAssociatedWith(final Member member) {
-        return from.equals(member) || to.equals(member);
+    public boolean isAuthor(final Member member) {
+        return from.equals(member);
     }
 }

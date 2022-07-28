@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
 import com.woowacourse.levellog.feedback.domain.Feedback;
@@ -15,6 +16,7 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,9 +111,15 @@ class FeedbackRepositoryTest {
         feedbackRepository.save(new Feedback(fromMember, toMember, levellog, "study", "speak", "etc"));
 
         // when
-        final boolean isExist = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(), fromMember.getId());
+        final boolean isExist1 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(), fromMember.getId());
+        final boolean isExist2 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId() + 1, fromMember.getId());
+        final boolean isExist3 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(), fromMember.getId() + 1);
 
         // then
-        assertThat(isExist).isTrue();
+        assertAll(() -> {
+            assertThat(isExist1).isTrue();
+            assertThat(isExist2).isFalse();
+            assertThat(isExist3).isFalse();
+        });
     }
 }

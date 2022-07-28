@@ -255,6 +255,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("4");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(teamService.save(any(), any())).willReturn(1L);
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
@@ -291,6 +292,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("4");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(teamService.save(any(), any())).willReturn(1L);
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
@@ -335,6 +337,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("4");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(teamService.save(any(), any())).willReturn(1L);
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
@@ -371,6 +374,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("4");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(teamService.save(any(), any())).willReturn(1L);
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
@@ -413,6 +417,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("4");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(teamService.save(any(), any())).willReturn(1L);
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
@@ -449,6 +454,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("4");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(teamService.save(any(), any())).willReturn(1L);
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
@@ -489,6 +495,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("4");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
+            given(teamService.save(any(), any())).willReturn(1L);
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));

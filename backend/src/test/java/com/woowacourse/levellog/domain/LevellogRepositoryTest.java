@@ -54,6 +54,7 @@ class LevellogRepositoryTest {
     }
 
     @Nested
+    @DisplayName("existsByAuthorIdAndTeamId 메서드는")
     class ExistsByAuthorIdAndTeamIdTest {
 
         @Test

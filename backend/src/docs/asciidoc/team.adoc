@@ -20,14 +20,9 @@ operation::team/create[]
 === 예외
 
 [[create-exception-title-null]]
-==== 저장 시 title이 null인 경우
+==== 저장 시 title이 null 또는 공백인 경우
 
-operation::team/create/exception/title/null[]
-
-[[create-exception-title-blank]]
-==== 저장 시 title이 공백인 경우
-
-operation::team/create/exception/title/blank[]
+operation::team/create/exception/title/null-and-blank[]
 
 [[create-exception-title-length]]
 ==== 저장 시 title의 길이가 255자 초과인 경우
@@ -35,14 +30,9 @@ operation::team/create/exception/title/blank[]
 operation::team/create/exception/title/length[]
 
 [[create-exception-place-null]]
-==== 저장 시 place이 null인 경우
+==== 저장 시 place이 null 또는 공백인 경우
 
-operation::team/create/exception/place/null[]
-
-[[create-exception-place-blank]]
-==== 저장 시 place이 공백인 경우
-
-operation::team/create/exception/place/blank[]
+operation::team/create/exception/place/null-and-blank[]
 
 [[create-exception-place-length]]
 ==== 저장 시 place의 길이가 255자 초과인 경우
@@ -68,7 +58,7 @@ operation::team/create/exception/participants/null[]
 == 팀 목록 조회
 
 [[findAll-success]]
-https://xxx[=== 성공]
+=== 성공
 
 operation::team/findAll[]
 
@@ -100,14 +90,9 @@ operation::team/update[]
 === 예외
 
 [[update-exception-title-null]]
-==== 수정 시 title이 null인 경우
+==== 수정 시 title이 null 또는 공백인 경우
 
-operation::team/update/exception/title/null[]
-
-[[update-exception-title-blank]]
-==== 수정 시 title이 공백인 경우
-
-operation::team/update/exception/title/blank[]
+operation::team/update/exception/title/null-and-blank[]
 
 [[update-exception-title-length]]
 ==== 수정 시 title의 길이가 255자 초과인 경우
@@ -115,14 +100,9 @@ operation::team/update/exception/title/blank[]
 operation::team/update/exception/title/length[]
 
 [[update-exception-place-null]]
-==== 수정 시 place이 null인 경우
+==== 수정 시 place이 null 또는 공백인 경우
 
-operation::team/update/exception/place/null[]
-
-[[update-exception-place-blank]]
-==== 수정 시 place이 공백인 경우
-
-operation::team/update/exception/place/blank[]
+operation::team/update/exception/place/null-and-blank[]
 
 [[update-exception-place-length]]
 ==== 수정 시 place의 길이가 255자 초과인 경우

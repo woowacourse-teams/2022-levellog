@@ -11,8 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayName("Team의")
 class TeamTest {
@@ -22,9 +23,10 @@ class TeamTest {
     class constructor {
 
         @ParameterizedTest
-        @NullSource
-        @DisplayName("팀 이름이 null이 들어오면 예외를 던진다.")
-        void titleNull_Exception(final String title) {
+        @NullAndEmptySource
+        @ValueSource(strings = {" "})
+        @DisplayName("팀 이름이 null 또는 공백이 들어오면 예외를 던진다.")
+        void titleNullOrBlank_Exception(final String title) {
             // given
             final String place = "선릉 트랙룸";
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
@@ -33,22 +35,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("팀 이름이 없습니다.");
-        }
-
-        @ParameterizedTest
-        @EmptySource
-        @DisplayName("팀 이름이 공백이 들어오면 예외를 던진다.")
-        void titleEmpty_Exception(final String title) {
-            // given
-            final String place = "선릉 트랙룸";
-            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
-            final String profileUrl = "profile.img";
-
-            // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("팀 이름이 비어있습니다.");
+                    .hasMessageContaining("팀 이름이 null 또는 공백입니다.");
         }
 
         @Test
@@ -67,9 +54,10 @@ class TeamTest {
         }
 
         @ParameterizedTest
-        @NullSource
-        @DisplayName("팀 장소가 null이 들어오면 예외를 던진다.")
-        void placeNull_Exception(final String place) {
+        @NullAndEmptySource
+        @ValueSource(strings = {" "})
+        @DisplayName("팀 장소가 null 또는 공백이 들어오면 예외를 던진다.")
+        void placeNullOrBlank_Exception(final String place) {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
@@ -78,22 +66,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("장소가 없습니다.");
-        }
-
-        @ParameterizedTest
-        @EmptySource
-        @DisplayName("팀 장소가 공백이 들어오면 예외를 던진다.")
-        void placeEmpty_Exception(final String place) {
-            // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
-            final String profileUrl = "profile.img";
-
-            // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("장소가 비어있습니다.");
+                    .hasMessageContaining("장소가 null 또는 공백입니다.");
         }
 
         @Test
@@ -142,9 +115,10 @@ class TeamTest {
         }
 
         @ParameterizedTest
-        @NullSource
-        @DisplayName("팀 프로필 사진 url이 null이 들어오면 예외를 던진다.")
-        void profileUrlNull_Exception(final String profileUrl) {
+        @NullAndEmptySource
+        @ValueSource(strings = {" "})
+        @DisplayName("팀 프로필 사진 url이 null 또는 공백이 들어오면 예외를 던진다.")
+        void profileUrlNullOrBlank_Exception(final String profileUrl) {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String place = "선릉 트랙룸";
@@ -153,22 +127,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("팀 프로필 사진이 없습니다.");
-        }
-
-        @ParameterizedTest
-        @EmptySource
-        @DisplayName("팀 프로필 사진 url이 공백이 들어오면 예외를 던진다.")
-        void profileUrlEmpty_Exception(final String profileUrl) {
-            // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
-            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
-
-            // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("팀 프로필 사진이 비어있습니다.");
+                    .hasMessageContaining("팀 프로필 사진이 null 또는 공백입니다.");
         }
 
         @Test
@@ -217,9 +176,10 @@ class TeamTest {
         }
 
         @ParameterizedTest
-        @NullSource
-        @DisplayName("팀 이름이 null이 들어오면 예외를 던진다.")
-        void titleNull_Exception(final String updateTitle) {
+        @NullAndEmptySource
+        @ValueSource(strings = {" "})
+        @DisplayName("팀 이름이 null 또는 공백이 들어오면 예외를 던진다.")
+        void titleNullOrBlank_Exception(final String updateTitle) {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String place = "선릉 트랙룸";
@@ -233,27 +193,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("팀 이름이 없습니다.");
-        }
-
-        @ParameterizedTest
-        @EmptySource
-        @DisplayName("팀 이름이 공백이 들어오면 예외를 던진다.")
-        void titleEmpty_Exception(final String updateTitle) {
-            // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
-            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl);
-            final String updatePlace = "잠실 어드레스룸";
-            final LocalDateTime updateStartAt = LocalDateTime.now().plusDays(10);
-
-            // when & then
-            assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("팀 이름이 비어있습니다.");
+                    .hasMessageContaining("팀 이름이 null 또는 공백입니다.");
         }
 
         @Test
@@ -277,9 +217,10 @@ class TeamTest {
         }
 
         @ParameterizedTest
-        @NullSource
-        @DisplayName("팀 장소가 null이 들어오면 예외를 던진다.")
-        void placeNull_Exception(final String updatePlace) {
+        @NullAndEmptySource
+        @ValueSource(strings = {" "})
+        @DisplayName("팀 장소가 null 또는 공백이 들어오면 예외를 던진다.")
+        void placeNullOrBlank_Exception(final String updatePlace) {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String place = "선릉 트랙룸";
@@ -293,27 +234,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("장소가 없습니다.");
-        }
-
-        @ParameterizedTest
-        @EmptySource
-        @DisplayName("팀 장소가 공백이 들어오면 예외를 던진다.")
-        void placeEmpty_Exception(final String updatePlace) {
-            // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
-            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl);
-            final String updateTitle = "브라운과 카페 투어";
-            final LocalDateTime updateStartAt = LocalDateTime.now().plusDays(10);
-
-            // when & then
-            assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("장소가 비어있습니다.");
+                    .hasMessageContaining("장소가 null 또는 공백입니다.");
         }
 
         @Test

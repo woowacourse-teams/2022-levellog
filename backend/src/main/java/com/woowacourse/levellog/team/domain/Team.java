@@ -42,11 +42,8 @@ public class Team extends BaseEntity {
     }
 
     private void validateTitle(final String title) {
-        if (title == null) {
-            throw new InvalidFieldException("팀 이름이 없습니다. 입력한 팀 이름 : [null]");
-        }
-        if (title.isEmpty()) {
-            throw new InvalidFieldException("팀 이름이 비어있습니다. 입력한 팀 이름 : [" + title + "]");
+        if (title == null || title.isBlank()) {
+            throw new InvalidFieldException("팀 이름이 null 또는 공백입니다. 입력한 팀 이름 : [" + title + "]");
         }
         if (title.length() > DEFAULT_STRING_SIZE) {
             throw new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]");
@@ -54,14 +51,11 @@ public class Team extends BaseEntity {
     }
 
     private void validatePlace(final String place) {
-        if (place == null) {
-            throw new InvalidFieldException("장소가 없습니다. 입력한 장소 이름 : [null]");
-        }
-        if (place.isEmpty()) {
-            throw new InvalidFieldException("장소가 비어있습니다. 입력한 장소 이름 : [" + place + "]");
+        if (place == null || place.isBlank()) {
+            throw new InvalidFieldException("장소가 null 또는 공백입니다. 입력한 장소 : [" + place + "]");
         }
         if (place.length() > DEFAULT_STRING_SIZE) {
-            throw new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 이름 : [" + place + "]");
+            throw new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]");
         }
     }
 
@@ -75,11 +69,8 @@ public class Team extends BaseEntity {
     }
 
     private void validateProfileUrl(final String profileUrl) {
-        if (profileUrl == null) {
-            throw new InvalidFieldException("팀 프로필 사진이 없습니다. 입력한 프로필 URL : [null]");
-        }
-        if (profileUrl.isEmpty()) {
-            throw new InvalidFieldException("팀 프로필 사진이 비어있습니다. 입력한 프로필 URL : [" + profileUrl + "]");
+        if (profileUrl == null || profileUrl.isBlank()) {
+            throw new InvalidFieldException("팀 프로필 사진이 null 또는 공백입니다. 입력한 프로필 URL : [" + profileUrl + "]");
         }
         if (profileUrl.length() > PROFILE_URL_SIZE) {
             throw new InvalidFieldException("잘못된 팀 프로필 사진을 입력했습니다. 입력한 프로필 URL : [" + profileUrl + "]");

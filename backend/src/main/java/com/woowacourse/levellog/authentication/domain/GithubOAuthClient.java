@@ -2,7 +2,7 @@ package com.woowacourse.levellog.authentication.domain;
 
 import com.woowacourse.levellog.authentication.dto.GithubAccessTokenDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.authentication.dto.TokenDto;
+import com.woowacourse.levellog.authentication.dto.GithubTokenDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,8 +29,8 @@ public class GithubOAuthClient implements OAuthClient {
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 
         final HttpEntity<GithubAccessTokenDto> httpEntity = new HttpEntity<>(request, headers);
-        final TokenDto response = new RestTemplate()
-                .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, TokenDto.class)
+        final GithubTokenDto response = new RestTemplate()
+                .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, GithubTokenDto.class)
                 .getBody();
 
         if (response == null) {

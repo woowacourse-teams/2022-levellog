@@ -7,11 +7,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Github OAuth로부터 access token을 받기 위한 dto
+ * 더 적절한 이름있으면 고쳐주세요.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class TokenDto {
+public class GithubTokenDto {
 
     @JsonProperty("access_token")
     private String accessToken;

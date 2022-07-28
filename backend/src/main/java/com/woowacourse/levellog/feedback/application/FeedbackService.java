@@ -98,7 +98,8 @@ public class FeedbackService {
 
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
             throw new InvalidFeedbackException(
-                    "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다. memberId :" + member.getId() + " teamId : " + team.getId());
+                    " [memberId :" + member.getId() + " teamId : " + team.getId() + "]",
+                    "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
         }
     }
 

@@ -78,7 +78,7 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException("자기 자신에게 피드백을 할 수 없습니다."));
+                    .willThrow(new InvalidFeedbackException(" [levellogId : " + levellogId + "]", "자기 자신에게 피드백을 할 수 없습니다."));
 
             final String requestContent = objectMapper.writeValueAsString(request);
 
@@ -109,7 +109,7 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다."));
+                    .willThrow(new InvalidFeedbackException(" [levellogId : " + levellogId + "]", "자기 자신에게 피드백을 할 수 없습니다."));
 
             final String requestContent = objectMapper.writeValueAsString(request);
 
@@ -180,7 +180,8 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
             final String requestContent = objectMapper.writeValueAsString(request);
 
-            doThrow(new InvalidFeedbackException("자신이 남긴 피드백만 수정할 수 있습니다."))
+            doThrow(new InvalidFeedbackException(
+                    " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]", "자신이 남긴 피드백만 삭제할 수 있습니다."))
                     .when(feedbackService)
                     .update(request, feedbackId, memberId);
 
@@ -249,7 +250,8 @@ class FeedbackControllerTest extends ControllerTest {
 
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-            doThrow(new InvalidFeedbackException("자신이 남긴 피드백만 삭제할 수 있습니다."))
+            doThrow(new InvalidFeedbackException(
+                    " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]", "자신이 남긴 피드백만 삭제할 수 있습니다."))
                     .when(feedbackService)
                     .deleteById(feedbackId, memberId);
 

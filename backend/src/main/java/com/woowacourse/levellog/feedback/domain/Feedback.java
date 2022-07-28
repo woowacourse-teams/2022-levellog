@@ -79,8 +79,7 @@ public class Feedback extends BaseEntity {
 
     public void validateAuthor(final Member member, final String message) {
         if (!from.equals(member)) {
-            throw new InvalidFeedbackException(
-                    message + " feedbackId : " + getId() + ", memberId : " + member.getId());
+            throw new InvalidFeedbackException(" [feedbackId : " + getId() + ", memberId : " + member.getId() + "]", message);
         }
     }
 }

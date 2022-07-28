@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import com.woowacourse.levellog.member.dto.MemberDto;

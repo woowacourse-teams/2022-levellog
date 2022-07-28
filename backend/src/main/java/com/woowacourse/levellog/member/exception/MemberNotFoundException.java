@@ -11,6 +11,6 @@ public class MemberNotFoundException extends LevellogException {
     private static final String ERROR_MESSAGE = "멤버가 존재하지 않습니다.";
 
     public MemberNotFoundException(final String message) {
-        super(message, HttpStatus.NOT_FOUND);
+        super(message, ERROR_MESSAGE, HttpStatus.NOT_FOUND);
     }
 }

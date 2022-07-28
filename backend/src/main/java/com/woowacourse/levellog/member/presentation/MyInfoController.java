@@ -26,19 +26,22 @@ public class MyInfoController {
     @GetMapping("/feedbacks")
     public ResponseEntity<FeedbacksResponse> findAllFeedbackToMe(@Authentic final Long memberId) {
         final FeedbacksResponse feedbacksResponse = feedbackService.findAllByTo(memberId);
+
         return ResponseEntity.ok(feedbacksResponse);
     }
 
     @GetMapping
     public ResponseEntity<MemberDto> myInfo(@Authentic final Long memberId) {
         final MemberDto memberDto = memberService.findMemberById(memberId);
+
         return ResponseEntity.ok(memberDto);
     }
 
     @PutMapping
     public ResponseEntity<Void> updateNickname(@Authentic final Long memberId,
-                                               @RequestBody @Valid final NicknameUpdateDto nicknameUpdateDto) {
-        memberService.updateNickname(nicknameUpdateDto, memberId);
+                                               @RequestBody @Valid final NicknameUpdateDto request) {
+        memberService.updateNickname(request, memberId);
+
         return ResponseEntity.noContent().build();
     }
 }

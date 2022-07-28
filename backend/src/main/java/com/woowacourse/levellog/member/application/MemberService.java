@@ -26,7 +26,7 @@ public class MemberService {
     public Long save(final MemberCreateDto request) {
         checkSameGithubId(request);
 
-        final Member member = new Member(request.getNickname(), request.getGithubId(), request.getProfileUrl());
+        final Member member = request.toEntity();
         final Member savedMember = memberRepository.save(member);
 
         return savedMember.getId();

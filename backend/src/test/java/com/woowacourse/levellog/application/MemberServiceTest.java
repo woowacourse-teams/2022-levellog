@@ -3,29 +3,16 @@ package com.woowacourse.levellog.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.MembersDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
 @DisplayName("MemberService의")
-class MemberServiceTest {
-
-    @Autowired
-    private MemberService memberService;
-
-    @Autowired
-    private MemberRepository memberRepository;
+class MemberServiceTest extends ServiceTest {
 
     @Test
     @DisplayName("save 메서드는 새로운 멤버를 저장한다.")

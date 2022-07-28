@@ -14,9 +14,9 @@ public class FakeGithubOAuthClient implements OAuthClient {
     }
 
     @Override
-    public String getAccessToken(final String code) {
-        if (!code.isBlank()) {
-            return code;
+    public String getAccessToken(final String authorizationCode) {
+        if (!authorizationCode.isBlank()) {
+            return authorizationCode;
         }
         throw new IllegalStateException("[TEST] code가 비어있습니다.");
     }

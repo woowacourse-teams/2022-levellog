@@ -6,12 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.domain.Participant;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
 import com.woowacourse.levellog.team.dto.TeamRequest;
 import com.woowacourse.levellog.team.dto.TeamResponse;
@@ -22,31 +18,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
-@Transactional
-@ActiveProfiles("test")
 @DisplayName("TeamService의")
-class TeamServiceTest {
-
-    @Autowired
-    private TeamService teamService;
-
-    @Autowired
-    private TeamRepository teamRepository;
-
-    @Autowired
-    private ParticipantRepository participantRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
+class TeamServiceTest extends ServiceTest {
 
     @Test
     @DisplayName("save 메서드는 팀을 생성한다.")

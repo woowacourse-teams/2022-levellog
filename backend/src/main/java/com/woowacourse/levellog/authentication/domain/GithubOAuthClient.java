@@ -1,9 +1,8 @@
 package com.woowacourse.levellog.authentication.domain;
 
-import com.woowacourse.levellog.authentication.dto.GithubAccessTokenRequest;
-import com.woowacourse.levellog.authentication.dto.GithubAccessTokenResponse;
+import com.woowacourse.levellog.authentication.dto.GithubAccessTokenDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import java.util.Objects;
+import com.woowacourse.levellog.authentication.dto.GithubTokenDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,21 +23,18 @@ public class GithubOAuthClient implements OAuthClient {
     }
 
     @Override
-    public String getAccessToken(final String code) {
-        final GithubAccessTokenRequest githubAccessTokenRequest = new GithubAccessTokenRequest(clientId, clientSecret,
-                code);
+    public String getAccessToken(final String authorizationCode) {
+        final GithubAccessTokenDto request = new GithubAccessTokenDto(clientId, clientSecret, authorizationCode);
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 
-        final HttpEntity<GithubAccessTokenRequest> httpEntity =
-                new HttpEntity<>(githubAccessTokenRequest, headers);
-
-        final GithubAccessTokenResponse response = new RestTemplate()
-                .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, GithubAccessTokenResponse.class)
+        final HttpEntity<GithubAccessTokenDto> httpEntity = new HttpEntity<>(request, headers);
+        final GithubTokenDto response = new RestTemplate()
+                .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, GithubTokenDto.class)
                 .getBody();
 
-        if (Objects.isNull(response)) {
-            throw new IllegalStateException("Github 요청에 실패했습니다.");
+        if (response == null) {
+            throw new IllegalStateException("Github 로그인 요청 실패 - authorizationCode:" + authorizationCode);
         }
 
         return response.getAccessToken();

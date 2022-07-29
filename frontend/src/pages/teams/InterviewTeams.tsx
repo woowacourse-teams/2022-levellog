@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import styled from 'styled-components';
 
@@ -12,7 +11,6 @@ import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
   const { teams, getTeams, handleClickInterviewGroup } = useTeams();
-
   useEffect(() => {
     getTeams();
   }, []);

@@ -29,6 +29,13 @@ public class Team extends BaseEntity {
     @Column(nullable = false, length = PROFILE_URL_SIZE)
     private String profileUrl;
 
+    @Column(nullable = false)
+    private int interviewerNumber = 0;
+
+    @Column(nullable = false)
+    private boolean isClosed = false;
+
+    // FIXME : 생성자 + 검증 로직 수정
     public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl) {
         validateTitle(title);
         validatePlace(place);

@@ -43,23 +43,27 @@ const FeedbackAdd = () => {
 
   return (
     <FlexBox gap={1.875}>
-      <form onSubmit={handleSubmitFeedbackForm}>
+      <FeedbackAddContainer onSubmit={handleSubmitFeedbackForm}>
         <ContentHeader title={'레벨로그 피드백'}>
           <Button type={'submit'}>등록하기</Button>
         </ContentHeader>
-        <FeedbackAddContainer>
+        <FeedbackFormContainer>
           <LevellogReport levellog={levellog} />
           <FeedbackForm feedbackRef={feedbackRef} />
-        </FeedbackAddContainer>
-      </form>
+        </FeedbackFormContainer>
+      </FeedbackAddContainer>
     </FlexBox>
   );
 };
 
-const FeedbackAddContainer = styled.div`
-  display: flex;
+const FeedbackAddContainer = styled.form`
   overflow: auto;
   width: 100%;
+`;
+
+const FeedbackFormContainer = styled.div`
+  display: flex;
+  overflow: auto;
   gap: 4.875rem;
   @media (max-width: 1024px) {
     gap: 1.875rem;

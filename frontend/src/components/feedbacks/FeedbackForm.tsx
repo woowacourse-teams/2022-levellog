@@ -7,7 +7,7 @@ import { FeedbackContainer, FeedbackTitle } from 'components/@commons/Style';
 
 const FeedbackForm = ({ feedbackRef }: FeedbackFormProps) => {
   return (
-    <FeedbackContainer>
+    <FeedbackFormContainer>
       <FeedbackTitle>Feedback</FeedbackTitle>
       <ContentStyle>
         <label>학습 측면에서 좋은 점과 부족한 점은?</label>
@@ -29,13 +29,21 @@ const FeedbackForm = ({ feedbackRef }: FeedbackFormProps) => {
           inputRef={(el: HTMLInputElement) => (feedbackRef.current[2] = el)}
         />
       </ContentStyle>
-    </FeedbackContainer>
+    </FeedbackFormContainer>
   );
 };
 
 interface FeedbackFormProps {
   feedbackRef: React.MutableRefObject<HTMLInputElement[]>;
 }
+
+const FeedbackFormContainer = styled.div`
+  overflow: auto;
+  width: 48rem;
+  @media (max-width: 520px) {
+    max-width: 22.875rem;
+  }
+`;
 
 const ContentStyle = styled.div`
   display: flex;

@@ -7,21 +7,25 @@ import styled from 'styled-components';
 import useUser from 'hooks/useUser';
 
 import Button from 'components/@commons/Button';
+import { LevellogCustomHookType } from 'types/levellog';
+import { ParticipantType } from 'types/team';
 
 const LevellogViewModal = ({
-  participant,
   levellog,
+  participant,
   getTeam,
-  onClickLevellogDelete,
+  onClickDeleteLevellog,
   handleClickCloseLevellogModal,
-}) => {
+}: LevellogViewModalProps) => {
   const { id, levellogId, nickname } = participant;
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
   const handleClickLevellogDelete = async () => {
-    await onClickLevellogDelete({ teamId, levellogId });
-    getTeam();
+    if (typeof teamId === 'string' && typeof levellogId === 'string') {
+      await onClickDeleteLevellog({ teamId, levellogId });
+      getTeam();
+    }
   };
 
   if (id === loginUserId) {
@@ -63,6 +67,17 @@ const LevellogViewModal = ({
     </ModalPortal>
   );
 };
+
+interface LevellogViewModalProps {
+  levellog: string;
+  participant: ParticipantType;
+  getTeam: () => void;
+  onClickDeleteLevellog: ({
+    teamId,
+    levellogId,
+  }: Omit<LevellogCustomHookType, 'inputValue'>) => Promise<void>;
+  handleClickCloseLevellogModal: () => void;
+}
 
 const Dimmer = styled.div`
   position: fixed;

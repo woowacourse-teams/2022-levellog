@@ -1,3 +1,5 @@
+import { ParticipantType } from './team';
+
 export interface LevellogCustomHookType {
   inputValue: string;
   teamId: string;
@@ -13,4 +15,8 @@ export interface LevellogApiType {
 
 export interface LevellogFormatType {
   content: string;
+}
+
+export interface LevellogParticipantType extends Pick<LevellogCustomHookType, 'teamId'> {
+  participant: ParticipantType;
 }

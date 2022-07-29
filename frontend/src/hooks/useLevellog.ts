@@ -13,32 +13,7 @@ import {
 } from 'apis/levellog';
 import { LevellogCustomHookType, LevellogFormatType } from 'types/levellog';
 
-const useLevellog = (): {
-  levellog: string;
-  levellogRef: React.RefObject<HTMLInputElement>;
-  postLevellog: ({
-    teamId,
-    inputValue,
-  }: Omit<LevellogCustomHookType, 'levellogId'>) => Promise<void>;
-  getLevellog: ({
-    teamId,
-    levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>) => Promise<string | void>;
-  editLevellog: ({ teamId, levellogId, inputValue }: LevellogCustomHookType) => Promise<void>;
-  deleteLevellog: ({
-    teamId,
-    levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>) => Promise<void>;
-  getLevellogOnRef: ({
-    teamId,
-    levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>) => Promise<void>;
-  onSubmitLevellogEditForm: ({
-    teamId,
-    levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>) => void;
-  onSubmitLevellogPostForm: ({ teamId }: Pick<LevellogCustomHookType, 'teamId'>) => void;
-} => {
+const useLevellog = () => {
   const [levellog, setLevellog] = useState('');
   const levellogRef = useRef<HTMLInputElement>(null);
   const accessToken = localStorage.getItem('accessToken');
@@ -57,7 +32,7 @@ const useLevellog = (): {
   const postLevellog = async ({
     teamId,
     inputValue,
-  }: Omit<LevellogCustomHookType, 'levellogId'>): Promise<void> => {
+  }: Omit<LevellogCustomHookType, 'levellogId'>) => {
     try {
       await requestPostLevellog({
         accessToken,
@@ -95,7 +70,7 @@ const useLevellog = (): {
   const deleteLevellog = async ({
     teamId,
     levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>): Promise<void> => {
+  }: Omit<LevellogCustomHookType, 'inputValue'>) => {
     try {
       await requestDeleteLevellog({ accessToken, teamId, levellogId });
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
@@ -108,11 +83,7 @@ const useLevellog = (): {
     }
   };
 
-  const editLevellog = async ({
-    teamId,
-    levellogId,
-    inputValue,
-  }: LevellogCustomHookType): Promise<void> => {
+  const editLevellog = async ({ teamId, levellogId, inputValue }: LevellogCustomHookType) => {
     try {
       await requestEditLevellog({
         accessToken,
@@ -133,7 +104,7 @@ const useLevellog = (): {
   const getLevellogOnRef = async ({
     teamId,
     levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>): Promise<void> => {
+  }: Omit<LevellogCustomHookType, 'inputValue'>) => {
     const levellog = await getLevellog({ teamId, levellogId });
 
     if (typeof levellog === 'string' && levellogRef.current) {
@@ -144,13 +115,13 @@ const useLevellog = (): {
   const onSubmitLevellogEditForm = ({
     teamId,
     levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>): void => {
+  }: Omit<LevellogCustomHookType, 'inputValue'>) => {
     if (levellogRef.current) {
       editLevellog({ teamId, levellogId, inputValue: levellogRef.current.value });
     }
   };
 
-  const onSubmitLevellogPostForm = ({ teamId }: Pick<LevellogCustomHookType, 'teamId'>): void => {
+  const onSubmitLevellogPostForm = ({ teamId }: Pick<LevellogCustomHookType, 'teamId'>) => {
     if (levellogRef.current) {
       postLevellog({ teamId, inputValue: levellogRef.current.value });
     }

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 
 import styled, { CSSProperties } from 'styled-components';
-import { ParticipantType } from 'types';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import { useTeam } from 'hooks/useTeams';
@@ -11,6 +10,7 @@ import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 import Interviewer from 'components/teams/Interviewer';
+import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
   const { teamLocationState, team, getTeam } = useTeam();
@@ -20,7 +20,7 @@ const InterviewDetail = () => {
     participant,
     isOnModal,
     onClickToggleModal,
-    onClickLevellogDelete,
+    onClickDeleteLevellog,
     handleClickCloseLevellogModal,
   } = useLevellogModal();
 
@@ -30,16 +30,16 @@ const InterviewDetail = () => {
     }
   }, []);
 
-  if (Object.keys(team).length === 0) return;
+  if (team && Object.keys(team).length) return <div>실패</div>;
 
   return (
     <>
       {isOnModal === true && (
         <LevellogViewModal
-          participant={participant}
           levellog={levellog}
+          participant={participant}
           getTeam={getTeam}
-          onClickLevellogDelete={onClickLevellogDelete}
+          onClickDeleteLevellog={onClickDeleteLevellog}
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}
         />
       )}
@@ -47,27 +47,28 @@ const InterviewDetail = () => {
         <InterviewDetailHeader>
           <FlexBox gap={1}>
             <InterviewDetailOwnerImage>
-              <Image src={team.teamImage} sizes={'LARGE'} />
+              <Image src={(team as InterviewTeamType).teamImage} sizes={'LARGE'} />
             </InterviewDetailOwnerImage>
             <FlexBox flexFlow="column" gap={1.125}>
-              <InterviewDetailTitle>{team.title}</InterviewDetailTitle>
+              <InterviewDetailTitle>{(team as InterviewTeamType).title}</InterviewDetailTitle>
               <FlexBox gap={1}>
-                <InterviewDetailTitleContent>{team.place}</InterviewDetailTitleContent>
-                <InterviewDetailTitleContent>{team.startAt}</InterviewDetailTitleContent>
+                <InterviewDetailTitleContent>
+                  {(team as InterviewTeamType).place}
+                </InterviewDetailTitleContent>
+                <InterviewDetailTitleContent>
+                  {(team as InterviewTeamType).startAt}
+                </InterviewDetailTitleContent>
               </FlexBox>
             </FlexBox>
           </FlexBox>
           <Button>그룹 수정하기</Button>
         </InterviewDetailHeader>
         <InterviewDetailContainer>
-          {team.participants.map((participant: ParticipantType) => (
+          {(team as InterviewTeamType).participants.map((participant: ParticipantType) => (
             <Interviewer
               key={participant.id}
-              levellog={levellog}
               participant={participant}
               onClickToggleModal={onClickToggleModal}
-              onClickLevellogDelete={onClickLevellogDelete}
-              handleClickCloseLevellogModal={handleClickCloseLevellogModal}
             />
           ))}
         </InterviewDetailContainer>

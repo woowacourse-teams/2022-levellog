@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
-import { InterviewTeamType } from 'types';
 
 import { useTeams } from 'hooks/useTeams';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import InterviewTeam from 'components/teams/InterviewTeam';
+import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
   const { teams, getTeams, handleClickInterviewGroup } = useTeams();

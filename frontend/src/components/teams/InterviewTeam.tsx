@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { InterviewTeamType, ParticipantType } from 'types';
 
 import FlexBox from '../@commons/FlexBox';
 import Image from '../@commons/Image';
+import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewTeam = ({
   id,

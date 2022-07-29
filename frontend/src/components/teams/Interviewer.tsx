@@ -8,13 +8,17 @@ import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
+import { LevellogParticipantType } from 'types/levellog';
+import { ParticipantType } from 'types/team';
 
-const Interviewer = ({ participant, onClickToggleModal }: any) => {
+const Interviewer = ({ participant, onClickToggleModal }: InterviewerProps) => {
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
   const handleClickToggleModal = () => {
-    onClickToggleModal({ teamId, participant });
+    if (typeof teamId === 'string') {
+      onClickToggleModal({ teamId, participant });
+    }
   };
 
   if (participant.id === loginUserId) {
@@ -67,11 +71,8 @@ const Interviewer = ({ participant, onClickToggleModal }: any) => {
 };
 
 interface InterviewerProps {
-  getTeam: () => Promise<void>;
-  id: string;
-  levellogId: string;
-  nickname: string;
-  profileUrl: string;
+  participant: ParticipantType;
+  onClickToggleModal: ({ teamId, participant }: LevellogParticipantType) => void;
 }
 
 const InterviewerButton = styled(Button)`

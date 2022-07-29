@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 
-const Button = ({ children, disabled = false, onClick, color, ...props }: ButtonProps) => {
+const Button = ({
+  children,
+  type = 'button',
+  disabled = false,
+  onClick,
+  color,
+  ...props
+}: ButtonProps) => {
   return (
     <ButtonStyle disabled={disabled} onClick={onClick} color={color} {...props}>
       <ButtonContent>{children}</ButtonContent>
@@ -10,7 +17,8 @@ const Button = ({ children, disabled = false, onClick, color, ...props }: Button
 
 interface ButtonProps {
   children: string;
-  disabled?: any;
+  type?: string;
+  disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   color?: string;
 }

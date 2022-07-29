@@ -9,12 +9,7 @@ import App from './App';
 import { UserProvider } from './contexts/userContext';
 
 const main = () => {
-  if (!process.env.NODE_ENV) {
-    const { worker } = require('./mocks/browser');
-    // worker.start();
-  }
-
-  const root = ReactDOM.createRoot(document.getElementById('root'));
+  const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
   root.render(
     <BrowserRouter>
       <UserProvider>

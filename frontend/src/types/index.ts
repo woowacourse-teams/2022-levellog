@@ -1,7 +1,3 @@
-export interface LevellogType {
-  content: string;
-}
-
 export interface UserInfoType {
   id: string;
   profileUrl: string;

@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
-const ProfileDropdown = ({ isShowProfileDropdown, handleClickLogoutButton }: any) => {
+const ProfileDropdown = ({
+  isShowProfileDropdown,
+  handleClickLogoutButton,
+}: ProfileDropdownProps) => {
   return (
     <ProfileDropdownContainer isShowProfileDropdown={isShowProfileDropdown}>
       <ProfileDropdownContent>프로필</ProfileDropdownContent>
@@ -11,6 +14,7 @@ const ProfileDropdown = ({ isShowProfileDropdown, handleClickLogoutButton }: any
 
 interface ProfileDropdownProps {
   isShowProfileDropdown: boolean;
+  handleClickLogoutButton: () => void;
 }
 
 const ProfileDropdownContainer = styled.div`
@@ -26,7 +30,8 @@ const ProfileDropdownContainer = styled.div`
   justify-content: space-around;
   border-radius: 8px;
   transition: all 0.2s;
-  display: ${(props: ProfileDropdownProps) => (props.isShowProfileDropdown ? 'block' : 'none')};
+  display: ${(props: Pick<ProfileDropdownProps, 'isShowProfileDropdown'>) =>
+    props.isShowProfileDropdown ? 'block' : 'none'};
   z-index: 10;
   @media (max-width: 1024px) {
     right: 5rem;

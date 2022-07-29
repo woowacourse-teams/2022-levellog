@@ -1,53 +1,62 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import axios, { AxiosResponse } from 'axios';
+
 import useUser from 'hooks/useUser';
 
 import { ROUTES_PATH } from 'constants/constants';
 
-import { getUserAuthority, getUserLogin } from 'apis/login';
+import { requestGetUserAuthority, requestGetUserLogin } from 'apis/login';
 
 const Login = () => {
   const { userInfoDispatch } = useUser();
-  const location = useLocation();
+  const location = useLocation() as unknown as { state: { pathname: string } };
   const navigate = useNavigate();
 
   useEffect(() => {
     const loginGithub = async () => {
       const params = new URL(window.location.href).searchParams;
       const code = params.get('code');
-      const state = location.state as any;
       const accessToken = localStorage.getItem('accessToken');
       try {
         if (accessToken) {
-          const res = await getUserAuthority({ accessToken });
+          const res = await requestGetUserAuthority({ accessToken });
           userInfoDispatch({
             id: res.data.id,
             profileUrl: res.data.profileUrl,
           });
-          navigate(state.pathname);
+          navigate(location.state.pathname);
+
           return;
         }
 
-        const res = await getUserLogin({ code });
-        localStorage.setItem('accessToken', res.data.accessToken);
-        userInfoDispatch({
-          id: res.data.id,
-          profileUrl: res.data.profileUrl,
-        });
-
-        if (state?.pathname) {
-          if (location.pathname === ROUTES_PATH.LOGIN) {
-            navigate(state.pathname);
+        if (code) {
+          const res = await requestGetUserLogin({ code });
+          localStorage.setItem('accessToken', res.data.accessToken);
+          userInfoDispatch({
+            id: res.data.id,
+            profileUrl: res.data.profileUrl,
+          });
+        }
+        if (location.state) {
+          if (location.state.pathname === ROUTES_PATH.LOGIN) {
+            navigate(location.state.pathname);
 
             return;
           }
-          navigate(state.pathname);
+          navigate(location.state.pathname);
 
           return;
         }
         navigate(ROUTES_PATH.HOME);
-      } catch (err) {}
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          const responseBody: AxiosResponse = err.response!;
+          if (err instanceof Error) alert(responseBody.data.message);
+          navigate(ROUTES_PATH.NOT_FOUND);
+        }
+      }
     };
 
     loginGithub();

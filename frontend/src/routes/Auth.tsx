@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import useUser from 'hooks/useUser';
 
@@ -18,12 +18,12 @@ const Auth = ({ needLogin }: AuthProps) => {
     }
 
     if (!loginUserId && accessToken) {
-      navigate(ROUTES_PATH.LOGIN, { state: location });
+      navigate(ROUTES_PATH.LOGIN, { state: location, replace: true });
       return;
     }
   }, [navigate]);
 
-  return <div></div>;
+  return <Outlet />;
 };
 
 interface AuthProps {

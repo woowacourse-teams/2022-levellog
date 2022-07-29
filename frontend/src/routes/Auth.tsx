@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import useUser from 'hooks/useUser';
 
 import { ROUTES_PATH } from 'constants/constants';
 
-const Auth = ({ needLogin }) => {
+const Auth = ({ needLogin }: AuthProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { loginUserId } = useUser();
@@ -23,7 +23,11 @@ const Auth = ({ needLogin }) => {
     }
   }, [navigate]);
 
-  return <Outlet />;
+  return <div></div>;
 };
+
+interface AuthProps {
+  needLogin: boolean;
+}
 
 export default Auth;

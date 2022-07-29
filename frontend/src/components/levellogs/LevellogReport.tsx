@@ -7,7 +7,7 @@ const LevellogReport = ({ levellog }: LevellogReportProps) => {
   return (
     <FeedbackContainer>
       <FeedbackTitle>레벨로그</FeedbackTitle>
-      <LevellogContainer>{levellog}</LevellogContainer>
+      <LevellogContent>{levellog}</LevellogContent>
     </FeedbackContainer>
   );
 };
@@ -17,6 +17,14 @@ interface LevellogReportProps {
 }
 
 const LevellogContainer = styled.div`
+  overflow: auto;
+  width: 47.0625rem;
+  @media (max-width: 520px) {
+    max-width: 22.875rem;
+  }
+`;
+
+const LevellogContent = styled.div`
   overflow: hidden;
   width: 100%;
   min-height: 60.0625rem;

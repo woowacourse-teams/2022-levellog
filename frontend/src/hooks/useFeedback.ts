@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
@@ -11,39 +11,18 @@ import {
   requestEditFeedback,
   requestDeleteFeedback,
 } from 'apis/feedback';
-import { FeedbackFormatType, FeedbackCustomHookType, FeedbackInfoType } from 'types/feedback';
+import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
-const useFeedback = (): {
-  feedbacks: FeedbackInfoType[];
-  feedbackRef: React.MutableRefObject<HTMLInputElement[]>;
-  getFeedbacksInTeam: ({ levellogId }: Pick<FeedbackCustomHookType, 'levellogId'>) => Promise<void>;
-  postFeedback: ({
-    levellogId,
-    feedbackResult,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackResult'>) => void;
-  editFeedback: ({
-    levellogId,
-    feedbackId,
-    feedbackResult,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId' | 'feedbackResult'>) => Promise<void>;
-  onClickDeleteButton: ({
-    feedbackInfo,
-    levellogId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackInfo'>) => Promise<void>;
-  onSubmitFeedbackForm: ({
-    teamId,
-    levellogId,
-  }: Pick<FeedbackCustomHookType, 'teamId' | 'levellogId'>) => Promise<void>;
-} => {
-  const [feedbacks, setFeedbacks] = useState<FeedbackInfoType[]>([]);
-  const feedbackRef = useRef<Array<HTMLInputElement>>([]);
+const useFeedback = () => {
+  const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
+  const feedbackRef = useRef<HTMLInputElement[]>([]);
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
   const postFeedback = async ({
     levellogId,
     feedbackResult,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackResult'>): Promise<void> => {
+  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackResult'>) => {
     try {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
     } catch (err: unknown) {
@@ -55,9 +34,7 @@ const useFeedback = (): {
     }
   };
 
-  const getFeedbacksInTeam = async ({
-    levellogId,
-  }: Pick<FeedbackCustomHookType, 'levellogId'>): Promise<void> => {
+  const getFeedbacksInTeam = async ({ levellogId }: Pick<FeedbackCustomHookType, 'levellogId'>) => {
     try {
       const res = await requestGetFeedbacksInTeam({ accessToken, levellogId });
       const feedbacks = res.data.feedbacks;
@@ -106,7 +83,7 @@ const useFeedback = (): {
   const onClickDeleteButton = async ({
     feedbackInfo,
     levellogId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackInfo'>): Promise<void> => {
+  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackInfo'>) => {
     const feedbackId = String(feedbackInfo.id);
 
     await deleteFeedback({ levellogId, feedbackId });
@@ -116,7 +93,7 @@ const useFeedback = (): {
   const onSubmitFeedbackForm = async ({
     teamId,
     levellogId,
-  }: Pick<FeedbackCustomHookType, 'teamId' | 'levellogId'>): Promise<void> => {
+  }: Pick<FeedbackCustomHookType, 'teamId' | 'levellogId'>) => {
     const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackFormatType = {
       feedback: {

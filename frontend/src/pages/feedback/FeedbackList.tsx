@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
-import { FeedbackType } from 'types';
 
 import useFeedback from 'hooks/useFeedback';
 
@@ -11,6 +10,7 @@ import { ROUTES_PATH } from 'constants/constants';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import Feedback from 'components/feedbacks/Feedback';
+import { FeedbackType } from 'types/feedback';
 
 const FeedbackList = () => {
   const { feedbacks, getFeedbacksInTeam, onClickDeleteButton } = useFeedback();
@@ -21,7 +21,7 @@ const FeedbackList = () => {
     alert('잘못된 접근입니다.');
     navigate(ROUTES_PATH.HOME);
 
-    return;
+    return <div></div>;
   }
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 
-import { FeedbackApiType, FeedbackInfoType } from 'types/feedback';
+import { FeedbackApiType, FeedbackType } from 'types/feedback';
 
 export const requestPostFeedback = ({
   accessToken,
@@ -19,7 +19,7 @@ export const requestGetFeedbacksInTeam = ({
   accessToken,
   levellogId,
 }: Pick<FeedbackApiType, 'accessToken' | 'levellogId'>): AxiosPromise<
-  Record<'feedbacks', FeedbackInfoType[]>
+  Record<'feedbacks', FeedbackType[]>
 > => {
   return axios({
     method: 'get',

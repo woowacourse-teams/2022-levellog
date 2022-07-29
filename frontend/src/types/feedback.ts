@@ -9,11 +9,11 @@ export interface FeedbackCustomHookType {
   teamId: string;
   levellogId: string;
   feedbackId: string;
-  feedbackInfo: FeedbackInfoType;
+  feedbackInfo: FeedbackType;
   feedbackResult: FeedbackFormatType;
 }
 
-export interface FeedbackInfoType {
+export interface FeedbackType {
   id: number;
   updatedAt: string;
   from: {

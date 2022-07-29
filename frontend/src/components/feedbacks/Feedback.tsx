@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
-import { FeedbackInfoType } from 'types/feedback';
+import { FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
 const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackProps) => {
   const handleClickDeleteButton = () => {
@@ -34,9 +34,12 @@ const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackPro
 };
 
 interface FeedbackProps {
-  feedbackInfo: FeedbackInfoType;
+  feedbackInfo: FeedbackType;
   levellogId: string;
-  onClickDeleteButton: Function;
+  onClickDeleteButton: ({
+    feedbackInfo,
+    levellogId,
+  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackInfo'>) => Promise<void>;
 }
 
 const FeedbackContainer = styled.div`

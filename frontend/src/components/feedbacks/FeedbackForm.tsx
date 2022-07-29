@@ -1,3 +1,5 @@
+import { forwardRef } from 'react';
+
 import styled from 'styled-components';
 
 import Input from 'components/@commons/Input';
@@ -32,7 +34,7 @@ const FeedbackForm = ({ feedbackRef }: FeedbackFormProps) => {
 };
 
 interface FeedbackFormProps {
-  feedbackRef: React.RefObject<HTMLInputElement[]>;
+  feedbackRef: React.MutableRefObject<HTMLInputElement[]>;
 }
 
 const ContentStyle = styled.div`

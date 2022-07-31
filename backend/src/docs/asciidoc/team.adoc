@@ -68,11 +68,11 @@ operation::team/findAll[]
 [[find-success]]
 === 팀 상세 조회 성공
 
-==== 참가자로 참여하는 팀 상세 조회
+==== 참가자로 참여하는 팀 상세 조회 (페퍼가 요청한 경우)
 
 operation::team/find/my-team[]
 
-==== 참가자가 아닌 팀 상세 조회
+==== 참가자가 아닌 팀 상세 조회 (또는 비로그인으로 조회)
 
 operation::team/find/not-my-team[]
 

@@ -100,4 +100,3 @@ operation::interview-question/delete/exception-interview-question[]
 ==== 인터뷰 질문 작성자가 아닌 멤버가 삭제하려는 경우
 
 operation::interview-question/delete/exception-unauthorized[]
-

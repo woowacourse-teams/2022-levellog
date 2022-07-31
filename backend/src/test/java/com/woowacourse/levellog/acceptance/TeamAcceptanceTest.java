@@ -24,8 +24,9 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
     /*
      * Scenario: 레벨 인터뷰 팀 생성하기
-     *   given: 2명의 맴버가 등록되어 있고, 1명의 멤버가 로그인 상태이다.
+     *   given: 페퍼, 이브, 릭이 등록되어 있고, 페퍼가 로그인 상태이다.
      *   when: 팀을 생성을 요청한다.
+     *   when: 인터뷰어는 1명이다.
      *   then: 201 Created 상태 코드와 Location 헤더에 /api/teams/{id}를 담아 응답받는다.
      */
     @Test
@@ -34,8 +35,11 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto request = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
+        final RestAssuredResponse loginResponse3 = login("릭");
+        final List<Long> participantIds = List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId());
+
+        final TeamCreateDto request = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(participantIds));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -190,7 +194,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
     private RestAssuredResponse createTeam(final String token, final String title, final int interviewerNumber,
                                            final Long... participantIds) {
         final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(participantIds));
-        final TeamCreateDto request = new TeamCreateDto(title, title + " place", interviewerNumber, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto request = new TeamCreateDto(title, title + " place", interviewerNumber,
+                LocalDateTime.now().plusDays(3),
                 participants);
 
         return post("/api/teams", token, request);

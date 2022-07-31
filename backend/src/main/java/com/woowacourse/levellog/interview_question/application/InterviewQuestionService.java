@@ -71,7 +71,8 @@ public class InterviewQuestionService {
 
     private InterviewQuestion getInterviewQuestion(final Long interviewQuestionId) {
         return interviewQuestionRepository.findById(interviewQuestionId)
-                .orElseThrow(() -> new InterviewQuestionNotFoundException("존재하지 않는 인터뷰 질문 [interviewQuestionId : " + interviewQuestionId + "]"));
+                .orElseThrow(() -> new InterviewQuestionNotFoundException(
+                        "존재하지 않는 인터뷰 질문 [interviewQuestionId : " + interviewQuestionId + "]"));
     }
 
     private Levellog getLevellog(final Long levellogId) {

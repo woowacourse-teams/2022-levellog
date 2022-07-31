@@ -59,8 +59,8 @@ class InterviewQuestionRepositoryTest {
                 InterviewQuestion.of(eve, toMember, levellog, "AOP란?"));
 
         // when
-        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndFrom(levellog,
-                eve);
+        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndFrom(
+                levellog, eve);
 
         // then
         assertThat(interviewQuestions).hasSize(2)

@@ -26,6 +26,13 @@ public class RestAssuredResponse {
                 .split("/api/teams/")[1];
     }
 
+    public String getPreQuestionId() {
+        return response
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split("/pre-question/")[1];
+    }
+
     public Long getMemberId() {
         return response
                 .extract()

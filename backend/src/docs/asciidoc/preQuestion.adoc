@@ -23,3 +23,71 @@ operation::pre-question/create[]
 ==== 저장 시 preQuestion이 null 또는 공백인 경우
 
 operation::pre-question/create/exception/null-and-blank[]
+
+[[find]]
+== 사전 질문 상세 조회
+
+[[find-success]]
+=== 사전 질문 상세 조회 성공
+
+operation::pre-question/find[]
+
+[[find-exception]]
+=== 사전 질문 상세 조회 예외
+
+[[find-exception-wrong-levellog]]
+==== url의 레벨로그 id가 잘못된 경우
+
+operation::pre-question/findbyid/exception/wrong-levellog[]
+
+[[find-exception-notfound]]
+==== 없는 사전 질문을 상세 조회하는 경우
+
+operation::pre-question/findbyid/exception/notfound[]
+
+[[update]]
+== 사전 질문 수정
+
+[[update-success]]
+=== 사전 질문 수정 성공
+
+operation::pre-question/update[]
+
+[[update-exception]]
+=== 사전 질문 수정 예외
+
+[[update-exception-prequestion-null]]
+==== 수정 시 preQuestion이 null 또는 공백인 경우
+
+operation::pre-question/update/exception/null-and-blank[]
+
+[[update-exception-prequestion-wrong-levellog]]
+==== url의 레벨로그 id가 잘못된 경우
+
+operation::pre-question/update/exception/wrong-levellog[]
+
+[[update-exception-notfound]]
+==== 없는 사전 질문을 수정하는 경우
+
+operation::pre-question/update/exception/notfound[]
+
+[[delete]]
+== 사전 질문 삭제
+
+[[delete-success]]
+=== 사전 질문 삭제 성공
+
+operation::pre-question/delete[]
+
+[[delete-exception]]
+=== 사전 질문 삭제 예외
+
+[[delete-exception-wrong-levellog]]
+==== url의 레벨로그 id가 잘못된 경우
+
+operation::pre-question/delete/exception/wrong-levellog[]
+
+[[delete-exception-notfound]]
+==== 없는 사전 질문을 삭제하는 경우
+
+operation::pre-question/delete/exception/notfound[]

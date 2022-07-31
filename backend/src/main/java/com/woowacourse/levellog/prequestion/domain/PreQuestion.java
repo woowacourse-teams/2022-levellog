@@ -49,4 +49,12 @@ public class PreQuestion extends BaseEntity {
             throw new InvalidFieldException("사전 내용은 공백이나 null일 수 없습니다.");
         }
     }
+
+    public void update(final String preQuestion) {
+        validateQuestion(preQuestion);
+    }
+
+    public boolean isSameLevellog(final Levellog levellog) {
+        return this.levellog.equals(levellog);
+    }
 }

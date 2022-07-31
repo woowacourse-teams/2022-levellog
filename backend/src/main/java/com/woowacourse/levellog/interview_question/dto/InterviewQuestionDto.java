@@ -19,8 +19,8 @@ public class InterviewQuestionDto {
     @NotBlank
     private String interviewQuestion;
 
-    public static InterviewQuestionDto from(final String content) {
-        return new InterviewQuestionDto(content);
+    public static InterviewQuestionDto from(final String interviewQuestion) {
+        return new InterviewQuestionDto(interviewQuestion);
     }
 
     public InterviewQuestion toInterviewQuestion(final Member fromMember, final Levellog levellog) {

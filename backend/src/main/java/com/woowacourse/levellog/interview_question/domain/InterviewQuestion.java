@@ -2,6 +2,7 @@ package com.woowacourse.levellog.interview_question.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Column;
@@ -44,7 +45,8 @@ public class InterviewQuestion extends BaseEntity {
         this.content = content;
     }
 
-    public static InterviewQuestion of(final Member from, final Member to, final Levellog levellog, final String content) {
+    public static InterviewQuestion of(final Member from, final Member to, final Levellog levellog,
+                                       final String content) {
         return new InterviewQuestion(from, to, levellog, content);
     }
 
@@ -55,5 +57,21 @@ public class InterviewQuestion extends BaseEntity {
         if (content.length() > DEFAULT_STRING_SIZE) {
             throw new InvalidFieldException("인터뷰 질문은 " + DEFAULT_STRING_SIZE + "자 이하여야합니다. 현재 길이:" + content.length());
         }
+    }
+
+    private void validateAuthor(final Member member) {
+        final boolean isNotAuthor = !from.equals(member);
+        if (isNotAuthor) {
+            throw new UnauthorizedException(
+                    "인터뷰 질문을 수정할 권한이 없습니다. 현재 memberId : " + member.getId() + " 인터뷰 질문 작성자 memberId  : " + from.getId()
+                            + " levellogId : " + levellog.getId());
+        }
+    }
+
+    public void updateContent(final String content, final Member member) {
+        validateContent(content);
+        validateAuthor(member);
+
+        this.content = content;
     }
 }

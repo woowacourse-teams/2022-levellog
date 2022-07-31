@@ -33,15 +33,23 @@ class TeamServiceTest extends ServiceTest {
         final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
         final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
         final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(participant1, participant2, participant3)));
 
         //when
         final Long id = teamService.save(teamCreateDto, participant1);
 
         //then
-        final Optional<Team> team = teamRepository.findById(id);
-        assertThat(team).isPresent();
+        final Optional<Team> possibleTeam = teamRepository.findById(id);
+        assertThat(possibleTeam).isPresent();
+
+        final Team team = possibleTeam.get();
+        assertAll(
+                () -> assertThat(team.getTitle()).isEqualTo("잠실 준조"),
+                () -> assertThat(team.getPlace()).isEqualTo("트랙룸"),
+                () -> assertThat(team.getInterviewerNumber()).isEqualTo(2),
+                () -> assertThat(team.isClosed()).isFalse()
+        );
     }
 
     @Test

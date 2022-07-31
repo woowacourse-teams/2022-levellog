@@ -3,6 +3,7 @@ package com.woowacourse.levellog.presentation;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -216,10 +217,11 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1L, 1L)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
+            final ResultActions perform = mockMvc.perform(
+                            put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1L, 1L)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestContent))
                     .andDo(print());
 
             // then
@@ -244,10 +246,11 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1L, 1L)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
+            final ResultActions perform = mockMvc.perform(
+                            put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1L, 1L)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestContent))
                     .andDo(print());
 
             // then
@@ -274,7 +277,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(
-                            put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1, invalidInterviewQuestionId)
+                            put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1,
+                                    invalidInterviewQuestionId)
                                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(requestContent))
@@ -315,6 +319,62 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("interview-question/update/exception-unauthorized"));
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteById 메서드는")
+    class DeleteByIdTest {
+
+        @Test
+        @DisplayName("존재하지 않는 인터뷰 질문을 수정하면 예외를 던진다.")
+        void deleteById_interviewQuestionNotFound_exception() throws Exception {
+            // given
+            final Long invalidInterviewQuestionId = 1000L;
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            doThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
+                    .when(interviewQuestionService)
+                    .deleteById(invalidInterviewQuestionId, 1L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(
+                            delete("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1,
+                                    invalidInterviewQuestionId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isNotFound())
+                    .andExpect(jsonPath("message").value("인터뷰 질문이 존재하지 않습니다."));
+
+            // docs
+            perform.andDo(document("interview-question/deleteById/exception-interviewQuestion"));
+        }
+
+        @Test
+        @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
+        void deleteById_unauthorized_exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            doThrow(new UnauthorizedException("권한이 없습니다."))
+                    .when(interviewQuestionService)
+                    .deleteById(1L, 1L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(
+                            delete("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1L, 1L)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("interview-question/deleteById/exception-unauthorized"));
         }
     }
 }

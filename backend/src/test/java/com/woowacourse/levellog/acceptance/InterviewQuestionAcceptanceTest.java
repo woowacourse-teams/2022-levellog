@@ -2,6 +2,7 @@ package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -137,7 +138,6 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         final String interviewQuestionId = requestSaveInterviewQuestion(pepperLevellogId, romaToken,
                 "Spring을 사용하는 이유?").getInterviewQuestionId();
-        System.out.println("interviewQuestionId = " + interviewQuestionId);
         final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
 
         // when
@@ -155,6 +155,52 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.NO_CONTENT.value());
         requestFindAllInterviewQuestion(pepperLevellogId, romaToken)
                 .body("interviewQuestions.interviewQuestion", contains("수정된 인터뷰 질문"));
+    }
+
+    /*
+     * Scenario: 피드백 삭제
+     *   given: 피드백이 등록되어 있다.
+     *   given: 등록된 피드백을 조회한다.
+     *   when: 조회한 피드백을 삭제한다.
+     *   then: 204 No Content 상태 코드를 응답받는다.
+     */
+    @Test
+    @DisplayName("인터뷰 질문 삭제")
+    void deleteById() {
+        // given
+        final RestAssuredResponse hostLoginResponse = login("페퍼");
+        final Long pepperId = hostLoginResponse.getMemberId();
+        final String pepperToken = hostLoginResponse.getToken();
+
+        final RestAssuredResponse romaLoginResponse = login("로마");
+        final Long romaId = romaLoginResponse.getMemberId();
+        final String romaToken = romaLoginResponse.getToken();
+
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("롬펲 인터뷰", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(pepperId, romaId)));
+        final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
+
+        final LevellogDto levellogRequest = LevellogDto.from("페퍼의 레벨로그");
+        final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
+                levellogRequest).getLevellogId();
+
+        final String interviewQuestionId = requestSaveInterviewQuestion(pepperLevellogId, romaToken,
+                "Spring을 사용하는 이유?").getInterviewQuestionId();
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("interview-question/delete"))
+                .when()
+                .delete("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}",
+                        pepperLevellogId, interviewQuestionId)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.NO_CONTENT.value());
+        requestFindAllInterviewQuestion(pepperLevellogId, romaToken)
+                .body("interviewQuestions.id", not(contains(interviewQuestionId)));
     }
 
     private RestAssuredResponse requestSaveInterviewQuestion(final String levellogId,

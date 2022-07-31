@@ -8,6 +8,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,14 @@ public class InterviewQuestionController {
                                        @PathVariable final Long interviewQuestionId,
                                        @Authentic final Long memberId) {
         interviewQuestionService.update(request, interviewQuestionId, memberId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{interviewQuestionId}")
+    public ResponseEntity<Void> deleteById(@PathVariable final Long levellogId,
+                                       @PathVariable final Long interviewQuestionId,
+                                       @Authentic final Long memberId) {
+        interviewQuestionService.deleteById(interviewQuestionId, memberId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -81,7 +81,7 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto request = new TeamCreateDto(title, "트랙룸", LocalDateTime.now().plusDays(3),
+            final TeamCreateDto request = new TeamCreateDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
             // when
@@ -103,8 +103,8 @@ class TeamControllerTest extends ControllerTest {
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
             final String title = "네오".repeat(128);
-            final TeamCreateDto request = new TeamCreateDto(
-                    title, "트랙룸", LocalDateTime.now().plusDays(3), participantIds);
+            final TeamCreateDto request = new TeamCreateDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    participantIds);
 
             doThrow(new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]"))
                     .when(teamService)
@@ -130,7 +130,7 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto request = new TeamCreateDto("네오 인터뷰", place, LocalDateTime.now().plusDays(3),
+            final TeamCreateDto request = new TeamCreateDto("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
             // when
@@ -152,8 +152,8 @@ class TeamControllerTest extends ControllerTest {
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
             final String place = "선릉".repeat(128);
-            final TeamCreateDto request = new TeamCreateDto(
-                    "네오 인터뷰", place, LocalDateTime.now().plusDays(3), participantIds);
+            final TeamCreateDto request = new TeamCreateDto("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
+                    participantIds);
 
             doThrow(new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]"))
                     .when(teamService)
@@ -177,7 +177,7 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", null, participantIds);
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", 1, null, participantIds);
 
             // when
             final ResultActions perform = requestPost("/api/teams", TOKEN, request);
@@ -198,8 +198,7 @@ class TeamControllerTest extends ControllerTest {
 
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
-            final TeamCreateDto request = new TeamCreateDto("네오 인터뷰", "선릉 트랙룸", startAt,
-                    participantIds);
+            final TeamCreateDto request = new TeamCreateDto("네오 인터뷰", "선릉 트랙룸", 1, startAt, participantIds);
 
             doThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
                     .when(teamService)
@@ -221,8 +220,7 @@ class TeamControllerTest extends ControllerTest {
         void participantsNull_Exception() throws Exception {
             // given
             mockLogin();
-
-            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3), null);
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
 
             // when
             final ResultActions perform = requestPost("/api/teams", TOKEN, request);

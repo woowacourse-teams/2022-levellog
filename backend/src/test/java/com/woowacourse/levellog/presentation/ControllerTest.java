@@ -13,6 +13,8 @@ import com.woowacourse.levellog.authentication.presentation.OAuthController;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.presentation.FeedbackController;
+import com.woowacourse.levellog.interview_question.application.InterviewQuestionService;
+import com.woowacourse.levellog.interview_question.presentation.InterviewQuestionController;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.presentation.LevellogController;
 import com.woowacourse.levellog.member.application.MemberService;
@@ -35,7 +37,8 @@ import org.springframework.web.context.WebApplicationContext;
         LevellogController.class,
         TeamController.class,
         OAuthController.class,
-        MyInfoController.class
+        MyInfoController.class,
+        InterviewQuestionController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class ControllerTest {
@@ -48,6 +51,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected FeedbackService feedbackService;
+
+    @MockBean
+    protected InterviewQuestionService interviewQuestionService;
 
     @MockBean
     protected TeamService teamService;

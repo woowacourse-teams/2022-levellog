@@ -3,7 +3,7 @@ package com.woowacourse.levellog.interview_question.dto;
 import com.woowacourse.levellog.interview_question.domain.InterviewQuestion;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,12 +12,16 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InterviewQuestionDto {
 
-    @NotNull
+    @NotBlank
     private String content;
+
+    public static InterviewQuestionDto from(final String content) {
+        return new InterviewQuestionDto(content);
+    }
 
     public InterviewQuestion toInterviewQuestion(final Member fromMember, final Levellog levellog) {
         return InterviewQuestion.of(fromMember, levellog.getAuthor(), levellog, content);

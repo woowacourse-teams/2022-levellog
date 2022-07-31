@@ -38,7 +38,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Levellog levellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
             participantRepository.save(new Participant(team, pepper, true));
             participantRepository.save(new Participant(team, eve, false));
-            final InterviewQuestionDto request = new InterviewQuestionDto("스프링이란?");
+            final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
             // when
             final Long id = interviewQuestionService.save(request, levellog.getId(), eve.getId());
@@ -61,7 +61,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long levellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
             participantRepository.save(new Participant(team, pepper, true));
             participantRepository.save(new Participant(team, eve, false));
-            final InterviewQuestionDto request = new InterviewQuestionDto(invalidContent);
+            final InterviewQuestionDto request = InterviewQuestionDto.from(invalidContent);
             final Long fromMemberId = eve.getId();
 
             // when & then
@@ -79,7 +79,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img"));
             final Long levellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
             participantRepository.save(new Participant(team, pepper, true));
-            final InterviewQuestionDto request = new InterviewQuestionDto("스프링이란?");
+            final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
             final Long invalidMemberId = 1000L;
 
             // when & then
@@ -96,7 +96,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img"));
             participantRepository.save(new Participant(team, pepper, true));
-            final InterviewQuestionDto request = new InterviewQuestionDto("스프링이란?");
+            final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
             final Long memberId = pepper.getId();
             final Long invalidLevellogId = 1000L;
 
@@ -118,7 +118,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long levellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
             participantRepository.save(new Participant(team, pepper, true));
             participantRepository.save(new Participant(team, eve, false));
-            final InterviewQuestionDto request = new InterviewQuestionDto("스프링이란?");
+            final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, levellogId, otherTeamMemberId))

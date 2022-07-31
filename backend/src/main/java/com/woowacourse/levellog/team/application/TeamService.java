@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.team.application;
 
+import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
@@ -10,6 +11,7 @@ import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
+import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
@@ -17,6 +19,7 @@ import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +54,85 @@ public class TeamService {
 
     public TeamDto findById(final Long teamId) {
         return getTeamResponse(getTeam(teamId));
+    }
+
+    public TeamAndRoleDto findByTeamIdAndRequestUserIdWithRole(final Long teamId, final Long memberId) {
+        final Team team = getTeam(teamId);
+        final List<Participant> participants = participantRepository.findByTeam(team);
+        final boolean isParticipant = participants
+                .stream()
+                .map(Participant::getMember)
+                .map(BaseEntity::getId)
+                .anyMatch(it -> it.equals(memberId));
+
+        if (!isParticipant) {
+            return TeamAndRoleDto.from(team, getHostId(participants), Collections.emptyList(), Collections.emptyList(),
+                    getParticipantResponses(participants));
+        }
+
+        final List<Long> interviewers = getInterviewers(participants, memberId, team.getInterviewerNumber());
+        final List<Long> interviewees = getInterviewees(participants, memberId, team.getInterviewerNumber());
+
+        return TeamAndRoleDto.from(team, getHostId(participants), interviewers, interviewees,
+                getParticipantResponses(participants));
+    }
+
+    private List<Long> getInterviewers(final List<Participant> participants, final Long memberId,
+                                       final int interviewerNumber) {
+        int index = 0;
+        for (int i = 0; i < participants.size(); i++) {
+            final Long currentMemberId = participants.get(i)
+                    .getMember()
+                    .getId();
+            if (currentMemberId.equals(memberId)) {
+                index = i;
+                break;
+            }
+        }
+
+        final List<Long> interviewers = new ArrayList<>();
+        while (interviewers.size() < interviewerNumber) {
+            final Long currentMemberId = participants.get(index)
+                    .getMember()
+                    .getId();
+            if (!currentMemberId.equals(memberId)) {
+                interviewers.add(currentMemberId);
+            }
+            index++;
+            if (index == participants.size()) {
+                index = 0;
+            }
+        }
+        return interviewers;
+    }
+
+    private List<Long> getInterviewees(final List<Participant> participants, final Long memberId,
+                                       final int interviewerNumber) {
+        int index = 0;
+        for (int i = 0; i < participants.size(); i++) {
+            final Long currentMemberId = participants.get(i)
+                    .getMember()
+                    .getId();
+            if (currentMemberId.equals(memberId)) {
+                index = i;
+                break;
+            }
+        }
+
+        final List<Long> interviewees = new ArrayList<>();
+        while (interviewees.size() < interviewerNumber) {
+            final Long currentMemberId = participants.get(index)
+                    .getMember()
+                    .getId();
+            if (!currentMemberId.equals(memberId)) {
+                interviewees.add(currentMemberId);
+            }
+            index--;
+            if (index == -1) {
+                index = participants.size() - 1;
+            }
+        }
+        return interviewees;
     }
 
     @Transactional

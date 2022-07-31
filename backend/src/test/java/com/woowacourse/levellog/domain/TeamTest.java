@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -311,5 +312,19 @@ class TeamTest {
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("잘못된 시작 시간을 입력했습니다.");
         }
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"1,2,true", "1,1,false", "2,1,false", "2,2,false", "2,3,true"})
+    @DisplayName("isValidParticipantNumber 메서드는 인터뷰어 수를 참고해서 참가자 수가 유효한지 계산한다.")
+    void isValidParticipantNumber(final int interviewerNumber, final int participantNumber, final boolean expected) {
+        // given
+        final Team team = new Team("레벨로그팀", "우리집", LocalDateTime.now().plusDays(3), "profile.url", interviewerNumber);
+
+        // when
+        final boolean actual = team.isValidParticipantNumber(participantNumber);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
     }
 }

@@ -44,6 +44,7 @@ public class Team extends BaseEntity {
         this.place = place;
         this.startAt = startAt;
         this.profileUrl = profileUrl;
+        this.interviewerNumber = interviewerNumber;
     }
 
     private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
@@ -106,5 +107,9 @@ public class Team extends BaseEntity {
         this.title = title;
         this.place = place;
         this.startAt = startAt;
+    }
+
+    public boolean isValidParticipantNumber(final int participantNumber) {
+        return participantNumber > interviewerNumber;
     }
 }

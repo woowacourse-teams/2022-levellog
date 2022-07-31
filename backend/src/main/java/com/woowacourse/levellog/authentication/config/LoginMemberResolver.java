@@ -28,6 +28,9 @@ public class LoginMemberResolver implements HandlerMethodArgumentResolver {
                                 final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String token = AuthorizationExtractor.extract(request);
+        if (token == null) {
+            return -1L;
+        }
 
         return Long.parseLong(jwtTokenProvider.getPayload(token));
     }

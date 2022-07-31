@@ -68,7 +68,13 @@ operation::team/findAll[]
 [[find-success]]
 === 팀 상세 조회 성공
 
-operation::team/find[]
+==== 참가자로 참여하는 팀 상세 조회
+
+operation::team/find/my-team[]
+
+==== 참가자가 아닌 팀 상세 조회
+
+operation::team/find/not-my-team[]
 
 [[find-exception]]
 === 팀 상세 조회 예외
@@ -76,7 +82,7 @@ operation::team/find[]
 [[update-exception-title-null]]
 ==== 없는 팀을 상세 조회하는 경우
 
-operation::team/findbyid/exception/notfound[]
+operation::team/find-by-id/exception/notfound[]
 
 [[update]]
 == 팀 수정

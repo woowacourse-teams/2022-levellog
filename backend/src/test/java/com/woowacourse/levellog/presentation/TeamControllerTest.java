@@ -430,13 +430,16 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
         void teamNotFound_Exception() throws Exception {
             // given
+            mockLogin();
             doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .when(teamService)
-                    .findById(10000000L);
+                    .findByTeamIdAndRequestUserIdWithRole(10000000L, 4L);
 
             // when
             final ResultActions perform = mockMvc.perform(get("/api/teams/" + 10000000L)
-                            .contentType(MediaType.APPLICATION_JSON))
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .accept(MediaType.ALL))
                     .andDo(print());
 
             // then
@@ -444,7 +447,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("팀이 존재하지 않습니다.");
 
             // docs
-            perform.andDo(document("team/findbyid/exception/notfound"));
+            perform.andDo(document("team/find-by-id/exception/notfound"));
         }
     }
 

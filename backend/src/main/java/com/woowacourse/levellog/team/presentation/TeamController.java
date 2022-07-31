@@ -3,8 +3,8 @@ package com.woowacourse.levellog.team.presentation;
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.team.application.TeamService;
+import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
-import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import java.net.URI;
@@ -43,8 +43,8 @@ public class TeamController {
 
     @GetMapping("/{teamId}")
     @PublicAPI
-    public ResponseEntity<TeamDto> findById(@PathVariable final Long teamId) {
-        final TeamDto response = teamService.findById(teamId);
+    public ResponseEntity<TeamAndRoleDto> findById(@PathVariable final Long teamId, @Authentic final Long memberId) {
+        final TeamAndRoleDto response = teamService.findByTeamIdAndRequestUserIdWithRole(teamId, memberId);
         return ResponseEntity.ok(response);
     }
 

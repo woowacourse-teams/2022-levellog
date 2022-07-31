@@ -2,7 +2,9 @@ package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
@@ -98,25 +100,31 @@ class TeamAcceptanceTest extends AcceptanceTest {
     /*
      * Scenario: 레벨 인터뷰 팀 상세 조회하기
      *   given: 팀이 등록되어 있다.
-     *   when: 팀 상세 조회를 요청한다.
+     *   when: 참여한 팀 상세 조회를 요청한다.
      *   then: 200 Ok 상태 코드와 팀을 응답받는다.
      */
     @Test
-    @DisplayName("레벨 인터뷰 팀 상세 조회하기")
-    void findTeam() {
+    @DisplayName("나의 팀 상세 조회하기")
+    void findTeam_myTeam() {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
+        final RestAssuredResponse loginResponse3 = login("릭");
+        final RestAssuredResponse loginResponse4 = login("로마");
+
+        final ParticipantIdsDto participants = new ParticipantIdsDto(
+                List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId(), loginResponse4.getMemberId()));
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
+                participants);
 
         final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/find"))
+                .filter(document("team/find/my-team"))
                 .when()
                 .get("/api/teams/{id}", id)
                 .then().log().all();
@@ -126,7 +134,51 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .body("title", equalTo("잠실 제이슨조"),
                         "place", equalTo("트랙룸"),
                         "hostId", equalTo(loginResponse1.getMemberId().intValue()),
-                        "participants.nickname", contains("페퍼", "이브")
+                        "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
+                        "interviewers", contains(loginResponse2.getMemberId().intValue(), loginResponse3.getMemberId().intValue()),
+                        "interviewees", contains(loginResponse3.getMemberId().intValue(), loginResponse4.getMemberId().intValue())
+                );
+    }
+
+    /*
+     * Scenario: 레벨 인터뷰 팀 상세 조회하기
+     *   given: 팀이 등록되어 있다.
+     *   when: 로그인하지 않고 팀 상세 조회를 요청한다.
+     *   then: 200 Ok 상태 코드와 팀을 응답받는다.
+     */
+    @Test
+    @DisplayName("로그인하지 않고 팀 상세 조회하기")
+    void findTeam_notLogin() {
+        // given
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
+        final RestAssuredResponse loginResponse3 = login("릭");
+        final RestAssuredResponse loginResponse4 = login("로마");
+
+        final ParticipantIdsDto participants = new ParticipantIdsDto(
+                List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId(), loginResponse4.getMemberId()));
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
+                participants);
+
+        final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+                .getTeamId();
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find/not-my-team"))
+                .when()
+                .get("/api/teams/{id}", id)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("title", equalTo("잠실 제이슨조"),
+                        "place", equalTo("트랙룸"),
+                        "hostId", equalTo(loginResponse1.getMemberId().intValue()),
+                        "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
+                        "interviewers", is(empty()),
+                        "interviewees", empty()
                 );
     }
 

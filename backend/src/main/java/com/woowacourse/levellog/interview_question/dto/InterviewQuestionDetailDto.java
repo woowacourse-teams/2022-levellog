@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class InterviewQuestionDetailDto {
 
     private Long id;
-    private String content;
+    private String interviewQuestion;
 
     public static InterviewQuestionDetailDto of(final InterviewQuestion interviewQuestion) {
         return new InterviewQuestionDetailDto(interviewQuestion.getId(), interviewQuestion.getContent());

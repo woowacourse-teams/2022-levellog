@@ -139,12 +139,13 @@ class InterviewQuestionServiceTest extends ServiceTest {
             saveInterviewQuestion("스프링 빈이란?", pepperLevellog, eve);
 
             // when
-            final InterviewQuestionsDto response = interviewQuestionService.findAll(pepperLevellog.getId(), eve.getId());
+            final InterviewQuestionsDto response = interviewQuestionService.findAll(pepperLevellog.getId(),
+                    eve.getId());
 
             // then
             final List<String> actualInterviewQuestionContents = response.getInterviewQuestions()
                     .stream()
-                    .map(InterviewQuestionDetailDto::getContent)
+                    .map(InterviewQuestionDetailDto::getInterviewQuestion)
                     .collect(Collectors.toList());
 
             assertAll(
@@ -168,9 +169,26 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     .isInstanceOf(LevellogNotFoundException.class)
                     .hasMessageContainingAll("존재하지 않는 레벨로그", String.valueOf(invalidLevellogId));
         }
+
+        @Test
+        @DisplayName("인터뷰 질문 작성자가 존재하지 않는 경우 예외를 던진다.")
+        void findAll_memberNotFound_exception() {
+            // given
+            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img"));
+            participantRepository.save(new Participant(team, pepper, true));
+            final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
+            final Long invalidMemberId = 1000L;
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.findAll(pepperLevellogId, invalidMemberId))
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessageContainingAll("존재하지 않는 멤버", String.valueOf(invalidMemberId));
+        }
     }
 
-    private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
+        private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img"));
         participantRepository.save(new Participant(team, participant1, true));

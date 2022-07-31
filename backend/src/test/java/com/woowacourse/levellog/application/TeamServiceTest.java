@@ -111,42 +111,6 @@ class TeamServiceTest extends ServiceTest {
         }
     }
 
-    // TODO: 2022/07/31 findByIdWithRole 메서드 테스트로 교체
-    @Nested
-    @DisplayName("findById 메서드는")
-    class findById {
-
-        @Test
-        @DisplayName("id에 해당하는 팀을 조회한다.")
-        void findById() {
-            //given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1);
-
-            saveAllParticipant(team, member1, member2);
-
-            //when
-            final TeamDto response = teamService.findById(team.getId());
-
-            //then
-            assertAll(
-                    () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
-                    () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
-                    () -> assertThat(response.getParticipants()).hasSize(2)
-            );
-        }
-
-        @Test
-        @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
-        void teamNotFound_Exception() {
-            // when & then
-            assertThatThrownBy(() -> teamService.findById(1000L))
-                    .isInstanceOf(TeamNotFoundException.class)
-                    .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
-        }
-    }
-
     @Nested
     @DisplayName("findByIdWithRole 메서드는")
     class findByIdWithRole {
@@ -155,7 +119,7 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
         void teamNotFound_Exception() {
             // when & then
-            assertThatThrownBy(() -> teamService.findByTeamIdAndRequestUserIdWithRole(1000L, 1L))
+            assertThatThrownBy(() -> teamService.findByTeamIdAndMemberId(1000L, 1L))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }
@@ -178,9 +142,9 @@ class TeamServiceTest extends ServiceTest {
                 saveAllParticipant(team, rick, pepper, roma, alien, eve);
 
                 //when
-                final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndRequestUserIdWithRole(team.getId(),
+                final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndMemberId(team.getId(),
                         pepper.getId());
-                final TeamAndRoleDto responseOfEve = teamService.findByTeamIdAndRequestUserIdWithRole(team.getId(),
+                final TeamAndRoleDto responseOfEve = teamService.findByTeamIdAndMemberId(team.getId(),
                         eve.getId());
 
                 //then
@@ -210,7 +174,7 @@ class TeamServiceTest extends ServiceTest {
                 saveAllParticipant(team, rick, pepper, roma);
 
                 //when
-                final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndRequestUserIdWithRole(team.getId(),
+                final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndMemberId(team.getId(),
                         pepper.getId());
 
                 //then
@@ -242,7 +206,7 @@ class TeamServiceTest extends ServiceTest {
                 saveAllParticipant(team, member1, member2, member3);
 
                 //when
-                final TeamAndRoleDto response = teamService.findByTeamIdAndRequestUserIdWithRole(team.getId(),
+                final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(),
                         member4.getId());
 
                 //then

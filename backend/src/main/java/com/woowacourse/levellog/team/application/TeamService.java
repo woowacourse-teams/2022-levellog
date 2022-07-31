@@ -51,11 +51,7 @@ public class TeamService {
         return new TeamsDto(getTeamResponses(teamRepository.findAll()));
     }
 
-    public TeamDto findById(final Long teamId) {
-        return getTeamResponse(getTeam(teamId));
-    }
-
-    public TeamAndRoleDto findByTeamIdAndRequestUserIdWithRole(final Long teamId, final Long memberId) {
+    public TeamAndRoleDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
 

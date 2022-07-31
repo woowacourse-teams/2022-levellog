@@ -433,7 +433,7 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
             doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .when(teamService)
-                    .findByTeamIdAndRequestUserIdWithRole(10000000L, 4L);
+                    .findByTeamIdAndMemberId(10000000L, 4L);
 
             // when
             final ResultActions perform = mockMvc.perform(get("/api/teams/" + 10000000L)

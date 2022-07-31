@@ -44,7 +44,7 @@ public class TeamController {
     @GetMapping("/{teamId}")
     @PublicAPI
     public ResponseEntity<TeamAndRoleDto> findById(@PathVariable final Long teamId, @Authentic final Long memberId) {
-        final TeamAndRoleDto response = teamService.findByTeamIdAndRequestUserIdWithRole(teamId, memberId);
+        final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(teamId, memberId);
         return ResponseEntity.ok(response);
     }
 

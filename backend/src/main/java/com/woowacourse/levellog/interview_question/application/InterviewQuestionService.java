@@ -3,6 +3,7 @@ package com.woowacourse.levellog.interview_question.application;
 import com.woowacourse.levellog.interview_question.domain.InterviewQuestion;
 import com.woowacourse.levellog.interview_question.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interview_question.dto.InterviewQuestionsDto;
 import com.woowacourse.levellog.interview_question.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -12,6 +13,7 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,15 @@ public class InterviewQuestionService {
 
         return interviewQuestionRepository.save(interviewQuestion)
                 .getId();
+    }
+
+    public InterviewQuestionsDto findAll(final Long levellogId, final Long fromMemberId) {
+        final Levellog levellog = getLevellog(levellogId);
+        final Member fromMember = getMember(fromMemberId);
+        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndFrom(
+                levellog, fromMember);
+
+        return InterviewQuestionsDto.from(interviewQuestions);
     }
 
     private Levellog getLevellog(final Long levellogId) {

@@ -1,11 +1,11 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
@@ -71,8 +71,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 new ParticipantIdsDto(
                         List.of(loginResponse1.getMemberId(), loginResponse3.getMemberId())));
 
-        RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto1);
-        RestAssuredTemplate.post("/api/teams", loginResponse2.getToken(), teamCreateDto2);
+        post("/api/teams", loginResponse1.getToken(), teamCreateDto1);
+        post("/api/teams", loginResponse2.getToken(), teamCreateDto2);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -106,7 +106,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
 
-        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+        final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
 
         // when
@@ -140,7 +140,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse loginResponse2 = login("이브");
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+        final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
         final TeamUpdateDto request = new TeamUpdateDto("선릉 브리조", "수성방", LocalDateTime.now().plusDays(3));
 
@@ -172,7 +172,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse loginResponse2 = login("이브");
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final String id = RestAssuredTemplate.post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+        final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -185,5 +185,14 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private RestAssuredResponse createTeam(final String token, final String title, final int interviewerNumber,
+                                           final Long... participantIds) {
+        final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(participantIds));
+        final TeamCreateDto request = new TeamCreateDto(title, title + " place", interviewerNumber, LocalDateTime.now().plusDays(3),
+                participants);
+
+        return post("/api/teams", token, request);
     }
 }

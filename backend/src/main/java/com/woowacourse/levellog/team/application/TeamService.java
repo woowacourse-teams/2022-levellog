@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.team.application;
 
-import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
@@ -8,6 +7,7 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
+import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
@@ -58,56 +58,18 @@ public class TeamService {
 
     public TeamAndRoleDto findByTeamIdAndRequestUserIdWithRole(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
-        final List<Participant> participants = participantRepository.findByTeam(team);
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
 
-        if (!isParticipant(memberId, participants)) {
-            return TeamAndRoleDto.from(team, getHostId(participants), Collections.emptyList(), Collections.emptyList(),
-                    getParticipantResponses(participants));
+        if (!participants.contains(memberId)) {
+            return TeamAndRoleDto.from(team, participants.toHostId(), Collections.emptyList(), Collections.emptyList(),
+                    getParticipantResponses(participants.getValues()));
         }
 
-        final List<Long> interviewers = getInterviewers(participants, memberId, team.getInterviewerNumber());
-        final List<Long> interviewees = getInterviewees(participants, memberId, team.getInterviewerNumber());
+        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
+        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
-        return TeamAndRoleDto.from(team, getHostId(participants), interviewers, interviewees,
-                getParticipantResponses(participants));
-    }
-
-    private boolean isParticipant(final Long memberId, final List<Participant> participants) {
-        return participants
-                .stream()
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
-                .anyMatch(it -> it.equals(memberId));
-    }
-
-    private List<Long> getInterviewers(final List<Participant> participants, final Long memberId,
-                                       final int interviewerNumber) {
-        final List<Long> participantIds = toParticipantIds(participants);
-        final int from = participantIds.indexOf(memberId) + 1;
-
-        final List<Long> linear = new ArrayList<>(participantIds);
-        linear.addAll(participantIds);
-
-        return linear.subList(from, from + interviewerNumber);
-    }
-
-    private List<Long> getInterviewees(final List<Participant> participants, final Long memberId,
-                                       final int interviewerNumber) {
-        final List<Long> participantIds = toParticipantIds(participants);
-        final int to = participantIds.indexOf(memberId) + participants.size();
-
-        final List<Long> linear = new ArrayList<>(participantIds);
-        linear.addAll(participantIds);
-
-        return linear.subList(to - interviewerNumber, to);
-    }
-
-    private List<Long> toParticipantIds(final List<Participant> participants) {
-        return participants
-                .stream()
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
-                .collect(Collectors.toList());
+        return TeamAndRoleDto.from(team, participants.toHostId(), interviewers, interviewees,
+                getParticipantResponses(participants.getValues()));
     }
 
     @Transactional

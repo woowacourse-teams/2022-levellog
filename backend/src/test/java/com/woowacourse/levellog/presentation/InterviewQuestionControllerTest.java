@@ -47,7 +47,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("content must not be blank"));
+                    .andExpect(jsonPath("message").value("interviewQuestion must not be blank"));
 
             // docs
             perform.andDo(document("interview-question/save/exception-contents-blank"));

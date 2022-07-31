@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.presentation;
 
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -8,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
@@ -32,6 +34,12 @@ import org.springframework.test.web.servlet.ResultActions;
 class TeamControllerTest extends ControllerTest {
 
     private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+
+    private long getIdInLocation(final ResultActions perform) {
+        return Long.parseLong(
+                Objects.requireNonNull(perform.andReturn().getResponse().getHeader(HttpHeaders.LOCATION))
+                        .split("/api/teams/")[1]);
+    }
 
     @Nested
     @DisplayName("save 메서드는")
@@ -240,6 +248,33 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/create/exception/participants/null"));
+        }
+
+        @Test
+        @DisplayName("인터뷰어가 1명 미만이면 예외를 던진다.")
+        void notPositiveInterviewerNumber_exceptionThrown() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 4L));
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
+                    participants);
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value(startsWith("interviewerNumber")));
+
+            // docs
+            perform.andDo(document("team/create/exception/interviewerNumber/not-positive"));
         }
     }
 
@@ -561,11 +596,5 @@ class TeamControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("team/delete/exception/notfound"));
         }
-    }
-
-    private long getIdInLocation(final ResultActions perform) {
-        return Long.parseLong(
-                Objects.requireNonNull(perform.andReturn().getResponse().getHeader(HttpHeaders.LOCATION))
-                        .split("/api/teams/")[1]);
     }
 }

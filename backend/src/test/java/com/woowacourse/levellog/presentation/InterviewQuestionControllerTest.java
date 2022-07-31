@@ -289,7 +289,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("인터뷰 질문이 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/update/exception-interviewQuestion"));
+            perform.andDo(document("interview-question/update/exception-interview-question"));
         }
 
         @Test
@@ -350,7 +350,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("인터뷰 질문이 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/deleteById/exception-interviewQuestion"));
+            perform.andDo(document("interview-question/delete/exception-interview-question"));
         }
 
         @Test
@@ -374,7 +374,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("권한이 없습니다."));
 
             // docs
-            perform.andDo(document("interview-question/deleteById/exception-unauthorized"));
+            perform.andDo(document("interview-question/delete/exception-unauthorized"));
         }
     }
 }

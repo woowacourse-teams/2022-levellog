@@ -59,13 +59,8 @@ public class TeamService {
     public TeamAndRoleDto findByTeamIdAndRequestUserIdWithRole(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         final List<Participant> participants = participantRepository.findByTeam(team);
-        final boolean isParticipant = participants
-                .stream()
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
-                .anyMatch(it -> it.equals(memberId));
 
-        if (!isParticipant) {
+        if (!isParticipant(memberId, participants)) {
             return TeamAndRoleDto.from(team, getHostId(participants), Collections.emptyList(), Collections.emptyList(),
                     getParticipantResponses(participants));
         }
@@ -77,13 +72,17 @@ public class TeamService {
                 getParticipantResponses(participants));
     }
 
-    private List<Long> getInterviewers(final List<Participant> participants, final Long memberId,
-                                       final int interviewerNumber) {
-        final List<Long> participantIds = participants
+    private boolean isParticipant(final Long memberId, final List<Participant> participants) {
+        return participants
                 .stream()
                 .map(Participant::getMember)
                 .map(BaseEntity::getId)
-                .collect(Collectors.toList());
+                .anyMatch(it -> it.equals(memberId));
+    }
+
+    private List<Long> getInterviewers(final List<Participant> participants, final Long memberId,
+                                       final int interviewerNumber) {
+        final List<Long> participantIds = toParticipantIds(participants);
         final int from = participantIds.indexOf(memberId) + 1;
 
         final List<Long> linear = new ArrayList<>(participantIds);
@@ -94,17 +93,21 @@ public class TeamService {
 
     private List<Long> getInterviewees(final List<Participant> participants, final Long memberId,
                                        final int interviewerNumber) {
-        final List<Long> participantIds = participants
-                .stream()
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
-                .collect(Collectors.toList());
+        final List<Long> participantIds = toParticipantIds(participants);
         final int to = participantIds.indexOf(memberId) + participants.size();
 
         final List<Long> linear = new ArrayList<>(participantIds);
         linear.addAll(participantIds);
 
         return linear.subList(to - interviewerNumber, to);
+    }
+
+    private List<Long> toParticipantIds(final List<Participant> participants) {
+        return participants
+                .stream()
+                .map(Participant::getMember)
+                .map(BaseEntity::getId)
+                .collect(Collectors.toList());
     }
 
     @Transactional

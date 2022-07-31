@@ -61,6 +61,13 @@ class TeamControllerTest extends ControllerTest {
                 .andDo(print());
     }
 
+    private void mockCreateTeam() {
+        final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+        final TeamCreateDto createRequest = new TeamCreateDto("네오와 함께하는 레벨 인터뷰", "트랙룸", 1,
+                LocalDateTime.now().plusDays(3), participantIds);
+        given(teamService.save(createRequest, 4L)).willReturn(1L);
+    }
+
     @Nested
     @DisplayName("save 메서드는")
     class Save {
@@ -261,17 +268,12 @@ class TeamControllerTest extends ControllerTest {
         void titleNull_Exception(final String title) throws Exception {
             // given
             mockLogin();
-
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto createRequest = new TeamCreateDto("네오와 함께하는 레벨 인터뷰", "트랙룸",
-                    LocalDateTime.now().plusDays(3),
-                    participantIds);
-            given(teamService.save(createRequest, 4L)).willReturn(1L);
+            mockCreateTeam();
             final long id = 1;
             final TeamUpdateDto request = new TeamUpdateDto(title, "트랙룸", LocalDateTime.now().plusDays(3));
 
             // when
-            final ResultActions perform = requestPut("/api/teams" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -286,12 +288,7 @@ class TeamControllerTest extends ControllerTest {
         void titleInvalidLength_Exception() throws Exception {
             // given
             mockLogin();
-
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto createRequest = new TeamCreateDto("네오와 함께하는 레벨 인터뷰", "트랙룸",
-                    LocalDateTime.now().plusDays(3),
-                    participantIds);
-            given(teamService.save(createRequest, 4L)).willReturn(1L);
+            mockCreateTeam();
             final long id = 1;
             final String title = "네오".repeat(128);
             final TeamUpdateDto request = new TeamUpdateDto(title, "트랙룸", LocalDateTime.now().plusDays(3));
@@ -301,7 +298,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, id, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -318,17 +315,12 @@ class TeamControllerTest extends ControllerTest {
         void placeNull_Exception(final String place) throws Exception {
             // given
             mockLogin();
-
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto createRequest = new TeamCreateDto("네오와 함께하는 레벨 인터뷰", "트랙룸",
-                    LocalDateTime.now().plusDays(3),
-                    participantIds);
-            given(teamService.save(createRequest, 4L)).willReturn(1L);
+            mockCreateTeam();
             final long id = 1;
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", place, LocalDateTime.now().plusDays(3));
 
             // when
-            final ResultActions perform = requestPut("/api/teams" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -343,12 +335,7 @@ class TeamControllerTest extends ControllerTest {
         void placeInvalidLength_Exception() throws Exception {
             // given
             mockLogin();
-
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto createRequest = new TeamCreateDto("네오와 함께하는 레벨 인터뷰", "트랙룸",
-                    LocalDateTime.now().plusDays(3),
-                    participantIds);
-            given(teamService.save(createRequest, 4L)).willReturn(1L);
+            mockCreateTeam();
             final long id = 1;
             final String place = "거실".repeat(128);
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", place,
@@ -359,7 +346,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, id, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -374,17 +361,12 @@ class TeamControllerTest extends ControllerTest {
         void startAtNull_Exception() throws Exception {
             // given
             mockLogin();
-
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto createRequest = new TeamCreateDto("네오와 함께하는 레벨 인터뷰", "트랙룸",
-                    LocalDateTime.now().plusDays(3),
-                    participantIds);
-            given(teamService.save(createRequest, 4L)).willReturn(1L);
+            mockCreateTeam();
             final long id = 1;
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", "트랙룸", null);
 
             // when
-            final ResultActions perform = requestPut("/api/teams" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -399,12 +381,7 @@ class TeamControllerTest extends ControllerTest {
         void startAtPast_Exception() throws Exception {
             // given
             mockLogin();
-
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto createRequest = new TeamCreateDto("네오와 함께하는 레벨 인터뷰", "트랙룸",
-                    LocalDateTime.now().plusDays(3),
-                    participantIds);
-            given(teamService.save(createRequest, 4L)).willReturn(1L);
+            mockCreateTeam();
             final long id = 1;
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", "트랙룸", startAt);
@@ -413,7 +390,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, id, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -428,12 +405,7 @@ class TeamControllerTest extends ControllerTest {
         void teamNotFound_Exception() throws Exception {
             // given
             mockLogin();
-
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamCreateDto createRequest = new TeamCreateDto("네오와 함께하는 레벨 인터뷰", "트랙룸",
-                    LocalDateTime.now().plusDays(3),
-                    participantIds);
-            given(teamService.save(createRequest, 4L)).willReturn(1L);
+            mockCreateTeam();
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(10));
 
             doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
@@ -441,7 +413,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 10000000L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams" + 10000000L, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + 10000000L, TOKEN, request);
 
             // then
             perform.andExpect(status().isNotFound())

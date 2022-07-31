@@ -16,6 +16,7 @@ public class Team extends BaseEntity {
 
     private static final int DEFAULT_STRING_SIZE = 255;
     private static final int PROFILE_URL_SIZE = 2048;
+    private static final int MIN_INTERVIEWER_NUMBER = 1;
 
     @Column(nullable = false)
     private String title;
@@ -30,22 +31,28 @@ public class Team extends BaseEntity {
     private String profileUrl;
 
     @Column(nullable = false)
-    private int interviewerNumber = 0;
+    private int interviewerNumber;
 
     @Column(nullable = false)
     private boolean isClosed = false;
 
-    // FIXME : 생성자 + 검증 로직 수정
-    public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl) {
-        validateTitle(title);
-        validatePlace(place);
-        validateStartAt(startAt);
-        validateProfileUrl(profileUrl);
+    public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
+                final int interviewerNumber) {
+        validate(title, place, startAt, profileUrl, interviewerNumber);
 
         this.title = title;
         this.place = place;
         this.startAt = startAt;
         this.profileUrl = profileUrl;
+    }
+
+    private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
+                           final int interviewerNumber) {
+        validateTitle(title);
+        validatePlace(place);
+        validateStartAt(startAt);
+        validateProfileUrl(profileUrl);
+        validateInterviewerNumber(interviewerNumber);
     }
 
     private void validateTitle(final String title) {
@@ -81,6 +88,13 @@ public class Team extends BaseEntity {
         }
         if (profileUrl.length() > PROFILE_URL_SIZE) {
             throw new InvalidFieldException("잘못된 팀 프로필 사진을 입력했습니다. 입력한 프로필 URL : [" + profileUrl + "]");
+        }
+    }
+
+    private void validateInterviewerNumber(final int interviewerNumber) {
+        if (interviewerNumber < MIN_INTERVIEWER_NUMBER) {
+            throw new InvalidFieldException(
+                    "팀 생성시 인터뷰어 수는 " + MIN_INTERVIEWER_NUMBER + "명 이상이어야 합니다. 입력한 인터뷰어 수 : [" + interviewerNumber + "]");
         }
     }
 

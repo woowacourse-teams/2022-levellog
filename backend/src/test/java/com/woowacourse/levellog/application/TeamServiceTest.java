@@ -249,6 +249,6 @@ class TeamServiceTest extends ServiceTest {
     }
 
     private Team saveAndGetTeam(final String title) {
-        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png"));
+        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png", 1));
     }
 }

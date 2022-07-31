@@ -43,6 +43,6 @@ public class TeamCreateDto {
     }
 
     public Team toEntity(final String profileUrl) {
-        return new Team(title, place, startAt, profileUrl);
+        return new Team(title, place, startAt, profileUrl, 1);
     }
 }

@@ -4,6 +4,7 @@ import com.woowacourse.levellog.interview_question.domain.InterviewQuestion;
 import com.woowacourse.levellog.interview_question.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interview_question.dto.InterviewQuestionsDto;
+import com.woowacourse.levellog.interview_question.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.interview_question.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -48,6 +49,19 @@ public class InterviewQuestionService {
                 levellog, fromMember);
 
         return InterviewQuestionsDto.from(interviewQuestions);
+    }
+
+    @Transactional
+    public void update(final InterviewQuestionDto request, final Long interviewQuestionId, final Long fromMemberId) {
+        final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
+        final Member fromMember = getMember(fromMemberId);
+
+        interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
+    }
+
+    private InterviewQuestion getInterviewQuestion(final Long interviewQuestionId) {
+        return interviewQuestionRepository.findById(interviewQuestionId)
+                .orElseThrow(() -> new InterviewQuestionNotFoundException("존재하지 않는 인터뷰 질문 [interviewQuestionId : " + interviewQuestionId + "]"));
     }
 
     private Levellog getLevellog(final Long levellogId) {

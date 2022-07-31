@@ -191,10 +191,10 @@ class TeamServiceTest extends ServiceTest {
 
                         () -> assertThat(responseOfPepper.getInterviewers()).containsExactly(roma.getId(),
                                 alien.getId()),
-                        () -> assertThat(responseOfPepper.getInterviewees()).containsExactly(rick.getId(), eve.getId()),
+                        () -> assertThat(responseOfPepper.getInterviewees()).containsExactly(eve.getId(), rick.getId()),
 
                         () -> assertThat(responseOfEve.getInterviewers()).containsExactly(rick.getId(), pepper.getId()),
-                        () -> assertThat(responseOfEve.getInterviewees()).containsExactly(alien.getId(), roma.getId())
+                        () -> assertThat(responseOfEve.getInterviewees()).containsExactly(roma.getId(), alien.getId())
                 );
             }
 
@@ -220,7 +220,7 @@ class TeamServiceTest extends ServiceTest {
                         () -> assertThat(responseOfPepper.getParticipants()).hasSize(3),
 
                         () -> assertThat(responseOfPepper.getInterviewers()).containsExactly(roma.getId(), rick.getId()),
-                        () -> assertThat(responseOfPepper.getInterviewees()).containsExactly(rick.getId(), roma.getId())
+                        () -> assertThat(responseOfPepper.getInterviewees()).containsExactly(roma.getId(), rick.getId())
                 );
             }
         }

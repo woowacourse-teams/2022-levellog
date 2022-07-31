@@ -5,12 +5,15 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interview_question.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -196,6 +199,122 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("interview-question/findAll/exception-member"));
+        }
+    }
+
+    @Nested
+    @DisplayName("update 메서드는")
+    class UpdateTest {
+
+        @Test
+        @DisplayName("인터뷰 질문이 공백인 경우 예외를 던진다.")
+        void update_contentBlank_exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            // when
+            final ResultActions perform = mockMvc.perform(put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1L, 1L)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("interviewQuestion must not be blank"));
+
+            // docs
+            perform.andDo(document("interview-question/update/exception-contents-blank"));
+        }
+
+        @Test
+        @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
+        void update_interviewQuestionInvalidLength_Exception() throws Exception {
+            // given
+            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?".repeat(255));
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            doThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
+                    .when(interviewQuestionService)
+                    .update(request, 1L, 1L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1L, 1L)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("인터뷰 질문은 255자 이하여야합니다."));
+
+            // docs
+            perform.andDo(document("interview-question/update/exception-contents-length"));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 인터뷰 질문을 수정하면 예외를 던진다.")
+        void update_interviewQuestionNotFound_exception() throws Exception {
+            // given
+            final Long invalidInterviewQuestionId = 1000L;
+            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            doThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
+                    .when(interviewQuestionService)
+                    .update(request, invalidInterviewQuestionId, 1L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(
+                            put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1, invalidInterviewQuestionId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isNotFound())
+                    .andExpect(jsonPath("message").value("인터뷰 질문이 존재하지 않습니다."));
+
+            // docs
+            perform.andDo(document("interview-question/update/exception-interviewQuestion"));
+        }
+
+        @Test
+        @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
+        void update_unauthorized_exception() throws Exception {
+            // given
+            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            doThrow(new UnauthorizedException("권한이 없습니다."))
+                    .when(interviewQuestionService)
+                    .update(request, 1L, 1L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(
+                            put("/api/levellogs/{levellogId}/interview-questions/{interviewQuestionId}", 1L, 1L)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("interview-question/update/exception-unauthorized"));
         }
     }
 }

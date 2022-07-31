@@ -104,6 +104,13 @@ class TeamServiceTest extends ServiceTest {
                 new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png", interviewerNumber));
     }
 
+    private void saveAllParticipant(final Team team, final Member host, final Member... participants) {
+        participantRepository.save(new Participant(team, host, true));
+        for (final Member participant : participants) {
+            participantRepository.save(new Participant(team, participant, false));
+        }
+    }
+
     // TODO: 2022/07/31 findByIdWithRole 메서드 테스트로 교체
     @Nested
     @DisplayName("findById 메서드는")
@@ -117,8 +124,7 @@ class TeamServiceTest extends ServiceTest {
             final Member member2 = saveAndGetMember("페퍼");
             final Team team = saveAndGetTeam("잠실 제이슨조", 1);
 
-            participantRepository.save(new Participant(team, member1, true));
-            participantRepository.save(new Participant(team, member2, false));
+            saveAllParticipant(team, member1, member2);
 
             //when
             final TeamDto response = teamService.findById(team.getId());
@@ -169,11 +175,7 @@ class TeamServiceTest extends ServiceTest {
                 final Member eve = saveAndGetMember("이브");
                 final Team team = saveAndGetTeam("잠실 제이슨조", 2);
 
-                participantRepository.save(new Participant(team, rick, true));
-                participantRepository.save(new Participant(team, pepper, false));
-                participantRepository.save(new Participant(team, roma, false));
-                participantRepository.save(new Participant(team, alien, false));
-                participantRepository.save(new Participant(team, eve, false));
+                saveAllParticipant(team, rick, pepper, roma, alien, eve);
 
                 //when
                 final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndRequestUserIdWithRole(team.getId(),
@@ -187,7 +189,8 @@ class TeamServiceTest extends ServiceTest {
                         () -> assertThat(responseOfPepper.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(responseOfPepper.getParticipants()).hasSize(5),
 
-                        () -> assertThat(responseOfPepper.getInterviewers()).containsExactly(roma.getId(), alien.getId()),
+                        () -> assertThat(responseOfPepper.getInterviewers()).containsExactly(roma.getId(),
+                                alien.getId()),
                         () -> assertThat(responseOfPepper.getInterviewees()).containsExactly(rick.getId(), eve.getId()),
 
                         () -> assertThat(responseOfEve.getInterviewers()).containsExactly(rick.getId(), pepper.getId()),
@@ -204,9 +207,7 @@ class TeamServiceTest extends ServiceTest {
                 final Member roma = saveAndGetMember("로마");
                 final Team team = saveAndGetTeam("잠실 제이슨조", 2);
 
-                participantRepository.save(new Participant(team, rick, true));
-                participantRepository.save(new Participant(team, pepper, false));
-                participantRepository.save(new Participant(team, roma, false));
+                saveAllParticipant(team, rick, pepper, roma);
 
                 //when
                 final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndRequestUserIdWithRole(team.getId(),
@@ -238,9 +239,7 @@ class TeamServiceTest extends ServiceTest {
                 final Member member4 = saveAndGetMember("알린");
                 final Team team = saveAndGetTeam("잠실 제이슨조", 2);
 
-                participantRepository.save(new Participant(team, member1, true));
-                participantRepository.save(new Participant(team, member2, false));
-                participantRepository.save(new Participant(team, member3, false));
+                saveAllParticipant(team, member1, member2, member3);
 
                 //when
                 final TeamAndRoleDto response = teamService.findByTeamIdAndRequestUserIdWithRole(team.getId(),
@@ -270,8 +269,7 @@ class TeamServiceTest extends ServiceTest {
             final Member member2 = saveAndGetMember("페퍼");
             final Team team = saveAndGetTeam("잠실 제이슨조", 1);
 
-            participantRepository.save(new Participant(team, member1, true));
-            participantRepository.save(new Participant(team, member2, false));
+            saveAllParticipant(team, member1, member2);
 
             final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3));
 
@@ -295,8 +293,7 @@ class TeamServiceTest extends ServiceTest {
             final Member member2 = saveAndGetMember("페퍼");
             final Team team = saveAndGetTeam("잠실 제이슨조", 1);
 
-            participantRepository.save(new Participant(team, member1, true));
-            participantRepository.save(new Participant(team, member2, false));
+            saveAllParticipant(team, member1, member2);
 
             final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3));
 
@@ -315,7 +312,7 @@ class TeamServiceTest extends ServiceTest {
             final TeamUpdateDto request = new TeamUpdateDto("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3));
             final Member member = saveAndGetMember("릭");
             final Team team = saveAndGetTeam("잠실 제이슨조", 1);
-            participantRepository.save(new Participant(team, member, true));
+            saveAllParticipant(team, member);
 
             //when & then
             assertThatThrownBy(() -> teamService.update(request, 1000L, member.getId()))
@@ -336,8 +333,7 @@ class TeamServiceTest extends ServiceTest {
             final Member member2 = saveAndGetMember("페퍼");
             final Team team = saveAndGetTeam("잠실 제이슨조", 1);
 
-            participantRepository.save(new Participant(team, member1, true));
-            participantRepository.save(new Participant(team, member2, false));
+            saveAllParticipant(team, member1, member2);
 
             // when
             teamService.deleteById(team.getId(), member1.getId());
@@ -354,8 +350,7 @@ class TeamServiceTest extends ServiceTest {
             final Member member2 = saveAndGetMember("페퍼");
             final Team team = saveAndGetTeam("잠실 제이슨조", 1);
 
-            participantRepository.save(new Participant(team, member1, true));
-            participantRepository.save(new Participant(team, member2, false));
+            saveAllParticipant(team, member1, member2);
 
             // when, then
             final Long memberId = member2.getId();
@@ -371,7 +366,7 @@ class TeamServiceTest extends ServiceTest {
             //given
             final Member member = saveAndGetMember("릭");
             final Team team = saveAndGetTeam("잠실 제이슨조", 1);
-            participantRepository.save(new Participant(team, member, true));
+            saveAllParticipant(team, member);
 
             //when & then
             assertThatThrownBy(() -> teamService.deleteById(1000L, member.getId()))

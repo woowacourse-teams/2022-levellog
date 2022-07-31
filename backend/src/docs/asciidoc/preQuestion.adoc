@@ -1,0 +1,25 @@
+= PreQuestion
+:toc: left
+:toclevels: 2
+:sectlinks:
+:source-highlighter: highlightjs
+
+[[home]]
+== home
+* link:index.html[목록으로 가기]
+
+[[create]]
+== 사전 질문 등록
+
+[[create-success]]
+=== 사전 질문 등록 성공
+
+operation::pre-question/create[]
+
+[[create-exception]]
+=== 사전 질문 등록 예외
+
+[[create-exception-prequestion-null]]
+==== 저장 시 preQuestion이 null 또는 공백인 경우
+
+operation::pre-question/create/exception/null-and-blank[]

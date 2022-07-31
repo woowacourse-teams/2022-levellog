@@ -17,6 +17,8 @@ import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.presentation.LevellogController;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.presentation.MyInfoController;
+import com.woowacourse.levellog.prequestion.application.PreQuestionService;
+import com.woowacourse.levellog.prequestion.presentation.PreQuestionController;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.presentation.TeamController;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +37,8 @@ import org.springframework.web.context.WebApplicationContext;
         LevellogController.class,
         TeamController.class,
         OAuthController.class,
-        MyInfoController.class
+        MyInfoController.class,
+        PreQuestionController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class ControllerTest {
@@ -51,6 +54,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected TeamService teamService;
+
+    @MockBean
+    protected PreQuestionService preQuestionService;
 
     @MockBean
     protected OAuthService oAuthService;

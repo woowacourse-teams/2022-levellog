@@ -107,7 +107,7 @@ class InterviewQuestionTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestion.updateContent("스프링 빈이란?", otherMember))
                     .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("인터뷰 질문을 수정할 권한이 없습니다.", String.valueOf(otherMember.getId()),
+                    .hasMessageContainingAll("인터뷰 질문에 대한 쓰기 권한이 없습니다.", String.valueOf(otherMember.getId()),
                             String.valueOf(from.getId())
                             , String.valueOf(levellog.getId()));
         }

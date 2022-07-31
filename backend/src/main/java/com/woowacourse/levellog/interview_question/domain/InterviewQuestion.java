@@ -59,11 +59,11 @@ public class InterviewQuestion extends BaseEntity {
         }
     }
 
-    private void validateAuthor(final Member member) {
+    public void validateAuthor(final Member member) {
         final boolean isNotAuthor = !from.equals(member);
         if (isNotAuthor) {
             throw new UnauthorizedException(
-                    "인터뷰 질문을 수정할 권한이 없습니다. 현재 memberId : " + member.getId() + " 인터뷰 질문 작성자 memberId  : " + from.getId()
+                    "인터뷰 질문에 대한 쓰기 권한이 없습니다. 현재 memberId : " + member.getId() + " 인터뷰 질문 작성자 memberId  : " + from.getId()
                             + " levellogId : " + levellog.getId());
         }
     }

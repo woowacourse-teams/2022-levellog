@@ -31,20 +31,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 @DisplayName("InterviewQuestionService 클래스의")
 class InterviewQuestionServiceTest extends ServiceTest {
 
-    private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
-
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img"));
-        participantRepository.save(new Participant(team, participant1, true));
-        participantRepository.save(new Participant(team, participant2, false));
-        return team;
-    }
-
-    private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member fromMember) {
-        final InterviewQuestionDto request = InterviewQuestionDto.from(content);
-        return interviewQuestionService.save(request, levellog.getId(), fromMember.getId());
-    }
-
     @Nested
     @DisplayName("save 메서드는")
     class SaveTest {
@@ -262,9 +248,77 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, otherMemberId))
                     .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("인터뷰 질문을 수정할 권한이 없습니다.", String.valueOf(otherMemberId),
-                            String.valueOf(eve.getId())
-                            , String.valueOf(pepperLevellog.getId()));
+                    .hasMessageContainingAll("인터뷰 질문에 대한 쓰기 권한이 없습니다.", String.valueOf(otherMemberId),
+                            String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
         }
+    }
+
+    @Nested
+    @DisplayName("deleteById 메서드는")
+    class DeleteByIdTest {
+
+        @Test
+        @DisplayName("인터뷰 질문을 삭제한다.")
+        void success() {
+            // given
+            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
+            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
+            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
+            final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
+
+            // when
+            interviewQuestionService.deleteById(interviewQuestionId, eve.getId());
+
+            // then
+            assertThat(interviewQuestionRepository.findById(interviewQuestionId))
+                    .isEmpty();
+        }
+
+        @Test
+        @DisplayName("인터뷰 질문이 존재하지 않는 경우 예외를 던진다.")
+        void update_interviewQuestionNotFound_exception() {
+            // given
+            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
+            final Long invalidInterviewQuestionId = 1000L;
+            final Long fromMemberId = eve.getId();
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.deleteById(invalidInterviewQuestionId, fromMemberId))
+                    .isInstanceOf(InterviewQuestionNotFoundException.class)
+                    .hasMessageContainingAll("존재하지 않는 인터뷰 질문", String.valueOf(invalidInterviewQuestionId));
+        }
+
+        @Test
+        @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
+        void deleteById_unauthorized_exception() {
+            // given
+            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
+            final Member eve = memberRepository.save(new Member("이브", 2222, "image.png"));
+            final Long otherMemberId = memberRepository.save(new Member("릭", 123123, "image.png")).getId();
+            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
+            final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, otherMemberId))
+                    .isInstanceOf(UnauthorizedException.class)
+                    .hasMessageContainingAll("인터뷰 질문에 대한 쓰기 권한이 없습니다.", String.valueOf(otherMemberId),
+                            String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
+        }
+    }
+
+    private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
+
+        final Team team = teamRepository.save(
+                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img"));
+        participantRepository.save(new Participant(team, participant1, true));
+        participantRepository.save(new Participant(team, participant2, false));
+        return team;
+    }
+
+    private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member fromMember) {
+        final InterviewQuestionDto request = InterviewQuestionDto.from(content);
+        return interviewQuestionService.save(request, levellog.getId(), fromMember.getId());
     }
 }

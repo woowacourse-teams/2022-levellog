@@ -59,6 +59,16 @@ public class InterviewQuestionService {
         interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
     }
 
+    @Transactional
+    public void deleteById(final Long interviewQuestionId, final Long fromMemberId) {
+        final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
+        final Member member = getMember(fromMemberId);
+
+        interviewQuestion.validateAuthor(member);
+
+        interviewQuestionRepository.delete(interviewQuestion);
+    }
+
     private InterviewQuestion getInterviewQuestion(final Long interviewQuestionId) {
         return interviewQuestionRepository.findById(interviewQuestionId)
                 .orElseThrow(() -> new InterviewQuestionNotFoundException("존재하지 않는 인터뷰 질문 [interviewQuestionId : " + interviewQuestionId + "]"));

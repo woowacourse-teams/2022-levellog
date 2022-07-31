@@ -19,7 +19,6 @@ import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -59,11 +58,6 @@ public class TeamService {
     public TeamAndRoleDto findByTeamIdAndRequestUserIdWithRole(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
-
-        if (!participants.contains(memberId)) {
-            return TeamAndRoleDto.from(team, participants.toHostId(), Collections.emptyList(), Collections.emptyList(),
-                    getParticipantResponses(participants.getValues()));
-        }
 
         final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());

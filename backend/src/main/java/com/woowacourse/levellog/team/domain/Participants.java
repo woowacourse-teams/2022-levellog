@@ -3,6 +3,7 @@ package com.woowacourse.levellog.team.domain;
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,10 @@ public class Participants {
     private final List<Participant> values;
 
     public List<Long> toInterviewerIds(final Long memberId, final int interviewerNumber) {
+        if (isNotContains(memberId)) {
+            return Collections.emptyList();
+        }
+
         final List<Long> participantIds = toParticipantIds();
         final int from = participantIds.indexOf(memberId) + 1;
 
@@ -25,6 +30,10 @@ public class Participants {
     }
 
     public List<Long> toIntervieweeIds(final Long memberId, final int interviewerNumber) {
+        if (isNotContains(memberId)) {
+            return Collections.emptyList();
+        }
+
         final List<Long> participantIds = toParticipantIds();
         final int to = participantIds.indexOf(memberId) + values.size();
 
@@ -42,12 +51,12 @@ public class Participants {
                 .collect(Collectors.toList());
     }
 
-    public boolean contains(final Long memberId) {
+    private boolean isNotContains(final Long memberId) {
         return values
                 .stream()
                 .map(Participant::getMember)
                 .map(BaseEntity::getId)
-                .anyMatch(it -> it.equals(memberId));
+                .noneMatch(it -> it.equals(memberId));
     }
 
     public Long toHostId() {

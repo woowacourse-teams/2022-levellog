@@ -53,8 +53,7 @@ public class PreQuestionService {
         final PreQuestion preQuestion = getPreQuestionByFromMember(preQuestionId, memberId);
         validateLevellog(preQuestion, levellogId);
 
-        preQuestionRepository.deleteById(
-                preQuestion.getId());
+        preQuestionRepository.deleteById(preQuestion.getId());
     }
 
     private PreQuestion getPreQuestion(final Long preQuestionId) {

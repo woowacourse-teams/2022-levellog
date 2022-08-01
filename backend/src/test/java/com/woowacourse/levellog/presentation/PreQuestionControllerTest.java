@@ -35,7 +35,7 @@ public class PreQuestionControllerTest extends ControllerTest {
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
-        @DisplayName("사전 질문으로 null이 들어오면 예외를 던진다.")
+        @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
         void preQuestionNull_Exception(final String preQuestion) throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
@@ -62,7 +62,6 @@ public class PreQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("pre-question/create/exception/null-and-blank"));
         }
-
     }
 
     @Nested
@@ -72,7 +71,7 @@ public class PreQuestionControllerTest extends ControllerTest {
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
-        @DisplayName("사전 질문으로 null이 들어오면 예외를 던진다.")
+        @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
         void preQuestionNull_Exception(final String preQuestion) throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
@@ -172,9 +171,6 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
-
             doThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .when(preQuestionService)
                     .findById(1L, 1L);
@@ -182,8 +178,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             // when
             final ResultActions perform = mockMvc.perform(get("/api/levellogs/1/pre-questions/1")
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
+                            .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 
             // then
@@ -196,14 +191,11 @@ public class PreQuestionControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("없는 사전 질문을 수정하면 예외를 던진다.")
+        @DisplayName("없는 사전 질문을 조회하면 예외를 던진다.")
         void preQuestionNotFound_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
-
-            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다.", "작성한 사전 질문이 존재하지 않습니다."))
                     .when(preQuestionService)
@@ -212,8 +204,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             // when
             final ResultActions perform = mockMvc.perform(get("/api/levellogs/1/pre-questions/1")
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
+                            .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 
             // then
@@ -237,9 +228,6 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
-
             doThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .when(preQuestionService)
                     .deleteById(1L, 1L, 4L);
@@ -247,8 +235,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             // when
             final ResultActions perform = mockMvc.perform(delete("/api/levellogs/1/pre-questions/1")
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
+                            .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 
             // then
@@ -261,7 +248,7 @@ public class PreQuestionControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("없는 사전 질문을 수정하면 예외를 던진다.")
+        @DisplayName("없는 사전 질문을 삭제하면 예외를 던진다.")
         void preQuestionNotFound_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");

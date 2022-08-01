@@ -36,7 +36,7 @@ operation::pre-question/find[]
 === 사전 질문 상세 조회 예외
 
 [[find-exception-wrong-levellog]]
-==== url의 레벨로그 id가 잘못된 경우
+==== url의 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
 
 operation::pre-question/findbyid/exception/wrong-levellog[]
 
@@ -62,7 +62,7 @@ operation::pre-question/update[]
 operation::pre-question/update/exception/null-and-blank[]
 
 [[update-exception-prequestion-wrong-levellog]]
-==== url의 레벨로그 id가 잘못된 경우
+==== url의 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
 
 operation::pre-question/update/exception/wrong-levellog[]
 

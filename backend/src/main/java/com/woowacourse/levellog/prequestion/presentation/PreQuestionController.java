@@ -25,10 +25,10 @@ public class PreQuestionController {
     private final PreQuestionService preQuestionService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid final PreQuestionDto createDto,
+    public ResponseEntity<Void> save(@RequestBody @Valid final PreQuestionDto request,
                                      @PathVariable final Long levellogId,
                                      @Authentic final Long memberId) {
-        final Long preQuestionId = preQuestionService.save(createDto, levellogId, memberId);
+        final Long preQuestionId = preQuestionService.save(request, levellogId, memberId);
         return ResponseEntity.created(
                 URI.create("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId)).build();
     }
@@ -42,17 +42,17 @@ public class PreQuestionController {
     }
 
     @PutMapping("/{preQuestionId}")
-    public ResponseEntity<Void> update(@PathVariable final Long preQuestionId,
-                                       @RequestBody @Valid final PreQuestionDto request,
+    public ResponseEntity<Void> update(@RequestBody @Valid final PreQuestionDto request,
                                        @PathVariable final Long levellogId,
+                                       @PathVariable final Long preQuestionId,
                                        @Authentic final Long memberId) {
         preQuestionService.update(request, preQuestionId, levellogId, memberId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{preQuestionId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long preQuestionId,
-                                       @PathVariable final Long levellogId,
+    public ResponseEntity<Void> delete(@PathVariable final Long levellogId,
+                                       @PathVariable final Long preQuestionId,
                                        @Authentic final Long memberId) {
         preQuestionService.deleteById(preQuestionId, levellogId, memberId);
         return ResponseEntity.noContent().build();

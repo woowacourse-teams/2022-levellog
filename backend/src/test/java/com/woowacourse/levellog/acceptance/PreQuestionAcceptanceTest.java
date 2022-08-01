@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -78,11 +79,10 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
                 levellogRequest).getLevellogId();
 
-        final String preQuestionId = RestAssured.given(specification).log().all()
+        final String preQuestionId = RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse2.getToken())
                 .body(new PreQuestionDto("이브가 쓴 사전 질문"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("pre-question/create"))
                 .when()
                 .post("/api/levellogs/" + levellogId + "/pre-questions")
                 .then().log().all()
@@ -104,6 +104,10 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
+        final String url = "/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId;
+        get(url, loginResponse2.getToken())
+                .getResponse()
+                .body("preQuestion", equalTo("이브가 수정한 사전 질문"));
     }
 
     /*
@@ -126,11 +130,10 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
                 levellogRequest).getLevellogId();
 
-        final String preQuestionId = RestAssured.given(specification).log().all()
+        final String preQuestionId = RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse2.getToken())
                 .body(new PreQuestionDto("이브가 쓴 사전 질문"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("pre-question/create"))
                 .when()
                 .post("/api/levellogs/" + levellogId + "/pre-questions")
                 .then().log().all()
@@ -148,7 +151,8 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
                 .then().log().all();
 
         // then
-        response.statusCode(HttpStatus.OK.value());
+        response.statusCode(HttpStatus.OK.value())
+                .body("preQuestion", equalTo("이브가 쓴 사전 질문"));
     }
 
     /*
@@ -171,11 +175,10 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
                 levellogRequest).getLevellogId();
 
-        final String preQuestionId = RestAssured.given(specification).log().all()
+        final String preQuestionId = RestAssured.given().log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse2.getToken())
                 .body(new PreQuestionDto("이브가 쓴 사전 질문"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("pre-question/create"))
                 .when()
                 .post("/api/levellogs/" + levellogId + "/pre-questions")
                 .then().log().all()

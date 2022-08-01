@@ -52,6 +52,8 @@ public class PreQuestion extends BaseEntity {
 
     public void update(final String preQuestion) {
         validateQuestion(preQuestion);
+
+        this.preQuestion = preQuestion;
     }
 
     public boolean isSameLevellog(final Levellog levellog) {

@@ -34,7 +34,7 @@ const InterviewTeam = ({
       </FlexBox>
       <FlexBox>
         {participants.map((participant: ParticipantType) => (
-          <Image key={participant.id} src={participant.profileUrl} sizes={'SMALL'} />
+          <Image key={participant.memberId} src={participant.profileUrl} sizes={'SMALL'} />
         ))}
       </FlexBox>
     </S.Container>

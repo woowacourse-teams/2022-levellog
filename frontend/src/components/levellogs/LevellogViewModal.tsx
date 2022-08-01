@@ -17,7 +17,7 @@ const LevellogViewModal = ({
   onClickDeleteLevellog,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
-  const { id, levellogId, nickname } = participant;
+  const { memberId, levellogId, nickname } = participant;
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
@@ -28,7 +28,7 @@ const LevellogViewModal = ({
     }
   };
 
-  if (id === loginUserId) {
+  if (memberId === loginUserId) {
     return (
       <ModalPortal>
         <S.Dimmer onClick={handleClickCloseLevellogModal}>

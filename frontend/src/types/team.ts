@@ -4,16 +4,16 @@ export interface TeamApiType {
 
 export interface InterviewTeamType {
   id: string;
-  teamImage: string;
-  hostId: string;
   title: string;
   place: string;
   startAt: string;
+  teamImage: string;
+  hostId: string;
   participants: ParticipantType[];
 }
 
 export interface ParticipantType {
-  id: string;
+  memberId: string;
   levellogId: string;
   nickname: string;
   profileUrl: string;

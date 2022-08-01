@@ -70,7 +70,7 @@ export const levellogHandlers = [
     levellogTeams.teams.find((team) => {
       if (team.id === teamId) {
         team.participants.find(
-          (participant) => participant.levellogId === levellogId && participant.id === 300,
+          (participant) => participant.levellogId === levellogId && participant.memberId === 300,
           // (participant.levellogId = null),
         );
       }

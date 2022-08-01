@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.prequestion.application;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -11,6 +12,10 @@ import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
+import com.woowacourse.levellog.team.domain.Participant;
+import com.woowacourse.levellog.team.domain.ParticipantRepository;
+import com.woowacourse.levellog.team.domain.Team;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +28,14 @@ public class PreQuestionService {
     private final PreQuestionRepository preQuestionRepository;
     private final LevellogRepository levellogRepository;
     private final MemberRepository memberRepository;
+    private final ParticipantRepository participantRepository;
 
     @Transactional
     public Long save(final PreQuestionDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getLevellog(levellogId);
         final Member from = getMember(memberId);
+
+        validateExistParticipantByMember(levellog.getTeam(), from);
 
         return preQuestionRepository.save(request.toEntity(levellog, from))
                 .getId();
@@ -41,9 +49,14 @@ public class PreQuestionService {
     }
 
     @Transactional
-    public void update(final PreQuestionDto request, final Long preQuestionId, final Long levellogId, final Long memberId) {
+    public void update(final PreQuestionDto request, final Long preQuestionId, final Long levellogId,
+                       final Long memberId) {
         final PreQuestion preQuestion = getPreQuestionByFromMember(preQuestionId, memberId);
-        validateLevellog(preQuestion, getLevellog(levellogId));
+        final Levellog levellog = getLevellog(levellogId);
+        final Member from = getMember(memberId);
+
+        validateLevellog(preQuestion, levellog);
+        validateExistPreQuestion(levellog, from);
 
         preQuestion.update(request.getPreQuestion());
     }
@@ -51,7 +64,11 @@ public class PreQuestionService {
     @Transactional
     public void deleteById(final Long preQuestionId, final Long levellogId, final Long memberId) {
         final PreQuestion preQuestion = getPreQuestionByFromMember(preQuestionId, memberId);
-        validateLevellog(preQuestion, getLevellog(levellogId));
+        final Levellog levellog = getLevellog(levellogId);
+        final Member from = getMember(memberId);
+
+        validateLevellog(preQuestion, levellog);
+        validateExistPreQuestion(levellog, from);
 
         preQuestionRepository.deleteById(preQuestion.getId());
     }
@@ -80,7 +97,27 @@ public class PreQuestionService {
 
     private void validateLevellog(final PreQuestion preQuestion, final Levellog levellog) {
         if (!preQuestion.isSameLevellog(levellog)) {
-            throw new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : " + levellog.getId());
+            throw new InvalidFieldException(
+                    "입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : " + levellog.getId());
+        }
+    }
+
+    private void validateExistParticipantByMember(final Team team, final Member member) {
+        final List<Participant> participants = participantRepository.findByTeam(team);
+
+        if (!existsParticipantByMember(participants, member)) {
+            throw new UnauthorizedException("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다.");
+        }
+    }
+
+    private boolean existsParticipantByMember(final List<Participant> participants, final Member member) {
+        return participants.stream()
+                .anyMatch(participant -> participant.getMember().equals(member));
+    }
+
+    private void validateExistPreQuestion(final Levellog levellog, final Member member) {
+        if (!preQuestionRepository.existsByLevellogAndFrom(levellog, member)) {
+            throw new PreQuestionNotFoundException("아직 사전 질문을 작성하지 않았습니다.");
         }
     }
 }

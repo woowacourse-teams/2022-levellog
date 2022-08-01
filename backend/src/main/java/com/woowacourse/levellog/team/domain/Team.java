@@ -109,7 +109,9 @@ public class Team extends BaseEntity {
         this.startAt = startAt;
     }
 
-    public boolean isValidParticipantNumber(final int participantNumber) {
-        return participantNumber > interviewerNumber;
+    public void validParticipantNumber(final int participantNumber) {
+        if (participantNumber <= interviewerNumber) {
+            throw new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
+        }
     }
 }

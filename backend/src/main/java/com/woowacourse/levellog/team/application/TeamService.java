@@ -45,6 +45,7 @@ public class TeamService {
         final Member host = getMember(hostId);
         final Team team = request.toEntity(host.getProfileUrl());
         final List<Participant> participants = getParticipants(team, hostId, request.getParticipants().getIds());
+        team.validParticipantNumber(participants.size());
 
         final Team savedTeam = teamRepository.save(team);
         participantRepository.saveAll(participants);

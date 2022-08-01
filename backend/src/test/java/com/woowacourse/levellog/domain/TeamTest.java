@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -314,17 +315,34 @@ class TeamTest {
         }
     }
 
-    @ParameterizedTest
-    @CsvSource(value = {"1,2,true", "1,1,false", "2,1,false", "2,2,false", "2,3,true"})
-    @DisplayName("isValidParticipantNumber 메서드는 인터뷰어 수를 참고해서 참가자 수가 유효한지 계산한다.")
-    void isValidParticipantNumber(final int interviewerNumber, final int participantNumber, final boolean expected) {
-        // given
-        final Team team = new Team("레벨로그팀", "우리집", LocalDateTime.now().plusDays(3), "profile.url", interviewerNumber);
+    @Nested
+    @DisplayName("validParticipantNumber 메서드는")
+    class validParticipantNumber {
 
-        // when
-        final boolean actual = team.isValidParticipantNumber(participantNumber);
+        @ParameterizedTest
+        @CsvSource(value = {"1,1", "2,1", "2,2"})
+        @DisplayName("isValidParticipantNumber 메서드는 인터뷰어 수를 참고해서 참가자 수가 유효한지 계산한다.")
+        void throwException(final int interviewerNumber, final int participantNumber) {
+            // given
+            final Team team = new Team("레벨로그팀", "우리집", LocalDateTime.now().plusDays(3), "profile.url",
+                    interviewerNumber);
 
-        // then
-        assertThat(actual).isEqualTo(expected);
+            // when & then
+            assertThatThrownBy(() -> team.validParticipantNumber(participantNumber))
+                    .isInstanceOf(InvalidFieldException.class);
+        }
+
+        @ParameterizedTest
+        @CsvSource(value = {"1,2", "2,3"})
+        @DisplayName("isValidParticipantNumber 메서드는 인터뷰어 수를 참고해서 참가자 수가 유효한지 계산한다.")
+        void notThrownException(final int interviewerNumber, final int participantNumber) {
+            // given
+            final Team team = new Team("레벨로그팀", "우리집", LocalDateTime.now().plusDays(3), "profile.url",
+                    interviewerNumber);
+
+            // when & then
+            assertThatCode(() -> team.validParticipantNumber(participantNumber))
+                    .doesNotThrowAnyException();
+        }
     }
 }

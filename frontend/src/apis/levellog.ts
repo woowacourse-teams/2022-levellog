@@ -1,6 +1,12 @@
-import axios from 'axios';
+import axios, { AxiosPromise } from 'axios';
 
-export const requestPostLevellog = ({ accessToken, teamId, levellogContent }: any) => {
+import { LevellogApiType, LevellogFormatType } from 'types/levellog';
+
+export const requestPostLevellog = ({
+  accessToken,
+  teamId,
+  levellogContent,
+}: Omit<LevellogApiType, 'levellogId'>): AxiosPromise<void> => {
   return axios({
     method: 'post',
     url: `${process.env.API_URI}/teams/${teamId}/levellogs`,
@@ -9,7 +15,11 @@ export const requestPostLevellog = ({ accessToken, teamId, levellogContent }: an
   });
 };
 
-export const requestGetLevellog = ({ accessToken, teamId, levellogId }: any) => {
+export const requestGetLevellog = ({
+  accessToken,
+  teamId,
+  levellogId,
+}: Omit<LevellogApiType, 'levellogContent'>): AxiosPromise<LevellogFormatType> => {
   return axios({
     method: 'get',
     url: `${process.env.API_URI}/teams/${teamId}/levellogs/${levellogId}`,
@@ -17,7 +27,12 @@ export const requestGetLevellog = ({ accessToken, teamId, levellogId }: any) => 
   });
 };
 
-export const requestEditLevellog = ({ accessToken, teamId, levellogId, levellogContent }: any) => {
+export const requestEditLevellog = ({
+  accessToken,
+  teamId,
+  levellogId,
+  levellogContent,
+}: LevellogApiType): AxiosPromise<void> => {
   return axios({
     method: 'put',
     url: `${process.env.API_URI}/teams/${teamId}/levellogs/${levellogId}`,
@@ -26,7 +41,11 @@ export const requestEditLevellog = ({ accessToken, teamId, levellogId, levellogC
   });
 };
 
-export const requestDeleteLevellog = ({ accessToken, teamId, levellogId }: any) => {
+export const requestDeleteLevellog = ({
+  accessToken,
+  teamId,
+  levellogId,
+}: Omit<LevellogApiType, 'levellogContent'>): AxiosPromise<void> => {
   return axios({
     method: 'delete',
     url: `${process.env.API_URI}/teams/${teamId}/levellogs/${levellogId}`,

@@ -18,3 +18,8 @@ export const SERVER_PATH = Object.freeze({
   FEEDBACKS: `${process.env.API_URI}/feedbacks`,
   LEVELLOGS: `${process.env.API_URI}/levellogs`,
 });
+
+export const MESSAGE = Object.freeze({
+  WRONG_ACCESS: '잘못된 접근입니다',
+  NEED_LOGIN: '로그인이 필요한 페이지입니다',
+});

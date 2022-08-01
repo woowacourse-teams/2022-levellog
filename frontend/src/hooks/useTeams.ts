@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
-import { InterviewTeamType } from 'types';
+import axios, { AxiosResponse } from 'axios';
+
+import { ROUTES_PATH } from 'constants/constants';
 
 import { requestGetTeams, requestGetTeam } from 'apis/teams';
+import { InterviewTeamType } from 'types/team';
 
 export const useTeams = () => {
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);
@@ -15,9 +18,12 @@ export const useTeams = () => {
       const teams = await res.data?.teams;
 
       setTeams(teams);
-    } catch (err) {
-      const res = err.response as any;
-      if (err instanceof Error) alert(res.data.message);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const responseBody: AxiosResponse = err.response!;
+        if (err instanceof Error) alert(responseBody.data.message);
+        navigate(ROUTES_PATH.NOT_FOUND);
+      }
     }
   };
 
@@ -34,24 +40,32 @@ export const useTeams = () => {
 };
 
 export const useTeam = () => {
-  const [team, setTeam] = useState<{ [key: string]: any }>({});
-  const location = useLocation();
+  const [team, setTeam] = useState<InterviewTeamType | Object>({});
+  // 나중에 location은 타입을 고칠 필요가 있어보임
+  const location = useLocation() as unknown as { state: InterviewTeamType };
   const { teamId } = useParams();
-  const teamLocationState = location.state;
+  const navigate = useNavigate();
+  const teamLocationState: InterviewTeamType | undefined = location.state;
 
   const getTeam = async () => {
     try {
-      const res = await requestGetTeam({ teamId });
+      if (typeof teamId === 'string') {
+        const res = await requestGetTeam({ teamId });
 
-      setTeam(res.data);
-    } catch (err) {
-      const res = err.response as any;
-      if (err instanceof Error) alert(res.data.message);
+        setTeam(res.data);
+      }
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const responseBody: AxiosResponse = err.response!;
+        if (err instanceof Error) alert(responseBody.data.message);
+        navigate(ROUTES_PATH.NOT_FOUND);
+      }
     }
   };
 
   useEffect(() => {
-    if (teamLocationState) {
+    // 나중에 location은 타입을 고칠 필요가 있어보임
+    if ((teamLocationState as InterviewTeamType).id !== undefined) {
       setTeam(teamLocationState);
     }
   }, []);

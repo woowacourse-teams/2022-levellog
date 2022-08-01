@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -11,7 +11,7 @@ import Image from 'components/@commons/Image';
 import { LevellogParticipantType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
-const Interviewer = ({ participant, onClickToggleModal }: InterviewerProps) => {
+const Interviewer = ({ participant, inTeam, onClickToggleModal }: InterviewerProps) => {
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
@@ -21,7 +21,7 @@ const Interviewer = ({ participant, onClickToggleModal }: InterviewerProps) => {
     }
   };
 
-  if (participant.id === loginUserId) {
+  if (participant.memberId === loginUserId) {
     return (
       <S.Container>
         <S.Profile>
@@ -63,7 +63,9 @@ const Interviewer = ({ participant, onClickToggleModal }: InterviewerProps) => {
           </S.InterviewerButton>
         </Link>
         <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
-          <S.InterviewerButton disabled={!participant.levellogId}>피드백</S.InterviewerButton>
+          <S.InterviewerButton disabled={!participant.levellogId || !inTeam}>
+            피드백
+          </S.InterviewerButton>
         </Link>
       </S.Content>
     </S.Container>
@@ -72,6 +74,7 @@ const Interviewer = ({ participant, onClickToggleModal }: InterviewerProps) => {
 
 interface InterviewerProps {
   participant: ParticipantType;
+  inTeam: Boolean;
   onClickToggleModal: ({ teamId, participant }: LevellogParticipantType) => void;
 }
 

@@ -13,7 +13,7 @@ export interface InterviewTeamType {
 }
 
 export interface ParticipantType {
-  id: string;
+  memberId: string;
   levellogId: string;
   nickname: string;
   profileUrl: string;

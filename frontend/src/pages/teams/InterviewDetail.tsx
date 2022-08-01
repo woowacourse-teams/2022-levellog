@@ -13,7 +13,7 @@ import Interviewer from 'components/teams/Interviewer';
 import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
-  const { teamLocationState, team, getTeam } = useTeam();
+  const { teamLocationState, team, inTeam, getTeam } = useTeam();
   const {
     levellog,
     participant,
@@ -51,7 +51,7 @@ const InterviewDetail = () => {
             <FlexBox flexFlow="column" gap={1.125}>
               <S.Title>{(team as InterviewTeamType).title}</S.Title>
               <FlexBox gap={1}>
-                <S.TitleContent>{(team as InterviewTeamType).place}``</S.TitleContent>
+                <S.TitleContent>{(team as InterviewTeamType).place}</S.TitleContent>
                 <S.TitleContent>{(team as InterviewTeamType).startAt}</S.TitleContent>
               </FlexBox>
             </FlexBox>
@@ -61,8 +61,9 @@ const InterviewDetail = () => {
         <S.Container>
           {(team as InterviewTeamType).participants.map((participant: ParticipantType) => (
             <Interviewer
-              key={participant.id}
+              key={participant.memberId}
               participant={participant}
+              inTeam={inTeam}
               onClickToggleModal={onClickToggleModal}
             />
           ))}

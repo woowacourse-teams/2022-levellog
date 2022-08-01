@@ -89,8 +89,8 @@ public class Participants {
             throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
         }
         if (notContains(targetMemberId)) {
-            throw new ParticipantNotFoundException(
-                    "memberId : " + targetMemberId + "에 해당하는 member는 teamId : " + teamId + "의 참가자가 아닙니다.");
+            throw new ParticipantNotFoundException("memberId : " + targetMemberId + "에 해당하는 member는 "
+                    + "teamId : " + teamId + "의 참가자가 아닙니다.");
         }
     }
 }

@@ -48,7 +48,7 @@ public class Team extends BaseEntity {
     }
 
     private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
-                           final int interviewerNumber) {
+                          final int interviewerNumber) {
         validateTitle(title);
         validatePlace(place);
         validateStartAt(startAt);
@@ -94,8 +94,8 @@ public class Team extends BaseEntity {
 
     private void validateInterviewerNumber(final int interviewerNumber) {
         if (interviewerNumber < MIN_INTERVIEWER_NUMBER) {
-            throw new InvalidFieldException(
-                    "팀 생성시 인터뷰어 수는 " + MIN_INTERVIEWER_NUMBER + "명 이상이어야 합니다. 입력한 인터뷰어 수 : [" + interviewerNumber + "]");
+            throw new InvalidFieldException("팀 생성시 인터뷰어 수는 " + MIN_INTERVIEWER_NUMBER + "명 이상이어야 합니다. "
+                    + "입력한 인터뷰어 수 : [" + interviewerNumber + "]");
         }
     }
 

@@ -254,7 +254,32 @@ class TeamControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value(startsWith("interviewerNumber")));
 
             // docs
-            perform.andDo(document("team/create/exception/interviewerNumber/not-positive"));
+            perform.andDo(document("team/create/exception/interviewer-number/not-positive"));
+        }
+
+        @Test
+        @DisplayName("인터뷰어 수가 참가자 수보다 많거나 같으면 예외를 던진다.")
+        void interviewerMoreThanParticipant_exceptionThrown() throws Exception {
+            // given
+            mockLogin();
+
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 4L));
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", 4, LocalDateTime.now().plusDays(3),
+                    participants);
+
+            willThrow(new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다."))
+                    .given(teamService)
+                    .save(request, 4L);
+
+            // when
+            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("참가자 수는 인터뷰어 수 보다 많아야 합니다."));
+
+            // docs
+            perform.andDo(document("team/create/exception/interviewer-number/more-than-participant"));
         }
 
         @Test

@@ -65,6 +65,16 @@ operation::team/create/exception/startat/past[]
 
 operation::team/create/exception/participants/null[]
 
+[[create-exception-interviwer-number-not-positive]]
+==== 저장 시 인터뷰어 수가 1미만인 경우
+
+operation::team/create/exception/interviewer-number/not-positive[]
+
+[[create-exception-interviwer-number-not-positive]]
+==== 저장 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
+
+operation::team/create/exception/interviewer-number/more-than-participant[]
+
 [[findAll]]
 == 팀 목록 조회
 

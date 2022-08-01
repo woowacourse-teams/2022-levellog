@@ -30,7 +30,7 @@ public class RestAssuredResponse {
         return response
                 .extract()
                 .header(HttpHeaders.LOCATION)
-                .split("/pre-question/")[1];
+                .split("/pre-questions/")[1];
     }
 
     public Long getMemberId() {

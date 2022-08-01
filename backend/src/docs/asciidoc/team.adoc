@@ -6,6 +6,7 @@
 
 [[home]]
 == home
+
 * link:index.html[목록으로 가기]
 
 [[create]]
@@ -83,6 +84,31 @@ operation::team/find/not-my-team[]
 ==== 없는 팀을 상세 조회하는 경우
 
 operation::team/find-by-id/exception/notfound[]
+
+[[find-my-role]]
+== 인터뷰 역할 조회
+
+[[find-my-role-success]]
+=== 인터뷰 역할 조회 성공
+
+==== 요청
+
+include::{snippets}/team/find-my-role/interviewer/http-request.adoc[]
+
+==== 나의 역할이 인터뷰어인 경우
+
+include::{snippets}/team/find-my-role/interviewer/http-response.adoc[]
+
+==== 나의 역할이 옵저버인 경우
+
+include::{snippets}/team/find-my-role/observer/http-response.adoc[]
+
+[[find-my-role-exception]]
+=== 인터뷰 역할 조회 예외
+
+==== 요청한 사용자가 팀의 참가자가 아닌 경우
+
+operation::team/find-my-role/exception/not-my-team[]
 
 [[update]]
 == 팀 수정

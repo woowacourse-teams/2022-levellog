@@ -35,15 +35,21 @@ public class PreQuestionService {
         final Levellog levellog = getLevellog(levellogId);
         final Member from = getMember(memberId);
 
+        validateIsAuthor(levellog, from);
         validateExistParticipantByMember(levellog.getTeam(), from);
 
         return preQuestionRepository.save(request.toEntity(levellog, from))
                 .getId();
     }
 
-    public PreQuestionDto findById(final Long preQuestionId, final Long levellogId) {
+    public PreQuestionDto findById(final Long preQuestionId, final Long levellogId, final Long memberId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
-        validateLevellog(preQuestion, getLevellog(levellogId));
+        final Levellog levellog = getLevellog(levellogId);
+        final Member from = getMember(memberId);
+
+        validateLevellog(preQuestion, levellog);
+        validateFromMember(preQuestion, from);
+        validateExistPreQuestion(levellog, from);
 
         return PreQuestionDto.from(preQuestion);
     }
@@ -51,11 +57,12 @@ public class PreQuestionService {
     @Transactional
     public void update(final PreQuestionDto request, final Long preQuestionId, final Long levellogId,
                        final Long memberId) {
-        final PreQuestion preQuestion = getPreQuestionByFromMember(preQuestionId, memberId);
+        final PreQuestion preQuestion = getPreQuestion(preQuestionId);
         final Levellog levellog = getLevellog(levellogId);
         final Member from = getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
+        validateFromMember(preQuestion, from);
         validateExistPreQuestion(levellog, from);
 
         preQuestion.update(request.getPreQuestion());
@@ -63,11 +70,12 @@ public class PreQuestionService {
 
     @Transactional
     public void deleteById(final Long preQuestionId, final Long levellogId, final Long memberId) {
-        final PreQuestion preQuestion = getPreQuestionByFromMember(preQuestionId, memberId);
+        final PreQuestion preQuestion = getPreQuestion(preQuestionId);
         final Levellog levellog = getLevellog(levellogId);
         final Member from = getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
+        validateFromMember(preQuestion, from);
         validateExistPreQuestion(levellog, from);
 
         preQuestionRepository.deleteById(preQuestion.getId());
@@ -77,12 +85,6 @@ public class PreQuestionService {
         return preQuestionRepository.findById(preQuestionId)
                 .orElseThrow(() -> new PreQuestionNotFoundException(
                         "사전 질문이 존재하지 않습니다. preQuestionId : " + preQuestionId));
-    }
-
-    private PreQuestion getPreQuestionByFromMember(final Long preQuestionId, final Long memberId) {
-        return preQuestionRepository.findByIdAndFrom(preQuestionId, getMember(memberId))
-                .orElseThrow(() -> new PreQuestionNotFoundException(
-                        "작성한 사전 질문이 존재하지 않습니다. preQuestionId : " + preQuestionId + " memberId : " + memberId));
     }
 
     private Levellog getLevellog(final Long levellogId) {
@@ -118,6 +120,18 @@ public class PreQuestionService {
     private void validateExistPreQuestion(final Levellog levellog, final Member member) {
         if (!preQuestionRepository.existsByLevellogAndFrom(levellog, member)) {
             throw new PreQuestionNotFoundException("아직 사전 질문을 작성하지 않았습니다.");
+        }
+    }
+
+    private void validateIsAuthor(final Levellog levellog, final Member member) {
+        if (levellog.isAuthor(member)) {
+            throw new UnauthorizedException("자신의 레벨로그에는 사전 질문을 작성할 수 없습니다.");
+        }
+    }
+
+    private void validateFromMember(final PreQuestion preQuestion, final Member member) {
+        if (!preQuestion.getFrom().equals(member)) {
+            throw new UnauthorizedException("자신의 사전 질문이 아닙니다.");
         }
     }
 }

@@ -168,7 +168,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             doThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .when(preQuestionService)
-                    .findById(1L, 1L);
+                    .findById(1L, 1L, 4L);
 
             // when
             final ResultActions perform = mockMvc.perform(get("/api/levellogs/1/pre-questions/1")
@@ -194,7 +194,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .when(preQuestionService)
-                    .findById(1L, 1L);
+                    .findById(1L, 1L, 4L);
 
             // when
             final ResultActions perform = mockMvc.perform(get("/api/levellogs/1/pre-questions/1")

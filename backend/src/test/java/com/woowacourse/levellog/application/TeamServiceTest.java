@@ -16,6 +16,7 @@ import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
+import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -119,6 +120,27 @@ class TeamServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, requestMemberId))
                     .isInstanceOf(UnauthorizedException.class);
+        }
+
+        @Test
+        @DisplayName("targetMember가 팀의 참가자가 아니면 예외를 던진다.")
+        void targetNotParticipant_exceptionThrown() {
+            // given
+            final Team team = saveAndGetTeam("레벨로그 모의 인터뷰", 1);
+
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("해리");
+            final Member member3 = saveAndGetMember("알린");
+
+            saveAllParticipant(team, member1, member2);
+
+            final Long teamId = team.getId();
+            final Long targetMemberId = member3.getId();
+            final Long requestMemberId = member1.getId();
+
+            // when & then
+            assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, requestMemberId))
+                    .isInstanceOf(ParticipantNotFoundException.class);
         }
     }
 

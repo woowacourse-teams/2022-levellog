@@ -20,6 +20,7 @@ import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
+import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,15 +70,23 @@ public class TeamService {
         final Team team = getTeam(teamId);
         final List<Participant> participants = participantRepository.findByTeam(team);
 
-        final boolean isNotParticipant = participants
+        if (isNotParticipant(memberId, participants)) {
+            throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
+        }
+        if (isNotParticipant(targetMemberId, participants)) {
+            throw new ParticipantNotFoundException(
+                    "memberId : " + targetMemberId + "에 해당하는 member는 teamId : " + teamId + "의 참가자가 아닙니다.");
+        }
+
+        return null;
+    }
+
+    private boolean isNotParticipant(final Long memberId, final List<Participant> participants) {
+        return participants
                 .stream()
                 .map(Participant::getMember)
                 .map(BaseEntity::getId)
                 .noneMatch(it -> it.equals(memberId));
-        if (isNotParticipant) {
-            throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
-        }
-        return null;
     }
 
     @Transactional

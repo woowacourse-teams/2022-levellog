@@ -5,8 +5,7 @@ import static org.springframework.web.cors.CorsUtils.isPreFlightRequest;
 import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
-import com.woowacourse.levellog.authentication.support.NoAuthentication;
-import java.util.Objects;
+import com.woowacourse.levellog.authentication.support.PublicAPI;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,23 +26,25 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if (isAnnotatedNoAuthentication((HandlerMethod) handler)) {
+        if (isPublicAPI((HandlerMethod) handler)) {
             return true;
         }
 
         final String token = AuthorizationExtractor.extract(request);
-
         if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException();
+            throw new InvalidTokenException("토큰 인증 실패 - token:" + token);
         }
 
         return true;
     }
 
-    private boolean isAnnotatedNoAuthentication(final HandlerMethod handler) {
-        final NoAuthentication classTypeNoAuthentication = handler.getBeanType().getAnnotation(NoAuthentication.class);
-        final NoAuthentication methodNoAuthentication = handler.getMethodAnnotation(NoAuthentication.class);
+    private boolean isPublicAPI(final HandlerMethod handler) {
+        final PublicAPI classTypePublicAPI = handler.getBeanType().getAnnotation(PublicAPI.class);
+        final boolean isPublicClass = classTypePublicAPI != null;
 
-        return !Objects.isNull(classTypeNoAuthentication) || !Objects.isNull(methodNoAuthentication);
+        final PublicAPI methodPublicAPI = handler.getMethodAnnotation(PublicAPI.class);
+        final boolean isPublicMethod = methodPublicAPI != null;
+
+        return isPublicClass || isPublicMethod;
     }
 }

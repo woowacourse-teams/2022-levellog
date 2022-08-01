@@ -1,18 +1,27 @@
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-
-import styled from 'styled-components';
-import { FeedbackType } from 'types';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import useFeedback from 'hooks/useFeedback';
 
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
+import FlexBox from 'components/@commons/FlexBox';
 import Feedback from 'components/feedbacks/Feedback';
+import { FeedbackType } from 'types/feedback';
 
 const FeedbackList = () => {
   const { feedbacks, getFeedbacksInTeam, onClickDeleteButton } = useFeedback();
   const { teamId, levellogId } = useParams();
+  const navigate = useNavigate();
+
+  if (typeof levellogId !== 'string') {
+    alert(MESSAGE.WRONG_ACCESS);
+    navigate(ROUTES_PATH.HOME);
+
+    return <div></div>;
+  }
 
   useEffect(() => {
     getFeedbacksInTeam({ levellogId });
@@ -25,7 +34,7 @@ const FeedbackList = () => {
           <Button>추가하기</Button>
         </Link>
       </ContentHeader>
-      <FeedbacksContainer>
+      <FlexBox gap={2.5}>
         {feedbacks.length !== 0 &&
           feedbacks.map((feedbackInfo: FeedbackType) => (
             <Feedback
@@ -35,17 +44,9 @@ const FeedbackList = () => {
               onClickDeleteButton={onClickDeleteButton}
             />
           ))}
-      </FeedbacksContainer>
+      </FlexBox>
     </>
   );
 };
-
-const FeedbacksContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
-`;
 
 export default FeedbackList;

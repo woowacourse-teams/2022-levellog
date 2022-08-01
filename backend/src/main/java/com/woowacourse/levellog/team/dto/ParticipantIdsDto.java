@@ -3,15 +3,15 @@ package com.woowacourse.levellog.team.dto;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 @AllArgsConstructor
-@ToString
-public class TeamsResponse {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ParticipantIdsDto {
 
-    private List<TeamResponse> teams;
+    private List<Long> ids;
 }

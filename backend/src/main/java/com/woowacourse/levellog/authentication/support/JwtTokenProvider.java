@@ -46,7 +46,7 @@ public class JwtTokenProvider {
                     .getBody()
                     .getSubject();
         } catch (final JwtException e) {
-            throw new InvalidTokenException();
+            throw new InvalidTokenException("token에서 payload 추출 실패 - token:" + token);
         }
     }
 

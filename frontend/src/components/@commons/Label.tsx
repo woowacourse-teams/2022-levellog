@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-export const SubTitleLabel = styled.label`
-  font-size: 30px;
-  margin-bottom: 20px;
+const SubTitleLabel = styled.label`
+  font-size: 1.875rem;
+  margin-bottom: 1.25rem;
 `;
+
+export default SubTitleLabel;

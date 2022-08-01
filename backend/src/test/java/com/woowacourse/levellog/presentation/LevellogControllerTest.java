@@ -1,26 +1,23 @@
 package com.woowacourse.levellog.presentation;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.levellog.dto.LevellogRequest;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
+import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.levellog.exception.UnauthorizedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -28,45 +25,82 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("LevellogController의")
 class LevellogControllerTest extends ControllerTest {
 
+    private static final String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.Y5wT9jBcP1lvMtjRqxaF0gMNDlgY5xs8SPhBKYChRn8";
+
     @Nested
     @DisplayName("save 메서드는")
-    class save {
+    class SaveTest {
 
-        @ParameterizedTest
-        @ValueSource(strings = {" "})
-        @NullAndEmptySource
-        @DisplayName("내용으로 공백이나 null이 들어오면 예외를 던진다.")
-        void nameNullOrEmpty_Exception(final String content) throws Exception {
+        @Test
+        @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
+        void save_alreadyExists_exception() throws Exception {
             // given
-            final Long teamId = 1L;
-            final LevellogRequest request = new LevellogRequest(content);
+            final LevellogDto request = LevellogDto.from("content");
             final String requestContent = objectMapper.writeValueAsString(request);
+            final Long authorId = 1L;
+            final Long teamId = 1L;
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            doThrow(new LevellogAlreadyExistException("팀에 레벨로그를 이미 작성했습니다.")).when(levellogService)
+                    .save(request, authorId, teamId);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/teams/{teamId}/levellogs", teamId)
+            final ResultActions perform = requestSaveLevellog(teamId, requestContent);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("팀에 레벨로그를 이미 작성했습니다."));
+
+            // docs
+            perform.andDo(document("levellog/save/exception-already-exists"));
+        }
+
+        @Test
+        @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
+        void save_nameNullOrEmpty_Exception() throws Exception {
+            // given
+            final Long teamId = 1L;
+            final LevellogDto request = LevellogDto.from(" ");
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+
+            // when
+            final ResultActions perform = requestSaveLevellog(teamId, requestContent);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("content must not be blank"));
+
+            // docs
+            perform.andDo(document("levellog/save/exception-contents"));
+        }
+
+        private ResultActions requestSaveLevellog(final Long teamId, final String requestContent) throws Exception {
+            return mockMvc.perform(post("/api/teams/{teamId}/levellogs", teamId)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))
                     .andDo(print());
-
-            // then
-            perform.andExpect(status().isBadRequest());
         }
     }
 
     @Nested
     @DisplayName("find 메서드는")
-    class find {
+    class FindTest {
 
         @Test
-        @DisplayName("존재하지 않는 레벨로그를 조회하면 404 예외를 던진다.")
-        void levellogNoExist_Exception() throws Exception {
+        @DisplayName("존재하지 않는 레벨로그를 조회하면 예외를 던진다.")
+        void find_levellogNoExist_Exception() throws Exception {
             // given
-            doThrow(new LevellogNotFoundException())
-                    .when(levellogService)
-                    .findById(any());
-
             final Long teamId = 1L;
             final Long levellogId = 1000L;
+
+            doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+                    .when(levellogService)
+                    .findById(levellogId);
 
             // when
             final ResultActions perform = mockMvc
@@ -75,93 +109,108 @@ class LevellogControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpect(status().isNotFound())
+                    .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
+
+            // docs
+            perform.andDo(document("levellog/find/exception-exist"));
         }
     }
 
     @Nested
     @DisplayName("update 메서드는")
-    class update {
+    class UpdateTest {
 
-        @ParameterizedTest
-        @ValueSource(strings = {" "})
-        @NullAndEmptySource
-        @DisplayName("내용으로 공백이나 null이 들어오면 예외를 던진다.")
-        void nameNullOrEmpty_Exception(final String content) throws Exception {
+        @Test
+        @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
+        void update_nameNullOrEmpty_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final LevellogRequest request = new LevellogRequest(content);
+            final LevellogDto request = LevellogDto.from(" ");
             final String requestContent = objectMapper.writeValueAsString(request);
 
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+
             // when
-            final ResultActions perform = mockMvc.perform(
-                            put("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer: token")
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestUpdateLevellog(teamId, levellogId, requestContent);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("content must not be blank"));
+
+            // docs
+            perform.andDo(document("levellog/update/exception-contents"));
         }
 
         @Test
         @DisplayName("본인이 작성하지 않은 레벨로그를 수정하려는 경우 예외를 던진다.")
-        void unauthorized_Exception() throws Exception {
+        void update_unauthorized_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-            doThrow(new UnauthorizedException("레벨로그를 수정할 권한이 없습니다.")).when(levellogService)
-                    .update(anyLong(), anyLong(), any());
-
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final LevellogRequest request = new LevellogRequest("content");
+            final Long authorId = 1L;
+            final LevellogDto request = LevellogDto.from("update content");
             final String requestContent = objectMapper.writeValueAsString(request);
 
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            doThrow(new UnauthorizedException("권한이 없습니다.")).when(levellogService)
+                    .update(request, levellogId, authorId);
+
             // when
-            final ResultActions perform = mockMvc.perform(
+            final ResultActions perform = requestUpdateLevellog(teamId, levellogId, requestContent);
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("levellog/update/exception-author"));
+        }
+
+        private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId,
+                                                    final String requestContent)
+                throws Exception {
+            return mockMvc.perform(
                             put("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer: token")
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(requestContent))
                     .andDo(print());
-
-            // then
-            perform.andExpect(status().isUnauthorized());
         }
     }
 
     @Nested
     @DisplayName("delete 메서드는")
-    class delete {
+    class DeleteTest {
 
         @Test
         @DisplayName("본인이 작성하지 않은 레벨로그를 삭제하려는 경우 예외를 던진다.")
-        void nameNullOrEmpty_Exception() throws Exception {
+        void delete_nameNullOrEmpty_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-            doThrow(new UnauthorizedException("레벨로그를 삭제할 권한이 없습니다.")).when(levellogService)
-                    .deleteById(anyLong(), anyLong());
-
             final Long teamId = 1L;
+            final Long memberId = 1L;
             final Long levellogId = 2L;
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            doThrow(new UnauthorizedException("권한이 없습니다.")).when(levellogService)
+                    .deleteById(levellogId, memberId);
 
             // when
             final ResultActions perform = mockMvc.perform(
                             delete("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer: token"))
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN))
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isUnauthorized());
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("levellog/delete/exception-author"));
         }
     }
 }
-
-

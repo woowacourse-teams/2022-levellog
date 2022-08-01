@@ -21,7 +21,7 @@ const Interviewer = ({ participant, onClickToggleModal }: InterviewerProps) => {
     }
   };
 
-  if (participant.id === loginUserId) {
+  if (participant.memberId === loginUserId) {
     return (
       <S.Container>
         <S.Profile>

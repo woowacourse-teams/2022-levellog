@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
@@ -212,10 +213,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
     private ValidatableResponse requestFindAllInterviewQuestion(final String levellogId,
                                                                 final String fromMemberToken) {
-        return RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + fromMemberToken)
-                .when()
-                .get("/api/levellogs/" + levellogId + "/interview-questions")
-                .then().log().all();
+        return get("/api/levellogs/" + levellogId + "/interview-questions", fromMemberToken)
+                .getResponse();
     }
 }

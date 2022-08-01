@@ -100,7 +100,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
     /*
      * Scenario: 레벨 인터뷰 팀 상세 조회하기
      *   given: 팀이 등록되어 있다.
-     *   when: 참여한 팀 상세 조회를 요청한다.
+     *   given: 페퍼의 계정으로 로그인되어있다.
+     *   when: 페퍼가 참여한 팀 상세 조회를 요청한다.
      *   then: 200 Ok 상태 코드와 팀을 응답받는다.
      */
     @Test
@@ -185,9 +186,10 @@ class TeamAcceptanceTest extends AcceptanceTest {
     }
 
     /*
-     * Scenario: 팀 참가자에 대한 나의 역할 조회하기
+     * Scenario: 팀 참가자에 대한 나(페퍼)의 역할 조회하기
      *   given: 팀이 등록되어 있다.
-     *   when: 페퍼는 같은 팀의 참가자안 릭에 대한 나의 역할을 조회한다.
+     *   given: 페퍼 계정으로 로그인되어 있다.
+     *   when: 나(페퍼)는 같은 팀의 참가자안 릭에 대한 나의 역할을 조회한다.
      *   then: 200 Ok 상태 코드와 interviewer를 응답 받는다.
      */
     @Test
@@ -224,7 +226,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
     /*
      * Scenario: 팀 참가자에 대한 나의 역할 조회하기
      *   given: 팀이 등록되어 있다.
-     *   when: 페퍼는 같은 팀의 참가자안 이브에 대한 나의 역할을 조회한다.
+     *   given: 페퍼 계정으로 로그인되어 있다.
+     *   when: 나(페퍼)는 같은 팀의 참가자안 이브에 대한 나의 역할을 조회한다.
      *   then: 200 Ok 상태 코드와 observer를 응답 받는다.
      */
     @Test

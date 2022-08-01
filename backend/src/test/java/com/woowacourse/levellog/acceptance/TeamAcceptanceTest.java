@@ -92,8 +92,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"),
-                        "teams.hostId",
-                        contains(pepper.getMemberId().intValue(), eve.getMemberId().intValue()),
+                        "teams.hostId", contains(pepper.getMemberId().intValue(), eve.getMemberId().intValue()),
+                        "teams.isClosed", contains(false, false),
                         "teams.participants.nickname", contains(List.of("페퍼", "이브"), List.of("이브", "페퍼", "릭"))
                 );
     }
@@ -136,6 +136,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .body("title", equalTo("잠실 제이슨조"),
                         "place", equalTo("트랙룸"),
                         "hostId", equalTo(pepper.getMemberId().intValue()),
+                        "isClosed", equalTo(false),
                         "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
                         "interviewers",
                         contains(eveId.intValue(), rickId.intValue()),

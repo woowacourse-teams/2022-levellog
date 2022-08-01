@@ -48,6 +48,8 @@ class TeamServiceTest extends ServiceTest {
         participantRepository.save(new Participant(team2, member1, false));
         participantRepository.save(new Participant(team2, member2, true));
 
+        team2.closeInterview(LocalDateTime.now().plusDays(5));
+
         //when
         final TeamsDto response = teamService.findAll();
 
@@ -67,10 +69,17 @@ class TeamServiceTest extends ServiceTest {
                 .map(TeamDto::getParticipants)
                 .map(List::size)
                 .collect(Collectors.toList());
+
+        final List<Boolean> actualCloseStatuses = response.getTeams()
+                .stream()
+                .map(TeamDto::getIsClosed)
+                .collect(Collectors.toList());
+
         assertAll(
                 () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
                 () -> assertThat(actualHostIds).contains(member1.getId(), member2.getId()),
                 () -> assertThat(actualParticipantSizes).contains(2, 2),
+                () -> assertThat(actualCloseStatuses).contains(false, true),
                 () -> assertThat(response.getTeams()).hasSize(2)
         );
     }
@@ -255,6 +264,29 @@ class TeamServiceTest extends ServiceTest {
     class findByTeamIdAndMemberId {
 
         @Test
+        @DisplayName("id에 해당하는 팀을 조회한다.")
+        void findByTeamIdAndMemberId() {
+            //given
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Team team = saveAndGetTeam("잠실 제이슨조", 2);
+
+            participantRepository.save(new Participant(team, member1, true));
+            participantRepository.save(new Participant(team, member2, false));
+
+            //when
+            final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), member1.getId());
+
+            //then
+            assertAll(
+                    () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                    () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
+                    () -> assertThat(response.getIsClosed()).isFalse(),
+                    () -> assertThat(response.getParticipants()).hasSize(2)
+            );
+        }
+
+        @Test
         @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
         void teamNotFound_Exception() {
             // when & then
@@ -330,7 +362,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Nested
         @DisplayName("요청한 유저가 팀에 참가자가 아닐 때")
-        class notParticipantRequest {
+        class NotParticipantRequest {
 
             @Test
             @DisplayName("인터뷰어와 인터뷰이가 빈 상태로 응답한다.")

@@ -59,14 +59,13 @@ public class PreQuestionService {
     private PreQuestion getPreQuestion(final Long preQuestionId) {
         return preQuestionRepository.findById(preQuestionId)
                 .orElseThrow(() -> new PreQuestionNotFoundException(
-                        "사전 질문이 존재하지 않습니다. preQuestionId : " + preQuestionId, "사전 질문이 존재하지 않습니다."));
+                        "사전 질문이 존재하지 않습니다. preQuestionId : " + preQuestionId));
     }
 
     private PreQuestion getPreQuestionByFromMember(final Long preQuestionId, final Long memberId) {
         return preQuestionRepository.findByIdAndFrom(preQuestionId, getMember(memberId))
                 .orElseThrow(() -> new PreQuestionNotFoundException(
-                        "작성한 사전 질문이 존재하지 않습니다. preQuestionId : " + preQuestionId + " memberId : " + memberId,
-                        "작성한 사전 질문이 존재하지 않습니다."));
+                        "작성한 사전 질문이 존재하지 않습니다. preQuestionId : " + preQuestionId + " memberId : " + memberId));
     }
 
     private Levellog getLevellog(final Long levellogId) {

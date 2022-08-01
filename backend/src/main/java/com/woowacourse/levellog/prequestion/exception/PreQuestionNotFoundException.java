@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 
 public class PreQuestionNotFoundException extends LevellogException {
 
-    public PreQuestionNotFoundException(final String message, final String clientMessage) {
-        super(message, clientMessage, HttpStatus.NOT_FOUND);
+    private static final String ERROR_MESSAGE = "사전 질문이 존재하지 않습니다.";
+
+    public PreQuestionNotFoundException(final String message) {
+        super(message, ERROR_MESSAGE, HttpStatus.NOT_FOUND);
     }
 }

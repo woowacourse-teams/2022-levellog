@@ -139,7 +139,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
-            doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다.", "작성한 사전 질문이 존재하지 않습니다."))
+            doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .when(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 4L);
 
@@ -197,7 +197,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다.", "작성한 사전 질문이 존재하지 않습니다."))
+            doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .when(preQuestionService)
                     .findById(1L, 1L);
 
@@ -254,7 +254,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다.", "작성한 사전 질문이 존재하지 않습니다."))
+            doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .when(preQuestionService)
                     .deleteById(1L, 1L, 4L);
 

@@ -54,7 +54,7 @@ public class PreQuestionTest {
             // when & then
             assertThatThrownBy(() -> new PreQuestion(levellog, author, preQuestion))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("내 글의 사전 질문을 작성할 수 없습니다.");
+                    .hasMessageContaining("내 레벨로그에 사전 질문을 작성할 수 없습니다.");
         }
     }
 

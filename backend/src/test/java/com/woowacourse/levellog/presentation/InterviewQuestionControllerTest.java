@@ -61,7 +61,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
         void save_interviewQuestionInvalidLength_Exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?".repeat(255));
+            final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
             final String requestContent = objectMapper.writeValueAsString(request);
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
@@ -236,7 +236,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
         void update_interviewQuestionInvalidLength_Exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?".repeat(255));
+            final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
             final String requestContent = objectMapper.writeValueAsString(request);
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");

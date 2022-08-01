@@ -44,7 +44,7 @@ class InterviewQuestionTest {
             final Member to = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img");
             final Levellog levellog = Levellog.of(to, team, "스프링을 공부하였습니다.");
-            final String content = "스프링이란?".repeat(255);
+            final String content = "a".repeat(256);
 
             // when & then
             assertThatThrownBy(() -> InterviewQuestion.of(from, to, levellog, content))
@@ -87,7 +87,7 @@ class InterviewQuestionTest {
             final InterviewQuestion interviewQuestion = InterviewQuestion.of(from, to, levellog, "스프링이란?");
 
             // when & then
-            final String updatedContent = "스프링 빈이란?".repeat(255);
+            final String updatedContent = "a".repeat(256);
             assertThatThrownBy(() -> interviewQuestion.updateContent(updatedContent, from))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContainingAll("인터뷰 질문은 255자 이하여야합니다.", String.valueOf(updatedContent.length()));
@@ -108,8 +108,7 @@ class InterviewQuestionTest {
             assertThatThrownBy(() -> interviewQuestion.updateContent("스프링 빈이란?", otherMember))
                     .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContainingAll("인터뷰 질문에 대한 쓰기 권한이 없습니다.", String.valueOf(otherMember.getId()),
-                            String.valueOf(from.getId())
-                            , String.valueOf(levellog.getId()));
+                            String.valueOf(from.getId()), String.valueOf(levellog.getId()));
         }
     }
 }

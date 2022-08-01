@@ -13,7 +13,7 @@ import Interviewer from 'components/teams/Interviewer';
 import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
-  const { teamLocationState, team, getTeam } = useTeam();
+  const { teamLocationState, team, inTeam, getTeam } = useTeam();
   const {
     levellog,
     participant,
@@ -63,6 +63,7 @@ const InterviewDetail = () => {
             <Interviewer
               key={participant.memberId}
               participant={participant}
+              inTeam={inTeam}
               onClickToggleModal={onClickToggleModal}
             />
           ))}

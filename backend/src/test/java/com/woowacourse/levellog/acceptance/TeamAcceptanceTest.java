@@ -4,7 +4,6 @@ import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
@@ -177,9 +176,83 @@ class TeamAcceptanceTest extends AcceptanceTest {
                         "place", equalTo("트랙룸"),
                         "hostId", equalTo(loginResponse1.getMemberId().intValue()),
                         "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
-                        "interviewers", is(empty()),
+                        "interviewers", empty(),
                         "interviewees", empty()
                 );
+    }
+
+    /*
+     * Scenario: 팀 참가자에 대한 나의 역할 조회하기
+     *   given: 팀이 등록되어 있다.
+     *   when: 페퍼는 같은 팀의 참가자안 릭에 대한 나의 역할을 조회한다.
+     *   then: 200 Ok 상태 코드와 interviewer를 응답 받는다.
+     */
+    @Test
+    @DisplayName("같은 팀 참가자에 대한 나의 역할 조회하기 - interviewer")
+    void findMyRole_interviewer() {
+        // given
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
+        final RestAssuredResponse loginResponse3 = login("릭");
+        final RestAssuredResponse loginResponse4 = login("로마");
+
+        final ParticipantIdsDto participants = new ParticipantIdsDto(
+                List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId(), loginResponse4.getMemberId()));
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
+                participants);
+
+        final String teamId = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+                .getTeamId();
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find-my-role/interviewer"))
+                .when()
+                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, loginResponse3.getMemberId())
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("myRole", equalTo("INTERVIEWER"));
+    }
+
+    /*
+     * Scenario: 팀 참가자에 대한 나의 역할 조회하기
+     *   given: 팀이 등록되어 있다.
+     *   when: 페퍼는 같은 팀의 참가자안 이브에 대한 나의 역할을 조회한다.
+     *   then: 200 Ok 상태 코드와 observer를 응답 받는다.
+     */
+    @Test
+    @DisplayName("같은 팀 참가자에 대한 나의 역할 조회하기 - observer")
+    void findMyRole_observer() {
+        // given
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
+        final RestAssuredResponse loginResponse3 = login("릭");
+        final RestAssuredResponse loginResponse4 = login("로마");
+
+        final ParticipantIdsDto participants = new ParticipantIdsDto(
+                List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId(), loginResponse4.getMemberId()));
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
+                participants);
+
+        final String teamId = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+                .getTeamId();
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find-my-role/observer"))
+                .when()
+                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, loginResponse2.getMemberId())
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("myRole", equalTo("OBSERVER"));
     }
 
     /*

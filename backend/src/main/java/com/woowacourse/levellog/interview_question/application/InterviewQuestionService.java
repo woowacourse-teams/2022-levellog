@@ -29,7 +29,6 @@ public class InterviewQuestionService {
     private final LevellogRepository levellogRepository;
     private final ParticipantRepository participantRepository;
 
-
     @Transactional
     public Long save(final InterviewQuestionDto request, final Long levellogId, final Long fromMemberId) {
         final Member fromMember = getMember(fromMemberId);

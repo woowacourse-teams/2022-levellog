@@ -223,8 +223,8 @@ class TeamServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("findByIdWithRole 메서드는")
-    class findByIdWithRole {
+    @DisplayName("findByTeamIdAndMemberId 메서드는")
+    class findByTeamIdAndMemberId {
 
         @Test
         @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
@@ -274,7 +274,7 @@ class TeamServiceTest extends ServiceTest {
             }
 
             @Test
-            @DisplayName("참가자가 3명이고, 인터뷰어 수는 2명이면 인터뷰어와 인터뷰이를 포함해서 응답한다.")
+            @DisplayName("참가자가 3명이고, 인터뷰어 수는 2명이면 인터뷰어와 인터뷰이가 동일하다.")
             void findById_manyInterviewerNumber() {
                 //given
                 final Member rick = saveAndGetMember("릭");
@@ -285,18 +285,17 @@ class TeamServiceTest extends ServiceTest {
                 saveAllParticipant(team, rick, pepper, roma);
 
                 //when
-                final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndMemberId(team.getId(),
-                        pepper.getId());
+                final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), pepper.getId());
 
                 //then
                 assertAll(
-                        () -> assertThat(responseOfPepper.getTitle()).isEqualTo(team.getTitle()),
-                        () -> assertThat(responseOfPepper.getHostId()).isEqualTo(rick.getId()),
-                        () -> assertThat(responseOfPepper.getParticipants()).hasSize(3),
+                        () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
+                        () -> assertThat(response.getParticipants()).hasSize(3),
 
-                        () -> assertThat(responseOfPepper.getInterviewers()).containsExactly(roma.getId(),
-                                rick.getId()),
-                        () -> assertThat(responseOfPepper.getInterviewees()).containsExactly(roma.getId(), rick.getId())
+                        () -> assertThat(response.getInterviewers()).isEqualTo(response.getInterviewees()),
+                        () -> assertThat(response.getInterviewers()).containsExactly(roma.getId(), rick.getId()),
+                        () -> assertThat(response.getInterviewees()).containsExactly(roma.getId(), rick.getId())
                 );
             }
         }

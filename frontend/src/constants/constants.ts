@@ -10,7 +10,8 @@ export const ROUTES_PATH = Object.freeze({
   LEVELLOG_ADD_ROUTE: '/levellog/add/:teamId',
   LEVELLOG_MODIFY: '/levellog/modify/teams/:teamId/levellogs/:levellogId',
   INTERVIEW_TEAMS: '/interview/teams',
-  INTERVIEW_TEAMS_DETAIL: '/interview/teams/:teamId',
+  INTERVIEW_TEAMS_DETAIL: `/interview/teams/:teamId`,
+  INTERVIEW_TEAMS_ADD: `/interview/teams/add`,
   NOT_FOUND: '*',
 });
 

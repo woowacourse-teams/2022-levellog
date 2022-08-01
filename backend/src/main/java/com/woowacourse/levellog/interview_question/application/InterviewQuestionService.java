@@ -1,11 +1,11 @@
 package com.woowacourse.levellog.interview_question.application;
 
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interview_question.domain.InterviewQuestion;
 import com.woowacourse.levellog.interview_question.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interview_question.dto.InterviewQuestionsDto;
 import com.woowacourse.levellog.interview_question.exception.InterviewQuestionNotFoundException;
-import com.woowacourse.levellog.interview_question.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -89,9 +89,9 @@ public class InterviewQuestionService {
         final Team team = levellog.getTeam();
 
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
-            throw new InvalidInterviewQuestionException(
-                    " [memberId :" + member.getId() + " teamId : " + team.getId() + " levellogId : " + levellog.getId()
-                            + "]", "같은 팀에 속한 멤버만 인터뷰 질문을 작성할 수 있습니다.");
+            throw new UnauthorizedException(
+                    "같은 팀에 속한 멤버만 인터뷰 질문을 작성할 수 있습니다. [memberId :" + member.getId() + " teamId : " + team.getId()
+                            + " levellogId : " + levellog.getId() + "]");
         }
     }
 }

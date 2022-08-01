@@ -11,7 +11,6 @@ import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDetailDt
 import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interview_question.dto.InterviewQuestionsDto;
 import com.woowacourse.levellog.interview_question.exception.InterviewQuestionNotFoundException;
-import com.woowacourse.levellog.interview_question.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -30,6 +29,20 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayName("InterviewQuestionService 클래스의")
 class InterviewQuestionServiceTest extends ServiceTest {
+
+    private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
+
+        final Team team = teamRepository.save(
+                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img"));
+        participantRepository.save(new Participant(team, participant1, true));
+        participantRepository.save(new Participant(team, participant2, false));
+        return team;
+    }
+
+    private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member fromMember) {
+        final InterviewQuestionDto request = InterviewQuestionDto.from(content);
+        return interviewQuestionService.save(request, levellog.getId(), fromMember.getId());
+    }
 
     @Nested
     @DisplayName("save 메서드는")
@@ -120,7 +133,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, otherTeamMemberId))
-                    .isInstanceOf(InvalidInterviewQuestionException.class)
+                    .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContainingAll("같은 팀에 속한 멤버만 인터뷰 질문을 작성할 수 있습니다.", String.valueOf(team.getId()),
                             String.valueOf(pepperLevellogId), String.valueOf(otherTeamMemberId));
         }
@@ -306,19 +319,5 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     .hasMessageContainingAll("인터뷰 질문에 대한 쓰기 권한이 없습니다.", String.valueOf(otherMemberId),
                             String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
         }
-    }
-
-    private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
-
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img"));
-        participantRepository.save(new Participant(team, participant1, true));
-        participantRepository.save(new Participant(team, participant2, false));
-        return team;
-    }
-
-    private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member fromMember) {
-        final InterviewQuestionDto request = InterviewQuestionDto.from(content);
-        return interviewQuestionService.save(request, levellog.getId(), fromMember.getId());
     }
 }

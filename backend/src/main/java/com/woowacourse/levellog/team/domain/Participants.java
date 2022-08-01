@@ -25,10 +25,7 @@ public class Participants {
         final List<Long> participantIds = toParticipantIds();
         final int from = participantIds.indexOf(memberId) + 1;
 
-        final List<Long> linear = new ArrayList<>(participantIds);
-        linear.addAll(participantIds);
-
-        return linear.subList(from, from + interviewerNumber);
+        return concatSameTwice(participantIds).subList(from, from + interviewerNumber);
     }
 
     public List<Long> toIntervieweeIds(final Long memberId, final int interviewerNumber) {
@@ -39,26 +36,7 @@ public class Participants {
         final List<Long> participantIds = toParticipantIds();
         final int to = participantIds.indexOf(memberId) + values.size();
 
-        final List<Long> linear = new ArrayList<>(participantIds);
-        linear.addAll(participantIds);
-
-        return linear.subList(to - interviewerNumber, to);
-    }
-
-    private List<Long> toParticipantIds() {
-        return values
-                .stream()
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
-                .collect(Collectors.toList());
-    }
-
-    private boolean notContains(final Long memberId) {
-        return values
-                .stream()
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
-                .noneMatch(it -> it.equals(memberId));
+        return concatSameTwice(participantIds).subList(to - interviewerNumber, to);
     }
 
     public Long toHostId() {
@@ -71,7 +49,8 @@ public class Participants {
                 .getId();
     }
 
-    public InterviewRole toInterviewRole(final Long teamId, final Long targetMemberId, final Long memberId, final int interviewerNumber) {
+    public InterviewRole toInterviewRole(final Long teamId, final Long targetMemberId, final Long memberId,
+                                         final int interviewerNumber) {
         validateParticipant(teamId, targetMemberId, memberId);
 
         final boolean isInterviewer = toInterviewerIds(targetMemberId, interviewerNumber)
@@ -82,6 +61,27 @@ public class Participants {
         }
 
         return InterviewRole.OBSERVER;
+    }
+
+    private boolean notContains(final Long memberId) {
+        return values.stream()
+                .map(Participant::getMember)
+                .map(BaseEntity::getId)
+                .noneMatch(it -> it.equals(memberId));
+    }
+
+    private List<Long> concatSameTwice(final List<Long> participantIds) {
+        final List<Long> linear = new ArrayList<>(participantIds);
+        linear.addAll(participantIds);
+
+        return linear;
+    }
+
+    private List<Long> toParticipantIds() {
+        return values.stream()
+                .map(Participant::getMember)
+                .map(BaseEntity::getId)
+                .collect(Collectors.toList());
     }
 
     private void validateParticipant(final Long teamId, final Long targetMemberId, final Long memberId) {

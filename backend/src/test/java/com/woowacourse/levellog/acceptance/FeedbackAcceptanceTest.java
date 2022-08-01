@@ -38,7 +38,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long roma_id = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
                 .getTeamId();
 
         final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
@@ -84,7 +84,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long roma_id = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
                 .getTeamId();
 
         final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
@@ -136,7 +136,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long roma_id = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id).getTeamId();
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id).getTeamId();
 
         final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
         final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
@@ -199,7 +199,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long roma_id = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, rick_id, roma_id)
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
                 .getTeamId();
 
         final LevellogDto levellogRequest = LevellogDto.from("레벨로그");

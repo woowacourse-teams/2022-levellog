@@ -2,7 +2,7 @@ package com.woowacourse.levellog.presentation;
 
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -108,8 +108,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamCreateDto request = new TeamCreateDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
-            doThrow(new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]"))
-                    .when(teamService)
+            willThrow(new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]"))
+                    .given(teamService)
                     .save(request, 4L);
 
             // when
@@ -157,8 +157,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamCreateDto request = new TeamCreateDto("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
-            doThrow(new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]"))
-                    .when(teamService)
+            willThrow(new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]"))
+                    .given(teamService)
                     .save(request, 4L);
 
             // when
@@ -202,8 +202,8 @@ class TeamControllerTest extends ControllerTest {
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
             final TeamCreateDto request = new TeamCreateDto("네오 인터뷰", "선릉 트랙룸", 1, startAt, participantIds);
 
-            doThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
-                    .when(teamService)
+            willThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
+                    .given(teamService)
                     .save(request, 4L);
 
             // when
@@ -293,8 +293,8 @@ class TeamControllerTest extends ControllerTest {
             final String title = "네오".repeat(128);
             final TeamUpdateDto request = new TeamUpdateDto(title, "트랙룸", LocalDateTime.now().plusDays(3));
 
-            doThrow(new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]"))
-                    .when(teamService)
+            willThrow(new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]"))
+                    .given(teamService)
                     .update(request, id, 4L);
 
             // when
@@ -341,8 +341,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", place,
                     LocalDateTime.now().plusDays(3));
 
-            doThrow(new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]"))
-                    .when(teamService)
+            willThrow(new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]"))
+                    .given(teamService)
                     .update(request, id, 4L);
 
             // when
@@ -385,8 +385,8 @@ class TeamControllerTest extends ControllerTest {
             final long id = 1;
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", "트랙룸", startAt);
-            doThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
-                    .when(teamService)
+            willThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
+                    .given(teamService)
                     .update(request, id, 4L);
 
             // when
@@ -408,8 +408,8 @@ class TeamControllerTest extends ControllerTest {
             mockCreateTeam();
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(10));
 
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
-                    .when(teamService)
+            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
+                    .given(teamService)
                     .update(request, 10000000L, 4L);
 
             // when
@@ -433,8 +433,8 @@ class TeamControllerTest extends ControllerTest {
         void teamNotFound_Exception() throws Exception {
             // given
             mockLogin();
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
-                    .when(teamService)
+            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
+                    .given(teamService)
                     .findByTeamIdAndMemberId(10000000L, 4L);
 
             // when
@@ -469,9 +469,10 @@ class TeamControllerTest extends ControllerTest {
                     .willThrow(new UnauthorizedException("권한이 없습니다."));
 
             // when
-            final ResultActions perform = mockMvc.perform(get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .accept(MediaType.ALL))
+            final ResultActions perform = mockMvc.perform(
+                            get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                                    .accept(MediaType.ALL))
                     .andDo(print());
 
             // then
@@ -494,9 +495,10 @@ class TeamControllerTest extends ControllerTest {
                     .willThrow(new ParticipantNotFoundException("팀에 참가자가 아닙니다."));
 
             // when
-            final ResultActions perform = mockMvc.perform(get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .accept(MediaType.ALL))
+            final ResultActions perform = mockMvc.perform(
+                            get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                                    .accept(MediaType.ALL))
                     .andDo(print());
 
             // then
@@ -517,8 +519,8 @@ class TeamControllerTest extends ControllerTest {
         void teamNotFound_Exception() throws Exception {
             // given
             mockLogin();
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
-                    .when(teamService)
+            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
+                    .given(teamService)
                     .deleteById(10000000L, 4L);
 
             // when

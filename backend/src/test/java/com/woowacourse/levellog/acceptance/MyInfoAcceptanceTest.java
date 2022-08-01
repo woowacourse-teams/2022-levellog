@@ -41,7 +41,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("myinfo/read"))
                 .when()
-                .get("/api/myInfo")
+                .get("/api/my-info")
                 .then().log().all();
 
         // then
@@ -71,7 +71,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("myinfo/update/nickname"))
                 .when()
-                .put("/api/myInfo")
+                .put("/api/my-info")
                 .then().log().all();
 
         // then
@@ -129,7 +129,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + rickToken)
                 .filter(document("myinfo/findAllToMe"))
                 .when()
-                .get("/api/myInfo/feedbacks")
+                .get("/api/my-info/feedbacks")
                 .then().log().all();
 
         // then

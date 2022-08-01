@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,6 +13,7 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -94,5 +96,30 @@ class LevellogRepositoryTest {
             // then
             assertFalse(actual);
         }
+    }
+
+    @Test
+    @DisplayName("findAllByAuthor 메서드는 주어진 author가 작성한 레벨로그를 모두 반환한다.")
+    void findAllByAuthor() {
+        // given
+        final Member author = memberRepository.save(new Member("pepper", 1111, "pepper.png"));
+        final Member anotherAuthor = memberRepository.save(new Member("roma", 12345, "roma.png"));
+        final Team team = teamRepository.save(
+                new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png"));
+        final Team team2 = teamRepository.save(
+                new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png"));
+
+        final Levellog authorLevellog1 = levellogRepository.save(Levellog.of(author, team, "Spring을 학습하였습니다."));
+        final Levellog authorLevellog2 = levellogRepository.save(Levellog.of(author, team2, "JPA를 학습하였습니다."));
+        final Levellog anotherLevelog = levellogRepository.save(Levellog.of(anotherAuthor, team, "리액트를 학습하였습니다."));
+
+        // when
+        final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author);
+
+        // then
+        assertAll(
+                () -> assertThat(levellogs).hasSize(2),
+                () -> assertThat(levellogs).contains(authorLevellog1, authorLevellog2)
+        );
     }
 }

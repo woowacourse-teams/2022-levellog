@@ -6,6 +6,7 @@
 
 [[home]]
 == home
+
 * link:index.html[목록으로 가기]
 
 [[read]]
@@ -34,6 +35,7 @@ operation::myinfo/update/nickname-invalid-length[]
 빈 문자열 혹은 공백으로 요청 보낼 경우
 
 operation::myinfo/update/nickname-blank[]
+
 [[findAllToMe]]
 == 받은 피드백 전체 조회
 
@@ -41,3 +43,11 @@ operation::myinfo/update/nickname-blank[]
 === 성공
 
 operation::myinfo/findAllToMe[]
+
+[[findAllLevellogs]]
+== 작성한 레벨로그 전체 조회
+
+[[findAllLevellogs-success]]
+=== 성공
+
+operation::myinfo/findAllLevellogs[]

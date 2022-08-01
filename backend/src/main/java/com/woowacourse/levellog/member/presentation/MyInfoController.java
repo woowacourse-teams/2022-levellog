@@ -3,6 +3,8 @@ package com.woowacourse.levellog.member.presentation;
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
+import com.woowacourse.levellog.levellog.application.LevellogService;
+import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
@@ -21,7 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyInfoController {
 
     private final FeedbackService feedbackService;
+    private final LevellogService levellogService;
     private final MemberService memberService;
+
+    @GetMapping
+    public ResponseEntity<MemberDto> myInfo(@Authentic final Long memberId) {
+        final MemberDto memberDto = memberService.findMemberById(memberId);
+
+        return ResponseEntity.ok(memberDto);
+    }
 
     @GetMapping("/feedbacks")
     public ResponseEntity<FeedbacksDto> findAllFeedbackToMe(@Authentic final Long memberId) {
@@ -29,11 +39,10 @@ public class MyInfoController {
         return ResponseEntity.ok(feedbacksResponse);
     }
 
-    @GetMapping
-    public ResponseEntity<MemberDto> myInfo(@Authentic final Long memberId) {
-        final MemberDto memberDto = memberService.findMemberById(memberId);
-
-        return ResponseEntity.ok(memberDto);
+    @GetMapping("/levellogs")
+    public ResponseEntity<LevellogsDto> findAllMyLevellogs(@Authentic final Long memberId) {
+        final LevellogsDto levellogsResponse = levellogService.findAllByAuthorId(memberId);
+        return ResponseEntity.ok(levellogsResponse);
     }
 
     @PutMapping

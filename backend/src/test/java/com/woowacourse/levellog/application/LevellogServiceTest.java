@@ -7,6 +7,7 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
+import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -322,4 +323,41 @@ class LevellogServiceTest extends ServiceTest {
                     .isInstanceOf(UnauthorizedException.class);
         }
     }
+
+    @Nested
+    @DisplayName("findAllByAuthroId 메서드는")
+    class FindAllByAuthorId {
+
+        @Test
+        @DisplayName("주어진 authorId에 해당하는 레벨로그를 모두 조회한다.")
+        void success() {
+            // given
+            final Member author = memberRepository.save(new Member("페퍼", 1111, "pepper.img"));
+            memberRepository.save(new Member("알린", 2222, "alien.img"));
+
+            final Team team = teamRepository.save(
+                    new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt().plusDays(3), "profileUrl"));
+            final Team team2 = teamRepository.save(
+                    new Team("선릉 제이슨조", "선릉 트랙룸", setTeamStartAt().plusDays(3), "profileUrl"));
+
+            levellogRepository.save(Levellog.of(author, team, "content1"));
+            levellogRepository.save(Levellog.of(author, team2, "content2"));
+
+            // when
+            final LevellogsDto levellogsDto = levellogService.findAllByAuthorId(author.getId());
+
+            // then
+            assertThat(levellogsDto.getLevellogs()).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("주어진 authorId에 해당하는 멤버가 없으면 예외를 던진다.")
+        void findAllByAuthorId_authorNotFound_exception() {
+            // when & then
+            assertThatThrownBy(() -> levellogService.findAllByAuthorId(1_000_000L))
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(1_000_000L));
+        }
+    }
+
 }

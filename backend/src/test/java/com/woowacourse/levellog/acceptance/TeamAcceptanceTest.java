@@ -70,9 +70,9 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
         final RestAssuredResponse loginResponse3 = login("릭");
-        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(
                         List.of(loginResponse1.getMemberId(), loginResponse3.getMemberId())));
 
@@ -134,8 +134,10 @@ class TeamAcceptanceTest extends AcceptanceTest {
                         "place", equalTo("트랙룸"),
                         "hostId", equalTo(loginResponse1.getMemberId().intValue()),
                         "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
-                        "interviewers", contains(loginResponse2.getMemberId().intValue(), loginResponse3.getMemberId().intValue()),
-                        "interviewees", contains(loginResponse3.getMemberId().intValue(), loginResponse4.getMemberId().intValue())
+                        "interviewers",
+                        contains(loginResponse2.getMemberId().intValue(), loginResponse3.getMemberId().intValue()),
+                        "interviewees",
+                        contains(loginResponse3.getMemberId().intValue(), loginResponse4.getMemberId().intValue())
                 );
     }
 
@@ -267,7 +269,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();
@@ -299,7 +301,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
                 .getTeamId();

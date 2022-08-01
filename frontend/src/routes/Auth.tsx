@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import useUser from 'hooks/useUser';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 const Auth = ({ needLogin }: AuthProps) => {
   const navigate = useNavigate();
@@ -13,12 +13,13 @@ const Auth = ({ needLogin }: AuthProps) => {
 
   useEffect(() => {
     if (needLogin && !accessToken) {
-      alert('로그인이 필요한 페이지입니다.');
+      alert(MESSAGE.NEED_LOGIN);
       navigate(ROUTES_PATH.HOME);
     }
 
     if (!loginUserId && accessToken) {
       navigate(ROUTES_PATH.LOGIN, { state: location, replace: true });
+
       return;
     }
   }, [navigate]);

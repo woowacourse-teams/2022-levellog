@@ -39,6 +39,7 @@ const Login = () => {
             profileUrl: res.data.profileUrl,
           });
         }
+
         if (location.state) {
           if (location.state.pathname === ROUTES_PATH.LOGIN) {
             navigate(location.state.pathname);
@@ -49,10 +50,12 @@ const Login = () => {
 
           return;
         }
+
         navigate(ROUTES_PATH.HOME);
       } catch (err: unknown) {
         if (axios.isAxiosError(err)) {
           const responseBody: AxiosResponse = err.response!;
+
           if (err instanceof Error) alert(responseBody.data.message);
           navigate(ROUTES_PATH.NOT_FOUND);
         }
@@ -62,7 +65,7 @@ const Login = () => {
     loginGithub();
   }, []);
 
-  return <></>;
+  return <h1>로그인 중</h1>;
 };
 
 export default Login;

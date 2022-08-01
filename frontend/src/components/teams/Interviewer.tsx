@@ -23,50 +23,50 @@ const Interviewer = ({ participant, onClickToggleModal }: InterviewerProps) => {
 
   if (participant.id === loginUserId) {
     return (
-      <>
-        <InterviewerContainer>
-          <InterviewerStyle>
-            <Image src={participant.profileUrl} sizes={'HUGE'} />
-            <NicknameStyle>
-              <p>{participant.nickname}</p>
-            </NicknameStyle>
-          </InterviewerStyle>
-          <ContentStyle>
-            {participant.levellogId ? (
-              <InterviewerButton onClick={handleClickToggleModal}>레벨로그 보기</InterviewerButton>
-            ) : (
-              <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
-                <InterviewerButton>레벨로그 작성</InterviewerButton>
-              </Link>
-            )}
-          </ContentStyle>
-        </InterviewerContainer>
-      </>
+      <S.Container>
+        <S.Profile>
+          <Image src={participant.profileUrl} sizes={'HUGE'} />
+          <S.Nickname>
+            <p>{participant.nickname}</p>
+          </S.Nickname>
+        </S.Profile>
+        <S.Content>
+          {participant.levellogId ? (
+            <S.InterviewerButton onClick={handleClickToggleModal}>
+              레벨로그 보기
+            </S.InterviewerButton>
+          ) : (
+            <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
+              <S.InterviewerButton>레벨로그 작성</S.InterviewerButton>
+            </Link>
+          )}
+        </S.Content>
+      </S.Container>
     );
   }
 
   return (
-    <>
-      <InterviewerContainer>
-        <InterviewerStyle>
-          <Image src={participant.profileUrl} sizes={'HUGE'} />
-          <NicknameStyle>
-            <p>{participant.nickname}</p>
-          </NicknameStyle>
-        </InterviewerStyle>
-        <ContentStyle>
-          <InterviewerButton disabled={!participant.levellogId} onClick={handleClickToggleModal}>
-            레벨로그 보기
-          </InterviewerButton>
-          <Link to="">
-            <InterviewerButton disabled={!participant.levellogId}>사전 질문 작성</InterviewerButton>
-          </Link>
-          <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
-            <InterviewerButton disabled={!participant.levellogId}>피드백</InterviewerButton>
-          </Link>
-        </ContentStyle>
-      </InterviewerContainer>
-    </>
+    <S.Container>
+      <S.Profile>
+        <Image src={participant.profileUrl} sizes={'HUGE'} />
+        <S.Nickname>
+          <p>{participant.nickname}</p>
+        </S.Nickname>
+      </S.Profile>
+      <S.Content>
+        <S.InterviewerButton disabled={!participant.levellogId} onClick={handleClickToggleModal}>
+          레벨로그 보기
+        </S.InterviewerButton>
+        <Link to="">
+          <S.InterviewerButton disabled={!participant.levellogId}>
+            사전 질문 작성
+          </S.InterviewerButton>
+        </Link>
+        <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
+          <S.InterviewerButton disabled={!participant.levellogId}>피드백</S.InterviewerButton>
+        </Link>
+      </S.Content>
+    </S.Container>
   );
 };
 
@@ -75,47 +75,49 @@ interface InterviewerProps {
   onClickToggleModal: ({ teamId, participant }: LevellogParticipantType) => void;
 }
 
-const InterviewerButton = styled(Button)`
-  padding: 0;
-  background-color: ${(props) => props.theme.default.INVISIBLE};
-  font-size: 1.125rem;
-  font-weight: 400;
-`;
+const S = {
+  Container: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 15rem;
+    height: 18.75rem;
+    padding: 1.25rem 1.5rem 1.875rem 1.5rem;
+    border: 1px solid ${(props) => props.theme.default.BLACK};
+  `,
 
-const InterviewerContainer = styled.div`
-  display: flex;
-  width: 240px;
-  height: 300px;
-  padding: 20px 24px 30px 24px;
-  border: 1px solid ${(props) => props.theme.default.BLACK};
-  flex-direction: column;
-  gap: 1.5rem;
-`;
+  Profile: styled.div`
+    position: relative;
+    width: 7.5rem;
+    height: 8.125rem;
+    margin: 0 auto;
+  `,
 
-const InterviewerStyle = styled.div`
-  position: relative;
-  width: 120px;
-  height: 130px;
-  margin: 0 auto;
-`;
+  Nickname: styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 6.25rem;
+    left: 0.625rem;
+    width: 6.25rem;
+    height: 1.875rem;
+    border: 1px solid ${(props) => props.theme.default.BLACK};
+    background-color: ${(props) => props.theme.default.WHITE};
+  `,
 
-const NicknameStyle = styled.div`
-  display: flex;
-  position: absolute;
-  top: 100px;
-  left: 10px;
-  width: 100px;
-  height: 30px;
-  border: 1px solid ${(props) => props.theme.default.BLACK};
-  background-color: ${(props) => props.theme.default.WHITE};
-  justify-content: center;
-  align-items: center;
-`;
+  Content: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+  `,
 
-const ContentStyle = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.125rem;
-`;
+  InterviewerButton: styled(Button)`
+    padding: 0;
+    background-color: ${(props) => props.theme.default.INVISIBLE};
+    font-size: 1.125rem;
+    font-weight: 400;
+  `,
+};
 
 export default Interviewer;

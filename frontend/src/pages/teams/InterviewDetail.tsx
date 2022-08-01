@@ -14,7 +14,6 @@ import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
   const { teamLocationState, team, getTeam } = useTeam();
-
   const {
     levellog,
     participant,
@@ -44,26 +43,22 @@ const InterviewDetail = () => {
         />
       )}
       <FlexBox gap={4.375}>
-        <InterviewDetailHeader>
+        <S.Header>
           <FlexBox gap={1}>
-            <InterviewDetailOwnerImage>
+            <S.OwnerImage>
               <Image src={(team as InterviewTeamType).teamImage} sizes={'LARGE'} />
-            </InterviewDetailOwnerImage>
+            </S.OwnerImage>
             <FlexBox flexFlow="column" gap={1.125}>
-              <InterviewDetailTitle>{(team as InterviewTeamType).title}</InterviewDetailTitle>
+              <S.Title>{(team as InterviewTeamType).title}</S.Title>
               <FlexBox gap={1}>
-                <InterviewDetailTitleContent>
-                  {(team as InterviewTeamType).place}
-                </InterviewDetailTitleContent>
-                <InterviewDetailTitleContent>
-                  {(team as InterviewTeamType).startAt}
-                </InterviewDetailTitleContent>
+                <S.TitleContent>{(team as InterviewTeamType).place}``</S.TitleContent>
+                <S.TitleContent>{(team as InterviewTeamType).startAt}</S.TitleContent>
               </FlexBox>
             </FlexBox>
           </FlexBox>
           <Button>그룹 수정하기</Button>
-        </InterviewDetailHeader>
-        <InterviewDetailContainer>
+        </S.Header>
+        <S.Container>
           {(team as InterviewTeamType).participants.map((participant: ParticipantType) => (
             <Interviewer
               key={participant.id}
@@ -71,44 +66,45 @@ const InterviewDetail = () => {
               onClickToggleModal={onClickToggleModal}
             />
           ))}
-        </InterviewDetailContainer>
+        </S.Container>
       </FlexBox>
     </>
   );
 };
 
-const InterviewDetailHeader = styled.div<CSSProperties>`
-  display: flex;
-  width: 100%;
-  height: 60px;
-  margin-top: 50px;
-  justify-content: space-between;
-  align-items: center;
-`;
+const S = {
+  Header: styled.div<CSSProperties>`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 3.75rem;
+    margin-top: 3.125rem;
+  `,
 
-const InterviewDetailTitle = styled.h3`
-  width: 11.5rem;
-  word-break: break-all;
-`;
+  Container: styled.div`
+    display: flex;
+    flex-flow: row wrap;
+    gap: 2.5rem;
+    @media (max-width: 560px) {
+      justify-content: center;
+    }
+  `,
 
-const InterviewDetailTitleContent = styled.p`
-  word-break: break-all;
-`;
+  Title: styled.h3`
+    width: 11.5rem;
+    word-break: break-all;
+  `,
 
-const InterviewDetailOwnerImage = styled.div`
-  @media (max-width: 620px) {
-    display: none;
-  }
-`;
+  TitleContent: styled.p`
+    word-break: break-all;
+  `,
 
-const InterviewDetailContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 40px;
-  @media (max-width: 560px) {
-    justify-content: center;
-  }
-`;
+  OwnerImage: styled.div`
+    @media (max-width: 620px) {
+      display: none;
+    }
+  `,
+};
 
 export default InterviewDetail;

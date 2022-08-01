@@ -5,10 +5,10 @@ const ProfileDropdown = ({
   handleClickLogoutButton,
 }: ProfileDropdownProps) => {
   return (
-    <ProfileDropdownContainer isShowProfileDropdown={isShowProfileDropdown}>
-      <ProfileDropdownContent>프로필</ProfileDropdownContent>
-      <ProfileDropdownContent onClick={handleClickLogoutButton}>로그아웃</ProfileDropdownContent>
-    </ProfileDropdownContainer>
+    <S.Container isShowProfileDropdown={isShowProfileDropdown}>
+      <S.Content>프로필</S.Content>
+      <S.Content onClick={handleClickLogoutButton}>로그아웃</S.Content>
+    </S.Container>
   );
 };
 
@@ -17,35 +17,36 @@ interface ProfileDropdownProps {
   handleClickLogoutButton: () => void;
 }
 
-const ProfileDropdownContainer = styled.div`
-  display: flex;
-  position: absolute;
-  top: 70px;
-  right: 10rem;
-  width: 106px;
-  height: 88px;
-  padding: 10px 0 10px 14px;
-  background-color: #b4b4b4;
-  flex-direction: column;
-  justify-content: space-around;
-  border-radius: 8px;
-  transition: all 0.2s;
-  display: ${(props: Pick<ProfileDropdownProps, 'isShowProfileDropdown'>) =>
-    props.isShowProfileDropdown ? 'block' : 'none'};
-  z-index: 10;
-  @media (max-width: 1024px) {
-    right: 5rem;
-  }
-  @media (max-width: 560px) {
-    right: 2.5rem;
-  }
-`;
+const S = {
+  Container: styled.div`
+    display: ${(props: Pick<ProfileDropdownProps, 'isShowProfileDropdown'>) =>
+      props.isShowProfileDropdown ? 'flex' : 'none'};
+    position: absolute;
+    top: 4.375rem;
+    right: 10rem;
+    z-index: 10;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 6.625rem;
+    height: 5.5rem;
+    padding: 0.625rem 0 0.625rem 0.875rem;
+    border-radius: 0.5rem;
+    background-color: ${(props) => props.theme.default.GRAY};
+    transition: all 0.2s;
+    @media (max-width: 1024px) {
+      right: 5rem;
+    }
+    @media (max-width: 560px) {
+      right: 2.5rem;
+    }
+  `,
 
-const ProfileDropdownContent = styled.div`
-  width: 106px;
-  margin-bottom: 0.625rem;
-  color: ${(props) => props.theme.default.WHITE};
-  font-weight: 700;
-`;
+  Content: styled.div`
+    width: 6.625rem;
+    margin-bottom: 0.625rem;
+    color: ${(props) => props.theme.default.WHITE};
+    font-weight: 700;
+  `,
+};
 
 export default ProfileDropdown;

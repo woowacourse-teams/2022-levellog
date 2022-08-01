@@ -11,6 +11,7 @@ import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
   const { teams, getTeams, handleClickInterviewGroup } = useTeams();
+
   useEffect(() => {
     getTeams();
   }, []);
@@ -20,22 +21,24 @@ const InterviewTeams = () => {
       <ContentHeader title={'Interview Group'}>
         <Button>추가하기</Button>
       </ContentHeader>
-      <InterviewTeamsContainer onClick={handleClickInterviewGroup}>
+      <S.Container onClick={handleClickInterviewGroup}>
         {teams.map((team: InterviewTeamType) => (
           <InterviewTeam key={team.id} {...team} />
         ))}
-      </InterviewTeamsContainer>
+      </S.Container>
     </>
   );
 };
 
-const InterviewTeamsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  @media (max-width: 560px) {
-    justify-content: center;
-  }
-`;
+const S = {
+  Container: styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    @media (max-width: 560px) {
+      justify-content: center;
+    }
+  `,
+};
 
 export default InterviewTeams;

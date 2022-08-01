@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import Input from 'components/@commons/Input';
-import { SubTitleLabel } from 'components/@commons/Label';
+import SubTitleLabel from 'components/@commons/Label';
 
 const LevellogForm = ({
   handleSubmitLevellogForm,
@@ -18,10 +18,10 @@ const LevellogForm = ({
       <ContentHeader title={title}>
         <Button type={'submit'}>{buttonValue}</Button>
       </ContentHeader>
-      <MainContainer>
+      <S.Content>
         <SubTitleLabel>Level Log</SubTitleLabel>
         <Input width="100%" height="50rem" inputRef={levellogRef} />
-      </MainContainer>
+      </S.Content>
     </form>
   );
 };
@@ -33,9 +33,11 @@ interface LevellogFormProps {
   buttonValue: string;
 }
 
-const MainContainer = styled.main`
-  display: flex;
-  flex-direction: column;
-`;
+const S = {
+  Content: styled.main`
+    display: flex;
+    flex-direction: column;
+  `,
+};
 
 export default LevellogForm;

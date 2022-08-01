@@ -1,12 +1,11 @@
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
+import App from 'App';
 import { ThemeProvider } from 'styled-components';
 
-import { theme } from './styles/theme';
-
-import App from './App';
-import { UserProvider } from './contexts/userContext';
+import { UserProvider } from 'contexts/userContext';
+import { theme } from 'styles/theme';
 
 const main = () => {
   const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

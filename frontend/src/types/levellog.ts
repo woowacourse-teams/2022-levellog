@@ -1,4 +1,4 @@
-import { ParticipantType } from './team';
+import { ParticipantType } from 'types/team';
 
 export interface LevellogCustomHookType {
   inputValue: string;

@@ -1,9 +1,8 @@
-import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import useLevellog from 'hooks/useLevellog';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import LevellogForm from 'components/levellogs/LevellogForm';
 
@@ -14,13 +13,14 @@ const LevellogAdd = () => {
 
   const handleSubmitLevellogForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (typeof teamId === 'string') {
       onSubmitLevellogPostForm({ teamId });
 
       return;
     }
 
-    alert('잘못된 접근입니다.');
+    alert(MESSAGE.WRONG_ACCESS);
     navigate(ROUTES_PATH.HOME);
   };
 
@@ -28,8 +28,8 @@ const LevellogAdd = () => {
     <LevellogForm
       handleSubmitLevellogForm={handleSubmitLevellogForm}
       levellogRef={levellogRef}
-      title="레벨로그 작성"
-      buttonValue="제출하기"
+      title={'레벨로그 작성'}
+      buttonValue={'제출하기'}
     />
   );
 };

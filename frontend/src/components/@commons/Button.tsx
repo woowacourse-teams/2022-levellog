@@ -26,9 +26,9 @@ interface ButtonProps {
 const ButtonStyle = styled.button`
   width: fit-content;
   padding: 0.625rem 1.125rem;
-  background-color: ${(props) => props.theme.default.GRAY};
   border: none;
-  border-radius: 6px;
+  border-radius: 0.375rem;
+  background-color: ${(props) => props.theme.default.GRAY};
   font-size: 1rem;
   font-weight: 500;
 `;

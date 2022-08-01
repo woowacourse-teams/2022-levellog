@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.team.application;
 
+import com.woowacourse.levellog.common.domain.BaseEntity;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
@@ -64,6 +66,17 @@ public class TeamService {
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
+        final Team team = getTeam(teamId);
+        final List<Participant> participants = participantRepository.findByTeam(team);
+
+        final boolean isNotParticipant = participants
+                .stream()
+                .map(Participant::getMember)
+                .map(BaseEntity::getId)
+                .noneMatch(it -> it.equals(memberId));
+        if (isNotParticipant) {
+            throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
+        }
         return null;
     }
 

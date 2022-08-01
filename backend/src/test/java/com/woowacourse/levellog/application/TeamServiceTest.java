@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
@@ -93,6 +94,32 @@ class TeamServiceTest extends ServiceTest {
                 () -> assertThat(actualParticipantSizes).contains(2, 2),
                 () -> assertThat(response.getTeams()).hasSize(2)
         );
+    }
+
+    @Nested
+    @DisplayName("findMyRole 메서드는")
+    class findMyRole {
+
+        @Test
+        @DisplayName("팀의 참가자가 아닌 member가 요청하면 예외를 던진다.")
+        void iAmNotParticipant_exceptionThrown() {
+            // given
+            final Team team = saveAndGetTeam("레벨로그 모의 인터뷰", 1);
+
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("해리");
+            final Member member3 = saveAndGetMember("알린");
+
+            saveAllParticipant(team, member1, member2);
+
+            final Long teamId = team.getId();
+            final Long targetMemberId = member1.getId();
+            final Long requestMemberId = member3.getId();
+
+            // when & then
+            assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, requestMemberId))
+                    .isInstanceOf(UnauthorizedException.class);
+        }
     }
 
     private Member saveAndGetMember(final String nickname) {

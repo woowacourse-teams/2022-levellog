@@ -98,7 +98,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void closeInterview(Long teamId, Long memberId) {
+    public void closeInterview(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         validateHost(memberId, team);
 

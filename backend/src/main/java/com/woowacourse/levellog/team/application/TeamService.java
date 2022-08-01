@@ -1,12 +1,12 @@
 package com.woowacourse.levellog.team.application;
 
-import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
+import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Participants;
@@ -68,25 +68,19 @@ public class TeamService {
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
         final Team team = getTeam(teamId);
-        final List<Participant> participants = participantRepository.findByTeam(team);
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
 
-        if (isNotParticipant(memberId, participants)) {
+        if (participants.notContains(memberId)) {
             throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
         }
-        if (isNotParticipant(targetMemberId, participants)) {
+        if (participants.notContains(targetMemberId)) {
             throw new ParticipantNotFoundException(
                     "memberId : " + targetMemberId + "에 해당하는 member는 teamId : " + teamId + "의 참가자가 아닙니다.");
         }
 
-        return null;
-    }
+        final InterviewRole interviewRole = participants.toInterviewRole(targetMemberId, memberId, team.getInterviewerNumber());
 
-    private boolean isNotParticipant(final Long memberId, final List<Participant> participants) {
-        return participants
-                .stream()
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
-                .noneMatch(it -> it.equals(memberId));
+        return InterviewRoleDto.from(interviewRole);
     }
 
     @Transactional

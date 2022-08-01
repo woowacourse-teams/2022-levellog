@@ -16,7 +16,7 @@ public class Participants {
     private final List<Participant> values;
 
     public List<Long> toInterviewerIds(final Long memberId, final int interviewerNumber) {
-        if (isNotContains(memberId)) {
+        if (notContains(memberId)) {
             return Collections.emptyList();
         }
 
@@ -30,7 +30,7 @@ public class Participants {
     }
 
     public List<Long> toIntervieweeIds(final Long memberId, final int interviewerNumber) {
-        if (isNotContains(memberId)) {
+        if (notContains(memberId)) {
             return Collections.emptyList();
         }
 
@@ -51,7 +51,7 @@ public class Participants {
                 .collect(Collectors.toList());
     }
 
-    private boolean isNotContains(final Long memberId) {
+    public boolean notContains(final Long memberId) {
         return values
                 .stream()
                 .map(Participant::getMember)
@@ -67,5 +67,15 @@ public class Participants {
                 .orElseThrow(() -> new MemberNotFoundException("모든 참가자 중 호스트가 존재하지 않습니다."))
                 .getMember()
                 .getId();
+    }
+
+    public InterviewRole toInterviewRole(final Long targetMemberId, final Long memberId, final int interviewerNumber) {
+        final boolean isInterviewer = toInterviewerIds(targetMemberId, interviewerNumber)
+                .stream()
+                .anyMatch(it -> it.equals(memberId));
+        if (isInterviewer) {
+            return InterviewRole.INTERVIEWER;
+        }
+        return InterviewRole.OBSERVER;
     }
 }

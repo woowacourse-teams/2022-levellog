@@ -7,8 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
@@ -100,6 +102,52 @@ class TeamServiceTest extends ServiceTest {
     @Nested
     @DisplayName("findMyRole 메서드는")
     class findMyRole {
+
+        @Test
+        @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - interviewer")
+        void success_interviewer() {
+            // given
+            final Team team = saveAndGetTeam("레벨로그 모의 인터뷰", 1);
+
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("해리");
+            final Member member3 = saveAndGetMember("알린");
+
+            saveAllParticipant(team, member1, member2, member3);
+
+            final Long teamId = team.getId();
+            final Long targetMemberId = member1.getId();
+            final Long requestMemberId = member2.getId();
+
+            // when
+            final InterviewRoleDto actual = teamService.findMyRole(teamId, targetMemberId, requestMemberId);
+
+            // then
+            assertThat(actual.getMyRole()).isEqualTo(InterviewRole.INTERVIEWER);
+        }
+
+        @Test
+        @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - observer")
+        void success_observer() {
+            // given
+            final Team team = saveAndGetTeam("레벨로그 모의 인터뷰", 1);
+
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("해리");
+            final Member member3 = saveAndGetMember("알린");
+
+            saveAllParticipant(team, member1, member2, member3);
+
+            final Long teamId = team.getId();
+            final Long targetMemberId = member1.getId();
+            final Long requestMemberId = member3.getId();
+
+            // when
+            final InterviewRoleDto actual = teamService.findMyRole(teamId, targetMemberId, requestMemberId);
+
+            // then
+            assertThat(actual.getMyRole()).isEqualTo(InterviewRole.OBSERVER);
+        }
 
         @Test
         @DisplayName("팀의 참가자가 아닌 member가 요청하면 예외를 던진다.")

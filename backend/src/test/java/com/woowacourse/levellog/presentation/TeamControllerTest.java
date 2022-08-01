@@ -17,6 +17,7 @@ import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
+import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -479,6 +480,31 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/find-my-role/exception/not-my-team"));
+        }
+
+        @Test
+        @DisplayName("타겟 멤버가 팀의 참가자가 아니면 예외를 던진다.")
+        void targetNotParticipant_exceptionThrown() throws Exception {
+            // given
+            final Long teamId = 2L;
+            final Long memberId = 5L;
+
+            mockLogin();
+            given(teamService.findMyRole(teamId, memberId, 4L))
+                    .willThrow(new ParticipantNotFoundException("팀에 참가자가 아닙니다."));
+
+            // when
+            final ResultActions perform = mockMvc.perform(get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .accept(MediaType.ALL))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isNotFound())
+                    .andExpect(jsonPath("message").value("참가자를 찾을 수 없습니다."));
+
+            // docs
+            perform.andDo(document("team/find-my-role/exception/target-not-participant"));
         }
     }
 

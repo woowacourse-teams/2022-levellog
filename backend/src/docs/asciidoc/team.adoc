@@ -110,6 +110,10 @@ include::{snippets}/team/find-my-role/observer/http-response.adoc[]
 
 operation::team/find-my-role/exception/not-my-team[]
 
+==== 타겟 멤버가 팀의 참가자가 아닌 경우
+
+operation::team/find-my-role/exception/target-not-participant[]
+
 [[update]]
 == 팀 수정
 

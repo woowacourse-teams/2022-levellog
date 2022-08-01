@@ -35,7 +35,7 @@ public class PreQuestionService {
 
     public PreQuestionDto findById(final Long preQuestionId, final Long levellogId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
-        validateLevellog(preQuestion, levellogId);
+        validateLevellog(preQuestion, getLevellog(levellogId));
 
         return PreQuestionDto.from(preQuestion);
     }
@@ -43,7 +43,7 @@ public class PreQuestionService {
     @Transactional
     public void update(final PreQuestionDto request, final Long preQuestionId, final Long levellogId, final Long memberId) {
         final PreQuestion preQuestion = getPreQuestionByFromMember(preQuestionId, memberId);
-        validateLevellog(preQuestion, levellogId);
+        validateLevellog(preQuestion, getLevellog(levellogId));
 
         preQuestion.update(request.getPreQuestion());
     }
@@ -51,7 +51,7 @@ public class PreQuestionService {
     @Transactional
     public void deleteById(final Long preQuestionId, final Long levellogId, final Long memberId) {
         final PreQuestion preQuestion = getPreQuestionByFromMember(preQuestionId, memberId);
-        validateLevellog(preQuestion, levellogId);
+        validateLevellog(preQuestion, getLevellog(levellogId));
 
         preQuestionRepository.deleteById(preQuestion.getId());
     }
@@ -79,9 +79,9 @@ public class PreQuestionService {
                 .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
     }
 
-    private void validateLevellog(final PreQuestion preQuestion, final Long levellogId) {
-        if (!preQuestion.isSameLevellog(getLevellog(levellogId))) {
-            throw new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : " + levellogId);
+    private void validateLevellog(final PreQuestion preQuestion, final Levellog levellog) {
+        if (!preQuestion.isSameLevellog(levellog)) {
+            throw new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : " + levellog.getId());
         }
     }
 }

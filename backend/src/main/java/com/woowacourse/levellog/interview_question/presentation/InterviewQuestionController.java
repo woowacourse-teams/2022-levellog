@@ -42,8 +42,8 @@ public class InterviewQuestionController {
 
     @PutMapping("/{interviewQuestionId}")
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
-                                       @RequestBody @Valid final InterviewQuestionDto request,
                                        @PathVariable final Long interviewQuestionId,
+                                       @RequestBody @Valid final InterviewQuestionDto request,
                                        @Authentic final Long memberId) {
         interviewQuestionService.update(request, interviewQuestionId, memberId);
         return ResponseEntity.noContent().build();

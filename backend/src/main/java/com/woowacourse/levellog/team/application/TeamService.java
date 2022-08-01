@@ -10,6 +10,7 @@ import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
+import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
@@ -60,6 +61,10 @@ public class TeamService {
 
         return TeamAndRoleDto.from(team, participants.toHostId(), interviewers, interviewees,
                 getParticipantResponses(participants.getValues()));
+    }
+
+    public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
+        return null;
     }
 
     @Transactional

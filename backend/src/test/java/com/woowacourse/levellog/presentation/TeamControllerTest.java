@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
@@ -448,6 +449,36 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/find-by-id/exception/notfound"));
+        }
+    }
+
+    @Nested
+    @DisplayName("findMyRole 메서드는")
+    class FindMyRole {
+
+        @Test
+        @DisplayName("요청한 사용자가 소속된 팀이 아니면 예외를 던진다.")
+        void notMyTeam_exceptionThrown() throws Exception {
+            // given
+            final Long teamId = 2L;
+            final Long memberId = 5L;
+
+            mockLogin();
+            given(teamService.findMyRole(teamId, memberId, 4L))
+                    .willThrow(new UnauthorizedException("권한이 없습니다."));
+
+            // when
+            final ResultActions perform = mockMvc.perform(get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .accept(MediaType.ALL))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("team/find-my-role/exception/not-my-team"));
         }
     }
 

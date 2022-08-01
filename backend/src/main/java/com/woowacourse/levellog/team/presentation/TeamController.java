@@ -3,6 +3,7 @@ package com.woowacourse.levellog.team.presentation;
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.team.application.TeamService;
+import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
@@ -45,6 +46,14 @@ public class TeamController {
     @PublicAPI
     public ResponseEntity<TeamAndRoleDto> findById(@PathVariable final Long teamId, @Authentic final Long memberId) {
         final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(teamId, memberId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{teamId}/members/{memberId}/my-role")
+    public ResponseEntity<InterviewRoleDto> findMyRole(@PathVariable final Long teamId,
+                                           @PathVariable(name = "memberId") final Long targetMemberId,
+                                           @Authentic final Long memberId) {
+        final InterviewRoleDto response = teamService.findMyRole(teamId, targetMemberId, memberId);
         return ResponseEntity.ok(response);
     }
 

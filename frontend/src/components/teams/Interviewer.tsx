@@ -11,7 +11,7 @@ import Image from 'components/@commons/Image';
 import { LevellogParticipantType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
-const Interviewer = ({ participant, inTeam, onClickToggleModal }: InterviewerProps) => {
+const Interviewer = ({ participant, userInTeam, onClickToggleModal }: InterviewerProps) => {
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
@@ -58,12 +58,12 @@ const Interviewer = ({ participant, inTeam, onClickToggleModal }: InterviewerPro
           레벨로그 보기
         </S.InterviewerButton>
         <Link to="">
-          <S.InterviewerButton disabled={!participant.levellogId}>
+          <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
             사전 질문 작성
           </S.InterviewerButton>
         </Link>
         <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
-          <S.InterviewerButton disabled={!participant.levellogId || !inTeam}>
+          <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
             피드백
           </S.InterviewerButton>
         </Link>
@@ -74,7 +74,7 @@ const Interviewer = ({ participant, inTeam, onClickToggleModal }: InterviewerPro
 
 interface InterviewerProps {
   participant: ParticipantType;
-  inTeam: Boolean;
+  userInTeam: Boolean;
   onClickToggleModal: ({ teamId, participant }: LevellogParticipantType) => void;
 }
 

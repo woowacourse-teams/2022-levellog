@@ -44,7 +44,7 @@ export const useTeams = () => {
 export const useTeam = () => {
   const { loginUserId } = useUser();
   const [team, setTeam] = useState<InterviewTeamType | Object>({});
-  const [inTeam, setInTeam] = useState(false);
+  const [userInTeam, setUserInTeam] = useState(false);
   // 나중에 location은 타입을 고칠 필요가 있어보임
   const location = useLocation() as unknown as { state: InterviewTeamType };
   const { teamId } = useParams();
@@ -57,7 +57,7 @@ export const useTeam = () => {
         const res = await requestGetTeam({ teamId });
 
         setTeam(res.data);
-        isParticipantInTeam({ team: res.data });
+        checkUserInTeam({ team: res.data });
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -68,17 +68,17 @@ export const useTeam = () => {
     }
   };
 
-  const isParticipantInTeam = ({ team }: Record<'team', InterviewTeamType>) => {
-    setInTeam(team.participants.some((participant) => participant.memberId === loginUserId));
+  const checkUserInTeam = ({ team }: Record<'team', InterviewTeamType>) => {
+    setUserInTeam(team.participants.some((participant) => participant.memberId === loginUserId));
   };
 
   useEffect(() => {
     // 나중에 location은 타입을 고칠 필요가 있어보임
     if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
       setTeam(teamLocationState);
-      isParticipantInTeam({ team: teamLocationState });
+      checkUserInTeam({ team: teamLocationState });
     }
   }, []);
 
-  return { teamLocationState, team, inTeam, getTeam };
+  return { teamLocationState, team, userInTeam, getTeam };
 };

@@ -1,5 +1,4 @@
-// export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.SERVICE_URI}/login`;
-export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=http://192.168.1.136:3000/login`;
+export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.SERVICE_URI}/login`;
 
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',

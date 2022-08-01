@@ -29,7 +29,6 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 @WebMvcTest({
         FeedbackController.class,
@@ -54,6 +53,9 @@ public abstract class ControllerTest {
     protected TeamService teamService;
 
     @MockBean
+    protected OAuthService oAuthService;
+
+    @MockBean
     protected JwtTokenProvider jwtTokenProvider;
 
     @Autowired
@@ -61,9 +63,6 @@ public abstract class ControllerTest {
 
     @Autowired
     protected ObjectMapper objectMapper;
-
-    @MockBean
-    private OAuthService oAuthService;
 
     @BeforeEach
     void setUp(final WebApplicationContext context, final RestDocumentationContextProvider provider) {
@@ -87,7 +86,6 @@ public abstract class ControllerTest {
                                         "Connection"),
                                 prettyPrint()
                         )
-                ).addFilters(new CharacterEncodingFilter("UTF-8", true)) // 한글 깨짐 방지
-                .build();
+                ).build();
     }
 }

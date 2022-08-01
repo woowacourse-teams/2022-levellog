@@ -1,16 +1,18 @@
-package com.woowacourse.levellog.levellog.dto;
+package com.woowacourse.levellog.authentication.dto;
 
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LevellogRequest {
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode
+public class GithubCodeDto {
 
     @NotBlank
-    private String content;
+    private String authorizationCode;
 }

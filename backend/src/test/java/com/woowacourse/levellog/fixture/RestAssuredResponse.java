@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.fixture;
 
-import com.woowacourse.levellog.authentication.dto.LoginResponse;
+import com.woowacourse.levellog.authentication.dto.LoginDto;
 import io.restassured.response.ValidatableResponse;
 import org.springframework.http.HttpHeaders;
 
@@ -8,7 +8,7 @@ public class RestAssuredResponse {
 
     private final ValidatableResponse response;
 
-    public RestAssuredResponse(ValidatableResponse response) {
+    public RestAssuredResponse(final ValidatableResponse response) {
         this.response = response;
     }
 
@@ -29,14 +29,14 @@ public class RestAssuredResponse {
     public Long getMemberId() {
         return response
                 .extract()
-                .as(LoginResponse.class)
+                .as(LoginDto.class)
                 .getId();
     }
 
     public String getToken() {
         return response
                 .extract()
-                .as(LoginResponse.class)
+                .as(LoginDto.class)
                 .getAccessToken();
     }
 

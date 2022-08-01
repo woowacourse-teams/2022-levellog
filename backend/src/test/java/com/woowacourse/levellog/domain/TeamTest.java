@@ -4,9 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mockStatic;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.InterviewCloseException;
+import com.woowacourse.levellog.team.support.TimeStandard;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,9 +20,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.MockedStatic;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @DisplayName("Team의")
 class TeamTest {
+
+    @Autowired
+    TimeStandard timeStandard;
 
     @Nested
     @DisplayName("생성자 메서드는")
@@ -343,6 +352,61 @@ class TeamTest {
             // when & then
             assertThatCode(() -> team.validParticipantNumber(participantNumber))
                     .doesNotThrowAnyException();
+        }
+    }
+
+    @DisplayName("closeInterview 메소드는")
+    class CloseInterview {
+
+        @Test
+        @DisplayName("팀 인터뷰를 종료 상태로 바꾼다.")
+        void closeInterview_success() {
+            // given
+            final String title = "네오와 함께하는 레벨 인터뷰";
+            final String place = "선릉 트랙룸";
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final String profileUrl = "profile.img";
+            final Team team = new Team(title, place, startAt, profileUrl, 2);
+
+            // when
+            team.closeInterview(startAt.plusDays(1));
+
+            // then
+            assertThat(team.isClosed()).isTrue();
+        }
+
+        @Test
+        @DisplayName("이미 종료된 인터뷰를 종료하려는 경우 예외가 발생한다.")
+        void close_alreadyClose_exceptionThrown() {
+            // given
+            final String title = "네오와 함께하는 레벨 인터뷰";
+            final String place = "선릉 트랙룸";
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final String profileUrl = "profile.img";
+            final Team team = new Team(title, place, startAt, profileUrl, 2);
+
+            team.closeInterview(startAt.plusDays(1));
+
+            // when & then
+            assertThatThrownBy(() -> team.closeInterview(startAt.plusDays(1)))
+                    .isInstanceOf(InterviewCloseException.class)
+                    .hasMessageContaining("이미 종료된 인터뷰");
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 시간 전 종료를 요청할 경우 예외가 발생한다.")
+        void close_beforeStart_exceptionThrown() {
+            // given
+            final String title = "네오와 함께하는 레벨 인터뷰";
+            final String place = "선릉 트랙룸";
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final String profileUrl = "profile.img";
+            final Team team = new Team(title, place, startAt, profileUrl, 2);
+
+            // when & then
+            assertThatThrownBy(() -> team.closeInterview(startAt.minusDays(1)))
+                    .isInstanceOf(InterviewCloseException.class)
+                    .hasMessageContaining("인터뷰가 시작되기 전에 종료할 수 없습니다.");
         }
     }
 }

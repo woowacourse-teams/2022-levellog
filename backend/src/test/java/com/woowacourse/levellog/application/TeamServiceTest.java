@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mockStatic;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
 @DisplayName("TeamService의")
 class TeamServiceTest extends ServiceTest {
@@ -421,6 +424,43 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.update(request, 1000L, member.getId()))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
+        }
+    }
+
+    @Nested
+    @DisplayName("closeInterview 메서드는")
+    class CloseInterview {
+
+        @Test
+        @DisplayName("입력 받은 팀의 인터뷰를 종료한다.")
+        void closeInterview() {
+            // given
+            final Member rick = saveAndGetMember("릭");
+            final Team team = saveAndGetTeam("잠실 제이슨조", 1);
+            participantRepository.save(new Participant(team, rick, true));
+
+            // when
+            teamService.closeInterview(team.getId(), rick.getId());
+
+            // then
+            final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
+            assertThat(actualTeam.isClosed()).isTrue();
+        }
+
+        @Test
+        @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하면 예외가 발생한다.")
+        void close_notHost_exceptionThrown() {
+            // given
+            final Member rick = saveAndGetMember("릭");
+            final Member alien = saveAndGetMember("알린");
+            final Team team = saveAndGetTeam("잠실 제이슨조", 1);
+            participantRepository.save(new Participant(team, rick, true));
+            participantRepository.save(new Participant(team, alien, false));
+
+            // when & then
+            assertThatThrownBy(() -> teamService.closeInterview(team.getId(), alien.getId()))
+                    .isInstanceOf(HostUnauthorizedException.class)
+                    .hasMessageContainingAll("호스트 권한이 없습니다.", alien.getId().toString());
         }
     }
 

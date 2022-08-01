@@ -21,6 +21,7 @@ import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ public class TeamService {
     private final ParticipantRepository participantRepository;
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
+    private final TimeStandard timeStandard;
 
     @Transactional
     public Long save(final TeamCreateDto request, final Long hostId) {
@@ -93,6 +95,14 @@ public class TeamService {
         validateHost(memberId, team);
 
         team.update(request.getTitle(), request.getPlace(), request.getStartAt());
+    }
+
+    @Transactional
+    public void closeInterview(Long teamId, Long memberId) {
+        final Team team = getTeam(teamId);
+        validateHost(memberId, team);
+
+        team.closeInterview(timeStandard.now());
     }
 
     @Transactional

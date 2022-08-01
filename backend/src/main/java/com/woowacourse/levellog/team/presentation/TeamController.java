@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -62,6 +63,13 @@ public class TeamController {
                                        @RequestBody @Valid final TeamUpdateDto request,
                                        @Authentic final Long memberId) {
         teamService.update(request, teamId, memberId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{teamId}/close")
+    public ResponseEntity<Void> close(@PathVariable final Long teamId,
+                                      @Authentic final Long memberId) {
+        teamService.closeInterview(teamId, memberId);
         return ResponseEntity.noContent().build();
     }
 

@@ -2,6 +2,7 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.team.exception.InterviewCloseException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -112,6 +113,25 @@ public class Team extends BaseEntity {
     public void validParticipantNumber(final int participantNumber) {
         if (participantNumber <= interviewerNumber) {
             throw new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
+        }
+    }
+
+    public void closeInterview(final LocalDateTime presentTime) {
+        validateInterviewStartTime(presentTime);
+        validateAlreadyClose();
+
+        isClosed = true;
+    }
+
+    private void validateInterviewStartTime(final LocalDateTime presentTime) {
+        if (presentTime.isBefore(startAt)) {
+            throw new InterviewCloseException("[teamId : " + this.getId() + "]", "인터뷰가 시작되기 전에 종료할 수 없습니다.");
+        }
+    }
+
+    private void validateAlreadyClose() {
+        if (isClosed) {
+            throw new InterviewCloseException("[teamId : " + this.getId() + "]", "이미 종료된 인터뷰입니다.");
         }
     }
 }

@@ -34,17 +34,18 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 팀 생성하기")
     void createTeam() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final RestAssuredResponse loginResponse3 = login("릭");
-        final List<Long> participantIds = List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId());
+        final String pepperToken = login("페퍼").getToken();
+        final Long eveId = login("이브").getMemberId();
+        final Long rickId = login("릭").getMemberId();
+
+        final List<Long> participantIds = List.of(eveId, rickId);
 
         final TeamCreateDto request = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(participantIds));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/create"))
@@ -67,17 +68,17 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 팀 목록 조회하기")
     void findAllTeam() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final RestAssuredResponse loginResponse3 = login("릭");
-        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(
-                        List.of(loginResponse1.getMemberId(), loginResponse3.getMemberId())));
+        final RestAssuredResponse pepper = login("페퍼");
+        final RestAssuredResponse eve = login("이브");
+        final RestAssuredResponse rick = login("릭");
 
-        post("/api/teams", loginResponse1.getToken(), teamCreateDto1);
-        post("/api/teams", loginResponse2.getToken(), teamCreateDto2);
+        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(eve.getMemberId())));
+        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(pepper.getMemberId(), rick.getMemberId())));
+
+        post("/api/teams", pepper.getToken(), teamCreateDto1);
+        post("/api/teams", eve.getToken(), teamCreateDto2);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -91,7 +92,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"),
                         "teams.hostId",
-                        contains(loginResponse1.getMemberId().intValue(), loginResponse2.getMemberId().intValue()),
+                        contains(pepper.getMemberId().intValue(), eve.getMemberId().intValue()),
                         "teams.participants.nickname", contains(List.of("페퍼", "이브"), List.of("이브", "페퍼", "릭"))
                 );
     }
@@ -106,22 +107,22 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("나의 팀 상세 조회하기")
     void findTeam_myTeam() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final RestAssuredResponse loginResponse3 = login("릭");
-        final RestAssuredResponse loginResponse4 = login("로마");
+        final RestAssuredResponse pepper = login("페퍼");
 
-        final ParticipantIdsDto participants = new ParticipantIdsDto(
-                List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId(), loginResponse4.getMemberId()));
+        final Long eveId = login("이브").getMemberId();
+        final Long rickId = login("릭").getMemberId();
+        final Long romaId = login("로마").getMemberId();
+
+        final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(eveId, rickId, romaId));
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
                 participants);
 
-        final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+        final String id = post("/api/teams", pepper.getToken(), teamCreateDto)
                 .getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepper.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/find/my-team"))
                 .when()
@@ -132,12 +133,12 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("title", equalTo("잠실 제이슨조"),
                         "place", equalTo("트랙룸"),
-                        "hostId", equalTo(loginResponse1.getMemberId().intValue()),
+                        "hostId", equalTo(pepper.getMemberId().intValue()),
                         "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
                         "interviewers",
-                        contains(loginResponse2.getMemberId().intValue(), loginResponse3.getMemberId().intValue()),
+                        contains(eveId.intValue(), rickId.intValue()),
                         "interviewees",
-                        contains(loginResponse3.getMemberId().intValue(), loginResponse4.getMemberId().intValue())
+                        contains(rickId.intValue(), romaId.intValue())
                 );
     }
 
@@ -151,17 +152,17 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인하지 않고 팀 상세 조회하기")
     void findTeam_notLogin() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final RestAssuredResponse loginResponse3 = login("릭");
-        final RestAssuredResponse loginResponse4 = login("로마");
+        final RestAssuredResponse pepper = login("페퍼");
 
-        final ParticipantIdsDto participants = new ParticipantIdsDto(
-                List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId(), loginResponse4.getMemberId()));
+        final Long eveId = login("이브").getMemberId();
+        final Long rickId = login("릭").getMemberId();
+        final Long romaId = login("로마").getMemberId();
+
+        final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(eveId, rickId, romaId));
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
                 participants);
 
-        final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+        final String id = post("/api/teams", pepper.getToken(), teamCreateDto)
                 .getTeamId();
 
         // when
@@ -176,7 +177,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("title", equalTo("잠실 제이슨조"),
                         "place", equalTo("트랙룸"),
-                        "hostId", equalTo(loginResponse1.getMemberId().intValue()),
+                        "hostId", equalTo(pepper.getMemberId().intValue()),
                         "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
                         "interviewers", empty(),
                         "interviewees", empty()
@@ -193,26 +194,26 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("같은 팀 참가자에 대한 나의 역할 조회하기 - interviewer")
     void findMyRole_interviewer() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final RestAssuredResponse loginResponse3 = login("릭");
-        final RestAssuredResponse loginResponse4 = login("로마");
+        final String pepperToken = login("페퍼").getToken();
 
-        final ParticipantIdsDto participants = new ParticipantIdsDto(
-                List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId(), loginResponse4.getMemberId()));
+        final Long eveId = login("이브").getMemberId();
+        final Long rickId = login("릭").getMemberId();
+        final Long romaId = login("로마").getMemberId();
+
+        final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(eveId, rickId, romaId));
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
                 participants);
 
-        final String teamId = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+        final String teamId = post("/api/teams", pepperToken, teamCreateDto)
                 .getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .headers(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/find-my-role/interviewer"))
                 .when()
-                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, loginResponse3.getMemberId())
+                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, rickId)
                 .then().log().all();
 
         // then
@@ -230,26 +231,26 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("같은 팀 참가자에 대한 나의 역할 조회하기 - observer")
     void findMyRole_observer() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final RestAssuredResponse loginResponse3 = login("릭");
-        final RestAssuredResponse loginResponse4 = login("로마");
+        final String pepperToken = login("페퍼").getToken();
 
-        final ParticipantIdsDto participants = new ParticipantIdsDto(
-                List.of(loginResponse2.getMemberId(), loginResponse3.getMemberId(), loginResponse4.getMemberId()));
+        final Long eveId = login("이브").getMemberId();
+        final Long rickId = login("릭").getMemberId();
+        final Long romaId = login("로마").getMemberId();
+
+        final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(eveId, rickId, romaId));
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
                 participants);
 
-        final String teamId = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+        final String teamId = post("/api/teams", pepperToken, teamCreateDto)
                 .getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .headers(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .headers(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/find-my-role/observer"))
                 .when()
-                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, loginResponse2.getMemberId())
+                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, eveId)
                 .then().log().all();
 
         // then
@@ -267,17 +268,18 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 팀 정보 수정하기")
     void update() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
+        final String pepperToken = login("페퍼").getToken();
+        final Long eveId = login("이브").getMemberId();
+
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+                new ParticipantIdsDto(List.of(eveId)));
+        final String id = post("/api/teams", pepperToken, teamCreateDto)
                 .getTeamId();
         final TeamUpdateDto request = new TeamUpdateDto("선릉 브리조", "수성방", LocalDateTime.now().plusDays(3));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/update"))
@@ -299,15 +301,16 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 팀 삭제하기")
     void delete() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
+        final String pepperToken = login("페퍼").getToken();
+        final Long eveId = login("이브").getMemberId();
+
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto)
+                new ParticipantIdsDto(List.of(eveId)));
+        final String id = post("/api/teams", pepperToken, teamCreateDto)
                 .getTeamId();
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/delete"))
                 .when()
@@ -316,15 +319,5 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    private RestAssuredResponse createTeam(final String token, final String title, final int interviewerNumber,
-                                           final Long... participantIds) {
-        final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(participantIds));
-        final TeamCreateDto request = new TeamCreateDto(title, title + " place", interviewerNumber,
-                LocalDateTime.now().plusDays(3),
-                participants);
-
-        return post("/api/teams", token, request);
     }
 }

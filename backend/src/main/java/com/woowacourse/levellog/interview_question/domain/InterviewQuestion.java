@@ -33,7 +33,7 @@ public class InterviewQuestion extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_interview_question_levellog"))
     private Levellog levellog;
 
-    @Column
+    @Column(nullable = false)
     private String content;
 
     private InterviewQuestion(final Member from, final Member to, final Levellog levellog, final String content) {

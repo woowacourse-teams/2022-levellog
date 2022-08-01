@@ -207,7 +207,7 @@ public class TeamService {
         final Long hostId = getHostId(participants);
 
         if (!memberId.equals(hostId)) {
-            throw new HostUnauthorizedException("호스트 권한이 없습니다. 입력한 memberId : [" + memberId + "]");
+            throw new HostUnauthorizedException("호스트 권한이 없습니다. [memberId : " + memberId + "]");
         }
     }
 }

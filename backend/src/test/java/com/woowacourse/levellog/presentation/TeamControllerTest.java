@@ -18,6 +18,7 @@ import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -254,6 +255,66 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/create/exception/interviewerNumber/not-positive"));
+        }
+
+        @Test
+        @DisplayName("팀 구성원 목록으로 중복된 Id가 들어오면 예외를 던진다.")
+        void save_duplicateParticipant_exceptionThrown() throws Exception {
+            // given
+            mockLogin();
+
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(1L, 2L, 2L)));
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            willThrow(new DuplicateParticipantsException("참가자 중복"))
+                    .given(teamService)
+                    .save(request, 4L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("중복되는 참가자가 존재합니다."));
+
+            // docs
+            perform.andDo(document("team/create/exception/participants/duplicate"));
+        }
+
+        @Test
+        @DisplayName("팀 구성원 목록으로 호스트 Id가 들어오면 예외를 던진다.")
+        void save_participantsWithHostId_exceptionThrown() throws Exception {
+            // given
+            mockLogin();
+
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(1L, 2L, 4L)));
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            willThrow(new DuplicateParticipantsException("참가자 중복"))
+                    .given(teamService)
+                    .save(request, 4L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("중복되는 참가자가 존재합니다."));
+
+            // docs
+            perform.andDo(document("team/create/exception/participants/host"));
         }
     }
 

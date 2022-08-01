@@ -19,11 +19,14 @@ import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
+import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -112,11 +115,28 @@ public class TeamService {
     }
 
     private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
+        validateParticipantDuplication(memberIds, hostId);
+
+        return generatePaticipants(team, hostId, memberIds);
+    }
+
+    private List<Participant> generatePaticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         final List<Participant> participants = new ArrayList<>();
         participants.add(new Participant(team, getMember(hostId), true));
         participants.addAll(toParticipants(team, memberIds));
 
         return participants;
+    }
+
+    private void validateParticipantDuplication(final List<Long> memberIds, final Long hostId) {
+        final List<Long> participantIds = new ArrayList<>(memberIds);
+        participantIds.add(hostId);
+
+        final Set<Long> distinct = new HashSet<>(participantIds);
+        if (distinct.size() != participantIds.size()) {
+            throw new DuplicateParticipantsException(
+                    "참가자 중복 [participants : " + participantIds + " hostId : " + hostId + "]");
+        }
     }
 
     private List<Participant> toParticipants(final Team team, final List<Long> memberIds) {

@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.team.application;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
@@ -21,7 +20,6 @@ import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -72,16 +70,7 @@ public class TeamService {
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
         final Team team = getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
-
-        if (participants.notContains(memberId)) {
-            throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
-        }
-        if (participants.notContains(targetMemberId)) {
-            throw new ParticipantNotFoundException(
-                    "memberId : " + targetMemberId + "에 해당하는 member는 teamId : " + teamId + "의 참가자가 아닙니다.");
-        }
-
-        final InterviewRole interviewRole = participants.toInterviewRole(targetMemberId, memberId, team.getInterviewerNumber());
+        final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId, memberId, team.getInterviewerNumber());
 
         return InterviewRoleDto.from(interviewRole);
     }

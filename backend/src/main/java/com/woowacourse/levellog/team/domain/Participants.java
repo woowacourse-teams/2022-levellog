@@ -1,7 +1,9 @@
 package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
+import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +53,7 @@ public class Participants {
                 .collect(Collectors.toList());
     }
 
-    public boolean notContains(final Long memberId) {
+    private boolean notContains(final Long memberId) {
         return values
                 .stream()
                 .map(Participant::getMember)
@@ -69,13 +71,26 @@ public class Participants {
                 .getId();
     }
 
-    public InterviewRole toInterviewRole(final Long targetMemberId, final Long memberId, final int interviewerNumber) {
+    public InterviewRole toInterviewRole(final Long teamId, final Long targetMemberId, final Long memberId, final int interviewerNumber) {
+        validateParticipant(teamId, targetMemberId, memberId);
+
         final boolean isInterviewer = toInterviewerIds(targetMemberId, interviewerNumber)
                 .stream()
                 .anyMatch(it -> it.equals(memberId));
         if (isInterviewer) {
             return InterviewRole.INTERVIEWER;
         }
+
         return InterviewRole.OBSERVER;
+    }
+
+    private void validateParticipant(final Long teamId, final Long targetMemberId, final Long memberId) {
+        if (notContains(memberId)) {
+            throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
+        }
+        if (notContains(targetMemberId)) {
+            throw new ParticipantNotFoundException(
+                    "memberId : " + targetMemberId + "에 해당하는 member는 teamId : " + teamId + "의 참가자가 아닙니다.");
+        }
     }
 }

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
@@ -44,10 +45,6 @@ public class PreQuestionControllerTest extends ControllerTest {
             final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
-            doThrow(new InvalidFieldException("사전 내용은 공백이나 null일 수 없습니다."))
-                    .when(preQuestionService)
-                    .save(preQuestionDto, 1L, 4L);
-
             // when
             final ResultActions perform = mockMvc.perform(post("/api/levellogs/1/pre-questions")
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
@@ -57,7 +54,8 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("preQuestion must not be blank");
+                    .andExpect(jsonPath("message")
+                            .value("preQuestion must not be blank"));
 
             // docs
             perform.andDo(document("pre-question/create/exception/null-and-blank"));
@@ -80,10 +78,6 @@ public class PreQuestionControllerTest extends ControllerTest {
             final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
-            doThrow(new InvalidFieldException("사전 내용은 공백이나 null일 수 없습니다."))
-                    .when(preQuestionService)
-                    .update(preQuestionDto, 1L, 1L, 4L);
-
             // when
             final ResultActions perform = mockMvc.perform(put("/api/levellogs/1/pre-questions/1")
                             .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
@@ -93,7 +87,8 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("preQuestion must not be blank");
+                    .andExpect(jsonPath("message")
+                            .value("preQuestion must not be blank"));
 
             // docs
             perform.andDo(document("pre-question/update/exception/null-and-blank"));
@@ -122,8 +117,8 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString()
-                    .contains("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1");
+                    .andExpect(jsonPath("message")
+                            .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
 
             // docs
             perform.andDo(document("pre-question/update/exception/wrong-levellog"));
@@ -152,8 +147,8 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isNotFound())
-                    .andReturn().getResponse().getContentAsString()
-                    .contains("작성한 사전 질문이 존재하지 않습니다.");
+                    .andExpect(jsonPath("message")
+                            .value("사전 질문이 존재하지 않습니다."));
 
             // docs
             perform.andDo(document("pre-question/update/exception/notfound"));
@@ -183,8 +178,8 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString()
-                    .contains("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1");
+                    .andExpect(jsonPath("message")
+                            .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
 
             // docs
             perform.andDo(document("pre-question/findbyid/exception/wrong-levellog"));
@@ -209,8 +204,8 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isNotFound())
-                    .andReturn().getResponse().getContentAsString()
-                    .contains("작성한 사전 질문이 존재하지 않습니다.");
+                    .andExpect(jsonPath("message")
+                            .value("사전 질문이 존재하지 않습니다."));
 
             // docs
             perform.andDo(document("pre-question/findbyid/exception/notfound"));
@@ -240,8 +235,8 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString()
-                    .contains("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1");
+                    .andExpect(jsonPath("message")
+                            .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
 
             // docs
             perform.andDo(document("pre-question/delete/exception/wrong-levellog"));
@@ -266,8 +261,8 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isNotFound())
-                    .andReturn().getResponse().getContentAsString()
-                    .contains("작성한 사전 질문이 존재하지 않습니다.");
+                    .andExpect(jsonPath("message")
+                            .value("사전 질문이 존재하지 않습니다."));
 
             // docs
             perform.andDo(document("pre-question/delete/exception/notfound"));

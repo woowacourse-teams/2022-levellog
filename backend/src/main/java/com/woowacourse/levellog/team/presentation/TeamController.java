@@ -49,10 +49,10 @@ public class TeamController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{teamId}/members/{memberId}/my-role")
+    @GetMapping("/{teamId}/members/{targetMemberId}/my-role")
     public ResponseEntity<InterviewRoleDto> findMyRole(@PathVariable final Long teamId,
-                                           @PathVariable(name = "memberId") final Long targetMemberId,
-                                           @Authentic final Long memberId) {
+                                                       @PathVariable final Long targetMemberId,
+                                                       @Authentic final Long memberId) {
         final InterviewRoleDto response = teamService.findMyRole(teamId, targetMemberId, memberId);
         return ResponseEntity.ok(response);
     }

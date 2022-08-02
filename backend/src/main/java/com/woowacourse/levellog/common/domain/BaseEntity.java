@@ -19,7 +19,7 @@ public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    Long id;
 
     @CreatedDate
     @Column(updatable = false, nullable = false)

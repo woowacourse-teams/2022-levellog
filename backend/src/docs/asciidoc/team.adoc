@@ -108,6 +108,24 @@ operation::team/find-by-id/exception/notfound[]
 [[find-my-role]]
 == 인터뷰 역할 조회
 
+*응답 종류*
+
+
+[cols="1,1"]
+|===
+|*응답*
+|*설명*
+
+|INTERVIEWER
+|타겟 멤버 입장에서 나는 인터뷰어이다.
+
+|OBSERVER
+|타겟 멤버 입장에서 나는 옵저버이다.
+
+|ME
+|타겟 멤버 아이디 == 나의 아이디
+|===
+
 [[find-my-role-success]]
 === 인터뷰 역할 조회 성공
 

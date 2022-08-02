@@ -3,6 +3,8 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useUser from 'hooks/useUser';
+
 import { ROUTES_PATH } from 'constants/constants';
 
 import { requestGetTeams, requestGetTeam } from 'apis/teams';
@@ -40,7 +42,9 @@ export const useTeams = () => {
 };
 
 export const useTeam = () => {
+  const { loginUserId } = useUser();
   const [team, setTeam] = useState<InterviewTeamType | Object>({});
+  const [userInTeam, setUserInTeam] = useState(false);
   // 나중에 location은 타입을 고칠 필요가 있어보임
   const location = useLocation() as unknown as { state: InterviewTeamType };
   const { teamId } = useParams();
@@ -53,6 +57,7 @@ export const useTeam = () => {
         const res = await requestGetTeam({ teamId });
 
         setTeam(res.data);
+        checkUserInTeam({ team: res.data });
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -63,12 +68,17 @@ export const useTeam = () => {
     }
   };
 
+  const checkUserInTeam = ({ team }: Record<'team', InterviewTeamType>) => {
+    setUserInTeam(team.participants.some((participant) => participant.memberId === loginUserId));
+  };
+
   useEffect(() => {
     // 나중에 location은 타입을 고칠 필요가 있어보임
-    if ((teamLocationState as InterviewTeamType).id !== undefined) {
+    if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
       setTeam(teamLocationState);
+      checkUserInTeam({ team: teamLocationState });
     }
   }, []);
 
-  return { teamLocationState, team, getTeam };
+  return { teamLocationState, team, userInTeam, getTeam };
 };

@@ -6,6 +6,8 @@ import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.config.TestAuthenticationConfig;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
+import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.application.MemberService;
@@ -44,6 +46,9 @@ abstract class ServiceTest {
     protected FeedbackService feedbackService;
 
     @Autowired
+    protected InterviewQuestionService interviewQuestionService;
+
+    @Autowired
     protected TeamService teamService;
 
     @Autowired
@@ -57,6 +62,9 @@ abstract class ServiceTest {
 
     @Autowired
     protected FeedbackRepository feedbackRepository;
+
+    @Autowired
+    protected InterviewQuestionRepository interviewQuestionRepository;
 
     @Autowired
     protected ParticipantRepository participantRepository;

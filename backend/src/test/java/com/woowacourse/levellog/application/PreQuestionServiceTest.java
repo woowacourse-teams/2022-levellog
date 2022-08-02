@@ -92,8 +92,8 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> preQuestionService.save(preQuestionDto, levellog.getId(), author.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContaining("자신의 레벨로그에는 사전 질문을 작성할 수 없습니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("내 레벨로그에 사전 질문을 작성할 수 없습니다.");
         }
     }
 

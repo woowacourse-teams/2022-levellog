@@ -94,7 +94,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
-            BDDMockito.willThrow(new UnauthorizedException("자신의 레벨로그에는 사전 질문을 작성할 수 없습니다."))
+            BDDMockito.willThrow(new InvalidFieldException("내 레벨로그에 사전 질문을 작성할 수 없습니다."))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 4L);
 
@@ -102,9 +102,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
 
             // then
-            perform.andExpect(status().isUnauthorized())
+            perform.andExpect(status().isBadRequest())
                     .andExpect(jsonPath("message")
-                            .value("권한이 없습니다."));
+                            .value("내 레벨로그에 사전 질문을 작성할 수 없습니다."));
 
             // docs
             perform.andDo(document("pre-question/create/exception/levellog-is-mine"));

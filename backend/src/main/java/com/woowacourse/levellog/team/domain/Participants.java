@@ -52,6 +52,9 @@ public class Participants {
     public InterviewRole toInterviewRole(final Long teamId, final Long targetMemberId, final Long memberId,
                                          final int interviewerNumber) {
         validateParticipant(teamId, targetMemberId, memberId);
+        if (targetMemberId.equals(memberId)) {
+            return InterviewRole.ME;
+        }
 
         final boolean isInterviewer = toInterviewerIds(targetMemberId, interviewerNumber)
                 .stream()

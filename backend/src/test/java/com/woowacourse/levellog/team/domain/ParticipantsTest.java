@@ -119,7 +119,7 @@ class ParticipantsTest {
                     () -> assertThat(actual).isEqualTo(expected)
             );
         }
-        
+
         @Test
         @DisplayName("타겟 멤버가 참가자가 아니면 빈 리스트를 반환한다.")
         void emptyList() {
@@ -170,6 +170,29 @@ class ParticipantsTest {
 
             // then
             assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("타겟 멤버가 요청한 멤버와 같으면 ME를 반환한다.")
+        void me() {
+            // given
+            final Team team = MockEntityFactory.setId(1L, new Team());
+            final List<Participant> values = new ArrayList<>(
+                    List.of(
+                            new Participant(team, getMember("릭", 1L), true),
+                            new Participant(team, getMember("로마", 2L), false),
+                            new Participant(team, getMember("알린", 3L), false),
+                            new Participant(team, getMember("이브", 4L), false),
+                            new Participant(team, getMember("해리", 5L), false)
+                    )
+            );
+            final Participants participants = new Participants(values);
+
+            // when
+            final InterviewRole actual = participants.toInterviewRole(team.getId(), 1L, 1L, 2);
+
+            // then
+            assertThat(actual).isEqualTo(InterviewRole.ME);
         }
     }
 }

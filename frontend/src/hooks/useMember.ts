@@ -29,16 +29,25 @@ const useMember = () => {
     }
   };
 
-  const onClickMember = ({ id, nickname, profileUrl }: MemberType) => {
-    const participant = { id, nickname, profileUrl };
-    setParticipants((prev) => prev.concat(participant));
+  const updateParticipants = ({ id, nickname, profileUrl }: MemberType) => {
+    const inputtedParticipant = { id, nickname, profileUrl };
+
+    if (participants.every((participant) => inputtedParticipant.id !== participant.id)) {
+      setParticipants((prev) => prev.concat(inputtedParticipant));
+      console.log('추가');
+      return;
+    }
+    setParticipants(
+      participants.filter((participant) => inputtedParticipant.id !== participant.id),
+    );
+    console.log('삭제');
   };
 
   return {
     members,
     participants,
     onChangeNickname,
-    onClickMember,
+    updateParticipants,
   };
 };
 

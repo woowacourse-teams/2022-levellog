@@ -1,16 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
 import { ROUTES_PATH } from 'constants/constants';
 
-import { requestGetTeams, requestGetTeam } from 'apis/teams';
-import { InterviewTeamType } from 'types/team';
+import { requestGetTeams, requestGetTeam, requestPostTeam } from 'apis/teams';
+import { MemberType } from 'types/member';
+import { InterviewTeamType, TeamCustomHookType } from 'types/team';
 
 export const useTeams = () => {
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);
+  const teamInfoRef = useRef<HTMLInputElement[]>([]);
+  const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
+
+  const postTeams = async ({ ...teamInfo }: TeamCustomHookType) => {
+    try {
+      await requestPostTeam({ teamInfo, accessToken });
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const responseBody: AxiosResponse = err.response!;
+        if (err instanceof Error) alert(responseBody.data.message);
+        navigate(ROUTES_PATH.NOT_FOUND);
+      }
+    }
+  };
 
   const getTeams = async () => {
     try {
@@ -27,6 +42,21 @@ export const useTeams = () => {
     }
   };
 
+  const onSubmitTeamAddForm = async ({ ...participants }: MemberType[]) => {
+    const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
+    const teamInfo = {
+      title: title.value,
+      place: place.value,
+      startAt: `${date.value}T${time.value}`, // 시작할 시간 포맷 -> 2022-08-01T14:30:00
+      interviewerNumber: interviewerNumber.value,
+      participants: {
+        ids: Object.values(participants).map((participants) => participants.id), // 참가자의 id 배열
+      },
+    };
+    console.log(teamInfo);
+    await postTeams({ ...teamInfo });
+  };
+
   const handleClickInterviewGroup = (e: React.MouseEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
     const team = teams.find((team) => +team.id === +target.id);
@@ -36,7 +66,14 @@ export const useTeams = () => {
     });
   };
 
-  return { teams, getTeams, handleClickInterviewGroup };
+  return {
+    teams,
+    teamInfoRef,
+    postTeams,
+    getTeams,
+    onSubmitTeamAddForm,
+    handleClickInterviewGroup,
+  };
 };
 
 export const useTeam = () => {

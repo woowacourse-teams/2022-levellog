@@ -50,7 +50,7 @@ const S = {
     min-height: 35.25rem;
     padding: 1.25rem 1.5625rem 1.25rem 1.5rem;
     background-color: ${(props) => props.theme.default.WHITE};
-    border-radius: 8px;
+    border-radius: 0.5rem;
     @media (max-width: 560px) {
       min-width: 15rem;
     }

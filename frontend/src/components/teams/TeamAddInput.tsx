@@ -36,10 +36,10 @@ const S = {
     width: 40.625rem;
     height: 1.125rem;
     @media (max-width: 1024px) {
-      width: 500px;
+      width: 31.25rem;
     }
     @media (max-width: 560px) {
-      width: 300px;
+      width: 18.75rem;
     }
   `,
 };

@@ -83,7 +83,7 @@ const S = {
     width: 15rem;
     height: 18.75rem;
     padding: 1.25rem 1.5rem 1.875rem 1.5rem;
-    border: 1px solid ${(props) => props.theme.default.BLACK};
+    border: 0.0625rem solid ${(props) => props.theme.default.BLACK};
   `,
 
   Profile: styled.div`
@@ -102,7 +102,7 @@ const S = {
     left: 0.625rem;
     width: 6.25rem;
     height: 1.875rem;
-    border: 1px solid ${(props) => props.theme.default.BLACK};
+    border: 0.0625rem solid ${(props) => props.theme.default.BLACK};
     background-color: ${(props) => props.theme.default.WHITE};
   `,
 

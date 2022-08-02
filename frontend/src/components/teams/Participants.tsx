@@ -33,9 +33,9 @@ const S = {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
     padding: 0.5rem;
-    box-shadow: 4px 4px 4px ${(props) => props.theme.default.GRAY};
+    box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.default.GRAY};
     border-style: none;
     border-radius: 1.5625rem;
     background-color: ${(props) => props.theme.default.WHITE};
@@ -50,7 +50,7 @@ const S = {
   DeleteButton: styled(Button)`
     background-color: ${(props) => props.theme.default.WHITE};
     border: none;
-    padding: 0 2px 0 2px;
+    padding: 0 0.125rem 0 0.125rem;
     color: ${(props) => props.theme.default.RED};
   `,
 };

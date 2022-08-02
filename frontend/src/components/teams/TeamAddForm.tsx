@@ -108,17 +108,17 @@ const S = {
     gap: 1rem;
     width: 42.625rem;
     @media (max-width: 1024px) {
-      width: 500px;
+      width: 31.25rem;
     }
     @media (max-width: 560px) {
-      width: 300px;
+      width: 18.75rem;
     }
   `,
 
   Notice: styled.p`
     color: ${(props) => props.theme.default.RED};
-    font-size: 14px;
-    margin-bottom: 10px;
+    font-size: 0.875rem;
+    margin-bottom: 0.625rem;
   `,
 
   MembersBox: styled.div`
@@ -131,10 +131,10 @@ const S = {
     border-radius: 0.3125rem;
     background-color: ${(props) => props.theme.default.WHITE};
     @media (max-width: 1024px) {
-      width: 500px;
+      width: 31.25rem;
     }
     @media (max-width: 560px) {
-      width: 300px;
+      width: 18.75rem;
     }
   `,
 };

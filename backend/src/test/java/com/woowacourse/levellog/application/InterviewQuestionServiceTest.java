@@ -63,10 +63,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Team team = saveTeamAndTwoParticipants(pepper, eve);
             final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from(invalidContent);
-            final Long fromMemberId = eve.getId();
+            final Long authorId = eve.getId();
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, fromMemberId))
+            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, authorId))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessage("인터뷰 질문은 공백이나 null일 수 없습니다.");
         }
@@ -210,7 +210,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // then
             final List<String> actualInterviewQuestions = interviewQuestionRepository
-                    .findAllByLevellogAndFrom(pepperLevellog, eve)
+                    .findAllByLevellogAndAuthor(pepperLevellog, eve)
                     .stream()
                     .map(InterviewQuestion::getContent)
                     .collect(Collectors.toList());
@@ -224,10 +224,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
             final Long invalidInterviewQuestionId = 1000L;
-            final Long fromMemberId = eve.getId();
+            final Long authorId = eve.getId();
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.update(request, invalidInterviewQuestionId, fromMemberId))
+            assertThatThrownBy(() -> interviewQuestionService.update(request, invalidInterviewQuestionId, authorId))
                     .isInstanceOf(InterviewQuestionNotFoundException.class)
                     .hasMessageContainingAll("존재하지 않는 인터뷰 질문", String.valueOf(invalidInterviewQuestionId));
         }
@@ -280,10 +280,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
             final Long invalidInterviewQuestionId = 1000L;
-            final Long fromMemberId = eve.getId();
+            final Long authorId = eve.getId();
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.deleteById(invalidInterviewQuestionId, fromMemberId))
+            assertThatThrownBy(() -> interviewQuestionService.deleteById(invalidInterviewQuestionId, authorId))
                     .isInstanceOf(InterviewQuestionNotFoundException.class)
                     .hasMessageContainingAll("존재하지 않는 인터뷰 질문", String.valueOf(invalidInterviewQuestionId));
         }
@@ -315,8 +315,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         return team;
     }
 
-    private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member fromMember) {
+    private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member author) {
         final InterviewQuestionDto request = InterviewQuestionDto.from(content);
-        return interviewQuestionService.save(request, levellog.getId(), fromMember.getId());
+        return interviewQuestionService.save(request, levellog.getId(), author.getId());
     }
 }

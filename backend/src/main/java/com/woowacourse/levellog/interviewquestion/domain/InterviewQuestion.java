@@ -22,12 +22,8 @@ public class InterviewQuestion extends BaseEntity {
     private static final int DEFAULT_STRING_SIZE = 255;
 
     @ManyToOne
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_interview_question_from_member"))
-    private Member from;
-
-    @ManyToOne
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_interview_question_to_member"))
-    private Member to;
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_interview_question_author_member"))
+    private Member author;
 
     @ManyToOne
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_interview_question_levellog"))
@@ -36,18 +32,17 @@ public class InterviewQuestion extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    private InterviewQuestion(final Member from, final Member to, final Levellog levellog, final String content) {
+    private InterviewQuestion(final Member author, final Levellog levellog, final String content) {
         validateContent(content);
 
-        this.from = from;
-        this.to = to;
+        this.author = author;
         this.levellog = levellog;
         this.content = content;
     }
 
-    public static InterviewQuestion of(final Member from, final Member to, final Levellog levellog,
+    public static InterviewQuestion of(final Member author, final Levellog levellog,
                                        final String content) {
-        return new InterviewQuestion(from, to, levellog, content);
+        return new InterviewQuestion(author, levellog, content);
     }
 
     private void validateContent(final String content) {
@@ -60,10 +55,10 @@ public class InterviewQuestion extends BaseEntity {
     }
 
     public void validateInterviewQuestionAuthor(final Member member, final String errorMessage) {
-        final boolean isNotAuthor = !from.equals(member);
+        final boolean isNotAuthor = !author.equals(member);
         if (isNotAuthor) {
             throw new UnauthorizedException(
-                    errorMessage + " 로그인 memberId : " + member.getId() + " 인터뷰 질문 작성자 memberId  : " + from.getId()
+                    errorMessage + " 로그인 memberId : " + member.getId() + " 인터뷰 질문 작성자 memberId  : " + author.getId()
                             + " 인터뷰 질문 id : " + getId() + " levellogId : " + levellog.getId());
         }
     }

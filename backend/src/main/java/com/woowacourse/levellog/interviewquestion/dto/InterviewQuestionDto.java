@@ -24,6 +24,6 @@ public class InterviewQuestionDto {
     }
 
     public InterviewQuestion toInterviewQuestion(final Member fromMember, final Levellog levellog) {
-        return InterviewQuestion.of(fromMember, levellog.getAuthor(), levellog, interviewQuestion);
+        return InterviewQuestion.of(fromMember, levellog, interviewQuestion);
     }
 }

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InterviewQuestionRepository extends JpaRepository<InterviewQuestion, Long> {
 
-    List<InterviewQuestion> findAllByLevellogAndFrom(Levellog levellog, Member member);
+    List<InterviewQuestion> findAllByLevellogAndAuthor(Levellog levellog, Member member);
 }

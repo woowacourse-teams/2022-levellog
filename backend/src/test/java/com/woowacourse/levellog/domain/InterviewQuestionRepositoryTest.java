@@ -42,8 +42,8 @@ class InterviewQuestionRepositoryTest {
     private LevellogRepository levellogRepository;
 
     @Test
-    @DisplayName("findAllByLevellogAndFrom 메서드는 levellog와 from 멤버가 모두 일치하는 인터뷰 질문 목록를 반환한다.")
-    void findAllByLevellogAndFrom() {
+    @DisplayName("findAllByLevellogAndAuthor 메서드는 levellog와 author 멤버가 모두 일치하는 인터뷰 질문 목록를 반환한다.")
+    void findAllByLevellogAndAuthor() {
         // given
         final Member eve = memberRepository.save(new Member("eve", 111, "profile.img"));
         final Member toMember = memberRepository.save(new Member("toMember", 333, "profile.img"));
@@ -54,12 +54,12 @@ class InterviewQuestionRepositoryTest {
         final Levellog levellog = levellogRepository.save(Levellog.of(toMember, team, "levellog"));
 
         final InterviewQuestion savedInterviewQuestion1 = interviewQuestionRepository.save(
-                InterviewQuestion.of(eve, toMember, levellog, "스프링을 왜 사용하였나요?"));
+                InterviewQuestion.of(eve, levellog, "스프링을 왜 사용하였나요?"));
         final InterviewQuestion savedInterviewQuestion2 = interviewQuestionRepository.save(
-                InterviewQuestion.of(eve, toMember, levellog, "AOP란?"));
+                InterviewQuestion.of(eve, levellog, "AOP란?"));
 
         // when
-        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndFrom(
+        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(
                 levellog, eve);
 
         // then

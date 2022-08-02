@@ -247,7 +247,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, otherMemberId))
                     .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("인터뷰 질문에 대한 쓰기 권한이 없습니다.", String.valueOf(otherMemberId),
+                    .hasMessageContainingAll("인터뷰 질문을 수정할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
                             String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
         }
     }
@@ -302,7 +302,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, otherMemberId))
                     .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("인터뷰 질문에 대한 쓰기 권한이 없습니다.", String.valueOf(otherMemberId),
+                    .hasMessageContainingAll("인터뷰 질문을 삭제할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
                             String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
         }
     }

@@ -71,7 +71,8 @@ public class TeamService {
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
         final Team team = getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
-        final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId, memberId, team.getInterviewerNumber());
+        final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId, memberId,
+                team.getInterviewerNumber());
 
         return InterviewRoleDto.from(interviewRole);
     }

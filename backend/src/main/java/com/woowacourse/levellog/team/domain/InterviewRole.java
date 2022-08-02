@@ -5,5 +5,4 @@ public enum InterviewRole {
     INTERVIEWER,
     OBSERVER,
     ME,
-    ;
 }

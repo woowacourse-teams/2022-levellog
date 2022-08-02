@@ -87,7 +87,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "profile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "profile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
             final Feedback feedback1 = feedbackRepository.save(

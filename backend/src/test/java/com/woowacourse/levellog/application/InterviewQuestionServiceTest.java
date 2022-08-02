@@ -30,6 +30,19 @@ import org.junit.jupiter.params.provider.ValueSource;
 @DisplayName("InterviewQuestionService 클래스의")
 class InterviewQuestionServiceTest extends ServiceTest {
 
+    private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
+        final Team team = teamRepository.save(
+                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1));
+        participantRepository.save(new Participant(team, participant1, true));
+        participantRepository.save(new Participant(team, participant2, false));
+        return team;
+    }
+
+    private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member author) {
+        final InterviewQuestionDto request = InterviewQuestionDto.from(content);
+        return interviewQuestionService.save(request, levellog.getId(), author.getId());
+    }
+
     @Nested
     @DisplayName("save 메서드는")
     class SaveTest {
@@ -141,7 +154,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             saveInterviewQuestion("스프링 빈이란?", pepperLevellog, eve);
 
             // when
-            final InterviewQuestionsDto response = interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellog.getId(),
+            final InterviewQuestionsDto response = interviewQuestionService.findAllByLevellogAndAuthor(
+                    pepperLevellog.getId(),
                     eve.getId());
 
             // then
@@ -184,7 +198,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long invalidMemberId = 1000L;
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellogId, invalidMemberId))
+            assertThatThrownBy(
+                    () -> interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellogId, invalidMemberId))
                     .isInstanceOf(MemberNotFoundException.class)
                     .hasMessageContainingAll("존재하지 않는 멤버", String.valueOf(invalidMemberId));
         }
@@ -305,18 +320,5 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     .hasMessageContainingAll("인터뷰 질문을 삭제할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
                             String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
         }
-    }
-
-    private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1));
-        participantRepository.save(new Participant(team, participant1, true));
-        participantRepository.save(new Participant(team, participant2, false));
-        return team;
-    }
-
-    private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member author) {
-        final InterviewQuestionDto request = InterviewQuestionDto.from(content);
-        return interviewQuestionService.save(request, levellog.getId(), author.getId());
     }
 }

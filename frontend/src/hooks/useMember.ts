@@ -10,16 +10,13 @@ const useMember = () => {
   const [participants, setParticipants] = useState<MemberType[]>([]);
   const accessToken = localStorage.getItem('accessToken');
 
-  const onChangeNickname = async ({ nickname }: MembersCustomHookType) => {
+  const updateMembers = async ({ nickname = '' }: MembersCustomHookType) => {
     try {
-      if (nickname === '') {
-        await setMembers([]);
-        return;
-      }
       const res = await requestGetMembers({ accessToken, nickname });
       const members = res.data.members.filter((member) =>
         participants.every((participant) => participant.id !== member.id),
       );
+
       setMembers(members);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -34,19 +31,17 @@ const useMember = () => {
 
     if (participants.every((participant) => inputtedParticipant.id !== participant.id)) {
       setParticipants((prev) => prev.concat(inputtedParticipant));
-      console.log('추가');
       return;
     }
     setParticipants(
       participants.filter((participant) => inputtedParticipant.id !== participant.id),
     );
-    console.log('삭제');
   };
 
   return {
     members,
     participants,
-    onChangeNickname,
+    updateMembers,
     updateParticipants,
   };
 };

@@ -3,7 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { requestGetTeams, requestGetTeam, requestPostTeam } from 'apis/teams';
 import { MemberType } from 'types/member';
@@ -18,6 +18,8 @@ export const useTeams = () => {
   const postTeams = async ({ ...teamInfo }: TeamCustomHookType) => {
     try {
       await requestPostTeam({ teamInfo, accessToken });
+      alert(MESSAGE.TEAM_CREATE);
+      navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
@@ -47,13 +49,12 @@ export const useTeams = () => {
     const teamInfo = {
       title: title.value,
       place: place.value,
-      startAt: `${date.value}T${time.value}`, // 시작할 시간 포맷 -> 2022-08-01T14:30:00
+      startAt: `${date.value}T${time.value}`,
       interviewerNumber: interviewerNumber.value,
       participants: {
-        ids: Object.values(participants).map((participants) => participants.id), // 참가자의 id 배열
+        ids: Object.values(participants).map((participants) => participants.id),
       },
     };
-    console.log(teamInfo);
     await postTeams({ ...teamInfo });
   };
 

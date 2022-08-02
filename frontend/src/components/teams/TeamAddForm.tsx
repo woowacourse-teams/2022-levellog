@@ -46,6 +46,8 @@ const TeamAddForm = ({
         label={'인터뷰어의 수'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[4] = el)}
         type={'number'}
+        min={'1'}
+        max={'3'}
         required
       />
       <TeamAddInput label={'참가자'} value={nickname} onChange={handleChangeInput}>
@@ -101,7 +103,10 @@ const S = {
 
   ParticipantsBox: styled.div`
     display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
     gap: 1rem;
+    width: 42.625rem;
   `,
 
   Notice: styled.p`
@@ -112,8 +117,9 @@ const S = {
 
   MembersBox: styled.div`
     box-sizing: content-box;
+    overflow: auto;
     width: 40.625rem;
-    height: fit-content;
+    height: 10rem;
     padding: 1rem;
     border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
     border-radius: 0.3125rem;

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 
-import styled from 'styled-components';
-
 import useMember from 'hooks/useMember';
 import { useTeams } from 'hooks/useTeams';
 
@@ -11,7 +9,7 @@ import ContentHeader from 'components/@commons/ContentHeader';
 import TeamAddForm from 'components/teams/TeamAddForm';
 
 const InterviewTeamAdd = () => {
-  const { members, participants, onChangeNickname, updateParticipants } = useMember();
+  const { members, participants, updateMembers, updateParticipants } = useMember();
   const { teamInfoRef, onSubmitTeamAddForm } = useTeams();
   const [nickname, setNickname] = useState('');
 
@@ -25,8 +23,8 @@ const InterviewTeamAdd = () => {
   };
 
   useEffect(() => {
-    onChangeNickname({ nickname });
-  }, [nickname]);
+    updateMembers({ nickname });
+  }, [nickname, participants]);
 
   return (
     <form onSubmit={handleSubmitTeamAddForm}>

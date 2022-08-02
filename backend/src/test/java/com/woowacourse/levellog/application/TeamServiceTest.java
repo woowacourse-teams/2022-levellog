@@ -13,6 +13,7 @@ import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
+import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
@@ -25,24 +26,6 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("TeamService의")
 class TeamServiceTest extends ServiceTest {
-
-    @Test
-    @DisplayName("save 메서드는 팀을 생성한다.")
-    void save() {
-        //given
-        final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
-        final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
-        final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(participant1, participant2, participant3)));
-
-        //when
-        final Long id = teamService.save(teamCreateDto, participant1);
-
-        //then
-        final Optional<Team> team = teamRepository.findById(id);
-        assertThat(team).isPresent();
-    }
 
     @Test
     @DisplayName("findAll 메서드는 전체 팀 목록을 조회한다.")
@@ -84,6 +67,53 @@ class TeamServiceTest extends ServiceTest {
                 () -> assertThat(actualParticipantSizes).contains(2, 2),
                 () -> assertThat(response.getTeams()).hasSize(2)
         );
+    }
+
+    private Member saveAndGetMember(final String nickname) {
+        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
+    }
+
+    private Team saveAndGetTeam(final String title) {
+        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png"));
+    }
+
+    @Nested
+    @DisplayName("save 메서드는")
+    class Save {
+
+        @Test
+        @DisplayName("팀을 생성한다.")
+        void save() {
+            //given
+            final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
+            final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
+            final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
+            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(participant2, participant3)));
+
+            //when
+            final Long id = teamService.save(teamCreateDto, participant1);
+
+            //then
+            final Optional<Team> team = teamRepository.findById(id);
+            assertThat(team).isPresent();
+        }
+
+        @Test
+        @DisplayName("참가자가 중복되면 예외가 발생한다.")
+        void save_duplicate_exceptionThrown() {
+            //given
+            final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
+            final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
+            final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
+            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(participant1, participant2, participant3)));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.save(teamCreateDto, participant1))
+                    .isInstanceOf(DuplicateParticipantsException.class)
+                    .hasMessageContaining("참가자 중복");
+        }
     }
 
     @Nested
@@ -242,13 +272,5 @@ class TeamServiceTest extends ServiceTest {
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }
-    }
-
-    private Member saveAndGetMember(final String nickname) {
-        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
-    }
-
-    private Team saveAndGetTeam(final String title) {
-        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png"));
     }
 }

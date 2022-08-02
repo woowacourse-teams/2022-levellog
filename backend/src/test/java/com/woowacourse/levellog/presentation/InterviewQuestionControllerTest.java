@@ -116,7 +116,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("존재하지 않는 멤버가 작성한 인터뷰 질문 작성을 요청하면 예외를 던진다.")
+        @DisplayName("존재하지 않는 멤버가 인터뷰 질문 작성을 요청하면 예외를 던진다.")
         void save_memberNotFound_exception() throws Exception {
             // given
             final long invalidMemberId = 20000000L;
@@ -327,7 +327,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
     class DeleteByIdTest {
 
         @Test
-        @DisplayName("존재하지 않는 인터뷰 질문을 수정하면 예외를 던진다.")
+        @DisplayName("존재하지 않는 인터뷰 질문을 삭제하면 예외를 던진다.")
         void deleteById_interviewQuestionNotFound_exception() throws Exception {
             // given
             final Long invalidInterviewQuestionId = 1000L;

@@ -159,10 +159,10 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
     }
 
     /*
-     * Scenario: 피드백 삭제
-     *   given: 피드백이 등록되어 있다.
-     *   given: 등록된 피드백을 조회한다.
-     *   when: 조회한 피드백을 삭제한다.
+     * Scenario: 인터뷰 질문 삭제
+     *   given: 인터뷰 질문이 등록되어 있다.
+     *   given: 등록된 인터뷰 질문을 조회한다.
+     *   when: 조회한 인터뷰 질문을 삭제한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
     @Test

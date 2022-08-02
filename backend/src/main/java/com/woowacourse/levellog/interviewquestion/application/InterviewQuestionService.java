@@ -80,8 +80,7 @@ public class InterviewQuestionService {
     }
 
     private Member getMember(final Long memberId) {
-        return memberRepository
-                .findById(memberId)
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 멤버 [memberId : " + memberId + "]"));
     }
 

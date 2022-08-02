@@ -160,7 +160,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
             doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
                     .when(interviewQuestionService)
-                    .findAll(invalidLevellogId, 1L);
+                    .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(
@@ -186,7 +186,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
             doThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
                     .when(interviewQuestionService)
-                    .findAll(levellogId, invalidMemberId);
+                    .findAllByLevellogAndAuthor(levellogId, invalidMemberId);
 
             // when
             final ResultActions perform = mockMvc.perform(

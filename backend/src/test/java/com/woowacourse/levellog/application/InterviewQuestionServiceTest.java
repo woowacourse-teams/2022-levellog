@@ -141,7 +141,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             saveInterviewQuestion("스프링 빈이란?", pepperLevellog, eve);
 
             // when
-            final InterviewQuestionsDto response = interviewQuestionService.findAll(pepperLevellog.getId(),
+            final InterviewQuestionsDto response = interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellog.getId(),
                     eve.getId());
 
             // then
@@ -167,7 +167,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long invalidLevellogId = 1000L;
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.findAll(invalidLevellogId, memberId))
+            assertThatThrownBy(() -> interviewQuestionService.findAllByLevellogAndAuthor(invalidLevellogId, memberId))
                     .isInstanceOf(LevellogNotFoundException.class)
                     .hasMessageContainingAll("존재하지 않는 레벨로그", String.valueOf(invalidLevellogId));
         }
@@ -184,7 +184,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long invalidMemberId = 1000L;
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.findAll(pepperLevellogId, invalidMemberId))
+            assertThatThrownBy(() -> interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellogId, invalidMemberId))
                     .isInstanceOf(MemberNotFoundException.class)
                     .hasMessageContainingAll("존재하지 않는 멤버", String.valueOf(invalidMemberId));
         }

@@ -34,9 +34,10 @@ public class InterviewQuestionController {
     }
 
     @GetMapping
-    public ResponseEntity<InterviewQuestionsDto> findAll(@PathVariable final Long levellogId,
-                                                         @Authentic final Long memberId) {
-        final InterviewQuestionsDto response = interviewQuestionService.findAll(levellogId, memberId);
+    public ResponseEntity<InterviewQuestionsDto> findAllMyInterviewQuestion(@PathVariable final Long levellogId,
+                                                                            @Authentic final Long memberId) {
+        final InterviewQuestionsDto response = interviewQuestionService.findAllByLevellogAndAuthor(levellogId,
+                memberId);
         return ResponseEntity.ok(response);
     }
 

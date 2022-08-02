@@ -3,7 +3,6 @@ package com.woowacourse.levellog.presentation;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -474,6 +473,7 @@ class TeamControllerTest extends ControllerTest {
             final long id = 1;
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", "트랙룸", startAt);
+
             willThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
                     .given(teamService)
                     .update(request, id, 4L);
@@ -522,6 +522,7 @@ class TeamControllerTest extends ControllerTest {
         void teamNotFound_Exception() throws Exception {
             // given
             mockLogin();
+
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .given(teamService)
                     .findByTeamIdAndMemberId(10000000L, 4L);
@@ -611,8 +612,8 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 200_000L;
-            doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. [teamId : " + teamId + "]", "팀이 존재하지 않습니다."))
-                    .when(teamService)
+            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. [teamId : " + teamId + "]", "팀이 존재하지 않습니다."))
+                    .given(teamService)
                     .close(teamId, 4L);
 
             // when
@@ -639,8 +640,8 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            doThrow(new InterviewCloseException("이미 종료된 인터뷰입니다. [teamId : " + teamId + "]", "이미 종료된 인터뷰입니다."))
-                    .when(teamService)
+            willThrow(new InterviewCloseException("이미 종료된 인터뷰입니다. [teamId : " + teamId + "]", "이미 종료된 인터뷰입니다."))
+                    .given(teamService)
                     .close(teamId, 4L);
 
             // when
@@ -667,9 +668,9 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            doThrow(new InterviewCloseException("인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]",
+            willThrow(new InterviewCloseException("인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]",
                     "인터뷰가 시작되기 전에 종료할 수 없습니다."))
-                    .when(teamService)
+                    .given(teamService)
                     .close(teamId, 4L);
 
             // when
@@ -696,8 +697,8 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            doThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
-                    .when(teamService)
+            willThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
+                    .given(teamService)
                     .close(teamId, 4L);
 
             // when
@@ -726,6 +727,7 @@ class TeamControllerTest extends ControllerTest {
         void teamNotFound_Exception() throws Exception {
             // given
             mockLogin();
+
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .given(teamService)
                     .deleteById(10000000L, 4L);

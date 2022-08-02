@@ -48,7 +48,7 @@ class InterviewQuestionRepositoryTest {
         final Member eve = memberRepository.save(new Member("eve", 111, "profile.img"));
         final Member toMember = memberRepository.save(new Member("toMember", 333, "profile.img"));
         final Team team = teamRepository.save(
-                new Team("잠실 네오조", "작은 강의실", LocalDateTime.now().plusDays(3), "team.img"));
+                new Team("잠실 네오조", "작은 강의실", LocalDateTime.now().plusDays(3), "team.img", 1));
         participantRepository.save(new Participant(team, eve, true));
         participantRepository.save(new Participant(team, toMember, false));
         final Levellog levellog = levellogRepository.save(Levellog.of(toMember, team, "levellog"));

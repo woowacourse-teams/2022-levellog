@@ -32,16 +32,6 @@ public class TeamCreateDto {
     @NotNull
     private ParticipantIdsDto participants;
 
-    @Deprecated(since = "인터뷰 참가자 역할 부여 기능 이후", forRemoval = true)
-    public TeamCreateDto(final String title, final String place, final LocalDateTime startAt,
-                         final ParticipantIdsDto participants) {
-        this.title = title;
-        this.place = place;
-        this.interviewerNumber = 1;
-        this.startAt = startAt;
-        this.participants = participants;
-    }
-
     public Team toEntity(final String profileUrl) {
         return new Team(title, place, startAt, profileUrl, interviewerNumber);
     }

@@ -177,7 +177,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("롬펲 인터뷰", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("롬펲 인터뷰", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId)));
         final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
 

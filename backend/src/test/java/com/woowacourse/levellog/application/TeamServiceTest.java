@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.InterviewRole;
@@ -23,6 +24,7 @@ import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -136,6 +138,20 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.save(teamCreateDto, participant1))
                     .isInstanceOf(DuplicateParticipantsException.class)
                     .hasMessageContaining("참가자 중복");
+        }
+
+        @Test
+        @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
+        void save_noParticipant_exceptionThrown() {
+            //given
+            final Long alienId = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
+            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(Collections.emptyList()));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.save(teamCreateDto, alienId))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("호스트 이외의 참가자가 존재하지 않습니다.");
         }
     }
 

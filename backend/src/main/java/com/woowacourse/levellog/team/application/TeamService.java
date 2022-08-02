@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.team.application;
 
+import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
@@ -135,12 +136,19 @@ public class TeamService {
     }
 
     private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
+        validateOtherParticipantExistence(memberIds);
         validateParticipantDuplication(memberIds, hostId);
 
-        return generatePaticipants(team, hostId, memberIds);
+        return generateParticipants(team, hostId, memberIds);
     }
 
-    private List<Participant> generatePaticipants(final Team team, final Long hostId, final List<Long> memberIds) {
+    private void validateOtherParticipantExistence(final List<Long> memberIds) {
+        if (memberIds.isEmpty()) {
+            throw new InvalidFieldException("호스트 이외의 참가자가 존재하지 않습니다.");
+        }
+    }
+
+    private List<Participant> generateParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         final List<Participant> participants = new ArrayList<>();
         participants.add(new Participant(team, getMember(hostId), true));
         participants.addAll(toParticipants(team, memberIds));

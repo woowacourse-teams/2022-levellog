@@ -60,6 +60,11 @@ operation::team/create/exception/startat/null[]
 
 operation::team/create/exception/startat/past[]
 
+[[create-exception-participants-empty]]
+==== 저장 시 호스트 이외의 참가자가 없는 경우
+
+operation::team/create/exception/participants/empty[]
+
 [[create-exception-participants-null]]
 ==== 저장 시 participants가 null인 경우
 

@@ -78,7 +78,7 @@ public class Team extends BaseEntity {
 
     private void validateStartAt(final LocalDateTime startAt) {
         if (startAt == null) {
-            throw new InterviewTimeException("시작 시간이 없습니다. 입력한 시작 시간 : [null]");
+            throw new InterviewTimeException("입력한 시작 시간 : [null]", "시작 시간이 없습니다.");
         }
         if (LocalDateTime.now().isAfter(startAt)) {
             throw new InterviewTimeException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]");

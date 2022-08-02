@@ -23,6 +23,7 @@ import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -218,6 +219,31 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/create/exception/startat/past"));
+        }
+
+        @Test
+        @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
+        void participantsEmpty_Exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(Collections.emptyList()));
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isBadRequest());
+
+            // docs
+            perform.andDo(document("team/create/exception/participants/empty"));
         }
 
         @Test

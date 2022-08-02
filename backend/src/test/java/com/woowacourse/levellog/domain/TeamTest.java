@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
-import com.woowacourse.levellog.team.support.TimeStandard;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,13 +17,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @DisplayName("Team의")
 class TeamTest {
-
-    @Autowired
-    TimeStandard timeStandard;
 
     @Nested
     @DisplayName("생성자 메서드는")

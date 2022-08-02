@@ -44,11 +44,11 @@ public class TeamService {
     public Long save(final TeamCreateDto request, final Long hostId) {
         final Member host = getMember(hostId);
         final Team team = request.toEntity(host.getProfileUrl());
-        final List<Participant> participants = getParticipants(team, hostId, request.getParticipants().getIds());
+        final Participants participants = getParticipants(team, hostId, request.getParticipants().getIds());
         team.validParticipantNumber(participants.size());
 
         final Team savedTeam = teamRepository.save(team);
-        participantRepository.saveAll(participants);
+        participantRepository.saveAll(participants.getValues());
 
         return savedTeam.getId();
     }
@@ -65,7 +65,7 @@ public class TeamService {
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
         return TeamAndRoleDto.from(team, participants.toHostId(), interviewers, interviewees,
-                getParticipantResponses(participants.getValues()));
+                getParticipantResponses(participants));
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
@@ -105,18 +105,14 @@ public class TeamService {
                         () -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
     }
 
-    private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
+    private Participants getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         validateParticipantDuplication(memberIds, hostId);
 
-        return generatePaticipants(team, hostId, memberIds);
-    }
-
-    private List<Participant> generatePaticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         final List<Participant> participants = new ArrayList<>();
         participants.add(new Participant(team, getMember(hostId), true));
         participants.addAll(toParticipants(team, memberIds));
 
-        return participants;
+        return new Participants(participants);
     }
 
     private void validateParticipantDuplication(final List<Long> memberIds, final Long hostId) {
@@ -143,21 +139,12 @@ public class TeamService {
     }
 
     private TeamDto getTeamResponse(final Team team) {
-        final List<Participant> participants = participantRepository.findByTeam(team);
-        return TeamDto.from(team, getHostId(participants), getParticipantResponses(participants));
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
+        return TeamDto.from(team, participants.toHostId(), getParticipantResponses(participants));
     }
 
-    private Long getHostId(final List<Participant> participants) {
-        return participants.stream()
-                .filter(Participant::isHost)
-                .findAny()
-                .orElseThrow(() -> new MemberNotFoundException("모든 참가자 중 호스트가 존재하지 않습니다."))
-                .getMember()
-                .getId();
-    }
-
-    private List<ParticipantDto> getParticipantResponses(final List<Participant> participants) {
-        return participants.stream()
+    private List<ParticipantDto> getParticipantResponses(final Participants participants) {
+        return participants.getValues().stream()
                 .map(it -> ParticipantDto.from(it, getLevellogId(it)))
                 .collect(Collectors.toList());
     }
@@ -174,10 +161,9 @@ public class TeamService {
     }
 
     private void validateHost(final Long memberId, final Team team) {
-        final List<Participant> participants = participantRepository.findByTeam(team);
-        final Long hostId = getHostId(participants);
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
 
-        if (!memberId.equals(hostId)) {
+        if (!memberId.equals(participants.toHostId())) {
             throw new HostUnauthorizedException("호스트 권한이 없습니다. 입력한 memberId : [" + memberId + "]");
         }
     }

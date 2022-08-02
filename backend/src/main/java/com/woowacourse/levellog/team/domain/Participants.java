@@ -66,6 +66,10 @@ public class Participants {
         return InterviewRole.OBSERVER;
     }
 
+    public int size() {
+        return values.size();
+    }
+
     private boolean notContains(final Long memberId) {
         return values.stream()
                 .map(Participant::getMember)

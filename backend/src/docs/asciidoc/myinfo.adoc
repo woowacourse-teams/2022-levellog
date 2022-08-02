@@ -36,10 +36,10 @@ operation::myinfo/update/nickname-invalid-length[]
 
 operation::myinfo/update/nickname-blank[]
 
-[[findAllToMe]]
+[[findAllReceivedFeedbacks]]
 == 받은 피드백 전체 조회
 
-[[findAllToMe-success]]
+[[findAllReceivedFeedbacks-success]]
 === 받은 피드백 전체 조회 성공
 
 operation::myinfo/findAllReceivedFeedbacks[]

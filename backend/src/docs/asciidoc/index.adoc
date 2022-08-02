@@ -12,4 +12,4 @@
 * link:auth.html[Auth]
 * link:myinfo.html[MyInfo]
 * link:member.html[Member]
-* link:interview-question.html[InterviewQuestion]
+* link:interviewquestion.html[InterviewQuestion]

@@ -144,4 +144,32 @@ class ParticipantsTest {
             assertThat(actual).isEmpty();
         }
     }
+
+    @Nested
+    @DisplayName("toInterviewRole 메서드는")
+    class toInterviewRole {
+
+        @ParameterizedTest(name = "참가자 아이디가 [1, 2, 3, 4, 5]이고 인터뷰어 수가 2명인 팀에서 아이디가 {0}인 타겟 멤버에 대해 아이디가 {1}인 참가자의 인터뷰 역할은 {2}이다.")
+        @CsvSource(value = {"1,2,INTERVIEWER", "1,3,INTERVIEWER", "1,4,OBSERVER", "1,5,OBSERVER"})
+        void success(final Long targetMemberId, final Long memberId, final InterviewRole expected) {
+            // given
+            final Team team = MockEntityFactory.setId(1L, new Team());
+            final List<Participant> values = new ArrayList<>(
+                    List.of(
+                            new Participant(team, getMember("릭", 1L), true),
+                            new Participant(team, getMember("로마", 2L), false),
+                            new Participant(team, getMember("알린", 3L), false),
+                            new Participant(team, getMember("이브", 4L), false),
+                            new Participant(team, getMember("해리", 5L), false)
+                    )
+            );
+            final Participants participants = new Participants(values);
+
+            // when
+            final InterviewRole actual = participants.toInterviewRole(team.getId(), targetMemberId, memberId, 2);
+
+            // then
+            assertThat(actual).isEqualTo(expected);
+        }
+    }
 }

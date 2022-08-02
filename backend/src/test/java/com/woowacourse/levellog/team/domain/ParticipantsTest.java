@@ -9,7 +9,6 @@ import com.woowacourse.levellog.common.domain.MockEntityFactory;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,16 +43,13 @@ class ParticipantsTest {
             // given
             final List<Long> expected = toIdList(expectedIds);
             final Team team = new Team();
-            final List<Participant> values = new ArrayList<>(
-                    List.of(
-                            new Participant(team, getMember("릭", 1L), true),
-                            new Participant(team, getMember("로마", 2L), false),
-                            new Participant(team, getMember("알린", 3L), false),
-                            new Participant(team, getMember("이브", 4L), false),
-                            new Participant(team, getMember("해리", 5L), false)
-                    )
+            final List<Participant> values = List.of(
+                    new Participant(team, getMember("릭", 1L), true),
+                    new Participant(team, getMember("로마", 2L), false),
+                    new Participant(team, getMember("알린", 3L), false),
+                    new Participant(team, getMember("이브", 4L), false),
+                    new Participant(team, getMember("해리", 5L), false)
             );
-
             final Participants participants = new Participants(values);
 
             // when
@@ -71,16 +67,13 @@ class ParticipantsTest {
         void emptyList() {
             // given
             final Team team = new Team();
-            final List<Participant> values = new ArrayList<>(
-                    List.of(
-                            new Participant(team, getMember("릭", 1L), true),
-                            new Participant(team, getMember("로마", 2L), false),
-                            new Participant(team, getMember("알린", 3L), false),
-                            new Participant(team, getMember("이브", 4L), false),
-                            new Participant(team, getMember("해리", 5L), false)
-                    )
+            final List<Participant> values = List.of(
+                    new Participant(team, getMember("릭", 1L), true),
+                    new Participant(team, getMember("로마", 2L), false),
+                    new Participant(team, getMember("알린", 3L), false),
+                    new Participant(team, getMember("이브", 4L), false),
+                    new Participant(team, getMember("해리", 5L), false)
             );
-
             final Participants participants = new Participants(values);
 
             // when
@@ -101,16 +94,13 @@ class ParticipantsTest {
             // given
             final List<Long> expected = toIdList(expectedIds);
             final Team team = new Team();
-            final List<Participant> values = new ArrayList<>(
-                    List.of(
-                            new Participant(team, getMember("릭", 1L), true),
-                            new Participant(team, getMember("로마", 2L), false),
-                            new Participant(team, getMember("알린", 3L), false),
-                            new Participant(team, getMember("이브", 4L), false),
-                            new Participant(team, getMember("해리", 5L), false)
-                    )
+            final List<Participant> values = List.of(
+                    new Participant(team, getMember("릭", 1L), true),
+                    new Participant(team, getMember("로마", 2L), false),
+                    new Participant(team, getMember("알린", 3L), false),
+                    new Participant(team, getMember("이브", 4L), false),
+                    new Participant(team, getMember("해리", 5L), false)
             );
-
             final Participants participants = new Participants(values);
 
             // when
@@ -128,16 +118,13 @@ class ParticipantsTest {
         void emptyList() {
             // given
             final Team team = new Team();
-            final List<Participant> values = new ArrayList<>(
-                    List.of(
-                            new Participant(team, getMember("릭", 1L), true),
-                            new Participant(team, getMember("로마", 2L), false),
-                            new Participant(team, getMember("알린", 3L), false),
-                            new Participant(team, getMember("이브", 4L), false),
-                            new Participant(team, getMember("해리", 5L), false)
-                    )
+            final List<Participant> values = List.of(
+                    new Participant(team, getMember("릭", 1L), true),
+                    new Participant(team, getMember("로마", 2L), false),
+                    new Participant(team, getMember("알린", 3L), false),
+                    new Participant(team, getMember("이브", 4L), false),
+                    new Participant(team, getMember("해리", 5L), false)
             );
-
             final Participants participants = new Participants(values);
 
             // when
@@ -157,14 +144,12 @@ class ParticipantsTest {
         void success(final Long targetMemberId, final Long memberId, final InterviewRole expected) {
             // given
             final Team team = MockEntityFactory.setId(1L, new Team());
-            final List<Participant> values = new ArrayList<>(
-                    List.of(
-                            new Participant(team, getMember("릭", 1L), true),
-                            new Participant(team, getMember("로마", 2L), false),
-                            new Participant(team, getMember("알린", 3L), false),
-                            new Participant(team, getMember("이브", 4L), false),
-                            new Participant(team, getMember("해리", 5L), false)
-                    )
+            final List<Participant> values = List.of(
+                    new Participant(team, getMember("릭", 1L), true),
+                    new Participant(team, getMember("로마", 2L), false),
+                    new Participant(team, getMember("알린", 3L), false),
+                    new Participant(team, getMember("이브", 4L), false),
+                    new Participant(team, getMember("해리", 5L), false)
             );
             final Participants participants = new Participants(values);
 
@@ -180,14 +165,12 @@ class ParticipantsTest {
         void me() {
             // given
             final Team team = MockEntityFactory.setId(1L, new Team());
-            final List<Participant> values = new ArrayList<>(
-                    List.of(
-                            new Participant(team, getMember("릭", 1L), true),
-                            new Participant(team, getMember("로마", 2L), false),
-                            new Participant(team, getMember("알린", 3L), false),
-                            new Participant(team, getMember("이브", 4L), false),
-                            new Participant(team, getMember("해리", 5L), false)
-                    )
+            final List<Participant> values = List.of(
+                    new Participant(team, getMember("릭", 1L), true),
+                    new Participant(team, getMember("로마", 2L), false),
+                    new Participant(team, getMember("알린", 3L), false),
+                    new Participant(team, getMember("이브", 4L), false),
+                    new Participant(team, getMember("해리", 5L), false)
             );
             final Participants participants = new Participants(values);
 
@@ -203,14 +186,12 @@ class ParticipantsTest {
         void requestMemberIdNotContains_exceptionThrown() {
             // given
             final Team team = MockEntityFactory.setId(1L, new Team());
-            final List<Participant> values = new ArrayList<>(
-                    List.of(
-                            new Participant(team, getMember("릭", 1L), true),
-                            new Participant(team, getMember("로마", 2L), false),
-                            new Participant(team, getMember("알린", 3L), false),
-                            new Participant(team, getMember("이브", 4L), false),
-                            new Participant(team, getMember("해리", 5L), false)
-                    )
+            final List<Participant> values = List.of(
+                    new Participant(team, getMember("릭", 1L), true),
+                    new Participant(team, getMember("로마", 2L), false),
+                    new Participant(team, getMember("알린", 3L), false),
+                    new Participant(team, getMember("이브", 4L), false),
+                    new Participant(team, getMember("해리", 5L), false)
             );
             final Participants participants = new Participants(values);
 
@@ -224,14 +205,12 @@ class ParticipantsTest {
         void targetMemberIdNotContains_exceptionThrown() {
             // given
             final Team team = MockEntityFactory.setId(1L, new Team());
-            final List<Participant> values = new ArrayList<>(
-                    List.of(
-                            new Participant(team, getMember("릭", 1L), true),
-                            new Participant(team, getMember("로마", 2L), false),
-                            new Participant(team, getMember("알린", 3L), false),
-                            new Participant(team, getMember("이브", 4L), false),
-                            new Participant(team, getMember("해리", 5L), false)
-                    )
+            final List<Participant> values = List.of(
+                    new Participant(team, getMember("릭", 1L), true),
+                    new Participant(team, getMember("로마", 2L), false),
+                    new Participant(team, getMember("알린", 3L), false),
+                    new Participant(team, getMember("이브", 4L), false),
+                    new Participant(team, getMember("해리", 5L), false)
             );
             final Participants participants = new Participants(values);
 

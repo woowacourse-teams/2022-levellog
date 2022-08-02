@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
-import com.woowacourse.levellog.interview_question.domain.InterviewQuestion;
-import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDetailDto;
-import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDto;
-import com.woowacourse.levellog.interview_question.dto.InterviewQuestionsDto;
-import com.woowacourse.levellog.interview_question.exception.InterviewQuestionNotFoundException;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDetailDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
+import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;

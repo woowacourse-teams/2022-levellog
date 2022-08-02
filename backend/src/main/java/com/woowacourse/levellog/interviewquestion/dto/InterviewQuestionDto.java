@@ -1,6 +1,6 @@
-package com.woowacourse.levellog.interview_question.dto;
+package com.woowacourse.levellog.interviewquestion.dto;
 
-import com.woowacourse.levellog.interview_question.domain.InterviewQuestion;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import javax.validation.constraints.NotBlank;

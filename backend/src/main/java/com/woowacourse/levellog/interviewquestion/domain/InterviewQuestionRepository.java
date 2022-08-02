@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.interview_question.domain;
+package com.woowacourse.levellog.interviewquestion.domain;
 
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;

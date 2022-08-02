@@ -1,6 +1,6 @@
-package com.woowacourse.levellog.interview_question.dto;
+package com.woowacourse.levellog.interviewquestion.dto;
 
-import com.woowacourse.levellog.interview_question.domain.InterviewQuestion;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;

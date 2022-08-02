@@ -1,11 +1,11 @@
-package com.woowacourse.levellog.interview_question.application;
+package com.woowacourse.levellog.interviewquestion.application;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
-import com.woowacourse.levellog.interview_question.domain.InterviewQuestion;
-import com.woowacourse.levellog.interview_question.domain.InterviewQuestionRepository;
-import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDto;
-import com.woowacourse.levellog.interview_question.dto.InterviewQuestionsDto;
-import com.woowacourse.levellog.interview_question.exception.InterviewQuestionNotFoundException;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
+import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;

@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.interview_question.domain;
+package com.woowacourse.levellog.interviewquestion.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;

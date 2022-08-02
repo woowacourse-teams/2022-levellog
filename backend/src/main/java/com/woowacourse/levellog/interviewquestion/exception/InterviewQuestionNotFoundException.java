@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.interview_question.exception;
+package com.woowacourse.levellog.interviewquestion.exception;
 
 import com.woowacourse.levellog.common.exception.LevellogException;
 import org.springframework.http.HttpStatus;

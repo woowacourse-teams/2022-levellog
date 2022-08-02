@@ -1,9 +1,9 @@
-package com.woowacourse.levellog.interview_question.presentation;
+package com.woowacourse.levellog.interviewquestion.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
-import com.woowacourse.levellog.interview_question.application.InterviewQuestionService;
-import com.woowacourse.levellog.interview_question.dto.InterviewQuestionDto;
-import com.woowacourse.levellog.interview_question.dto.InterviewQuestionsDto;
+import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;

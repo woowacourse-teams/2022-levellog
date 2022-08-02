@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.InterviewCloseException;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ class TeamTest {
 
     @Nested
     @DisplayName("생성자 메서드는")
-    class constructor {
+    class Constructor {
 
         @ParameterizedTest
         @NullAndEmptySource
@@ -103,7 +103,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
-                    .isInstanceOf(InvalidFieldException.class)
+                    .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("시작 시간이 없습니다.");
         }
 
@@ -118,7 +118,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
-                    .isInstanceOf(InvalidFieldException.class)
+                    .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("잘못된 시작 시간을 입력했습니다.");
         }
 
@@ -171,7 +171,7 @@ class TeamTest {
 
     @Nested
     @DisplayName("update 메서드는")
-    class update {
+    class Update {
 
         @Test
         @DisplayName("팀 이름, 장소, 시작 시간을 수정한다.")
@@ -296,7 +296,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt))
-                    .isInstanceOf(InvalidFieldException.class)
+                    .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("시작 시간이 없습니다.");
         }
 
@@ -316,7 +316,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt))
-                    .isInstanceOf(InvalidFieldException.class)
+                    .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("잘못된 시작 시간을 입력했습니다.");
         }
     }
@@ -386,7 +386,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.close(startAt.plusDays(1)))
-                    .isInstanceOf(InterviewCloseException.class)
+                    .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("이미 종료된 인터뷰");
         }
 
@@ -402,7 +402,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.close(startAt.minusDays(1)))
-                    .isInstanceOf(InterviewCloseException.class)
+                    .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("인터뷰가 시작되기 전에 종료할 수 없습니다.");
         }
     }

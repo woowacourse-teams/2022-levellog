@@ -19,7 +19,7 @@ import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.InterviewCloseException;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
@@ -640,7 +640,7 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new InterviewCloseException("이미 종료된 인터뷰입니다. [teamId : " + teamId + "]", "이미 종료된 인터뷰입니다."))
+            willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다. [teamId : " + teamId + "]", "이미 종료된 인터뷰입니다."))
                     .given(teamService)
                     .close(teamId, 4L);
 
@@ -668,7 +668,7 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new InterviewCloseException("인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]",
+            willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]",
                     "인터뷰가 시작되기 전에 종료할 수 없습니다."))
                     .given(teamService)
                     .close(teamId, 4L);

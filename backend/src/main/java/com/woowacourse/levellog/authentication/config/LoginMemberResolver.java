@@ -12,6 +12,11 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+/**
+ * PublicAPI 중 토크에서 member id를 꺼내야하는 기능이 추가되었다.
+ * 이에 따라 토큰이 존재하지 않으면 -1을 반환하는 로직이 추가되었다.
+ * @see com.woowacourse.levellog.team.presentation.TeamController#findById(Long, Long) 
+ */
 @Component
 @RequiredArgsConstructor
 public class LoginMemberResolver implements HandlerMethodArgumentResolver {

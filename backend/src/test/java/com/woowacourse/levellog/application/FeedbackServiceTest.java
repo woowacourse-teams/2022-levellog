@@ -41,7 +41,7 @@ class FeedbackServiceTest extends ServiceTest {
         feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
 
         // when
-        final FeedbacksDto feedbacksResponse = feedbackService.findAll(levellog.getId());
+        final FeedbacksDto feedbacksResponse = feedbackService.findAll(levellog.getId(), 1L);
 
         // then
         assertThat(feedbacksResponse.getFeedbacks()).hasSize(2);

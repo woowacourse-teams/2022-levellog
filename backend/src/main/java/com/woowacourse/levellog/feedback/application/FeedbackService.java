@@ -50,7 +50,7 @@ public class FeedbackService {
                 .getId();
     }
 
-    public FeedbacksDto findAll(final Long levellogId) {
+    public FeedbacksDto findAll(final Long levellogId, final Long memberId) {
         final Levellog levellog = getLevellog(levellogId);
         final List<FeedbackDto> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
 

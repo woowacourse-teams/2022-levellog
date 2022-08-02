@@ -5,11 +5,15 @@ import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
+import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
+import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
+import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
+import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
@@ -41,6 +45,7 @@ public class TeamService {
         final Member host = getMember(hostId);
         final Team team = request.toEntity(host.getProfileUrl());
         final List<Participant> participants = getParticipants(team, hostId, request.getParticipants().getIds());
+        team.validParticipantNumber(participants.size());
 
         final Team savedTeam = teamRepository.save(team);
         participantRepository.saveAll(participants);
@@ -52,8 +57,24 @@ public class TeamService {
         return new TeamsDto(getTeamResponses(teamRepository.findAll()));
     }
 
-    public TeamDto findById(final Long teamId) {
-        return getTeamResponse(getTeam(teamId));
+    public TeamAndRoleDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
+        final Team team = getTeam(teamId);
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
+
+        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
+        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
+
+        return TeamAndRoleDto.from(team, participants.toHostId(), interviewers, interviewees,
+                getParticipantResponses(participants.getValues()));
+    }
+
+    public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
+        final Team team = getTeam(teamId);
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
+        final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId, memberId,
+                team.getInterviewerNumber());
+
+        return InterviewRoleDto.from(interviewRole);
     }
 
     @Transactional

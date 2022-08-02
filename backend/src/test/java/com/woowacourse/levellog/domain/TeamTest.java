@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -33,7 +35,7 @@ class TeamTest {
             final String profileUrl = "profile.img";
 
             // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
+            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("팀 이름이 null 또는 공백입니다.");
         }
@@ -48,7 +50,7 @@ class TeamTest {
             final String profileUrl = "profile.img";
 
             // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
+            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("잘못된 팀 이름을 입력했습니다.");
         }
@@ -64,7 +66,7 @@ class TeamTest {
             final String profileUrl = "profile.img";
 
             // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
+            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("장소가 null 또는 공백입니다.");
         }
@@ -79,7 +81,7 @@ class TeamTest {
             final String profileUrl = "profile.img";
 
             // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
+            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("잘못된 장소를 입력했습니다.");
         }
@@ -94,7 +96,7 @@ class TeamTest {
             final String profileUrl = "profile.img";
 
             // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
+            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("시작 시간이 없습니다.");
         }
@@ -109,7 +111,7 @@ class TeamTest {
             final String profileUrl = "profile.img";
 
             // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
+            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("잘못된 시작 시간을 입력했습니다.");
         }
@@ -125,7 +127,7 @@ class TeamTest {
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
 
             // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
+            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("팀 프로필 사진이 null 또는 공백입니다.");
         }
@@ -140,9 +142,24 @@ class TeamTest {
             final String profileUrl = "a".repeat(2049);
 
             // when & then
-            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl))
+            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("잘못된 팀 프로필 사진을 입력했습니다.");
+        }
+
+        @Test
+        @DisplayName("인터뷰어 수가 1명 미만이면 예외를 던진다.")
+        void minInterviewerNumber_exceptionThrown() {
+            // given
+            final String title = "네오와 함께하는 레벨 인터뷰";
+            final String place = "선릉 트랙룸";
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final String profileUrl = "profile.org";
+
+            // when & then
+            assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 0))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("팀 생성시 인터뷰어 수는 1명 이상이어야 합니다");
         }
     }
 
@@ -159,7 +176,7 @@ class TeamTest {
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final String profileUrl = "profile.img";
 
-            final Team team = new Team(title, place, startAt, profileUrl);
+            final Team team = new Team(title, place, startAt, profileUrl, 1);
             final String updateTitle = "브라운과 카페 투어";
             final String updatePlace = "잠실 어드레스룸";
             final LocalDateTime updateStartAt = LocalDateTime.now().plusDays(10);
@@ -186,7 +203,7 @@ class TeamTest {
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final String profileUrl = "profile.img";
 
-            final Team team = new Team(title, place, startAt, profileUrl);
+            final Team team = new Team(title, place, startAt, profileUrl, 1);
             final String updatePlace = "잠실 어드레스룸";
             final LocalDateTime updateStartAt = LocalDateTime.now().plusDays(10);
 
@@ -205,7 +222,7 @@ class TeamTest {
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final String profileUrl = "profile.img";
 
-            final Team team = new Team(title, place, startAt, profileUrl);
+            final Team team = new Team(title, place, startAt, profileUrl, 1);
             final String updateTitle = "a".repeat(256);
             final String updatePlace = "잠실 어드레스룸";
             final LocalDateTime updateStartAt = LocalDateTime.now().plusDays(10);
@@ -227,7 +244,7 @@ class TeamTest {
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final String profileUrl = "profile.img";
 
-            final Team team = new Team(title, place, startAt, profileUrl);
+            final Team team = new Team(title, place, startAt, profileUrl, 1);
             final String updateTitle = "브라운과 카페 투어";
             final LocalDateTime updateStartAt = LocalDateTime.now().plusDays(10);
 
@@ -246,7 +263,7 @@ class TeamTest {
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final String profileUrl = "profile.img";
 
-            final Team team = new Team(title, place, startAt, profileUrl);
+            final Team team = new Team(title, place, startAt, profileUrl, 1);
             final String updateTitle = "브라운과 카페 투어";
             final String updatePlace = "a".repeat(256);
             final LocalDateTime updateStartAt = LocalDateTime.now().plusDays(10);
@@ -267,7 +284,7 @@ class TeamTest {
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final String profileUrl = "profile.img";
 
-            final Team team = new Team(title, place, startAt, profileUrl);
+            final Team team = new Team(title, place, startAt, profileUrl, 1);
             final String updateTitle = "브라운과 카페 투어";
             final String updatePlace = "잠실 어드레스룸";
 
@@ -286,7 +303,7 @@ class TeamTest {
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final String profileUrl = "profile.img";
 
-            final Team team = new Team(title, place, startAt, profileUrl);
+            final Team team = new Team(title, place, startAt, profileUrl, 1);
             final String updateTitle = "브라운과 카페 투어";
             final String updatePlace = "잠실 어드레스룸";
             final LocalDateTime updateStartAt = LocalDateTime.now().minusDays(10);
@@ -295,6 +312,37 @@ class TeamTest {
             assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("잘못된 시작 시간을 입력했습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("validParticipantNumber 메서드는")
+    class validParticipantNumber {
+
+        @ParameterizedTest
+        @CsvSource(value = {"1,1", "2,1", "2,2"})
+        @DisplayName("isValidParticipantNumber 메서드는 인터뷰어 수를 참고해서 참가자 수가 유효한지 계산한다.")
+        void throwException(final int interviewerNumber, final int participantNumber) {
+            // given
+            final Team team = new Team("레벨로그팀", "우리집", LocalDateTime.now().plusDays(3), "profile.url",
+                    interviewerNumber);
+
+            // when & then
+            assertThatThrownBy(() -> team.validParticipantNumber(participantNumber))
+                    .isInstanceOf(InvalidFieldException.class);
+        }
+
+        @ParameterizedTest
+        @CsvSource(value = {"1,2", "2,3"})
+        @DisplayName("isValidParticipantNumber 메서드는 인터뷰어 수를 참고해서 참가자 수가 유효한지 계산한다.")
+        void notThrownException(final int interviewerNumber, final int participantNumber) {
+            // given
+            final Team team = new Team("레벨로그팀", "우리집", LocalDateTime.now().plusDays(3), "profile.url",
+                    interviewerNumber);
+
+            // when & then
+            assertThatCode(() -> team.validParticipantNumber(participantNumber))
+                    .doesNotThrowAnyException();
         }
     }
 }

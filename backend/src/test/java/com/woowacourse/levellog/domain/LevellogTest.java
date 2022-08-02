@@ -29,7 +29,7 @@ class LevellogTest {
         void success() {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png");
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
             final String content = "Spring을 학습하였습니다";
 
             // when & then
@@ -43,7 +43,7 @@ class LevellogTest {
         void newLevellog_contentBlank_exception(final String invalidContent) {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png");
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
 
             //  when & then
             assertThatThrownBy(() -> Levellog.of(author, team, invalidContent))
@@ -61,7 +61,7 @@ class LevellogTest {
         void success() {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png");
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
             final String updatedContent = "updated content";
 
@@ -78,7 +78,7 @@ class LevellogTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member member = new Member("알린", 2222, "alien.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png");
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
 
             //  when & then
@@ -96,7 +96,7 @@ class LevellogTest {
         void updateContent_contentBlank_exception(final String invalidContent) {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png");
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
 
             //  when & then

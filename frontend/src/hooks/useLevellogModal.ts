@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import useLevellog from './useLevellog';
+import useLevellog from 'hooks/useLevellog';
+
 import { LevellogCustomHookType, LevellogParticipantType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
@@ -9,8 +10,8 @@ const useLevellogModal = () => {
   const [isOnModal, setIsOnModal] = useState(false);
   const [participant, setParticipant] = useState({} as ParticipantType);
 
-  const onClickToggleModal = ({ teamId, participant }: LevellogParticipantType) => {
-    getLevellog({ teamId, levellogId: participant.levellogId });
+  const onClickToggleModal = async ({ teamId, participant }: LevellogParticipantType) => {
+    await getLevellog({ teamId, levellogId: participant.levellogId });
     setIsOnModal((prev) => !prev);
     setParticipant(participant);
   };
@@ -23,8 +24,11 @@ const useLevellogModal = () => {
     setIsOnModal(false);
   };
 
-  const handleClickCloseLevellogModal = () => {
-    setIsOnModal(false);
+  const handleClickCloseLevellogModal = (e: React.MouseEvent<HTMLElement>) => {
+    const clickElement = e.target as HTMLElement;
+    if (clickElement.id === 'dimmer' || clickElement.id === 'closeButton') {
+      setIsOnModal(false);
+    }
   };
 
   return {

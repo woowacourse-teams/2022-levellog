@@ -12,19 +12,18 @@ import { MESSAGE } from 'constants/constants';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
-import FeedbackForm from 'components/feedbacks/FeedbackForm';
+import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
 const FeedbackAdd = () => {
-  const { feedbackRef, onSubmitFeedbackForm } = useFeedback();
+  const { feedbackRef, onClickFeedbackAddButton } = useFeedback();
   const { levellog, getLevellog } = useLevellog();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
 
-  const handleSubmitFeedbackForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleClickFeedbackAddButton = () => {
     if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      onSubmitFeedbackForm({ teamId, levellogId });
+      onClickFeedbackAddButton({ teamId, levellogId });
 
       return;
     }
@@ -44,26 +43,26 @@ const FeedbackAdd = () => {
 
   return (
     <FlexBox gap={1.875}>
-      <S.Container onSubmit={handleSubmitFeedbackForm}>
+      <S.Container>
         <ContentHeader title={'레벨로그 피드백'}>
-          <Button type={'submit'}>등록하기</Button>
+          <Button onClick={handleClickFeedbackAddButton}>등록하기</Button>
         </ContentHeader>
-        <S.FormContainer>
+        <S.Content>
           <LevellogReport levellog={levellog} />
-          <FeedbackForm feedbackRef={feedbackRef} />
-        </S.FormContainer>
+          <FeedbackFormat feedbackRef={feedbackRef} />
+        </S.Content>
       </S.Container>
     </FlexBox>
   );
 };
 
 const S = {
-  Container: styled.form`
+  Container: styled.div`
     overflow: auto;
     width: 100%;
   `,
 
-  FormContainer: styled.div`
+  Content: styled.div`
     display: flex;
     overflow: auto;
     gap: 4.875rem;

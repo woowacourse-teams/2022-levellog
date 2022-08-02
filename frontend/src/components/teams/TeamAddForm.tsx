@@ -9,8 +9,8 @@ const TeamAddForm = ({
   teamInfoRef,
   participants,
   members,
-  nickname,
-  setNickname,
+  nicknameValue,
+  setNicknameValue,
   handleChangeInput,
   updateParticipants,
 }: TeamAddFormProps) => {
@@ -50,7 +50,7 @@ const TeamAddForm = ({
         max={'3'}
         required
       />
-      <TeamAddInput label={'참가자'} value={nickname} onChange={handleChangeInput}>
+      <TeamAddInput label={'참가자'} value={nicknameValue} onChange={handleChangeInput}>
         <>
           {participants.length > 0 ? (
             <S.ParticipantsBox>
@@ -73,7 +73,7 @@ const TeamAddForm = ({
             <Member
               key={member.id}
               member={member}
-              setNickname={setNickname}
+              setNicknameValue={setNicknameValue}
               updateParticipants={updateParticipants}
             />
           ))}
@@ -86,9 +86,9 @@ const TeamAddForm = ({
 interface TeamAddFormProps {
   teamInfoRef: React.MutableRefObject<HTMLInputElement[]>;
   participants: Array<MemberType>;
-  nickname: string;
+  nicknameValue: string;
   members: Array<MemberType>;
-  setNickname: React.Dispatch<React.SetStateAction<string>>;
+  setNicknameValue: React.Dispatch<React.SetStateAction<string>>;
   handleChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   updateParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
 }

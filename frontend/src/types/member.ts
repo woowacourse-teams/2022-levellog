@@ -4,7 +4,7 @@ export interface MembersApiType {
 }
 
 export interface MembersCustomHookType {
-  nickname: string;
+  nicknameValue: string;
 }
 
 export interface MemberType {

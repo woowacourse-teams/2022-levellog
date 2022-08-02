@@ -325,7 +325,7 @@ class LevellogServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("findAllByAuthroId 메서드는")
+    @DisplayName("findAllByAuthorId 메서드는")
     class FindAllByAuthorId {
 
         @Test

@@ -5,30 +5,30 @@ import styled from 'styled-components';
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';
 
-const Member = ({ member, setNickname, updateParticipants }: MemberProps) => {
+const Member = ({ member, setNicknameValue, updateParticipants }: MemberProps) => {
   const { id, nickname, profileUrl } = member;
 
   const handleClickMember = () => {
-    setNickname('');
+    setNicknameValue('');
     updateParticipants({ id, nickname, profileUrl });
   };
 
   return (
-    <S.Member type={'button'} onClick={handleClickMember}>
+    <S.MemberButton type={'button'} onClick={handleClickMember}>
       <Image src={profileUrl} sizes={'SMALL'} />
       <S.Nickname>{nickname}</S.Nickname>
-    </S.Member>
+    </S.MemberButton>
   );
 };
 
 interface MemberProps {
   member: MemberType;
-  setNickname: Dispatch<SetStateAction<string>>;
+  setNicknameValue: Dispatch<SetStateAction<string>>;
   updateParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
 }
 
 const S = {
-  Member: styled.button`
+  MemberButton: styled.button`
     display: flex;
     align-items: center;
     gap: 0.5rem;

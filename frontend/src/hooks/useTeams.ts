@@ -17,7 +17,7 @@ export const useTeams = () => {
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
-  const postTeams = async ({ ...teamInfo }: TeamCustomHookType) => {
+  const postTeams = async ({ teamInfo }: { teamInfo: TeamCustomHookType }) => {
     try {
       teamInfo.participants.ids = teamInfo.participants.ids.filter((id) => id !== loginUserId);
       await requestPostTeam({ teamInfo, accessToken });
@@ -47,7 +47,7 @@ export const useTeams = () => {
     }
   };
 
-  const onSubmitTeamAddForm = async ({ ...participants }: MemberType[]) => {
+  const onSubmitTeamAddForm = async ({ participants }: { participants: MemberType[] }) => {
     const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
     const teamInfo = {
       title: title.value,
@@ -58,7 +58,7 @@ export const useTeams = () => {
         ids: Object.values(participants).map((participants) => participants.id),
       },
     };
-    await postTeams({ ...teamInfo });
+    await postTeams({ teamInfo });
   };
 
   const handleClickInterviewGroup = (e: React.MouseEvent<HTMLElement>) => {

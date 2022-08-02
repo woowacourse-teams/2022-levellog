@@ -21,7 +21,7 @@ const InterviewTeamAdd = () => {
 
   const handleSubmitTeamAddForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmitTeamAddForm({ ...participants });
+    onSubmitTeamAddForm({ participants });
   };
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {

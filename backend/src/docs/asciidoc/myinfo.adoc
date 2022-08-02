@@ -13,7 +13,7 @@
 == 내 정보 조회
 
 [[read-success]]
-=== 성공
+=== 내 정보 조회 성공
 
 operation::myinfo/read[]
 
@@ -21,12 +21,12 @@ operation::myinfo/read[]
 == 닉네임 변경
 
 [[update-nickname-success]]
-=== 성공
+=== 닉네임 변경 성공
 
 operation::myinfo/update/nickname[]
 
 [[update-nickname-fail]]
-=== 실패
+=== 닉네임 변경 실패
 
 50자를 초과한 닉네임으로 요청 보낼 경우
 
@@ -40,7 +40,7 @@ operation::myinfo/update/nickname-blank[]
 == 받은 피드백 전체 조회
 
 [[findAllToMe-success]]
-=== 성공
+=== 받은 피드백 전체 조회 성공
 
 operation::myinfo/findAllToMe[]
 
@@ -48,6 +48,14 @@ operation::myinfo/findAllToMe[]
 == 작성한 레벨로그 전체 조회
 
 [[findAllLevellogs-success]]
-=== 성공
+=== 작성한 레벨로그 전체 조회 성공
 
-operation::myinfo/findAllLevellogs[]
+operation::myinfo/findAllMyLevellogs[]
+
+[[findAllTeams]]
+== 참가한 팀 전체 조회
+
+[[findAllTeams-succes]]
+=== 참가한 팀 전체 조회 성공
+
+operation::myinfo/findAllMyTeam[]

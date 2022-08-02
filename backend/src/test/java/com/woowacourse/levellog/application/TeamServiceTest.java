@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
@@ -69,14 +70,6 @@ class TeamServiceTest extends ServiceTest {
         );
     }
 
-    private Member saveAndGetMember(final String nickname) {
-        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
-    }
-
-    private Team saveAndGetTeam(final String title) {
-        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png"));
-    }
-
     @Nested
     @DisplayName("save 메서드는")
     class Save {
@@ -114,6 +107,7 @@ class TeamServiceTest extends ServiceTest {
                     .isInstanceOf(DuplicateParticipantsException.class)
                     .hasMessageContaining("참가자 중복");
         }
+
     }
 
     @Nested
@@ -150,6 +144,7 @@ class TeamServiceTest extends ServiceTest {
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }
+
     }
 
     @Nested
@@ -216,6 +211,7 @@ class TeamServiceTest extends ServiceTest {
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }
+
     }
 
     @Nested
@@ -272,5 +268,55 @@ class TeamServiceTest extends ServiceTest {
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }
+
+    }
+
+    @Nested
+    @DisplayName("findAllByMemberId 메서드는 ")
+    class FindAllByMemerId {
+
+        @Test
+        @DisplayName("주어진 memberId의 멤버가 참가한 모든 팀을 조회한다.")
+        void success() {
+            // given
+            final Member roma = saveAndGetMember("로마");
+            final Member harry = saveAndGetMember("해리");
+            final Member alien = saveAndGetMember("알린");
+
+            final TeamCreateDto romaTeamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(harry.getId())));
+            final TeamCreateDto romaTeamCreateDto2 = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(harry.getId(), alien.getId())));
+
+            final TeamCreateDto harryTeamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(alien.getId())));
+
+            teamService.save(romaTeamCreateDto, roma.getId());
+            teamService.save(romaTeamCreateDto2, roma.getId());
+            teamService.save(harryTeamCreateDto, harry.getId());
+
+            // when
+            final List<TeamDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
+
+            // then
+            assertThat(teams).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("주어진 memberId의 멤버가 존재하지 않을 때 예외를 던진다.")
+        void memberNotFound_exception() {
+            // when & then
+            assertThatThrownBy(() -> teamService.findAllByMemberId(100_000L))
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(100_000L));
+        }
+    }
+
+    private Member saveAndGetMember(final String nickname) {
+        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
+    }
+
+    private Team saveAndGetTeam(final String title) {
+        return teamRepository.save(new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png"));
     }
 }

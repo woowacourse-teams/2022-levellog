@@ -153,7 +153,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
      */
     @Test
     @DisplayName("내가 작성한 레벨로그 조회")
-    void findAllMyLevellog() {
+    void findAllMyLevellogs() {
         // given
         // 멤버 생성
         final RestAssuredResponse romaLoginResponse = login("로마");
@@ -184,7 +184,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
-                .filter(document("myinfo/findAllLevellogs"))
+                .filter(document("myinfo/findAllMyLevellogs"))
                 .when()
                 .get("/api/my-info/levellogs")
                 .then().log().all();
@@ -192,5 +192,48 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("levellogs.content", contains("레벨로그1 내용", "레벨로그2 내용"));
+    }
+
+    /*
+     * Scenario: 내가 참여한 팀 조회하기
+     *   given: 나(로마) 는 2개의 팀에 참여했다.
+     *   when: 내가 참여한 팀 조회를 요청한다.
+     *   then: 내가 참여한 팀 목록 (2개) 과 200 OK 상태코드를 응답받는다.
+     */
+    @Test
+    @DisplayName("내가 참여한 팀 조회")
+    void findAllMyTeams() {
+        // given
+        // 멤버 생성
+        final RestAssuredResponse romaLoginResponse = login("로마");
+        final String romaToken = romaLoginResponse.getToken();
+        final Long romaId = romaLoginResponse.getMemberId();
+
+        final RestAssuredResponse hostLoginResponse = login("호스트");
+        final String hostToken = hostLoginResponse.getToken();
+
+        final Long pepperId = login("페퍼").getMemberId();
+        final Long alienId = login("알린").getMemberId();
+
+        // 팀 생성
+        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(romaId, pepperId)));
+        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(romaId, alienId)));
+
+        post("/api/teams", hostToken, teamCreateDto1);
+        post("/api/teams", hostToken, teamCreateDto2);
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .filter(document("myinfo/findAllMyTeam"))
+                .when()
+                .get("/api/my-info/teams")
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"));
     }
 }

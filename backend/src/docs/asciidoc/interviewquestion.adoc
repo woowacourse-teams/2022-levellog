@@ -40,7 +40,7 @@ operation::interview-question/save/exception-member[]
 == 인터뷰 질문 목록 조회
 
 [[findAll-success]]
-=== 인터뷰 질문 상세 조회 성공
+=== 인터뷰 질문 목록 조회 성공
 
 operation::interview-question/findAll[]
 

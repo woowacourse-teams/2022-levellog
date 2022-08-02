@@ -109,7 +109,7 @@ public class ParticipantRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByMember 메서드는 해당 멤버가 포함된 모든 partiipant를 반환한다.")
+    @DisplayName("findAllByMember 메서드는 해당 멤버가 포함된 모든 participant 반환한다.")
     void findAllByMember() {
         // given
         final Team team = teamRepository.save(

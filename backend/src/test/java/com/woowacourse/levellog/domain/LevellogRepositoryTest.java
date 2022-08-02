@@ -107,7 +107,7 @@ class LevellogRepositoryTest {
         final Team team = teamRepository.save(
                 new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png", 1));
         final Team team2 = teamRepository.save(
-                new Team("선릉 브라운조", "무중력 광장", LocalDateTime.now().plusDays(1), "campus.png", 1));
+                new Team("선릉 네오조", "수성 회의실", LocalDateTime.now().plusDays(1), "campus2.png", 1));
 
         final Levellog authorLevellog1 = levellogRepository.save(Levellog.of(author, team, "Spring을 학습하였습니다."));
         final Levellog authorLevellog2 = levellogRepository.save(Levellog.of(author, team2, "JPA를 학습하였습니다."));

@@ -107,6 +107,12 @@ const S = {
     overflow: auto;
     gap: 1rem;
     width: 42.625rem;
+    @media (max-width: 1024px) {
+      width: 500px;
+    }
+    @media (max-width: 560px) {
+      width: 300px;
+    }
   `,
 
   Notice: styled.p`
@@ -124,6 +130,12 @@ const S = {
     border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
     border-radius: 0.3125rem;
     background-color: ${(props) => props.theme.default.WHITE};
+    @media (max-width: 1024px) {
+      width: 500px;
+    }
+    @media (max-width: 560px) {
+      width: 300px;
+    }
   `,
 };
 

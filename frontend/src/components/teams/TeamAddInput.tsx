@@ -35,6 +35,12 @@ const S = {
   Input: styled(Input)`
     width: 40.625rem;
     height: 1.125rem;
+    @media (max-width: 1024px) {
+      width: 500px;
+    }
+    @media (max-width: 560px) {
+      width: 300px;
+    }
   `,
 };
 

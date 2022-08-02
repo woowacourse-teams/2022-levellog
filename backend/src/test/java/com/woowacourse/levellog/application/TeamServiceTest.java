@@ -273,7 +273,7 @@ class TeamServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("findAllByMemberId 메서드는 ")
-    class FindAllByMemerId {
+    class FindAllByMemberId {
 
         @Test
         @DisplayName("주어진 memberId의 멤버가 참가한 모든 팀을 조회한다.")

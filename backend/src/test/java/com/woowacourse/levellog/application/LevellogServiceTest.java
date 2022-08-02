@@ -333,7 +333,6 @@ class LevellogServiceTest extends ServiceTest {
         void success() {
             // given
             final Member author = memberRepository.save(new Member("페퍼", 1111, "pepper.img"));
-            memberRepository.save(new Member("알린", 2222, "alien.img"));
 
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "잠실 트랙룸", setTeamStartAt().plusDays(3), "profileUrl"));

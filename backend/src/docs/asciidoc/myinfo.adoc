@@ -42,7 +42,7 @@ operation::myinfo/update/nickname-blank[]
 [[findAllToMe-success]]
 === 받은 피드백 전체 조회 성공
 
-operation::myinfo/findAllToMe[]
+operation::myinfo/findAllReceivedFeedbacks[]
 
 [[findAllLevellogs]]
 == 작성한 레벨로그 전체 조회

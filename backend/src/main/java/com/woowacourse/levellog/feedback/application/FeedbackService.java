@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.feedback.application;
 
+import com.woowacourse.levellog.common.domain.BaseEntity;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
@@ -15,6 +17,7 @@ import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
+import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import java.util.List;
@@ -53,6 +56,18 @@ public class FeedbackService {
     public FeedbacksDto findAll(final Long levellogId, final Long memberId) {
         final Levellog levellog = getLevellog(levellogId);
         final List<FeedbackDto> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
+
+        final boolean isParticipant = participantRepository.findByTeam(levellog.getTeam())
+                .stream()
+                .map(Participant::getMember)
+                .map(BaseEntity::getId)
+                .anyMatch(it -> it.equals(memberId));
+
+        if (!isParticipant) {
+            throw new UnauthorizedException("자신이 속한 팀의 피드백만 조회할 수 있습니다."
+                    + " [ teamId : " + levellog.getTeam().getId() + " memberId : " + memberId
+                    + " levellogId : " + levellogId + " ]");
+        }
 
         return new FeedbacksDto(responses);
     }

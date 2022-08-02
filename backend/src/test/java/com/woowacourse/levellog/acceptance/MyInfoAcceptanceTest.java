@@ -176,10 +176,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final LevellogDto levellogRequest1 = LevellogDto.from("레벨로그1 내용");
         final LevellogDto levellogRequest2 = LevellogDto.from("레벨로그2 내용");
 
-        final String levellogId1 = post("/api/teams/" + teamId1 + "/levellogs", romaToken, levellogRequest1)
-                .getLevellogId();
-        final String levellogId2 = post("/api/teams/" + teamId2 + "/levellogs", romaToken, levellogRequest2)
-                .getLevellogId();
+        post("/api/teams/" + teamId1 + "/levellogs", romaToken, levellogRequest1).getLevellogId();
+        post("/api/teams/" + teamId2 + "/levellogs", romaToken, levellogRequest2).getLevellogId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

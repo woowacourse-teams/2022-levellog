@@ -86,8 +86,7 @@ public class LevellogService {
     }
 
     private Member getMember(final Long memberId) {
-        return memberRepository
-                .findById(memberId)
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
     }
 

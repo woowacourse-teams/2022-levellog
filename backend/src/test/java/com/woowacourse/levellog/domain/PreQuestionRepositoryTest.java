@@ -41,7 +41,7 @@ public class PreQuestionRepositoryTest {
     void findByIdAndAuthor() {
         // given
         final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-        final Team team = teamRepository.save(new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img"));
+        final Team team = teamRepository.save(new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
         final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
 
         final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));

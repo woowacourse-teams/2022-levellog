@@ -30,7 +30,7 @@ public class PreQuestionTest {
         void constructor_PreQuestionNullOrBlank_Exception(final String preQuestion) {
             // given
             final Member author = new Member("알린", 12345678, "알린.img");
-            final Team team = new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img");
+            final Team team = new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
             final Member from = new Member("로마", 56781234, "로마.img");
@@ -46,7 +46,7 @@ public class PreQuestionTest {
         void constructor_PreQuestionMyLevellog_Exception() {
             // given
             final Member author = new Member("알린", 12345678, "알린.img");
-            final Team team = new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img");
+            final Team team = new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
             final String preQuestion = "알린의 사전 질문";
@@ -67,7 +67,7 @@ public class PreQuestionTest {
         void update() {
             // given
             final Member author = new Member("알린", 12345678, "알린.img");
-            final Team team = new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img");
+            final Team team = new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
             final Member from = new Member("로마", 56781234, "로마.img");
@@ -88,7 +88,7 @@ public class PreQuestionTest {
         void update_PreQuestionNullOrBlank_Exception(final String preQuestion) {
             // given
             final Member author = new Member("알린", 12345678, "알린.img");
-            final Team team = new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img");
+            final Team team = new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
             final Member from = new Member("로마", 56781234, "로마.img");

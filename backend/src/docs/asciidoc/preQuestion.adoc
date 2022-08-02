@@ -20,9 +20,19 @@ operation::pre-question/create[]
 === 사전 질문 등록 예외
 
 [[create-exception-prequestion-null]]
-==== 저장 시 preQuestion이 null 또는 공백인 경우
+==== 등록 시 preQuestion이 null 또는 공백인 경우
 
 operation::pre-question/create/exception/null-and-blank[]
+
+[[create-exception-not-participant]]
+==== 팀의 참가자가 아닌데 사전 질문을 등록하는 경우
+
+operation::pre-question/create/exception/not-participant[]
+
+[[create-exception-my-levellog]]
+==== 내 레벨로그에 사전 질문을 등록하는 경우
+
+operation::pre-question/create/exception/levellog-is-mine[]
 
 [[find]]
 == 사전 질문 상세 조회
@@ -44,6 +54,11 @@ operation::pre-question/findbyid/exception/wrong-levellog[]
 ==== 없는 사전 질문을 상세 조회하는 경우
 
 operation::pre-question/findbyid/exception/notfound[]
+
+[[find-exception-not-my-pre-question]]
+==== 타인의 사전 질문을 조회하는 경우
+
+operation::pre-question/findbyid/exception/not-my-pre-question[]
 
 [[update]]
 == 사전 질문 수정
@@ -71,6 +86,11 @@ operation::pre-question/update/exception/wrong-levellog[]
 
 operation::pre-question/update/exception/notfound[]
 
+[[update-exception-not-my-pre-question]]
+==== 다른 사용자의 사전 질문을 수정하는 경우
+
+operation::pre-question/update/exception/not-my-pre-question[]
+
 [[delete]]
 == 사전 질문 삭제
 
@@ -83,11 +103,11 @@ operation::pre-question/delete[]
 === 사전 질문 삭제 예외
 
 [[delete-exception-wrong-levellog]]
-==== url의 레벨로그 id가 잘못된 경우
+==== url의 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
 
 operation::pre-question/delete/exception/wrong-levellog[]
 
 [[delete-exception-notfound]]
-==== 없는 사전 질문을 삭제하는 경우
+==== 타인의 사전 질문을 삭제하는 경우
 
-operation::pre-question/delete/exception/notfound[]
+operation::pre-question/delete/exception/not-my-pre-question[]

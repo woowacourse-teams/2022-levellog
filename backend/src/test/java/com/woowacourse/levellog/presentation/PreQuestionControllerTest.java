@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.presentation;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.BDDMockito;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -37,7 +38,7 @@ public class PreQuestionControllerTest extends ControllerTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
-        void preQuestionNull_Exception(final String preQuestion) throws Exception {
+        void preQuestionNullAndBlank_Exception(final String preQuestion) throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -46,11 +47,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/levellogs/1/pre-questions")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -59,6 +56,58 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("pre-question/create/exception/null-and-blank"));
+        }
+
+        @Test
+        @DisplayName("참가자가 아닌 멤버가 사전 질문을 등록하는 경우 예외를 던진다.")
+        void fromNotParticipant_Exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
+            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
+
+            BDDMockito.willThrow(new UnauthorizedException("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다."))
+                    .given(preQuestionService)
+                    .save(preQuestionDto, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message")
+                            .value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("pre-question/create/exception/not-participant"));
+        }
+
+        @Test
+        @DisplayName("내 레벨로그에 사전 질문을 등록하는 경우 예외를 던진다.")
+        void levellogIsMine_Exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
+            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
+
+            BDDMockito.willThrow(new UnauthorizedException("자신의 레벨로그에는 사전 질문을 작성할 수 없습니다."))
+                    .given(preQuestionService)
+                    .save(preQuestionDto, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message")
+                            .value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("pre-question/create/exception/levellog-is-mine"));
         }
     }
 
@@ -70,7 +119,7 @@ public class PreQuestionControllerTest extends ControllerTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
-        void preQuestionNull_Exception(final String preQuestion) throws Exception {
+        void preQuestionNullAndBlank_Exception(final String preQuestion) throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -79,11 +128,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/levellogs/1/pre-questions/1")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -95,8 +140,8 @@ public class PreQuestionControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("url에서 잘못된 레벨로그 id를 입력하면 예외를 던진다.")
-        void preQuestionWrongLevellogId_Exception() throws Exception {
+        @DisplayName("잘못된 레벨로그의 사전 질문을 수정하면 예외를 던진다.")
+        void levellogWrongId_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -104,16 +149,13 @@ public class PreQuestionControllerTest extends ControllerTest {
             final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
-            doThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
-                    .when(preQuestionService)
+            BDDMockito.willThrow(
+                            new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
+                    .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/levellogs/1/pre-questions/1")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -125,7 +167,7 @@ public class PreQuestionControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("없는 사전 질문을 수정하면 예외를 던진다.")
+        @DisplayName("저장되어있지 않은 사전 질문을 수정하는 경우 예외를 던진다.")
         void preQuestionNotFound_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
@@ -134,16 +176,12 @@ public class PreQuestionControllerTest extends ControllerTest {
             final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
-            doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
-                    .when(preQuestionService)
+            BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
+                    .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/levellogs/1/pre-questions/1")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -153,6 +191,32 @@ public class PreQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("pre-question/update/exception/notfound"));
         }
+
+        @Test
+        @DisplayName("타인의 사전 질문을 수정하는 경우 예외를 던진다.")
+        void fromNotMyPreQuestion_Exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
+            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
+
+            BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
+                    .given(preQuestionService)
+                    .update(preQuestionDto, 1L, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message")
+                            .value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("pre-question/update/exception/not-my-pre-question"));
+        }
     }
 
     @Nested
@@ -160,21 +224,42 @@ public class PreQuestionControllerTest extends ControllerTest {
     class FindById {
 
         @Test
-        @DisplayName("url에서 잘못된 레벨로그 id를 입력하면 예외를 던진다.")
-        void preQuestionWrongLevellogId_Exception() throws Exception {
+        @DisplayName("타인의 사전 질문을 조회하는 경우 예외를 던진다.")
+        void fromNotMyPreQuestion_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            doThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
-                    .when(preQuestionService)
+            BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
+                    .given(preQuestionService)
                     .findById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = mockMvc.perform(get("/api/levellogs/1/pre-questions/1")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestFind("/api/levellogs/1/pre-questions/1", TOKEN);
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message")
+                            .value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("pre-question/findbyid/exception/not-my-pre-question"));
+        }
+
+        @Test
+        @DisplayName("잘못된 레벨로그의 사전 질문을 조회하면 예외를 던진다.")
+        void levellogWrongId_Exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            BDDMockito.willThrow(
+                            new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
+                    .given(preQuestionService)
+                    .findById(1L, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestFind("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -186,21 +271,18 @@ public class PreQuestionControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("없는 사전 질문을 조회하면 예외를 던진다.")
+        @DisplayName("저장되어있지 않은 사전 질문을 조회하는 경우 예외를 던진다.")
         void preQuestionNotFound_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
-                    .when(preQuestionService)
+            BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
+                    .given(preQuestionService)
                     .findById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = mockMvc.perform(get("/api/levellogs/1/pre-questions/1")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestFind("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -217,21 +299,19 @@ public class PreQuestionControllerTest extends ControllerTest {
     class Delete {
 
         @Test
-        @DisplayName("url에서 잘못된 레벨로그 id를 입력하면 예외를 던진다.")
-        void preQuestionWrongLevellogId_Exception() throws Exception {
+        @DisplayName("잘못된 레벨로그의 사전 질문을 삭제하면 예외를 던진다.")
+        void levellogWrongId_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            doThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
-                    .when(preQuestionService)
+            BDDMockito.willThrow(
+                            new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
+                    .given(preQuestionService)
                     .deleteById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = mockMvc.perform(delete("/api/levellogs/1/pre-questions/1")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -243,21 +323,18 @@ public class PreQuestionControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("없는 사전 질문을 삭제하면 예외를 던진다.")
+        @DisplayName("저장되어있지 않은 사전 질문을 삭제하는 경우 예외를 던진다.")
         void preQuestionNotFound_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            doThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
-                    .when(preQuestionService)
+            BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
+                    .given(preQuestionService)
                     .deleteById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = mockMvc.perform(delete("/api/levellogs/1/pre-questions/1")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -267,5 +344,62 @@ public class PreQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("pre-question/delete/exception/notfound"));
         }
+
+        @Test
+        @DisplayName("타인의 사전 질문을 삭제하는 경우 예외를 던진다.")
+        void fromNotMyPreQuestion_Exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
+                    .given(preQuestionService)
+                    .deleteById(1L, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", TOKEN);
+
+            // then
+            perform.andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("message")
+                            .value("권한이 없습니다."));
+
+            // docs
+            perform.andDo(document("pre-question/delete/exception/not-my-pre-question"));
+        }
+
+
+    }
+
+    private ResultActions requestPost(final String url, final String token, final String requestContent)
+            throws Exception {
+        return mockMvc.perform(post(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestContent))
+                .andDo(print());
+    }
+
+    private ResultActions requestUpdate(final String url, final String token, final String requestContent)
+            throws Exception {
+        return mockMvc.perform(put(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestContent))
+                .andDo(print());
+    }
+
+    private ResultActions requestFind(final String url, final String token) throws Exception {
+        return mockMvc.perform(get(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print());
+    }
+
+    private ResultActions requestDelete(final String url, final String token) throws Exception {
+        return mockMvc.perform(delete(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print());
     }
 }

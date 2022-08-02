@@ -1,14 +1,17 @@
 import styled from 'styled-components';
 
-import { FeedbackContainer, FeedbackTitle } from 'components/@commons/Style';
+import { FeedbackTitle } from 'components/@commons/Style';
+import UiViewer from 'components/@commons/UiViewer';
 
 // 레벨로그 작성한 유저의 닉네임 가져오기
 const LevellogReport = ({ levellog }: LevellogReportProps) => {
   return (
-    <FeedbackContainer>
+    <S.Container>
       <FeedbackTitle>레벨로그</FeedbackTitle>
-      <S.Content>{levellog}</S.Content>
-    </FeedbackContainer>
+      <S.Content>
+        <UiViewer content={levellog} />
+      </S.Content>
+    </S.Container>
   );
 };
 
@@ -17,19 +20,18 @@ interface LevellogReportProps {
 }
 
 const S = {
-  // FeedbackAdd 페이지가 figma와 달라서 FeedbackContainer를 없애고 따로 스타일 작성해야함.
   Container: styled.div`
     overflow: auto;
-    width: 47.0625rem;
+    width: 48rem;
     @media (max-width: 520px) {
       max-width: 22.875rem;
     }
   `,
 
   Content: styled.div`
-    overflow: hidden;
+    overflow: auto;
     width: 100%;
-    min-height: 60.0625rem;
+    height: 60rem;
     padding: 1rem;
     border-radius: 0.5rem;
     background-color: ${(props) => props.theme.default.WHITE};

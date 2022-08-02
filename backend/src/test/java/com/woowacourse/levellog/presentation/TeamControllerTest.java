@@ -613,7 +613,7 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 200_000L;
             doThrow(new TeamNotFoundException("팀이 존재하지 않습니다. [teamId : " + teamId + "]", "팀이 존재하지 않습니다."))
                     .when(teamService)
-                    .closeInterview(teamId, 4L);
+                    .close(teamId, 4L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
@@ -641,7 +641,7 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 1L;
             doThrow(new InterviewCloseException("이미 종료된 인터뷰입니다. [teamId : " + teamId + "]", "이미 종료된 인터뷰입니다."))
                     .when(teamService)
-                    .closeInterview(teamId, 4L);
+                    .close(teamId, 4L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
@@ -670,7 +670,7 @@ class TeamControllerTest extends ControllerTest {
             doThrow(new InterviewCloseException("인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]",
                     "인터뷰가 시작되기 전에 종료할 수 없습니다."))
                     .when(teamService)
-                    .closeInterview(teamId, 4L);
+                    .close(teamId, 4L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
@@ -698,7 +698,7 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 1L;
             doThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
                     .when(teamService)
-                    .closeInterview(teamId, 4L);
+                    .close(teamId, 4L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")

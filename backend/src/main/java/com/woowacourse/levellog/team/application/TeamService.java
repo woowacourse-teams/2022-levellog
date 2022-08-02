@@ -98,11 +98,11 @@ public class TeamService {
     }
 
     @Transactional
-    public void closeInterview(final Long teamId, final Long memberId) {
+    public void close(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         validateHost(memberId, team);
 
-        team.closeInterview(timeStandard.now());
+        team.close(timeStandard.now());
     }
 
     @Transactional

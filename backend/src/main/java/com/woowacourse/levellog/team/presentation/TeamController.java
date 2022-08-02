@@ -68,7 +68,7 @@ public class TeamController {
     @PostMapping("/{teamId}/close")
     public ResponseEntity<Void> close(@PathVariable final Long teamId,
                                       @Authentic final Long memberId) {
-        teamService.closeInterview(teamId, memberId);
+        teamService.close(teamId, memberId);
         return ResponseEntity.noContent().build();
     }
 

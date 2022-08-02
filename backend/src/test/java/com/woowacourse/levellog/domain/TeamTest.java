@@ -366,7 +366,7 @@ class TeamTest {
             final Team team = new Team(title, place, startAt, profileUrl, 2);
 
             // when
-            team.closeInterview(startAt.plusDays(1));
+            team.close(startAt.plusDays(1));
 
             // then
             assertThat(team.isClosed()).isTrue();
@@ -382,10 +382,10 @@ class TeamTest {
             final String profileUrl = "profile.img";
             final Team team = new Team(title, place, startAt, profileUrl, 2);
 
-            team.closeInterview(startAt.plusDays(1));
+            team.close(startAt.plusDays(1));
 
             // when & then
-            assertThatThrownBy(() -> team.closeInterview(startAt.plusDays(1)))
+            assertThatThrownBy(() -> team.close(startAt.plusDays(1)))
                     .isInstanceOf(InterviewCloseException.class)
                     .hasMessageContaining("이미 종료된 인터뷰");
         }
@@ -401,7 +401,7 @@ class TeamTest {
             final Team team = new Team(title, place, startAt, profileUrl, 2);
 
             // when & then
-            assertThatThrownBy(() -> team.closeInterview(startAt.minusDays(1)))
+            assertThatThrownBy(() -> team.close(startAt.minusDays(1)))
                     .isInstanceOf(InterviewCloseException.class)
                     .hasMessageContaining("인터뷰가 시작되기 전에 종료할 수 없습니다.");
         }

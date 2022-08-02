@@ -48,7 +48,7 @@ class TeamServiceTest extends ServiceTest {
         participantRepository.save(new Participant(team2, member1, false));
         participantRepository.save(new Participant(team2, member2, true));
 
-        team2.closeInterview(LocalDateTime.now().plusDays(5));
+        team2.close(LocalDateTime.now().plusDays(5));
 
         //when
         final TeamsDto response = teamService.findAll();
@@ -469,7 +469,7 @@ class TeamServiceTest extends ServiceTest {
             participantRepository.save(new Participant(team, rick, true));
 
             // when
-            teamService.closeInterview(team.getId(), rick.getId());
+            teamService.close(team.getId(), rick.getId());
 
             // then
             final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
@@ -487,7 +487,7 @@ class TeamServiceTest extends ServiceTest {
             participantRepository.save(new Participant(team, alien, false));
 
             // when & then
-            assertThatThrownBy(() -> teamService.closeInterview(team.getId(), alien.getId()))
+            assertThatThrownBy(() -> teamService.close(team.getId(), alien.getId()))
                     .isInstanceOf(HostUnauthorizedException.class)
                     .hasMessageContainingAll("호스트 권한이 없습니다.", alien.getId().toString());
         }

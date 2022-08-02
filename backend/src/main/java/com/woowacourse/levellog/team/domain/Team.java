@@ -35,7 +35,7 @@ public class Team extends BaseEntity {
     private int interviewerNumber;
 
     @Column(nullable = false)
-    private boolean isClosed = false;
+    private boolean isClosed;
 
     public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
                 final int interviewerNumber) {
@@ -46,6 +46,7 @@ public class Team extends BaseEntity {
         this.startAt = startAt;
         this.profileUrl = profileUrl;
         this.interviewerNumber = interviewerNumber;
+        this.isClosed = false;
     }
 
     private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
@@ -116,9 +117,9 @@ public class Team extends BaseEntity {
         }
     }
 
-    public void closeInterview(final LocalDateTime presentTime) {
+    public void close(final LocalDateTime presentTime) {
         validateInterviewStartTime(presentTime);
-        validateAlreadyClose();
+        validateAlreadyClosedInterview();
 
         isClosed = true;
     }
@@ -129,7 +130,7 @@ public class Team extends BaseEntity {
         }
     }
 
-    private void validateAlreadyClose() {
+    private void validateAlreadyClosedInterview() {
         if (isClosed) {
             throw new InterviewCloseException("[teamId : " + this.getId() + "]", "이미 종료된 인터뷰입니다.");
         }

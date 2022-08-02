@@ -33,6 +33,13 @@ public class RestAssuredResponse {
                 .split("/pre-questions/")[1];
     }
 
+    public String getInterviewQuestionId() {
+        return response
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split("/interview-questions/")[1];
+    }
+
     public Long getMemberId() {
         return response
                 .extract()

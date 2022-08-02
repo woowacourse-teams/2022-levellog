@@ -57,8 +57,6 @@ class FeedbackServiceTest extends ServiceTest {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
         final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
-        final Feedback feedback1 = feedbackRepository.save(
-                new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
         feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
         feedbackRepository.save(new Feedback(eve, roma, levellog, "이브 스터디", "이브 말하기", "이브 기타"));
 
@@ -261,7 +259,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
             participantRepository.save(new Participant(team, eve, true));
-            participantRepository.save(new Participant(team, alien, true));
+            participantRepository.save(new Participant(team, alien, false));
 
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 

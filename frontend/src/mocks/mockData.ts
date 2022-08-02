@@ -152,19 +152,19 @@ export const levellogTeams = {
       hostId: 300,
       participants: [
         {
-          id: 300,
+          memberId: 300,
           levellogId: 1,
           nickname: '페퍼',
           profileUrl: 'https://avatars.githubusercontent.com/u/28749734?v=4',
         },
         {
-          id: 2,
+          memberId: 2,
           levellogId: 2,
           nickname: 'OzRagwort',
           profileUrl: 'https://avatars.githubusercontent.com/u/32123302?v=4',
         },
         {
-          id: 3,
+          memberId: 3,
           levellogId: 3,
           nickname: '유정이',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
@@ -180,37 +180,37 @@ export const levellogTeams = {
       hostId: 300,
       participants: [
         {
-          id: 300,
+          memberId: 300,
           levellogId: 1,
           nickname: '페퍼',
           profileUrl: 'https://avatars.githubusercontent.com/u/28749734?v=4',
         },
         {
-          id: 2,
+          memberId: 2,
           levellogId: 2,
           nickname: 'OzRagwort',
           profileUrl: 'https://avatars.githubusercontent.com/u/32123302?v=4',
         },
         {
-          id: 3,
+          memberId: 3,
           levellogId: 3,
           nickname: '유정이',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
         },
         {
-          id: 4,
+          memberId: 4,
           levellogId: 4,
           nickname: '릭',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
         },
         {
-          id: 5,
+          memberId: 5,
           levellogId: 5,
           nickname: '알린',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
         },
         {
-          id: 6,
+          memberId: 6,
           levellogId: 6,
           nickname: '로마',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
@@ -226,26 +226,26 @@ export const levellogTeams = {
       hostId: 300,
       participants: [
         {
-          id: 300,
+          memberId: 300,
           levellogId: 1,
           nickname: '페퍼',
           profileUrl: 'https://avatars.githubusercontent.com/u/28749734?v=4',
         },
 
         {
-          id: 3,
+          memberId: 3,
           levellogId: 3,
           nickname: '유정이',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
         },
         {
-          id: 7,
+          memberId: 7,
           levellogId: 7,
           nickname: '해리',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
         },
         {
-          id: 5,
+          memberId: 5,
           levellogId: 5,
           nickname: '알린',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
@@ -261,25 +261,25 @@ export const levellogTeams = {
       hostId: 300,
       participants: [
         {
-          id: 300,
+          memberId: 300,
           levellogId: 1,
           nickname: '페퍼',
           profileUrl: 'https://avatars.githubusercontent.com/u/28749734?v=4',
         },
         {
-          id: 4,
+          memberId: 4,
           levellogId: 4,
           nickname: '릭',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
         },
         {
-          id: 7,
+          memberId: 7,
           levellogId: 7,
           nickname: '해리',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
         },
         {
-          id: 5,
+          memberId: 5,
           levellogId: 5,
           nickname: '알린',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
@@ -295,19 +295,19 @@ export const levellogTeams = {
       hostId: 300,
       participants: [
         {
-          id: 4,
+          memberId: 4,
           levellogId: 4,
           nickname: '릭',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
         },
         {
-          id: 5,
+          memberId: 5,
           levellogId: 5,
           nickname: '알린',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',
         },
         {
-          id: 6,
+          memberId: 6,
           levellogId: 6,
           nickname: '로마',
           profileUrl: 'https://avatars.githubusercontent.com/u/76840965?v=4',

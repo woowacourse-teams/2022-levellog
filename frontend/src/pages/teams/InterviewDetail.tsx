@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 
 import styled, { CSSProperties } from 'styled-components';
-import { ParticipantType } from 'types';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import { useTeam } from 'hooks/useTeams';
@@ -11,16 +10,16 @@ import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 import Interviewer from 'components/teams/Interviewer';
+import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
-  const { teamLocationState, team, getTeam } = useTeam();
-
+  const { teamLocationState, team, userInTeam, getTeam } = useTeam();
   const {
     levellog,
     participant,
     isOnModal,
     onClickToggleModal,
-    onClickLevellogDelete,
+    onClickDeleteLevellog,
     handleClickCloseLevellogModal,
   } = useLevellogModal();
 
@@ -30,84 +29,83 @@ const InterviewDetail = () => {
     }
   }, []);
 
-  if (Object.keys(team).length === 0) return;
+  if (team && Object.keys(team).length === 0) return <div>실패</div>;
 
   return (
     <>
       {isOnModal === true && (
         <LevellogViewModal
-          participant={participant}
           levellog={levellog}
+          participant={participant}
           getTeam={getTeam}
-          onClickLevellogDelete={onClickLevellogDelete}
+          onClickDeleteLevellog={onClickDeleteLevellog}
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}
         />
       )}
       <FlexBox gap={4.375}>
-        <InterviewDetailHeader>
+        <S.Header>
           <FlexBox gap={1}>
-            <InterviewDetailOwnerImage>
-              <Image src={team.teamImage} sizes={'LARGE'} />
-            </InterviewDetailOwnerImage>
+            <S.OwnerImage>
+              <Image src={(team as InterviewTeamType).teamImage} sizes={'LARGE'} />
+            </S.OwnerImage>
             <FlexBox flexFlow="column" gap={1.125}>
-              <InterviewDetailTitle>{team.title}</InterviewDetailTitle>
+              <S.Title>{(team as InterviewTeamType).title}</S.Title>
               <FlexBox gap={1}>
-                <InterviewDetailTitleContent>{team.place}</InterviewDetailTitleContent>
-                <InterviewDetailTitleContent>{team.startAt}</InterviewDetailTitleContent>
+                <S.TitleContent>{(team as InterviewTeamType).place}</S.TitleContent>
+                <S.TitleContent>{(team as InterviewTeamType).startAt}</S.TitleContent>
               </FlexBox>
             </FlexBox>
           </FlexBox>
           <Button>그룹 수정하기</Button>
-        </InterviewDetailHeader>
-        <InterviewDetailContainer>
-          {team.participants.map((participant: ParticipantType) => (
+        </S.Header>
+        <S.Container>
+          {(team as InterviewTeamType).participants.map((participant: ParticipantType) => (
             <Interviewer
-              key={participant.id}
-              levellog={levellog}
+              key={participant.memberId}
               participant={participant}
+              userInTeam={userInTeam}
               onClickToggleModal={onClickToggleModal}
-              onClickLevellogDelete={onClickLevellogDelete}
-              handleClickCloseLevellogModal={handleClickCloseLevellogModal}
             />
           ))}
-        </InterviewDetailContainer>
+        </S.Container>
       </FlexBox>
     </>
   );
 };
 
-const InterviewDetailHeader = styled.div<CSSProperties>`
-  display: flex;
-  width: 100%;
-  height: 60px;
-  margin-top: 50px;
-  justify-content: space-between;
-  align-items: center;
-`;
+const S = {
+  Header: styled.div<CSSProperties>`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 3.75rem;
+    margin-top: 3.125rem;
+  `,
 
-const InterviewDetailTitle = styled.h3`
-  width: 11.5rem;
-  word-break: break-all;
-`;
+  Container: styled.div`
+    display: flex;
+    flex-flow: row wrap;
+    gap: 2.5rem;
+    @media (max-width: 560px) {
+      justify-content: center;
+    }
+  `,
 
-const InterviewDetailTitleContent = styled.p`
-  word-break: break-all;
-`;
+  Title: styled.h3`
+    width: 11.5rem;
+    word-break: break-all;
+  `,
 
-const InterviewDetailOwnerImage = styled.div`
-  @media (max-width: 620px) {
-    display: none;
-  }
-`;
+  TitleContent: styled.p`
+    word-break: break-all;
+  `,
 
-const InterviewDetailContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 40px;
-  @media (max-width: 560px) {
-    justify-content: center;
-  }
-`;
+  OwnerImage: styled.div`
+    @media (max-width: 620px) {
+      display: none;
+    }
+  `,
+};
 
 export default InterviewDetail;

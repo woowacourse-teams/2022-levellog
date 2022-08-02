@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 
-import { InterviewTeamType } from 'types/index';
+import { TeamApiType, InterviewTeamType } from 'types/team';
 
 export const requestGetTeams = (): AxiosPromise<Record<'teams', InterviewTeamType[]>> => {
   return axios({
@@ -9,7 +9,7 @@ export const requestGetTeams = (): AxiosPromise<Record<'teams', InterviewTeamTyp
   });
 };
 
-export const requestGetTeam = ({ teamId }: any): AxiosPromise<InterviewTeamType> => {
+export const requestGetTeam = ({ teamId }: TeamApiType): AxiosPromise<InterviewTeamType> => {
   return axios({
     method: 'get',
     url: `${process.env.API_URI}/teams/${teamId}`,

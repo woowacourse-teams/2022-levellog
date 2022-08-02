@@ -1,4 +1,5 @@
-export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.SERVICE_URI}/login`;
+// export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.SERVICE_URI}/login`;
+export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=http://192.168.1.136:3000/login`;
 
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',
@@ -17,4 +18,9 @@ export const ROUTES_PATH = Object.freeze({
 export const SERVER_PATH = Object.freeze({
   FEEDBACKS: `${process.env.API_URI}/feedbacks`,
   LEVELLOGS: `${process.env.API_URI}/levellogs`,
+});
+
+export const MESSAGE = Object.freeze({
+  WRONG_ACCESS: '잘못된 접근입니다',
+  NEED_LOGIN: '로그인이 필요한 페이지입니다',
 });

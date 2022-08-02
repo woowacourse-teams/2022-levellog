@@ -4,6 +4,8 @@
     "module": "es2020",
     "moduleResolution": "node",
     "jsx": "react-jsx",
+    "strict": true,
+    "noImplicitAny": true,
     "esModuleInterop": true,
     "baseUrl": "src"
   }

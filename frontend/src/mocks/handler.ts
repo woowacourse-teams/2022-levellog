@@ -70,10 +70,8 @@ export const levellogHandlers = [
     levellogTeams.teams.find((team) => {
       if (team.id === teamId) {
         team.participants.find(
-          (participant) =>
-            participant.levellogId === levellogId &&
-            participant.id === 300 &&
-            (participant.levellogId = null),
+          (participant) => participant.levellogId === levellogId && participant.memberId === 300,
+          // (participant.levellogId = null),
         );
       }
     });
@@ -84,18 +82,18 @@ export const levellogHandlers = [
 
 export const authHandlers = [
   rest.post('/api/auth/login', (req, res, ctx) => {
-    if (Object.keys(req.body).includes('authorizationCode')) {
-      return res(
-        ctx.status(200),
-        ctx.json({
-          id: 300,
-          accessToken: 'fflkmdsaklfmkals32$Rmksdlfmlksdm',
-          profileUrl: 'https://avatars.githubusercontent.com/u/432423423?v=4',
-        }),
-      );
-    }
+    // if (Object.keys(req.body).includes('authorizationCode')) {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        id: 300,
+        accessToken: 'fflkmdsaklfmkals32$Rmksdlfmlksdm',
+        profileUrl: 'https://avatars.githubusercontent.com/u/432423423?v=4',
+      }),
+    );
+    // }
 
-    return res(ctx.status(403));
+    // return res(ctx.status(403));
   }),
 
   rest.get('/api/myInfo', (req, res, ctx) => {

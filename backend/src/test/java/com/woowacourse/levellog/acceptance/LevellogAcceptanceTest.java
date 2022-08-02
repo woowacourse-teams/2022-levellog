@@ -33,14 +33,14 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
         final LevellogDto request = LevellogDto.from("Spring과 React를 학습했습니다.");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/save"))
@@ -65,7 +65,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
         final LevellogDto request = LevellogDto.from("Spring과 React를 학습했습니다.");
@@ -97,7 +97,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
@@ -134,7 +134,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),

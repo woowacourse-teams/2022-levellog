@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
@@ -27,24 +28,20 @@ import org.junit.jupiter.api.Test;
 @DisplayName("FeedbackService의")
 class FeedbackServiceTest extends ServiceTest {
 
-    @Test
-    @DisplayName("findAll 메서드는 모든 피드백을 조회한다.")
-    void findAll() {
-        // given
-        final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-        final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
-        final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
-        final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
-        feedbackRepository.save(new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
-        feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
+    private Member saveAndGetMember(final String nickname) {
+        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
+    }
 
-        // when
-        final FeedbacksDto feedbacksResponse = feedbackService.findAll(levellog.getId());
+    private Team saveAndGetTeam(final String title, final int interviewerNumber) {
+        return teamRepository.save(
+                new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png", interviewerNumber));
+    }
 
-        // then
-        assertThat(feedbacksResponse.getFeedbacks()).hasSize(2);
+    private void saveAllParticipant(final Team team, final Member host, final Member... participants) {
+        participantRepository.save(new Participant(team, host, true));
+        for (final Member participant : participants) {
+            participantRepository.save(new Participant(team, participant, false));
+        }
     }
 
     @Test
@@ -55,7 +52,7 @@ class FeedbackServiceTest extends ServiceTest {
         final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
         final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
         final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
+                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
         final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
         feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
         feedbackRepository.save(new Feedback(eve, roma, levellog, "이브 스터디", "이브 말하기", "이브 기타"));
@@ -77,6 +74,53 @@ class FeedbackServiceTest extends ServiceTest {
     }
 
     @Nested
+    @DisplayName("findAll 메서드는")
+    class FindAll {
+
+        @Test
+        @DisplayName("모든 피드백을 조회한다.")
+        void success() {
+            // given
+            final Member eve = saveAndGetMember("이브");
+            final Member roma = saveAndGetMember("로마");
+            final Member alien = saveAndGetMember("알린");
+            final Team team = saveAndGetTeam("잠실 네오조", 1);
+            saveAllParticipant(team, eve, roma);
+            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
+            saveAllParticipant(team, eve, roma, alien);
+            feedbackRepository.save(new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
+            feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
+
+            // when
+            final FeedbacksDto feedbacksResponse = feedbackService.findAll(levellog.getId(), eve.getId());
+
+            // then
+            assertThat(feedbacksResponse.getFeedbacks()).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findAll_notMyTeam_exception() {
+            // given
+            final Member eve = saveAndGetMember("이브");
+            final Member roma = saveAndGetMember("로마");
+            final Member alien = saveAndGetMember("알린");
+            final Team team = saveAndGetTeam("잠실 네오조", 1);
+            saveAllParticipant(team, eve, roma);
+            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
+            feedbackRepository.save(new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
+
+            // when & then
+            final Long memberId = alien.getId();
+            final Long levellogId = levellog.getId();
+            assertThatThrownBy(() -> feedbackService.findAll(levellogId, memberId))
+                    .isInstanceOf(UnauthorizedException.class)
+                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.", String.valueOf(team.getId()),
+                            String.valueOf(memberId), String.valueOf(levellogId));
+        }
+    }
+
+    @Nested
     @DisplayName("update 메서드는")
     class update {
 
@@ -87,7 +131,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "profile.img"));
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "profile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
             final Feedback feedback1 = feedbackRepository.save(
@@ -113,7 +157,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
             final Feedback feedback1 = feedbackRepository.save(
@@ -140,7 +184,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
             final Feedback alienFeedback = feedbackRepository.save(
@@ -163,7 +207,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
             final Feedback alienFeedback = feedbackRepository.save(
@@ -188,7 +232,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
             participantRepository.save(new Participant(team, eve, true));
             participantRepository.save(new Participant(team, roma, false));
@@ -213,7 +257,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
 
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
 
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
             feedbackRepository.save(new Feedback(roma, eve, levellog, "study", "speak", "etc"));
@@ -234,7 +278,7 @@ class FeedbackServiceTest extends ServiceTest {
             // given
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
             participantRepository.save(new Participant(team, eve, true));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
@@ -257,7 +301,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
 
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img"));
+                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
             participantRepository.save(new Participant(team, eve, true));
             participantRepository.save(new Participant(team, alien, false));
 

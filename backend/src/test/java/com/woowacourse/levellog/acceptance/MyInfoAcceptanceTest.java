@@ -164,9 +164,9 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String hostToken = hostLoginResponse.getToken();
 
         // 팀 생성
-        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId)));
-        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId)));
 
         final String teamId1 = post("/api/teams", hostToken, teamCreateDto1).getTeamId();
@@ -216,9 +216,9 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final Long alienId = login("알린").getMemberId();
 
         // 팀 생성
-        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId, pepperId)));
-        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId, alienId)));
 
         post("/api/teams", hostToken, teamCreateDto1);

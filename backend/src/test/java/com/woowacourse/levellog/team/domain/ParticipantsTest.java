@@ -45,6 +45,34 @@ class ParticipantsTest {
         );
     }
 
+    @ParameterizedTest(name = "toIntervieweeIds 메서드는 인터뷰어 수가 {0}명이고 참가자 아이디가 [1, 2, 3, 4, 5]인 팀에서 아이디가 {1}인 참가자의 인터뷰이 아이디는 [{2}]이다.")
+    @CsvSource(value = {"2:1:4, 5", "2:4:2, 3", "4:3:4, 5, 1, 2"}, delimiter = ':')
+    void toIntervieweeIds(final int interviewerNumber, final Long targetMemberId, final String expectedIds) {
+        // given
+        final List<Long> expected = toIdList(expectedIds);
+        final Team team = new Team();
+        final List<Participant> values = new ArrayList<>(
+                List.of(
+                        new Participant(team, getMember("릭", 1L), true),
+                        new Participant(team, getMember("로마", 2L), false),
+                        new Participant(team, getMember("알린", 3L), false),
+                        new Participant(team, getMember("이브", 4L), false),
+                        new Participant(team, getMember("해리", 5L), false)
+                )
+        );
+
+        final Participants participants = new Participants(values);
+
+        // when
+        final List<Long> actual = participants.toIntervieweeIds(targetMemberId, interviewerNumber);
+
+        // then
+        assertAll(
+                () -> assertThat(actual).hasSize(interviewerNumber),
+                () -> assertThat(actual).isEqualTo(expected)
+        );
+    }
+
     Member getMember(final String nickname, final Long memberId) {
         final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".com");
 

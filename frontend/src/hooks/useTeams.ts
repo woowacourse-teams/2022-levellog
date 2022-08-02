@@ -81,8 +81,10 @@ export const useTeams = () => {
 };
 
 export const useTeam = () => {
+  const { loginUserId } = useUser();
   const [team, setTeam] = useState<InterviewTeamType | Object>({});
   // 나중에 location은 타입을 고칠 필요가 있어보임
+  const [userInTeam, setUserInTeam] = useState(false);
   const location = useLocation() as unknown as { state: InterviewTeamType };
   const { teamId } = useParams();
   const navigate = useNavigate();
@@ -94,6 +96,7 @@ export const useTeam = () => {
         const res = await requestGetTeam({ teamId });
 
         setTeam(res.data);
+        checkUserInTeam({ team: res.data });
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -104,6 +107,10 @@ export const useTeam = () => {
     }
   };
 
+  const checkUserInTeam = ({ team }: Record<'team', InterviewTeamType>) => {
+    setUserInTeam(team.participants.some((participant) => participant.memberId === loginUserId));
+  };
+
   useEffect(() => {
     // 나중에 location은 타입을 고칠 필요가 있어보임
     // teamLocationState && 안 해주면 에러남
@@ -112,5 +119,5 @@ export const useTeam = () => {
     }
   }, []);
 
-  return { teamLocationState, team, getTeam };
+  return { teamLocationState, team, userInTeam, getTeam };
 };

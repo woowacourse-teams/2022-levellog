@@ -11,9 +11,9 @@ interface ImageProps {
 }
 
 const ImageStyle = styled.img`
-  width: ${(props) => props.theme.imageSize[props.sizes]};
-  height: ${(props) => props.theme.imageSize[props.sizes]};
-  border-radius: ${(props) => props.theme.imageSize[props.sizes]};
+  width: ${(props) => props.theme.imageSize[props.sizes!]};
+  height: ${(props) => props.theme.imageSize[props.sizes!]};
+  border-radius: ${(props) => props.theme.imageSize[props.sizes!]};
 `;
 
 export default Image;

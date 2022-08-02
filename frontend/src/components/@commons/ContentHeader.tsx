@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const ContentHeader = ({ title, children }: InputProps) => {
+const ContentHeader = ({ title, children }: ContentHeaderProps) => {
   return (
     <ContentHeaderStyle>
       <h1>{title}</h1>
@@ -9,7 +9,7 @@ const ContentHeader = ({ title, children }: InputProps) => {
   );
 };
 
-interface InputProps {
+interface ContentHeaderProps {
   title: string;
   children?: React.ReactElement;
 }
@@ -17,10 +17,10 @@ interface InputProps {
 const ContentHeaderStyle = styled.div`
   display: flex;
   position: relative;
-  width: 100%;
-  height: 7.5rem;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 7.5rem;
   @media (max-width: 560px) {
     justify-content: start;
     font-size: 0.75rem;

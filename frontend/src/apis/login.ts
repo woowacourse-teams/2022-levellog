@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-export const getUserLogin = ({ code }: any) => {
+import { LoginApiType } from 'types/login';
+
+export const requestGetUserLogin = ({ code }: Pick<LoginApiType, 'code'>) => {
   return axios({
     method: 'post',
     headers: {
@@ -13,7 +15,7 @@ export const getUserLogin = ({ code }: any) => {
   });
 };
 
-export const getUserAuthority = ({ accessToken }: any) => {
+export const requestGetUserAuthority = ({ accessToken }: Pick<LoginApiType, 'accessToken'>) => {
   return axios({
     method: 'get',
     url: `${process.env.API_URI}/myInfo`,

@@ -2,10 +2,13 @@ package com.woowacourse.levellog.team.domain;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.domain.MockEntityFactory;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -193,6 +196,48 @@ class ParticipantsTest {
 
             // then
             assertThat(actual).isEqualTo(InterviewRole.ME);
+        }
+
+        @Test
+        @DisplayName("요청한 멤버가 참가자가 아니라면 예외를 던진다.")
+        void requestMemberIdNotContains_exceptionThrown() {
+            // given
+            final Team team = MockEntityFactory.setId(1L, new Team());
+            final List<Participant> values = new ArrayList<>(
+                    List.of(
+                            new Participant(team, getMember("릭", 1L), true),
+                            new Participant(team, getMember("로마", 2L), false),
+                            new Participant(team, getMember("알린", 3L), false),
+                            new Participant(team, getMember("이브", 4L), false),
+                            new Participant(team, getMember("해리", 5L), false)
+                    )
+            );
+            final Participants participants = new Participants(values);
+
+            // when & then
+            assertThatThrownBy(() -> participants.toInterviewRole(team.getId(), 1L, 9L, 2))
+                    .isInstanceOf(UnauthorizedException.class);
+        }
+
+        @Test
+        @DisplayName("타겟 멤버가 참가자가 아니라면 예외를 던진다.")
+        void targetMemberIdNotContains_exceptionThrown() {
+            // given
+            final Team team = MockEntityFactory.setId(1L, new Team());
+            final List<Participant> values = new ArrayList<>(
+                    List.of(
+                            new Participant(team, getMember("릭", 1L), true),
+                            new Participant(team, getMember("로마", 2L), false),
+                            new Participant(team, getMember("알린", 3L), false),
+                            new Participant(team, getMember("이브", 4L), false),
+                            new Participant(team, getMember("해리", 5L), false)
+                    )
+            );
+            final Participants participants = new Participants(values);
+
+            // when & then
+            assertThatThrownBy(() -> participants.toInterviewRole(team.getId(), 9L, 1L, 2))
+                    .isInstanceOf(ParticipantNotFoundException.class);
         }
     }
 }

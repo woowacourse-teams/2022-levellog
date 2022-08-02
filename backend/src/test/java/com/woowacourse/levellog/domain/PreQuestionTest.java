@@ -21,7 +21,7 @@ public class PreQuestionTest {
 
     @Nested
     @DisplayName("생성자 메서드는")
-    class constructor {
+    class Constructor {
 
         @ParameterizedTest
         @NullAndEmptySource
@@ -60,7 +60,7 @@ public class PreQuestionTest {
 
     @Nested
     @DisplayName("update 메서드는")
-    class update {
+    class Update {
 
         @Test
         @DisplayName("사전 질문을 수정한다.")
@@ -78,7 +78,7 @@ public class PreQuestionTest {
             preQuestion.update("수정된 사전 질문");
 
             // then
-            assertThat(preQuestion.getPreQuestion()).isEqualTo("수정된 사전 질문");
+            assertThat(preQuestion.getContent()).isEqualTo("수정된 사전 질문");
         }
 
         @ParameterizedTest

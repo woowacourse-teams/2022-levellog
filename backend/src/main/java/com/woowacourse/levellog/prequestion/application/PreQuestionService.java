@@ -33,21 +33,21 @@ public class PreQuestionService {
     @Transactional
     public Long save(final PreQuestionDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getLevellog(levellogId);
-        final Member from = getMember(memberId);
+        final Member questioner = getMember(memberId);
 
-        validateExistParticipantByMember(levellog.getTeam(), from);
+        validateSameTeamMember(levellog.getTeam(), questioner);
 
-        return preQuestionRepository.save(request.toEntity(levellog, from))
+        return preQuestionRepository.save(request.toEntity(levellog, questioner))
                 .getId();
     }
 
     public PreQuestionDto findById(final Long preQuestionId, final Long levellogId, final Long memberId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
         final Levellog levellog = getLevellog(levellogId);
-        final Member from = getMember(memberId);
+        final Member questioner = getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
-        validateFromMember(preQuestion, from);
+        validateMyQuestion(preQuestion, questioner);
 
         return PreQuestionDto.from(preQuestion);
     }
@@ -57,10 +57,10 @@ public class PreQuestionService {
                        final Long memberId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
         final Levellog levellog = getLevellog(levellogId);
-        final Member from = getMember(memberId);
+        final Member questioner = getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
-        validateFromMember(preQuestion, from);
+        validateMyQuestion(preQuestion, questioner);
 
         preQuestion.update(request.getPreQuestion());
     }
@@ -69,10 +69,10 @@ public class PreQuestionService {
     public void deleteById(final Long preQuestionId, final Long levellogId, final Long memberId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
         final Levellog levellog = getLevellog(levellogId);
-        final Member from = getMember(memberId);
+        final Member questioner = getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
-        validateFromMember(preQuestion, from);
+        validateMyQuestion(preQuestion, questioner);
 
         preQuestionRepository.deleteById(preQuestion.getId());
     }
@@ -100,7 +100,7 @@ public class PreQuestionService {
         }
     }
 
-    private void validateExistParticipantByMember(final Team team, final Member member) {
+    private void validateSameTeamMember(final Team team, final Member member) {
         final List<Participant> participants = participantRepository.findByTeam(team);
 
         if (!existsParticipantByMember(participants, member)) {
@@ -113,8 +113,8 @@ public class PreQuestionService {
                 .anyMatch(participant -> participant.getMember().equals(member));
     }
 
-    private void validateFromMember(final PreQuestion preQuestion, final Member member) {
-        if (!preQuestion.getFrom().equals(member)) {
+    private void validateMyQuestion(final PreQuestion preQuestion, final Member member) {
+        if (!preQuestion.isSameAuthor(member)) {
             throw new UnauthorizedException("자신의 사전 질문이 아닙니다.");
         }
     }

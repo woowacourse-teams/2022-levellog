@@ -20,7 +20,7 @@ public class PreQuestionDto {
     private String preQuestion;
 
     public static PreQuestionDto from(final PreQuestion preQuestion) {
-        return new PreQuestionDto(preQuestion.getPreQuestion());
+        return new PreQuestionDto(preQuestion.getContent());
     }
 
     public PreQuestion toEntity(final Levellog levellog, final Member from) {

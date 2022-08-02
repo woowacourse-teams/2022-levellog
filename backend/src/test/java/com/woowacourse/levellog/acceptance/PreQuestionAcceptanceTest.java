@@ -25,7 +25,7 @@ import org.springframework.http.MediaType;
 public class PreQuestionAcceptanceTest extends AcceptanceTest {
 
     /*
-     * Scenario: 사전 등록 생성하기
+     * Scenario: 사전 질문 등록하기
      *   given: 1개의 레벨로그와 2명의 사용자(페퍼, 이브)가 있다.
      *   when: 이브가 페퍼의 레벨로그에 사전 질문 등록을 요청한다.
      *   then: 201 Created 상태 코드와 Location 헤더에 /api/levellogs/{levellogsId}/pre-question/{preQuestionId}를 담아 응답받는다.
@@ -65,7 +65,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
     }
 
     /*
-     * Scenario: 사전 등록 수정하기
+     * Scenario: 사전 질문 수정하기
      *   given: 1개의 레벨로그와 2명의 사용자(페퍼, 이브)가 있다.
      *   given: 이브가 페퍼에게 작성한 사전 질문이 있다.
      *   when: 이브가 페퍼에게 쓴 레벨로그의 사전 질문 수정을 요청한다.
@@ -112,7 +112,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
     }
 
     /*
-     * Scenario: 사전 등록 조회하기
+     * Scenario: 사전 질문 조회하기
      *   given: 1개의 레벨로그와 2명의 사용자(페퍼, 이브)가 있다.
      *   given: 이브가 페퍼에게 작성한 사전 질문이 있다.
      *   when: 이브가 페퍼에게 쓴 레벨로그의 사전 질문 조회를 요청한다.
@@ -156,7 +156,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
     }
 
     /*
-     * Scenario: 사전 등록 제거하기
+     * Scenario: 사전 질문 제거하기
      *   given: 1개의 레벨로그와 2명의 사용자(페퍼, 이브)가 있다.
      *   given: 이브가 페퍼에게 작성한 사전 질문이 있다.
      *   when: 이브가 페퍼에게 쓴 레벨로그의 사전 질문 삭제를 요청한다.

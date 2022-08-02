@@ -22,7 +22,7 @@ const useMember = () => {
   const updateMembers = async ({ nickname = '' }: MembersCustomHookType) => {
     try {
       if (isThrottle()) return;
-      console.log('요청');
+
       const res = await requestGetMembers({ accessToken, nickname });
       const members = res.data.members.filter((member) =>
         participants.every((participant) => participant.id !== member.id),
@@ -42,6 +42,7 @@ const useMember = () => {
 
     if (participants.every((participant) => inputtedParticipant.id !== participant.id)) {
       setParticipants((prev) => prev.concat(inputtedParticipant));
+
       return;
     }
     setParticipants(

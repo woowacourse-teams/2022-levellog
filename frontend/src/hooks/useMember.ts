@@ -4,6 +4,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import useUser from 'hooks/useUser';
 
+import useUtil from './useUtil';
 import { requestGetMembers } from 'apis/member';
 import { MembersCustomHookType, MemberType } from 'types/member';
 
@@ -16,9 +17,12 @@ const useMember = () => {
   const [members, setMembers] = useState<MemberType[]>([]);
   const [participants, setParticipants] = useState<MemberType[]>([{ id, nickname, profileUrl }]);
   const accessToken = localStorage.getItem('accessToken');
+  const { isThrottle } = useUtil();
 
   const updateMembers = async ({ nickname = '' }: MembersCustomHookType) => {
     try {
+      if (isThrottle()) return;
+      console.log('요청');
       const res = await requestGetMembers({ accessToken, nickname });
       const members = res.data.members.filter((member) =>
         participants.every((participant) => participant.id !== member.id),

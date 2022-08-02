@@ -19,6 +19,16 @@ operation::team/create[]
 [[create-exception]]
 === 팀 생성 예외
 
+[[create-exception-participants-duplicate]]
+==== 저장 시 중복된 참가자가 존재하는 경우
+
+operation::team/create/exception/participants/duplicate[]
+
+[[create-exception-participants-host]]
+==== 저장 시 참가자 목록에 Host가 포함된 경우 (hostId = 1)
+
+operation::team/create/exception/participants/host[]
+
 [[create-exception-title-null]]
 ==== 저장 시 title이 null 또는 공백인 경우
 

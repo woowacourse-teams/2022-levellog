@@ -40,7 +40,7 @@ public class ParticipantRepositoryTest {
                 "네오와 함께하는 레벨 인터뷰",
                 "선릉 트랙룸",
                 LocalDateTime.now().plusDays(3),
-                "profile.img"));
+                "profile.img", 1));
 
         final Member alien = memberRepository.save(new Member("알린", 12345678, "alien.img"));
         final Member roma = memberRepository.save(new Member("로마", 56781234, "roma.img"));
@@ -67,7 +67,7 @@ public class ParticipantRepositoryTest {
                 "네오와 함께하는 레벨 인터뷰",
                 "선릉 트랙룸",
                 LocalDateTime.now().plusDays(3),
-                "profile.img"));
+                "profile.img", 1));
 
         final Member alien = memberRepository.save(new Member("알린", 12345678, "alien.img"));
         final Member roma = memberRepository.save(new Member("로마", 56781234, "roma.img"));
@@ -90,7 +90,7 @@ public class ParticipantRepositoryTest {
                 "네오와 함께하는 레벨 인터뷰",
                 "선릉 트랙룸",
                 LocalDateTime.now().plusDays(3),
-                "profile.img"));
+                "profile.img", 1));
 
         final Member alien = memberRepository.save(new Member("알린", 12345678, "alien.img"));
         final Member roma = memberRepository.save(new Member("로마", 56781234, "roma.img"));

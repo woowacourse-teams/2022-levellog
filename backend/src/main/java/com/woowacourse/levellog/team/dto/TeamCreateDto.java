@@ -4,6 +4,7 @@ import com.woowacourse.levellog.team.domain.Team;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,6 +23,9 @@ public class TeamCreateDto {
     @NotBlank
     private String place;
 
+    @Positive
+    private int interviewerNumber;
+
     @NotNull
     private LocalDateTime startAt;
 
@@ -29,6 +33,6 @@ public class TeamCreateDto {
     private ParticipantIdsDto participants;
 
     public Team toEntity(final String profileUrl) {
-        return new Team(title, place, startAt, profileUrl);
+        return new Team(title, place, startAt, profileUrl, interviewerNumber);
     }
 }

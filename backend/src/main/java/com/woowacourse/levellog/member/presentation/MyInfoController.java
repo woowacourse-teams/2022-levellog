@@ -39,12 +39,14 @@ public class MyInfoController {
     @GetMapping("/feedbacks")
     public ResponseEntity<FeedbacksDto> findAllFeedbackToMe(@Authentic final Long memberId) {
         final FeedbacksDto feedbacksResponse = feedbackService.findAllByTo(memberId);
+
         return ResponseEntity.ok(feedbacksResponse);
     }
 
     @GetMapping("/levellogs")
     public ResponseEntity<LevellogsDto> findAllMyLevellogs(@Authentic final Long memberId) {
         final LevellogsDto levellogsResponse = levellogService.findAllByAuthorId(memberId);
+
         return ResponseEntity.ok(levellogsResponse);
     }
 

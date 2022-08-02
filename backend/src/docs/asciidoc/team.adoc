@@ -6,6 +6,7 @@
 
 [[home]]
 == home
+
 * link:index.html[목록으로 가기]
 
 [[create]]
@@ -18,6 +19,16 @@ operation::team/create[]
 
 [[create-exception]]
 === 팀 생성 예외
+
+[[create-exception-participants-duplicate]]
+==== 저장 시 중복된 참가자가 존재하는 경우
+
+operation::team/create/exception/participants/duplicate[]
+
+[[create-exception-participants-host]]
+==== 저장 시 참가자 목록에 Host가 포함된 경우 (hostId = 1)
+
+operation::team/create/exception/participants/host[]
 
 [[create-exception-title-null]]
 ==== 저장 시 title이 null 또는 공백인 경우
@@ -54,6 +65,16 @@ operation::team/create/exception/startat/past[]
 
 operation::team/create/exception/participants/null[]
 
+[[create-exception-interviwer-number-not-positive]]
+==== 저장 시 인터뷰어 수가 1미만인 경우
+
+operation::team/create/exception/interviewer-number/not-positive[]
+
+[[create-exception-interviwer-number-not-positive]]
+==== 저장 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
+
+operation::team/create/exception/interviewer-number/more-than-participant[]
+
 [[findAll]]
 == 팀 목록 조회
 
@@ -68,7 +89,13 @@ operation::team/findAll[]
 [[find-success]]
 === 팀 상세 조회 성공
 
-operation::team/find[]
+==== 참가자로 참여하는 팀 상세 조회 (페퍼가 요청한 경우)
+
+operation::team/find/my-team[]
+
+==== 참가자가 아닌 팀 상세 조회 (또는 비로그인으로 조회)
+
+operation::team/find/not-my-team[]
 
 [[find-exception]]
 === 팀 상세 조회 예외
@@ -76,7 +103,54 @@ operation::team/find[]
 [[update-exception-title-null]]
 ==== 없는 팀을 상세 조회하는 경우
 
-operation::team/findbyid/exception/notfound[]
+operation::team/find-by-id/exception/notfound[]
+
+[[find-my-role]]
+== 인터뷰 역할 조회
+
+*응답 종류*
+
+
+[cols="1,1"]
+|===
+|*응답*
+|*설명*
+
+|INTERVIEWER
+|타겟 멤버 입장에서 나는 인터뷰어이다.
+
+|OBSERVER
+|타겟 멤버 입장에서 나는 옵저버이다.
+
+|ME
+|타겟 멤버 아이디 == 나의 아이디
+|===
+
+[[find-my-role-success]]
+=== 인터뷰 역할 조회 성공
+
+==== 요청
+
+include::{snippets}/team/find-my-role/interviewer/http-request.adoc[]
+
+==== 나의 역할이 인터뷰어인 경우
+
+include::{snippets}/team/find-my-role/interviewer/http-response.adoc[]
+
+==== 나의 역할이 옵저버인 경우
+
+include::{snippets}/team/find-my-role/observer/http-response.adoc[]
+
+[[find-my-role-exception]]
+=== 인터뷰 역할 조회 예외
+
+==== 요청한 사용자가 팀의 참가자가 아닌 경우
+
+operation::team/find-my-role/exception/not-my-team[]
+
+==== 타겟 멤버가 팀의 참가자가 아닌 경우
+
+operation::team/find-my-role/exception/target-not-participant[]
 
 [[update]]
 == 팀 수정

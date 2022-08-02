@@ -5,19 +5,26 @@ import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
+import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
+import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
+import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
+import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
+import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,6 +45,7 @@ public class TeamService {
         final Member host = getMember(hostId);
         final Team team = request.toEntity(host.getProfileUrl());
         final List<Participant> participants = getParticipants(team, hostId, request.getParticipants().getIds());
+        team.validParticipantNumber(participants.size());
 
         final Team savedTeam = teamRepository.save(team);
         participantRepository.saveAll(participants);
@@ -49,8 +57,24 @@ public class TeamService {
         return new TeamsDto(getTeamResponses(teamRepository.findAll()));
     }
 
-    public TeamDto findById(final Long teamId) {
-        return getTeamResponse(getTeam(teamId));
+    public TeamAndRoleDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
+        final Team team = getTeam(teamId);
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
+
+        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
+        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
+
+        return TeamAndRoleDto.from(team, participants.toHostId(), interviewers, interviewees,
+                getParticipantResponses(participants.getValues()));
+    }
+
+    public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
+        final Team team = getTeam(teamId);
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
+        final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId, memberId,
+                team.getInterviewerNumber());
+
+        return InterviewRoleDto.from(interviewRole);
     }
 
     @Transactional
@@ -82,11 +106,28 @@ public class TeamService {
     }
 
     private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
+        validateParticipantDuplication(memberIds, hostId);
+
+        return generatePaticipants(team, hostId, memberIds);
+    }
+
+    private List<Participant> generatePaticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         final List<Participant> participants = new ArrayList<>();
         participants.add(new Participant(team, getMember(hostId), true));
         participants.addAll(toParticipants(team, memberIds));
 
         return participants;
+    }
+
+    private void validateParticipantDuplication(final List<Long> memberIds, final Long hostId) {
+        final List<Long> participantIds = new ArrayList<>(memberIds);
+        participantIds.add(hostId);
+
+        final Set<Long> distinct = new HashSet<>(participantIds);
+        if (distinct.size() != participantIds.size()) {
+            throw new DuplicateParticipantsException(
+                    "참가자 중복 [participants : " + participantIds + " hostId : " + hostId + "]");
+        }
     }
 
     private List<Participant> toParticipants(final Team team, final List<Long> memberIds) {

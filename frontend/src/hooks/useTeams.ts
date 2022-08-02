@@ -5,11 +5,13 @@ import axios, { AxiosResponse } from 'axios';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
+import useUser from './useUser';
 import { requestGetTeams, requestGetTeam, requestPostTeam } from 'apis/teams';
 import { MemberType } from 'types/member';
 import { InterviewTeamType, TeamCustomHookType } from 'types/team';
 
 export const useTeams = () => {
+  const { loginUserId } = useUser();
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);
   const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const accessToken = localStorage.getItem('accessToken');
@@ -17,6 +19,7 @@ export const useTeams = () => {
 
   const postTeams = async ({ ...teamInfo }: TeamCustomHookType) => {
     try {
+      teamInfo.participants.ids = teamInfo.participants.ids.filter((id) => id !== loginUserId);
       await requestPostTeam({ teamInfo, accessToken });
       alert(MESSAGE.TEAM_CREATE);
       navigate(ROUTES_PATH.HOME);
@@ -103,7 +106,8 @@ export const useTeam = () => {
 
   useEffect(() => {
     // 나중에 location은 타입을 고칠 필요가 있어보임
-    if ((teamLocationState as InterviewTeamType).id !== undefined) {
+    // teamLocationState && 안 해주면 에러남
+    if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
       setTeam(teamLocationState);
     }
   }, []);

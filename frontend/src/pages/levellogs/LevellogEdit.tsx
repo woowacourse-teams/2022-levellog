@@ -17,6 +17,8 @@ const LevellogEdit = () => {
 
     if (typeof teamId === 'string' && typeof levellogId === 'string') {
       onSubmitLevellogEditForm({ teamId, levellogId });
+      // 이전에 return 안 해줘서 무조건 alert 띄움
+      return;
     }
 
     alert(MESSAGE.WRONG_ACCESS);

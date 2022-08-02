@@ -2,12 +2,19 @@ import { useState } from 'react';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useUser from 'hooks/useUser';
+
 import { requestGetMembers } from 'apis/member';
 import { MembersCustomHookType, MemberType } from 'types/member';
 
 const useMember = () => {
+  const {
+    loginUserId: id,
+    loginUserNickname: nickname,
+    loginUserProfileUrl: profileUrl,
+  } = useUser();
   const [members, setMembers] = useState<MemberType[]>([]);
-  const [participants, setParticipants] = useState<MemberType[]>([]);
+  const [participants, setParticipants] = useState<MemberType[]>([{ id, nickname, profileUrl }]);
   const accessToken = localStorage.getItem('accessToken');
 
   const updateMembers = async ({ nickname = '' }: MembersCustomHookType) => {

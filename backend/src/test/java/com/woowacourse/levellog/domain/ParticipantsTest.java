@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.team.domain;
+package com.woowacourse.levellog.domain;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,7 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.common.domain.MockEntityFactory;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.team.domain.InterviewRole;
+import com.woowacourse.levellog.team.domain.Participant;
+import com.woowacourse.levellog.team.domain.Participants;
+import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,14 +47,15 @@ class ParticipantsTest {
         void success(final int interviewerNumber, final Long targetMemberId, final String expectedIds) {
             // given
             final List<Long> expected = toIdList(expectedIds);
-            final Team team = new Team();
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+                    interviewerNumber);
+
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
                     new Participant(team, getMember("알린", 3L), false),
                     new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false)
-            );
+                    new Participant(team, getMember("해리", 5L), false));
             final Participants participants = new Participants(values);
 
             // when
@@ -66,18 +72,20 @@ class ParticipantsTest {
         @DisplayName("타겟 멤버가 참가자가 아니면 빈 리스트를 반환한다.")
         void emptyList() {
             // given
-            final Team team = new Team();
+            final int interviewerNumber = 1;
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+                    interviewerNumber);
+
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
                     new Participant(team, getMember("알린", 3L), false),
                     new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false)
-            );
+                    new Participant(team, getMember("해리", 5L), false));
             final Participants participants = new Participants(values);
 
             // when
-            final List<Long> actual = participants.toInterviewerIds(999L, 1);
+            final List<Long> actual = participants.toInterviewerIds(999L, interviewerNumber);
 
             // then
             assertThat(actual).isEmpty();
@@ -93,14 +101,16 @@ class ParticipantsTest {
         void success(final int interviewerNumber, final Long targetMemberId, final String expectedIds) {
             // given
             final List<Long> expected = toIdList(expectedIds);
-            final Team team = new Team();
+
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+                    interviewerNumber);
+
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
                     new Participant(team, getMember("알린", 3L), false),
                     new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false)
-            );
+                    new Participant(team, getMember("해리", 5L), false));
             final Participants participants = new Participants(values);
 
             // when
@@ -117,18 +127,20 @@ class ParticipantsTest {
         @DisplayName("타겟 멤버가 참가자가 아니면 빈 리스트를 반환한다.")
         void emptyList() {
             // given
-            final Team team = new Team();
+            final int interviewerNumber = 1;
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+                    interviewerNumber);
+
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
                     new Participant(team, getMember("알린", 3L), false),
                     new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false)
-            );
+                    new Participant(team, getMember("해리", 5L), false));
             final Participants participants = new Participants(values);
 
             // when
-            final List<Long> actual = participants.toInterviewerIds(999L, 1);
+            final List<Long> actual = participants.toInterviewerIds(999L, interviewerNumber);
 
             // then
             assertThat(actual).isEmpty();
@@ -143,18 +155,21 @@ class ParticipantsTest {
         @CsvSource(value = {"1,2,INTERVIEWER", "1,3,INTERVIEWER", "1,4,OBSERVER", "1,5,OBSERVER"})
         void success(final Long targetMemberId, final Long memberId, final InterviewRole expected) {
             // given
-            final Team team = MockEntityFactory.setId(1L, new Team());
+            final int interviewerNumber = 2;
+            final Team team = MockEntityFactory.setId(1L,
+                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
                     new Participant(team, getMember("알린", 3L), false),
                     new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false)
-            );
+                    new Participant(team, getMember("해리", 5L), false));
             final Participants participants = new Participants(values);
 
             // when
-            final InterviewRole actual = participants.toInterviewRole(team.getId(), targetMemberId, memberId, 2);
+            final InterviewRole actual = participants.toInterviewRole(team.getId(), targetMemberId, memberId,
+                    interviewerNumber);
 
             // then
             assertThat(actual).isEqualTo(expected);
@@ -164,18 +179,19 @@ class ParticipantsTest {
         @DisplayName("타겟 멤버가 요청한 멤버와 같으면 ME를 반환한다.")
         void me() {
             // given
-            final Team team = MockEntityFactory.setId(1L, new Team());
+            final int interviewerNumber = 2;
+            final Team team = MockEntityFactory.setId(1L,
+                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
                     new Participant(team, getMember("알린", 3L), false),
                     new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false)
-            );
+                    new Participant(team, getMember("해리", 5L), false));
             final Participants participants = new Participants(values);
 
             // when
-            final InterviewRole actual = participants.toInterviewRole(team.getId(), 1L, 1L, 2);
+            final InterviewRole actual = participants.toInterviewRole(team.getId(), 1L, 1L, interviewerNumber);
 
             // then
             assertThat(actual).isEqualTo(InterviewRole.ME);
@@ -185,18 +201,20 @@ class ParticipantsTest {
         @DisplayName("요청한 멤버가 참가자가 아니라면 예외를 던진다.")
         void requestMemberIdNotContains_exceptionThrown() {
             // given
-            final Team team = MockEntityFactory.setId(1L, new Team());
+            final int interviewerNumber = 2;
+            final Team team = MockEntityFactory.setId(1L,
+                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
                     new Participant(team, getMember("알린", 3L), false),
                     new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false)
-            );
+                    new Participant(team, getMember("해리", 5L), false));
             final Participants participants = new Participants(values);
 
             // when & then
-            assertThatThrownBy(() -> participants.toInterviewRole(team.getId(), 1L, 9L, 2))
+            assertThatThrownBy(() -> participants.toInterviewRole(team.getId(), 1L, 9L, interviewerNumber))
                     .isInstanceOf(UnauthorizedException.class);
         }
 
@@ -204,18 +222,20 @@ class ParticipantsTest {
         @DisplayName("타겟 멤버가 참가자가 아니라면 예외를 던진다.")
         void targetMemberIdNotContains_exceptionThrown() {
             // given
-            final Team team = MockEntityFactory.setId(1L, new Team());
+            final int interviewerNumber = 2;
+            final Team team = MockEntityFactory.setId(1L,
+                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
                     new Participant(team, getMember("알린", 3L), false),
                     new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false)
-            );
+                    new Participant(team, getMember("해리", 5L), false));
             final Participants participants = new Participants(values);
 
             // when & then
-            assertThatThrownBy(() -> participants.toInterviewRole(team.getId(), 9L, 1L, 2))
+            assertThatThrownBy(() -> participants.toInterviewRole(team.getId(), 9L, 1L, interviewerNumber))
                     .isInstanceOf(ParticipantNotFoundException.class);
         }
     }

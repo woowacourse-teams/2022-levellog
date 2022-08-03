@@ -25,12 +25,12 @@ jobs:
 
       - name: Install Dependencies # 의존 파일 설치
         working-directory: ./frontend
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Dev Build # React Dev Build
         working-directory: ./frontend
-        run: yarn build-dev
+        run: npm build-dev
 
       - name: Prod Build # React Prod Build
         working-directory: ./frontend
-        run: yarn build-prod
+        run: npm build-prod

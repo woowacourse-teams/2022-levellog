@@ -25,7 +25,7 @@ jobs:
 
       - name: Install Dependencies # 의존 파일 설치
         working-directory: ./frontend
-        run: npm ci
+        run: npm install
 
       - name: Dev Build # React Dev Build
         working-directory: ./frontend

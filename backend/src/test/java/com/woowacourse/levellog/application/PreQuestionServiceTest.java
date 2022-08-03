@@ -32,11 +32,10 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -60,11 +59,10 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
 
@@ -81,11 +79,10 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "알린이 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -108,11 +105,10 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -133,12 +129,11 @@ public class PreQuestionServiceTest extends ServiceTest {
             final PreQuestionDto romaPreQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
             final PreQuestionDto evePreQuestionDto = PreQuestionDto.from("이브가 쓴 사전 질문");
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Member eve = memberRepository.save(new Member("이브", 23452345, "이브.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Member eve = saveAndGetMember("이브", 23452345, "이브.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -160,16 +155,14 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
-            final Team team2 = teamRepository.save(
-                    new Team("잠실 브라운조", "수성방", LocalDateTime.now().plusDays(3), "브라운조.img", 1));
-            final Member author2 = memberRepository.save(new Member("페퍼", 12341234, "페퍼.img"));
-            final Levellog levellog2 = levellogRepository.save(Levellog.of(author2, team2, "페퍼의 레벨로그"));
+            final Team team2 = saveAndGetTeam("잠실 브라운조", "수성방", "브라운조.img");
+            final Member author2 = saveAndGetMember("페퍼", 12341234, "페퍼.img");
+            final Levellog levellog2 = saveAndGetLevellog(author2, team2, "페퍼의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -186,11 +179,10 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("저장되어있지 않은 사전 질문을 조회하는 경우 예외를 던진다.")
         void findById_PreQuestionNotFound_Exception() {
             // given
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -213,11 +205,10 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -239,17 +230,17 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.update(preQuestionDto, 1L, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(
+                    () -> preQuestionService.update(preQuestionDto, 1L, levellog.getId(), questioner.getId()))
                     .isInstanceOf(PreQuestionNotFoundException.class)
                     .hasMessageContaining("사전 질문이 존재하지 않습니다.");
         }
@@ -261,12 +252,11 @@ public class PreQuestionServiceTest extends ServiceTest {
             final PreQuestionDto romaPreQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
             final PreQuestionDto evePreQuestionDto = PreQuestionDto.from("이브가 쓴 사전 질문");
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Member eve = memberRepository.save(new Member("이브", 23452345, "이브.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Member eve = saveAndGetMember("이브", 23452345, "이브.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -277,7 +267,8 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(
-                    () -> preQuestionService.update(romaPreQuestionDto, preQuestionId, levellog.getId(), questioner.getId()))
+                    () -> preQuestionService.update(romaPreQuestionDto, preQuestionId, levellog.getId(),
+                            questioner.getId()))
                     .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContaining("자신의 사전 질문이 아닙니다.");
         }
@@ -289,16 +280,14 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
-            final Team team2 = teamRepository.save(
-                    new Team("잠실 브라운조", "수성방", LocalDateTime.now().plusDays(3), "브라운조.img", 1));
-            final Member author2 = memberRepository.save(new Member("페퍼", 12341234, "페퍼.img"));
-            final Levellog levellog2 = levellogRepository.save(Levellog.of(author2, team2, "페퍼의 레벨로그"));
+            final Team team2 = saveAndGetTeam("잠실 브라운조", "수성방", "브라운조.img");
+            final Member author2 = saveAndGetMember("페퍼", 12341234, "페퍼.img");
+            final Levellog levellog2 = saveAndGetLevellog(author2, team2, "페퍼의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -306,7 +295,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Long id = preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId());
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.update(preQuestionDto, id, levellog2.getId(), questioner.getId()))
+            assertThatThrownBy(
+                    () -> preQuestionService.update(preQuestionDto, id, levellog2.getId(), questioner.getId()))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
         }
@@ -323,11 +313,10 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -348,12 +337,11 @@ public class PreQuestionServiceTest extends ServiceTest {
             final PreQuestionDto romaPreQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
             final PreQuestionDto evePreQuestionDto = PreQuestionDto.from("이브가 쓴 사전 질문");
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Member eve = memberRepository.save(new Member("이브", 23452345, "이브.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Member eve = saveAndGetMember("이브", 23452345, "이브.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -372,11 +360,10 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("저장되어있지 않은 사전 질문을 삭제하는 경우 예외를 던진다.")
         void deleteById_PreQuestionNotFound_Exception() {
             // given
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -394,16 +381,14 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Team team = teamRepository.save(
-                    new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
-            final Member author = memberRepository.save(new Member("알린", 12345678, "알린.img"));
-            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "알린의 레벨로그"));
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
-            final Team team2 = teamRepository.save(
-                    new Team("잠실 브라운조", "수성방", LocalDateTime.now().plusDays(3), "브라운조.img", 1));
-            final Member author2 = memberRepository.save(new Member("페퍼", 12341234, "페퍼.img"));
-            final Levellog levellog2 = levellogRepository.save(Levellog.of(author2, team2, "페퍼의 레벨로그"));
+            final Team team2 = saveAndGetTeam("잠실 브라운조", "수성방", "브라운조.img");
+            final Member author2 = saveAndGetMember("페퍼", 12341234, "페퍼.img");
+            final Levellog levellog2 = saveAndGetLevellog(author2, team2, "페퍼의 레벨로그");
 
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
@@ -415,5 +400,18 @@ public class PreQuestionServiceTest extends ServiceTest {
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
         }
+    }
+
+    private Team saveAndGetTeam(final String title, final String place, final String profileUrl) {
+        return teamRepository.save(
+                new Team(title, place, LocalDateTime.now().plusDays(3), profileUrl, 1));
+    }
+
+    private Member saveAndGetMember(final String nickname, final int githubId, final String profileUrl) {
+        return memberRepository.save(new Member(nickname, githubId, profileUrl));
+    }
+
+    private Levellog saveAndGetLevellog(final Member author, final Team team, final String content) {
+        return levellogRepository.save(Levellog.of(author, team, content));
     }
 }

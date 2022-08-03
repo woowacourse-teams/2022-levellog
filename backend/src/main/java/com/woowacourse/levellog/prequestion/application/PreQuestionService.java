@@ -49,7 +49,7 @@ public class PreQuestionService {
         validateLevellog(preQuestion, levellog);
         validateMyQuestion(preQuestion, questioner);
 
-        return PreQuestionDto.from(preQuestion);
+        return PreQuestionDto.from(preQuestion.getContent());
     }
 
     @Transactional

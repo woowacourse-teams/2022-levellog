@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PreQuestionDto {
 
     @NotBlank
     private String preQuestion;
 
-    public static PreQuestionDto from(final PreQuestion preQuestion) {
-        return new PreQuestionDto(preQuestion.getContent());
+    public static PreQuestionDto from(final String preQuestionContent) {
+        return new PreQuestionDto(preQuestionContent);
     }
 
     public PreQuestion toEntity(final Levellog levellog, final Member from) {

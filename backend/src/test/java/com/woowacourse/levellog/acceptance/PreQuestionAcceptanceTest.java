@@ -47,7 +47,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
-        final PreQuestionDto request = new PreQuestionDto("이브가 쓴 사전 질문");
+        final PreQuestionDto request = PreQuestionDto.from("이브가 쓴 사전 질문");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -88,12 +88,12 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
-        final PreQuestionDto saveRequestDto = new PreQuestionDto("이브가 쓴 사전 질문");
+        final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
         final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";
         final String preQuestionId = post(baseUrl, eveToken, saveRequestDto)
                 .getPreQuestionId();
 
-        final PreQuestionDto request = new PreQuestionDto("이브가 수정한 사전 질문");
+        final PreQuestionDto request = PreQuestionDto.from("이브가 수정한 사전 질문");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -136,7 +136,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
-        final PreQuestionDto saveRequestDto = new PreQuestionDto("이브가 쓴 사전 질문");
+        final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
         final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";
         final String preQuestionId = post(baseUrl, eveToken, saveRequestDto)
                 .getPreQuestionId();
@@ -179,7 +179,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
-        final PreQuestionDto saveRequestDto = new PreQuestionDto("이브가 쓴 사전 질문");
+        final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
         final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";
         final String preQuestionId = post(baseUrl, eveToken, saveRequestDto)
                 .getPreQuestionId();

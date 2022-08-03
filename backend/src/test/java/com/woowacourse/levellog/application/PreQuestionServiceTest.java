@@ -30,7 +30,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void save() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -58,7 +58,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void save_FromNotParticipant_Exception() {
             // given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -79,7 +79,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void save_LevellogIsMine_Exception() {
             // given
             final String preQuestion = "알린이 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -106,7 +106,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void findById() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -130,8 +130,8 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("타인의 사전 질문을 조회하는 경우 예외를 던진다.")
         void findById_FromNotMyPreQuestion_Exception() {
             // given
-            final PreQuestionDto romaPreQuestionDto = new PreQuestionDto("로마가 쓴 사전 질문");
-            final PreQuestionDto evePreQuestionDto = new PreQuestionDto("이브가 쓴 사전 질문");
+            final PreQuestionDto romaPreQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
+            final PreQuestionDto evePreQuestionDto = PreQuestionDto.from("이브가 쓴 사전 질문");
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -158,7 +158,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void findById_LevellogWrongId_Exception() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -211,7 +211,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void update() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -225,7 +225,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Long id = preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId());
 
             //when
-            preQuestionService.update(new PreQuestionDto("수정된 사전 질문"), id, levellog.getId(), questioner.getId());
+            preQuestionService.update(PreQuestionDto.from("수정된 사전 질문"), id, levellog.getId(), questioner.getId());
 
             //then
             final PreQuestionDto response = preQuestionService.findById(id, levellog.getId(), questioner.getId());
@@ -237,7 +237,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void update_PreQuestionNotFound_Exception() {
             // given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -258,8 +258,8 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("타인의 사전 질문을 수정하는 경우 예외를 던진다.")
         void update_FromNotMyPreQuestion_Exception() {
             // given
-            final PreQuestionDto romaPreQuestionDto = new PreQuestionDto("로마가 쓴 사전 질문");
-            final PreQuestionDto evePreQuestionDto = new PreQuestionDto("이브가 쓴 사전 질문");
+            final PreQuestionDto romaPreQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
+            final PreQuestionDto evePreQuestionDto = PreQuestionDto.from("이브가 쓴 사전 질문");
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -287,7 +287,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void update_LevellogWrongId_Exception() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -321,7 +321,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void deleteById() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -345,8 +345,8 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("타인의 사전 질문을 삭제하는 경우 예외를 던진다.")
         void deleteById_FromNotMyPreQuestion_Exception() {
             // given
-            final PreQuestionDto romaPreQuestionDto = new PreQuestionDto("로마가 쓴 사전 질문");
-            final PreQuestionDto evePreQuestionDto = new PreQuestionDto("이브가 쓴 사전 질문");
+            final PreQuestionDto romaPreQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
+            final PreQuestionDto evePreQuestionDto = PreQuestionDto.from("이브가 쓴 사전 질문");
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
@@ -392,7 +392,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void deleteById_LevellogWrongId_Exception() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             final Team team = teamRepository.save(
                     new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));

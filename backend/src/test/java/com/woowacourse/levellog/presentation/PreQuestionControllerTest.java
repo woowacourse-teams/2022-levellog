@@ -43,7 +43,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             // when
@@ -65,7 +65,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(new UnauthorizedException("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다."))
@@ -91,7 +91,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(new InvalidFieldException("내 레벨로그에 사전 질문을 작성할 수 없습니다."))
@@ -124,7 +124,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            final PreQuestionDto preQuestionDto = new PreQuestionDto(preQuestion);
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             // when
@@ -146,7 +146,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(
@@ -174,7 +174,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
@@ -200,7 +200,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            final PreQuestionDto preQuestionDto = new PreQuestionDto("사전 질문");
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))

@@ -143,7 +143,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + eveToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("pre-question/find"))
+                .filter(document("pre-question/find-my"))
                 .when()
                 .get(baseUrl + "my")
                 .then().log().all();

@@ -238,7 +238,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value("권한이 없습니다."));
 
             // docs
-            perform.andDo(document("pre-question/findbyid/exception/not-my-pre-question"));
+            perform.andDo(document("pre-question/find-my/exception/not-my-pre-question"));
         }
 
         @Test
@@ -263,7 +263,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                             .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
 
             // docs
-            perform.andDo(document("pre-question/findbyid/exception/wrong-levellog"));
+            perform.andDo(document("pre-question/find-my/exception/wrong-levellog"));
         }
 
         @Test
@@ -286,7 +286,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value("사전 질문이 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("pre-question/findbyid/exception/notfound"));
+            perform.andDo(document("pre-question/find-my/exception/notfound"));
         }
     }
 

@@ -6,6 +6,11 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.application.OAuthService;
@@ -28,9 +33,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -99,5 +107,41 @@ public abstract class ControllerTest {
                                 prettyPrint()
                         )
                 ).build();
+    }
+
+    protected ResultActions requestGet(final String url, final String token) throws Exception {
+        return mockMvc.perform(get(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print());
+    }
+
+    protected ResultActions requestPost(final String url, final String token, final Object request)
+            throws Exception {
+        final String content = objectMapper.writeValueAsString(request);
+
+        return mockMvc.perform(post(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andDo(print());
+    }
+
+    protected ResultActions requestPut(final String url, final String token, final Object request)
+            throws Exception {
+        final String content = objectMapper.writeValueAsString(request);
+
+        return mockMvc.perform(put(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andDo(print());
+    }
+
+    protected ResultActions requestDelete(final String url, final String token) throws Exception {
+        return mockMvc.perform(delete(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print());
     }
 }

@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import styled, { CSSProperties } from 'styled-components';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import { useTeam } from 'hooks/useTeams';
 import useUser from 'hooks/useUser';
+
+import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -64,7 +67,9 @@ const InterviewDetail = () => {
           </FlexBox>
           {(team as InterviewTeamType).hostId === loginUserId && (
             <S.ButtonBox>
-              <Button>팀 수정하기</Button>
+              <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
+                <Button>팀 수정하기</Button>
+              </Link>
               <Button onClick={handleClickTeamButtons}>팀 삭제하기</Button>
             </S.ButtonBox>
           )}

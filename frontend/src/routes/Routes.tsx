@@ -1,4 +1,3 @@
-import Home from 'pages/Home';
 import Login from 'pages/Login';
 import NotFound from 'pages/NotFound';
 import FeedbackAdd from 'pages/feedback/FeedbackAdd';
@@ -7,6 +6,7 @@ import LevellogAdd from 'pages/levellogs/LevellogAdd';
 import LevellogEdit from 'pages/levellogs/LevellogEdit';
 import InterviewDetail from 'pages/teams/InterviewDetail';
 import InterviewTeamAdd from 'pages/teams/InterviewTeamAdd';
+import InterviewTeamEdit from 'pages/teams/InterviewTeamEdit';
 import InterviewTeams from 'pages/teams/InterviewTeams';
 
 import { ROUTES_PATH } from 'constants/constants';
@@ -30,12 +30,16 @@ export const routes = [
         element: <LevellogAdd />,
       },
       {
-        path: ROUTES_PATH.LEVELLOG_MODIFY,
+        path: ROUTES_PATH.LEVELLOG_EDIT,
         element: <LevellogEdit />,
       },
       {
         path: ROUTES_PATH.INTERVIEW_TEAMS_ADD,
         element: <InterviewTeamAdd />,
+      },
+      {
+        path: ROUTES_PATH.INTERVIEW_TEAMS_EDIT,
+        element: <InterviewTeamEdit />,
       },
     ],
   },

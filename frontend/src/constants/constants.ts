@@ -1,4 +1,4 @@
-export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&redirect_uri=${process.env.SERVICE_URI}/login`;
+export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}`;
 
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',
@@ -12,6 +12,7 @@ export const ROUTES_PATH = Object.freeze({
   INTERVIEW_TEAMS: '/interview/teams',
   INTERVIEW_TEAMS_DETAIL: `/interview/teams/:teamId`,
   INTERVIEW_TEAMS_ADD: `/interview/teams/add`,
+  PREQUESTION_ADD: '/pre-questions/teams/:teamId/levellog/:levellogId',
   NOT_FOUND: '*',
 });
 

@@ -26,10 +26,10 @@ export const levellogHandlers = [
       levellogId: randomId,
       content: contents.content,
     };
-    levellogs.push(levellog);
-    levellogTeams.teams.find(
-      (team) => team.id === teamId && (team.participants[0].levellogId = randomId),
-    );
+    // levellogs.push(levellog);
+    // levellogTeams.teams.find(
+    //   (team) => team.id === teamId && (team.participants[0].levellogId = randomId),
+    // );
 
     return res(ctx.status(201));
   }),

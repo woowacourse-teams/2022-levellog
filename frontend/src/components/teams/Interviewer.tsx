@@ -57,7 +57,7 @@ const Interviewer = ({ participant, userInTeam, onClickToggleModal }: Interviewe
         <S.InterviewerButton disabled={!participant.levellogId} onClick={handleClickToggleModal}>
           레벨로그 보기
         </S.InterviewerButton>
-        <Link to="">
+        <Link to={`/pre-questions/teams/${teamId}/levellog/${participant.levellogId}`}>
           <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
             사전 질문 작성
           </S.InterviewerButton>

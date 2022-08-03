@@ -1,6 +1,7 @@
 import Home from 'pages/Home';
 import Login from 'pages/Login';
 import NotFound from 'pages/NotFound';
+import PreQuestionAdd from 'pages/PreQuestion/PreQuestionAdd';
 import FeedbackAdd from 'pages/feedback/FeedbackAdd';
 import FeedbackList from 'pages/feedback/FeedbackList';
 import LevellogAdd from 'pages/levellogs/LevellogAdd';
@@ -11,7 +12,7 @@ import InterviewTeams from 'pages/teams/InterviewTeams';
 
 import { ROUTES_PATH } from 'constants/constants';
 
-import Auth from './Auth';
+import Auth from 'routes/Auth';
 
 export const routes = [
   {
@@ -36,6 +37,10 @@ export const routes = [
       {
         path: ROUTES_PATH.INTERVIEW_TEAMS_ADD,
         element: <InterviewTeamAdd />,
+      },
+      {
+        path: ROUTES_PATH.PREQUESTION_ADD,
+        element: <PreQuestionAdd />,
       },
     ],
   },

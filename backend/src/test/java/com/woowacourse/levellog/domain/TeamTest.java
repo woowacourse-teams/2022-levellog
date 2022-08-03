@@ -347,6 +347,7 @@ class TeamTest {
         }
     }
 
+    @Nested
     @DisplayName("close 메소드는")
     class Close {
 

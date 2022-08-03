@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.presentation;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
@@ -21,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.BDDMockito;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -67,7 +68,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            BDDMockito.willThrow(new UnauthorizedException("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다."))
+            willThrow(new UnauthorizedException("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다."))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 4L);
 
@@ -92,7 +93,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            BDDMockito.willThrow(new InvalidPreQuestionException(" [levellogId : 1]", "자기 자신에게 사전 질문을 등록할 수 없습니다."))
+            willThrow(new InvalidPreQuestionException(" [levellogId : 1]", "자기 자신에게 사전 질문을 등록할 수 없습니다."))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 4L);
 
@@ -145,7 +146,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            BDDMockito.willThrow(
+            willThrow(
                             new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 4L);
@@ -172,7 +173,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
+            willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 4L);
 
@@ -197,7 +198,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
+            willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 4L);
 
@@ -219,61 +220,36 @@ public class PreQuestionControllerTest extends ControllerTest {
     class FindMy {
 
         @Test
-        @DisplayName("타인의 사전 질문을 조회하는 경우 예외를 던진다.")
-        void findMy_FromNotMyPreQuestion_Exception() throws Exception {
-            // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
-
-            BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
-                    .given(preQuestionService)
-                    .findMy( 1L, 4L);
-
-            // when
-            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", TOKEN);
-
-            // then
-            perform.andExpectAll(
-                    status().isUnauthorized(),
-                    jsonPath("message").value("권한이 없습니다."));
-
-            // docs
-            perform.andDo(document("pre-question/find-my/exception/not-my-pre-question"));
-        }
-
-        @Test
-        @DisplayName("잘못된 레벨로그의 사전 질문을 조회하면 예외를 던진다.")
+        @DisplayName("레벨로그가 존재하지 않으면 예외를 던진다.")
         void findMy_LevellogWrongId_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            BDDMockito.willThrow(
-                            new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
+            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
                     .given(preQuestionService)
-                    .findMy(1L, 4L);
+                    .findMy( 999L, 4L);
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", TOKEN);
+            final ResultActions perform = requestGet("/api/levellogs/999/pre-questions/my", TOKEN);
 
             // then
             perform.andExpectAll(
-                    status().isBadRequest(),
-                    jsonPath("message")
-                            .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
+                    status().isNotFound(),
+                    jsonPath("message").value("레벨로그가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("pre-question/find-my/exception/wrong-levellog"));
+            perform.andDo(document("pre-question/find-my/exception/not-exist-levellog"));
         }
 
         @Test
-        @DisplayName("저장되어있지 않은 사전 질문을 조회하는 경우 예외를 던진다.")
+        @DisplayName("사전 질문이 존재하지 않으면 예외를 던진다.")
         void findMy_PreQuestionNotFound_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
+            willThrow(new PreQuestionNotFoundException("사전 질문이 존재하지 않습니다."))
                     .given(preQuestionService)
                     .findMy(1L, 4L);
 
@@ -283,10 +259,11 @@ public class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value("사전 질문이 존재하지 않습니다."));
+                    jsonPath("message")
+                            .value("사전 질문이 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("pre-question/find-my/exception/notfound"));
+            perform.andDo(document("pre-question/find-my/exception/not-exist-pre-question"));
         }
     }
 
@@ -301,7 +278,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            BDDMockito.willThrow(
+            willThrow(
                             new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 4L);
@@ -326,7 +303,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
+            willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 4L);
 
@@ -349,7 +326,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
+            willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 4L);
 

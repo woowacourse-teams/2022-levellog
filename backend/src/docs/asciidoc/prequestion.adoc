@@ -45,20 +45,15 @@ operation::pre-question/find-my[]
 [[find-my-exception]]
 === 사전 질문 상세 조회 예외
 
-[[find-my-exception-wrong-levellog]]
-==== url의 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
+[[find-my-exception-not-exist-levellog]]
+==== 레벨로그가 존재하지 않는 경우
 
-operation::pre-question/find-my/exception/wrong-levellog[]
+operation::pre-question/find-my/exception/not-exist-levellog[]
 
-[[find-my-exception-notfound]]
-==== 없는 사전 질문을 상세 조회하는 경우
+[[find-my-exception-not-exist-pre-question]]
+==== 레벨로그에 대한 사전 질문이 존재하지 않는 경우
 
-operation::pre-question/find-my/exception/notfound[]
-
-[[find-my-exception-not-my-pre-question]]
-==== 타인의 사전 질문을 조회하는 경우
-
-operation::pre-question/find-my/exception/not-my-pre-question[]
+operation::pre-question/find-my/exception/not-exist-pre-question[]
 
 [[update]]
 == 사전 질문 수정

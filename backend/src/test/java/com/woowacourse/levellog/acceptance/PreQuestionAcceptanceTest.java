@@ -22,7 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @DisplayName("사전 질문 관련 기능")
-public class PreQuestionAcceptanceTest extends AcceptanceTest {
+class PreQuestionAcceptanceTest extends AcceptanceTest {
 
     /*
      * Scenario: 사전 질문 등록하기
@@ -107,21 +107,20 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        get(baseUrl + preQuestionId, eveToken).getResponse()
+        get(baseUrl + "my", eveToken).getResponse()
                 .body("preQuestion", equalTo("이브가 수정한 사전 질문"));
     }
 
     /*
-     * Scenario: 사전 질문 조회하기
+     * Scenario: 내가 작성한 사전 질문 조회하기
      *   given: 1개의 레벨로그와 2명의 사용자(페퍼, 이브)가 있다.
      *   given: 이브가 페퍼에게 작성한 사전 질문이 있다.
      *   when: 이브가 페퍼의 레벨로그에 쓴 사전 질문 조회를 요청한다.
      *   then: 200 ok 상태 코드와 사전 질문 데이터를 응답받는다.
      */
-
     @Test
-    @DisplayName("사전 질문 조회하기")
-    void findById() {
+    @DisplayName("내가 작성한 사전 질문 조회하기")
+    void findMy() {
         // given
         final RestAssuredResponse pepperResponse = login("페퍼");
         final RestAssuredResponse eveResponse = login("이브");
@@ -138,8 +137,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
 
         final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
         final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";
-        final String preQuestionId = post(baseUrl, eveToken, saveRequestDto)
-                .getPreQuestionId();
+        post(baseUrl, eveToken, saveRequestDto);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -147,7 +145,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("pre-question/find"))
                 .when()
-                .get(baseUrl + preQuestionId)
+                .get(baseUrl + "my")
                 .then().log().all();
 
         // then
@@ -195,7 +193,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        get(baseUrl + preQuestionId, eveToken).getResponse()
+        get(baseUrl + "my", eveToken).getResponse()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }

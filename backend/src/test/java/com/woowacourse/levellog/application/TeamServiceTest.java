@@ -473,12 +473,12 @@ class TeamServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("closeInterview 메서드는")
-    class CloseInterview {
+    @DisplayName("close 메서드는")
+    class Close {
 
         @Test
         @DisplayName("입력 받은 팀의 인터뷰를 종료한다.")
-        void closeInterview() {
+        void close() {
             // given
             final Member rick = saveAndGetMember("릭");
             final Team team = saveAndGetTeam("잠실 제이슨조", 1);

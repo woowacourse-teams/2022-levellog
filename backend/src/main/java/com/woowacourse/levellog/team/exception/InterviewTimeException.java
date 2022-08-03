@@ -10,7 +10,7 @@ public class InterviewTimeException extends LevellogException {
 
     private static final String CLIENT_MESSAGE = "잘못된 인터뷰 시작 시간입니다.";
 
-    public InterviewTimeException(final String exceptionInfoForDev, final String clientMessage) {
+    public InterviewTimeException(final String clientMessage, final String exceptionInfoForDev) {
         super(clientMessage + exceptionInfoForDev, clientMessage, HttpStatus.BAD_REQUEST);
     }
 

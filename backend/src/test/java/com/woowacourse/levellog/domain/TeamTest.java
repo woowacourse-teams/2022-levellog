@@ -114,7 +114,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("잘못된 시작 시간을 입력했습니다.");
+                    .hasMessageContaining("인터뷰 시작 시간은 현재 시간 이후여야 합니다.");
         }
 
         @ParameterizedTest
@@ -312,7 +312,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("잘못된 시작 시간을 입력했습니다.");
+                    .hasMessageContaining("인터뷰 시작 시간은 현재 시간 이후여야 합니다.");
         }
     }
 
@@ -347,18 +347,15 @@ class TeamTest {
         }
     }
 
-    @DisplayName("closeInterview 메소드는")
-    class CloseInterview {
+    @DisplayName("close 메소드는")
+    class Close {
 
         @Test
         @DisplayName("팀 인터뷰를 종료 상태로 바꾼다.")
-        void closeInterview_success() {
+        void close_success() {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
-            final String profileUrl = "profile.img";
-            final Team team = new Team(title, place, startAt, profileUrl, 2);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
 
             // when
             team.close(startAt.plusDays(1));
@@ -369,13 +366,10 @@ class TeamTest {
 
         @Test
         @DisplayName("이미 종료된 인터뷰를 종료하려는 경우 예외가 발생한다.")
-        void close_alreadyClose_exceptionThrown() {
+        void close_alreadyClosed_exceptionThrown() {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
-            final String profileUrl = "profile.img";
-            final Team team = new Team(title, place, startAt, profileUrl, 2);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
 
             team.close(startAt.plusDays(1));
 
@@ -389,11 +383,8 @@ class TeamTest {
         @DisplayName("인터뷰 시작 시간 전 종료를 요청할 경우 예외가 발생한다.")
         void close_beforeStart_exceptionThrown() {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
-            final String profileUrl = "profile.img";
-            final Team team = new Team(title, place, startAt, profileUrl, 2);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
 
             // when & then
             assertThatThrownBy(() -> team.close(startAt.minusDays(1)))

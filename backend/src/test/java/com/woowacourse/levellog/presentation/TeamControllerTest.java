@@ -627,8 +627,8 @@ class TeamControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("closeInterview 메서드는")
-    class CloseInterview {
+    @DisplayName("close 메서드는")
+    class Close {
 
         @Test
         @DisplayName("존재하지 않는 팀의 인터뷰를 종료하려고 하면 예외가 발생한다.")
@@ -660,13 +660,14 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("이미 종료된 팀 인터뷰를 종료하려고 하면 예외가 발생한다.")
-        void close_alreadyClose_exceptionThrown() throws Exception {
+        void close_alreadyClosed_exceptionThrown() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다. [teamId : " + teamId + "]", "이미 종료된 인터뷰입니다."))
+            willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다.",
+                    "[teamId : " + teamId + "]"))
                     .given(teamService)
                     .close(teamId, 4L);
 
@@ -694,8 +695,8 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]",
-                    "인터뷰가 시작되기 전에 종료할 수 없습니다."))
+            willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.",
+                    "인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]"))
                     .given(teamService)
                     .close(teamId, 4L);
 

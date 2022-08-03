@@ -50,9 +50,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message")
-                            .value("preQuestion must not be blank"));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("preQuestion must not be blank"));
 
             // docs
             perform.andDo(document("pre-question/create/exception/null-and-blank"));
@@ -76,9 +76,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
 
             // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message")
-                            .value("권한이 없습니다."));
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value("권한이 없습니다."));
 
             // docs
             perform.andDo(document("pre-question/create/exception/not-participant"));
@@ -102,9 +102,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message")
-                            .value("내 레벨로그에 사전 질문을 작성할 수 없습니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("내 레벨로그에 사전 질문을 작성할 수 없습니다."));
 
             // docs
             perform.andDo(document("pre-question/create/exception/levellog-is-mine"));
@@ -131,9 +131,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message")
-                            .value("preQuestion must not be blank"));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("preQuestion must not be blank"));
 
             // docs
             perform.andDo(document("pre-question/update/exception/null-and-blank"));
@@ -158,8 +158,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message")
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message")
                             .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
 
             // docs
@@ -184,9 +185,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message")
-                            .value("사전 질문이 존재하지 않습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("사전 질문이 존재하지 않습니다."));
 
             // docs
             perform.andDo(document("pre-question/update/exception/notfound"));
@@ -210,9 +211,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message")
-                            .value("권한이 없습니다."));
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value("권한이 없습니다."));
 
             // docs
             perform.andDo(document("pre-question/update/exception/not-my-pre-question"));
@@ -238,9 +239,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestFind("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message")
-                            .value("권한이 없습니다."));
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value("권한이 없습니다."));
 
             // docs
             perform.andDo(document("pre-question/findbyid/exception/not-my-pre-question"));
@@ -262,8 +263,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestFind("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message")
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message")
                             .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
 
             // docs
@@ -285,9 +287,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestFind("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message")
-                            .value("사전 질문이 존재하지 않습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("사전 질문이 존재하지 않습니다."));
 
             // docs
             perform.andDo(document("pre-question/findbyid/exception/notfound"));
@@ -314,8 +316,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message")
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message")
                             .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
 
             // docs
@@ -337,9 +340,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message")
-                            .value("사전 질문이 존재하지 않습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("사전 질문이 존재하지 않습니다."));
 
             // docs
             perform.andDo(document("pre-question/delete/exception/notfound"));
@@ -360,9 +363,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message")
-                            .value("권한이 없습니다."));
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value("권한이 없습니다."));
 
             // docs
             perform.andDo(document("pre-question/delete/exception/not-my-pre-question"));

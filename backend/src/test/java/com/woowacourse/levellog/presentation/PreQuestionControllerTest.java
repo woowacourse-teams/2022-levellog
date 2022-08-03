@@ -32,42 +32,6 @@ class PreQuestionControllerTest extends ControllerTest {
 
     private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
 
-    private ResultActions requestPost(final String url, final String token, final Object request)
-            throws Exception {
-        final String content = objectMapper.writeValueAsString(request);
-
-        return mockMvc.perform(post(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
-                .andDo(print());
-    }
-
-    private ResultActions requestPut(final String url, final String token, final Object request)
-            throws Exception {
-        final String content = objectMapper.writeValueAsString(request);
-
-        return mockMvc.perform(put(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
-                .andDo(print());
-    }
-
-    private ResultActions requestGet(final String url, final String token) throws Exception {
-        return mockMvc.perform(get(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print());
-    }
-
-    private ResultActions requestDelete(final String url, final String token) throws Exception {
-        return mockMvc.perform(delete(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print());
-    }
-
     @Nested
     @DisplayName("save 메서드는")
     class Save {

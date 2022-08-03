@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 
-import { TeamApiType, InterviewTeamType } from 'types/team';
+import { TeamApiType, InterviewTeamType, TeamEditApiType } from 'types/team';
 
 export const requestPostTeam = ({
   teamInfo,
@@ -30,7 +30,7 @@ export const requestGetTeam = ({
   });
 };
 
-export const requestEditTeam = ({ teamId, teamInfo, accessToken }: TeamApiType) => {
+export const requestEditTeam = ({ teamId, teamInfo, accessToken }: TeamEditApiType) => {
   return axios({
     method: 'put',
     headers: { Authorization: `Bearer ${accessToken}` },

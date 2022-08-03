@@ -14,7 +14,7 @@ import {
   requestEditTeam,
 } from 'apis/teams';
 import { MemberType } from 'types/member';
-import { InterviewTeamType, TeamApiType, TeamCustomHookType } from 'types/team';
+import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
 
 export const useTeams = () => {
   const { loginUserId } = useUser();
@@ -33,7 +33,7 @@ export const useTeams = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -48,7 +48,7 @@ export const useTeams = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -104,7 +104,7 @@ export const useTeam = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -116,24 +116,26 @@ export const useTeam = () => {
 
         setTeam(res.data);
         checkUserInTeam({ team: res.data });
+        return res.data;
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };
 
-  const editTeam = async ({ teamId, teamInfo }: Omit<TeamApiType, 'accessToken'>) => {
+  const editTeam = async ({ teamInfo }: Pick<TeamEditApiType, 'teamInfo'>) => {
     try {
+      if (typeof teamId !== 'string') throw Error;
       await requestEditTeam({ teamId, teamInfo, accessToken });
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -145,7 +147,7 @@ export const useTeam = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -168,18 +170,35 @@ export const useTeam = () => {
     await postTeam({ teamInfo });
   };
 
-  const onSubmitTeamEditForm = async ({ teamId, teamInfo }: Omit<TeamApiType, 'accessToken'>) => {
-    await editTeam({ teamId, teamInfo });
+  const onSubmitTeamEditForm = async () => {
+    const [title, place, date, time] = teamInfoRef.current;
+    const teamInfo = {
+      title: title.value,
+      place: place.value,
+      startAt: `${date.value}T${time.value}`,
+    };
+    await editTeam({ teamInfo });
     navigate(ROUTES_PATH.HOME);
   };
 
   const onClickDeleteTeamButton = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
-    if (confirm('정말로 팀을 삭제하시겠습니까?')) {
+    if (confirm(MESSAGE.TEAM_DELETE_CONFIRM)) {
       await deleteTeam({ teamId });
       navigate(ROUTES_PATH.HOME);
 
       return;
     }
+  };
+
+  const getTeamOnRef = async () => {
+    const team = await getTeam();
+    if (team && Object.keys(team).length === 0) {
+      return;
+    }
+    teamInfoRef.current[0].value = (team as unknown as InterviewTeamType).title;
+    teamInfoRef.current[1].value = (team as unknown as InterviewTeamType).place;
+    teamInfoRef.current[2].value = (team as unknown as InterviewTeamType).startAt.slice(0, 10);
+    teamInfoRef.current[3].value = (team as unknown as InterviewTeamType).startAt.slice(-8);
   };
 
   useEffect(() => {
@@ -194,6 +213,7 @@ export const useTeam = () => {
     userInTeam,
     getTeam,
     teamInfoRef,
+    getTeamOnRef,
     onSubmitTeamAddForm,
     onSubmitTeamEditForm,
     onClickDeleteTeamButton,

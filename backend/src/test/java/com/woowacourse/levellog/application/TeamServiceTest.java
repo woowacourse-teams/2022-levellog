@@ -156,33 +156,6 @@ class TeamServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("findById 메서드는")
-    class findById {
-
-        @Test
-        @DisplayName("id에 해당하는 팀을 조회한다.")
-        void findById() {
-            //given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1);
-
-            participantRepository.save(new Participant(team, member1, true));
-            participantRepository.save(new Participant(team, member2, false));
-
-            //when
-            final TeamDto response = teamService.findById(team.getId());
-
-            //then
-            assertAll(
-                    () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
-                    () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
-                    () -> assertThat(response.getParticipants()).hasSize(2)
-            );
-        }
-    }
-
-    @Nested
     @DisplayName("findMyRole 메서드는")
     class findMyRole {
 

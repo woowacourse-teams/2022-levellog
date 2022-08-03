@@ -128,7 +128,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             // when
-            final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
             perform.andExpectAll(
@@ -155,7 +155,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
             perform.andExpectAll(
@@ -182,7 +182,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
             perform.andExpectAll(
@@ -208,7 +208,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestUpdate("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
 
             // then
             perform.andExpectAll(
@@ -236,7 +236,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                     .findById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestFind("/api/levellogs/1/pre-questions/1", TOKEN);
+            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
             perform.andExpectAll(
@@ -260,7 +260,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                     .findById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestFind("/api/levellogs/1/pre-questions/1", TOKEN);
+            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
             perform.andExpectAll(
@@ -284,7 +284,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                     .findById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestFind("/api/levellogs/1/pre-questions/1", TOKEN);
+            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/1", TOKEN);
 
             // then
             perform.andExpectAll(
@@ -381,7 +381,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                 .andDo(print());
     }
 
-    private ResultActions requestUpdate(final String url, final String token, final String requestContent)
+    private ResultActions requestPut(final String url, final String token, final String requestContent)
             throws Exception {
         return mockMvc.perform(put(url)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -390,7 +390,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                 .andDo(print());
     }
 
-    private ResultActions requestFind(final String url, final String token) throws Exception {
+    private ResultActions requestGet(final String url, final String token) throws Exception {
         return mockMvc.perform(get(url)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))

@@ -40,7 +40,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/save"))

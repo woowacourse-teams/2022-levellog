@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
@@ -62,7 +63,7 @@ class FeedbackControllerTest extends ControllerTest {
             perform.andExpect(status().isBadRequest());
 
             // docs
-            perform.andDo(document("feedback/save/exception-exist"));
+            perform.andDo(document("feedback/save/exception/exist"));
         }
 
         @Test
@@ -94,7 +95,7 @@ class FeedbackControllerTest extends ControllerTest {
             perform.andExpect(status().isBadRequest());
 
             // docs
-            perform.andDo(document("feedback/save/exception-self"));
+            perform.andDo(document("feedback/save/exception/self"));
         }
 
         @Test
@@ -126,7 +127,7 @@ class FeedbackControllerTest extends ControllerTest {
             perform.andExpect(status().isBadRequest());
 
             // docs
-            perform.andDo(document("feedback/save/exception-team"));
+            perform.andDo(document("feedback/save/exception/team"));
         }
 
         @Test
@@ -158,7 +159,7 @@ class FeedbackControllerTest extends ControllerTest {
             performCreate.andExpect(status().isNotFound());
 
             // docs
-            performCreate.andDo(document("feedback/save/exception-levellog"));
+            performCreate.andDo(document("feedback/save/exception/levellog"));
         }
     }
 
@@ -199,7 +200,7 @@ class FeedbackControllerTest extends ControllerTest {
             perform.andExpect(status().isBadRequest());
 
             // docs
-            perform.andDo(document("feedback/update/exception-author"));
+            perform.andDo(document("feedback/update/exception/author"));
         }
 
         @Test
@@ -234,7 +235,7 @@ class FeedbackControllerTest extends ControllerTest {
             perform.andExpect(status().isNotFound());
 
             // docs
-            perform.andDo(document("feedback/update/exception-feedback"));
+            perform.andDo(document("feedback/update/exception/feedback"));
         }
     }
 
@@ -267,7 +268,7 @@ class FeedbackControllerTest extends ControllerTest {
             perform.andExpect(status().isBadRequest());
 
             // docs
-            perform.andDo(document("feedback/delete/exception-author"));
+            perform.andDo(document("feedback/delete/exception/author"));
         }
 
         @Test
@@ -294,7 +295,7 @@ class FeedbackControllerTest extends ControllerTest {
             perform.andExpect(status().isNotFound());
 
             // docs
-            perform.andDo(document("feedback/delete/exception-feedback"));
+            perform.andDo(document("feedback/delete/exception/feedback"));
         }
     }
 
@@ -312,7 +313,7 @@ class FeedbackControllerTest extends ControllerTest {
 
             final Long levellogId = 1L;
 
-            given(feedbackService.findAll(1L))
+            given(feedbackService.findAll(1L, 1L))
                     .willThrow(new MemberNotFoundException("존재하지 않는 멤버"));
 
             // when
@@ -325,7 +326,7 @@ class FeedbackControllerTest extends ControllerTest {
             perform.andExpect(status().isNotFound());
 
             // docs
-            perform.andDo(document("feedback/find-all/exception-member"));
+            perform.andDo(document("feedback/find-all/exception/member"));
         }
 
         @Test
@@ -338,7 +339,7 @@ class FeedbackControllerTest extends ControllerTest {
 
             final Long levellogId = 200000L;
 
-            given(feedbackService.findAll(levellogId))
+            given(feedbackService.findAll(levellogId, 1L))
                     .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
 
             // when
@@ -351,7 +352,31 @@ class FeedbackControllerTest extends ControllerTest {
             performFindAll.andExpect(status().isNotFound());
 
             // docs
-            performFindAll.andDo(document("feedback/find-all/exception-levellog"));
+            performFindAll.andDo(document("feedback/find-all/exception/levellog"));
+        }
+
+        @Test
+        @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findAll_notMyTeam_exception() throws Exception {
+            // given
+            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            final Long levellogId = 1L;
+
+            given(jwtTokenProvider.getPayload(token)).willReturn("1");
+            given(jwtTokenProvider.validateToken(token)).willReturn(true);
+            given(feedbackService.findAll(levellogId, 1L))
+                    .willThrow(new UnauthorizedException("권한이 없습니다."));
+
+            // when
+            final ResultActions perform = mockMvc.perform(get("/api/levellogs/{levellogId}/feedbacks", levellogId)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isUnauthorized());
+
+            // docs
+            perform.andDo(document("feedback/find-all/exception/not-my-team"));
         }
     }
 }

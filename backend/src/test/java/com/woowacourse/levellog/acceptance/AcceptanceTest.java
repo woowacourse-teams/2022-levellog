@@ -14,16 +14,13 @@ import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.config.TestAuthenticationConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,19 +40,10 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 abstract class AcceptanceTest {
 
-    @Deprecated
-    protected static final String MASTER = "토미";
-
-    @Deprecated
-    protected String masterToken;
-
     protected RequestSpecification specification;
 
     @Autowired
     protected ObjectMapper objectMapper;
-
-    @Deprecated
-    private Long masterId;
 
     @LocalServerPort
     private int port;
@@ -90,28 +78,6 @@ abstract class AcceptanceTest {
                                         prettyPrint()
                                 )
                 ).build();
-
-        masterToken = login(MASTER)
-                .getToken();
-        masterId = login(MASTER)
-                .getMemberId();
-    }
-
-    @Deprecated
-    protected RestAssuredResponse requestCreateTeam(final String title, final String host,
-                                                    final String... participants) {
-        final List<Long> participantIds = Arrays.stream(participants)
-                .map(this::login)
-                .map(RestAssuredResponse::getMemberId)
-                .collect(Collectors.toList());
-        final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
-        final TeamCreateDto request = new TeamCreateDto(title, title + "place", 1, LocalDateTime.now().plusDays(3),
-                participantIdsDto);
-
-        final String token = login(host)
-                .getToken();
-
-        return post("/api/teams", token, request);
     }
 
     @Deprecated
@@ -136,12 +102,5 @@ abstract class AcceptanceTest {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Deprecated
-    protected RestAssuredResponse requestCreateLevellog(final String teamId, final String content) {
-        final LevellogDto request = LevellogDto.from(content);
-
-        return post("/api/teams/" + teamId + "/levellogs", masterToken, request);
     }
 }

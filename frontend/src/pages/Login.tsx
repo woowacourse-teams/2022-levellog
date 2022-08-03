@@ -24,6 +24,7 @@ const Login = () => {
           const res = await requestGetUserAuthority({ accessToken });
           userInfoDispatch({
             id: res.data.id,
+            nickname: res.data.nickname,
             profileUrl: res.data.profileUrl,
           });
           navigate(location.state.pathname);
@@ -36,6 +37,7 @@ const Login = () => {
           localStorage.setItem('accessToken', res.data.accessToken);
           userInfoDispatch({
             id: res.data.id,
+            nickname: res.data.nickname,
             profileUrl: res.data.profileUrl,
           });
         }

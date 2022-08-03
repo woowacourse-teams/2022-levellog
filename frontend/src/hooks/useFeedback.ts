@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
 import { ROUTES_PATH } from 'constants/constants';
 
+import { Editor } from '@toast-ui/react-editor';
 import {
   requestPostFeedback,
   requestGetFeedbacksInTeam,
@@ -15,7 +16,7 @@ import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/
 
 const useFeedback = () => {
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
-  const feedbackRef = useRef<HTMLInputElement[]>([]);
+  const feedbackRef = useRef<Editor[]>([]);
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
@@ -90,18 +91,19 @@ const useFeedback = () => {
     await getFeedbacksInTeam({ levellogId });
   };
 
-  const onSubmitFeedbackForm = async ({
+  const onClickFeedbackAddButton = async ({
     teamId,
     levellogId,
   }: Pick<FeedbackCustomHookType, 'teamId' | 'levellogId'>) => {
     const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackFormatType = {
       feedback: {
-        study: study.value,
-        speak: speak.value,
-        etc: etc.value,
+        study: study.getInstance().getEditorElements().mdEditor.innerText,
+        speak: speak.getInstance().getEditorElements().mdEditor.innerText,
+        etc: etc.getInstance().getEditorElements().mdEditor.innerText,
       },
     };
+
     await postFeedback({ levellogId, feedbackResult });
     navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
@@ -113,7 +115,7 @@ const useFeedback = () => {
     postFeedback,
     editFeedback,
     onClickDeleteButton,
-    onSubmitFeedbackForm,
+    onClickFeedbackAddButton,
   };
 };
 

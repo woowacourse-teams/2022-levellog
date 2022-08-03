@@ -5,6 +5,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import { ROUTES_PATH } from 'constants/constants';
 
+import { Editor } from '@toast-ui/react-editor';
 import {
   requestDeleteLevellog,
   requestEditLevellog,
@@ -15,7 +16,7 @@ import { LevellogCustomHookType, LevellogFormatType } from 'types/levellog';
 
 const useLevellog = () => {
   const [levellog, setLevellog] = useState('');
-  const levellogRef = useRef<HTMLInputElement>(null);
+  const levellogRef = useRef<Editor>(null);
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
@@ -106,24 +107,33 @@ const useLevellog = () => {
     levellogId,
   }: Omit<LevellogCustomHookType, 'inputValue'>) => {
     const levellog = await getLevellog({ teamId, levellogId });
-
+    if (typeof levellog === 'string') {
+      setLevellog(levellog);
+    }
     if (typeof levellog === 'string' && levellogRef.current) {
-      levellogRef.current.value = levellog;
+      levellogRef.current.getInstance().setMarkdown(levellog);
     }
   };
 
-  const onSubmitLevellogEditForm = ({
+  const onClickLevellogAddButton = ({ teamId }: Pick<LevellogCustomHookType, 'teamId'>) => {
+    if (levellogRef.current) {
+      postLevellog({
+        teamId,
+        inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
+      });
+    }
+  };
+
+  const onClickLevellogEditButton = ({
     teamId,
     levellogId,
   }: Omit<LevellogCustomHookType, 'inputValue'>) => {
     if (levellogRef.current) {
-      editLevellog({ teamId, levellogId, inputValue: levellogRef.current.value });
-    }
-  };
-
-  const onSubmitLevellogPostForm = ({ teamId }: Pick<LevellogCustomHookType, 'teamId'>) => {
-    if (levellogRef.current) {
-      postLevellog({ teamId, inputValue: levellogRef.current.value });
+      editLevellog({
+        teamId,
+        levellogId,
+        inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
+      });
     }
   };
 
@@ -135,8 +145,8 @@ const useLevellog = () => {
     editLevellog,
     deleteLevellog,
     getLevellogOnRef,
-    onSubmitLevellogEditForm,
-    onSubmitLevellogPostForm,
+    onClickLevellogAddButton,
+    onClickLevellogEditButton,
   };
 };
 

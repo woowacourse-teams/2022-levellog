@@ -6,7 +6,7 @@ import { GITHUB_LOGIN_URL } from 'constants/constants';
 import { UserContext, UserDispatchContext } from 'contexts/userContext';
 
 const useUser = () => {
-  const { id, profileUrl } = useContext(UserContext);
+  const { id, nickname, profileUrl } = useContext(UserContext);
   const userInfoDispatch = useContext(UserDispatchContext);
   const [isShowProfileDropdown, setIsShowProfileDropdown] = useState(false);
 
@@ -21,7 +21,7 @@ const useUser = () => {
 
   const handleClickLogoutButton = () => {
     localStorage.removeItem('accessToken');
-    userInfoDispatch({ id: '', profileUrl: '' });
+    userInfoDispatch({ id: '', nickname: '', profileUrl: '' });
     setIsShowProfileDropdown(false);
   };
 
@@ -31,6 +31,7 @@ const useUser = () => {
 
   return {
     loginUserId: id,
+    loginUserNickname: nickname,
     loginUserProfileUrl: profileUrl,
     isShowProfileDropdown,
     handleClickProfileImage,

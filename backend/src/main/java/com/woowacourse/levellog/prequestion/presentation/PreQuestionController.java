@@ -34,7 +34,7 @@ public class PreQuestionController {
 
     @GetMapping("/my")
     public ResponseEntity<PreQuestionDto> findMy(@PathVariable final Long levellogId, @Authentic final Long memberId) {
-        final PreQuestionDto response = preQuestionService.findById(levellogId, memberId);
+        final PreQuestionDto response = preQuestionService.findMy(levellogId, memberId);
         return ResponseEntity.ok(response);
     }
 

@@ -227,7 +227,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
                     .given(preQuestionService)
-                    .findById( 1L, 4L);
+                    .findMy( 1L, 4L);
 
             // when
             final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", TOKEN);
@@ -251,7 +251,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             BDDMockito.willThrow(
                             new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .given(preQuestionService)
-                    .findById(1L, 4L);
+                    .findMy(1L, 4L);
 
             // when
             final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", TOKEN);
@@ -275,7 +275,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .given(preQuestionService)
-                    .findById(1L, 4L);
+                    .findMy(1L, 4L);
 
             // when
             final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", TOKEN);

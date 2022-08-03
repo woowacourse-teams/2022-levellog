@@ -8,6 +8,7 @@ interface InputProps {
   width?: string;
   height?: string;
   inputRef?: React.Ref<HTMLInputElement>;
+  [props: string]: any;
 }
 
 export const InputStyle = styled.input`

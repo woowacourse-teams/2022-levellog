@@ -24,6 +24,7 @@ const Login = () => {
           const res = await requestGetUserAuthority({ accessToken });
           userInfoDispatch({
             id: res.data.id,
+            nickname: res.data.nickname,
             profileUrl: res.data.profileUrl,
           });
           navigate(location.state.pathname);
@@ -36,6 +37,7 @@ const Login = () => {
           localStorage.setItem('accessToken', res.data.accessToken);
           userInfoDispatch({
             id: res.data.id,
+            nickname: res.data.nickname,
             profileUrl: res.data.profileUrl,
           });
         }
@@ -55,9 +57,11 @@ const Login = () => {
       } catch (err: unknown) {
         if (axios.isAxiosError(err)) {
           const responseBody: AxiosResponse = err.response!;
-
-          if (err instanceof Error) alert(responseBody.data.message);
-          navigate(ROUTES_PATH.NOT_FOUND);
+          if (err instanceof Error) {
+            localStorage.removeItem('accessToken');
+            alert(responseBody.data.message);
+            navigate(ROUTES_PATH.HOME);
+          }
         }
       }
     };

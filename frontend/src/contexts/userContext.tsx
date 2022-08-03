@@ -6,6 +6,7 @@ type UserDispatchType = Dispatch<SetStateAction<UserInfoType>>;
 
 const userInfo = {
   id: '',
+  nickname: '',
   profileUrl: '',
 };
 

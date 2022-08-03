@@ -1,5 +1,17 @@
 export interface TeamApiType {
   teamId: string;
+  teamInfo: TeamCustomHookType;
+  accessToken: string | null;
+}
+
+export interface TeamCustomHookType {
+  title: string;
+  place: string;
+  startAt: string;
+  interviewerNumber: string;
+  participants: {
+    ids: Array<string>;
+  };
 }
 
 export interface InterviewTeamType {

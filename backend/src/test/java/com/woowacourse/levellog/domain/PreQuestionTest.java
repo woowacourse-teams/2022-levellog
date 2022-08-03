@@ -7,6 +7,7 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
+import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.team.domain.Team;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
@@ -53,8 +54,8 @@ public class PreQuestionTest {
 
             // when & then
             assertThatThrownBy(() -> new PreQuestion(levellog, author, preQuestion))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("내 레벨로그에 사전 질문을 작성할 수 없습니다.");
+                    .isInstanceOf(InvalidPreQuestionException.class)
+                    .hasMessageContaining("자기 자신에게 사전 질문을 등록할 수 없습니다.");
         }
     }
 

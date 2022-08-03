@@ -33,7 +33,7 @@ public class PreQuestion extends BaseEntity {
     private String content;
 
     public PreQuestion(final Levellog levellog, final Member author, final String content) {
-        validateIsAuthor(levellog, author);
+        validateSelfPreQuestion(levellog, author);
         validateContent(content);
 
         this.levellog = levellog;
@@ -41,10 +41,8 @@ public class PreQuestion extends BaseEntity {
         this.content = content;
     }
 
-    private void validateIsAuthor(final Levellog levellog, final Member member) {
-        if (levellog.isAuthor(member)) {
-            throw new InvalidFieldException("내 레벨로그에 사전 질문을 작성할 수 없습니다.");
-        }
+    private void validateSelfPreQuestion(final Levellog levellog, final Member member) {
+        levellog.validateSelfPreQuestion(member);
     }
 
     private void validateContent(final String content) {

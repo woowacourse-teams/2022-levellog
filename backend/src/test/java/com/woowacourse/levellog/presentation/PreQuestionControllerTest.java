@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -91,7 +92,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            BDDMockito.willThrow(new InvalidFieldException("내 레벨로그에 사전 질문을 작성할 수 없습니다."))
+            BDDMockito.willThrow(new InvalidPreQuestionException(" [levellogId : 1]", "자기 자신에게 사전 질문을 등록할 수 없습니다."))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 4L);
 
@@ -101,7 +102,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("내 레벨로그에 사전 질문을 작성할 수 없습니다."));
+                    jsonPath("message").value("자기 자신에게 사전 질문을 등록할 수 없습니다."));
 
             // docs
             perform.andDo(document("pre-question/create/exception/levellog-is-mine"));

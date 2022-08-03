@@ -10,6 +10,7 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
@@ -89,8 +90,8 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> preQuestionService.save(preQuestionDto, levellog.getId(), author.getId()))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("내 레벨로그에 사전 질문을 작성할 수 없습니다.");
+                    .isInstanceOf(InvalidPreQuestionException.class)
+                    .hasMessageContaining("자기 자신에게 사전 질문을 등록할 수 없습니다.");
         }
     }
 

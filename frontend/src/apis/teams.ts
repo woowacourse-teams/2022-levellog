@@ -29,3 +29,14 @@ export const requestGetTeam = ({
     url: `${process.env.API_URI}/teams/${teamId}`,
   });
 };
+
+export const requestDeleteTeam = ({
+  teamId,
+  accessToken,
+}: Omit<TeamApiType, 'teamInfo'>): AxiosPromise<void> => {
+  return axios({
+    method: 'delete',
+    headers: { Authorization: `Bearer ${accessToken}` },
+    url: `${process.env.API_URI}/teams/${teamId}`,
+  });
+};

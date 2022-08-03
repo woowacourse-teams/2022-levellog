@@ -4,6 +4,7 @@ import styled, { CSSProperties } from 'styled-components';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import { useTeam } from 'hooks/useTeams';
+import useUser from 'hooks/useUser';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -13,7 +14,8 @@ import Interviewer from 'components/teams/Interviewer';
 import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
-  const { teamLocationState, team, userInTeam, getTeam } = useTeam();
+  const { teamLocationState, team, userInTeam, getTeam, onClickDeleteTeamButton } = useTeam();
+  const { loginUserId } = useUser();
   const {
     levellog,
     participant,
@@ -22,6 +24,10 @@ const InterviewDetail = () => {
     onClickDeleteLevellog,
     handleClickCloseLevellogModal,
   } = useLevellogModal();
+
+  const handleClickTeamButtons = () => {
+    onClickDeleteTeamButton({ teamId: (team as InterviewTeamType).id });
+  };
 
   useEffect(() => {
     if (!teamLocationState) {
@@ -56,7 +62,12 @@ const InterviewDetail = () => {
               </FlexBox>
             </FlexBox>
           </FlexBox>
-          <Button>그룹 수정하기</Button>
+          {(team as InterviewTeamType).hostId === loginUserId && (
+            <S.ButtonBox>
+              <Button>팀 수정하기</Button>
+              <Button onClick={handleClickTeamButtons}>팀 삭제하기</Button>
+            </S.ButtonBox>
+          )}
         </S.Header>
         <S.Container>
           {(team as InterviewTeamType).participants.map((participant: ParticipantType) => (
@@ -104,6 +115,14 @@ const S = {
   OwnerImage: styled.div`
     @media (max-width: 620px) {
       display: none;
+    }
+  `,
+
+  ButtonBox: styled.div`
+    display: flex;
+    gap: 1rem;
+    @media (max-width: 560px) {
+      flex-direction: column;
     }
   `,
 };

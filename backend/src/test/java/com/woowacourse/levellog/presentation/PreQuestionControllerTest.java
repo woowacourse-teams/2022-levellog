@@ -44,10 +44,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -66,14 +65,13 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(new UnauthorizedException("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다."))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -92,14 +90,13 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(new InvalidFieldException("내 레벨로그에 사전 질문을 작성할 수 없습니다."))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, requestContent);
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -125,10 +122,9 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -147,7 +143,6 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(
                             new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
@@ -155,7 +150,7 @@ public class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -175,14 +170,13 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -201,14 +195,13 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            final String requestContent = objectMapper.writeValueAsString(preQuestionDto);
 
             BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, requestContent);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -372,21 +365,25 @@ public class PreQuestionControllerTest extends ControllerTest {
         }
     }
 
-    private ResultActions requestPost(final String url, final String token, final String requestContent)
+    private ResultActions requestPost(final String url, final String token, final Object request)
             throws Exception {
+        final String content = objectMapper.writeValueAsString(request);
+
         return mockMvc.perform(post(url)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestContent))
+                        .content(content))
                 .andDo(print());
     }
 
-    private ResultActions requestPut(final String url, final String token, final String requestContent)
+    private ResultActions requestPut(final String url, final String token, final Object request)
             throws Exception {
+        final String content = objectMapper.writeValueAsString(request);
+
         return mockMvc.perform(put(url)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestContent))
+                        .content(content))
                 .andDo(print());
     }
 

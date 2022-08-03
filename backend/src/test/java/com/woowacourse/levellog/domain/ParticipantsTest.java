@@ -239,4 +239,28 @@ class ParticipantsTest {
                     .isInstanceOf(ParticipantNotFoundException.class);
         }
     }
+
+    @ParameterizedTest(name = "isContains 메서드는 주어진 memberId {0} 이 Participants에 포함되어있는지 여부를 반환한다.")
+    @CsvSource(value = {"1, true", "100, false"})
+    void isContains(final Long memberId, final boolean expected) {
+        // given
+        final int interviewerNumber = 2;
+        final Team team = MockEntityFactory.setId(1L,
+                new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+
+        final Member rick = getMember("릭", 1L);
+        final List<Participant> values = List.of(
+                new Participant(team, rick, true),
+                new Participant(team, getMember("로마", 2L), false),
+                new Participant(team, getMember("알린", 3L), false),
+                new Participant(team, getMember("이브", 4L), false),
+                new Participant(team, getMember("해리", 5L), false));
+        final Participants participants = new Participants(values);
+
+        // when
+        final boolean result = participants.isContains(memberId);
+
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
 }

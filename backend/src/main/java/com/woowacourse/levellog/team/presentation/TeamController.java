@@ -37,8 +37,8 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamsDto> findAll() {
-        final TeamsDto response = teamService.findAll();
+    public ResponseEntity<TeamsDto> findAll(@Authentic final Long memberId) {
+        final TeamsDto response = teamService.findAll(memberId);
         return ResponseEntity.ok(response);
     }
 

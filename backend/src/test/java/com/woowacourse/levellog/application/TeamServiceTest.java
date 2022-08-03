@@ -41,19 +41,20 @@ class TeamServiceTest extends ServiceTest {
         //given
         final Member member1 = saveAndGetMember("릭");
         final Member member2 = saveAndGetMember("페퍼");
+        final Member member3 = saveAndGetMember("로마");
 
         final Team team1 = saveAndGetTeam("잠실 제이슨조", 1);
         final Team team2 = saveAndGetTeam("선릉 브라운조", 1);
 
-        participantRepository.save(new Participant(team1, member1, true));
-        participantRepository.save(new Participant(team1, member2, false));
-        participantRepository.save(new Participant(team2, member1, false));
-        participantRepository.save(new Participant(team2, member2, true));
+        participantRepository.save(new Participant(team1, member2, true));
+        participantRepository.save(new Participant(team1, member3, false));
+        participantRepository.save(new Participant(team2, member1, true));
+        participantRepository.save(new Participant(team2, member2, false));
 
         team2.close(LocalDateTime.now().plusDays(5));
 
         //when
-        final TeamsDto response = teamService.findAll();
+        final TeamsDto response = teamService.findAll(member1.getId());
 
         //then
         final List<String> actualTitles = response.getTeams()
@@ -77,11 +78,16 @@ class TeamServiceTest extends ServiceTest {
                 .map(TeamDto::getIsClosed)
                 .collect(Collectors.toList());
 
+        final List<Boolean> actualIsParticipants = response.getTeams()
+                .stream().map(TeamDto::getIsParticipant)
+                .collect(Collectors.toList());
+
         assertAll(
                 () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
                 () -> assertThat(actualHostIds).contains(member1.getId(), member2.getId()),
                 () -> assertThat(actualParticipantSizes).contains(2, 2),
-                () -> assertThat(actualCloseStatuses).contains(false, true),
+                () -> assertThat(actualCloseStatuses).containsExactly(false, true),
+                () -> assertThat(actualIsParticipants).containsExactly(false, true),
                 () -> assertThat(response.getTeams()).hasSize(2)
         );
     }

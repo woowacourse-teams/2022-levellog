@@ -22,6 +22,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+@DisplayName("MyInfoController의")
 class MyInfoControllerTest extends ControllerTest {
 
     @Nested

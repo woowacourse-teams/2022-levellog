@@ -28,9 +28,45 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("PreQuestionController의")
-public class PreQuestionControllerTest extends ControllerTest {
+class PreQuestionControllerTest extends ControllerTest {
 
     private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+
+    private ResultActions requestPost(final String url, final String token, final Object request)
+            throws Exception {
+        final String content = objectMapper.writeValueAsString(request);
+
+        return mockMvc.perform(post(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andDo(print());
+    }
+
+    private ResultActions requestPut(final String url, final String token, final Object request)
+            throws Exception {
+        final String content = objectMapper.writeValueAsString(request);
+
+        return mockMvc.perform(put(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andDo(print());
+    }
+
+    private ResultActions requestGet(final String url, final String token) throws Exception {
+        return mockMvc.perform(get(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print());
+    }
+
+    private ResultActions requestDelete(final String url, final String token) throws Exception {
+        return mockMvc.perform(delete(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print());
+    }
 
     @Nested
     @DisplayName("save 메서드는")
@@ -93,7 +129,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            willThrow(new InvalidPreQuestionException(" [levellogId : 1]", "자기 자신에게 사전 질문을 등록할 수 없습니다."))
+            willThrow(new InvalidPreQuestionException("[levellogId : 1]", "자기 자신에게 사전 질문을 등록할 수 없습니다."))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 4L);
 
@@ -146,8 +182,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            willThrow(
-                            new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
+            willThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 4L);
 
@@ -157,8 +192,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message")
-                            .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
+                    jsonPath("message").value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
 
             // docs
             perform.andDo(document("pre-question/update/exception/wrong-levellog"));
@@ -228,7 +262,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
             willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
                     .given(preQuestionService)
-                    .findMy( 999L, 4L);
+                    .findMy(999L, 4L);
 
             // when
             final ResultActions perform = requestGet("/api/levellogs/999/pre-questions/my", TOKEN);
@@ -259,8 +293,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message")
-                            .value("사전 질문이 존재하지 않습니다."));
+                    jsonPath("message").value("사전 질문이 존재하지 않습니다."));
 
             // docs
             perform.andDo(document("pre-question/find-my/exception/not-exist-pre-question"));
@@ -278,8 +311,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
-            willThrow(
-                            new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
+            willThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 4L);
 
@@ -289,8 +321,7 @@ public class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message")
-                            .value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
+                    jsonPath("message").value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
 
             // docs
             perform.andDo(document("pre-question/delete/exception/wrong-levellog"));
@@ -341,41 +372,5 @@ public class PreQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("pre-question/delete/exception/not-my-pre-question"));
         }
-    }
-
-    private ResultActions requestPost(final String url, final String token, final Object request)
-            throws Exception {
-        final String content = objectMapper.writeValueAsString(request);
-
-        return mockMvc.perform(post(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
-                .andDo(print());
-    }
-
-    private ResultActions requestPut(final String url, final String token, final Object request)
-            throws Exception {
-        final String content = objectMapper.writeValueAsString(request);
-
-        return mockMvc.perform(put(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(content))
-                .andDo(print());
-    }
-
-    private ResultActions requestGet(final String url, final String token) throws Exception {
-        return mockMvc.perform(get(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print());
-    }
-
-    private ResultActions requestDelete(final String url, final String token) throws Exception {
-        return mockMvc.perform(delete(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print());
     }
 }

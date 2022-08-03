@@ -74,7 +74,7 @@ public class TeamService {
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
         return TeamAndRoleDto.from(team, participants.toHostId(), interviewers, interviewees,
-                getParticipantResponses(participants));
+                getParticipantResponses(participants), participants.isContains(memberId));
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {

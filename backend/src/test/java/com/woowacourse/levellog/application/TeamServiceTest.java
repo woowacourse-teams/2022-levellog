@@ -312,13 +312,16 @@ class TeamServiceTest extends ServiceTest {
                         () -> assertThat(responseOfPepper.getTitle()).isEqualTo(team.getTitle()),
                         () -> assertThat(responseOfPepper.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(responseOfPepper.getParticipants()).hasSize(5),
+                        () -> assertThat(responseOfPepper.getIsParticipant()).isTrue(),
 
                         () -> assertThat(responseOfPepper.getInterviewers()).containsExactly(roma.getId(),
                                 alien.getId()),
                         () -> assertThat(responseOfPepper.getInterviewees()).containsExactly(eve.getId(), rick.getId()),
 
                         () -> assertThat(responseOfEve.getInterviewers()).containsExactly(rick.getId(), pepper.getId()),
-                        () -> assertThat(responseOfEve.getInterviewees()).containsExactly(roma.getId(), alien.getId())
+                        () -> assertThat(responseOfEve.getInterviewees()).containsExactly(roma.getId(), alien.getId()),
+                        () -> assertThat(responseOfPepper.getIsParticipant()).isTrue()
+
                 );
             }
 
@@ -375,7 +378,8 @@ class TeamServiceTest extends ServiceTest {
                         () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
                         () -> assertThat(response.getParticipants()).hasSize(3),
                         () -> assertThat(response.getInterviewers()).isEmpty(),
-                        () -> assertThat(response.getInterviewees()).isEmpty()
+                        () -> assertThat(response.getInterviewees()).isEmpty(),
+                        () -> assertThat(response.getIsParticipant()).isFalse()
                 );
             }
         }

@@ -2,6 +2,7 @@ package com.woowacourse.levellog.team.dto;
 
 import com.woowacourse.levellog.team.domain.Team;
 import java.time.LocalDateTime;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -29,6 +30,7 @@ public class TeamCreateDto {
     @NotNull
     private LocalDateTime startAt;
 
+    @Valid
     @NotNull
     private ParticipantIdsDto participants;
 

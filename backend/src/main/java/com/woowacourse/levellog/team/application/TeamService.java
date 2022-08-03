@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.team.application;
 
+import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
@@ -21,6 +22,7 @@ import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +41,7 @@ public class TeamService {
     private final ParticipantRepository participantRepository;
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
+    private final TimeStandard timeStandard;
 
     @Transactional
     public Long save(final TeamCreateDto request, final Long hostId) {
@@ -96,6 +99,14 @@ public class TeamService {
     }
 
     @Transactional
+    public void close(final Long teamId, final Long memberId) {
+        final Team team = getTeam(teamId);
+        validateHost(memberId, team);
+
+        team.close(timeStandard.now());
+    }
+
+    @Transactional
     public void deleteById(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         validateHost(memberId, team);
@@ -125,12 +136,19 @@ public class TeamService {
     }
 
     private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
+        validateOtherParticipantExistence(memberIds);
         validateParticipantDuplication(memberIds, hostId);
 
-        return generatePaticipants(team, hostId, memberIds);
+        return generateParticipants(team, hostId, memberIds);
     }
 
-    private List<Participant> generatePaticipants(final Team team, final Long hostId, final List<Long> memberIds) {
+    private void validateOtherParticipantExistence(final List<Long> memberIds) {
+        if (memberIds.isEmpty()) {
+            throw new InvalidFieldException("호스트 이외의 참가자가 존재하지 않습니다.");
+        }
+    }
+
+    private List<Participant> generateParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         final List<Participant> participants = new ArrayList<>();
         participants.add(new Participant(team, getMember(hostId), true));
         participants.addAll(toParticipants(team, memberIds));
@@ -197,7 +215,7 @@ public class TeamService {
         final Long hostId = getHostId(participants);
 
         if (!memberId.equals(hostId)) {
-            throw new HostUnauthorizedException("호스트 권한이 없습니다. 입력한 memberId : [" + memberId + "]");
+            throw new HostUnauthorizedException("호스트 권한이 없습니다. [hostId : " + hostId + ", memberId : " + memberId + "]");
         }
     }
 }

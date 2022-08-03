@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.InterviewRole;
@@ -23,6 +24,7 @@ import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,6 +50,8 @@ class TeamServiceTest extends ServiceTest {
         participantRepository.save(new Participant(team2, member1, false));
         participantRepository.save(new Participant(team2, member2, true));
 
+        team2.close(LocalDateTime.now().plusDays(5));
+
         //when
         final TeamsDto response = teamService.findAll();
 
@@ -67,10 +71,17 @@ class TeamServiceTest extends ServiceTest {
                 .map(TeamDto::getParticipants)
                 .map(List::size)
                 .collect(Collectors.toList());
+
+        final List<Boolean> actualCloseStatuses = response.getTeams()
+                .stream()
+                .map(TeamDto::getIsClosed)
+                .collect(Collectors.toList());
+
         assertAll(
                 () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
                 () -> assertThat(actualHostIds).contains(member1.getId(), member2.getId()),
                 () -> assertThat(actualParticipantSizes).contains(2, 2),
+                () -> assertThat(actualCloseStatuses).contains(false, true),
                 () -> assertThat(response.getTeams()).hasSize(2)
         );
     }
@@ -127,6 +138,20 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.save(teamCreateDto, participant1))
                     .isInstanceOf(DuplicateParticipantsException.class)
                     .hasMessageContaining("참가자 중복");
+        }
+
+        @Test
+        @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
+        void save_noParticipant_exceptionThrown() {
+            //given
+            final Long alienId = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
+            final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(Collections.emptyList()));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.save(teamCreateDto, alienId))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("호스트 이외의 참가자가 존재하지 않습니다.");
         }
     }
 
@@ -255,6 +280,29 @@ class TeamServiceTest extends ServiceTest {
     class findByTeamIdAndMemberId {
 
         @Test
+        @DisplayName("id에 해당하는 팀을 조회한다.")
+        void findByTeamIdAndMemberId() {
+            //given
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Team team = saveAndGetTeam("잠실 제이슨조", 2);
+
+            participantRepository.save(new Participant(team, member1, true));
+            participantRepository.save(new Participant(team, member2, false));
+
+            //when
+            final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), member1.getId());
+
+            //then
+            assertAll(
+                    () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                    () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
+                    () -> assertThat(response.getIsClosed()).isFalse(),
+                    () -> assertThat(response.getParticipants()).hasSize(2)
+            );
+        }
+
+        @Test
         @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
         void teamNotFound_Exception() {
             // when & then
@@ -330,7 +378,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Nested
         @DisplayName("요청한 유저가 팀에 참가자가 아닐 때")
-        class notParticipantRequest {
+        class NotParticipantRequest {
 
             @Test
             @DisplayName("인터뷰어와 인터뷰이가 빈 상태로 응답한다.")
@@ -421,6 +469,43 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.update(request, 1000L, member.getId()))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
+        }
+    }
+
+    @Nested
+    @DisplayName("close 메서드는")
+    class Close {
+
+        @Test
+        @DisplayName("입력 받은 팀의 인터뷰를 종료한다.")
+        void close() {
+            // given
+            final Member rick = saveAndGetMember("릭");
+            final Team team = saveAndGetTeam("잠실 제이슨조", 1);
+            participantRepository.save(new Participant(team, rick, true));
+
+            // when
+            teamService.close(team.getId(), rick.getId());
+
+            // then
+            final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
+            assertThat(actualTeam.isClosed()).isTrue();
+        }
+
+        @Test
+        @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하면 예외가 발생한다.")
+        void close_notHost_exceptionThrown() {
+            // given
+            final Member rick = saveAndGetMember("릭");
+            final Member alien = saveAndGetMember("알린");
+            final Team team = saveAndGetTeam("잠실 제이슨조", 1);
+            participantRepository.save(new Participant(team, rick, true));
+            participantRepository.save(new Participant(team, alien, false));
+
+            // when & then
+            assertThatThrownBy(() -> teamService.close(team.getId(), alien.getId()))
+                    .isInstanceOf(HostUnauthorizedException.class)
+                    .hasMessageContainingAll("호스트 권한이 없습니다.", alien.getId().toString());
         }
     }
 

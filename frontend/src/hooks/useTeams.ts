@@ -17,7 +17,7 @@ export const useTeams = () => {
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
-  const postTeams = async ({ teamInfo }: { teamInfo: TeamCustomHookType }) => {
+  const postTeams = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
     try {
       teamInfo.participants.ids = teamInfo.participants.ids.filter((id) => id !== loginUserId);
       await requestPostTeam({ teamInfo, accessToken });
@@ -47,7 +47,7 @@ export const useTeams = () => {
     }
   };
 
-  const onSubmitTeamAddForm = async ({ participants }: { participants: MemberType[] }) => {
+  const onSubmitTeamAddForm = async ({ participants }: Record<'participants', MemberType[]>) => {
     const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
     const teamInfo = {
       title: title.value,

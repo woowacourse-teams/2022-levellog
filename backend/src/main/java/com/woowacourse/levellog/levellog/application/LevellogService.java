@@ -4,6 +4,8 @@ import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWithIdDto;
+import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -12,6 +14,8 @@ import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +47,17 @@ public class LevellogService {
         return LevellogDto.from(levellog);
     }
 
+    public LevellogsDto findAllByAuthorId(final Long authorId) {
+        final Member author = getMember(authorId);
+
+        final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author);
+        final List<LevellogWithIdDto> levellogWithIdDtos = levellogs.stream()
+                .map(LevellogWithIdDto::from)
+                .collect(Collectors.toList());
+
+        return new LevellogsDto(levellogWithIdDtos);
+    }
+
     @Transactional
     public void update(final LevellogDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
@@ -71,8 +86,7 @@ public class LevellogService {
     }
 
     private Member getMember(final Long memberId) {
-        return memberRepository
-                .findById(memberId)
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
     }
 

@@ -5,6 +5,7 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.team.domain.Team;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -70,6 +71,12 @@ public class Levellog extends BaseEntity {
     public void validateSelfFeedback(final Member member) {
         if (isAuthor(member)) {
             throw new InvalidFeedbackException(" [levellogId : " + getId() + "]", "자기 자신에게 피드백을 할 수 없습니다.");
+        }
+    }
+
+    public void validateSelfPreQuestion(final Member member) {
+        if (isAuthor(member)) {
+            throw new InvalidPreQuestionException(" [levellogId : " + getId() + "]", "자기 자신에게 사전 질문을 등록할 수 없습니다.");
         }
     }
 }

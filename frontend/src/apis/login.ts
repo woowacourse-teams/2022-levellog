@@ -18,7 +18,7 @@ export const requestGetUserLogin = ({ code }: Pick<LoginApiType, 'code'>) => {
 export const requestGetUserAuthority = ({ accessToken }: Pick<LoginApiType, 'accessToken'>) => {
   return axios({
     method: 'get',
-    url: `${process.env.API_URI}/myInfo`,
+    url: `${process.env.API_URI}/my-info`,
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 };

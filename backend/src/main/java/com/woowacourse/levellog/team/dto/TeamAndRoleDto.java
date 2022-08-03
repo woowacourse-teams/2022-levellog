@@ -23,6 +23,7 @@ public class TeamAndRoleDto {
     private LocalDateTime startAt;
     private String teamImage;
     private Long hostId;
+    private Boolean isClosed;
     private List<Long> interviewers;
     private List<Long> interviewees;
     private List<ParticipantDto> participants;
@@ -36,6 +37,7 @@ public class TeamAndRoleDto {
                 team.getStartAt(),
                 team.getProfileUrl(),
                 hostId,
+                team.isClosed(),
                 interviewers,
                 interviewees,
                 participantResponses

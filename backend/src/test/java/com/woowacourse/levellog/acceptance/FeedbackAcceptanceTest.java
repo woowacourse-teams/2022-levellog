@@ -31,7 +31,6 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     void createFeedback() {
         // given
         final RestAssuredResponse hostLoginResponse = login("릭");
-        final Long rick_id = hostLoginResponse.getMemberId();
         final String rickToken = hostLoginResponse.getToken();
 
         final RestAssuredResponse romaLoginResponse = login("로마");
@@ -77,7 +76,6 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     void findAllFeedbacks() {
         // given
         final RestAssuredResponse hostLoginResponse = login("릭");
-        final Long rick_id = hostLoginResponse.getMemberId();
         final String rickToken = hostLoginResponse.getToken();
 
         final RestAssuredResponse romaLoginResponse = login("로마");
@@ -102,7 +100,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .filter(document("feedback/find-all"))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
                 .when()
                 .get("/api/levellogs/{levellogId}/feedbacks", levellogId)
                 .then().log().all();
@@ -129,7 +127,6 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     void updateFeedback() {
         // given
         final RestAssuredResponse hostLoginResponse = login("릭");
-        final Long rick_id = hostLoginResponse.getMemberId();
         final String rickToken = hostLoginResponse.getToken();
 
         final RestAssuredResponse romaLoginResponse = login("로마");
@@ -172,7 +169,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindAllFeedbacks(rick_levellogId)
+        RestAssuredTemplate.get("/api/levellogs/" + rick_levellogId + "/feedbacks", romaToken)
+                .getResponse()
                 .body("feedbacks.feedback.study", contains("수정된 Study 피드백"),
                         "feedbacks.feedback.speak", contains("수정된 Speak 피드백"),
                         "feedbacks.feedback.etc", contains("수정된 Etc 피드백")
@@ -192,7 +190,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     void deleteFeedback() {
         // given
         final RestAssuredResponse hostLoginResponse = login("릭");
-        final Long rick_id = hostLoginResponse.getMemberId();
+        hostLoginResponse.getMemberId();
         final String rickToken = hostLoginResponse.getToken();
 
         final RestAssuredResponse romaLoginResponse = login("로마");
@@ -230,15 +228,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindAllFeedbacks(rick_levellogId)
+        RestAssuredTemplate.get("/api/levellogs/" + rick_levellogId + "/feedbacks", romaToken)
+                .getResponse()
                 .body("feedbacks.id", not(contains(deleteId)));
-    }
-
-    private ValidatableResponse requestFindAllFeedbacks(final String levellogId) {
-        return RestAssured.given().log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + masterToken)
-                .when()
-                .get("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                .then().log().all();
     }
 }

@@ -24,10 +24,13 @@ jobs:
         run: node -v
 
       - name: Install Dependencies # 의존 파일 설치
+        working-directory: ./frontend
         run: npm ci
 
       - name: Dev Build # React Dev Build
+        working-directory: ./frontend
         run: npm build-dev
 
       - name: Prod Build # React Prod Build
+        working-directory: ./frontend
         run: npm build-prod

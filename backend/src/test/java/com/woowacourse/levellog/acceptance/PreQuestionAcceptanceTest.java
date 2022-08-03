@@ -68,7 +68,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
      * Scenario: 사전 질문 수정하기
      *   given: 1개의 레벨로그와 2명의 사용자(페퍼, 이브)가 있다.
      *   given: 이브가 페퍼에게 작성한 사전 질문이 있다.
-     *   when: 이브가 페퍼에게 쓴 레벨로그의 사전 질문 수정을 요청한다.
+     *   when: 이브가 페퍼의 레벨로그에 쓴 사전 질문 수정을 요청한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
     @Test
@@ -115,7 +115,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
      * Scenario: 사전 질문 조회하기
      *   given: 1개의 레벨로그와 2명의 사용자(페퍼, 이브)가 있다.
      *   given: 이브가 페퍼에게 작성한 사전 질문이 있다.
-     *   when: 이브가 페퍼에게 쓴 레벨로그의 사전 질문 조회를 요청한다.
+     *   when: 이브가 페퍼의 레벨로그에 쓴 사전 질문 조회를 요청한다.
      *   then: 200 ok 상태 코드와 사전 질문 데이터를 응답받는다.
      */
 
@@ -159,7 +159,7 @@ public class PreQuestionAcceptanceTest extends AcceptanceTest {
      * Scenario: 사전 질문 제거하기
      *   given: 1개의 레벨로그와 2명의 사용자(페퍼, 이브)가 있다.
      *   given: 이브가 페퍼에게 작성한 사전 질문이 있다.
-     *   when: 이브가 페퍼에게 쓴 레벨로그의 사전 질문 삭제를 요청한다.
+     *   when: 이브가 페퍼의 레벨로그에 쓴 사전 질문 삭제를 요청한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
     @Test

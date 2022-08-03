@@ -115,7 +115,8 @@ public class PreQuestionService {
 
     private void validateMyQuestion(final PreQuestion preQuestion, final Member member) {
         if (!preQuestion.isSameAuthor(member)) {
-            throw new UnauthorizedException("자신의 사전 질문이 아닙니다.");
+            throw new UnauthorizedException(
+                    "자신의 사전 질문이 아닙니다. 사전 질문 id = " + preQuestion.getId() + ", 멤버 id = " + member.getId());
         }
     }
 }

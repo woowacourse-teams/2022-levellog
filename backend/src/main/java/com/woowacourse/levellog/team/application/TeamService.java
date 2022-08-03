@@ -56,18 +56,14 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    public TeamsDto findAll() {
-        return new TeamsDto(getTeamResponses(teamRepository.findAll()));
+    public TeamsDto findAll(final Long memberId) {
+        return new TeamsDto(getTeamResponses(teamRepository.findAll(), memberId));
     }
 
     public TeamsDto findAllByMemberId(final Long memberId) {
         final List<Team> teams = getTeamsByMemberId(memberId);
 
-        return new TeamsDto(getTeamResponses(teams));
-    }
-
-    public TeamDto findById(final Long teamId) {
-        return getTeamResponse(getTeam(teamId));
+        return new TeamsDto(getTeamResponses(teams, memberId));
     }
 
     public TeamAndRoleDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
@@ -78,7 +74,7 @@ public class TeamService {
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
         return TeamAndRoleDto.from(team, participants.toHostId(), interviewers, interviewees,
-                getParticipantResponses(participants));
+                getParticipantResponses(participants), participants.isContains(memberId));
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
@@ -169,15 +165,17 @@ public class TeamService {
                 .collect(Collectors.toList());
     }
 
-    private List<TeamDto> getTeamResponses(final List<Team> teams) {
+    private List<TeamDto> getTeamResponses(final List<Team> teams, final Long memberId) {
         return teams.stream()
-                .map(this::getTeamResponse)
+                .map(it -> getTeamResponse(it, memberId))
                 .collect(Collectors.toList());
     }
 
-    private TeamDto getTeamResponse(final Team team) {
+    private TeamDto getTeamResponse(final Team team, final Long memberId) {
         final Participants participants = new Participants(participantRepository.findByTeam(team));
-        return TeamDto.from(team, participants.toHostId(), getParticipantResponses(participants));
+
+        return TeamDto.from(team, participants.toHostId(), participants.isContains(memberId),
+                getParticipantResponses(participants));
     }
 
     private List<ParticipantDto> getParticipantResponses(final Participants participants) {

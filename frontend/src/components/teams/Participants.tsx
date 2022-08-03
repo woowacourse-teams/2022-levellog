@@ -15,11 +15,11 @@ const Participant = ({ participant, updateParticipants }: ParticipantProps) => {
   };
 
   return (
-    <S.Participant>
+    <S.Container>
       <Image src={profileUrl} sizes={'SMALL'} />
       <S.Nickname>{nickname}</S.Nickname>
       {loginUserId !== id && <S.DeleteButton onClick={handleClickDeleteButton}>X</S.DeleteButton>}
-    </S.Participant>
+    </S.Container>
   );
 };
 
@@ -29,7 +29,7 @@ interface ParticipantProps {
 }
 
 const S = {
-  Participant: styled.div`
+  Container: styled.div`
     display: flex;
     align-items: center;
     gap: 0.25rem;

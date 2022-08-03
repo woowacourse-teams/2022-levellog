@@ -23,7 +23,7 @@ const LevellogViewModal = ({
   const { loginUserId } = useUser();
 
   const handleClickDeleteLevellog = async () => {
-    if (typeof teamId === 'string' && typeof levellogId === 'number') {
+    if (teamId && levellogId) {
       await onClickDeleteLevellog({ teamId, levellogId });
       getTeam();
     }

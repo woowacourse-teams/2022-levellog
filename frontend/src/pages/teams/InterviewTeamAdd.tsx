@@ -9,22 +9,28 @@ import ContentHeader from 'components/@commons/ContentHeader';
 import TeamAddForm from 'components/teams/TeamAddForm';
 
 const InterviewTeamAdd = () => {
-  const { members, participants, updateMembers, updateParticipants } = useMember();
+  const {
+    members,
+    nicknameValue,
+    setNicknameValue,
+    participants,
+    updateMembers,
+    updateParticipants,
+  } = useMember();
   const { teamInfoRef, onSubmitTeamAddForm } = useTeams();
-  const [nickname, setNickname] = useState('');
 
   const handleSubmitTeamAddForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmitTeamAddForm({ ...participants });
+    onSubmitTeamAddForm({ participants });
   };
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
+    setNicknameValue(e.target.value);
   };
 
   useEffect(() => {
-    updateMembers({ nickname });
-  }, [nickname, participants]);
+    updateMembers({ nicknameValue });
+  }, [nicknameValue, participants]);
 
   return (
     <form onSubmit={handleSubmitTeamAddForm}>
@@ -35,8 +41,8 @@ const InterviewTeamAdd = () => {
         teamInfoRef={teamInfoRef}
         participants={participants}
         members={members}
-        nickname={nickname}
-        setNickname={setNickname}
+        nicknameValue={nicknameValue}
+        setNicknameValue={setNicknameValue}
         handleChangeInput={handleChangeInput}
         updateParticipants={updateParticipants}
       />

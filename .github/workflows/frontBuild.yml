@@ -24,6 +24,7 @@ jobs:
         run: node -v
 
       - name: Install Dependencies # 의존 파일 설치
+        working-directory: ./frontend
         run: yarn install --frozen-lockfile
 
       - name: Dev Build # React Dev Build

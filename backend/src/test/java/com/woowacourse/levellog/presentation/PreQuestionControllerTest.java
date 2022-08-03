@@ -215,22 +215,22 @@ public class PreQuestionControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("findById 메서드는")
-    class FindById {
+    @DisplayName("findMy 메서드는")
+    class FindMy {
 
         @Test
         @DisplayName("타인의 사전 질문을 조회하는 경우 예외를 던진다.")
-        void findById_FromNotMyPreQuestion_Exception() throws Exception {
+        void findMy_FromNotMyPreQuestion_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             BDDMockito.willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
                     .given(preQuestionService)
-                    .findById(1L, 1L, 4L);
+                    .findById( 1L, 4L);
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/1", TOKEN);
+            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", TOKEN);
 
             // then
             perform.andExpectAll(
@@ -243,7 +243,7 @@ public class PreQuestionControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("잘못된 레벨로그의 사전 질문을 조회하면 예외를 던진다.")
-        void findById_LevellogWrongId_Exception() throws Exception {
+        void findMy_LevellogWrongId_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -251,10 +251,10 @@ public class PreQuestionControllerTest extends ControllerTest {
             BDDMockito.willThrow(
                             new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .given(preQuestionService)
-                    .findById(1L, 1L, 4L);
+                    .findById(1L, 4L);
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/1", TOKEN);
+            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", TOKEN);
 
             // then
             perform.andExpectAll(
@@ -268,17 +268,17 @@ public class PreQuestionControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("저장되어있지 않은 사전 질문을 조회하는 경우 예외를 던진다.")
-        void findById_PreQuestionNotFound_Exception() throws Exception {
+        void findMy_PreQuestionNotFound_Exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             BDDMockito.willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .given(preQuestionService)
-                    .findById(1L, 1L, 4L);
+                    .findById(1L, 4L);
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/1", TOKEN);
+            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", TOKEN);
 
             // then
             perform.andExpectAll(

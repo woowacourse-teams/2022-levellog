@@ -32,11 +32,9 @@ public class PreQuestionController {
                 URI.create("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId)).build();
     }
 
-    @GetMapping("/{preQuestionId}")
-    public ResponseEntity<PreQuestionDto> findById(@PathVariable final Long levellogId,
-                                                   @PathVariable final Long preQuestionId,
-                                                   @Authentic final Long memberId) {
-        final PreQuestionDto response = preQuestionService.findById(preQuestionId, levellogId, memberId);
+    @GetMapping("/my")
+    public ResponseEntity<PreQuestionDto> findMy(@PathVariable final Long levellogId, @Authentic final Long memberId) {
+        final PreQuestionDto response = preQuestionService.findById(levellogId, memberId);
         return ResponseEntity.ok(response);
     }
 

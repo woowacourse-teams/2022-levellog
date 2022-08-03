@@ -24,7 +24,7 @@ const S = {
     width: 100%;
     height: 9rem;
     margin-top: 7.125rem;
-    border-top: 1px solid ${(props) => props.theme.default.BLACK};
+    border-top: 0.0625rem solid ${(props) => props.theme.default.BLACK};
   `,
 
   Content: styled.div`

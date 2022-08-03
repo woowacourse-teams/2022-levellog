@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
 import { useTeams } from 'hooks/useTeams';
+
+import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -19,7 +22,9 @@ const InterviewTeams = () => {
   return (
     <>
       <ContentHeader title={'Interview Group'}>
-        <Button>추가하기</Button>
+        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
+          <Button>추가하기</Button>
+        </Link>
       </ContentHeader>
       <S.Container onClick={handleClickInterviewGroup}>
         {teams.map((team: InterviewTeamType) => (

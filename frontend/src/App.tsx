@@ -25,6 +25,7 @@ const PageContainer = styled.main`
   overflow-x: hidden;
   box-sizing: border-box;
   width: 100%;
+  min-height: 65vh;
   padding: 0 10rem;
   @media (max-width: 1024px) {
     padding: 0 5rem;

@@ -1,6 +1,6 @@
 export const IMAGE_SIZE_LIST = {
-  HUGE: '120px',
-  LARGE: '60px',
-  MEDIUM: '44px',
-  SMALL: '30px',
+  HUGE: '7.5rem',
+  LARGE: '3.75rem',
+  MEDIUM: '2.75rem',
+  SMALL: '1.875rem',
 };

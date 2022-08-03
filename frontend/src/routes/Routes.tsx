@@ -6,6 +6,7 @@ import FeedbackList from 'pages/feedback/FeedbackList';
 import LevellogAdd from 'pages/levellogs/LevellogAdd';
 import LevellogEdit from 'pages/levellogs/LevellogEdit';
 import InterviewDetail from 'pages/teams/InterviewDetail';
+import InterviewTeamAdd from 'pages/teams/InterviewTeamAdd';
 import InterviewTeams from 'pages/teams/InterviewTeams';
 
 import { ROUTES_PATH } from 'constants/constants';
@@ -31,6 +32,10 @@ export const routes = [
       {
         path: ROUTES_PATH.LEVELLOG_MODIFY,
         element: <LevellogEdit />,
+      },
+      {
+        path: ROUTES_PATH.INTERVIEW_TEAMS_ADD,
+        element: <InterviewTeamAdd />,
       },
     ],
   },

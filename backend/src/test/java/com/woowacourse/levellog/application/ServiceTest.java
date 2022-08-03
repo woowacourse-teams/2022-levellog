@@ -3,7 +3,7 @@ package com.woowacourse.levellog.application;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
-import com.woowacourse.levellog.config.TestAuthenticationConfig;
+import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@Import(TestAuthenticationConfig.class)
+@Import(TestConfig.class)
 abstract class ServiceTest {
 
     @Autowired

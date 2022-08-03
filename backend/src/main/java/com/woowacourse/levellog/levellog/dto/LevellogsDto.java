@@ -1,7 +1,6 @@
-package com.woowacourse.levellog.team.dto;
+package com.woowacourse.levellog.levellog.dto;
 
 import java.util.List;
-import javax.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,8 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ParticipantIdsDto {
+public class LevellogsDto {
 
-    @NotEmpty
-    private List<Long> ids;
+    private List<LevellogWithIdDto> levellogs;
 }

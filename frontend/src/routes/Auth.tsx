@@ -13,7 +13,6 @@ const Auth = ({ needLogin }: AuthProps) => {
 
   useEffect(() => {
     if (needLogin && !accessToken) {
-      alert(MESSAGE.NEED_LOGIN);
       navigate(ROUTES_PATH.HOME);
     }
 

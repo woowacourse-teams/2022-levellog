@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
@@ -45,17 +46,12 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/create"))
-                .when()
-                .post("/api/teams")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken).body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/create")).when().post("/api/teams")
                 .then().log().all();
 
         // then
-        response.statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, equalTo("/api/teams/1"));
+        response.statusCode(HttpStatus.CREATED.value()).header(HttpHeaders.LOCATION, equalTo("/api/teams/1"));
     }
 
     /*
@@ -82,23 +78,18 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/findAll"))
-                .when()
-                .get("/api/teams")
+                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/findAll")).when().get("/api/teams")
                 .then().log().all();
 
         // then
-        response.statusCode(HttpStatus.OK.value())
-                .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"),
-                        "teams.hostId",
-                        contains(pepper.getMemberId().intValue(), eve.getMemberId().intValue()),
-                        "teams.participants.nickname", contains(List.of("페퍼", "이브"), List.of("이브", "페퍼", "릭"))
-                );
+        response.statusCode(HttpStatus.OK.value()).body("teams.title", contains("잠실 제이슨조", "잠실 브리조"), "teams.hostId",
+                contains(pepper.getMemberId().intValue(), eve.getMemberId().intValue()), "teams.isClosed",
+                contains(false, false), "teams.participants.nickname",
+                contains(List.of("페퍼", "이브"), List.of("이브", "페퍼", "릭")));
     }
 
     /*
-     * Scenario: 레벨 인터뷰 팀 상세 조회하기
+     * Scenario: 내가 속한 레벨 인터뷰 팀 상세 조회하기
      *   given: 팀이 등록되어 있다.
      *   given: 페퍼의 계정으로 로그인되어있다.
      *   when: 페퍼가 참여한 팀 상세 조회를 요청한다.
@@ -118,33 +109,23 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
                 participants);
 
-        final String id = post("/api/teams", pepper.getToken(), teamCreateDto)
-                .getTeamId();
+        final String id = post("/api/teams", pepper.getToken(), teamCreateDto).getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepper.getToken())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/find/my-team"))
-                .when()
-                .get("/api/teams/{id}", id)
-                .then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/find/my-team")).when()
+                .get("/api/teams/{id}", id).then().log().all();
 
         // then
-        response.statusCode(HttpStatus.OK.value())
-                .body("title", equalTo("잠실 제이슨조"),
-                        "place", equalTo("트랙룸"),
-                        "hostId", equalTo(pepper.getMemberId().intValue()),
-                        "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
-                        "interviewers",
-                        contains(eveId.intValue(), rickId.intValue()),
-                        "interviewees",
-                        contains(rickId.intValue(), romaId.intValue())
-                );
+        response.statusCode(HttpStatus.OK.value()).body("title", equalTo("잠실 제이슨조"), "place", equalTo("트랙룸"), "hostId",
+                equalTo(pepper.getMemberId().intValue()), "isClosed", equalTo(false), "participants.nickname",
+                contains("페퍼", "이브", "릭", "로마"), "interviewers", contains(eveId.intValue(), rickId.intValue()),
+                "interviewees", contains(rickId.intValue(), romaId.intValue()));
     }
 
     /*
-     * Scenario: 레벨 인터뷰 팀 상세 조회하기
+     * Scenario: 내가 속하지 않은 레벨 인터뷰 팀 상세 조회하기
      *   given: 팀이 등록되어 있다.
      *   when: 로그인하지 않고 팀 상세 조회를 요청한다.
      *   then: 200 Ok 상태 코드와 팀을 응답받는다.
@@ -163,26 +144,17 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
                 participants);
 
-        final String id = post("/api/teams", pepper.getToken(), teamCreateDto)
-                .getTeamId();
+        final String id = post("/api/teams", pepper.getToken(), teamCreateDto).getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/find/not-my-team"))
-                .when()
-                .get("/api/teams/{id}", id)
-                .then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/find/not-my-team")).when()
+                .get("/api/teams/{id}", id).then().log().all();
 
         // then
-        response.statusCode(HttpStatus.OK.value())
-                .body("title", equalTo("잠실 제이슨조"),
-                        "place", equalTo("트랙룸"),
-                        "hostId", equalTo(pepper.getMemberId().intValue()),
-                        "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
-                        "interviewers", empty(),
-                        "interviewees", empty()
-                );
+        response.statusCode(HttpStatus.OK.value()).body("title", equalTo("잠실 제이슨조"), "place", equalTo("트랙룸"), "hostId",
+                equalTo(pepper.getMemberId().intValue()), "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
+                "interviewers", empty(), "interviewees", empty());
     }
 
     /*
@@ -206,21 +178,16 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
                 participants);
 
-        final String teamId = post("/api/teams", pepperToken, teamCreateDto)
-                .getTeamId();
+        final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .headers(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/find-my-role/interviewer"))
-                .when()
-                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, rickId)
-                .then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/find-my-role/interviewer")).when()
+                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, rickId).then().log().all();
 
         // then
-        response.statusCode(HttpStatus.OK.value())
-                .body("myRole", equalTo("INTERVIEWER"));
+        response.statusCode(HttpStatus.OK.value()).body("myRole", equalTo("INTERVIEWER"));
     }
 
     /*
@@ -244,21 +211,46 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
                 participants);
 
-        final String teamId = post("/api/teams", pepperToken, teamCreateDto)
-                .getTeamId();
+        final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .headers(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/find-my-role/observer"))
-                .when()
-                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, eveId)
-                .then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/find-my-role/observer")).when()
+                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, eveId).then().log().all();
 
         // then
-        response.statusCode(HttpStatus.OK.value())
-                .body("myRole", equalTo("OBSERVER"));
+        response.statusCode(HttpStatus.OK.value()).body("myRole", equalTo("OBSERVER"));
+    }
+
+    /*
+     * Scenario: 레벨 인터뷰 종료하기
+     *   given: 팀이 등록되어 있다.
+     *   when: 등록된 팀에 대한 인터뷰 종료를 요청한다.
+     *   then: 204 No Content 상태 코드를 응답받는다.
+     */
+    @Test
+    @DisplayName("레벨 인터뷰 종료하기")
+    void closeInterview() {
+        // given
+        final RestAssuredResponse loginResponse1 = login("페퍼");
+        final RestAssuredResponse loginResponse2 = login("이브");
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
+
+        final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto).getTeamId();
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/close")).when()
+                .post("/api/teams/{id}/close", id).then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.NO_CONTENT.value());
+
+        final ValidatableResponse teamFindResponse = get("/api/teams/" + id).getResponse();
+        teamFindResponse.body("isClosed", equalTo(true));
     }
 
     /*
@@ -276,19 +268,14 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(eveId)));
-        final String id = post("/api/teams", pepperToken, teamCreateDto)
-                .getTeamId();
+        final String id = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
         final TeamUpdateDto request = new TeamUpdateDto("선릉 브리조", "수성방", LocalDateTime.now().plusDays(3));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
-                .body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/update"))
-                .when()
-                .put("/api/teams/{id}", id)
-                .then().log().all();
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken).body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/update")).when()
+                .put("/api/teams/{id}", id).then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
@@ -309,16 +296,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(eveId)));
-        final String id = post("/api/teams", pepperToken, teamCreateDto)
-                .getTeamId();
+        final String id = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
+
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/delete"))
-                .when()
-                .delete("/api/teams/{id}", id)
-                .then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/delete")).when()
+                .delete("/api/teams/{id}", id).then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());

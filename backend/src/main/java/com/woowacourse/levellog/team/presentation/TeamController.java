@@ -65,6 +65,13 @@ public class TeamController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{teamId}/close")
+    public ResponseEntity<Void> close(@PathVariable final Long teamId,
+                                      @Authentic final Long memberId) {
+        teamService.close(teamId, memberId);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{teamId}")
     public ResponseEntity<Void> delete(@PathVariable final Long teamId, @Authentic final Long memberId) {
         teamService.deleteById(teamId, memberId);

@@ -22,6 +22,7 @@ public class TeamDto {
     private String place;
     private LocalDateTime startAt;
     private String teamImage;
+    private Boolean isClosed;
     private Long hostId;
     private List<ParticipantDto> participants;
 
@@ -32,6 +33,7 @@ public class TeamDto {
                 team.getPlace(),
                 team.getStartAt(),
                 team.getProfileUrl(),
+                team.isClosed(),
                 hostId,
                 participantResponses
         );

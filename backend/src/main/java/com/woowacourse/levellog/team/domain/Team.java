@@ -2,6 +2,7 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +35,7 @@ public class Team extends BaseEntity {
     private int interviewerNumber;
 
     @Column(nullable = false)
-    private boolean isClosed = false;
+    private boolean isClosed;
 
     public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
                 final int interviewerNumber) {
@@ -45,6 +46,7 @@ public class Team extends BaseEntity {
         this.startAt = startAt;
         this.profileUrl = profileUrl;
         this.interviewerNumber = interviewerNumber;
+        this.isClosed = false;
     }
 
     private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
@@ -76,10 +78,10 @@ public class Team extends BaseEntity {
 
     private void validateStartAt(final LocalDateTime startAt) {
         if (startAt == null) {
-            throw new InvalidFieldException("시작 시간이 없습니다. 입력한 시작 시간 : [null]");
+            throw new InterviewTimeException("시작 시간이 없습니다.", "입력한 시작 시간 : [null]");
         }
         if (LocalDateTime.now().isAfter(startAt)) {
-            throw new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]");
+            throw new InterviewTimeException("인터뷰 시작 시간은 현재 시간 이후여야 합니다. 입력한 시작 시간 : [" + startAt + "]");
         }
     }
 
@@ -112,6 +114,25 @@ public class Team extends BaseEntity {
     public void validParticipantNumber(final int participantNumber) {
         if (participantNumber <= interviewerNumber) {
             throw new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
+        }
+    }
+
+    public void close(final LocalDateTime presentTime) {
+        validateInterviewStartTime(presentTime);
+        validateAlreadyClosed();
+
+        isClosed = true;
+    }
+
+    private void validateInterviewStartTime(final LocalDateTime presentTime) {
+        if (presentTime.isBefore(startAt)) {
+            throw new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.", "[teamId : " + this.getId() + "]");
+        }
+    }
+
+    private void validateAlreadyClosed() {
+        if (isClosed) {
+            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
         }
     }
 }

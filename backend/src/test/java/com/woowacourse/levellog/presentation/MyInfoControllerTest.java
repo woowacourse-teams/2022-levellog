@@ -44,7 +44,7 @@ class MyInfoControllerTest extends ControllerTest {
             final String requestContent = objectMapper.writeValueAsString(nicknameUpdateDto);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/myInfo")
+            final ResultActions perform = mockMvc.perform(put("/api/my-info")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
@@ -71,7 +71,7 @@ class MyInfoControllerTest extends ControllerTest {
             final String requestContent = objectMapper.writeValueAsString(nicknameUpdateDto);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/myInfo")
+            final ResultActions perform = mockMvc.perform(put("/api/my-info")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent)
                             .header(HttpHeaders.AUTHORIZATION, "Bearer token"))

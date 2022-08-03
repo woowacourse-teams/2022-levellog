@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.config.TestAuthenticationConfig;
+import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
@@ -35,7 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@Import(TestAuthenticationConfig.class)
+@Import(TestConfig.class)
 @ExtendWith(RestDocumentationExtension.class)
 @ActiveProfiles("test")
 abstract class AcceptanceTest {

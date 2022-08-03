@@ -60,6 +60,11 @@ operation::team/create/exception/startat/null[]
 
 operation::team/create/exception/startat/past[]
 
+[[create-exception-participants-empty]]
+==== 저장 시 호스트 이외의 참가자가 없는 경우
+
+operation::team/create/exception/participants/empty[]
+
 [[create-exception-participants-null]]
 ==== 저장 시 participants가 null인 경우
 
@@ -100,7 +105,7 @@ operation::team/find/not-my-team[]
 [[find-exception]]
 === 팀 상세 조회 예외
 
-[[update-exception-title-null]]
+[[find-exception-notFound]]
 ==== 없는 팀을 상세 조회하는 경우
 
 operation::team/find-by-id/exception/notfound[]
@@ -193,10 +198,42 @@ operation::team/update/exception/startat/null[]
 
 operation::team/update/exception/startat/past[]
 
-[[update-exception-notfound]]
+[[update-exception-notFound]]
 ==== 없는 팀을 수정하는 경우
 
 operation::team/update/exception/notfound[]
+
+[[close]]
+== 팀 인터뷰 종료
+
+[[close-success]]
+=== 팀 인터뷰 종료 성공
+
+operation::team/close[]
+
+[[close-exception]]
+=== 팀 인터뷰 종료 예외
+
+[[close-exception-notfound]]
+==== 없는 팀의 인터뷰를 종료하려는 경우
+
+operation::team/close/exception/notfound[]
+
+[[close-exception-unauthorized]]
+==== 호스트가 아닌 사용자가 인터뷰를 종료하려는 경우
+
+include::{snippets}/team/close/exception/unauthorized/http-response.adoc[]
+
+[[close-exception-alreadyClose]]
+==== 이미 종료된 인터뷰를 종료하려는 경우
+
+include::{snippets}/team/close/exception/already-close/http-response.adoc[]
+
+[[close-exception-beforeStart]]
+==== 인터뷰 시작 시간 전에 종료하려는 경우
+
+include::{snippets}/team/close/exception/before-start/http-response.adoc[]
+
 
 [[delete]]
 == 팀 삭제

@@ -18,9 +18,12 @@ import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
+import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -216,6 +219,31 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/create/exception/startat/past"));
+        }
+
+        @Test
+        @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
+        void participantsEmpty_Exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final TeamCreateDto request = new TeamCreateDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(Collections.emptyList()));
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+
+            // then
+            perform.andExpect(status().isBadRequest());
+
+            // docs
+            perform.andDo(document("team/create/exception/participants/empty"));
         }
 
         @Test
@@ -471,6 +499,7 @@ class TeamControllerTest extends ControllerTest {
             final long id = 1;
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
             final TeamUpdateDto request = new TeamUpdateDto("잠실 제이슨조", "트랙룸", startAt);
+
             willThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
                     .given(teamService)
                     .update(request, id, 4L);
@@ -519,6 +548,7 @@ class TeamControllerTest extends ControllerTest {
         void teamNotFound_Exception() throws Exception {
             // given
             mockLogin();
+
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .given(teamService)
                     .findByTeamIdAndMemberId(10000000L, 4L);
@@ -597,6 +627,125 @@ class TeamControllerTest extends ControllerTest {
     }
 
     @Nested
+    @DisplayName("close 메서드는")
+    class Close {
+
+        @Test
+        @DisplayName("존재하지 않는 팀의 인터뷰를 종료하려고 하면 예외가 발생한다.")
+        void close_notFoundTeam_exceptionThrown() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final Long teamId = 200_000L;
+            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. [teamId : " + teamId + "]", "팀이 존재하지 않습니다."))
+                    .given(teamService)
+                    .close(teamId, 4L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("팀이 존재하지 않습니다.")
+            );
+
+            // docs
+            perform.andDo(document("team/close/exception/notfound"));
+        }
+
+        @Test
+        @DisplayName("이미 종료된 팀 인터뷰를 종료하려고 하면 예외가 발생한다.")
+        void close_alreadyClosed_exceptionThrown() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final Long teamId = 1L;
+            willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다.",
+                    "[teamId : " + teamId + "]"))
+                    .given(teamService)
+                    .close(teamId, 4L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("이미 종료된 인터뷰입니다.")
+            );
+
+            // docs
+            perform.andDo(document("team/close/exception/already-close"));
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 시간 전에 종료하려고 하면 예외가 발생한다.")
+        void close_beforeStart_exceptionThrown() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final Long teamId = 1L;
+            willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.",
+                    "인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]"))
+                    .given(teamService)
+                    .close(teamId, 4L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("인터뷰가 시작되기 전에 종료할 수 없습니다.")
+            );
+
+            // docs
+            perform.andDo(document("team/close/exception/before-start"));
+        }
+
+        @Test
+        @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하려고 하면 예외가 발생한다.")
+        void close_notHost_exceptionThrown() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final Long teamId = 1L;
+            willThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
+                    .given(teamService)
+                    .close(teamId, 4L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value("호스트 권한이 없습니다.")
+            );
+
+            // docs
+            perform.andDo(document("team/close/exception/unauthorized"));
+        }
+    }
+
+    @Nested
     @DisplayName("delete 메서드는")
     class Delete {
 
@@ -605,6 +754,7 @@ class TeamControllerTest extends ControllerTest {
         void teamNotFound_Exception() throws Exception {
             // given
             mockLogin();
+
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .given(teamService)
                     .deleteById(10000000L, 4L);

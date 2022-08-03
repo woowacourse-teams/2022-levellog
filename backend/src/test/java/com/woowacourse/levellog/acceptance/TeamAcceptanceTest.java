@@ -46,12 +46,17 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken).body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/create")).when().post("/api/teams")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/create"))
+                .when()
+                .post("/api/teams")
                 .then().log().all();
 
         // then
-        response.statusCode(HttpStatus.CREATED.value()).header(HttpHeaders.LOCATION, equalTo("/api/teams/1"));
+        response.statusCode(HttpStatus.CREATED.value())
+                .header(HttpHeaders.LOCATION, equalTo("/api/teams/1"));
     }
 
     /*
@@ -78,7 +83,11 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/findAll")).when().get("/api/teams")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepper.getToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/findAll"))
+                .when()
+                .get("/api/teams")
                 .then().log().all();
 
         // then
@@ -116,8 +125,11 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepper.getToken())
-                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/find/my-team")).when()
-                .get("/api/teams/{id}", id).then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find/my-team"))
+                .when()
+                .get("/api/teams/{id}", id)
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
@@ -196,11 +208,15 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .headers(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/find-my-role/interviewer")).when()
-                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, rickId).then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find-my-role/interviewer"))
+                .when()
+                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, rickId)
+                .then().log().all();
 
         // then
-        response.statusCode(HttpStatus.OK.value()).body("myRole", equalTo("INTERVIEWER"));
+        response.statusCode(HttpStatus.OK.value())
+                .body("myRole", equalTo("INTERVIEWER"));
     }
 
     /*
@@ -229,11 +245,15 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .headers(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/find-my-role/observer")).when()
-                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, eveId).then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find-my-role/observer"))
+                .when()
+                .get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, eveId)
+                .then().log().all();
 
         // then
-        response.statusCode(HttpStatus.OK.value()).body("myRole", equalTo("OBSERVER"));
+        response.statusCode(HttpStatus.OK.value())
+                .body("myRole", equalTo("OBSERVER"));
     }
 
     /*
@@ -256,14 +276,17 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
-                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/close")).when()
-                .post("/api/teams/{id}/close", id).then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/close"))
+                .when()
+                .post("/api/teams/{id}/close", id)
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
 
-        final ValidatableResponse teamFindResponse = get("/api/teams/" + id).getResponse();
-        teamFindResponse.body("isClosed", equalTo(true));
+        get("/api/teams/" + id).getResponse()
+                .body("isClosed", equalTo(true));
     }
 
     /*
@@ -286,9 +309,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken).body(request)
-                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/update")).when()
-                .put("/api/teams/{id}", id).then().log().all();
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/update"))
+                .when()
+                .put("/api/teams/{id}", id)
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
@@ -314,8 +341,11 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
-                .contentType(MediaType.APPLICATION_JSON_VALUE).filter(document("team/delete")).when()
-                .delete("/api/teams/{id}", id).then().log().all();
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/delete"))
+                .when()
+                .delete("/api/teams/{id}", id)
+                .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());

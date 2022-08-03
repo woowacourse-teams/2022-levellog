@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { FeedbackTitle } from 'components/@commons/Style';
 import UiViewer from 'components/@commons/UiViewer';
 
-// 레벨로그 작성한 유저의 닉네임 가져오기
 const LevellogReport = ({ levellog }: LevellogReportProps) => {
   return (
     <S.Container>

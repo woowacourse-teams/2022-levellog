@@ -116,6 +116,7 @@ export const useTeam = () => {
 
         setTeam(res.data);
         checkUserInTeam({ team: res.data });
+
         return res.data;
       }
     } catch (err: unknown) {

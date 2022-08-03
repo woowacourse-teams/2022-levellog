@@ -7,8 +7,6 @@ import useLevellogModal from 'hooks/useLevellogModal';
 import { useTeam } from 'hooks/useTeams';
 import useUser from 'hooks/useUser';
 
-import { ROUTES_PATH } from 'constants/constants';
-
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';

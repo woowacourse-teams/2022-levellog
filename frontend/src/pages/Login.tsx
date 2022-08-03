@@ -57,9 +57,11 @@ const Login = () => {
       } catch (err: unknown) {
         if (axios.isAxiosError(err)) {
           const responseBody: AxiosResponse = err.response!;
-
-          if (err instanceof Error) alert(responseBody.data.message);
-          navigate(ROUTES_PATH.NOT_FOUND);
+          if (err instanceof Error) {
+            localStorage.removeItem('accessToken');
+            alert(responseBody.data.message);
+            navigate(ROUTES_PATH.HOME);
+          }
         }
       }
     };

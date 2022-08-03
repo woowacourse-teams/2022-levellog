@@ -1,7 +1,5 @@
 package com.woowacourse.levellog.prequestion.application;
 
-import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -12,10 +10,9 @@ import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
-import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
+import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,30 +90,17 @@ public class PreQuestionService {
                 .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
     }
 
-    private void validateLevellog(final PreQuestion preQuestion, final Levellog levellog) {
-        if (!preQuestion.isSameLevellog(levellog)) {
-            throw new InvalidFieldException(
-                    "입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : " + levellog.getId());
-        }
-    }
-
     private void validateSameTeamMember(final Team team, final Member member) {
-        final List<Participant> participants = participantRepository.findByTeam(team);
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
 
-        if (!existsParticipantByMember(participants, member)) {
-            throw new UnauthorizedException("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다.");
-        }
+        participants.validateExistsMember(member);
     }
 
-    private boolean existsParticipantByMember(final List<Participant> participants, final Member member) {
-        return participants.stream()
-                .anyMatch(participant -> participant.getMember().equals(member));
+    private void validateLevellog(final PreQuestion preQuestion, final Levellog levellog) {
+        preQuestion.validateLevellog(levellog);
     }
 
     private void validateMyQuestion(final PreQuestion preQuestion, final Member member) {
-        if (!preQuestion.isSameAuthor(member)) {
-            throw new UnauthorizedException(
-                    "자신의 사전 질문이 아닙니다. 사전 질문 id = " + preQuestion.getId() + ", 멤버 id = " + member.getId());
-        }
+        preQuestion.validateMyQuestion(member);
     }
 }

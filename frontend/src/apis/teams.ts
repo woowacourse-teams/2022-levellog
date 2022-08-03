@@ -30,6 +30,15 @@ export const requestGetTeam = ({
   });
 };
 
+export const requestEditTeam = ({ teamId, teamInfo, accessToken }: TeamApiType) => {
+  return axios({
+    method: 'put',
+    headers: { Authorization: `Bearer ${accessToken}` },
+    url: `${process.env.API_URI}/teams/${teamId}`,
+    data: teamInfo,
+  });
+};
+
 export const requestDeleteTeam = ({
   teamId,
   accessToken,

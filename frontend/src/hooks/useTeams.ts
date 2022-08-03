@@ -6,7 +6,13 @@ import axios, { AxiosResponse } from 'axios';
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import useUser from './useUser';
-import { requestGetTeams, requestGetTeam, requestPostTeam, requestDeleteTeam } from 'apis/teams';
+import {
+  requestGetTeams,
+  requestGetTeam,
+  requestPostTeam,
+  requestDeleteTeam,
+  requestEditTeam,
+} from 'apis/teams';
 import { MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType } from 'types/team';
 
@@ -88,6 +94,18 @@ export const useTeam = () => {
     }
   };
 
+  const editTeam = async ({ teamId, teamInfo }: Omit<TeamApiType, 'accessToken'>) => {
+    try {
+      await requestEditTeam({ teamId, teamInfo, accessToken });
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const responseBody: AxiosResponse = err.response!;
+        if (err instanceof Error) alert(responseBody.data.message);
+        navigate(ROUTES_PATH.NOT_FOUND);
+      }
+    }
+  };
+
   const deleteTeam = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     try {
       await requestDeleteTeam({ teamId, accessToken });
@@ -118,17 +136,21 @@ export const useTeam = () => {
     await postTeam({ teamInfo });
   };
 
-  const onClickDeleteTeamButton = ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
+  const onSubmitTeamEditForm = async ({ teamId, teamInfo }: Omit<TeamApiType, 'accessToken'>) => {
+    await editTeam({ teamId, teamInfo });
+    navigate(ROUTES_PATH.HOME);
+  };
+
+  const onClickDeleteTeamButton = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     if (confirm('정말로 팀을 삭제하시겠습니까?')) {
-      // deleteTeam({ teamId });
+      await deleteTeam({ teamId });
       navigate(ROUTES_PATH.HOME);
+
       return;
     }
   };
 
   useEffect(() => {
-    // 나중에 location은 타입을 고칠 필요가 있어보임
-    // teamLocationState && 안 해주면 에러남
     if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
       setTeam(teamLocationState);
     }
@@ -141,6 +163,7 @@ export const useTeam = () => {
     getTeam,
     teamInfoRef,
     onSubmitTeamAddForm,
+    onSubmitTeamEditForm,
     onClickDeleteTeamButton,
   };
 };

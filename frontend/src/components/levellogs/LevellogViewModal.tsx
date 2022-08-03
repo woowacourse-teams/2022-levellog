@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import useUser from 'hooks/useUser';
 
 import Button from 'components/@commons/Button';
+import UiViewer from 'components/@commons/UiViewer';
 import { LevellogCustomHookType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
@@ -22,8 +23,7 @@ const LevellogViewModal = ({
   const { loginUserId } = useUser();
 
   const handleClickDeleteLevellog = async () => {
-    // levellogId가 number라 일단 null이 아닌지만 체크하고 요청하기로 함.
-    if (teamId && levellogId) {
+    if (typeof teamId === 'string' && typeof levellogId === 'number') {
       await onClickDeleteLevellog({ teamId, levellogId });
       getTeam();
     }
@@ -32,13 +32,17 @@ const LevellogViewModal = ({
   if (memberId === loginUserId) {
     return (
       <ModalPortal>
-        <S.Dimmer onClick={handleClickCloseLevellogModal}>
+        <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal}>
           <S.Container>
             <S.Header>
               <S.Title>{nickname}의 Levellog</S.Title>
-              <S.CloseButton onClick={handleClickCloseLevellogModal}>X</S.CloseButton>
+              <S.CloseButton id="closeButton" onClick={handleClickCloseLevellogModal}>
+                X
+              </S.CloseButton>
             </S.Header>
-            <S.Levellog>{levellog}</S.Levellog>
+            <S.Levellog>
+              <UiViewer content={levellog} />
+            </S.Levellog>
             <S.Footer>
               <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
                 <Button>수정하기</Button>
@@ -53,13 +57,17 @@ const LevellogViewModal = ({
 
   return (
     <ModalPortal>
-      <S.Dimmer onClick={handleClickCloseLevellogModal}>
+      <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal}>
         <S.Container>
           <S.Header>
             <S.Title>{nickname}의 Levellog</S.Title>
-            <S.CloseButton onClick={handleClickCloseLevellogModal}>X</S.CloseButton>
+            <S.CloseButton id="closeButton" onClick={handleClickCloseLevellogModal}>
+              X
+            </S.CloseButton>
           </S.Header>
-          <S.Levellog>{levellog}</S.Levellog>
+          <S.Levellog>
+            <UiViewer content={levellog} />
+          </S.Levellog>
           <S.Footer>
             <Button>사전 질문 작성</Button>
           </S.Footer>
@@ -77,7 +85,7 @@ interface LevellogViewModalProps {
     teamId,
     levellogId,
   }: Omit<LevellogCustomHookType, 'inputValue'>) => Promise<void>;
-  handleClickCloseLevellogModal: () => void;
+  handleClickCloseLevellogModal: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 const S = {

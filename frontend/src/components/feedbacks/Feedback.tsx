@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
+import UiViewer from 'components/@commons/UiViewer';
 import { FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
 const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackProps) => {
@@ -18,15 +19,21 @@ const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackPro
       <FlexBox gap={1.5}>
         <FlexBox flexFlow={'column'} gap={1.25}>
           <h3>학습 측면에서 좋은 점과 부족한 점은?</h3>
-          <S.Content>{feedbackInfo.feedback.study}</S.Content>
+          <S.Content>
+            <UiViewer content={feedbackInfo.feedback.study} />
+          </S.Content>
         </FlexBox>
         <FlexBox flexFlow={'column'} gap={1.25}>
           <h3>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</h3>
-          <S.Content>{feedbackInfo.feedback.speak}</S.Content>
+          <S.Content>
+            <UiViewer content={feedbackInfo.feedback.speak} />
+          </S.Content>
         </FlexBox>
         <FlexBox flexFlow={'column'} gap={1.25}>
           <h3>기타 피드백 (위 2 질문 외에 다른 피드백을 주세요.)</h3>
-          <S.Content>{feedbackInfo.feedback.etc}</S.Content>
+          <S.Content>
+            <UiViewer content={feedbackInfo.feedback.etc} />
+          </S.Content>
         </FlexBox>
       </FlexBox>
     </S.Container>
@@ -63,10 +70,10 @@ const S = {
     margin-bottom: 1.875rem;
   `,
 
-  Content: styled.p`
+  Content: styled.div`
     width: 43.75rem;
     min-height: 6.25rem;
-    padding: 1rem;
+    padding: 0 1rem;
     border-radius: 0.5rem;
     background-color: ${(props) => props.theme.default.LIGHT_GRAY};
     word-spacing: 0.0625rem;

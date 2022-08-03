@@ -107,4 +107,31 @@ public class ParticipantRepositoryTest {
                 () -> assertThat(existsRoma).isFalse()
         );
     }
+
+    @Test
+    @DisplayName("findAllByMember 메서드는 해당 멤버가 포함된 모든 participant 반환한다.")
+    void findAllByMember() {
+        // given
+        final Team team = teamRepository.save(
+                new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "profile.img", 1));
+        final Team team2 = teamRepository.save(
+                new Team("브라운 잠실", "잠실 트랙룸", LocalDateTime.now().plusDays(3), "profile.img", 1));
+
+        final Member alien = memberRepository.save(new Member("알린", 12345678, "alien.img"));
+        final Member roma = memberRepository.save(new Member("로마", 56781234, "roma.img"));
+
+        final Participant romaParticipant1 = participantRepository.save(new Participant(team, roma, false));
+        final Participant romaParticipant2 = participantRepository.save(new Participant(team2, roma, true));
+
+        participantRepository.save(new Participant(team, alien, true)); // roma 비포함 participant
+
+        // when
+        final List<Participant> participants = participantRepository.findAllByMember(roma);
+
+        // then
+        assertAll(
+                () -> assertThat(participants).hasSize(2),
+                () -> assertThat(participants).contains(romaParticipant1, romaParticipant2)
+        );
+    }
 }

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
@@ -126,6 +127,33 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.save(teamCreateDto, participant1))
                     .isInstanceOf(DuplicateParticipantsException.class)
                     .hasMessageContaining("참가자 중복");
+        }
+    }
+
+    @Nested
+    @DisplayName("findById 메서드는")
+    class findById {
+
+        @Test
+        @DisplayName("id에 해당하는 팀을 조회한다.")
+        void findById() {
+            //given
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Team team = saveAndGetTeam("잠실 제이슨조", 1);
+
+            participantRepository.save(new Participant(team, member1, true));
+            participantRepository.save(new Participant(team, member2, false));
+
+            //when
+            final TeamDto response = teamService.findById(team.getId());
+
+            //then
+            assertAll(
+                    () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                    () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
+                    () -> assertThat(response.getParticipants()).hasSize(2)
+            );
         }
     }
 
@@ -447,6 +475,51 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.deleteById(1000L, member.getId()))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
+        }
+
+    }
+
+    @Nested
+    @DisplayName("findAllByMemberId 메서드는 ")
+    class FindAllByMemberId {
+
+        @Test
+        @DisplayName("주어진 memberId의 멤버가 참가한 모든 팀을 조회한다.")
+        void success() {
+            // given
+            final Member roma = saveAndGetMember("로마");
+            final Member harry = saveAndGetMember("해리");
+            final Member alien = saveAndGetMember("알린");
+
+            final TeamCreateDto romaTeamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", 1,
+                    LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(harry.getId())));
+            final TeamCreateDto romaTeamCreateDto2 = new TeamCreateDto("잠실 준조", "트랙룸", 1,
+                    LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(harry.getId(), alien.getId())));
+
+            final TeamCreateDto harryTeamCreateDto = new TeamCreateDto("잠실 준조", "트랙룸", 1,
+                    LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(alien.getId())));
+
+            teamService.save(romaTeamCreateDto, roma.getId());
+            teamService.save(romaTeamCreateDto2, roma.getId());
+            teamService.save(harryTeamCreateDto, harry.getId());
+
+            // when
+            final List<TeamDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
+
+            // then
+            assertThat(teams).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("주어진 memberId의 멤버가 존재하지 않을 때 예외를 던진다.")
+        void memberNotFound_exception() {
+            // when & then
+            assertThatThrownBy(() -> teamService.findAllByMemberId(100_000L))
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(100_000L));
         }
     }
 }

@@ -57,6 +57,16 @@ public class TeamService {
         return new TeamsDto(getTeamResponses(teamRepository.findAll()));
     }
 
+    public TeamsDto findAllByMemberId(final Long memberId) {
+        final List<Team> teams = getTeamsByMemberId(memberId);
+
+        return new TeamsDto(getTeamResponses(teams));
+    }
+
+    public TeamDto findById(final Long teamId) {
+        return getTeamResponse(getTeam(teamId));
+    }
+
     public TeamAndRoleDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
@@ -103,6 +113,15 @@ public class TeamService {
         return teamRepository.findById(teamId)
                 .orElseThrow(
                         () -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
+    }
+
+    private List<Team> getTeamsByMemberId(final Long memberId) {
+        final Member member = getMember(memberId);
+        final List<Participant> participants = participantRepository.findAllByMember(member);
+
+        return participants.stream()
+                .map(Participant::getTeam)
+                .collect(Collectors.toList());
     }
 
     private List<Participant> getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {

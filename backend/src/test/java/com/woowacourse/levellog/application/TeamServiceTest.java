@@ -157,7 +157,7 @@ class TeamServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("findMyRole 메서드는")
-    class findMyRole {
+    class FindMyRole {
 
         @Test
         @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - interviewer")
@@ -250,7 +250,7 @@ class TeamServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("findByTeamIdAndMemberId 메서드는")
-    class findByTeamIdAndMemberId {
+    class FindByTeamIdAndMemberId {
 
         @Test
         @DisplayName("id에 해당하는 팀을 조회한다.")
@@ -286,11 +286,11 @@ class TeamServiceTest extends ServiceTest {
 
         @Nested
         @DisplayName("요청한 유저가 팀에 참가자일 때")
-        class participantRequest {
+        class ParticipantRequest {
 
             @Test
-            @DisplayName("인터뷰어와 인터뷰이를 포함해서 응답한다.")
-            void findById() {
+            @DisplayName("인터뷰어와 인터뷰이, isParticipant를 true로 응답한다.")
+            void findByTeamIdAndMemberId() {
                 //given
                 final Member rick = saveAndGetMember("릭");
                 final Member pepper = saveAndGetMember("페퍼");
@@ -327,7 +327,7 @@ class TeamServiceTest extends ServiceTest {
 
             @Test
             @DisplayName("참가자가 3명이고, 인터뷰어 수는 2명이면 인터뷰어와 인터뷰이가 동일하다.")
-            void findById_manyInterviewerNumber() {
+            void findByTeamIdAndMemberId_manyInterviewerNumber() {
                 //given
                 final Member rick = saveAndGetMember("릭");
                 final Member pepper = saveAndGetMember("페퍼");
@@ -357,8 +357,8 @@ class TeamServiceTest extends ServiceTest {
         class NotParticipantRequest {
 
             @Test
-            @DisplayName("인터뷰어와 인터뷰이가 빈 상태로 응답한다.")
-            void findById() {
+            @DisplayName("인터뷰어와 인터뷰이가 빈 상태이고 isParticipant를 false로 응답한다.")
+            void findByTeamIdAndMemberId() {
                 //given
                 final Member member1 = saveAndGetMember("릭");
                 final Member member2 = saveAndGetMember("페퍼");
@@ -387,7 +387,7 @@ class TeamServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("update 메서드는")
-    class update {
+    class Update {
 
         @Test
         @DisplayName("id에 해당하는 팀 정보를 변경한다.")
@@ -488,7 +488,7 @@ class TeamServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("delete 메서드는")
-    class delete {
+    class Delete {
 
         @Test
         @DisplayName("delete 메서드는 id에 해당하는 팀을 삭제한다.")

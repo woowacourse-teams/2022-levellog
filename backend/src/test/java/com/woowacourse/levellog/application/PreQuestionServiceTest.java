@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
@@ -96,12 +97,12 @@ public class PreQuestionServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("findById 메서드는")
-    class FindById {
+    @DisplayName("findMy 메서드는")
+    class FindMy {
 
         @Test
         @DisplayName("사전 질문을 조회한다.")
-        void findById() {
+        void findMy() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
@@ -114,44 +115,18 @@ public class PreQuestionServiceTest extends ServiceTest {
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
 
-            final Long id = preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId());
+            preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId());
 
             //when
-            final PreQuestionDto response = preQuestionService.findById(id, levellog.getId(), questioner.getId());
+            final PreQuestionDto response = preQuestionService.findMy(levellog.getId(), questioner.getId());
 
             //then
             assertThat(response.getPreQuestion()).isEqualTo(preQuestion);
         }
 
         @Test
-        @DisplayName("타인의 사전 질문을 조회하는 경우 예외를 던진다.")
-        void findById_FromNotMyPreQuestion_Exception() {
-            // given
-            final PreQuestionDto romaPreQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
-            final PreQuestionDto evePreQuestionDto = PreQuestionDto.from("이브가 쓴 사전 질문");
-
-            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
-            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
-            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
-            final Member eve = saveAndGetMember("이브", 23452345, "이브.img");
-            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
-
-            participantRepository.save(new Participant(team, author, true));
-            participantRepository.save(new Participant(team, questioner, false));
-            participantRepository.save(new Participant(team, eve, false));
-
-            preQuestionService.save(romaPreQuestionDto, levellog.getId(), questioner.getId());
-            final Long preQuestionId = preQuestionService.save(evePreQuestionDto, levellog.getId(), eve.getId());
-
-            // when, then
-            assertThatThrownBy(() -> preQuestionService.findById(preQuestionId, levellog.getId(), questioner.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContaining("자신의 사전 질문이 아닙니다.");
-        }
-
-        @Test
-        @DisplayName("잘못된 레벨로그의 사전 질문을 조회하면 예외를 던진다.")
-        void findById_LevellogWrongId_Exception() {
+        @DisplayName("레벨로그가 존재하지 않으면 예외를 던진다.")
+        void findMy_LevellogWrongId_Exception() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
@@ -161,24 +136,20 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
             final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
 
-            final Team team2 = saveAndGetTeam("잠실 브라운조", "수성방", "브라운조.img");
-            final Member author2 = saveAndGetMember("페퍼", 12341234, "페퍼.img");
-            final Levellog levellog2 = saveAndGetLevellog(author2, team2, "페퍼의 레벨로그");
-
             participantRepository.save(new Participant(team, author, true));
             participantRepository.save(new Participant(team, questioner, false));
 
-            final Long id = preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId());
+            preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId());
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.findById(id, levellog2.getId(), questioner.getId()))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
+            assertThatThrownBy(() -> preQuestionService.findMy(999L, questioner.getId()))
+                    .isInstanceOf(LevellogNotFoundException.class)
+                    .hasMessageContaining("레벨로그가 존재하지 않습니다.");
         }
 
         @Test
-        @DisplayName("저장되어있지 않은 사전 질문을 조회하는 경우 예외를 던진다.")
-        void findById_PreQuestionNotFound_Exception() {
+        @DisplayName("사전 질문이 존재하지 않으면 예외를 던진다.")
+        void findMy_PreQuestionNotFound_Exception() {
             // given
             final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
             final Member author = saveAndGetMember("알린", 12345678, "알린.img");
@@ -189,7 +160,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             participantRepository.save(new Participant(team, questioner, false));
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.findById(1L, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.findMy(levellog.getId(), questioner.getId()))
                     .isInstanceOf(PreQuestionNotFoundException.class)
                     .hasMessageContainingAll("사전 질문이 존재하지 않습니다.", "1");
         }
@@ -220,7 +191,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             preQuestionService.update(PreQuestionDto.from("수정된 사전 질문"), id, levellog.getId(), questioner.getId());
 
             //then
-            final PreQuestionDto response = preQuestionService.findById(id, levellog.getId(), questioner.getId());
+            final PreQuestionDto response = preQuestionService.findMy(levellog.getId(), questioner.getId());
             assertThat(response.getPreQuestion()).isEqualTo("수정된 사전 질문");
         }
 

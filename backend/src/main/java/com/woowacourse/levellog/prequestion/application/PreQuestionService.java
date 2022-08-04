@@ -38,13 +38,12 @@ public class PreQuestionService {
                 .getId();
     }
 
-    public PreQuestionDto findById(final Long preQuestionId, final Long levellogId, final Long memberId) {
-        final PreQuestion preQuestion = getPreQuestion(preQuestionId);
+    public PreQuestionDto findMy(final Long levellogId, final Long questionerId) {
         final Levellog levellog = getLevellog(levellogId);
-        final Member questioner = getMember(memberId);
-
-        validateLevellog(preQuestion, levellog);
-        validateMyQuestion(preQuestion, questioner);
+        final Member questioner = getMember(questionerId);
+        final PreQuestion preQuestion = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner)
+                .orElseThrow(() -> new PreQuestionNotFoundException("사전 질문이 존재하지 않습니다. "
+                        + "[ levellogId : " + levellogId + " memberId : " + questionerId + " ]"));
 
         return PreQuestionDto.from(preQuestion.getContent());
     }

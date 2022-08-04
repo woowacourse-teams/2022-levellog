@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useEffect } from 'react';
 
 import useMember from 'hooks/useMember';
-import { useTeams } from 'hooks/useTeams';
+import { useTeam } from 'hooks/useTeams';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -17,7 +17,8 @@ const InterviewTeamAdd = () => {
     updateMembers,
     updateParticipants,
   } = useMember();
-  const { teamInfoRef, onSubmitTeamAddForm } = useTeams();
+
+  const { teamInfoRef, onSubmitTeamAddForm } = useTeam();
 
   const handleSubmitTeamAddForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

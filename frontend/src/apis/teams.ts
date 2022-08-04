@@ -41,3 +41,23 @@ export const requestGetTeam = ({
     }),
   );
 };
+
+export const requestEditTeam = ({ teamId, teamInfo, accessToken }: TeamEditApiType) => {
+  return axios({
+    method: 'put',
+    headers: { Authorization: `Bearer ${accessToken}` },
+    url: `${process.env.API_URI}/teams/${teamId}`,
+    data: teamInfo,
+  });
+};
+
+export const requestDeleteTeam = ({
+  teamId,
+  accessToken,
+}: Omit<TeamApiType, 'teamInfo'>): AxiosPromise<void> => {
+  return axios({
+    method: 'delete',
+    headers: { Authorization: `Bearer ${accessToken}` },
+    url: `${process.env.API_URI}/teams/${teamId}`,
+  });
+};

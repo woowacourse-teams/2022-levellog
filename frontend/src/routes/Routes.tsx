@@ -1,4 +1,3 @@
-import Home from 'pages/Home';
 import Login from 'pages/Login';
 import NotFound from 'pages/NotFound';
 import FeedbackAdd from 'pages/feedback/FeedbackAdd';
@@ -9,6 +8,7 @@ import PreQuestionAdd from 'pages/prequestion/PreQuestionAdd';
 import PreQuestionEdit from 'pages/prequestion/PreQuestionEdit';
 import InterviewDetail from 'pages/teams/InterviewDetail';
 import InterviewTeamAdd from 'pages/teams/InterviewTeamAdd';
+import InterviewTeamEdit from 'pages/teams/InterviewTeamEdit';
 import InterviewTeams from 'pages/teams/InterviewTeams';
 
 import { ROUTES_PATH } from 'constants/constants';
@@ -32,7 +32,7 @@ export const routes = [
         element: <LevellogAdd />,
       },
       {
-        path: ROUTES_PATH.LEVELLOG_MODIFY,
+        path: ROUTES_PATH.LEVELLOG_EDIT,
         element: <LevellogEdit />,
       },
       {
@@ -46,6 +46,10 @@ export const routes = [
       {
         path: ROUTES_PATH.PREQUESTION_EDIT,
         element: <PreQuestionEdit />,
+       },
+       {
+        path: ROUTES_PATH.INTERVIEW_TEAMS_EDIT,
+        element: <InterviewTeamEdit />,
       },
     ],
   },

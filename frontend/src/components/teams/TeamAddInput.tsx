@@ -28,8 +28,8 @@ const S = {
   `,
 
   Label: styled.label`
-    font-size: 1rem;
     margin-bottom: 1rem;
+    font-size: 1rem;
   `,
 
   Input: styled(Input)`

@@ -7,7 +7,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,28 +42,6 @@ class TeamControllerTest extends ControllerTest {
     private void mockLogin() {
         given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
         given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
-    }
-
-    private ResultActions requestPost(final String url, final String token, final Object body) throws Exception {
-        final String json = objectMapper.writeValueAsString(body);
-
-        return mockMvc.perform(post(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.ALL)
-                        .content(json))
-                .andDo(print());
-    }
-
-    private ResultActions requestPut(final String url, final String token, final Object body) throws Exception {
-        final String json = objectMapper.writeValueAsString(body);
-
-        return mockMvc.perform(put(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.ALL)
-                        .content(json))
-                .andDo(print());
     }
 
     private void mockCreateTeam() {

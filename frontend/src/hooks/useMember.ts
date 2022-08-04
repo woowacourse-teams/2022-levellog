@@ -20,11 +20,10 @@ const useMember = () => {
   const accessToken = localStorage.getItem('accessToken');
   const { isThrottle } = useUtil();
 
-  const updateMembers = async ({ nicknameValue: nickname = '' }: MembersCustomHookType) => {
+  const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {
     try {
       if (isThrottle()) return;
-
-      const res = await requestGetMembers({ accessToken, nickname });
+      const res = await requestGetMembers({ accessToken, nickname: nicknameValue });
       const members = res.data.members.filter((member) =>
         participants.every((participant) => participant.id !== member.id),
       );

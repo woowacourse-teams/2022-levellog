@@ -22,19 +22,22 @@ public class TeamDto {
     private String place;
     private LocalDateTime startAt;
     private String teamImage;
-    private Boolean isClosed;
     private Long hostId;
+    private Boolean isClosed;
+    private Boolean isParticipant;
     private List<ParticipantDto> participants;
 
-    public static TeamDto from(final Team team, final Long hostId, final List<ParticipantDto> participantResponses) {
+    public static TeamDto from(final Team team, final Long hostId,
+                               final Boolean isParticipant, final List<ParticipantDto> participantResponses) {
         return new TeamDto(
                 team.getId(),
                 team.getTitle(),
                 team.getPlace(),
                 team.getStartAt(),
                 team.getProfileUrl(),
-                team.isClosed(),
                 hostId,
+                team.isClosed(),
+                isParticipant,
                 participantResponses
         );
     }

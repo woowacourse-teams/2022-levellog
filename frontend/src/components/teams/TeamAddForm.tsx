@@ -19,15 +19,15 @@ const TeamAddForm = ({
       <TeamAddInput
         label={'제목'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[0] = el)}
-        minLength={'5'}
-        maxLength={'10'}
+        minLength={'3'}
+        maxLength={'14'}
         required
       />
       <TeamAddInput
         label={'장소'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[1] = el)}
-        minLength={'5'}
-        maxLength={'10'}
+        minLength={'3'}
+        maxLength={'12'}
         required
       />
       <TeamAddInput

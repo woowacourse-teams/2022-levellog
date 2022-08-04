@@ -14,11 +14,12 @@ import { ParticipantType } from 'types/team';
 const LevellogViewModal = ({
   levellog,
   participant,
+  userInTeam,
   getTeam,
   onClickDeleteLevellog,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
-  const { memberId, levellogId, nickname } = participant;
+  const { memberId, levellogId, nickname, preQuestionId } = participant;
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
@@ -32,13 +33,11 @@ const LevellogViewModal = ({
   if (memberId === loginUserId) {
     return (
       <ModalPortal>
-        <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal} />
+        <S.Dimmer onClick={handleClickCloseLevellogModal} />
         <S.Container>
           <S.Header>
             <S.Title>{nickname}의 Levellog</S.Title>
-            <S.CloseButton id="closeButton" onClick={handleClickCloseLevellogModal}>
-              X
-            </S.CloseButton>
+            <S.CloseButton onClick={handleClickCloseLevellogModal}>X</S.CloseButton>
           </S.Header>
           <S.Levellog>
             <UiViewer content={levellog} />
@@ -56,21 +55,29 @@ const LevellogViewModal = ({
 
   return (
     <ModalPortal>
-      <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal} />
+      <S.Dimmer onClick={handleClickCloseLevellogModal} />
       <S.Container>
         <S.Header>
           <S.Title>{nickname}의 Levellog</S.Title>
-          <S.CloseButton id="closeButton" onClick={handleClickCloseLevellogModal}>
-            X
-          </S.CloseButton>
+          <S.CloseButton onClick={handleClickCloseLevellogModal}>X</S.CloseButton>
         </S.Header>
         <S.Levellog>
           <UiViewer content={levellog} />
         </S.Levellog>
         <S.Footer>
-          <Link to={`/pre-questions/teams/${teamId}/levellog/${levellogId}`}>
-            <Button>사전 질문 작성</Button>
-          </Link>
+          {loginUserId &&
+            userInTeam &&
+            (participant.preQuestionId ? (
+              <Link
+                to={`/pre-questions/teams/${teamId}/levellog/${levellogId}/pre-question/${preQuestionId}`}
+              >
+                <Button>사전 질문 수정</Button>
+              </Link>
+            ) : (
+              <Link to={`/pre-questions/teams/${teamId}/levellog/${levellogId}`}>
+                <Button>사전 질문 작성</Button>
+              </Link>
+            ))}
         </S.Footer>
       </S.Container>
     </ModalPortal>
@@ -80,6 +87,7 @@ const LevellogViewModal = ({
 interface LevellogViewModalProps {
   levellog: string;
   participant: ParticipantType;
+  userInTeam: Boolean;
   getTeam: () => void;
   onClickDeleteLevellog: ({
     teamId,

@@ -8,12 +8,12 @@ import { ParticipantType } from 'types/team';
 const usePreQuestionModal = () => {
   const { preQuestion, getPreQuestion, deletePreQuestion } = usePreQuestion();
   const [isPreQuestionModalOpen, setIsPreQuestionModalOpen] = useState(false);
-  const [participant1, setParticipant] = useState({} as ParticipantType);
+  const [preQuestionParticipant, setPreQuestionParticipant] = useState({} as ParticipantType);
 
   const onClickOpenPreQuestionModal = async ({ participant }: PreQuestionParticipantType) => {
     await getPreQuestion({ levellogId: participant.levellogId });
     setIsPreQuestionModalOpen(true);
-    setParticipant(participant);
+    setPreQuestionParticipant(participant);
   };
 
   const onClickDeletePreQuestion = async ({
@@ -34,7 +34,7 @@ const usePreQuestionModal = () => {
 
   return {
     preQuestion,
-    participant1,
+    preQuestionParticipant,
     isPreQuestionModalOpen,
     onClickOpenPreQuestionModal,
     onClickDeletePreQuestion,

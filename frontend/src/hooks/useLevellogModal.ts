@@ -8,12 +8,12 @@ import { ParticipantType } from 'types/team';
 const useLevellogModal = () => {
   const { levellog, getLevellog, deleteLevellog } = useLevellog();
   const [isLevellogModalOpen, setIsLevellogModalOpen] = useState(false);
-  const [participant, setParticipant] = useState({} as ParticipantType);
+  const [levellogParticipant, setLevellogParticipant] = useState({} as ParticipantType);
 
   const onClickOpenLevellogModal = async ({ teamId, participant }: LevellogParticipantType) => {
     await getLevellog({ teamId, levellogId: participant.levellogId });
     setIsLevellogModalOpen(true);
-    setParticipant(participant);
+    setLevellogParticipant(participant);
   };
 
   const onClickDeleteLevellog = async ({
@@ -30,7 +30,7 @@ const useLevellogModal = () => {
 
   return {
     levellog,
-    participant,
+    levellogParticipant,
     isLevellogModalOpen,
     deleteLevellog,
     onClickOpenLevellogModal,

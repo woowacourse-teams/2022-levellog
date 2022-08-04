@@ -93,6 +93,10 @@ const GlobalStyles = createGlobalStyle`
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+
+  :disabled {
+    cursor: inherit;
+  }
 `;
 
 export default GlobalStyles;

@@ -83,10 +83,10 @@ export const useTeams = () => {
 
 export const useTeam = () => {
   const { loginUserId } = useUser();
-  const accessToken = localStorage.getItem('accessToken');
   const [team, setTeam] = useState<InterviewTeamType | Object>({});
   // 나중에 location은 타입을 고칠 필요가 있어보임
   const location = useLocation() as { state: InterviewTeamType };
+  const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const { teamId } = useParams();
   const navigate = useNavigate();
   const teamLocationState: InterviewTeamType | undefined = location.state;
@@ -111,8 +111,9 @@ export const useTeam = () => {
     try {
       if (typeof teamId === 'string') {
         const res = await requestGetTeam({ teamId, accessToken });
-
         setTeam(res.data);
+
+        return res.data;
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -146,12 +147,6 @@ export const useTeam = () => {
         navigate(ROUTES_PATH.HOME);
       }
     }
-  };
-
-  useEffect(() => {
-    // 나중에 location은 타입을 고칠 필요가 있어보임
-  const checkUserInTeam = ({ team }: Record<'team', InterviewTeamType>) => {
-    setUserInTeam(team.participants.some((participant) => participant.memberId === loginUserId));
   };
 
   const onSubmitTeamAddForm = async ({ participants }: Record<'participants', MemberType[]>) => {
@@ -199,6 +194,8 @@ export const useTeam = () => {
     teamInfoRef.current[3].value = (team as unknown as InterviewTeamType).startAt.slice(-8);
   };
 
+  useEffect(() => {
+    // 나중에 location은 타입을 고칠 필요가 있어보임
     if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
       setTeam(teamLocationState);
     }
@@ -207,7 +204,6 @@ export const useTeam = () => {
   return {
     teamLocationState,
     team,
-    userInTeam,
     getTeam,
     teamInfoRef,
     getTeamOnRef,

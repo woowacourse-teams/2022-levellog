@@ -1,7 +1,7 @@
 import axios, { AxiosPromise } from 'axios';
 
 import { 엑세스토큰이없는경우헤더제거 } from 'apis/utils';
-import { TeamApiType, InterviewTeamType } from 'types/team';
+import { TeamApiType, InterviewTeamType, TeamEditApiType } from 'types/team';
 
 export const requestPostTeam = ({
   teamInfo,

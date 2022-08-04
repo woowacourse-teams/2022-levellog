@@ -17,7 +17,7 @@ import Interviewer from 'components/teams/Interviewer';
 import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
-  const { teamLocationState, team, userInTeam, getTeam, onClickDeleteTeamButton } = useTeam();
+  const { teamLocationState, team, getTeam, onClickDeleteTeamButton } = useTeam();
   const { loginUserId } = useUser();
   const {
     levellog,

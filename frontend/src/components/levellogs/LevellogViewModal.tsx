@@ -68,7 +68,9 @@ const LevellogViewModal = ({
           <UiViewer content={levellog} />
         </S.Levellog>
         <S.Footer>
-          <Button>사전 질문 작성</Button>
+          <Link to={`/pre-questions/teams/${teamId}/levellog/${levellogId}`}>
+            <Button>사전 질문 작성</Button>
+          </Link>
         </S.Footer>
       </S.Container>
     </ModalPortal>

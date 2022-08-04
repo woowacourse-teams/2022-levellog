@@ -1,7 +1,8 @@
 import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import profileDefaultImage from 'assets/images/defaultProfile.png';
-import { GITHUB_LOGIN_URL } from 'constants/constants';
+import { GITHUB_LOGIN_URL, ROUTES_PATH } from 'constants/constants';
 
 import { UserContext, UserDispatchContext } from 'contexts/userContext';
 
@@ -9,6 +10,7 @@ const useUser = () => {
   const { id, nickname, profileUrl } = useContext(UserContext);
   const userInfoDispatch = useContext(UserDispatchContext);
   const [isShowProfileDropdown, setIsShowProfileDropdown] = useState(false);
+  const navigate = useNavigate();
 
   const handleClickProfileImage = () => {
     setIsShowProfileDropdown((prev) => !prev);
@@ -23,6 +25,7 @@ const useUser = () => {
     localStorage.removeItem('accessToken');
     userInfoDispatch({ id: '', nickname: '', profileUrl: '' });
     setIsShowProfileDropdown(false);
+    navigate(ROUTES_PATH.HOME);
   };
 
   const handleClickLoginButton = () => {

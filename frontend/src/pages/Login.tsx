@@ -55,7 +55,6 @@ const Login = () => {
 
           return;
         }
-
         navigate(ROUTES_PATH.HOME);
       } catch (err: unknown) {
         if (axios.isAxiosError(err)) {

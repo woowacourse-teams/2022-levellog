@@ -7,12 +7,12 @@ import { ParticipantType } from 'types/team';
 
 const useLevellogModal = () => {
   const { levellog, getLevellog, deleteLevellog } = useLevellog();
-  const [isOnModal, setIsOnModal] = useState(false);
+  const [isLevellogModalOpen, setIsLevellogModalOpen] = useState(false);
   const [participant, setParticipant] = useState({} as ParticipantType);
 
-  const onClickToggleModal = async ({ teamId, participant }: LevellogParticipantType) => {
+  const onClickOpenLevellogModal = async ({ teamId, participant }: LevellogParticipantType) => {
     await getLevellog({ teamId, levellogId: participant.levellogId });
-    setIsOnModal((prev) => !prev);
+    setIsLevellogModalOpen(true);
     setParticipant(participant);
   };
 
@@ -21,22 +21,19 @@ const useLevellogModal = () => {
     levellogId,
   }: Omit<LevellogCustomHookType, 'inputValue'>) => {
     await deleteLevellog({ teamId, levellogId });
-    setIsOnModal(false);
+    setIsLevellogModalOpen(false);
   };
 
   const handleClickCloseLevellogModal = (e: React.MouseEvent<HTMLElement>) => {
-    const clickElement = e.target as HTMLElement;
-    if (clickElement.id === 'dimmer' || clickElement.id === 'closeButton') {
-      setIsOnModal(false);
-    }
+    setIsLevellogModalOpen(false);
   };
 
   return {
     levellog,
     participant,
-    isOnModal,
+    isLevellogModalOpen,
     deleteLevellog,
-    onClickToggleModal,
+    onClickOpenLevellogModal,
     onClickDeleteLevellog,
     handleClickCloseLevellogModal,
   };

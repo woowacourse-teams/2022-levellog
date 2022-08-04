@@ -4,73 +4,48 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
-import useUser from 'hooks/useUser';
-
 import Button from 'components/@commons/Button';
 import UiViewer from 'components/@commons/UiViewer';
-import { LevellogCustomHookType } from 'types/levellog';
+import { PreQuestionCustomHookType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
 
-const LevellogViewModal = ({
-  levellog,
+const PreQuestionViewModal = ({
+  preQuestion,
   participant,
   getTeam,
-  onClickDeleteLevellog,
-  handleClickCloseLevellogModal,
+  onClickDeletePreQuestion,
+  handleClickClosePreQuestionModal,
 }: LevellogViewModalProps) => {
-  const { memberId, levellogId, nickname } = participant;
+  const { memberId, levellogId, preQuestionId, nickname } = participant;
   const { teamId } = useParams();
-  const { loginUserId } = useUser();
 
   const handleClickDeleteLevellog = async () => {
-    if (teamId && levellogId) {
-      await onClickDeleteLevellog({ teamId, levellogId });
+    if (levellogId && preQuestionId) {
+      await onClickDeletePreQuestion({ levellogId, preQuestionId });
       getTeam();
     }
   };
 
-  if (memberId === loginUserId) {
-    return (
-      <ModalPortal>
-        <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal} />
-        <S.Container>
-          <S.Header>
-            <S.Title>{nickname}의 Levellog</S.Title>
-            <S.CloseButton id="closeButton" onClick={handleClickCloseLevellogModal}>
-              X
-            </S.CloseButton>
-          </S.Header>
-          <S.Levellog>
-            <UiViewer content={levellog} />
-          </S.Levellog>
-          <S.Footer>
-            <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
-              <Button>수정하기</Button>
-            </Link>
-            <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>
-          </S.Footer>
-        </S.Container>
-      </ModalPortal>
-    );
-  }
-
   return (
     <ModalPortal>
-      <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal} />
+      <S.Dimmer id="dimmer" onClick={handleClickClosePreQuestionModal} />
       <S.Container>
         <S.Header>
-          <S.Title>{nickname}의 Levellog</S.Title>
-          <S.CloseButton id="closeButton" onClick={handleClickCloseLevellogModal}>
+          <S.Title>{nickname}의 사전질문</S.Title>
+          <S.CloseButton id="closeButton" onClick={handleClickClosePreQuestionModal}>
             X
           </S.CloseButton>
         </S.Header>
         <S.Levellog>
-          <UiViewer content={levellog} />
+          <UiViewer content={preQuestion} />
         </S.Levellog>
         <S.Footer>
-          <Link to={`/pre-questions/teams/${teamId}/levellog/${levellogId}`}>
-            <Button>사전 질문 작성</Button>
+          <Link
+            to={`/pre-questions/teams/${teamId}/levellog/${levellogId}/pre-question/${preQuestionId}`}
+          >
+            <Button>수정하기</Button>
           </Link>
+          <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>
         </S.Footer>
       </S.Container>
     </ModalPortal>
@@ -78,14 +53,14 @@ const LevellogViewModal = ({
 };
 
 interface LevellogViewModalProps {
-  levellog: string;
+  preQuestion: string;
   participant: ParticipantType;
   getTeam: () => void;
-  onClickDeleteLevellog: ({
-    teamId,
+  onClickDeletePreQuestion: ({
     levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>) => Promise<void>;
-  handleClickCloseLevellogModal: (e: React.MouseEvent<HTMLElement>) => void;
+    preQuestionId,
+  }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => Promise<void>;
+  handleClickClosePreQuestionModal: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 const S = {
@@ -167,4 +142,4 @@ const S = {
   `,
 };
 
-export default LevellogViewModal;
+export default PreQuestionViewModal;

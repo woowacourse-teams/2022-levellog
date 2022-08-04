@@ -33,6 +33,8 @@ export interface InterviewTeamType {
   startAt: string;
   teamImage: string;
   hostId: string;
+  isClosed: Boolean;
+  isParticipant: Boolean;
   participants: ParticipantType[];
 }
 
@@ -41,4 +43,5 @@ export interface ParticipantType {
   levellogId: string;
   nickname: string;
   profileUrl: string;
+  preQuestionId: string;
 }

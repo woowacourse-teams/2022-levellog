@@ -32,12 +32,11 @@ public class PreQuestionService {
     public Long save(final PreQuestionDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getLevellog(levellogId);
         final Member questioner = getMember(memberId);
-        final PreQuestion preQuestion = request.toEntity(levellog, questioner);
 
         validatePreQuestionExistence(levellog, questioner);
         validateSameTeamMember(levellog.getTeam(), questioner);
 
-        return preQuestionRepository.save(preQuestion)
+        return preQuestionRepository.save(request.toEntity(levellog, questioner))
                 .getId();
     }
 

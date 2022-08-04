@@ -54,6 +54,7 @@ const InterviewDetail = () => {
         <LevellogViewModal
           levellog={levellog}
           participant={levellogParticipant}
+          userInTeam={(team as InterviewTeamType).isParticipant}
           getTeam={getTeam}
           onClickDeleteLevellog={onClickDeleteLevellog}
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}

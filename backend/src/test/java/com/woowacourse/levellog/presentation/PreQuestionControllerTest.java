@@ -3,17 +3,13 @@ package com.woowacourse.levellog.presentation;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
@@ -23,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("PreQuestionController의")
@@ -107,6 +101,31 @@ class PreQuestionControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("pre-question/create/exception/levellog-is-mine"));
+        }
+
+        @Test
+        @DisplayName("사전 질문이 이미 등록되었을 때 사전 질문을 등록하는 경우 예외를 던진다.")
+        void save_PreQuestionAlreadyExist_Exception() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
+
+            willThrow(new PreQuestionAlreadyExistException("사전 질문을 이미 작성하였습니다. levellogId : 1 authorId : 4"))
+                    .given(preQuestionService)
+                    .save(preQuestionDto, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, preQuestionDto);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("레벨로그의 사전 질문을 이미 작성했습니다."));
+
+            // docs
+            perform.andDo(document("pre-question/create/exception/already-exist"));
         }
     }
 

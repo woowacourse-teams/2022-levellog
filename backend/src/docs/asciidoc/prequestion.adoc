@@ -34,6 +34,11 @@ operation::pre-question/create/exception/not-participant[]
 
 operation::pre-question/create/exception/levellog-is-mine[]
 
+[[create-exception-already-exist]]
+==== 사전 질문이 이미 등록되었을 때 사전 질문을 등록하는 경우
+
+operation::pre-question/create/exception/already-exist[]
+
 [[find-my]]
 == 사전 질문 상세 조회
 

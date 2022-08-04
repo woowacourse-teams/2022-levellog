@@ -93,15 +93,30 @@ const InterviewDetail = () => {
           )}
         </S.Header>
         <S.Container>
-          {(team as InterviewTeamType).participants.map((participant: ParticipantType) => (
-            <Interviewer
-              key={participant.memberId}
-              participant={participant}
-              userInTeam={(team as InterviewTeamType).isParticipant}
-              onClickOpenLevellogModal={onClickOpenLevellogModal}
-              onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}
-            />
-          ))}
+          {(team as InterviewTeamType).participants.map((participant: ParticipantType) => {
+            const loginUserRole = {
+              interviewee: false,
+              interviewer: false,
+            };
+            if (loginUserId) {
+              loginUserRole.interviewee = (team as InterviewTeamType).interviewees.includes(
+                Number(participant.memberId),
+              );
+              loginUserRole.interviewer = (team as InterviewTeamType).interviewers.includes(
+                Number(participant.memberId),
+              );
+            }
+            return (
+              <Interviewer
+                key={participant.memberId}
+                participant={participant}
+                loginUserRole={loginUserRole}
+                userInTeam={(team as InterviewTeamType).isParticipant}
+                onClickOpenLevellogModal={onClickOpenLevellogModal}
+                onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}
+              />
+            );
+          })}
         </S.Container>
       </FlexBox>
     </>

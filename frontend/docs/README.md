@@ -119,7 +119,7 @@
 ### 팀 내 역할 알려주기
 
 - [ ] `FeedbackAdd`페이지에서 역할API를 이용하여 나의 역할 알려주기
-- [ ] `InterviewDetail`페이지에서 팀 조회 API 응답 변경에 대응해 역할을 알려준다
-  - [ ] `isClosed` -> 이 인터뷰 팀의 종료되었는지 여부
-  - [ ] `interviewers` -> 나(조회한 유저)를 인터뷰 할 참가자들
-  - [ ] `interviewees` -> 내(조회한 유저)가 인터뷰 할 참가자들
+- [x] `InterviewDetail`페이지에서 팀 조회 API 응답 변경에 대응해 역할을 알려준다
+  - [x] `isClosed` -> 이 인터뷰 팀의 종료되었는지 여부
+  - [x] `interviewers` -> 나(조회한 유저)를 인터뷰 할 참가자들
+  - [x] `interviewees` -> 내(조회한 유저)가 인터뷰 할 참가자들

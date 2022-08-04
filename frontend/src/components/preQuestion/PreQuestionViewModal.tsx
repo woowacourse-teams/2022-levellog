@@ -16,7 +16,7 @@ const PreQuestionViewModal = ({
   onClickDeletePreQuestion,
   handleClickClosePreQuestionModal,
 }: LevellogViewModalProps) => {
-  const { memberId, levellogId, preQuestionId, nickname } = participant;
+  const { levellogId, preQuestionId, nickname } = participant;
   const { teamId } = useParams();
 
   const handleClickDeleteLevellog = async () => {

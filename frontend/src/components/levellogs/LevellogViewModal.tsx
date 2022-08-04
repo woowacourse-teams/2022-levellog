@@ -18,7 +18,7 @@ const LevellogViewModal = ({
   onClickDeleteLevellog,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
-  const { memberId, levellogId, nickname } = participant;
+  const { memberId, levellogId, nickname, preQuestionId } = participant;
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
@@ -68,9 +68,17 @@ const LevellogViewModal = ({
           <UiViewer content={levellog} />
         </S.Levellog>
         <S.Footer>
-          <Link to={`/pre-questions/teams/${teamId}/levellog/${levellogId}`}>
-            <Button>사전 질문 작성</Button>
-          </Link>
+          {participant.preQuestionId ? (
+            <Link
+              to={`/pre-questions/teams/${teamId}/levellog/${levellogId}/pre-question/${preQuestionId}`}
+            >
+              <Button>사전 질문 수정</Button>
+            </Link>
+          ) : (
+            <Link to={`/pre-questions/teams/${teamId}/levellog/${levellogId}`}>
+              <Button>사전 질문 작성</Button>
+            </Link>
+          )}
         </S.Footer>
       </S.Container>
     </ModalPortal>

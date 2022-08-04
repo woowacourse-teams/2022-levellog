@@ -15,6 +15,7 @@ import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
+import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
@@ -56,8 +57,13 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    public TeamsDto findAll(final Long memberId) {
-        return new TeamsDto(getTeamResponses(teamRepository.findAll(), memberId));
+    public TeamAndRolesDto findAll(final Long memberId) {
+        final List<Team> teams = teamRepository.findAll();
+        final List<TeamAndRoleDto> teamAndRoles = teams.stream()
+                .map(it -> findByTeamIdAndMemberId(it.getId(), memberId))
+                .collect(Collectors.toList());
+
+        return new TeamAndRolesDto(teamAndRoles);
     }
 
     public TeamsDto findAllByMemberId(final Long memberId) {

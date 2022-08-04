@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.InterviewRole;
@@ -15,10 +15,10 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
+import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
@@ -54,32 +54,32 @@ class TeamServiceTest extends ServiceTest {
         team2.close(LocalDateTime.now().plusDays(5));
 
         //when
-        final TeamsDto response = teamService.findAll(member1.getId());
+        final TeamAndRolesDto response = teamService.findAll(member1.getId());
 
         //then
         final List<String> actualTitles = response.getTeams()
                 .stream()
-                .map(TeamDto::getTitle)
+                .map(TeamAndRoleDto::getTitle)
                 .collect(Collectors.toList());
 
         final List<Long> actualHostIds = response.getTeams()
                 .stream()
-                .map(TeamDto::getHostId)
+                .map(TeamAndRoleDto::getHostId)
                 .collect(Collectors.toList());
 
         final List<Integer> actualParticipantSizes = response.getTeams()
                 .stream()
-                .map(TeamDto::getParticipants)
+                .map(TeamAndRoleDto::getParticipants)
                 .map(List::size)
                 .collect(Collectors.toList());
 
         final List<Boolean> actualCloseStatuses = response.getTeams()
                 .stream()
-                .map(TeamDto::getIsClosed)
+                .map(TeamAndRoleDto::getIsClosed)
                 .collect(Collectors.toList());
 
         final List<Boolean> actualIsParticipants = response.getTeams()
-                .stream().map(TeamDto::getIsParticipant)
+                .stream().map(TeamAndRoleDto::getIsParticipant)
                 .collect(Collectors.toList());
 
         assertAll(

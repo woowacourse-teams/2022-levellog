@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { RoleApiType } from 'types/role';
 
-export const requestGetMyRole = ({ teamId, participantId, accessToken }: RoleApiType) => {
+export const requestGetLoginUserRole = ({ teamId, participantId, accessToken }: RoleApiType) => {
   return axios({
     method: 'get',
     headers: { Authorization: `Bearer ${accessToken}` },

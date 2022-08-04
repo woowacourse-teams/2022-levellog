@@ -11,13 +11,13 @@ import Image from 'components/@commons/Image';
 import Role from 'components/@commons/role';
 import { LevellogParticipantType } from 'types/levellog';
 import { PreQuestionParticipantType } from 'types/preQuestion';
-import { LoginUserRoleType } from 'types/role';
+import { RoleType } from 'types/role';
 import { ParticipantType } from 'types/team';
 
 const Interviewer = ({
   participant,
   userInTeam,
-  loginUserRole,
+  role,
   onClickOpenLevellogModal,
   onClickOpenPreQuestionModal,
 }: InterviewerProps) => {
@@ -79,8 +79,8 @@ const Interviewer = ({
   return (
     <S.Container>
       <S.Profile>
-        {loginUserRole.interviewee && <Role role={'인터뷰이'} />}
-        {loginUserRole.interviewer && <Role role={'인터뷰어'} />}
+        {role.interviewee && <Role role={'인터뷰이'} />}
+        {role.interviewer && <Role role={'인터뷰어'} />}
         <Image src={participant.profileUrl} sizes={'HUGE'} />
         <S.Nickname>
           <p>{participant.nickname}</p>
@@ -125,7 +125,7 @@ const Interviewer = ({
 
 interface InterviewerProps {
   participant: ParticipantType;
-  loginUserRole: LoginUserRoleType;
+  role: RoleType;
   userInTeam: Boolean;
   onClickOpenLevellogModal: ({ teamId, participant }: LevellogParticipantType) => void;
   onClickOpenPreQuestionModal: ({ participant }: PreQuestionParticipantType) => void;

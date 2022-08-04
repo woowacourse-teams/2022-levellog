@@ -5,18 +5,18 @@ import axios, { AxiosResponse } from 'axios';
 
 import { ROUTES_PATH } from 'constants/constants';
 
-import { requestGetMyRole } from 'apis/role';
+import { requestGetLoginUserRole } from 'apis/role';
 import { RoleApiType } from 'types/role';
 
 const useRole = () => {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accessToken');
-  const [myRole, setMyRole] = useState('');
+  const [loginUserRole, setLoginUserRole] = useState('');
 
-  const getMyRole = async ({ teamId, participantId }: Omit<RoleApiType, 'accessToken'>) => {
+  const getLoginUserRole = async ({ teamId, participantId }: Omit<RoleApiType, 'accessToken'>) => {
     try {
-      const res = await requestGetMyRole({ teamId, participantId, accessToken });
-      setMyRole(res.data);
+      const res = await requestGetLoginUserRole({ teamId, participantId, accessToken });
+      setLoginUserRole(res.data.myRole);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
@@ -27,8 +27,8 @@ const useRole = () => {
   };
 
   return {
-    myRole,
-    getMyRole,
+    loginUserRole,
+    getLoginUserRole,
   };
 };
 

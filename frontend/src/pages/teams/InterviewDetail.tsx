@@ -48,6 +48,8 @@ const InterviewDetail = () => {
 
   if (team && Object.keys(team).length === 0) return <div>실패</div>;
 
+  console.log(team);
+
   return (
     <>
       {isLevellogModalOpen && (
@@ -94,15 +96,15 @@ const InterviewDetail = () => {
         </S.Header>
         <S.Container>
           {(team as InterviewTeamType).participants.map((participant: ParticipantType) => {
-            const loginUserRole = {
+            const role = {
               interviewee: false,
               interviewer: false,
             };
             if (loginUserId) {
-              loginUserRole.interviewee = (team as InterviewTeamType).interviewees.includes(
+              role.interviewee = (team as InterviewTeamType).interviewees.includes(
                 Number(participant.memberId),
               );
-              loginUserRole.interviewer = (team as InterviewTeamType).interviewers.includes(
+              role.interviewer = (team as InterviewTeamType).interviewers.includes(
                 Number(participant.memberId),
               );
             }
@@ -110,7 +112,7 @@ const InterviewDetail = () => {
               <Interviewer
                 key={participant.memberId}
                 participant={participant}
-                loginUserRole={loginUserRole}
+                role={role}
                 userInTeam={(team as InterviewTeamType).isParticipant}
                 onClickOpenLevellogModal={onClickOpenLevellogModal}
                 onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}

@@ -13,7 +13,7 @@ const Role = ({ role }: RoleProp) => {
       ) : (
         <Image src={MicImage} sizes={'SMALL'} />
       )}
-      <RoleText>{role}</RoleText>
+      <RoleText>{`나의 ${role}`}</RoleText>
     </RoleStyle>
   );
 };
@@ -29,7 +29,7 @@ const RoleStyle = styled.div`
   position: absolute;
   top: -10px;
   left: -50px;
-  width: 84px;
+  width: 114px;
   height: 35px;
   padding: 3px;
   box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.default.GRAY};

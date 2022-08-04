@@ -4,7 +4,7 @@ export interface RoleApiType {
   accessToken: string | null;
 }
 
-export interface LoginUserRoleType {
+export interface RoleType {
   interviewee: boolean;
   interviewer: boolean;
 }

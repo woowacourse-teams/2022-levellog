@@ -18,7 +18,6 @@ const useMember = () => {
   const [nicknameValue, setNicknameValue] = useState('');
   const accessToken = localStorage.getItem('accessToken');
   const { isThrottle } = useUtil();
-  console.log(id, nickname, profileUrl);
   const [participants, setParticipants] = useState<MemberType[]>([{ id, nickname, profileUrl }]);
 
   const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {

@@ -6,6 +6,8 @@ import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
+import com.woowacourse.levellog.prequestion.domain.PreQuestion;
+import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -42,6 +44,7 @@ public class TeamService {
     private final ParticipantRepository participantRepository;
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
+    private final PreQuestionRepository preQuestionRepository;
     private final TimeStandard timeStandard;
 
     @Transactional
@@ -80,7 +83,7 @@ public class TeamService {
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
         return TeamAndRoleDto.from(team, participants.toHostId(), interviewers, interviewees,
-                getParticipantResponses(participants), participants.isContains(memberId));
+                getParticipantResponses(participants, memberId), participants.isContains(memberId));
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
@@ -181,24 +184,35 @@ public class TeamService {
         final Participants participants = new Participants(participantRepository.findByTeam(team));
 
         return TeamDto.from(team, participants.toHostId(), participants.isContains(memberId),
-                getParticipantResponses(participants));
+                getParticipantResponses(participants, memberId));
     }
 
-    private List<ParticipantDto> getParticipantResponses(final Participants participants) {
+    private List<ParticipantDto> getParticipantResponses(final Participants participants, final Long memberId) {
         return participants.getValues().stream()
-                .map(it -> ParticipantDto.from(it, getLevellogId(it)))
+                .map(it -> createParticipantDto(it, memberId))
                 .collect(Collectors.toList());
     }
 
-    private Long getLevellogId(final Participant participant) {
-        final Levellog levellog = levellogRepository
-                .findByAuthorIdAndTeamId(participant.getMember().getId(), participant.getTeam().getId())
-                .orElse(null);
+    private ParticipantDto createParticipantDto(final Participant participant, final Long memberId) {
+        final Levellog levellog = getLevellog(participant);
 
         if (levellog == null) {
-            return null;
+            return ParticipantDto.from(participant, null, null);
         }
-        return levellog.getId();
+
+        return ParticipantDto.from(participant, levellog.getId(), getPreQuestionId(memberId, levellog));
+    }
+
+    private Levellog getLevellog(final Participant participant) {
+        return levellogRepository
+                .findByAuthorIdAndTeamId(participant.getMember().getId(), participant.getTeam().getId())
+                .orElse(null);
+    }
+
+    private Long getPreQuestionId(final Long memberId, final Levellog levellog) {
+        return preQuestionRepository.findByLevellogAndAuthorId(levellog, memberId)
+                .map(PreQuestion::getId)
+                .orElse(null);
     }
 
     private void validateHost(final Long memberId, final Team team) {

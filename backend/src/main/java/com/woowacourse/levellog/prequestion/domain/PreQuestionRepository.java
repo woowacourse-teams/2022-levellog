@@ -10,4 +10,6 @@ public interface PreQuestionRepository extends JpaRepository<PreQuestion, Long> 
     Optional<PreQuestion> findByIdAndAuthor(Long id, Member author);
 
     Optional<PreQuestion> findByLevellogAndAuthor(Levellog levellog, Member author);
+
+    Optional<PreQuestion> findByLevellogAndAuthorId(Levellog levellog, Long memberId);
 }

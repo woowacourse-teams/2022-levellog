@@ -73,4 +73,23 @@ class PreQuestionRepositoryTest {
         // then
         assertThat(actual).hasValue(preQuestion);
     }
+
+    @Test
+    @DisplayName("findByLevellogAndAuthorId 메서드는 Levellog와 AuthorId가 같은 사전 질문을 반환한다.")
+    void findByLevellogAndAuthorId() {
+        // given
+        final Member levellogAuthor = memberRepository.save(new Member("알린", 12345678, "알린.img"));
+        final Team team = teamRepository.save(new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
+        final Levellog levellog = levellogRepository.save(Levellog.of(levellogAuthor, team, "알린의 레벨로그"));
+
+        final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
+        final String content = "로마가 쓴 사전 질문입니다.";
+        final PreQuestion preQuestion = preQuestionRepository.save(new PreQuestion(levellog, questioner, content));
+
+        // when
+        final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthorId(levellog, questioner.getId());
+
+        // then
+        assertThat(actual).hasValue(preQuestion);
+    }
 }

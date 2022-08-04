@@ -32,32 +32,7 @@ const LevellogViewModal = ({
   if (memberId === loginUserId) {
     return (
       <ModalPortal>
-        <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal}>
-          <S.Container>
-            <S.Header>
-              <S.Title>{nickname}의 Levellog</S.Title>
-              <S.CloseButton id="closeButton" onClick={handleClickCloseLevellogModal}>
-                X
-              </S.CloseButton>
-            </S.Header>
-            <S.Levellog>
-              <UiViewer content={levellog} />
-            </S.Levellog>
-            <S.Footer>
-              <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
-                <Button>수정하기</Button>
-              </Link>
-              <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>
-            </S.Footer>
-          </S.Container>
-        </S.Dimmer>
-      </ModalPortal>
-    );
-  }
-
-  return (
-    <ModalPortal>
-      <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal}>
+        <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal} />
         <S.Container>
           <S.Header>
             <S.Title>{nickname}의 Levellog</S.Title>
@@ -69,10 +44,33 @@ const LevellogViewModal = ({
             <UiViewer content={levellog} />
           </S.Levellog>
           <S.Footer>
-            <Button>사전 질문 작성</Button>
+            <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
+              <Button>수정하기</Button>
+            </Link>
+            <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>
           </S.Footer>
         </S.Container>
-      </S.Dimmer>
+      </ModalPortal>
+    );
+  }
+
+  return (
+    <ModalPortal>
+      <S.Dimmer id="dimmer" onClick={handleClickCloseLevellogModal} />
+      <S.Container>
+        <S.Header>
+          <S.Title>{nickname}의 Levellog</S.Title>
+          <S.CloseButton id="closeButton" onClick={handleClickCloseLevellogModal}>
+            X
+          </S.CloseButton>
+        </S.Header>
+        <S.Levellog>
+          <UiViewer content={levellog} />
+        </S.Levellog>
+        <S.Footer>
+          <Button>사전 질문 작성</Button>
+        </S.Footer>
+      </S.Container>
     </ModalPortal>
   );
 };

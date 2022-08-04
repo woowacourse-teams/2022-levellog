@@ -3,25 +3,35 @@ import { useEffect } from 'react';
 import styled, { CSSProperties } from 'styled-components';
 
 import useLevellogModal from 'hooks/useLevellogModal';
+import usePreQuestionModal from 'hooks/usePreQuestionModal';
 import { useTeam } from 'hooks/useTeams';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
+import PreQuestionViewModal from 'components/preQuestion/preQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
 import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
-  const { teamLocationState, team, userInTeam, getTeam } = useTeam();
+  const { teamLocationState, team, getTeam } = useTeam();
   const {
     levellog,
     participant,
-    isOnModal,
-    onClickToggleModal,
+    isLevellogModalOpen,
+    onClickOpenLevellogModal,
     onClickDeleteLevellog,
     handleClickCloseLevellogModal,
   } = useLevellogModal();
+  const {
+    preQuestion,
+    participant1,
+    isPreQuestionModalOpen,
+    onClickOpenPreQuestionModal,
+    onClickDeletePreQuestion,
+    handleClickClosePreQuestionModal,
+  } = usePreQuestionModal();
 
   useEffect(() => {
     if (!teamLocationState) {
@@ -33,13 +43,22 @@ const InterviewDetail = () => {
 
   return (
     <>
-      {isOnModal === true && (
+      {isLevellogModalOpen && (
         <LevellogViewModal
           levellog={levellog}
           participant={participant}
           getTeam={getTeam}
           onClickDeleteLevellog={onClickDeleteLevellog}
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}
+        />
+      )}
+      {isPreQuestionModalOpen && (
+        <PreQuestionViewModal
+          preQuestion={preQuestion}
+          participant={participant1}
+          getTeam={getTeam}
+          onClickDeletePreQuestion={onClickDeletePreQuestion}
+          handleClickClosePreQuestionModal={handleClickClosePreQuestionModal}
         />
       )}
       <FlexBox gap={4.375}>
@@ -63,8 +82,9 @@ const InterviewDetail = () => {
             <Interviewer
               key={participant.memberId}
               participant={participant}
-              userInTeam={userInTeam}
-              onClickToggleModal={onClickToggleModal}
+              userInTeam={(team as InterviewTeamType).isParticipant}
+              onClickOpenLevellogModal={onClickOpenLevellogModal}
+              onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}
             />
           ))}
         </S.Container>

@@ -101,7 +101,7 @@ class PreQuestionRepositoryTest {
     class ExistsByLevellogAndAuthorTest {
 
         @Test
-        @DisplayName("levellogId와 authorId가 모두 일치하는 레벨로그가 존재하는 경우 true를 반환한다.")
+        @DisplayName("levellog와 사전 질문의 author가 모두 일치하는 사전 질문이 존재하는 경우 true를 반환한다.")
         void exists() {
             // given
             final Member levellogAuthor = memberRepository.save(new Member("알린", 12345678, "알린.img"));
@@ -120,7 +120,7 @@ class PreQuestionRepositoryTest {
         }
 
         @Test
-        @DisplayName("memberId와 teamId이 모두 일치하는 레벨로그가 존재하지 않는 경우 false를 반환한다.")
+        @DisplayName("levellog와 사전 질문의 author가 모두 일치하는 사전 질문이 존재하지 않는 경우 false를 반환한다.")
         void notExists() {
             // given
             final Member levellogAuthor = memberRepository.save(new Member("알린", 12345678, "알린.img"));

@@ -1,5 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 
+import { 엑세스토큰이없는경우헤더제거 } from 'apis/utils';
 import { TeamApiType, InterviewTeamType } from 'types/team';
 
 export const requestPostTeam = ({
@@ -14,18 +15,29 @@ export const requestPostTeam = ({
   });
 };
 
-export const requestGetTeams = (): AxiosPromise<Record<'teams', InterviewTeamType[]>> => {
-  return axios({
-    method: 'get',
-    url: `${process.env.API_URI}/teams`,
-  });
+export const requestGetTeams = ({
+  accessToken,
+}: Pick<TeamApiType, 'accessToken'>): AxiosPromise<Record<'teams', InterviewTeamType[]>> => {
+  return axios(
+    엑세스토큰이없는경우헤더제거({
+      accessToken,
+      method: 'get',
+      url: `${process.env.API_URI}/teams`,
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }),
+  );
 };
 
 export const requestGetTeam = ({
   teamId,
-}: Pick<TeamApiType, 'teamId'>): AxiosPromise<InterviewTeamType> => {
-  return axios({
-    method: 'get',
-    url: `${process.env.API_URI}/teams/${teamId}`,
-  });
+  accessToken,
+}: Omit<TeamApiType, 'teamInfo'>): AxiosPromise<InterviewTeamType> => {
+  return axios(
+    엑세스토큰이없는경우헤더제거({
+      accessToken,
+      method: 'get',
+      url: `${process.env.API_URI}/teams/${teamId}`,
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }),
+  );
 };

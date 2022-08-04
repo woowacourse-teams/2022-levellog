@@ -8,6 +8,7 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -31,10 +32,12 @@ public class PreQuestionService {
     public Long save(final PreQuestionDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getLevellog(levellogId);
         final Member questioner = getMember(memberId);
+        final PreQuestion preQuestion = request.toEntity(levellog, questioner);
 
+        validatePreQuestionExistence(levellog, questioner);
         validateSameTeamMember(levellog.getTeam(), questioner);
 
-        return preQuestionRepository.save(request.toEntity(levellog, questioner))
+        return preQuestionRepository.save(preQuestion)
                 .getId();
     }
 
@@ -93,6 +96,14 @@ public class PreQuestionService {
         final Participants participants = new Participants(participantRepository.findByTeam(team));
 
         participants.validateExistsMember(member);
+    }
+
+    private void validatePreQuestionExistence(final Levellog levellog, final Member questioner) {
+        final boolean isExists = preQuestionRepository.existsByLevellogAndAuthor(levellog, questioner);
+        if (isExists) {
+            throw new PreQuestionAlreadyExistException(
+                    "사전 질문을 이미 작성하였습니다. levellogId : " + levellog.getId() + " authorId : " + questioner.getId());
+        }
     }
 
     private void validateLevellog(final PreQuestion preQuestion, final Levellog levellog) {

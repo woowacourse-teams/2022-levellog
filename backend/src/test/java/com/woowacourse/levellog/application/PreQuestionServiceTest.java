@@ -10,6 +10,7 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
@@ -93,6 +94,31 @@ public class PreQuestionServiceTest extends ServiceTest {
             assertThatThrownBy(() -> preQuestionService.save(preQuestionDto, levellog.getId(), author.getId()))
                     .isInstanceOf(InvalidPreQuestionException.class)
                     .hasMessageContaining("자기 자신에게 사전 질문을 등록할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("사전 질문이 이미 등록되었을 때 사전 질문을 등록하는 경우 예외를 던진다.")
+        void save_PreQuestionAlreadyExist_Exception() {
+            // given
+            final String preQuestion = "알린이 쓴 사전 질문";
+            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
+
+            final Team team = saveAndGetTeam("선릉 네오조", "목성방", "네오조.img");
+            final Member author = saveAndGetMember("알린", 12345678, "알린.img");
+            final Member questioner = saveAndGetMember("로마", 56781234, "로마.img");
+            final Levellog levellog = saveAndGetLevellog(author, team, "알린의 레벨로그");
+
+            participantRepository.save(new Participant(team, author, true));
+            participantRepository.save(new Participant(team, questioner, false));
+
+            preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId());
+
+            // when, then
+            assertThatThrownBy(() -> preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId()))
+                    .isInstanceOf(PreQuestionAlreadyExistException.class)
+                    .hasMessageContainingAll("사전 질문을 이미 작성하였습니다.",
+                            String.valueOf(levellog.getId()),
+                            String.valueOf(questioner.getId()));
         }
     }
 

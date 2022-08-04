@@ -1,6 +1,8 @@
 package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -14,6 +16,7 @@ import com.woowacourse.levellog.team.domain.TeamRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -91,5 +94,45 @@ class PreQuestionRepositoryTest {
 
         // then
         assertThat(actual).hasValue(preQuestion);
+    }
+
+    @Nested
+    @DisplayName("existsByLevellogAndAuthor 메서드는")
+    class ExistsByLevellogAndAuthorTest {
+
+        @Test
+        @DisplayName("levellogId와 authorId가 모두 일치하는 레벨로그가 존재하는 경우 true를 반환한다.")
+        void exists() {
+            // given
+            final Member levellogAuthor = memberRepository.save(new Member("알린", 12345678, "알린.img"));
+            final Team team = teamRepository.save(new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
+            final Levellog levellog = levellogRepository.save(Levellog.of(levellogAuthor, team, "알린의 레벨로그"));
+
+            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
+            final String content = "로마가 쓴 사전 질문입니다.";
+            preQuestionRepository.save(new PreQuestion(levellog, questioner, content));
+
+            // when
+            final boolean actual = preQuestionRepository.existsByLevellogAndAuthor(levellog, questioner);
+
+            // then
+            assertTrue(actual);
+        }
+
+        @Test
+        @DisplayName("memberId와 teamId이 모두 일치하는 레벨로그가 존재하지 않는 경우 false를 반환한다.")
+        void notExists() {
+            // given
+            final Member levellogAuthor = memberRepository.save(new Member("알린", 12345678, "알린.img"));
+            final Team team = teamRepository.save(new Team("선릉 네오조", "목성방", LocalDateTime.now().plusDays(3), "네오조.img", 1));
+            final Levellog levellog = levellogRepository.save(Levellog.of(levellogAuthor, team, "알린의 레벨로그"));
+            final Member questioner = memberRepository.save(new Member("로마", 56781234, "로마.img"));
+
+            // when
+            final boolean actual = preQuestionRepository.existsByLevellogAndAuthor(levellog, questioner);
+
+            // then
+            assertFalse(actual);
+        }
     }
 }

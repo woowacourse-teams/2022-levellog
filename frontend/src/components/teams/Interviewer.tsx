@@ -8,7 +8,7 @@ import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
-import Role from 'components/@commons/role';
+import Role from 'components/@commons/Role';
 import { LevellogParticipantType } from 'types/levellog';
 import { PreQuestionParticipantType } from 'types/preQuestion';
 import { RoleType } from 'types/role';

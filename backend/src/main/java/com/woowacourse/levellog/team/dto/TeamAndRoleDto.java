@@ -24,12 +24,14 @@ public class TeamAndRoleDto {
     private String teamImage;
     private Long hostId;
     private Boolean isClosed;
+    private Boolean isParticipant;
     private List<Long> interviewers;
     private List<Long> interviewees;
     private List<ParticipantDto> participants;
 
     public static TeamAndRoleDto from(final Team team, final Long hostId, final List<Long> interviewers,
-                                      final List<Long> interviewees, final List<ParticipantDto> participantResponses) {
+                                      final List<Long> interviewees, final List<ParticipantDto> participantResponses,
+                                      final Boolean isParticipant) {
         return new TeamAndRoleDto(
                 team.getId(),
                 team.getTitle(),
@@ -38,6 +40,7 @@ public class TeamAndRoleDto {
                 team.getProfileUrl(),
                 hostId,
                 team.isClosed(),
+                isParticipant,
                 interviewers,
                 interviewees,
                 participantResponses

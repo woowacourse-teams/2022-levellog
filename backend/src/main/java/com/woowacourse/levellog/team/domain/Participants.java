@@ -19,7 +19,7 @@ public class Participants {
     private final List<Participant> values;
 
     public List<Long> toInterviewerIds(final Long memberId, final int interviewerNumber) {
-        if (notContains(memberId)) {
+        if (!isContains(memberId)) {
             return Collections.emptyList();
         }
 
@@ -30,7 +30,7 @@ public class Participants {
     }
 
     public List<Long> toIntervieweeIds(final Long memberId, final int interviewerNumber) {
-        if (notContains(memberId)) {
+        if (!isContains(memberId)) {
             return Collections.emptyList();
         }
 
@@ -71,11 +71,11 @@ public class Participants {
         return values.size();
     }
 
-    private boolean notContains(final Long memberId) {
+    public boolean isContains(final Long memberId) {
         return values.stream()
                 .map(Participant::getMember)
                 .map(BaseEntity::getId)
-                .noneMatch(it -> it.equals(memberId));
+                .anyMatch(it -> it.equals(memberId));
     }
 
     private List<Long> concatSameTwice(final List<Long> participantIds) {
@@ -93,10 +93,10 @@ public class Participants {
     }
 
     private void validateParticipant(final Long teamId, final Long targetMemberId, final Long memberId) {
-        if (notContains(memberId)) {
+        if (!isContains(memberId)) {
             throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
         }
-        if (notContains(targetMemberId)) {
+        if (!isContains(targetMemberId)) {
             throw new ParticipantNotFoundException("memberId : " + targetMemberId + "에 해당하는 member는 "
                     + "teamId : " + teamId + "의 참가자가 아닙니다.");
         }

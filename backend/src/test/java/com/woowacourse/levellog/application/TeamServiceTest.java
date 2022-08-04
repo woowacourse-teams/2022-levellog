@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.InterviewRole;
@@ -15,10 +15,10 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
+import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
@@ -41,47 +41,53 @@ class TeamServiceTest extends ServiceTest {
         //given
         final Member member1 = saveAndGetMember("릭");
         final Member member2 = saveAndGetMember("페퍼");
+        final Member member3 = saveAndGetMember("로마");
 
         final Team team1 = saveAndGetTeam("잠실 제이슨조", 1);
         final Team team2 = saveAndGetTeam("선릉 브라운조", 1);
 
-        participantRepository.save(new Participant(team1, member1, true));
-        participantRepository.save(new Participant(team1, member2, false));
-        participantRepository.save(new Participant(team2, member1, false));
-        participantRepository.save(new Participant(team2, member2, true));
+        participantRepository.save(new Participant(team1, member2, true));
+        participantRepository.save(new Participant(team1, member3, false));
+        participantRepository.save(new Participant(team2, member1, true));
+        participantRepository.save(new Participant(team2, member2, false));
 
         team2.close(LocalDateTime.now().plusDays(5));
 
         //when
-        final TeamsDto response = teamService.findAll();
+        final TeamAndRolesDto response = teamService.findAll(member1.getId());
 
         //then
         final List<String> actualTitles = response.getTeams()
                 .stream()
-                .map(TeamDto::getTitle)
+                .map(TeamAndRoleDto::getTitle)
                 .collect(Collectors.toList());
 
         final List<Long> actualHostIds = response.getTeams()
                 .stream()
-                .map(TeamDto::getHostId)
+                .map(TeamAndRoleDto::getHostId)
                 .collect(Collectors.toList());
 
         final List<Integer> actualParticipantSizes = response.getTeams()
                 .stream()
-                .map(TeamDto::getParticipants)
+                .map(TeamAndRoleDto::getParticipants)
                 .map(List::size)
                 .collect(Collectors.toList());
 
         final List<Boolean> actualCloseStatuses = response.getTeams()
                 .stream()
-                .map(TeamDto::getIsClosed)
+                .map(TeamAndRoleDto::getIsClosed)
+                .collect(Collectors.toList());
+
+        final List<Boolean> actualIsParticipants = response.getTeams()
+                .stream().map(TeamAndRoleDto::getIsParticipant)
                 .collect(Collectors.toList());
 
         assertAll(
                 () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
                 () -> assertThat(actualHostIds).contains(member1.getId(), member2.getId()),
                 () -> assertThat(actualParticipantSizes).contains(2, 2),
-                () -> assertThat(actualCloseStatuses).contains(false, true),
+                () -> assertThat(actualCloseStatuses).containsExactly(false, true),
+                () -> assertThat(actualIsParticipants).containsExactly(false, true),
                 () -> assertThat(response.getTeams()).hasSize(2)
         );
     }
@@ -156,35 +162,8 @@ class TeamServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("findById 메서드는")
-    class findById {
-
-        @Test
-        @DisplayName("id에 해당하는 팀을 조회한다.")
-        void findById() {
-            //given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1);
-
-            participantRepository.save(new Participant(team, member1, true));
-            participantRepository.save(new Participant(team, member2, false));
-
-            //when
-            final TeamDto response = teamService.findById(team.getId());
-
-            //then
-            assertAll(
-                    () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
-                    () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
-                    () -> assertThat(response.getParticipants()).hasSize(2)
-            );
-        }
-    }
-
-    @Nested
     @DisplayName("findMyRole 메서드는")
-    class findMyRole {
+    class FindMyRole {
 
         @Test
         @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - interviewer")
@@ -277,7 +256,7 @@ class TeamServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("findByTeamIdAndMemberId 메서드는")
-    class findByTeamIdAndMemberId {
+    class FindByTeamIdAndMemberId {
 
         @Test
         @DisplayName("id에 해당하는 팀을 조회한다.")
@@ -313,11 +292,11 @@ class TeamServiceTest extends ServiceTest {
 
         @Nested
         @DisplayName("요청한 유저가 팀에 참가자일 때")
-        class participantRequest {
+        class ParticipantRequest {
 
             @Test
-            @DisplayName("인터뷰어와 인터뷰이를 포함해서 응답한다.")
-            void findById() {
+            @DisplayName("인터뷰어와 인터뷰이, isParticipant를 true로 응답한다.")
+            void findByTeamIdAndMemberId() {
                 //given
                 final Member rick = saveAndGetMember("릭");
                 final Member pepper = saveAndGetMember("페퍼");
@@ -339,19 +318,22 @@ class TeamServiceTest extends ServiceTest {
                         () -> assertThat(responseOfPepper.getTitle()).isEqualTo(team.getTitle()),
                         () -> assertThat(responseOfPepper.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(responseOfPepper.getParticipants()).hasSize(5),
+                        () -> assertThat(responseOfPepper.getIsParticipant()).isTrue(),
 
                         () -> assertThat(responseOfPepper.getInterviewers()).containsExactly(roma.getId(),
                                 alien.getId()),
                         () -> assertThat(responseOfPepper.getInterviewees()).containsExactly(eve.getId(), rick.getId()),
 
                         () -> assertThat(responseOfEve.getInterviewers()).containsExactly(rick.getId(), pepper.getId()),
-                        () -> assertThat(responseOfEve.getInterviewees()).containsExactly(roma.getId(), alien.getId())
+                        () -> assertThat(responseOfEve.getInterviewees()).containsExactly(roma.getId(), alien.getId()),
+                        () -> assertThat(responseOfPepper.getIsParticipant()).isTrue()
+
                 );
             }
 
             @Test
             @DisplayName("참가자가 3명이고, 인터뷰어 수는 2명이면 인터뷰어와 인터뷰이가 동일하다.")
-            void findById_manyInterviewerNumber() {
+            void findByTeamIdAndMemberId_manyInterviewerNumber() {
                 //given
                 final Member rick = saveAndGetMember("릭");
                 final Member pepper = saveAndGetMember("페퍼");
@@ -381,8 +363,8 @@ class TeamServiceTest extends ServiceTest {
         class NotParticipantRequest {
 
             @Test
-            @DisplayName("인터뷰어와 인터뷰이가 빈 상태로 응답한다.")
-            void findById() {
+            @DisplayName("인터뷰어와 인터뷰이가 빈 상태이고 isParticipant를 false로 응답한다.")
+            void findByTeamIdAndMemberId() {
                 //given
                 final Member member1 = saveAndGetMember("릭");
                 final Member member2 = saveAndGetMember("페퍼");
@@ -402,7 +384,8 @@ class TeamServiceTest extends ServiceTest {
                         () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
                         () -> assertThat(response.getParticipants()).hasSize(3),
                         () -> assertThat(response.getInterviewers()).isEmpty(),
-                        () -> assertThat(response.getInterviewees()).isEmpty()
+                        () -> assertThat(response.getInterviewees()).isEmpty(),
+                        () -> assertThat(response.getIsParticipant()).isFalse()
                 );
             }
         }
@@ -410,7 +393,7 @@ class TeamServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("update 메서드는")
-    class update {
+    class Update {
 
         @Test
         @DisplayName("id에 해당하는 팀 정보를 변경한다.")
@@ -511,7 +494,7 @@ class TeamServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("delete 메서드는")
-    class delete {
+    class Delete {
 
         @Test
         @DisplayName("delete 메서드는 id에 해당하는 팀을 삭제한다.")

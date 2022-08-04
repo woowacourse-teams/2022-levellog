@@ -4,6 +4,12 @@ export interface TeamApiType {
   accessToken: string | null;
 }
 
+export interface TeamEditApiType {
+  teamId: string;
+  teamInfo: Pick<TeamCustomHookType, 'title' | 'place' | 'startAt'>;
+  accessToken: string | null;
+}
+
 export interface TeamCustomHookType {
   title: string;
   place: string;
@@ -12,6 +18,12 @@ export interface TeamCustomHookType {
   participants: {
     ids: Array<string>;
   };
+}
+
+export interface Team {
+  title: string;
+  place: string;
+  startAt: string;
 }
 
 export interface InterviewTeamType {

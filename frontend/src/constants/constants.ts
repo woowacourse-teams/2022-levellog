@@ -8,10 +8,11 @@ export const ROUTES_PATH = Object.freeze({
   LEVELLOG: '/levellog',
   LEVELLOG_ADD: '/levellog/add',
   LEVELLOG_ADD_ROUTE: '/levellog/add/:teamId',
-  LEVELLOG_MODIFY: '/levellog/modify/teams/:teamId/levellogs/:levellogId',
+  LEVELLOG_EDIT: '/levellog/edit/teams/:teamId/levellogs/:levellogId',
   INTERVIEW_TEAMS: '/interview/teams',
   INTERVIEW_TEAMS_DETAIL: `/interview/teams/:teamId`,
   INTERVIEW_TEAMS_ADD: `/interview/teams/add`,
+  INTERVIEW_TEAMS_EDIT: `/interview/teams/:teamId/edit`,
   NOT_FOUND: '*',
 });
 
@@ -24,4 +25,5 @@ export const MESSAGE = Object.freeze({
   WRONG_ACCESS: '잘못된 접근입니다',
   NEED_LOGIN: '로그인이 필요한 페이지입니다',
   TEAM_CREATE: '인터뷰팀 생성을 완료했습니다!',
+  TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
 });

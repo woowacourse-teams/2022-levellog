@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 
-import { TeamApiType, InterviewTeamType } from 'types/team';
+import { TeamApiType, InterviewTeamType, TeamEditApiType } from 'types/team';
 
 export const requestPostTeam = ({
   teamInfo,
@@ -26,6 +26,26 @@ export const requestGetTeam = ({
 }: Pick<TeamApiType, 'teamId'>): AxiosPromise<InterviewTeamType> => {
   return axios({
     method: 'get',
+    url: `${process.env.API_URI}/teams/${teamId}`,
+  });
+};
+
+export const requestEditTeam = ({ teamId, teamInfo, accessToken }: TeamEditApiType) => {
+  return axios({
+    method: 'put',
+    headers: { Authorization: `Bearer ${accessToken}` },
+    url: `${process.env.API_URI}/teams/${teamId}`,
+    data: teamInfo,
+  });
+};
+
+export const requestDeleteTeam = ({
+  teamId,
+  accessToken,
+}: Omit<TeamApiType, 'teamInfo'>): AxiosPromise<void> => {
+  return axios({
+    method: 'delete',
+    headers: { Authorization: `Bearer ${accessToken}` },
     url: `${process.env.API_URI}/teams/${teamId}`,
   });
 };

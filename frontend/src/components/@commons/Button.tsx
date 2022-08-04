@@ -10,7 +10,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <ButtonStyle disabled={disabled} onClick={onClick} color={color} {...props}>
-      <ButtonContent>{children}</ButtonContent>
+      {children}
     </ButtonStyle>
   );
 };
@@ -21,9 +21,11 @@ interface ButtonProps {
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   color?: string;
+  [props: string]: any;
 }
 
 const ButtonStyle = styled.button`
+  white-space: pre;
   width: fit-content;
   padding: 0.625rem 1.125rem;
   border: none;
@@ -31,10 +33,6 @@ const ButtonStyle = styled.button`
   background-color: ${(props) => props.theme.default.GRAY};
   font-size: 1rem;
   font-weight: 500;
-`;
-
-const ButtonContent = styled.p`
-  white-space: pre;
 `;
 
 export default Button;

@@ -4,8 +4,8 @@ import FeedbackAdd from 'pages/feedback/FeedbackAdd';
 import FeedbackList from 'pages/feedback/FeedbackList';
 import LevellogAdd from 'pages/levellogs/LevellogAdd';
 import LevellogEdit from 'pages/levellogs/LevellogEdit';
-import PreQuestionAdd from 'pages/prequestion/PreQuestionAdd';
-import PreQuestionEdit from 'pages/prequestion/PreQuestionEdit';
+import PreQuestionAdd from 'pages/preQuestion/PreQuestionAdd';
+import PreQuestionEdit from 'pages/preQuestion/PreQuestionEdit';
 import InterviewDetail from 'pages/teams/InterviewDetail';
 import InterviewTeamAdd from 'pages/teams/InterviewTeamAdd';
 import InterviewTeamEdit from 'pages/teams/InterviewTeamEdit';
@@ -46,8 +46,8 @@ export const routes = [
       {
         path: ROUTES_PATH.PREQUESTION_EDIT,
         element: <PreQuestionEdit />,
-       },
-       {
+      },
+      {
         path: ROUTES_PATH.INTERVIEW_TEAMS_EDIT,
         element: <InterviewTeamEdit />,
       },

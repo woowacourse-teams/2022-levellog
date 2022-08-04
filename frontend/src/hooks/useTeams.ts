@@ -17,26 +17,9 @@ import { MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
 
 export const useTeams = () => {
-  const { loginUserId } = useUser();
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);
-  const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accessToken');
-
-  const postTeams = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
-    try {
-      teamInfo.participants.ids = teamInfo.participants.ids.filter((id) => id !== loginUserId);
-      await requestPostTeam({ teamInfo, accessToken });
-      alert(MESSAGE.TEAM_CREATE);
-      navigate(ROUTES_PATH.HOME);
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
-      }
-    }
-  };
 
   const getTeams = async () => {
     try {
@@ -49,20 +32,6 @@ export const useTeams = () => {
         navigate(ROUTES_PATH.HOME);
       }
     }
-  };
-
-  const onSubmitTeamAddForm = async ({ participants }: Record<'participants', MemberType[]>) => {
-    const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
-    const teamInfo = {
-      title: title.value,
-      place: place.value,
-      startAt: `${date.value}T${time.value}`,
-      interviewerNumber: interviewerNumber.value,
-      participants: {
-        ids: Object.values(participants).map((participants) => participants.id),
-      },
-    };
-    await postTeams({ teamInfo });
   };
 
   const handleClickInterviewGroup = (e: React.MouseEvent<HTMLElement>) => {

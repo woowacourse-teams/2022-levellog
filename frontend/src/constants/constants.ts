@@ -13,6 +13,7 @@ export const ROUTES_PATH = Object.freeze({
   INTERVIEW_TEAMS_DETAIL: `/interview/teams/:teamId`,
   INTERVIEW_TEAMS_ADD: `/interview/teams/add`,
   PREQUESTION_ADD: '/pre-questions/teams/:teamId/levellog/:levellogId',
+  PREQUESTION_EDIT: '/pre-questions/teams/:teamId/levellog/:levellogId/pre-question/:preQuestionId',
   NOT_FOUND: '*',
 });
 

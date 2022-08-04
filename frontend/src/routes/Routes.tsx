@@ -1,11 +1,12 @@
 import Home from 'pages/Home';
 import Login from 'pages/Login';
 import NotFound from 'pages/NotFound';
-import PreQuestionAdd from 'pages/PreQuestion/PreQuestionAdd';
 import FeedbackAdd from 'pages/feedback/FeedbackAdd';
 import FeedbackList from 'pages/feedback/FeedbackList';
 import LevellogAdd from 'pages/levellogs/LevellogAdd';
 import LevellogEdit from 'pages/levellogs/LevellogEdit';
+import PreQuestionAdd from 'pages/preQuestion/PreQuestionAdd';
+import PreQuestionEdit from 'pages/preQuestion/PreQuestionEdit';
 import InterviewDetail from 'pages/teams/InterviewDetail';
 import InterviewTeamAdd from 'pages/teams/InterviewTeamAdd';
 import InterviewTeams from 'pages/teams/InterviewTeams';
@@ -41,6 +42,10 @@ export const routes = [
       {
         path: ROUTES_PATH.PREQUESTION_ADD,
         element: <PreQuestionAdd />,
+      },
+      {
+        path: ROUTES_PATH.PREQUESTION_EDIT,
+        element: <PreQuestionEdit />,
       },
     ],
   },

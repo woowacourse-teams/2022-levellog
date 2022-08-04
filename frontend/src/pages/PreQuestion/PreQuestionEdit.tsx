@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -12,18 +12,23 @@ import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
 import UiEditor from 'components/@commons/UiEditor';
+import UiViewer from 'components/@commons/UiViewer';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
-const PreQuestionAdd = () => {
+const PreQuestionEdit = () => {
   const { levellog, getLevellog } = useLevellog();
-  const { preQuestionRef, onClickPreQuestionAddButton } = usePreQuestion();
+  const { preQuestionRef, getPreQuestionOnRef, onClickPreQuestionEditButton } = usePreQuestion();
 
   const navigate = useNavigate();
-  const { teamId, levellogId } = useParams();
+  const { teamId, levellogId, preQuestionId } = useParams();
 
-  const handleClickPreQuestionAddButton = () => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      onClickPreQuestionAddButton({ teamId, levellogId });
+  const handleClickPreQuestionEditButton = () => {
+    if (
+      typeof teamId === 'string' &&
+      typeof levellogId === 'string' &&
+      typeof preQuestionId === 'string'
+    ) {
+      onClickPreQuestionEditButton({ teamId, levellogId, preQuestionId });
 
       return;
     }
@@ -34,14 +39,20 @@ const PreQuestionAdd = () => {
   useEffect(() => {
     if (typeof teamId === 'string' && typeof levellogId === 'string') {
       getLevellog({ teamId, levellogId });
+      getPreQuestionOnRef({ levellogId });
+
+      return;
     }
+
+    alert(MESSAGE.WRONG_ACCESS);
+    navigate(ROUTES_PATH.HOME);
   }, []);
 
   return (
     <FlexBox gap={1.875}>
       <S.Container>
-        <ContentHeader title={'사전질문'}>
-          <Button onClick={handleClickPreQuestionAddButton}>작성하기</Button>
+        <ContentHeader title={'사전질문 수정'}>
+          <Button onClick={handleClickPreQuestionEditButton}>수정하기</Button>
         </ContentHeader>
         <S.Content>
           <LevellogReport levellog={levellog} />
@@ -93,4 +104,4 @@ const S = {
   `,
 };
 
-export default PreQuestionAdd;
+export default PreQuestionEdit;

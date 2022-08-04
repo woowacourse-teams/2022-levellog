@@ -10,7 +10,7 @@ import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
-import PreQuestionViewModal from 'components/preQuestion/preQuestionViewModal';
+import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
 import { InterviewTeamType, ParticipantType } from 'types/team';
 

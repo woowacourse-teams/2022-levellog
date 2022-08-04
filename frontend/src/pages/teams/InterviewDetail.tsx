@@ -21,7 +21,7 @@ const InterviewDetail = () => {
   const { loginUserId } = useUser();
   const {
     levellog,
-    participant,
+    levellogParticipant,
     isLevellogModalOpen,
     onClickOpenLevellogModal,
     onClickDeleteLevellog,
@@ -29,7 +29,7 @@ const InterviewDetail = () => {
   } = useLevellogModal();
   const {
     preQuestion,
-    participant1,
+    preQuestionParticipant,
     isPreQuestionModalOpen,
     onClickOpenPreQuestionModal,
     onClickDeletePreQuestion,
@@ -53,7 +53,8 @@ const InterviewDetail = () => {
       {isLevellogModalOpen && (
         <LevellogViewModal
           levellog={levellog}
-          participant={participant}
+          participant={levellogParticipant}
+          userInTeam={(team as InterviewTeamType).isParticipant}
           getTeam={getTeam}
           onClickDeleteLevellog={onClickDeleteLevellog}
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}
@@ -62,7 +63,7 @@ const InterviewDetail = () => {
       {isPreQuestionModalOpen && (
         <PreQuestionViewModal
           preQuestion={preQuestion}
-          participant={participant1}
+          participant={preQuestionParticipant}
           getTeam={getTeam}
           onClickDeletePreQuestion={onClickDeletePreQuestion}
           handleClickClosePreQuestionModal={handleClickClosePreQuestionModal}

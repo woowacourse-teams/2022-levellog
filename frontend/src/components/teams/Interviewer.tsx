@@ -18,6 +18,7 @@ const Interviewer = ({
   onClickOpenLevellogModal,
   onClickOpenPreQuestionModal,
 }: InterviewerProps) => {
+  const navigate = useNavigate();
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
@@ -29,6 +30,14 @@ const Interviewer = ({
 
   const handleClickOpenPreQuestionModal = () => {
     onClickOpenPreQuestionModal({ participant });
+  };
+
+  const handleClickPreQuestionButton = () => {
+    navigate(`/pre-questions/teams/${teamId}/levellog/${participant.levellogId}`);
+  };
+
+  const handleClickFeedbackButton = () => {
+    navigate(`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`);
   };
 
   if (participant.memberId === loginUserId) {
@@ -77,26 +86,31 @@ const Interviewer = ({
         >
           레벨로그 보기
         </S.InterviewerButton>
-
-        {participant.preQuestionId ? (
-          <S.InterviewerButton
-            disabled={!participant.levellogId || !userInTeam}
-            onClick={handleClickOpenPreQuestionModal}
-          >
-            사전 질문 보기
-          </S.InterviewerButton>
-        ) : (
-          <Link to={`/pre-questions/teams/${teamId}/levellog/${participant.levellogId}`}>
-            <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
-              사전 질문 작성
+        {loginUserId && (
+          <>
+            {participant.preQuestionId ? (
+              <S.InterviewerButton
+                disabled={!participant.levellogId || !userInTeam}
+                onClick={handleClickOpenPreQuestionModal}
+              >
+                사전 질문 보기
+              </S.InterviewerButton>
+            ) : (
+              <S.InterviewerButton
+                disabled={!participant.levellogId || !userInTeam}
+                onClick={handleClickPreQuestionButton}
+              >
+                사전 질문 작성
+              </S.InterviewerButton>
+            )}
+            <S.InterviewerButton
+              disabled={!participant.levellogId || !userInTeam}
+              onClick={handleClickFeedbackButton}
+            >
+              피드백
             </S.InterviewerButton>
-          </Link>
+          </>
         )}
-        <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
-          <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
-            피드백
-          </S.InterviewerButton>
-        </Link>
       </S.Content>
     </S.Container>
   );

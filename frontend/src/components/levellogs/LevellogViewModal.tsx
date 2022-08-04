@@ -44,7 +44,7 @@ const LevellogViewModal = ({
             <UiViewer content={levellog} />
           </S.Levellog>
           <S.Footer>
-            <Link to={`/levellog/modify/teams/${teamId}/levellogs/${levellogId}`}>
+            <Link to={`/levellog/edit/teams/${teamId}/levellogs/${levellogId}`}>
               <Button>수정하기</Button>
             </Link>
             <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>

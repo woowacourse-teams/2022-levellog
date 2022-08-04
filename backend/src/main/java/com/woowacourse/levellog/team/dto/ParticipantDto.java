@@ -17,13 +17,15 @@ public class ParticipantDto {
 
     private Long memberId;
     private Long levellogId;
+    private Long preQuestionId;
     private String nickname;
     private String profileUrl;
 
-    public static ParticipantDto from(final Participant participant, final Long levellogId) {
+    public static ParticipantDto from(final Participant participant, final Long levellogId, final Long preQuestionId) {
         return new ParticipantDto(
                 participant.getMember().getId(),
                 levellogId,
+                preQuestionId,
                 participant.getMember().getNickname(),
                 participant.getMember().getProfileUrl());
     }

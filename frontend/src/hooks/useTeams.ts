@@ -19,10 +19,11 @@ import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } f
 export const useTeams = () => {
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accessToken');
 
   const getTeams = async () => {
     try {
-      const res = await requestGetTeams();
+      const res = await requestGetTeams({ accessToken });
       const teams = await res.data?.teams;
 
       setTeams(teams);
@@ -80,7 +81,7 @@ export const useTeam = () => {
   const getTeam = async () => {
     try {
       if (typeof teamId === 'string') {
-        const res = await requestGetTeam({ teamId });
+        const res = await requestGetTeam({ teamId, accessToken });
 
         setTeam(res.data);
         checkUserInTeam({ team: res.data });

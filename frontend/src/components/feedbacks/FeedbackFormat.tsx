@@ -12,6 +12,7 @@ const FeedbackFormat = ({ feedbackRef }: FeedbackFormProps) => {
         <p>학습 측면에서 좋은 점과 부족한 점은?</p>
         <UiEditor
           needToolbar={false}
+          autoFocus={false}
           height={'18.75rem'}
           contentRef={(el: Editor) => (feedbackRef.current[0] = el)}
           initialEditType={'markdown'}
@@ -19,6 +20,7 @@ const FeedbackFormat = ({ feedbackRef }: FeedbackFormProps) => {
         <p>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</p>
         <UiEditor
           needToolbar={false}
+          autoFocus={false}
           height={'18.75rem'}
           contentRef={(el: Editor) => (feedbackRef.current[1] = el)}
           initialEditType={'markdown'}
@@ -26,6 +28,7 @@ const FeedbackFormat = ({ feedbackRef }: FeedbackFormProps) => {
         <p>기타 피드백 (위 2 질문 외에 다른 피드백도 주세요.)</p>
         <UiEditor
           needToolbar={false}
+          autoFocus={false}
           height={'18.75rem'}
           contentRef={(el: Editor) => (feedbackRef.current[2] = el)}
           initialEditType={'markdown'}

@@ -7,6 +7,7 @@ import { Editor } from '@toast-ui/react-editor';
 
 const UiEditor = ({
   needToolbar,
+  autoFocus,
   height,
   contentRef,
   initialEditType,
@@ -22,10 +23,11 @@ const UiEditor = ({
   return (
     <S.Container needToolbar={needToolbar}>
       <Editor
+        autofocus={autoFocus}
         previewStyle={'tab'}
         height={height}
         initialEditType={initialEditType}
-        initialValue={'작성해주세요.'}
+        initialValue={' '}
         ref={contentRef}
         hideModeSwitch={true}
         toolbarItems={toolbarItems}
@@ -37,6 +39,7 @@ const UiEditor = ({
 
 interface UiEditorProps {
   needToolbar: boolean;
+  autoFocus: boolean;
   height: string;
   contentRef: LegacyRef<Editor>;
   initialEditType: 'markdown' | 'wysiwyg';

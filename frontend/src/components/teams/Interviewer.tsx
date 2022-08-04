@@ -9,16 +9,26 @@ import { ROUTES_PATH } from 'constants/constants';
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import { LevellogParticipantType } from 'types/levellog';
+import { PreQuestionParticipantType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
 
-const Interviewer = ({ participant, userInTeam, onClickToggleModal }: InterviewerProps) => {
+const Interviewer = ({
+  participant,
+  userInTeam,
+  onClickOpenLevellogModal,
+  onClickOpenPreQuestionModal,
+}: InterviewerProps) => {
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
-  const handleClickToggleModal = () => {
+  const handleClickOpenLevellogModal = () => {
     if (typeof teamId === 'string') {
-      onClickToggleModal({ teamId, participant });
+      onClickOpenLevellogModal({ teamId, participant });
     }
+  };
+
+  const handleClickOpenPreQuestionModal = () => {
+    onClickOpenPreQuestionModal({ participant });
   };
 
   if (participant.memberId === loginUserId) {
@@ -32,9 +42,16 @@ const Interviewer = ({ participant, userInTeam, onClickToggleModal }: Interviewe
         </S.Profile>
         <S.Content>
           {participant.levellogId ? (
-            <S.InterviewerButton onClick={handleClickToggleModal}>
-              레벨로그 보기
-            </S.InterviewerButton>
+            <>
+              <S.InterviewerButton onClick={handleClickOpenLevellogModal}>
+                레벨로그 보기
+              </S.InterviewerButton>
+              <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
+                <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
+                  피드백
+                </S.InterviewerButton>
+              </Link>
+            </>
           ) : (
             <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
               <S.InterviewerButton>레벨로그 작성</S.InterviewerButton>
@@ -54,14 +71,27 @@ const Interviewer = ({ participant, userInTeam, onClickToggleModal }: Interviewe
         </S.Nickname>
       </S.Profile>
       <S.Content>
-        <S.InterviewerButton disabled={!participant.levellogId} onClick={handleClickToggleModal}>
+        <S.InterviewerButton
+          disabled={!participant.levellogId}
+          onClick={handleClickOpenLevellogModal}
+        >
           레벨로그 보기
         </S.InterviewerButton>
-        <Link to="">
-          <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
-            사전 질문 작성
+
+        {participant.preQuestionId ? (
+          <S.InterviewerButton
+            disabled={!participant.levellogId || !userInTeam}
+            onClick={handleClickOpenPreQuestionModal}
+          >
+            사전 질문 보기
           </S.InterviewerButton>
-        </Link>
+        ) : (
+          <Link to={`/pre-questions/teams/${teamId}/levellog/${participant.levellogId}`}>
+            <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
+              사전 질문 작성
+            </S.InterviewerButton>
+          </Link>
+        )}
         <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
           <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
             피드백
@@ -75,7 +105,8 @@ const Interviewer = ({ participant, userInTeam, onClickToggleModal }: Interviewe
 interface InterviewerProps {
   participant: ParticipantType;
   userInTeam: Boolean;
-  onClickToggleModal: ({ teamId, participant }: LevellogParticipantType) => void;
+  onClickOpenLevellogModal: ({ teamId, participant }: LevellogParticipantType) => void;
+  onClickOpenPreQuestionModal: ({ participant }: PreQuestionParticipantType) => void;
 }
 
 const S = {

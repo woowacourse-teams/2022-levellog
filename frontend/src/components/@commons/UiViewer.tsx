@@ -2,7 +2,7 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import { Viewer } from '@toast-ui/react-editor';
 
 const UiViewer = ({ content }: UiViewerProps) => {
-  return <Viewer initialValue={content} />;
+  return content ? <Viewer initialValue={content} /> : <p>불러오는 중</p>;
 };
 
 interface UiViewerProps {

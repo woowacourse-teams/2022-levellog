@@ -7,7 +7,7 @@ const ModalPortal = ({ children }: ModalPortalProps) => {
 };
 
 interface ModalPortalProps {
-  children: JSX.Element;
+  children: JSX.Element[];
 }
 
 export default ModalPortal;

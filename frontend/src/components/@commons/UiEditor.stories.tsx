@@ -14,6 +14,7 @@ const Template: ComponentStory<typeof UiEditor> = (args) => <UiEditor {...args} 
 export const MARKDOWN = Template.bind({});
 MARKDOWN.args = {
   needToolbar: true,
+  autoFocus: false,
   height: '50rem',
   contentRef: createRef(),
   initialEditType: 'markdown',
@@ -22,6 +23,7 @@ MARKDOWN.args = {
 export const WYSIWYG = Template.bind({});
 WYSIWYG.args = {
   needToolbar: true,
+  autoFocus: false,
   height: '50rem',
   contentRef: createRef(),
   initialEditType: 'wysiwyg',

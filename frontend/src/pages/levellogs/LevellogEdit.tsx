@@ -48,6 +48,7 @@ const LevellogEdit = () => {
         <SubTitleLabel>Level Log</SubTitleLabel>
         <UiEditor
           needToolbar={true}
+          autoFocus={true}
           height={'50rem'}
           contentRef={levellogRef}
           initialEditType={'markdown'}

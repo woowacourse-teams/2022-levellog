@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
@@ -19,6 +20,10 @@ import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import org.apache.http.HttpHeaders;
+=======
+import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
+import com.woowacourse.levellog.feedback.dto.FeedbackRequest;
+>>>>>>> main
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,6 +44,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
         void save_alreadyExist_exceptionThrown() throws Exception {
             // given
+<<<<<<< HEAD
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
@@ -50,6 +56,10 @@ class FeedbackControllerTest extends ControllerTest {
             given(feedbackService.save(request, levellogId, memberId))
                     .willThrow(new FeedbackAlreadyExistException("피드백이 이미 존재합니다."));
 
+=======
+            final Long levellogId = 1L;
+            final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+>>>>>>> main
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -70,6 +80,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
         void save_selfFeedback_exceptionThrown() throws Exception {
             // given
+<<<<<<< HEAD
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
 
@@ -82,6 +93,11 @@ class FeedbackControllerTest extends ControllerTest {
                     .willThrow(new InvalidFeedbackException(" [levellogId : " + levellogId + "]",
                             "자기 자신에게 피드백을 할 수 없습니다."));
 
+=======
+            final Long levellogId = 1L;
+            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(study, speak, etc);
+            final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+>>>>>>> main
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
@@ -171,6 +187,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("피드백에 관련이 없는 멤버가 피드백을 수정하면 예외가 발생한다.")
         void update_otherMember_exceptionThrown() throws Exception {
             // given
+<<<<<<< HEAD
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -181,6 +198,11 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+=======
+            final Long levellogId = 1L;
+            final Long feedbackId = 2L;
+            final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+>>>>>>> main
             final String requestContent = objectMapper.writeValueAsString(request);
 
             doThrow(new InvalidFeedbackException(
@@ -191,7 +213,10 @@ class FeedbackControllerTest extends ControllerTest {
             // when
             final ResultActions perform = mockMvc.perform(
                             put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
+<<<<<<< HEAD
                                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+=======
+>>>>>>> main
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(requestContent))
                     .andDo(print());
@@ -207,6 +232,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("존재하지 않는 피드백 정보로 피드백 수정을 요청하면 예외가 발생한다.")
         void update_notFoundFeedback_exceptionThrown() throws Exception {
             // given
+<<<<<<< HEAD
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -217,6 +243,12 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+=======
+            final Long levellogId = 1L;
+            final Long feedbackId = 2L;
+            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(study, speak, etc);
+            final FeedbackRequest request = new FeedbackRequest(feedbackContentDto);
+>>>>>>> main
             final String requestContent = objectMapper.writeValueAsString(request);
 
             doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
@@ -226,6 +258,7 @@ class FeedbackControllerTest extends ControllerTest {
             // when
             final ResultActions perform = mockMvc.perform(
                             put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
+<<<<<<< HEAD
                                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(requestContent))
@@ -262,6 +295,10 @@ class FeedbackControllerTest extends ControllerTest {
             final ResultActions perform = mockMvc.perform(
                             delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
                                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+=======
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestContent))
+>>>>>>> main
                     .andDo(print());
 
             // then

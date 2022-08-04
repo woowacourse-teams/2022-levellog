@@ -3,8 +3,13 @@ package com.woowacourse.levellog.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.member.domain.Member;
+=======
+import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.InvalidFieldException;
+>>>>>>> main
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

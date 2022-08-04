@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
@@ -13,6 +14,9 @@ import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
+=======
+import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+>>>>>>> main
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.time.LocalDateTime;

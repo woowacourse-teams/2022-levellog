@@ -1,11 +1,15 @@
 package com.woowacourse.levellog.levellog.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
+<<<<<<< HEAD
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
+=======
+import com.woowacourse.levellog.member.domain.Member;
+>>>>>>> main
 import com.woowacourse.levellog.team.domain.Team;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,11 +18,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
+<<<<<<< HEAD
+=======
+import lombok.AllArgsConstructor;
+>>>>>>> main
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+<<<<<<< HEAD
+=======
+@AllArgsConstructor
+>>>>>>> main
 @Getter
 public class Levellog extends BaseEntity {
 
@@ -34,6 +46,7 @@ public class Levellog extends BaseEntity {
     @Lob
     private String content;
 
+<<<<<<< HEAD
     private Levellog(final Member author, final Team team, final String content) {
         validateContent(content);
         this.author = author;
@@ -78,5 +91,13 @@ public class Levellog extends BaseEntity {
         if (isAuthor(member)) {
             throw new InvalidPreQuestionException(" [levellogId : " + getId() + "]", "자기 자신에게 사전 질문을 등록할 수 없습니다.");
         }
+=======
+    public void updateContent(final String content) {
+        this.content = content;
+    }
+
+    public boolean isAuthorId(final Long memberId) {
+        return author.getId().equals(memberId);
+>>>>>>> main
     }
 }

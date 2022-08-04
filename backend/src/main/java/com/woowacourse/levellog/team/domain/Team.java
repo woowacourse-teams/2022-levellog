@@ -1,8 +1,11 @@
 package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
+<<<<<<< HEAD
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
+=======
+>>>>>>> main
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,10 +18,13 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Team extends BaseEntity {
 
+<<<<<<< HEAD
     private static final int DEFAULT_STRING_SIZE = 255;
     private static final int PROFILE_URL_SIZE = 2048;
     private static final int MIN_INTERVIEWER_NUMBER = 1;
 
+=======
+>>>>>>> main
     @Column(nullable = false)
     private String title;
 
@@ -28,6 +34,7 @@ public class Team extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime startAt;
 
+<<<<<<< HEAD
     @Column(nullable = false, length = PROFILE_URL_SIZE)
     private String profileUrl;
 
@@ -41,10 +48,17 @@ public class Team extends BaseEntity {
                 final int interviewerNumber) {
         validate(title, place, startAt, profileUrl, interviewerNumber);
 
+=======
+    @Column(nullable = false, length = 2048)
+    private String profileUrl;
+
+    public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl) {
+>>>>>>> main
         this.title = title;
         this.place = place;
         this.startAt = startAt;
         this.profileUrl = profileUrl;
+<<<<<<< HEAD
         this.interviewerNumber = interviewerNumber;
         this.isClosed = false;
     }
@@ -106,10 +120,16 @@ public class Team extends BaseEntity {
         validatePlace(place);
         validateStartAt(startAt);
 
+=======
+    }
+
+    public void update(final String title, final String place, final LocalDateTime startAt) {
+>>>>>>> main
         this.title = title;
         this.place = place;
         this.startAt = startAt;
     }
+<<<<<<< HEAD
 
     public void validParticipantNumber(final int participantNumber) {
         if (participantNumber <= interviewerNumber) {
@@ -135,4 +155,6 @@ public class Team extends BaseEntity {
             throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
         }
     }
+=======
+>>>>>>> main
 }

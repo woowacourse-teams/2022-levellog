@@ -10,8 +10,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+=======
+import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+import com.woowacourse.levellog.member.exception.InvalidFieldException;
+>>>>>>> main
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

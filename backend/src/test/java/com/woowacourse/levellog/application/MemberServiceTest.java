@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
@@ -12,6 +13,16 @@ import com.woowacourse.levellog.member.dto.MembersDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
+=======
+import com.woowacourse.levellog.member.application.MemberService;
+import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.domain.MemberRepository;
+import com.woowacourse.levellog.member.dto.MemberCreateDto;
+import com.woowacourse.levellog.member.dto.MemberResponse;
+import com.woowacourse.levellog.member.dto.MembersResponse;
+import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+import java.util.Optional;
+>>>>>>> main
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

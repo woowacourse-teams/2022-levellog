@@ -1,8 +1,11 @@
 package com.woowacourse.levellog.feedback.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
+<<<<<<< HEAD
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
+=======
+>>>>>>> main
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Column;
@@ -11,11 +14,16 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
+<<<<<<< HEAD
+=======
+import lombok.AllArgsConstructor;
+>>>>>>> main
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+<<<<<<< HEAD
 @Getter
 public class Feedback extends BaseEntity {
 
@@ -24,6 +32,12 @@ public class Feedback extends BaseEntity {
     private static final int FEEDBACK_CONTENT_MAX_LENGTH = 1000;
     private static final String CONTENT_TYPE_STUDY = "Study";
 
+=======
+@AllArgsConstructor
+@Getter
+public class Feedback extends BaseEntity {
+
+>>>>>>> main
     @ManyToOne
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_from_member"))
     private Member from;
@@ -36,6 +50,7 @@ public class Feedback extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_levellog"))
     private Levellog levellog;
 
+<<<<<<< HEAD
     @Column(length = FEEDBACK_CONTENT_MAX_LENGTH)
     private String study;
 
@@ -72,15 +87,32 @@ public class Feedback extends BaseEntity {
     public void updateFeedback(final String study, final String speak, final String etc) {
         validateFeedback(study, speak, etc);
 
+=======
+    @Column(length = 1000)
+    private String study;
+
+    @Column(length = 1000)
+    private String speak;
+
+    @Column(length = 1000)
+    private String etc;
+
+    public void updateFeedback(final String study, final String speak, final String etc) {
+>>>>>>> main
         this.study = study;
         this.speak = speak;
         this.etc = etc;
     }
 
+<<<<<<< HEAD
     public void validateAuthor(final Member member, final String message) {
         if (!from.equals(member)) {
             throw new InvalidFeedbackException(" [feedbackId : " + getId() + ", memberId : " + member.getId() + "]",
                     message);
         }
+=======
+    public boolean isAssociatedWith(final Member member) {
+        return from.equals(member) || to.equals(member);
+>>>>>>> main
     }
 }

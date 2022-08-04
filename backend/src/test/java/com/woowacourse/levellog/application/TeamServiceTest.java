@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -23,6 +24,21 @@ import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+=======
+import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.domain.MemberRepository;
+import com.woowacourse.levellog.team.application.TeamService;
+import com.woowacourse.levellog.team.domain.Participant;
+import com.woowacourse.levellog.team.domain.ParticipantRepository;
+import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamRepository;
+import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
+import com.woowacourse.levellog.team.dto.TeamRequest;
+import com.woowacourse.levellog.team.dto.TeamResponse;
+import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
+import com.woowacourse.levellog.team.dto.TeamsResponse;
+import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
+>>>>>>> main
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;

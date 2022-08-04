@@ -7,10 +7,17 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
+=======
+import com.woowacourse.levellog.authentication.dto.LoginResponse;
+import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
+import com.woowacourse.levellog.team.dto.TeamRequest;
+import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
+>>>>>>> main
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.time.LocalDateTime;

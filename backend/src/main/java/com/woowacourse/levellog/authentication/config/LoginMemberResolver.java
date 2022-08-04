@@ -1,8 +1,14 @@
 package com.woowacourse.levellog.authentication.config;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+=======
+import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
+import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.authentication.support.LoginMember;
+>>>>>>> main
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;

@@ -5,7 +5,12 @@ import static org.springframework.web.cors.CorsUtils.isPreFlightRequest;
 import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+<<<<<<< HEAD
 import com.woowacourse.levellog.authentication.support.PublicAPI;
+=======
+import com.woowacourse.levellog.authentication.support.NoAuthentication;
+import java.util.Objects;
+>>>>>>> main
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +43,15 @@ public class AuthInterceptor implements HandlerInterceptor {
         return true;
     }
 
+<<<<<<< HEAD
     private boolean isPublicAPI(final HandlerMethod handler) {
         final PublicAPI classTypePublicAPI = handler.getBeanType().getAnnotation(PublicAPI.class);
         final boolean isPublicClass = classTypePublicAPI != null;
+=======
+    private boolean isAnnotatedNoAuthentication(final HandlerMethod handler) {
+        final NoAuthentication classTypeNoAuthentication = handler.getBeanType().getAnnotation(NoAuthentication.class);
+        final NoAuthentication methodNoAuthentication = handler.getMethodAnnotation(NoAuthentication.class);
+>>>>>>> main
 
         final PublicAPI methodPublicAPI = handler.getMethodAnnotation(PublicAPI.class);
         final boolean isPublicMethod = methodPublicAPI != null;

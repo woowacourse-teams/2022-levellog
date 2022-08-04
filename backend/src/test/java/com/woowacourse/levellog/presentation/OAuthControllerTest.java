@@ -1,15 +1,23 @@
 package com.woowacourse.levellog.presentation;
 
+<<<<<<< HEAD
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+=======
+>>>>>>> main
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+=======
+import com.woowacourse.levellog.authentication.dto.GithubCodeRequest;
+import org.junit.jupiter.api.DisplayName;
+>>>>>>> main
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -19,6 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("OAuthController의")
 class OAuthControllerTest extends ControllerTest {
 
+<<<<<<< HEAD
     private static final String AUTHORIZATION_CODE = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODk3MjQ0LCJleHAiOjE2NTg5MzMyNDR9";
 
     @Nested
@@ -65,5 +74,24 @@ class OAuthControllerTest extends ControllerTest {
             perform.andExpect(status().isInternalServerError())
                     .andDo(document("auth/login/github-fail"));
         }
+=======
+    @ParameterizedTest
+    @ValueSource(strings = {" "})
+    @NullAndEmptySource
+    @DisplayName("login 메서드는 코드에 공백이나 null이 들어오면 예외를 던진다.")
+    void login(final String code) throws Exception {
+        // given
+        final GithubCodeRequest request = new GithubCodeRequest(code);
+        final String requestContent = objectMapper.writeValueAsString(request);
+
+        // when
+        final ResultActions perform = mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestContent))
+                .andDo(print());
+
+        // then
+        perform.andExpect(status().isBadRequest());
+>>>>>>> main
     }
 }

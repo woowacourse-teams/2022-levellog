@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+<<<<<<< HEAD
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
@@ -21,6 +22,11 @@ import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+=======
+import com.woowacourse.levellog.team.dto.ParticipantIdsRequest;
+import com.woowacourse.levellog.team.dto.TeamRequest;
+import com.woowacourse.levellog.team.dto.TeamUpdateRequest;
+>>>>>>> main
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;

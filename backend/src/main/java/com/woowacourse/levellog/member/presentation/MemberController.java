@@ -1,7 +1,11 @@
 package com.woowacourse.levellog.member.presentation;
 
 import com.woowacourse.levellog.member.application.MemberService;
+<<<<<<< HEAD
 import com.woowacourse.levellog.member.dto.MembersDto;
+=======
+import com.woowacourse.levellog.member.dto.MembersResponse;
+>>>>>>> main
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

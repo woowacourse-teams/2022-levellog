@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.presentation;
 
+<<<<<<< HEAD
 import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
 import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -12,18 +13,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+=======
+>>>>>>> main
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.presentation.OAuthController;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.presentation.FeedbackController;
+<<<<<<< HEAD
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.presentation.InterviewQuestionController;
+=======
+>>>>>>> main
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.presentation.LevellogController;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.presentation.MyInfoController;
+<<<<<<< HEAD
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.presentation.PreQuestionController;
 import com.woowacourse.levellog.team.application.TeamService;
@@ -41,17 +48,30 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+=======
+import com.woowacourse.levellog.team.application.TeamService;
+import com.woowacourse.levellog.team.presentation.TeamController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+>>>>>>> main
 
 @WebMvcTest({
         FeedbackController.class,
         LevellogController.class,
         TeamController.class,
         OAuthController.class,
+<<<<<<< HEAD
         MyInfoController.class,
         PreQuestionController.class,
         InterviewQuestionController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
+=======
+        MyInfoController.class
+})
+>>>>>>> main
 public abstract class ControllerTest {
 
     @MockBean
@@ -64,6 +84,7 @@ public abstract class ControllerTest {
     protected FeedbackService feedbackService;
 
     @MockBean
+<<<<<<< HEAD
     protected InterviewQuestionService interviewQuestionService;
 
     @MockBean
@@ -74,6 +95,12 @@ public abstract class ControllerTest {
 
     @MockBean
     protected OAuthService oAuthService;
+=======
+    protected TeamService teamService;
+
+    @MockBean
+    private OAuthService oAuthService;
+>>>>>>> main
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;
@@ -84,6 +111,7 @@ public abstract class ControllerTest {
     @Autowired
     protected ObjectMapper objectMapper;
 
+<<<<<<< HEAD
     @BeforeEach
     void setUp(final WebApplicationContext context, final RestDocumentationContextProvider provider) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
@@ -144,4 +172,6 @@ public abstract class ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print());
     }
+=======
+>>>>>>> main
 }

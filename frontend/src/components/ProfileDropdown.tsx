@@ -46,6 +46,7 @@ const S = {
     margin-bottom: 0.625rem;
     color: ${(props) => props.theme.default.WHITE};
     font-weight: 700;
+    cursor: pointer;
   `,
 };
 

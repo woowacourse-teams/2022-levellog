@@ -7,4 +7,6 @@ export const COLORS = {
   LIGHT_GRAY: '#F1F1F1',
   WHITE: '#FFFFFF',
   RED: '#FF0000',
+  WINE: '#B40404',
+  BLUE: '#0050FF',
 };

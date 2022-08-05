@@ -71,7 +71,6 @@ export const useTeam = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -101,7 +100,6 @@ export const useTeam = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
       }
     }
   };

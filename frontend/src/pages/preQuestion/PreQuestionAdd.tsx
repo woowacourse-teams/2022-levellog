@@ -40,7 +40,7 @@ const PreQuestionAdd = () => {
   return (
     <FlexBox gap={1.875}>
       <S.Container>
-        <ContentHeader title={'사전질문'}>
+        <ContentHeader title={'사전질문 작성'}>
           <Button onClick={handleClickPreQuestionAddButton}>작성하기</Button>
         </ContentHeader>
         <S.Content>

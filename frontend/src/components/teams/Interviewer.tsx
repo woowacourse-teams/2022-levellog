@@ -8,13 +8,16 @@ import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
+import Role from 'components/@commons/Role';
 import { LevellogParticipantType } from 'types/levellog';
 import { PreQuestionParticipantType } from 'types/preQuestion';
+import { RoleType } from 'types/role';
 import { ParticipantType } from 'types/team';
 
 const Interviewer = ({
   participant,
   userInTeam,
+  role,
   onClickOpenLevellogModal,
   onClickOpenPreQuestionModal,
 }: InterviewerProps) => {
@@ -39,6 +42,8 @@ const Interviewer = ({
   const handleClickFeedbackButton = () => {
     navigate(`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`);
   };
+
+  if (!teamId) return <div></div>;
 
   if (participant.memberId === loginUserId) {
     return (
@@ -74,6 +79,8 @@ const Interviewer = ({
   return (
     <S.Container>
       <S.Profile>
+        {role.interviewee && <Role role={'인터뷰이'} />}
+        {role.interviewer && <Role role={'인터뷰어'} />}
         <Image src={participant.profileUrl} sizes={'HUGE'} />
         <S.Nickname>
           <p>{participant.nickname}</p>
@@ -118,6 +125,7 @@ const Interviewer = ({
 
 interface InterviewerProps {
   participant: ParticipantType;
+  role: RoleType;
   userInTeam: Boolean;
   onClickOpenLevellogModal: ({ teamId, participant }: LevellogParticipantType) => void;
   onClickOpenPreQuestionModal: ({ participant }: PreQuestionParticipantType) => void;

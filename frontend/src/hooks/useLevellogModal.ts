@@ -21,6 +21,7 @@ const useLevellogModal = () => {
     levellogId,
   }: Omit<LevellogCustomHookType, 'inputValue'>) => {
     await deleteLevellog({ teamId, levellogId });
+    alert('레벨로그 삭제가 완료되었습니다.');
     setIsLevellogModalOpen(false);
   };
 

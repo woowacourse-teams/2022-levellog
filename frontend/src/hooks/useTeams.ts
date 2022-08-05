@@ -66,6 +66,7 @@ export const useTeam = () => {
       teamInfo.participants.ids = teamInfo.participants.ids.filter((id) => id !== loginUserId);
       await requestPostTeam({ teamInfo, accessToken });
       alert(MESSAGE.TEAM_CREATE);
+      navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
@@ -127,7 +128,6 @@ export const useTeam = () => {
       },
     };
     await postTeam({ teamInfo });
-    navigate(ROUTES_PATH.HOME);
   };
 
   const onSubmitTeamEditForm = async () => {

@@ -8,15 +8,12 @@ import useLevellog from 'hooks/useLevellog';
 import useRole from 'hooks/useRole';
 import { useTeam } from 'hooks/useTeams';
 
-import InterviewerImage from 'assets/images/group.png';
-import MicImage from 'assets/images/mic.png';
 import { ROUTES_PATH } from 'constants/constants';
 import { MESSAGE } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
-import Image from 'components/@commons/Image';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import LevellogReport from 'components/levellogs/LevellogReport';
 import { InterviewTeamType } from 'types/team';
@@ -25,7 +22,7 @@ const FeedbackAdd = () => {
   const { feedbackRef, onClickFeedbackAddButton } = useFeedback();
   const { levellog, getLevellog } = useLevellog();
   const { teamId, levellogId } = useParams();
-  const { team, getTeam } = useTeam();
+  const { getTeam } = useTeam();
   const { loginUserRole, getLoginUserRole } = useRole();
   const navigate = useNavigate();
   const [writer, setWriter] = useState('');

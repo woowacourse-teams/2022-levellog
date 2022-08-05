@@ -29,7 +29,7 @@ const FeedbackList = () => {
 
   return (
     <>
-      <ContentHeader title={'레벨로그 피드백'}>
+      <ContentHeader title={'레벨 인터뷰 피드백'}>
         <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}>
           <Button>추가하기</Button>
         </Link>

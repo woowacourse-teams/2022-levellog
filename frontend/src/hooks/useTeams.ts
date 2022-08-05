@@ -66,12 +66,10 @@ export const useTeam = () => {
       teamInfo.participants.ids = teamInfo.participants.ids.filter((id) => id !== loginUserId);
       await requestPostTeam({ teamInfo, accessToken });
       alert(MESSAGE.TEAM_CREATE);
-      navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -101,7 +99,6 @@ export const useTeam = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
       }
     }
   };

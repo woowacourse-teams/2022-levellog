@@ -34,11 +34,14 @@ const Login = () => {
 
         if (code) {
           const res = await requestGetUserLogin({ code });
+          //로그인만 해도 닉네임 주도록 API 수정가능?
           localStorage.setItem('accessToken', res.data.accessToken);
+          const accessToken = localStorage.getItem('accessToken')!;
+          const resLogin = await requestGetUserAuthority({ accessToken });
           userInfoDispatch({
-            id: res.data.id,
-            nickname: res.data.nickname,
-            profileUrl: res.data.profileUrl,
+            id: resLogin.data.id,
+            nickname: resLogin.data.nickname,
+            profileUrl: resLogin.data.profileUrl,
           });
         }
 
@@ -52,7 +55,6 @@ const Login = () => {
 
           return;
         }
-
         navigate(ROUTES_PATH.HOME);
       } catch (err: unknown) {
         if (axios.isAxiosError(err)) {

@@ -21,7 +21,7 @@ const InterviewTeams = () => {
 
   return (
     <>
-      <ContentHeader title={'Interview Group'}>
+      <ContentHeader title={'인터뷰 팀'}>
         <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
           <Button>추가하기</Button>
         </Link>

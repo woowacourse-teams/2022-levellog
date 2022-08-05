@@ -31,7 +31,7 @@ const usePreQuestion = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -52,7 +52,7 @@ const usePreQuestion = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -67,7 +67,7 @@ const usePreQuestion = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -85,7 +85,7 @@ const usePreQuestion = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.NOT_FOUND);
+        navigate(ROUTES_PATH.HOME);
       }
     }
   };

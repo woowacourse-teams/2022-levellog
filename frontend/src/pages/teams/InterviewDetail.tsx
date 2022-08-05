@@ -46,7 +46,7 @@ const InterviewDetail = () => {
     }
   }, []);
 
-  if (team && Object.keys(team).length === 0) return <div>실패</div>;
+  if (team && Object.keys(team).length === 0) return <div></div>;
 
   return (
     <>

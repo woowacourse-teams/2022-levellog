@@ -92,6 +92,7 @@ const useLevellog = () => {
         levellogId,
         levellogContent: stringToLevellog({ inputValue }),
       });
+      alert('레벨로그 수정이 완료되었습니다.');
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -121,6 +122,7 @@ const useLevellog = () => {
         teamId,
         inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
       });
+      alert('레벨로그 작성이 완료되었습니다.');
     }
   };
 

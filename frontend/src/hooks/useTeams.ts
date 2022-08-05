@@ -127,6 +127,7 @@ export const useTeam = () => {
       },
     };
     await postTeam({ teamInfo });
+    navigate(ROUTES_PATH.HOME);
   };
 
   const onSubmitTeamEditForm = async () => {

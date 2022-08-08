@@ -10,15 +10,15 @@ import TeamAddForm from 'components/teams/TeamAddForm';
 
 const InterviewTeamAdd = () => {
   const {
+    teamInfoRef,
+    onSubmitTeamAddForm,
     members,
     nicknameValue,
     setNicknameValue,
     participants,
     updateMembers,
     updateParticipants,
-  } = useMember();
-
-  const { teamInfoRef, onSubmitTeamAddForm } = useTeam();
+  } = useTeam();
 
   const handleSubmitTeamAddForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

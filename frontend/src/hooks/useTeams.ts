@@ -6,6 +6,8 @@ import axios, { AxiosResponse } from 'axios';
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import useUser from './useUser';
+import useUtil from './useUtil';
+import { requestGetMembers } from 'apis/member';
 import {
   requestGetTeams,
   requestGetTeam,
@@ -14,7 +16,7 @@ import {
   requestEditTeam,
   requestCloseTeamInterview,
 } from 'apis/teams';
-import { MemberType } from 'types/member';
+import { MembersCustomHookType, MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
 
 export const useTeams = () => {
@@ -52,13 +54,18 @@ export const useTeams = () => {
 };
 
 export const useTeam = () => {
-  const { loginUserId } = useUser();
+  const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
+  const [members, setMembers] = useState<MemberType[]>([]);
+  const [nicknameValue, setNicknameValue] = useState('');
   const [team, setTeam] = useState<InterviewTeamType | Object>({});
-  // 나중에 location은 타입을 고칠 필요가 있어보임
   const location = useLocation() as { state: InterviewTeamType };
   const teamInfoRef = useRef<HTMLInputElement[]>([]);
+  const [participants, setParticipants] = useState<MemberType[]>([
+    { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
+  ]);
   const { teamId } = useParams();
   const navigate = useNavigate();
+  const { isThrottle } = useUtil();
   const teamLocationState: InterviewTeamType | undefined = location.state;
   const accessToken = localStorage.getItem('accessToken');
 
@@ -80,7 +87,15 @@ export const useTeam = () => {
     try {
       if (typeof teamId === 'string') {
         const res = await requestGetTeam({ teamId, accessToken });
-        setTeam(res.data);
+        setParticipants((prev) =>
+          res.data.participants.map((participant) => {
+            return {
+              id: participant.memberId,
+              nickname: participant.nickname,
+              profileUrl: participant.profileUrl,
+            };
+          }),
+        );
 
         return res.data;
       }
@@ -149,8 +164,12 @@ export const useTeam = () => {
       title: title.value,
       place: place.value,
       startAt: `${date.value}T${time.value}`,
+      interviewerNumber: '', //interviewerNumber.value, // api 변경 후 수정
+      participants: {
+        ids: Object.values(participants).map((participants) => participants.id),
+      },
     };
-    await editTeam({ teamInfo });
+    // await editTeam({ teamInfo });
     navigate(ROUTES_PATH.HOME);
   };
 
@@ -177,14 +196,47 @@ export const useTeam = () => {
     if (team && Object.keys(team).length === 0) {
       return;
     }
+    if (teamInfoRef.current[0] === null) {
+      return;
+    }
     teamInfoRef.current[0].value = (team as unknown as InterviewTeamType).title;
     teamInfoRef.current[1].value = (team as unknown as InterviewTeamType).place;
     teamInfoRef.current[2].value = (team as unknown as InterviewTeamType).startAt.slice(0, 10);
     teamInfoRef.current[3].value = (team as unknown as InterviewTeamType).startAt.slice(-8);
+    //teamInfoRef.current[4].value = (team as unknown as InterviewTeamType).interviewerNumber;
+  };
+
+  const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {
+    try {
+      if (isThrottle()) return;
+      const res = await requestGetMembers({ accessToken, nickname: nicknameValue });
+      const members = res.data.members.filter((member) =>
+        participants.every((participant) => participant.id !== member.id),
+      );
+
+      setMembers(members);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const responseBody: AxiosResponse = err.response!;
+        if (err instanceof Error) alert(responseBody.data.message);
+      }
+    }
+  };
+
+  const updateParticipants = ({ id, nickname, profileUrl }: MemberType) => {
+    const inputtedParticipant = { id, nickname, profileUrl };
+
+    if (participants.every((participant) => inputtedParticipant.id !== participant.id)) {
+      setParticipants((prev) => prev.concat(inputtedParticipant));
+
+      return;
+    }
+    setParticipants(
+      participants.filter((participant) => inputtedParticipant.id !== participant.id),
+    );
   };
 
   useEffect(() => {
-    // 나중에 location은 타입을 고칠 필요가 있어보임
     if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
       setTeam(teamLocationState);
     }
@@ -194,8 +246,14 @@ export const useTeam = () => {
     teamLocationState,
     team,
     getTeam,
+    members,
+    participants,
+    nicknameValue,
+    setNicknameValue,
     teamInfoRef,
     getTeamOnRef,
+    updateMembers,
+    updateParticipants,
     onSubmitTeamAddForm,
     onSubmitTeamEditForm,
     onClickDeleteTeamButton,

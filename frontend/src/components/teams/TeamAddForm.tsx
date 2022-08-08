@@ -51,34 +51,26 @@ const TeamAddForm = ({
         required
       />
       <TeamAddInput label={'참가자'} value={nicknameValue} onChange={handleChangeInput}>
-        <>
-          {participants.length > 0 ? (
-            <S.ParticipantsBox>
-              {participants.map((participant: MemberType) => (
-                <Participant
-                  key={participant.id}
-                  participant={participant}
-                  updateParticipants={updateParticipants}
-                />
-              ))}
-            </S.ParticipantsBox>
-          ) : (
-            <S.Notice>참가자를 추가해주세요!</S.Notice>
-          )}
-        </>
-      </TeamAddInput>
-      {members.length > 0 && (
-        <S.MembersBox>
-          {members.map((member: MemberType) => (
-            <Member
-              key={member.id}
-              member={member}
-              setNicknameValue={setNicknameValue}
+        <S.ParticipantsBox>
+          {participants.map((participant: MemberType) => (
+            <Participant
+              key={participant.id}
+              participant={participant}
               updateParticipants={updateParticipants}
             />
           ))}
-        </S.MembersBox>
-      )}
+        </S.ParticipantsBox>
+      </TeamAddInput>
+      <S.MembersBox isNoneMember={members.length === 0}>
+        {members.map((member: MemberType) => (
+          <Member
+            key={member.id}
+            member={member}
+            setNicknameValue={setNicknameValue}
+            updateParticipants={updateParticipants}
+          />
+        ))}
+      </S.MembersBox>
     </S.FormContainer>
   );
 };
@@ -121,7 +113,8 @@ const S = {
     margin-bottom: 0.625rem;
   `,
 
-  MembersBox: styled.div`
+  MembersBox: styled.div<{ isNoneMember: Boolean }>`
+    display: ${(props) => (props.isNoneMember ? 'none' : 'block')};
     box-sizing: content-box;
     overflow: auto;
     width: 40.625rem;

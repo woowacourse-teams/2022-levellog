@@ -17,6 +17,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -37,8 +38,12 @@ class InterviewQuestionServiceTest extends ServiceTest {
     }
 
     private Team getTeam(final Member host, final Member... members) {
+        return getTeam(3, host, members);
+    }
+
+    private Team getTeam(final long days,  final Member host, final Member... members) {
         final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1));
+                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(days), "jamsil.img", 1));
 
         participantRepository.save(new Participant(team, host, true));
 
@@ -278,6 +283,25 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContainingAll("인터뷰 질문을 수정할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
                             String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
+        }
+
+        @Test
+        @DisplayName("인터뷰가 종료된 후면 예외를 던진다.")
+        void update_isClosed_exception() {
+            // given
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+            final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
+
+            team.close(timeStandard.now());
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("인터뷰가 이미 종료되었습니다.", String.valueOf(team.getId()), String.valueOf(interviewQuestionId));
         }
     }
 

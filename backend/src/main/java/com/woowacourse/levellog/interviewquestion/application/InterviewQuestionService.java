@@ -14,6 +14,9 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamRepository;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ public class InterviewQuestionService {
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
     private final ParticipantRepository participantRepository;
+    private final TeamRepository teamRepository;
 
     @Transactional
     public Long save(final InterviewQuestionDto request, final Long levellogId, final Long fromMemberId) {
@@ -54,6 +58,16 @@ public class InterviewQuestionService {
     public void update(final InterviewQuestionDto request, final Long interviewQuestionId, final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member fromMember = getMember(fromMemberId);
+
+        final Team team = teamRepository.findByInterviewQuestion(interviewQuestion)
+                .orElseThrow(() -> new TeamNotFoundException(
+                        "인터뷰 질문에 해당하는 팀이 존재하지 않습니다. [interviewQuestionId : " + interviewQuestionId + "]",
+                        "인터뷰 질문에 해당하는 팀이 존재하지 않습니다."));
+
+        if (team.isClosed()) {
+            throw new InterviewTimeException("인터뷰가 이미 종료되었습니다.",
+                    " [interviewQuestionId : " + interviewQuestionId + ", teamId : " + team.getId() + "]");
+        }
 
         interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
     }

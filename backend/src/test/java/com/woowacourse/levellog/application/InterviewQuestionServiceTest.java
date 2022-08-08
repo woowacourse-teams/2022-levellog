@@ -50,6 +50,11 @@ class InterviewQuestionServiceTest extends ServiceTest {
         return team;
     }
 
+    private Levellog getLevellog(final Member author, final Team team) {
+        final Levellog levellog = Levellog.of(author, team, "levellog content");
+        return levellogRepository.save(levellog);
+    }
+
     private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member author) {
         final InterviewQuestionDto request = InterviewQuestionDto.from(content);
         return interviewQuestionService.save(request, levellog.getId(), author.getId());
@@ -66,11 +71,11 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
             final Team team = getTeam(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
             // when
-            final Long id = interviewQuestionService.save(request, pepperLevellog.getId(), eve.getId());
+            final Long id = interviewQuestionService.save(request, pepperLevellogId, eve.getId());
 
             // then
             assertThat(interviewQuestionRepository.findById(id))
@@ -86,7 +91,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
             final Team team = getTeam(pepper, eve);
-            final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from(invalidContent);
             final Long authorId = eve.getId();
 
@@ -102,7 +107,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Team team = getTeam(pepper);
-            final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
             final Long invalidMemberId = 1000L;
 
@@ -137,7 +142,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member eve = getMember("이브");
             final Long otherTeamMemberId = getMember("알린").getId();
             final Team team = getTeam(pepper, eve);
-            final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
             // when & then
@@ -159,7 +164,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
             final Team team = getTeam(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
+            final Levellog pepperLevellog = getLevellog(pepper, team);
             saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
             saveInterviewQuestion("스프링 빈이란?", pepperLevellog, eve);
 
@@ -202,7 +207,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Team team = getTeam(pepper);
-            final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final Long invalidMemberId = 1000L;
 
             // when & then
@@ -224,7 +229,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
             final Team team = getTeam(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
+            final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
 
@@ -263,7 +268,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member eve = getMember("이브");
             final Long otherMemberId = getMember("릭").getId();
             final Team team = getTeam(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
+            final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
 
@@ -286,7 +291,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
             final Team team = getTeam(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
+            final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
 
             // when
@@ -320,7 +325,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long otherMemberId = getMember("릭")
                     .getId();
             final Team team = getTeam(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
+            final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
 
             // when & then

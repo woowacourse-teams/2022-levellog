@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.domain;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
+import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
@@ -56,7 +57,7 @@ abstract class RepositoryTest {
         return getTeam(3, host, members);
     }
 
-    protected Team getTeam(final long days,  final Member host, final Member... members) {
+    protected Team getTeam(final long days, final Member host, final Member... members) {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(days), "jamsil.img", 1));
 
@@ -75,9 +76,16 @@ abstract class RepositoryTest {
         return levellogRepository.save(levellog);
     }
 
-    protected InterviewQuestion getInterviewQuestion(final String content, final Levellog levellog, final Member author) {
+    protected InterviewQuestion getInterviewQuestion(final String content, final Levellog levellog,
+                                                     final Member author) {
         final InterviewQuestionDto request = InterviewQuestionDto.from(content);
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
         return interviewQuestionRepository.save(interviewQuestion);
+    }
+
+    protected Feedback getFeedback(final Member from, final Member to, final Levellog levellog) {
+        final Feedback feedback = new Feedback(from, to, levellog, "study from " + from.getNickname(),
+                "speak from " + from.getNickname(), "etc from " + from.getNickname());
+        return feedbackRepository.save(feedback);
     }
 }

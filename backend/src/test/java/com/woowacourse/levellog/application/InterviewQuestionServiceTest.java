@@ -18,6 +18,7 @@ import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -35,11 +36,17 @@ class InterviewQuestionServiceTest extends ServiceTest {
         return memberRepository.save(member);
     }
 
-    private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
+    private Team getTeam(final Member host, final Member... members) {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1));
-        participantRepository.save(new Participant(team, participant1, true));
-        participantRepository.save(new Participant(team, participant2, false));
+
+        participantRepository.save(new Participant(team, host, true));
+
+        final List<Participant> participants = Arrays.stream(members)
+                .map(it -> new Participant(team, it, false))
+                .collect(Collectors.toList());
+        participantRepository.saveAll(participants);
+
         return team;
     }
 
@@ -58,7 +65,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
@@ -78,7 +85,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from(invalidContent);
             final Long authorId = eve.getId();
@@ -94,9 +101,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
         void save_memberNotFound_exception() {
             // given
             final Member pepper = getMember("페퍼");
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1));
-            participantRepository.save(new Participant(team, pepper, true));
+            final Team team = getTeam(pepper);
             final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
             final Long invalidMemberId = 1000L;
@@ -113,7 +118,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            saveTeamAndTwoParticipants(pepper, eve);
+            getTeam(pepper, eve);
             final Long memberId = pepper.getId();
             final Long invalidLevellogId = 1000L;
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
@@ -131,7 +136,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
             final Long otherTeamMemberId = getMember("알린").getId();
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
@@ -153,7 +158,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
             saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
             saveInterviewQuestion("스프링 빈이란?", pepperLevellog, eve);
@@ -181,7 +186,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            saveTeamAndTwoParticipants(pepper, eve);
+            getTeam(pepper, eve);
             final Long memberId = eve.getId();
             final Long invalidLevellogId = 1000L;
 
@@ -196,9 +201,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
         void findAll_memberNotFound_exception() {
             // given
             final Member pepper = getMember("페퍼");
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1));
-            participantRepository.save(new Participant(team, pepper, true));
+            final Team team = getTeam(pepper);
             final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
             final Long invalidMemberId = 1000L;
 
@@ -220,7 +223,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
@@ -259,7 +262,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
             final Long otherMemberId = getMember("릭").getId();
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
@@ -282,7 +285,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
 
@@ -316,7 +319,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member eve = getMember("이브");
             final Long otherMemberId = getMember("릭")
                     .getId();
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
 

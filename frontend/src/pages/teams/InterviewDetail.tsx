@@ -57,7 +57,6 @@ const InterviewDetail = () => {
   }, []);
 
   if (team && Object.keys(team).length === 0) return <div></div>;
-  console.log(team);
 
   return (
     <>

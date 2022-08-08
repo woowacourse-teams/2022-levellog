@@ -45,7 +45,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("save 메서드는")
-    class SaveTest {
+    class Save {
 
         @Test
         @DisplayName("인터뷰 질문을 저장한다.")
@@ -140,7 +140,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("findAll 메서드는")
-    class FindAllTest {
+    class FindAll {
 
         @Test
         @DisplayName("레벨로그에 대해 특정 멤버가 작성한 인터뷰 질문 목록을 조회한다.")
@@ -207,7 +207,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("update 메서드는")
-    class UpdateTest {
+    class Update {
 
         @Test
         @DisplayName("인터뷰 질문을 수정한다.")
@@ -269,7 +269,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("deleteById 메서드는")
-    class DeleteByIdTest {
+    class DeleteById {
 
         @Test
         @DisplayName("인터뷰 질문을 삭제한다.")
@@ -291,7 +291,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 질문이 존재하지 않는 경우 예외를 던진다.")
-        void update_interviewQuestionNotFound_exception() {
+        void deleteById_interviewQuestionNotFound_exception() {
             // given
             final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
             final Long invalidInterviewQuestionId = 1000L;

@@ -17,8 +17,14 @@ import Interviewer from 'components/teams/Interviewer';
 import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
-  const { teamLocationState, team, getTeam, onClickDeleteTeamButton } = useTeam();
   const { loginUserId } = useUser();
+  const {
+    teamLocationState,
+    team,
+    getTeam,
+    onClickDeleteTeamButton,
+    onClickCloseTeamInterviewButton,
+  } = useTeam();
   const {
     levellog,
     levellogParticipant,
@@ -36,8 +42,12 @@ const InterviewDetail = () => {
     handleClickClosePreQuestionModal,
   } = usePreQuestionModal();
 
-  const handleClickTeamButtons = () => {
+  const handleClickDeleteTeamButton = () => {
     onClickDeleteTeamButton({ teamId: (team as InterviewTeamType).id });
+  };
+
+  const handleClickCloseTeamInterviewButton = () => {
+    onClickCloseTeamInterviewButton({ teamId: (team as InterviewTeamType).id });
   };
 
   useEffect(() => {
@@ -88,7 +98,8 @@ const InterviewDetail = () => {
               <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
                 <Button>팀 수정하기</Button>
               </Link>
-              <Button onClick={handleClickTeamButtons}>팀 삭제하기</Button>
+              <Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</Button>
+              <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
             </S.ButtonBox>
           )}
         </S.Header>

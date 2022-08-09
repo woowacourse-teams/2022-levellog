@@ -3,11 +3,12 @@ package com.woowacourse.levellog.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,17 +19,10 @@ class ParticipantRepositoryTest extends RepositoryTest {
     @DisplayName("findByTeam은 team이 일치하는 모든 participant를 반환한다.")
     void findByTeam() {
         // given
-        final Team team = teamRepository.save(new Team(
-                "네오와 함께하는 레벨 인터뷰",
-                "선릉 트랙룸",
-                LocalDateTime.now().plusDays(3),
-                "profile.img", 1));
+        final Member alien = getMember("알린");
+        final Member roma = getMember("로마");
 
-        final Member alien = memberRepository.save(new Member("알린", 12345678, "alien.img"));
-        final Member roma = memberRepository.save(new Member("로마", 56781234, "roma.img"));
-
-        participantRepository.save(new Participant(team, alien, true));
-        participantRepository.save(new Participant(team, roma, false));
+        final Team team = getTeam(alien, roma);
 
         // when
         final List<Participant> participants = participantRepository.findByTeam(team);
@@ -45,17 +39,10 @@ class ParticipantRepositoryTest extends RepositoryTest {
     @DisplayName("deleteByTeam는 team이 일치하는 모든 participant를 제거한다.")
     void deleteByTeam() {
         // given
-        final Team team = teamRepository.save(new Team(
-                "네오와 함께하는 레벨 인터뷰",
-                "선릉 트랙룸",
-                LocalDateTime.now().plusDays(3),
-                "profile.img", 1));
+        final Member alien = getMember("알린");
+        final Member roma = getMember("로마");
 
-        final Member alien = memberRepository.save(new Member("알린", 12345678, "alien.img"));
-        final Member roma = memberRepository.save(new Member("로마", 56781234, "roma.img"));
-
-        participantRepository.save(new Participant(team, alien, true));
-        participantRepository.save(new Participant(team, roma, false));
+        final Team team = getTeam(alien, roma);
 
         // when
         participantRepository.deleteByTeam(team);
@@ -68,16 +55,10 @@ class ParticipantRepositoryTest extends RepositoryTest {
     @DisplayName("existsByMemberAndTeam는 멤버와 팀이 일치 여부를 반환한다.")
     void existsByMemberAndTeam() {
         // given
-        final Team team = teamRepository.save(new Team(
-                "네오와 함께하는 레벨 인터뷰",
-                "선릉 트랙룸",
-                LocalDateTime.now().plusDays(3),
-                "profile.img", 1));
+        final Member alien = getMember("알린");
+        final Member roma = getMember("로마");
 
-        final Member alien = memberRepository.save(new Member("알린", 12345678, "alien.img"));
-        final Member roma = memberRepository.save(new Member("로마", 56781234, "roma.img"));
-
-        participantRepository.save(new Participant(team, alien, true));
+        final Team team = getTeam(alien);
 
         // when
         final boolean existsAlien = participantRepository.existsByMemberAndTeam(alien, team);
@@ -94,26 +75,28 @@ class ParticipantRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByMember 메서드는 해당 멤버가 포함된 모든 participant 반환한다.")
     void findAllByMember() {
         // given
-        final Team team = teamRepository.save(
-                new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "profile.img", 1));
-        final Team team2 = teamRepository.save(
-                new Team("브라운 잠실", "잠실 트랙룸", LocalDateTime.now().plusDays(3), "profile.img", 1));
+        final Member alien = getMember("알린");
+        final Member roma = getMember("로마");
 
-        final Member alien = memberRepository.save(new Member("알린", 12345678, "alien.img"));
-        final Member roma = memberRepository.save(new Member("로마", 56781234, "roma.img"));
-
-        final Participant romaParticipant1 = participantRepository.save(new Participant(team, roma, false));
-        final Participant romaParticipant2 = participantRepository.save(new Participant(team2, roma, true));
-
-        participantRepository.save(new Participant(team, alien, true)); // roma 비포함 participant
+        final Team team1 = getTeam(alien, roma);
+        final Team team2 = getTeam(roma);
 
         // when
         final List<Participant> participants = participantRepository.findAllByMember(roma);
 
+        final List<Long> actualTeamIds = toTeamIds(participants);
+
         // then
         assertAll(
                 () -> assertThat(participants).hasSize(2),
-                () -> assertThat(participants).contains(romaParticipant1, romaParticipant2)
+                () -> assertThat(actualTeamIds).contains(team1.getId(), team2.getId())
         );
+    }
+
+    private List<Long> toTeamIds(final List<Participant> participants) {
+        return participants.stream()
+                .map(Participant::getTeam)
+                .map(BaseEntity::getId)
+                .collect(Collectors.toList());
     }
 }

@@ -393,4 +393,23 @@ class TeamTest {
                     .hasMessageContaining("인터뷰가 시작되기 전에 종료할 수 없습니다.");
         }
     }
+
+    @Nested
+    @DisplayName("validateBeforeStartAt 메서드는")
+    class ValidateAfterStartAt {
+
+        @Test
+        @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이전이면 예외가 발생한다.")
+        void validate_beforeStartAt_thrownException() {
+            // given
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
+
+            // when & then
+            final String message = "피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다.";
+            assertThatThrownBy(() -> team.validateAfterStartAt(startAt.minusDays(1), message))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining(message);
+        }
+    }
 }

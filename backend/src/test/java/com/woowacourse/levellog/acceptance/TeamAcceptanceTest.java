@@ -302,10 +302,10 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final String pepperToken = login("페퍼").getToken();
         final Long eveId = login("이브").getMemberId();
 
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(7),
                 new ParticipantIdsDto(List.of(eveId)));
         final String id = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
-        final TeamUpdateDto request = new TeamUpdateDto("선릉 브리조", "수성방", LocalDateTime.now().plusDays(3));
+        final TeamUpdateDto request = new TeamUpdateDto("선릉 브리조", "수성방", LocalDateTime.now().plusDays(6));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

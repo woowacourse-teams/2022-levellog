@@ -101,27 +101,10 @@ public class Team extends BaseEntity {
         }
     }
 
-    public void update(final String title, final String place, final LocalDateTime startAt) {
-        validateTitle(title);
-        validatePlace(place);
-        validateStartAt(startAt);
-
-        this.title = title;
-        this.place = place;
-        this.startAt = startAt;
-    }
-
     public void validParticipantNumber(final int participantNumber) {
         if (participantNumber <= interviewerNumber) {
             throw new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
         }
-    }
-
-    public void close(final LocalDateTime presentTime) {
-        validateInterviewStartTime(presentTime);
-        validateAlreadyClosed();
-
-        isClosed = true;
     }
 
     private void validateInterviewStartTime(final LocalDateTime presentTime) {
@@ -134,5 +117,31 @@ public class Team extends BaseEntity {
         if (isClosed) {
             throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
         }
+    }
+
+    private void validateUpdatable(final LocalDateTime presentTime) {
+        if (presentTime.isAfter(this.startAt)) {
+            throw new InterviewTimeException("인터뷰가 시작된 이후에는 수정할 수 없습니다.",
+                    "[teamId : " + this.getId() + " presentTime : " + presentTime + " startAt :" + this.startAt + "]");
+        }
+    }
+
+    public void update(final String title, final String place, final LocalDateTime startAt,
+                       final LocalDateTime presentTime) {
+        validateTitle(title);
+        validatePlace(place);
+        validateStartAt(startAt);
+        validateUpdatable(presentTime);
+
+        this.title = title;
+        this.place = place;
+        this.startAt = startAt;
+    }
+
+    public void close(final LocalDateTime presentTime) {
+        validateInterviewStartTime(presentTime);
+        validateAlreadyClosed();
+
+        isClosed = true;
     }
 }

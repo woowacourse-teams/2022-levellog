@@ -100,7 +100,7 @@ public class TeamService {
         final Team team = getTeam(teamId);
         validateHost(memberId, team);
 
-        team.update(request.getTitle(), request.getPlace(), request.getStartAt());
+        team.update(request.getTitle(), request.getPlace(), request.getStartAt(), timeStandard.now());
     }
 
     @Transactional

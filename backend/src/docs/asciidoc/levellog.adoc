@@ -20,10 +20,13 @@ operation::levellog/save[]
 === 레벨로그 작성 실패
 
 ==== 이미 작성한 레벨로그가 존재하는 경우
-operation::levellog/save/exception-already-exists[]
+include::{snippets}/levellog/save/exception-already-exists/http-response.adoc[]
 
 ==== 레벨로그 내용이 공백인 경우
-operation::levellog/save/exception-contents[]
+include::{snippets}/levellog/save/exception-contents/http-response.adoc[]
+
+==== 인터뷰가 진행중이거나 끝난 팀에 레벨로그 작성을 하려는 경우
+include::{snippets}/levellog/save/exception-after-start/http-response.adoc[]
 
 [[find]]
 == 레벨로그 상세 조회
@@ -37,7 +40,7 @@ operation::levellog/find[]
 === 레벨로그 조회 실패
 
 ==== 레벨로그가 존재하지 않는 경우
-operation::levellog/find/exception-exist[]
+include::{snippets}/levellog/find/exception-exist/http-response.adoc[]
 
 [[update]]
 == 레벨로그 수정
@@ -51,10 +54,10 @@ operation::levellog/update[]
 === 레벨로그 수정 실패
 
 ==== 작성자가 아닌 멤버가 수정하려는 경우
-operation::levellog/update/exception-author[]
+include::{snippets}/levellog/update/exception-author/http-response.adoc[]
 
 ==== 레벨로그 내용이 공백인 경우
-operation::levellog/update/exception-contents[]
+include::{snippets}/levellog/update/exception-contents/http-response.adoc[]
 
 [[delete]]
 == 레벨로그 삭제
@@ -68,4 +71,4 @@ operation::levellog/delete[]
 === 레벨로그 삭제 실패
 
 ==== 작성자가 아닌 멤버가 삭제하려는 경우
-operation::levellog/delete/exception-author[]
+include::{snippets}/levellog/delete/exception-author/http-response.adoc[]

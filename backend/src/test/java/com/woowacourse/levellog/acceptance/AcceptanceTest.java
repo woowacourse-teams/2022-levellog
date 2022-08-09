@@ -99,7 +99,7 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse requestCreateTeam(final String title, final String token,
                                                     final Long... participantIds) {
         final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(List.of(participantIds));
-        final TeamCreateDto request = new TeamCreateDto(title, title + "place", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto request = new TeamCreateDto(title, title + "place", 1, LocalDateTime.now().plusDays(7),
                 participantIdsDto);
 
         return post("/api/teams", token, request);

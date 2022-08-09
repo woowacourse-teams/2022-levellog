@@ -15,6 +15,7 @@ import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class LevellogServiceTest extends ServiceTest {
 
     private static final LocalDateTime TOMORROW = LocalDateTime.now().plusDays(1);
+    private static final LocalDateTime AFTER_FAKE_NOW = LocalDateTime.now().plusDays(6);
 
     @Nested
     @DisplayName("save 메서드는")
@@ -41,7 +43,7 @@ class LevellogServiceTest extends ServiceTest {
             final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
             final Long authorId = memberRepository.save(new Member("알린", 1111, "alien.img"))
                     .getId();
-            final Long teamId = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TOMORROW, "profileUrl", 1))
+            final Long teamId = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", AFTER_FAKE_NOW, "profileUrl", 1))
                     .getId();
 
             // when
@@ -116,6 +118,22 @@ class LevellogServiceTest extends ServiceTest {
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 후에 요청한 경우 예외를 반환한다.")
+        void save_afterStart_exception() {
+            // given
+            final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
+            final Long authorId = memberRepository.save(new Member("알린", 1111, "alien.img"))
+                    .getId();
+            final Long teamId = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TOMORROW, "profileUrl", 1))
+                    .getId();
+
+            // when & then
+            assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.", String.valueOf(teamId));
         }
     }
 

@@ -124,9 +124,17 @@ public class Team extends BaseEntity {
         isClosed = true;
     }
 
+    public boolean isAfterStartTime(final LocalDateTime presentTime) {
+        return presentTime.isAfter(startAt);
+    }
+
+    public boolean isBeforeStartTime(final LocalDateTime presentTime) {
+        return presentTime.isBefore(startAt);
+    }
+
     public void validateAfterStartAt(final LocalDateTime presentTime, final String message) {
-        if (presentTime.isBefore(startAt)) {
-            throw new InterviewTimeException(message, "[teamId : " + this.getId() + ", startAt : " + startAt + "]");
+        if (isBeforeStartTime(presentTime)) {
+            throw new InterviewTimeException(message, "[teamId : " + this.getId() + "]");
         }
     }
 

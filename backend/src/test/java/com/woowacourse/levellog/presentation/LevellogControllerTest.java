@@ -15,6 +15,7 @@ import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -76,6 +77,31 @@ class LevellogControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("levellog/save/exception-contents"));
+        }
+
+        @Test
+        @DisplayName("팀의 인터뷰가 시작된 이후에 요청하는 경우 예외를 던진다.")
+        void save_afterStartTime_exception() throws Exception {
+            // given
+            final LevellogWriteDto request = LevellogWriteDto.from("content");
+            final String requestContent = objectMapper.writeValueAsString(request);
+            final Long authorId = 1L;
+            final Long teamId = 1L;
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            doThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.")).when(levellogService)
+                    .save(request, authorId, teamId);
+
+            // when
+            final ResultActions perform = requestSaveLevellog(teamId, requestContent);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."));
+
+            // docs
+            perform.andDo(document("levellog/save/exception-after-start"));
         }
 
         private ResultActions requestSaveLevellog(final Long teamId, final String requestContent) throws Exception {

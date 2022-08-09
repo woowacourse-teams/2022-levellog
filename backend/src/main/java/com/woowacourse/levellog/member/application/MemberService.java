@@ -1,6 +1,8 @@
 package com.woowacourse.levellog.member.application;
 
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
+import com.woowacourse.levellog.member.domain.CrewNicknameTable;
+import com.woowacourse.levellog.member.domain.CrewNicknameTableRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
@@ -10,6 +12,7 @@ import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,12 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final CrewNicknameTableRepository crewNicknameTableRepository;
 
     @Transactional
     public Long save(final MemberCreateDto request) {
         checkSameGithubId(request);
 
-        final Member member = request.toEntity();
+        final Member member = getMember(request);
         final Member savedMember = memberRepository.save(member);
 
         return savedMember.getId();
@@ -69,6 +73,15 @@ public class MemberService {
         if (isExistSameGithubId) {
             throw new MemberAlreadyExistException("멤버 중복 [githubId : " + request.getGithubId() + "]");
         }
+    }
+
+    private Member getMember(final MemberCreateDto request) {
+        final Member member = request.toEntity();
+        final Optional<CrewNicknameTable> crewName = crewNicknameTableRepository.findByGithubNickname(
+                request.getNickname());
+        crewName.ifPresent(name -> member.updateNickname(name.getCrewNickname()));
+
+        return member;
     }
 
     private Member getById(final Long memberId) {

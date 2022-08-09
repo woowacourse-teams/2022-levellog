@@ -31,6 +31,12 @@ include::{snippets}/feedback/save/exception/team/http-response.adoc[]
 ==== 존재하지 않는 레벨로그에 대해 피드백을 작성하려는 경우
 operation::feedback/save/exception/levellog[]
 
+==== 인터뷰 시작 전에 피드백을 작성하려는 경우
+include::{snippets}/feedback/save/exception/before-interview/http-response.adoc[]
+
+==== 인터뷰 종료 후에 피드백을 작성하려는 경우
+include::{snippets}/feedback/save/exception/after-interview/http-response.adoc[]
+
 [[find-all]]
 == 피드백 목록 조회
 
@@ -64,6 +70,12 @@ include::{snippets}/feedback/update/exception/author/http-response.adoc[]
 
 ==== 존재하지 않는 피드백 정보로 피드백을 수정하려는 경우
 operation::feedback/update/exception/feedback[]
+
+==== 인터뷰 시작 전에 피드백을 수정하려는 경우
+include::{snippets}/feedback/update/exception/before-interview/http-response.adoc[]
+
+==== 인터뷰 종료 후에 피드백을 수정하려는 경우
+include::{snippets}/feedback/update/exception/after-interview/http-response.adoc[]
 
 [[delete]]
 == 피드백 삭제

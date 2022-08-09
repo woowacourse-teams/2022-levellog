@@ -6,8 +6,7 @@ import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
-import com.woowacourse.levellog.team.dto.TeamCreateDto;
-import com.woowacourse.levellog.team.dto.TeamUpdateDto;
+import com.woowacourse.levellog.team.dto.TeamDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +28,9 @@ public class TeamController {
     private final TeamService teamService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid final TeamCreateDto teamCreateDto,
+    public ResponseEntity<Void> save(@RequestBody @Valid final TeamDto teamDto,
                                      @Authentic final Long memberId) {
-        final Long teamId = teamService.save(teamCreateDto, memberId);
+        final Long teamId = teamService.save(teamDto, memberId);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId)).build();
     }
 
@@ -60,7 +59,7 @@ public class TeamController {
 
     @PutMapping("/{teamId}")
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
-                                       @RequestBody @Valid final TeamUpdateDto request,
+                                       @RequestBody @Valid final TeamDto request,
                                        @Authentic final Long memberId) {
         teamService.update(request, teamId, memberId);
         return ResponseEntity.noContent().build();

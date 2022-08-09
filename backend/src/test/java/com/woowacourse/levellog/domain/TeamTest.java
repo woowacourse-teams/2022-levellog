@@ -172,25 +172,19 @@ class TeamTest {
         @DisplayName("팀 이름, 장소, 시작 시간을 수정한다.")
         void update() {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime presentTime = LocalDateTime.now();
-            final LocalDateTime startAt = presentTime.plusDays(3);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl, 1);
-            final String updateTitle = "브라운과 카페 투어";
-            final String updatePlace = "잠실 어드레스룸";
-            final LocalDateTime updateStartAt = presentTime.plusDays(10);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(3), "profile.img", 1);
+            final Team updatedTeam = new Team("브라운과 카페 투어", "잠실 어드레스룸", presentTime.plusDays(10), "profile.img", 2);
 
             // when
-            team.update(updateTitle, updatePlace, updateStartAt, presentTime);
+            team.update(updatedTeam, presentTime);
 
             // then
             assertAll(
-                    () -> assertThat(team.getTitle()).isEqualTo(updateTitle),
-                    () -> assertThat(team.getPlace()).isEqualTo(updatePlace),
-                    () -> assertThat(team.getStartAt()).isEqualTo(updateStartAt)
+                    () -> assertThat(team.getTitle()).isEqualTo(updatedTeam.getTitle()),
+                    () -> assertThat(team.getPlace()).isEqualTo(updatedTeam.getPlace()),
+                    () -> assertThat(team.getStartAt()).isEqualTo(updatedTeam.getStartAt()),
+                    () -> assertThat(team.getInterviewerNumber()).isEqualTo(updatedTeam.getInterviewerNumber())
             );
         }
 
@@ -200,18 +194,13 @@ class TeamTest {
         @DisplayName("팀 이름이 null 또는 공백이 들어오면 예외를 던진다.")
         void titleNullOrBlank_Exception(final String updateTitle) {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime presentTime = LocalDateTime.now();
-            final LocalDateTime startAt = presentTime.plusDays(3);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl, 1);
-            final String updatePlace = "잠실 어드레스룸";
-            final LocalDateTime updateStartAt = presentTime.plusDays(10);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(3), "profile.img", 1);
 
             // when & then
-            assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt, presentTime))
+            assertThatThrownBy(
+                    () -> team.update(new Team(updateTitle, "잠실 어드레스룸", presentTime.plusDays(10), "profile.img", 2),
+                            presentTime))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("팀 이름이 null 또는 공백입니다.");
         }
@@ -220,19 +209,14 @@ class TeamTest {
         @DisplayName("팀 이름이 255자를 초과할 경우 예외를 던진다.")
         void titleInvalidLength_Exception() {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime presentTime = LocalDateTime.now();
-            final LocalDateTime startAt = presentTime.plusDays(3);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl, 1);
             final String updateTitle = "a".repeat(256);
-            final String updatePlace = "잠실 어드레스룸";
-            final LocalDateTime updateStartAt = presentTime.plusDays(10);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(3), "profile.img", 1);
 
             // when & then
-            assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt, presentTime))
+            assertThatThrownBy(
+                    () -> team.update(new Team(updateTitle, "잠실 어드레스룸", presentTime.plusDays(10), "profile.img", 2),
+                            presentTime))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("잘못된 팀 이름을 입력했습니다.");
         }
@@ -243,18 +227,13 @@ class TeamTest {
         @DisplayName("팀 장소가 null 또는 공백이 들어오면 예외를 던진다.")
         void placeNullOrBlank_Exception(final String updatePlace) {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime presentTime = LocalDateTime.now();
-            final LocalDateTime startAt = presentTime.plusDays(3);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl, 1);
-            final String updateTitle = "브라운과 카페 투어";
-            final LocalDateTime updateStartAt = presentTime.plusDays(10);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(3), "profile.img", 1);
 
             // when & then
-            assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt, presentTime))
+            assertThatThrownBy(
+                    () -> team.update(new Team("브라운과 카페 투어", updatePlace, presentTime.plusDays(10), "profile.img", 2),
+                            presentTime))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("장소가 null 또는 공백입니다.");
         }
@@ -263,19 +242,14 @@ class TeamTest {
         @DisplayName("팀 장소가 255자를 초과할 경우 예외를 던진다.")
         void placeInvalidLength_Exception() {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime presentTime = LocalDateTime.now();
-            final LocalDateTime startAt = presentTime.plusDays(3);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl, 1);
-            final String updateTitle = "브라운과 카페 투어";
             final String updatePlace = "a".repeat(256);
-            final LocalDateTime updateStartAt = presentTime.plusDays(10);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(3), "profile.img", 1);
 
             // when & then
-            assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt, presentTime))
+            assertThatThrownBy(
+                    () -> team.update(new Team("브라운과 카페 투어", updatePlace, presentTime.plusDays(10), "profile.img", 2),
+                            presentTime))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("잘못된 장소를 입력했습니다.");
         }
@@ -285,18 +259,12 @@ class TeamTest {
         @DisplayName("인터뷰 시작 시간이 null이 들어오면 예외를 던진다.")
         void startAtNull_Exception(final LocalDateTime updateStartAt) {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime presentTime = LocalDateTime.now();
-            final LocalDateTime startAt = presentTime.plusDays(3);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl, 1);
-            final String updateTitle = "브라운과 카페 투어";
-            final String updatePlace = "잠실 어드레스룸";
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(3), "profile.img", 1);
 
             // when & then
-            assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt, presentTime))
+            assertThatThrownBy(
+                    () -> team.update(new Team("브라운과 카페 투어", "잠실 어드레스룸", updateStartAt, "profile.img", 2), presentTime))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("시작 시간이 없습니다.");
         }
@@ -305,19 +273,13 @@ class TeamTest {
         @DisplayName("인터뷰 시작 시간이 과거인 경우 예외를 던진다.")
         void startAtInvalidDateTime_Exception() {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime presentTime = LocalDateTime.now();
-            final LocalDateTime startAt = presentTime.plusDays(3);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl, 1);
-            final String updateTitle = "브라운과 카페 투어";
-            final String updatePlace = "잠실 어드레스룸";
-            final LocalDateTime updateStartAt = presentTime.minusDays(10);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(3), "profile.img", 1);
 
             // when & then
-            assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt, presentTime))
+            assertThatThrownBy(
+                    () -> team.update(new Team("브라운과 카페 투어", "잠실 어드레스룸", presentTime.minusDays(10), "profile.img", 2),
+                            presentTime))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("인터뷰 시작 시간은 현재 시간 이후여야 합니다.");
         }
@@ -326,20 +288,13 @@ class TeamTest {
         @DisplayName("인터뷰 시작 이후인 경우 예외를 던진다.")
         void updateAfterStartAt_Exception() {
             // given
-            final String title = "네오와 함께하는 레벨 인터뷰";
-            final String place = "선릉 트랙룸";
             final LocalDateTime now = LocalDateTime.now();
-            final LocalDateTime startAt = now.plusDays(1);
-            final String profileUrl = "profile.img";
-
-            final Team team = new Team(title, place, startAt, profileUrl, 1);
-            final String updateTitle = "브라운과 카페 투어";
-            final String updatePlace = "잠실 어드레스룸";
-            final LocalDateTime updateStartAt = now.plusDays(3);
             final LocalDateTime presentTime = now.plusDays(2);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", now.plusDays(1), "profile.img", 1);
+            final Team updatedTeam = new Team("브라운과 카페 투어", "잠실 어드레스룸", now.plusDays(3), "profile.img", 2);
 
             // when & then
-            assertThatThrownBy(() -> team.update(updateTitle, updatePlace, updateStartAt, presentTime))
+            assertThatThrownBy(() -> team.update(updatedTeam, presentTime))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("인터뷰가 시작된 이후에는 수정할 수 없습니다.");
         }

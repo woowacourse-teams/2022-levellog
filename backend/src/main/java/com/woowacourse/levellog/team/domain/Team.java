@@ -119,23 +119,22 @@ public class Team extends BaseEntity {
         }
     }
 
-    private void validateUpdatable(final LocalDateTime presentTime) {
+    private void validateUpdateTime(final LocalDateTime presentTime) {
         if (presentTime.isAfter(this.startAt)) {
             throw new InterviewTimeException("인터뷰가 시작된 이후에는 수정할 수 없습니다.",
                     "[teamId : " + this.getId() + " presentTime : " + presentTime + " startAt :" + this.startAt + "]");
         }
     }
 
-    public void update(final String title, final String place, final LocalDateTime startAt,
-                       final LocalDateTime presentTime) {
-        validateTitle(title);
-        validatePlace(place);
-        validateStartAt(startAt);
-        validateUpdatable(presentTime);
+    public void update(final Team team, final LocalDateTime presentTime) {
+        validateUpdateTime(presentTime);
 
-        this.title = title;
-        this.place = place;
-        this.startAt = startAt;
+        this.title = team.title;
+        this.place = team.place;
+        this.startAt = team.startAt;
+        this.profileUrl = team.profileUrl;
+        this.interviewerNumber = team.interviewerNumber;
+        this.isClosed = false;
     }
 
     public void close(final LocalDateTime presentTime) {

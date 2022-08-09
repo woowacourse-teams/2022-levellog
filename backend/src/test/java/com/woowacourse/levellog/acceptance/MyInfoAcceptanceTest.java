@@ -12,7 +12,7 @@ import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamCreateDto;
+import com.woowacourse.levellog.team.dto.TeamDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.time.LocalDateTime;
@@ -164,13 +164,13 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String hostToken = hostLoginResponse.getToken();
 
         // 팀 생성
-        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamDto teamDto1 = new TeamDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId)));
-        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
+        final TeamDto teamDto2 = new TeamDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId)));
 
-        final String teamId1 = post("/api/teams", hostToken, teamCreateDto1).getTeamId();
-        final String teamId2 = post("/api/teams", hostToken, teamCreateDto2).getTeamId();
+        final String teamId1 = post("/api/teams", hostToken, teamDto1).getTeamId();
+        final String teamId2 = post("/api/teams", hostToken, teamDto2).getTeamId();
 
         // 레벨로그 생성
         final LevellogDto levellogRequest1 = LevellogDto.from("레벨로그1 내용");
@@ -214,13 +214,13 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final Long alienId = login("알린").getMemberId();
 
         // 팀 생성
-        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamDto teamDto1 = new TeamDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId, pepperId)));
-        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
+        final TeamDto teamDto2 = new TeamDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId, alienId)));
 
-        post("/api/teams", hostToken, teamCreateDto1);
-        post("/api/teams", hostToken, teamCreateDto2);
+        post("/api/teams", hostToken, teamDto1);
+        post("/api/teams", hostToken, teamDto2);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

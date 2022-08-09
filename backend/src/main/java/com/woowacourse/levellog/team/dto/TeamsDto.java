@@ -15,5 +15,5 @@ import lombok.ToString;
 @ToString
 public class TeamsDto {
 
-    private List<TeamDto> teams;
+    private List<TeamDetailDto> teams;
 }

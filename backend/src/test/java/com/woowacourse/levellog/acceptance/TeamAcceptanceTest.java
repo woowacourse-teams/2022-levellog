@@ -2,6 +2,7 @@ package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
@@ -13,7 +14,6 @@ import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import com.woowacourse.levellog.team.dto.TeamUpdateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         final List<Long> participantIds = List.of(eveId, rickId);
 
-        final TeamCreateDto request = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto request = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(participantIds));
 
         // when
@@ -73,9 +73,9 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse eve = login("이브");
         final RestAssuredResponse rick = login("릭");
 
-        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(eve.getMemberId())));
-        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(rick.getMemberId())));
 
         post("/api/teams", pepper.getToken(), teamCreateDto1);
@@ -117,7 +117,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final Long romaId = login("로마").getMemberId();
 
         final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(eveId, rickId, romaId));
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, TEAM_START_TIME,
                 participants);
 
         final String id = post("/api/teams", pepper.getToken(), teamCreateDto).getTeamId();
@@ -160,7 +160,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final Long romaId = login("로마").getMemberId();
 
         final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(eveId, rickId, romaId));
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, TEAM_START_TIME,
                 participants);
 
         final String id = post("/api/teams", pepper.getToken(), teamCreateDto).getTeamId();
@@ -200,7 +200,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final Long romaId = login("로마").getMemberId();
 
         final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(eveId, rickId, romaId));
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, TEAM_START_TIME,
                 participants);
 
         final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
@@ -237,7 +237,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final Long romaId = login("로마").getMemberId();
 
         final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(eveId, rickId, romaId));
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 2, TEAM_START_TIME,
                 participants);
 
         final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
@@ -266,12 +266,15 @@ class TeamAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨 인터뷰 종료하기")
     void closeInterview() {
         // given
+
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
 
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
+                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String id = post("/api/teams", loginResponse1.getToken(), teamCreateDto).getTeamId();
+
+        timeStandard.setInProgress();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -302,10 +305,10 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final String pepperToken = login("페퍼").getToken();
         final Long eveId = login("이브").getMemberId();
 
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(eveId)));
         final String id = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
-        final TeamUpdateDto request = new TeamUpdateDto("선릉 브리조", "수성방", LocalDateTime.now().plusDays(3));
+        final TeamUpdateDto request = new TeamUpdateDto("선릉 브리조", "수성방", TEAM_START_TIME);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -334,7 +337,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final String pepperToken = login("페퍼").getToken();
         final Long eveId = login("이브").getMemberId();
 
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(eveId)));
         final String id = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
 

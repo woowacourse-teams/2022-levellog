@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
 import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.config.DatabaseCleaner;
+import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
@@ -20,7 +22,6 @@ import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,17 +48,22 @@ abstract class AcceptanceTest {
     @Autowired
     protected DatabaseCleaner databaseCleaner;
 
+    @Autowired
+    protected FakeTimeStandard timeStandard;
+
     @LocalServerPort
     private int port;
 
     @BeforeEach
-    public void tearDown(final RestDocumentationContextProvider contextProvider) {
+    public void setUp(final RestDocumentationContextProvider contextProvider) {
         setRestAssuredPort();
         setRestDocsSpec(contextProvider);
+
+        timeStandard.setBeforeStarted();
     }
 
     @AfterEach
-    public void cleanDatabase() {
+    public void tearDown() {
         databaseCleaner.clean();
     }
 
@@ -99,7 +105,7 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse requestCreateTeam(final String title, final String token,
                                                     final Long... participantIds) {
         final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(List.of(participantIds));
-        final TeamCreateDto request = new TeamCreateDto(title, title + "place", 1, LocalDateTime.now().plusDays(7),
+        final TeamCreateDto request = new TeamCreateDto(title, title + "place", 1, TEAM_START_TIME,
                 participantIdsDto);
 
         return post("/api/teams", token, request);

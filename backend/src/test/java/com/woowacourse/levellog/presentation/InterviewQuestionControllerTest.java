@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.presentation;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,9 +13,12 @@ import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("InterviewQuestionController 클래스의")
@@ -42,7 +46,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("save 메서드는")
-    class SaveTest {
+    class Save {
 
         @Test
         @DisplayName("인터뷰 질문이 공백인 경우 예외를 던진다.")
@@ -135,7 +139,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("findAll 메서드는")
-    class FindAllTest {
+    class FindAll {
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 인터뷰 질문 목록 조회를 요청하면 예외를 던진다.")
@@ -183,7 +187,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("update 메서드는")
-    class UpdateTest {
+    class Update {
 
         @Test
         @DisplayName("인터뷰 질문이 공백인 경우 예외를 던진다.")
@@ -269,11 +273,34 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("interview-question/update/exception/unauthorized"));
         }
+
+        @ParameterizedTest
+        @CsvSource(value = {"이미 종료된 인터뷰입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
+        @DisplayName("인터뷰가 수정 정책에 위반되면 예외를 던진다.")
+        void update_interviewTime_exception(final String message, final String snippet) throws Exception {
+            // given
+            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+
+            mockLogin();
+            willThrow(new InterviewTimeException(message))
+                    .given(interviewQuestionService)
+                    .update(request, 1L, 1L );
+
+            // when
+            final ResultActions perform = requestPut(getUrl(1L, 1L), ACCESS_TOKEN, request);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value(message));
+
+            // docs
+            perform.andDo(document("interview-question/update/exception/" + snippet));
+        }
     }
 
     @Nested
     @DisplayName("deleteById 메서드는")
-    class DeleteByIdTest {
+    class DeleteById {
 
         @Test
         @DisplayName("존재하지 않는 인터뷰 질문을 삭제하면 예외를 던진다.")

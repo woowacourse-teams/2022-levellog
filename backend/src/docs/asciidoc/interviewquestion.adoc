@@ -82,6 +82,14 @@ operation::interview-question/update/exception/contents/blank[]
 
 operation::interview-question/update/exception/contents/length[]
 
+==== 인터뷰가 이미 종료된 경우
+
+include::{snippets}/interview-question/update/exception/is-closed/http-response.adoc[]
+
+==== 인터뷰가 시작 전인 경우
+
+include::{snippets}/interview-question/update/exception/is-ready/http-response.adoc[]
+
 [[delete]]
 == 인터뷰 질문 삭제
 

@@ -34,7 +34,15 @@ operation::interview-question/save/exception/levellog-not-found[]
 
 ==== 인터뷰 질문 작성자 멤버를 찾을 수 없는 경우
 
-operation::interview-question/save/exception/member-not-found[]
+include::{snippets}/interview-question/save/exception/member-not-found/http-response.adoc[]
+
+==== 인터뷰가 이미 종료된 경우
+
+include::{snippets}/interview-question/save/exception/is-closed/http-response.adoc[]
+
+==== 인터뷰가 시작 전인 경우
+
+include::{snippets}/interview-question/save/exception/is-ready/http-response.adoc[]
 
 [[findAll]]
 == 인터뷰 질문 목록 조회

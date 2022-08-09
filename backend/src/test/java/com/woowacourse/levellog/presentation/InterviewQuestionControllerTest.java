@@ -134,6 +134,31 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("interview-question/save/exception/member-not-found"));
         }
+
+
+        @ParameterizedTest
+        @CsvSource(value = {"이미 종료된 인터뷰입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
+        @DisplayName("인터뷰 생성 정책에 위반되면 예외를 던진다.")
+        void save_interviewTime_exception(final String message, final String snippet) throws Exception {
+            // given
+            final long levellogId = 1L;
+            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
+
+            mockLogin();
+            willThrow(new InterviewTimeException(message))
+                    .given(interviewQuestionService)
+                    .save(request, levellogId, 1L);
+
+            // when
+            final ResultActions perform = requestPost(getUrl(levellogId), TOKEN, request);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value(message));
+
+            // docs
+            perform.andDo(document("interview-question/save/exception/" + snippet));
+        }
     }
 
     @Nested

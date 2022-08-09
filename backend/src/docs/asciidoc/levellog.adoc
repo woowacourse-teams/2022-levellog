@@ -61,17 +61,3 @@ include::{snippets}/levellog/update/exception-contents/http-response.adoc[]
 
 ==== 인터뷰가 진행중이거나 끝난 팀에 레벨로그 수정을 하려는 경우
 include::{snippets}/levellog/update/exception-after-start/http-response.adoc[]
-
-[[delete]]
-== 레벨로그 삭제
-
-[[delete-success]]
-=== 레벨로그 삭제 성공
-
-operation::levellog/delete[]
-
-[[delete-exception]]
-=== 레벨로그 삭제 실패
-
-==== 작성자가 아닌 멤버가 삭제하려는 경우
-include::{snippets}/levellog/delete/exception-author/http-response.adoc[]

@@ -123,39 +123,6 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 .body("content", equalTo(updateContent));
     }
 
-    /*
-     * Scenario: 레벨로그 삭제
-     *   given: 레벨로그가 등록되어있다.
-     *   when: 레벨로그를 삭제한다.
-     *   then: 204 No Content 상태 코드를 응답 받는다.
-     */
-    @Test
-    @DisplayName("레벨로그 삭제")
-    void deleteLevellog() {
-        // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
-        final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
-                LevellogWriteDto.from("Spring과 React를 학습했습니다.")).getLevellogId();
-
-        // when
-        final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
-                .filter(document("levellog/delete"))
-                .when()
-                .delete("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
-                .then().log().all();
-
-        // then
-        response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindLevellog(Long.parseLong(teamId), Long.parseLong(levellogId))
-                .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("message", equalTo("레벨로그가 존재하지 않습니다."));
-    }
-
     private ValidatableResponse requestFindLevellog(final Long teamId, final Long levellogId) {
         return RestAssured.given().log().all()
                 .accept(MediaType.ALL_VALUE)

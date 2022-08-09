@@ -267,87 +267,18 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("인터뷰 시작 후에 요청한 경우 예외를 반환한다.")
         void update_afterStart_exception() {
             // given
-            final LevellogDto request = LevellogDto.from("update content");
+            final LevellogWriteDto request = LevellogWriteDto.from("update content");
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", BEFORE_FAKE_NOW_TIME, "profileUrl", 1));
+            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
 
             final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "original content"));
+
+            timeStandard.setInProgress();
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellog.getId(), author.getId()))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.", String.valueOf(team.getId()));
-        }
-    }
-
-    @Nested
-    @DisplayName("deleteById 메서드는")
-    class DeleteById {
-
-        @Test
-        @DisplayName("id에 해당하는 레벨로그를 삭제한다.")
-        void success() {
-            // given
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "original content"));
-
-            // when
-            levellogService.deleteById(levellog.getId(), author.getId());
-
-            // then
-            final Optional<Levellog> actual = levellogRepository.findById(levellog.getId());
-            assertThat(actual).isEmpty();
-        }
-
-        @Test
-        @DisplayName("id에 해당하는 레벨로그가 존재하지 않는 경우 예외를 던진다.")
-        void deleteById_notFound_exception() {
-            // given
-            final Long authorId = memberRepository.save(new Member("알린", 1111, "alien.img"))
-                    .getId();
-            final Long levellogId = 1000L;
-
-            // when & then
-            assertThatThrownBy(() -> levellogService.deleteById(levellogId, authorId))
-                    .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(levellogId));
-        }
-
-        @Test
-        @DisplayName("memberId에 해당하는 작성자가 존재하지 않는 경우 예외를 던진다.")
-        void deleteById_memberNotFound_exception() {
-            // given
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
-
-            final Long levellogId = levellogRepository.save(Levellog.of(author, team, "Spring을 학습하였습니다."))
-                    .getId();
-            final Long authorId = author.getId();
-
-            memberRepository.deleteById(authorId);
-
-            // when & then
-            assertThatThrownBy(() -> levellogService.deleteById(levellogId, authorId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(authorId));
-        }
-
-        @Test
-        @DisplayName("작성자의 id와 로그인한 id가 다를 경우 권한 없음 예외를 던진다.")
-        void deleteById_unauthorized_Exception() {
-            // given
-            final Member author = memberRepository.save(new Member("알린", 2222, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
-            final Long levellogId = levellogRepository.save(Levellog.of(author, team, "original content"))
-                    .getId();
-
-            final Long otherMemberId = memberRepository.save(new Member("페퍼", 1111, "pepper.img"))
-                    .getId();
-
-            // when & then
-            assertThatThrownBy(() -> levellogService.deleteById(levellogId, otherMemberId))
-                    .isInstanceOf(UnauthorizedException.class);
         }
     }
 

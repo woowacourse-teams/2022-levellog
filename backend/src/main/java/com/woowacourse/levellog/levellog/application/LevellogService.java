@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.levellog.application;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
@@ -69,15 +68,6 @@ public class LevellogService {
         levellog.updateContent(member, request.getContent(), timeStandard.now());
     }
 
-    @Transactional
-    public void deleteById(final Long levellogId, final Long memberId) {
-        final Levellog levellog = getById(levellogId);
-        final Member member = getMember(memberId);
-        validateAuthor(member, levellog);
-
-        levellogRepository.deleteById(levellogId);
-    }
-
     private Levellog getById(final Long levellogId) {
         return levellogRepository.findById(levellogId)
                 .orElseThrow(() -> new LevellogNotFoundException("레벨로그가 존재하지 않습니다. levellogId : " + levellogId));
@@ -97,14 +87,6 @@ public class LevellogService {
         final boolean isExists = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
         if (isExists) {
             throw new LevellogAlreadyExistException("레벨로그를 이미 작성하였습니다. authorId : " + authorId + " teamId : " + teamId);
-        }
-    }
-
-    private void validateAuthor(final Member member, final Levellog levellog) {
-        final boolean isNotAuthor = !levellog.isAuthor(member);
-        if (isNotAuthor) {
-            throw new UnauthorizedException("레벨로그를 삭제할 권한이 없습니다. memberId : " + member.getId()
-                    + " levellogId: " + levellog.getId());
         }
     }
 }

@@ -4,7 +4,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -203,7 +202,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
-            final LevellogDto request = LevellogDto.from("new content");
+            final LevellogWriteDto request = LevellogWriteDto.from("new content");
             final String requestContent = objectMapper.writeValueAsString(request);
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
@@ -232,38 +231,6 @@ class LevellogControllerTest extends ControllerTest {
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(requestContent))
                     .andDo(print());
-        }
-    }
-
-    @Nested
-    @DisplayName("delete 메서드는")
-    class DeleteTest {
-
-        @Test
-        @DisplayName("본인이 작성하지 않은 레벨로그를 삭제하려는 경우 예외를 던진다.")
-        void delete_nameNullOrEmpty_Exception() throws Exception {
-            // given
-            final Long teamId = 1L;
-            final Long memberId = 1L;
-            final Long levellogId = 2L;
-
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new UnauthorizedException("권한이 없습니다.")).when(levellogService)
-                    .deleteById(levellogId, memberId);
-
-            // when
-            final ResultActions perform = mockMvc.perform(
-                            delete("/api/teams/{teamId}/levellogs/{levellogId}", teamId, levellogId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ACCESS_TOKEN))
-                    .andDo(print());
-
-            // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message").value("권한이 없습니다."));
-
-            // docs
-            perform.andDo(document("levellog/delete/exception-author"));
         }
     }
 }

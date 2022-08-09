@@ -2,9 +2,7 @@ package com.woowacourse.levellog.presentation;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -367,66 +365,6 @@ class FeedbackControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("feedback/update/exception/after-interview"));
-        }
-    }
-
-    @Nested
-    @DisplayName("delete 메서드는")
-    class delete {
-
-        @Test
-        @DisplayName("피드백에 관련이 없는 멤버가 삭제를 요청하면 예외가 발생한다.")
-        void delete_otherMember_exceptionThrown() throws Exception {
-            // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
-            final Long levellogId = 1L;
-            final Long feedbackId = 2L;
-            doThrow(new InvalidFeedbackException(
-                    " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]", "자신이 남긴 피드백만 삭제할 수 있습니다."))
-                    .when(feedbackService)
-                    .deleteById(feedbackId, memberId);
-
-            // when
-            final ResultActions perform = mockMvc.perform(
-                            delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                    .andDo(print());
-
-            // then
-            perform.andExpect(status().isBadRequest());
-
-            // docs
-            perform.andDo(document("feedback/delete/exception/author"));
-        }
-
-        @Test
-        @DisplayName("존재하지 않는 피드백 정보로 피드백 삭제를 요청하면 예외가 발생한다.")
-        void delete_notFoundFeedback_exceptionThrown() throws Exception {
-            // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
-            final Long levellogId = 1L;
-            final Long feedbackId = 2000000L;
-            doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
-                    .when(feedbackService)
-                    .deleteById(feedbackId, memberId);
-
-            // when
-            final ResultActions perform = mockMvc.perform(
-                            delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                    .andDo(print());
-
-            // then
-            perform.andExpect(status().isNotFound());
-
-            // docs
-            perform.andDo(document("feedback/delete/exception/feedback"));
         }
     }
 

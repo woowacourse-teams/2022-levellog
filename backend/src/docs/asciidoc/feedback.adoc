@@ -76,20 +76,3 @@ include::{snippets}/feedback/update/exception/before-interview/http-response.ado
 
 ==== 인터뷰 종료 후에 피드백을 수정하려는 경우
 include::{snippets}/feedback/update/exception/after-interview/http-response.adoc[]
-
-[[delete]]
-== 피드백 삭제
-
-[[delete-success]]
-=== 피드백 삭제 성공
-
-operation::feedback/delete[]
-
-[[delete-exception]]
-=== 피드백 삭제 예외
-
-==== 다른 사용자가 작성한 피드백을 삭제하려는 경우
-include::{snippets}/feedback/delete/exception/author/http-response.adoc[]
-
-==== 존재하지 않는 피드백 정보로 피드백을 삭제하려는 경우
-operation::feedback/delete/exception/feedback[]

@@ -222,54 +222,6 @@ class FeedbackServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("delete 메서드는")
-    class delete {
-
-        @Test
-        @DisplayName("자신이 남긴 피드백을 삭제한다.")
-        void delete_fromEqualsMe_success() {
-            // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
-
-            final Feedback alienFeedback = feedbackRepository.save(
-                    new Feedback(alien, eve, levellog, "알린이 이브에게 스터디", "알린이 이브에게 말하기", "알린이 이브에게 기타"));
-            final Long deleteId = alienFeedback.getId();
-
-            // when
-            feedbackService.deleteById(deleteId, alien.getId());
-
-            // then
-            final Optional<Feedback> deletedFeedback = feedbackRepository.findById(deleteId);
-            assertThat(deletedFeedback).isEmpty();
-        }
-
-        @Test
-        @DisplayName("피드백에 관련이 없는 멤버가 삭제하면 예외를 던진다.")
-        void delete_otherMember_exceptionThrown() {
-            // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
-            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
-
-            final Feedback alienFeedback = feedbackRepository.save(
-                    new Feedback(alien, eve, levellog, "알린이 이브에게 스터디", "알린이 이브에게 말하기", "알린이 이브에게 기타"));
-            final Long deleteId = alienFeedback.getId();
-
-            // when, then
-            assertThatThrownBy(() -> feedbackService.deleteById(deleteId, roma.getId()))
-                    .isInstanceOf(InvalidFeedbackException.class)
-                    .hasMessageContaining("자신이 남긴 피드백만 삭제할 수 있습니다.");
-        }
-    }
-
-    @Nested
     @DisplayName("save 메서드는")
     class save {
 

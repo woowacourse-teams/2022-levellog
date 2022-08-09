@@ -97,16 +97,6 @@ public class FeedbackService {
                 request.getFeedback().getEtc());
     }
 
-    @Transactional
-    public void deleteById(final Long feedbackId, final Long memberId) {
-        final Feedback feedback = getFeedback(feedbackId);
-        final Member member = getMember(memberId);
-
-        feedback.validateAuthor(member, "자신이 남긴 피드백만 삭제할 수 있습니다.");
-
-        feedbackRepository.deleteById(feedbackId);
-    }
-
     private void validateExistence(final Long levellogId, final Long fromMemberId) {
         if (feedbackRepository.existsByLevellogIdAndFromId(levellogId, fromMemberId)) {
             throw new FeedbackAlreadyExistException("피드백이 이미 존재합니다. levellogId : " + levellogId);

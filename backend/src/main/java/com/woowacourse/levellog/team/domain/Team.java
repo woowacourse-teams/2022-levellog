@@ -130,9 +130,9 @@ public class Team extends BaseEntity {
         }
     }
 
-    private void validateAlreadyClosed() {
+    public void validateAlreadyClosed() {
         if (isClosed) {
-            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
+            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + getId() + "]");
         }
     }
 }

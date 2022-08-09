@@ -55,7 +55,15 @@ abstract class AcceptanceTest {
      */
     @BeforeEach
     public void setUp(final RestDocumentationContextProvider contextProvider) {
+        setRestAssuredPort();
+        setRestDocsSpec(contextProvider);
+    }
+
+    private void setRestAssuredPort() {
         RestAssured.port = port;
+    }
+
+    private void setRestDocsSpec(final RestDocumentationContextProvider contextProvider) {
         specification = new RequestSpecBuilder()
                 .addFilter(
                         documentationConfiguration(contextProvider)

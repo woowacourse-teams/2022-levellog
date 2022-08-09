@@ -303,6 +303,23 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContainingAll("인터뷰가 이미 종료되었습니다.", String.valueOf(team.getId()), String.valueOf(interviewQuestionId));
         }
+
+        @Test
+        @DisplayName("인터뷰가 시작 전이면 예외를 던진다.")
+        void update_isReady_exception() {
+            // given
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(10, pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+            final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("인터뷰 시작 전입니다.", String.valueOf(team.getId()));
+        }
     }
 
     @Nested

@@ -17,6 +17,7 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class InterviewQuestionService {
     private final LevellogRepository levellogRepository;
     private final ParticipantRepository participantRepository;
     private final TeamRepository teamRepository;
+    private final TimeStandard timeStandard;
 
     @Transactional
     public Long save(final InterviewQuestionDto request, final Long levellogId, final Long fromMemberId) {
@@ -68,6 +70,7 @@ public class InterviewQuestionService {
             throw new InterviewTimeException("인터뷰가 이미 종료되었습니다.",
                     " [interviewQuestionId : " + interviewQuestionId + ", teamId : " + team.getId() + "]");
         }
+        team.validateAfterStartAt(timeStandard.now(), "인터뷰 시작 전입니다.");
 
         interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
     }

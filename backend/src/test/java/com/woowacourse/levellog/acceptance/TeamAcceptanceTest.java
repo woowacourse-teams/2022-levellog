@@ -72,7 +72,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse eve = login("이브");
         final RestAssuredResponse rick = login("릭");
 
-        final TeamDto teamDto1 = new TeamDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamDto teamDto1 = new TeamDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(10),
                 new ParticipantIdsDto(List.of(eve.getMemberId())));
         final TeamDto teamDto2 = new TeamDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(rick.getMemberId())));
@@ -93,7 +93,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"),
                         "teams.hostId", contains(pepper.getMemberId().intValue(), eve.getMemberId().intValue()),
-                        "teams.isClosed", contains(false, false),
+                        "teams.status", contains("READY", "IN_PROGRESS"),
                         "teams.isParticipant", contains(true, false),
                         "teams.participants.nickname", contains(List.of("페퍼", "이브"), List.of("이브", "릭")));
     }
@@ -135,7 +135,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .body("title", equalTo("잠실 제이슨조"),
                         "place", equalTo("트랙룸"),
                         "hostId", equalTo(pepper.getMemberId().intValue()),
-                        "isClosed", equalTo(false),
+                        "status", equalTo("IN_PROGRESS"),
                         "isParticipant", equalTo(true),
                         "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
                         "interviewers", contains(eveId.intValue(), rickId.intValue()),
@@ -174,7 +174,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .body("title", equalTo("잠실 제이슨조"),
                         "place", equalTo("트랙룸"),
                         "hostId", equalTo(pepper.getMemberId().intValue()),
-                        "isClosed", equalTo(false),
+                        "status", equalTo("IN_PROGRESS"),
                         "isParticipant", equalTo(false),
                         "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
                         "interviewers", empty(),
@@ -285,7 +285,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.NO_CONTENT.value());
 
         get("/api/teams/" + id).getResponse()
-                .body("isClosed", equalTo(true));
+                .body("status", equalTo("CLOSED"));
     }
 
     /*

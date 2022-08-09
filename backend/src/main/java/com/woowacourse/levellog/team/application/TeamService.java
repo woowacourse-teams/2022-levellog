@@ -14,6 +14,7 @@ import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
+import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
@@ -78,10 +79,11 @@ public class TeamService {
         final Team team = getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
 
+        final TeamStatus status = team.status(timeStandard.now());
         final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
-        return TeamAndRoleDto.from(team, participants.toHostId(), interviewers, interviewees,
+        return TeamAndRoleDto.from(team, participants.toHostId(), status, interviewers, interviewees,
                 getParticipantResponses(participants, memberId), participants.isContains(memberId));
     }
 

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
@@ -375,6 +376,54 @@ class TeamTest {
             assertThatThrownBy(() -> team.close(startAt.minusDays(1)))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("인터뷰가 시작되기 전에 종료할 수 없습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("status 메서드는")
+    class Status {
+
+        @Test
+        @DisplayName("현재 시간이 인터뷰 시작 시간보다 이전인 경우 READY를 반환한다.")
+        void readyStatus_success() {
+            // given
+            final LocalDateTime presentTime = LocalDateTime.now();
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(3), "profileUrl", 2);
+
+            // when
+            final TeamStatus actual = team.status(presentTime);
+
+            // then
+            assertThat(actual).isEqualTo(TeamStatus.READY);
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작시간이 현재 시간보다 이후이면서 종료되지 않은 경우 IN_PROGRESS를 반환한다.")
+        void inProgressStatus_success() {
+            // given
+            final LocalDateTime presentTime = LocalDateTime.now();
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(1), "profileUrl", 2);
+
+            // when
+            final TeamStatus actual = team.status(presentTime.plusDays(2));
+
+            // then
+            assertThat(actual).isEqualTo(TeamStatus.IN_PROGRESS);
+        }
+
+        @Test
+        @DisplayName("인터뷰가 종료된 경우 CLOSED를 반환한다.")
+        void closedStatus_success() {
+            // given
+            final LocalDateTime presentTime = LocalDateTime.now();
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", presentTime.plusDays(1), "profileUrl", 2);
+            team.close(presentTime.plusDays(2));
+
+            // when
+            final TeamStatus actual = team.status(presentTime.plusDays(3));
+
+            // then
+            assertThat(actual).isEqualTo(TeamStatus.CLOSED);
         }
     }
 }

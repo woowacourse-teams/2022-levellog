@@ -12,6 +12,7 @@ import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
@@ -74,9 +75,9 @@ class TeamServiceTest extends ServiceTest {
                 .map(List::size)
                 .collect(Collectors.toList());
 
-        final List<Boolean> actualCloseStatuses = response.getTeams()
+        final List<TeamStatus> actualCloseStatuses = response.getTeams()
                 .stream()
-                .map(TeamAndRoleDto::getIsClosed)
+                .map(TeamAndRoleDto::getStatus)
                 .collect(Collectors.toList());
 
         final List<Boolean> actualIsParticipants = response.getTeams()
@@ -87,7 +88,7 @@ class TeamServiceTest extends ServiceTest {
                 () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
                 () -> assertThat(actualHostIds).contains(member1.getId(), member2.getId()),
                 () -> assertThat(actualParticipantSizes).contains(2, 2),
-                () -> assertThat(actualCloseStatuses).containsExactly(false, true),
+                () -> assertThat(actualCloseStatuses).containsExactly(TeamStatus.READY, TeamStatus.CLOSED),
                 () -> assertThat(actualIsParticipants).containsExactly(false, true),
                 () -> assertThat(response.getTeams()).hasSize(2)
         );
@@ -281,7 +282,7 @@ class TeamServiceTest extends ServiceTest {
             assertAll(
                     () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
                     () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
-                    () -> assertThat(response.getIsClosed()).isFalse(),
+                    () -> assertThat(response.getStatus()).isEqualTo(TeamStatus.READY),
                     () -> assertThat(response.getParticipants()).hasSize(2)
             );
         }

@@ -143,4 +143,14 @@ public class Team extends BaseEntity {
 
         isClosed = true;
     }
+
+    public TeamStatus status(final LocalDateTime presentTime) {
+        if (isClosed) {
+            return TeamStatus.CLOSED;
+        }
+        if (startAt.isAfter(presentTime)) {
+            return TeamStatus.READY;
+        }
+        return TeamStatus.IN_PROGRESS;
+    }
 }

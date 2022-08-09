@@ -393,4 +393,42 @@ class TeamTest {
                     .hasMessageContaining("인터뷰가 시작되기 전에 종료할 수 없습니다.");
         }
     }
+
+    @Nested
+    @DisplayName("validateBeforeStartAt 메서드는")
+    class ValidateBeforeStartAt {
+
+        @Test
+        @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이전이면 예외가 발생한다.")
+        void validate_beforeStartAt_thrownException() {
+            // given
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
+
+            // when & then
+            assertThatThrownBy(() -> team.validateAfterStartAt(startAt.minusDays(1), "피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다."))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining("피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("validateAlreadyClosed 메서드는")
+    class ValidateAlreadyClosed {
+
+        @Test
+        @DisplayName("팀 인터뷰가 이미 종료된 상태면 예외를 발생시킨다.")
+        void validate_alreadyClosed_thrownException() {
+            // given
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
+
+            team.close(startAt.plusDays(1));
+
+            // when & then
+            assertThatThrownBy(team::validateAlreadyClosed)
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining("이미 종료된 인터뷰입니다.");
+        }
+    }
 }

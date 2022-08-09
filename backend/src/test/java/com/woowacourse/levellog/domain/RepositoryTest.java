@@ -10,6 +10,7 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
+import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -87,5 +88,11 @@ abstract class RepositoryTest {
         final Feedback feedback = new Feedback(from, to, levellog, "study from " + from.getNickname(),
                 "speak from " + from.getNickname(), "etc from " + from.getNickname());
         return feedbackRepository.save(feedback);
+    }
+
+    protected PreQuestion getPreQuestion(final Levellog levellog, final Member author) {
+        final PreQuestion preQuestion = new PreQuestion(levellog, author,
+                author.getNickname() + "이 " + levellog.getId() + "에 작성한 사전질문");
+        return preQuestionRepository.save(preQuestion);
     }
 }

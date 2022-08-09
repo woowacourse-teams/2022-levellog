@@ -59,7 +59,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("interviewQuestion must not be blank"));
 
             // docs
-            perform.andDo(document("interview-question/save/exception-contents-blank"));
+            perform.andDo(document("interview-question/save/exception/contents/blank"));
         }
 
         @Test
@@ -81,7 +81,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("인터뷰 질문은 255자 이하여야합니다."));
 
             // docs
-            perform.andDo(document("interview-question/save/exception-contents-length"));
+            perform.andDo(document("interview-question/save/exception/contents/length"));
         }
 
         @Test
@@ -105,7 +105,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/save/exception-levellog"));
+            perform.andDo(document("interview-question/save/exception/levellog-not-found"));
         }
 
         @Test
@@ -129,7 +129,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("멤버가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/save/exception-member"));
+            perform.andDo(document("interview-question/save/exception/member-not-found"));
         }
     }
 
@@ -155,7 +155,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/findAll/exception-levellog"));
+            perform.andDo(document("interview-question/findAll/exception/levellog/not-found"));
         }
 
         @Test
@@ -177,7 +177,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("멤버가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/findAll/exception-member"));
+            perform.andDo(document("interview-question/findAll/exception/member-not-found"));
         }
     }
 
@@ -200,7 +200,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("interviewQuestion must not be blank"));
 
             // docs
-            perform.andDo(document("interview-question/update/exception-contents-blank"));
+            perform.andDo(document("interview-question/update/exception/contents/blank"));
         }
 
         @Test
@@ -222,7 +222,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("인터뷰 질문은 255자 이하여야합니다."));
 
             // docs
-            perform.andDo(document("interview-question/update/exception-contents-length"));
+            perform.andDo(document("interview-question/update/exception/contents/length"));
         }
 
         @Test
@@ -245,7 +245,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("인터뷰 질문이 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/update/exception-interview-question"));
+            perform.andDo(document("interview-question/update/exception/not-found"));
         }
 
         @Test
@@ -267,7 +267,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("권한이 없습니다."));
 
             // docs
-            perform.andDo(document("interview-question/update/exception-unauthorized"));
+            perform.andDo(document("interview-question/update/exception/unauthorized"));
         }
     }
 
@@ -294,7 +294,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("인터뷰 질문이 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/delete/exception-interview-question"));
+            perform.andDo(document("interview-question/delete/exception/not-found"));
         }
 
         @Test
@@ -314,7 +314,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("권한이 없습니다."));
 
             // docs
-            perform.andDo(document("interview-question/delete/exception-unauthorized"));
+            perform.andDo(document("interview-question/delete/exception/unauthorized"));
         }
     }
 }

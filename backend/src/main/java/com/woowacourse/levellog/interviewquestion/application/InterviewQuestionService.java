@@ -42,8 +42,10 @@ public class InterviewQuestionService {
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(fromMember, levellog);
 
-        return interviewQuestionRepository.save(interviewQuestion)
-                .getId();
+        final InterviewQuestion savedInterviewQuestion = interviewQuestionRepository.save(interviewQuestion);
+        validateCanCUD(savedInterviewQuestion);
+
+        return savedInterviewQuestion.getId();
     }
 
     public InterviewQuestionsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
@@ -60,13 +62,7 @@ public class InterviewQuestionService {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member fromMember = getMember(fromMemberId);
 
-        final Team team = teamRepository.findByInterviewQuestion(interviewQuestion)
-                .orElseThrow(() -> new TeamNotFoundException(
-                        "인터뷰 질문에 해당하는 팀이 존재하지 않습니다. [interviewQuestionId : " + interviewQuestionId + "]",
-                        "인터뷰 질문에 해당하는 팀이 존재하지 않습니다."));
-
-        team.validateAlreadyClosed();
-        team.validateAfterStartAt(timeStandard.now(), "인터뷰 시작 전입니다.");
+        validateCanCUD(interviewQuestion);
 
         interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
     }
@@ -77,6 +73,7 @@ public class InterviewQuestionService {
         final Member member = getMember(fromMemberId);
 
         interviewQuestion.validateInterviewQuestionAuthor(member, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
+        validateCanCUD(interviewQuestion);
 
         interviewQuestionRepository.delete(interviewQuestion);
     }
@@ -105,5 +102,15 @@ public class InterviewQuestionService {
                     "같은 팀에 속한 멤버만 인터뷰 질문을 작성할 수 있습니다. [memberId :" + member.getId() + " teamId : " + team.getId()
                             + " levellogId : " + levellog.getId() + "]");
         }
+    }
+
+    private void validateCanCUD(final InterviewQuestion interviewQuestion) {
+        final Team team = teamRepository.findByInterviewQuestion(interviewQuestion)
+                .orElseThrow(() -> new TeamNotFoundException(
+                        "인터뷰 질문에 해당하는 팀이 존재하지 않습니다. [interviewQuestionId : " + interviewQuestion.getId() + "]",
+                        "인터뷰 질문에 해당하는 팀이 존재하지 않습니다."));
+
+        team.validateAlreadyClosed();
+        team.validateAfterStartAt(timeStandard.now(), "인터뷰 시작 전입니다.");
     }
 }

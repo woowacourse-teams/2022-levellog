@@ -41,7 +41,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
         return getTeam(3, host, members);
     }
 
-    private Team getTeam(final long days,  final Member host, final Member... members) {
+    private Team getTeam(final long days, final Member host, final Member... members) {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(days), "jamsil.img", 1));
 

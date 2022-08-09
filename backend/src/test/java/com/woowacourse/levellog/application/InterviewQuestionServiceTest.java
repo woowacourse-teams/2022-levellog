@@ -301,7 +301,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰가 이미 종료되었습니다.", String.valueOf(team.getId()), String.valueOf(interviewQuestionId));
+                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
         }
 
         @Test

@@ -11,10 +11,11 @@ const InterviewTeam = ({
   title,
   place,
   startAt,
+  isClosed,
   participants,
 }: InterviewTeamType) => {
   return (
-    <S.Container id={id}>
+    <S.Container id={id} isClosed={isClosed}>
       <FlexBox gap={0.625}>
         <Image src={teamImage} sizes={'LARGE'} />
         <FlexBox flexFlow="column wrap" gap={0.625}>
@@ -42,10 +43,11 @@ const InterviewTeam = ({
 };
 
 const S = {
-  Container: styled.div`
+  Container: styled.div<{ isClosed: Boolean }>`
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    opacity: ${(props) => (props.isClosed ? 0.2 : 1)};
     width: 20.25rem;
     min-width: 20.25rem;
     height: 15rem;

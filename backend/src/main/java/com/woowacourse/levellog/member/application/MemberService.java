@@ -30,7 +30,7 @@ public class MemberService {
     public Long save(final MemberCreateDto request) {
         checkSameGithubId(request);
 
-        final Member member = getMember(request);
+        final Member member = createMember(request);
         final Member savedMember = memberRepository.save(member);
 
         return savedMember.getId();
@@ -75,7 +75,7 @@ public class MemberService {
         }
     }
 
-    private Member getMember(final MemberCreateDto request) {
+    private Member createMember(final MemberCreateDto request) {
         final Member member = request.toEntity();
         final Optional<CrewNicknameTable> crewName = crewNicknameTableRepository.findByGithubNickname(
                 request.getNickname());

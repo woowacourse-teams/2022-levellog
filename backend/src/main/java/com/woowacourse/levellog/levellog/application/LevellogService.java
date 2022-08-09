@@ -14,7 +14,6 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
@@ -38,13 +37,9 @@ public class LevellogService {
         final Team team = getTeam(teamId);
         final Member author = getMember(authorId);
         validateLevellogExistence(authorId, teamId);
-        // TODO TEAM 도메인에 해당 로직 삽입 예정 ( 다른 팀원들 어떻게 하는지 보고 해결하자 )
-        if (team.isAfterStartTime(timeStandard.now())) {
-            throw new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.", "[teamId : " + teamId + "]");
-        }
 
-        final Levellog levellog = request.toLevellog(author, team);
-        final Levellog savedLevellog = levellogRepository.save(levellog);
+        final Levellog savedLevellog = levellogRepository.save(request.toLevellog(author, team));
+        savedLevellog.validateTeamStartTime(timeStandard.now());
 
         return savedLevellog.getId();
     }
@@ -71,7 +66,7 @@ public class LevellogService {
         final Levellog levellog = getById(levellogId);
         final Member member = getMember(memberId);
 
-        levellog.updateContent(member, request.getContent());
+        levellog.updateContent(member, request.getContent(), timeStandard.now());
     }
 
     @Transactional

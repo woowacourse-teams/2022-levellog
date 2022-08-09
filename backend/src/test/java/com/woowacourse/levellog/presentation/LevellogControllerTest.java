@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.presentation;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -81,7 +82,7 @@ class LevellogControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀의 인터뷰가 시작된 이후에 요청하는 경우 예외를 던진다.")
-        void save_afterStartTime_exception() throws Exception {
+        void save_afterStart_exception() throws Exception {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("content");
             final String requestContent = objectMapper.writeValueAsString(request);
@@ -124,8 +125,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final Long levellogId = 1000L;
 
-            doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
-                    .when(levellogService)
+            doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다.")).when(levellogService)
                     .findById(levellogId);
 
             // when
@@ -194,6 +194,33 @@ class LevellogControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("levellog/update/exception-author"));
+        }
+
+        @Test
+        @DisplayName("팀의 인터뷰가 시작된 이후에 요청하는 경우 예외를 던진다.")
+        void update_afterStart_exception() throws Exception {
+            // given
+            final Long teamId = 1L;
+            final Long levellogId = 2L;
+            final Long authorId = 1L;
+            final LevellogDto request = LevellogDto.from("new content");
+            final String requestContent = objectMapper.writeValueAsString(request);
+
+            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+
+            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.")).given(levellogService)
+                    .update(request, levellogId, authorId);
+
+            // when
+            final ResultActions perform = requestUpdateLevellog(teamId, levellogId, requestContent);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."));
+
+            // docs
+            perform.andDo(document("levellog/update/exception-after-start"));
         }
 
         private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId,

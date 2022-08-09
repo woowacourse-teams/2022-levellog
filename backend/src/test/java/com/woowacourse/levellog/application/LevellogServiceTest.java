@@ -247,7 +247,7 @@ class LevellogServiceTest extends ServiceTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("수정한 레벨로그의 내용이 공백이나 null일 경우 예외를 던진다.")
-        void update_contentBlank_Exception(final String invalidContent) {
+        void update_contentBlank_exception(final String invalidContent) {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from(invalidContent);
             final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
@@ -261,6 +261,22 @@ class LevellogServiceTest extends ServiceTest {
             assertThatThrownBy(() -> levellogService.update(request, levellogId, authorId))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 후에 요청한 경우 예외를 반환한다.")
+        void update_afterStart_exception() {
+            // given
+            final LevellogDto request = LevellogDto.from("update content");
+            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
+            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", BEFORE_FAKE_NOW_TIME, "profileUrl", 1));
+
+            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "original content"));
+
+            // when & then
+            assertThatThrownBy(() -> levellogService.update(request, levellog.getId(), author.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.", String.valueOf(team.getId()));
         }
     }
 
@@ -367,5 +383,4 @@ class LevellogServiceTest extends ServiceTest {
                     .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(1_000_000L));
         }
     }
-
 }

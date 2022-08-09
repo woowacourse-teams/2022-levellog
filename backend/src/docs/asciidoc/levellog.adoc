@@ -59,6 +59,9 @@ include::{snippets}/levellog/update/exception-author/http-response.adoc[]
 ==== 레벨로그 내용이 공백인 경우
 include::{snippets}/levellog/update/exception-contents/http-response.adoc[]
 
+==== 인터뷰가 진행중이거나 끝난 팀에 레벨로그 수정을 하려는 경우
+include::{snippets}/levellog/update/exception-after-start/http-response.adoc[]
+
 [[delete]]
 == 레벨로그 삭제
 

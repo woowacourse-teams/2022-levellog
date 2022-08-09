@@ -2,7 +2,6 @@ package com.woowacourse.levellog.presentation;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,8 +72,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             mockLogin();
 
             final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
-            doThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
-                    .when(interviewQuestionService)
+            willThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
+                    .given(interviewQuestionService)
                     .save(request, 1L, 1L);
 
             // when
@@ -97,8 +96,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final long invalidLevellogId = 20000000L;
             final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
 
-            doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .save(request, invalidLevellogId, 1L);
 
             // when
@@ -121,8 +120,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
 
             mockLogin(invalidMemberId);
-            doThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .save(request, levellogId, invalidMemberId);
 
             // when
@@ -147,8 +146,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             mockLogin();
             final long invalidLevellogId = 20000000L;
-            doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
 
             // when
@@ -169,8 +168,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final long invalidMemberId = 20000000L;
             final long levellogId = 1L;
             mockLogin(invalidMemberId);
-            doThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .findAllByLevellogAndAuthor(levellogId, invalidMemberId);
 
             // when
@@ -214,8 +213,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
 
             mockLogin();
-            doThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
-                    .when(interviewQuestionService)
+            willThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
+                    .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
             // when
@@ -237,8 +236,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
 
             mockLogin();
-            doThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .update(request, invalidInterviewQuestionId, 1L);
 
             // when
@@ -259,8 +258,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
 
             mockLogin();
-            doThrow(new UnauthorizedException("권한이 없습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new UnauthorizedException("권한이 없습니다."))
+                    .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
             // when
@@ -309,8 +308,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final Long invalidInterviewQuestionId = 1000L;
 
             mockLogin();
-            doThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .deleteById(invalidInterviewQuestionId, 1L);
 
             // when
@@ -329,8 +328,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void deleteById_unauthorized_exception() throws Exception {
             // given
             mockLogin();
-            doThrow(new UnauthorizedException("권한이 없습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new UnauthorizedException("권한이 없습니다."))
+                    .given(interviewQuestionService)
                     .deleteById(1L, 1L);
 
             // when

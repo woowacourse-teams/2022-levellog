@@ -186,7 +186,7 @@ class FeedbackControllerTest extends ControllerTest {
             doThrow(new InvalidFeedbackException(
                     " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]", "자신이 남긴 피드백만 수정할 수 있습니다."))
                     .when(feedbackService)
-                    .update(request, feedbackId, memberId);
+                    .update(request, levellogId, feedbackId, memberId);
 
             // when
             final ResultActions perform = mockMvc.perform(
@@ -221,7 +221,7 @@ class FeedbackControllerTest extends ControllerTest {
 
             doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
                     .when(feedbackService)
-                    .update(request, feedbackId, memberId);
+                    .update(request, levellogId, feedbackId, memberId);
 
             // when
             final ResultActions perform = mockMvc.perform(

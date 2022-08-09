@@ -4,7 +4,6 @@ import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
@@ -20,6 +19,7 @@ import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,19 +35,21 @@ public class FeedbackService {
     private final LevellogRepository levellogRepository;
     private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
+    private final TimeStandard timeStandard;
 
     @Transactional
     public Long save(final FeedbackWriteDto request, final Long levellogId, final Long fromMemberId) {
         validateExistence(levellogId, fromMemberId);
 
         final Member member = getMember(fromMemberId);
-        final FeedbackContentDto feedbackContent = request.getFeedback();
         final Levellog levellog = getLevellog(levellogId);
+        final Team team = getLevellog(levellogId).getTeam();
 
         levellog.validateSelfFeedback(member);
-        validateTeamMember(levellogId, member);
+        validateTeamMember(team, member);
+        validateFeedbackTime(team);
 
-        final Feedback feedback = feedbackContent.toFeedback(member, levellog);
+        final Feedback feedback = request.getFeedback().toFeedback(member, levellog);
 
         return feedbackRepository.save(feedback)
                 .getId();
@@ -80,11 +82,14 @@ public class FeedbackService {
     }
 
     @Transactional
-    public void update(final FeedbackWriteDto request, final Long feedbackId, final Long memberId) {
+    public void update(final FeedbackWriteDto request, final Long levellogId, final Long feedbackId,
+                       final Long memberId) {
         final Feedback feedback = getFeedback(feedbackId);
         final Member member = getMember(memberId);
+        final Team team = getLevellog(levellogId).getTeam();
 
         feedback.validateAuthor(member, "자신이 남긴 피드백만 수정할 수 있습니다.");
+        validateFeedbackTime(team);
 
         feedback.updateFeedback(
                 request.getFeedback().getStudy(),
@@ -108,14 +113,17 @@ public class FeedbackService {
         }
     }
 
-    private void validateTeamMember(final Long levellogId, final Member member) {
-        final Team team = getLevellog(levellogId).getTeam();
-
+    private void validateTeamMember(final Team team, final Member member) {
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
             throw new InvalidFeedbackException(
                     " [memberId :" + member.getId() + " teamId : " + team.getId() + "]",
                     "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
         }
+    }
+
+    private void validateFeedbackTime(final Team team) {
+        team.validateAfterStartAt(timeStandard.now(), "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.");
+        team.validateAlreadyClosed();
     }
 
     private List<FeedbackDto> getFeedbackResponses(final List<Feedback> feedbacks) {

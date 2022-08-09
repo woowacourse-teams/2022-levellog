@@ -15,10 +15,8 @@ on:
 
 jobs:
   test:
-    if: ${{ github.event.label.name == '👩🏻‍💻 백엔드' }}
+    if: contains(github.event.labels.*.name,'👩🏻‍💻 백엔드')
     runs-on: ubuntu-22.04 # 실행 환경 지정
-
-    steps:
       - uses: actions/checkout@v2 # github action 버전 지정(major version)
 
       - name: Set up JDK 11 # JAVA 버전 지정

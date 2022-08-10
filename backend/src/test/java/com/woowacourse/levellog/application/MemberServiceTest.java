@@ -73,7 +73,10 @@ class MemberServiceTest extends ServiceTest {
             final Long id = memberService.save(memberCreateDto);
 
             // then
-            assertThat(memberRepository.findById(id)).isPresent();
+            assertAll(
+                    () -> assertThat(memberRepository.findById(id)).isPresent(),
+                    () -> assertThat(memberRepository.findById(id).get().getNickname()).isEqualTo("로마")
+            );
         }
 
         @Test

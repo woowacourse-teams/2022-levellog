@@ -311,7 +311,7 @@ class FeedbackServiceTest extends ServiceTest {
             assertThatThrownBy(() -> feedbackService.save(new FeedbackWriteDto(
                             new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타")),
                     levellog.getId(), roma.getId()))
-                    .isInstanceOf(InvalidFeedbackException.class)
+                    .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContaining("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
         }
 

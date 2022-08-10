@@ -339,31 +339,6 @@ class FeedbackControllerTest extends ControllerTest {
     class FindAll {
 
         @Test
-        @DisplayName("존재하지 않는 멤버에 대한 피드백 목록 조회를 요청하면 예외가 발생한다.")
-        void findAll_notFoundMember_exceptionThrown() throws Exception {
-            // given
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
-            final Long levellogId = 1L;
-
-            given(feedbackService.findAll(levellogId, memberId))
-                    .willThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."));
-
-            // when
-            final ResultActions perform = requestGet("/api/levellogs/" + levellogId + "/feedbacks", token);
-
-            // then
-            perform.andExpectAll(
-                    status().isNotFound(),
-                    jsonPath("message").value("멤버가 존재하지 않습니다.")
-            );
-
-            // docs
-            perform.andDo(document("feedback/find-all/exception/member"));
-        }
-
-        @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
         void findAll_notFoundLevellog_exceptionThrown() throws Exception {
             // given

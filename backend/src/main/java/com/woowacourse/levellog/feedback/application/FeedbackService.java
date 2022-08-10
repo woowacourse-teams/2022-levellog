@@ -46,7 +46,7 @@ public class FeedbackService {
         final Team team = levellog.getTeam();
 
         levellog.validateSelfFeedback(member);
-        validateTeamMember(team, member);
+        validateTeamMember(team, member, "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
         validateFeedbackTime(team);
 
         final Feedback feedback = request.getFeedback()
@@ -60,17 +60,7 @@ public class FeedbackService {
         final Levellog levellog = getLevellog(levellogId);
         final List<FeedbackDto> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
 
-        final boolean isParticipant = participantRepository.findByTeam(levellog.getTeam())
-                .stream()
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
-                .anyMatch(it -> it.equals(memberId));
-
-        if (!isParticipant) {
-            throw new UnauthorizedException("자신이 속한 팀의 피드백만 조회할 수 있습니다."
-                    + " [ teamId : " + levellog.getTeam().getId() + " memberId : " + memberId
-                    + " levellogId : " + levellogId + " ]");
-        }
+        validateTeamMember(levellog.getTeam(), getMember(memberId), "자신이 속한 팀의 피드백만 조회할 수 있습니다.");
 
         return new FeedbacksDto(responses);
     }
@@ -103,11 +93,9 @@ public class FeedbackService {
         }
     }
 
-    private void validateTeamMember(final Team team, final Member member) {
+    private void validateTeamMember(final Team team, final Member member, final String message) {
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
-            throw new InvalidFeedbackException(
-                    " [memberId :" + member.getId() + " teamId : " + team.getId() + "]",
-                    "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
+            throw new UnauthorizedException(message + " [ teamId : " + team.getId() + " memberId : " + member.getId() + " ]");
         }
     }
 

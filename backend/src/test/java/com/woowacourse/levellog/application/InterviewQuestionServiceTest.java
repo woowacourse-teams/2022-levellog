@@ -419,7 +419,6 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
-            final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
 
             team.close(timeStandard.now());
 
@@ -438,7 +437,6 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Team team = getTeam(10, pepper, eve);
             final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
-            final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))

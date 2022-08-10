@@ -14,8 +14,6 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.domain.TeamRepository;
-import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +29,6 @@ public class InterviewQuestionService {
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
     private final ParticipantRepository participantRepository;
-    private final TeamRepository teamRepository;
     private final TimeStandard timeStandard;
 
     @Transactional
@@ -105,10 +102,8 @@ public class InterviewQuestionService {
     }
 
     private void validateCanCUD(final InterviewQuestion interviewQuestion) {
-        final Team team = teamRepository.findByInterviewQuestion(interviewQuestion)
-                .orElseThrow(() -> new TeamNotFoundException(
-                        "인터뷰 질문에 해당하는 팀이 존재하지 않습니다. [interviewQuestionId : " + interviewQuestion.getId() + "]",
-                        "인터뷰 질문에 해당하는 팀이 존재하지 않습니다."));
+        final Team team = interviewQuestion.getLevellog()
+                .getTeam();
 
         team.validateAlreadyClosed();
         team.validateAfterStartAt(timeStandard.now(), "인터뷰 시작 전입니다.");

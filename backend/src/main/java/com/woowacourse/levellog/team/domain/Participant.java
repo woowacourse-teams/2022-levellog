@@ -7,14 +7,14 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
+@Where(clause = "deleted = false")
 public class Participant extends BaseEntity {
 
     @ManyToOne
@@ -26,4 +26,17 @@ public class Participant extends BaseEntity {
     private Member member;
 
     private boolean isHost;
+
+    private boolean deleted;
+
+    public Participant(final Team team, final Member member, final boolean isHost) {
+        this.team = team;
+        this.member = member;
+        this.isHost = isHost;
+        this.deleted = false;
+    }
+
+    public void delete() {
+        deleted = true;
+    }
 }

@@ -78,6 +78,10 @@ public class Participants {
                 .anyMatch(it -> it.equals(memberId));
     }
 
+    public void delete() {
+        values.forEach(Participant::delete);
+    }
+
     private List<Long> concatSameTwice(final List<Long> participantIds) {
         final List<Long> linear = new ArrayList<>(participantIds);
         linear.addAll(participantIds);

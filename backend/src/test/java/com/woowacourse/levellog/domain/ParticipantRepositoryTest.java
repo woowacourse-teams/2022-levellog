@@ -60,29 +60,6 @@ public class ParticipantRepositoryTest {
     }
 
     @Test
-    @DisplayName("deleteByTeam는 team이 일치하는 모든 participant를 제거한다.")
-    void deleteByTeam() {
-        // given
-        final Team team = teamRepository.save(new Team(
-                "네오와 함께하는 레벨 인터뷰",
-                "선릉 트랙룸",
-                LocalDateTime.now().plusDays(3),
-                "profile.img", 1));
-
-        final Member alien = memberRepository.save(new Member("알린", 12345678, "alien.img"));
-        final Member roma = memberRepository.save(new Member("로마", 56781234, "roma.img"));
-
-        participantRepository.save(new Participant(team, alien, true));
-        participantRepository.save(new Participant(team, roma, false));
-
-        // when
-        participantRepository.deleteByTeam(team);
-
-        // then
-        assertThat(participantRepository.findAll()).isEmpty();
-    }
-
-    @Test
     @DisplayName("existsByMemberAndTeam는 멤버와 팀이 일치 여부를 반환한다.")
     void existsByMemberAndTeam() {
         // given

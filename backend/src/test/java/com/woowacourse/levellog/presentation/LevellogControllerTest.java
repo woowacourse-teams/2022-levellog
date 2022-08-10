@@ -71,7 +71,7 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("팀의 인터뷰가 시작된 이후에 요청하는 경우 예외를 던진다.")
+        @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 저장하는 경우 예외를 던진다.")
         void save_afterStart_exception() throws Exception {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("content");
@@ -180,7 +180,7 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("팀의 인터뷰가 시작된 이후에 요청하는 경우 예외를 던진다.")
+        @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 수정하는 경우 예외를 던진다.")
         void update_afterStart_exception() throws Exception {
             // given
             final Long teamId = 1L;

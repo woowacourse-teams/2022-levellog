@@ -174,7 +174,7 @@ export const interviewTeams = {
       place: '톱오브스윙방',
       startAt: '2022-08-06T11:44:59.447635',
       teamImage: '이브.com',
-      isClosed: false,
+      status: 'IN_PROGRESS',
       hostId: 2,
       participants: [
         {

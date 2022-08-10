@@ -11,7 +11,7 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionReposi
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.application.MemberService;
-import com.woowacourse.levellog.member.domain.NicknameRepository;
+import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
@@ -61,7 +61,7 @@ abstract class ServiceTest {
     protected MemberRepository memberRepository;
 
     @Autowired
-    protected NicknameRepository nicknameRepository;
+    protected NicknameMappingRepository nicknameMappingRepository;
 
     @Autowired
     protected LevellogRepository levellogRepository;

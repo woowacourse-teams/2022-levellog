@@ -43,7 +43,7 @@ public class FeedbackController {
                                        @RequestBody @Valid final FeedbackWriteDto request,
                                        @PathVariable final Long feedbackId,
                                        @Authentic final Long memberId) {
-        feedbackService.update(request, levellogId, feedbackId, memberId);
+        feedbackService.update(request, feedbackId, memberId);
         return ResponseEntity.noContent().build();
     }
 }

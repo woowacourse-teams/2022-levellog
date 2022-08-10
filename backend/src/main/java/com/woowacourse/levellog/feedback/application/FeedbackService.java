@@ -83,11 +83,10 @@ public class FeedbackService {
     }
 
     @Transactional
-    public void update(final FeedbackWriteDto request, final Long levellogId, final Long feedbackId,
-                       final Long memberId) {
+    public void update(final FeedbackWriteDto request, final Long feedbackId, final Long memberId) {
         final Feedback feedback = getFeedback(feedbackId);
         final Member member = getMember(memberId);
-        final Team team = getLevellog(levellogId).getTeam();
+        final Team team = feedback.getLevellog().getTeam();
 
         feedback.validateAuthor(member);
         validateFeedbackTime(team);

@@ -3,10 +3,7 @@ package com.woowacourse.levellog.presentation;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
@@ -18,11 +15,9 @@ import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
-import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("FeedbackController의")
@@ -54,7 +49,10 @@ class FeedbackControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", token, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("피드백이 이미 존재합니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/save/exception/exist"));
@@ -73,14 +71,17 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(" [levellogId : " + levellogId + "]",
-                            "자기 자신에게 피드백을 할 수 없습니다."));
+                    .willThrow(new InvalidFeedbackException(
+                            "자기 자신에게 피드백을 할 수 없습니다.", " [levellogId : " + levellogId + "]"));
 
             // when
             final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", token, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("자기 자신에게 피드백을 할 수 없습니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/save/exception/self"));
@@ -100,13 +101,16 @@ class FeedbackControllerTest extends ControllerTest {
 
             given(feedbackService.save(request, levellogId, memberId))
                     .willThrow(new InvalidFeedbackException(
-                            " [memberId :" + memberId + "]", "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다."));
+                            "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.", " [memberId :" + memberId + "]"));
 
             // when
             final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", token, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/save/exception/team"));
@@ -126,18 +130,20 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
+                    .willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."));
 
             // when
             final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", token, request);
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("레벨로그가 존재하지 않습니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/save/exception/levellog"));
         }
-
         @Test
         @DisplayName("팀 인터뷰 시작 전에 피드백을 작성할 경우 예외를 발생시킨다.")
         void save_beforeStartAt_exceptionThrown() throws Exception {
@@ -157,7 +163,10 @@ class FeedbackControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", token, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/save/exception/before-interview"));
@@ -182,7 +191,10 @@ class FeedbackControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", token, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("이미 종료된 인터뷰입니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/save/exception/after-interview"));
@@ -207,17 +219,20 @@ class FeedbackControllerTest extends ControllerTest {
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
-            willThrow(new InvalidFeedbackException(
-                    " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]", "자신이 남긴 피드백만 수정할 수 있습니다."))
+            willThrow(new InvalidFeedbackException("자신이 남긴 피드백만 수정할 수 있습니다.",
+                    " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]"))
                     .given(feedbackService)
-                    .update(request, levellogId, feedbackId, memberId);
+                    .update(request, feedbackId, memberId);
 
             // when
             final ResultActions perform = requestPut(
                     "/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId, token, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("자신이 남긴 피드백만 수정할 수 있습니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/update/exception/author"));
@@ -237,16 +252,19 @@ class FeedbackControllerTest extends ControllerTest {
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
-            willThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
+            willThrow(new FeedbackNotFoundException("존재하지 않는 피드백입니다."))
                     .given(feedbackService)
-                    .update(request, levellogId, feedbackId, memberId);
+                    .update(request, feedbackId, memberId);
 
             // when
             final ResultActions perform = requestPut(
                     "/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId, token, request);
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("존재하지 않는 피드백입니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/update/exception/feedback"));
@@ -268,13 +286,16 @@ class FeedbackControllerTest extends ControllerTest {
 
             willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다."))
                     .given(feedbackService)
-                    .update(request, levellogId, feedbackId, memberId);
+                    .update(request, feedbackId, memberId);
 
             // when
             final ResultActions perform = requestPut(
                     "/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId, token, request);
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/update/exception/before-interview"));
@@ -296,14 +317,17 @@ class FeedbackControllerTest extends ControllerTest {
 
             willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다."))
                     .given(feedbackService)
-                    .update(request, levellogId, feedbackId, memberId);
+                    .update(request, feedbackId, memberId);
 
             // when
             final ResultActions perform = requestPut(
                     "/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId, token, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("이미 종료된 인터뷰입니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/update/exception/after-interview"));
@@ -324,13 +348,16 @@ class FeedbackControllerTest extends ControllerTest {
             final Long levellogId = 1L;
 
             given(feedbackService.findAll(levellogId, memberId))
-                    .willThrow(new MemberNotFoundException("존재하지 않는 멤버"));
+                    .willThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."));
 
             // when
             final ResultActions perform = requestGet("/api/levellogs/" + levellogId + "/feedbacks", token);
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("멤버가 존재하지 않습니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/find-all/exception/member"));
@@ -346,16 +373,19 @@ class FeedbackControllerTest extends ControllerTest {
             final Long levellogId = 200000L;
 
             given(feedbackService.findAll(levellogId, memberId))
-                    .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
+                    .willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."));
 
             // when
-            final ResultActions performFindAll = requestGet("/api/levellogs/" + levellogId + "/feedbacks", token);
+            final ResultActions perform = requestGet("/api/levellogs/" + levellogId + "/feedbacks", token);
 
             // then
-            performFindAll.andExpect(status().isNotFound());
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("레벨로그가 존재하지 않습니다.")
+            );
 
             // docs
-            performFindAll.andDo(document("feedback/find-all/exception/levellog"));
+            perform.andDo(document("feedback/find-all/exception/levellog"));
         }
 
         @Test
@@ -374,7 +404,10 @@ class FeedbackControllerTest extends ControllerTest {
             final ResultActions perform = requestGet("/api/levellogs/" + levellogId + "/feedbacks", token);
 
             // then
-            perform.andExpect(status().isUnauthorized());
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value("권한이 없습니다.")
+            );
 
             // docs
             perform.andDo(document("feedback/find-all/exception/not-my-team"));

@@ -141,7 +141,7 @@ class FeedbackServiceTest extends ServiceTest {
             // when
             feedbackService.update(new FeedbackWriteDto(
                             new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
-                    levellog.getId(), feedback1.getId(), roma.getId());
+                    feedback1.getId(), roma.getId());
 
             // then
             final Feedback feedback = feedbackRepository.findById(feedback1.getId()).get();
@@ -168,7 +168,7 @@ class FeedbackServiceTest extends ServiceTest {
             assertThatThrownBy(() ->
                     feedbackService.update(new FeedbackWriteDto(
                                     new FeedbackContentDto("수정된 스터디", "수정된 말하기", "수정된 기타")),
-                            levellog.getId(), feedback1.getId(), alien.getId()))
+                            feedback1.getId(), alien.getId()))
                     .isInstanceOf(InvalidFeedbackException.class)
                     .hasMessageContaining("자신이 남긴 피드백만 수정할 수 있습니다.");
         }
@@ -189,7 +189,7 @@ class FeedbackServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> feedbackService.update(new FeedbackWriteDto(
                             new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
-                    levellog.getId(), feedback1.getId(), roma.getId()))
+                    feedback1.getId(), roma.getId()))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.");
         }
@@ -215,7 +215,7 @@ class FeedbackServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> feedbackService.update(new FeedbackWriteDto(
                             new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
-                    levellog.getId(), feedback1.getId(), roma.getId()))
+                    feedback1.getId(), roma.getId()))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("이미 종료된 인터뷰입니다.");
         }
@@ -346,7 +346,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
 
-            final LocalDateTime startAt = LocalDateTime.now().plusDays(10);
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final Team team = teamRepository.save(
                     new Team("잠실 네오조", "트랙룸", startAt, "progile.img", 1));
             participantRepository.save(new Participant(team, eve, true));

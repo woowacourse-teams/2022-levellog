@@ -30,9 +30,9 @@ public class TeamAndRoleDto {
     private List<Long> interviewees;
     private List<ParticipantDto> participants;
 
-    public static TeamAndRoleDto from(final Team team, final Long hostId, final TeamStatus status, final List<Long> interviewers,
-                                      final List<Long> interviewees, final List<ParticipantDto> participantResponses,
-                                      final Boolean isParticipant) {
+    public static TeamAndRoleDto from(final Team team, final Long hostId, final TeamStatus status,
+                                      final List<Long> interviewers, final List<Long> interviewees,
+                                      final List<ParticipantDto> participantResponses, final Boolean isParticipant) {
         return new TeamAndRoleDto(
                 team.getId(),
                 team.getTitle(),

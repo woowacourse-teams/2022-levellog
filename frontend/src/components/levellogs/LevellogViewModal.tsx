@@ -15,20 +15,11 @@ const LevellogViewModal = ({
   levellog,
   participant,
   userInTeam,
-  getTeam,
-  onClickDeleteLevellog,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
   const { memberId, levellogId, nickname, preQuestionId } = participant;
   const { teamId } = useParams();
   const { loginUserId } = useUser();
-
-  const handleClickDeleteLevellog = async () => {
-    if (teamId && levellogId) {
-      await onClickDeleteLevellog({ teamId, levellogId });
-      getTeam();
-    }
-  };
 
   if (memberId === loginUserId) {
     return (
@@ -46,7 +37,6 @@ const LevellogViewModal = ({
             <Link to={`/levellog/edit/teams/${teamId}/levellogs/${levellogId}`}>
               <Button>수정하기</Button>
             </Link>
-            <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>
           </S.Footer>
         </S.Container>
       </ModalPortal>
@@ -88,11 +78,6 @@ interface LevellogViewModalProps {
   levellog: string;
   participant: ParticipantType;
   userInTeam: Boolean;
-  getTeam: () => void;
-  onClickDeleteLevellog: ({
-    teamId,
-    levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>) => Promise<void>;
   handleClickCloseLevellogModal: (e: React.MouseEvent<HTMLElement>) => void;
 }
 

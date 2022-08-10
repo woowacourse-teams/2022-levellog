@@ -5,16 +5,11 @@ import FlexBox from 'components/@commons/FlexBox';
 import UiViewer from 'components/@commons/UiViewer';
 import { FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
-const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackProps) => {
-  const handleClickDeleteButton = () => {
-    onClickDeleteButton({ feedbackInfo, levellogId });
-  };
-
+const Feedback = ({ feedbackInfo }: FeedbackProps) => {
   return (
     <S.Container>
       <S.Header>
         <h3>{feedbackInfo.from.nickname}의 피드백</h3>
-        <Button onClick={handleClickDeleteButton}>삭제하기</Button>
       </S.Header>
       <FlexBox gap={1.5}>
         <FlexBox flexFlow={'column'} gap={1.25}>
@@ -42,11 +37,6 @@ const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackPro
 
 interface FeedbackProps {
   feedbackInfo: FeedbackType;
-  levellogId: string;
-  onClickDeleteButton: ({
-    feedbackInfo,
-    levellogId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackInfo'>) => Promise<void>;
 }
 
 const S = {

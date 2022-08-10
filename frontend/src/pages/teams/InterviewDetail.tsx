@@ -5,7 +5,7 @@ import styled, { CSSProperties } from 'styled-components';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import usePreQuestionModal from 'hooks/usePreQuestionModal';
-import { useTeam } from 'hooks/useTeams';
+import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
 import Button from 'components/@commons/Button';
@@ -19,6 +19,7 @@ import { InterviewTeamType, ParticipantType } from 'types/team';
 const InterviewDetail = () => {
   const { loginUserId } = useUser();
   const {
+    currentTeam,
     teamLocationState,
     team,
     getTeam,
@@ -30,7 +31,6 @@ const InterviewDetail = () => {
     levellogParticipant,
     isLevellogModalOpen,
     onClickOpenLevellogModal,
-    onClickDeleteLevellog,
     handleClickCloseLevellogModal,
   } = useLevellogModal();
   const {
@@ -57,6 +57,8 @@ const InterviewDetail = () => {
   }, []);
 
   if (team && Object.keys(team).length === 0) return <div></div>;
+  console.log(currentTeam);
+  console.log(team);
 
   return (
     <>
@@ -65,8 +67,6 @@ const InterviewDetail = () => {
           levellog={levellog}
           participant={levellogParticipant}
           userInTeam={(team as InterviewTeamType).isParticipant}
-          getTeam={getTeam}
-          onClickDeleteLevellog={onClickDeleteLevellog}
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}
         />
       )}

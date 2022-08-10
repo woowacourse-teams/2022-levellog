@@ -5,6 +5,7 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWithIdDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -30,7 +31,7 @@ public class LevellogService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long save(final LevellogDto request, final Long authorId, final Long teamId) {
+    public Long save(final LevellogWriteDto request, final Long authorId, final Long teamId) {
         final Team team = getTeam(teamId);
         final Member author = getMember(authorId);
         validateLevellogExistence(authorId, teamId);
@@ -59,7 +60,7 @@ public class LevellogService {
     }
 
     @Transactional
-    public void update(final LevellogDto request, final Long levellogId, final Long memberId) {
+    public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
         final Member member = getMember(memberId);
 

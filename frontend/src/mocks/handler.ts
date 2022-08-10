@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { feedbacks, levellogs, levellogTeams } from './mockData';
+import { feedbacks, levellogs, interviewTeams } from './mockData';
 
 export const feedbackHandlers = [
   rest.post('/api/levellogs/:levellogId/feedbacks', (req, res, ctx) => {
@@ -67,7 +67,7 @@ export const levellogHandlers = [
     );
     levellogs.splice(index, 1);
 
-    levellogTeams.teams.find((team) => {
+    interviewTeams.teams.find((team) => {
       if (team.id === teamId) {
         team.participants.find(
           (participant) => participant.levellogId === levellogId && participant.memberId === 300,
@@ -112,17 +112,15 @@ export const authHandlers = [
   }),
 ];
 
-export const levellogGroupHandlers = [
+export const TeamHandlers = [
   rest.get('/api/teams', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(levellogTeams));
+    return res(ctx.status(200), ctx.json(interviewTeams));
   }),
 
   rest.get('/api/teams/:teamId', (req, res, ctx) => {
     const { teamId } = req.params;
-    const chooseLevellogTeam = levellogTeams.teams.find(
-      (levellogTeam) => +levellogTeam.id === +teamId,
-    );
+    const chooseTeam = interviewTeams.teams.find((team) => +team.id === +teamId);
 
-    return res(ctx.status(200), ctx.json(chooseLevellogTeam));
+    return res(ctx.status(200), ctx.json(chooseTeam));
   }),
 ];

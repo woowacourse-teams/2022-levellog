@@ -141,7 +141,7 @@ export const levellogs = [
   },
 ];
 
-export const levellogTeams = {
+export const interviewTeams = {
   teams: [
     {
       id: 1,
@@ -149,7 +149,7 @@ export const levellogTeams = {
       place: '트랙룸',
       startAt: '2022-08-06T11:44:59.4461',
       teamImage: '페퍼.com',
-      isClosed: false,
+      status: 'READY',
       hostId: 1,
       participants: [
         {
@@ -157,12 +157,14 @@ export const levellogTeams = {
           levellogId: null,
           nickname: '페퍼',
           profileUrl: '페퍼.com',
+          preQuestionId: null,
         },
         {
           memberId: 2,
           levellogId: null,
           nickname: '이브',
           profileUrl: '이브.com',
+          preQuestionId: null,
         },
       ],
     },
@@ -180,18 +182,21 @@ export const levellogTeams = {
           levellogId: null,
           nickname: '이브',
           profileUrl: '이브.com',
+          preQuestionId: null,
         },
         {
           memberId: 1,
           levellogId: null,
           nickname: '페퍼',
           profileUrl: '페퍼.com',
+          preQuestionId: null,
         },
         {
           memberId: 3,
           levellogId: null,
           nickname: '릭',
           profileUrl: '릭.com',
+          preQuestionId: null,
         },
       ],
     },

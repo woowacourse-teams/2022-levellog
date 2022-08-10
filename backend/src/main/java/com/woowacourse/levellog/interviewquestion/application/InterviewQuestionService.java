@@ -35,14 +35,14 @@ public class InterviewQuestionService {
     public Long save(final InterviewQuestionDto request, final Long levellogId, final Long fromMemberId) {
         final Member fromMember = getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
+
         validateMemberIsParticipant(fromMember, levellog);
+        validateInProgress(levellog.getTeam());
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(fromMember, levellog);
 
-        final InterviewQuestion savedInterviewQuestion = interviewQuestionRepository.save(interviewQuestion);
-        validateTeamInProgress(savedInterviewQuestion);
-
-        return savedInterviewQuestion.getId();
+        return interviewQuestionRepository.save(interviewQuestion)
+                .getId();
     }
 
     public InterviewQuestionsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
@@ -59,7 +59,9 @@ public class InterviewQuestionService {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member fromMember = getMember(fromMemberId);
 
-        validateTeamInProgress(interviewQuestion);
+        final Team team = interviewQuestion.getLevellog()
+                .getTeam();
+        validateInProgress(team);
 
         interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
     }
@@ -70,7 +72,9 @@ public class InterviewQuestionService {
         final Member member = getMember(fromMemberId);
 
         interviewQuestion.validateMemberIsAuthor(member, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
-        validateTeamInProgress(interviewQuestion);
+        final Team team = interviewQuestion.getLevellog()
+                .getTeam();
+        validateInProgress(team);
 
         interviewQuestionRepository.delete(interviewQuestion);
     }
@@ -101,10 +105,7 @@ public class InterviewQuestionService {
         }
     }
 
-    private void validateTeamInProgress(final InterviewQuestion interviewQuestion) {
-        final Team team = interviewQuestion.getLevellog()
-                .getTeam();
-
+    private void validateInProgress(final Team team) {
         team.validateAlreadyClosed();
         team.validateAfterStartAt(timeStandard.now(), "인터뷰 시작 전입니다.");
     }

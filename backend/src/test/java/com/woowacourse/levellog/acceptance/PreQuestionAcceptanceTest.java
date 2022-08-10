@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.levellog.dto.LevellogDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
@@ -43,7 +43,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(eveMemberId)));
         final String teamId = post("/api/teams", pepperToken, teamRequest).getTeamId();
-        final LevellogDto levellogRequest = LevellogDto.from("페퍼의 레벨로그");
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
@@ -84,7 +84,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(eveMemberId)));
         final String teamId = post("/api/teams", pepperToken, teamRequest).getTeamId();
-        final LevellogDto levellogRequest = LevellogDto.from("페퍼의 레벨로그");
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
@@ -131,7 +131,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(eveMemberId)));
         final String teamId = post("/api/teams", pepperToken, teamRequest).getTeamId();
-        final LevellogDto levellogRequest = LevellogDto.from("페퍼의 레벨로그");
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
@@ -173,7 +173,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(eveMemberId)));
         final String teamId = post("/api/teams", pepperToken, teamRequest).getTeamId();
-        final LevellogDto levellogRequest = LevellogDto.from("페퍼의 레벨로그");
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 

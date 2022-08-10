@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.member.domain.CrewNicknameTable;
+import com.woowacourse.levellog.member.domain.Nickname;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import com.woowacourse.levellog.member.dto.MemberDto;
@@ -80,7 +80,7 @@ class MemberServiceTest extends ServiceTest {
         @DisplayName("사전에 깃허브 닉네임에 대한 특수한 닉네임을 등록한 멤버가 저장될 때는 미리 저장한 닉네임으로 변경하여 멤버를 저장한다.")
         void successBySpecial() {
             // given
-            crewNicknameTableRepository.save(new CrewNicknameTable("깃허브로마", "우테코로마"));
+            nicknameRepository.save(new Nickname("깃허브로마", "우테코로마"));
             final MemberCreateDto memberCreateDto = new MemberCreateDto("깃허브로마", 12345678, "profileUrl.image");
 
             // when

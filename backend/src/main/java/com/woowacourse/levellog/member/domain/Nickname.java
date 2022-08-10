@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class CrewNicknameTable extends BaseEntity {
+public class Nickname extends BaseEntity {
 
     @Column(nullable = false)
     private String githubNickname;
@@ -18,7 +18,7 @@ public class CrewNicknameTable extends BaseEntity {
     @Column(nullable = false)
     private String crewNickname;
 
-    public CrewNicknameTable(final String githubNickname, final String crewNickname) {
+    public Nickname(final String githubNickname, final String crewNickname) {
         this.githubNickname = githubNickname;
         this.crewNickname = crewNickname;
     }

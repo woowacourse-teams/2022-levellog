@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.member.application;
 
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.member.domain.CrewNicknameTable;
-import com.woowacourse.levellog.member.domain.CrewNicknameTableRepository;
+import com.woowacourse.levellog.member.domain.Nickname;
+import com.woowacourse.levellog.member.domain.NicknameRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final CrewNicknameTableRepository crewNicknameTableRepository;
+    private final NicknameRepository nicknameRepository;
 
     @Transactional
     public Long save(final MemberCreateDto request) {
@@ -77,10 +77,10 @@ public class MemberService {
 
     private Member createMember(final MemberCreateDto request) {
         final Member member = request.toEntity();
-        final Optional<CrewNicknameTable> crewName = crewNicknameTableRepository.findByGithubNickname(
+        final Optional<Nickname> nickname = nicknameRepository.findByGithubNickname(
                 request.getNickname());
-        if (crewName.isPresent()) {
-            member.updateNickname(crewName.get().getCrewNickname());
+        if (nickname.isPresent()) {
+            member.updateNickname(nickname.get().getCrewNickname());
         }
 
         return member;

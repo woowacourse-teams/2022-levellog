@@ -7,8 +7,6 @@ import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -60,17 +58,10 @@ public class Levellog extends BaseEntity {
         }
     }
 
-    public void updateContent(final Member member, final String content, final LocalDateTime presentTime) {
+    public void updateContent(final Member member, final String content) {
         validateAuthor(member, "레벨로그를 수정할 권한이 없습니다. memberId : " + member.getId() + " levellogId : " + getId());
         validateContent(content);
-        validateTeamStartTime(presentTime);
         this.content = content;
-    }
-
-    public void validateTeamStartTime(final LocalDateTime presentTime) {
-        if (team.isAfterStartTime(presentTime)) {
-            throw new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.", "[teamId : " + team.getId() + "]");
-        }
     }
 
     public boolean isAuthor(final Member member) {

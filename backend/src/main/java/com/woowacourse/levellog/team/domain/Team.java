@@ -124,16 +124,14 @@ public class Team extends BaseEntity {
         isClosed = true;
     }
 
-    public boolean isAfterStartTime(final LocalDateTime presentTime) {
-        return presentTime.isAfter(startAt);
-    }
-
-    public boolean isBeforeStartTime(final LocalDateTime presentTime) {
-        return presentTime.isBefore(startAt);
-    }
-
     public void validateAfterStartAt(final LocalDateTime presentTime, final String message) {
         if (isBeforeStartTime(presentTime)) {
+            throw new InterviewTimeException(message, "[teamId : " + this.getId() + "]");
+        }
+    }
+
+    public void validateBeforeStartAt(final LocalDateTime presentTime, final String message) {
+        if (isAfterStartTime(presentTime)) {
             throw new InterviewTimeException(message, "[teamId : " + this.getId() + "]");
         }
     }
@@ -142,5 +140,13 @@ public class Team extends BaseEntity {
         if (isClosed) {
             throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
         }
+    }
+
+    private boolean isAfterStartTime(final LocalDateTime presentTime) {
+        return presentTime.isAfter(startAt);
+    }
+
+    private boolean isBeforeStartTime(final LocalDateTime presentTime) {
+        return presentTime.isBefore(startAt);
     }
 }

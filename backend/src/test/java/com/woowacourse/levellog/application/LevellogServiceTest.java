@@ -278,7 +278,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellog.getId(), author.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 수정이 가능합니다.", String.valueOf(team.getId()));
         }
     }
 

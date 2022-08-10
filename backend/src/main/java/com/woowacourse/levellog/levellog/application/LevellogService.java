@@ -64,7 +64,7 @@ public class LevellogService {
     public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
         final Member member = getMember(memberId);
-        levellog.getTeam().validateBeforeStartAt(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 작성이 가능합니다.");
+        levellog.getTeam().validateBeforeStartAt(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 수정이 가능합니다.");
 
         levellog.updateContent(member, request.getContent());
     }

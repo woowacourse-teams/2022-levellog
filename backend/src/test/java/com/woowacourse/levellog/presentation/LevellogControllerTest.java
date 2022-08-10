@@ -191,7 +191,7 @@ class LevellogControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
 
-            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."))
+            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 수정이 가능합니다."))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
 
@@ -200,7 +200,7 @@ class LevellogControllerTest extends ControllerTest {
 
             // then
             perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."));
+                    .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 수정이 가능합니다."));
 
             // docs
             perform.andDo(document("levellog/update/exception-after-start"));

@@ -20,14 +20,12 @@ import { MembersCustomHookType, MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
 
 const useTeam = () => {
-  const currentTeam = useContext(TeamContext);
-  const teamInfoDispatch = useContext(TeamDispatchContext);
-  console.log(currentTeam);
-
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const [members, setMembers] = useState<MemberType[]>([]);
   const [nicknameValue, setNicknameValue] = useState('');
-  const [team, setTeam] = useState<InterviewTeamType | Object>({});
+  const team = useContext(TeamContext);
+  const teamInfoDispatch = useContext(TeamDispatchContext);
+
   const location = useLocation() as { state: InterviewTeamType };
   const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const { teamId } = useParams();
@@ -57,7 +55,7 @@ const useTeam = () => {
     try {
       if (typeof teamId === 'string') {
         const res = await requestGetTeam({ teamId, accessToken });
-        await setTeam(res.data);
+        await teamInfoDispatch(res.data);
         await setParticipants((prev) =>
           res.data.participants.map((participant) => {
             return {
@@ -67,7 +65,6 @@ const useTeam = () => {
             };
           }),
         );
-        await teamInfoDispatch(res.data);
         return res.data;
       }
     } catch (err: unknown) {
@@ -210,15 +207,13 @@ const useTeam = () => {
 
   useEffect(() => {
     if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
-      setTeam(teamLocationState);
       teamInfoDispatch(teamLocationState);
     }
   }, []);
 
   return {
-    currentTeam,
-    teamLocationState,
     team,
+    teamLocationState,
     getTeam,
     members,
     participants,

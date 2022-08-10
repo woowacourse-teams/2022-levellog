@@ -78,6 +78,9 @@ const useFeedback = () => {
     navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 
+  //레벨로그id, 피드백id, FeedbackFormatType의 값 필요함
+  const onClickFeedbackEditButton = () => {};
+
   return {
     feedbacks,
     feedbackRef,
@@ -85,6 +88,7 @@ const useFeedback = () => {
     postFeedback,
     editFeedback,
     onClickFeedbackAddButton,
+    onClickFeedbackEditButton,
   };
 };
 

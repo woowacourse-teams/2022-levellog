@@ -1,6 +1,7 @@
 import Login from 'pages/Login';
 import NotFound from 'pages/NotFound';
 import FeedbackAdd from 'pages/feedback/FeedbackAdd';
+import FeedbackEdit from 'pages/feedback/FeedbackEdit';
 import FeedbackList from 'pages/feedback/FeedbackList';
 import LevellogAdd from 'pages/levellogs/LevellogAdd';
 import LevellogEdit from 'pages/levellogs/LevellogEdit';
@@ -11,8 +12,9 @@ import InterviewTeamAdd from 'pages/teams/InterviewTeamAdd';
 import InterviewTeamEdit from 'pages/teams/InterviewTeamEdit';
 import InterviewTeams from 'pages/teams/InterviewTeams';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
+import TeamStatus from './TeamStatus';
 import Auth from 'routes/Auth';
 
 export const routes = [
@@ -22,18 +24,6 @@ export const routes = [
       {
         path: ROUTES_PATH.FEEDBACK_ROUTE,
         element: <FeedbackList />,
-      },
-      {
-        path: ROUTES_PATH.FEEDBACK_ADD,
-        element: <FeedbackAdd />,
-      },
-      {
-        path: ROUTES_PATH.LEVELLOG_ADD_ROUTE,
-        element: <LevellogAdd />,
-      },
-      {
-        path: ROUTES_PATH.LEVELLOG_EDIT,
-        element: <LevellogEdit />,
       },
       {
         path: ROUTES_PATH.INTERVIEW_TEAMS_ADD,
@@ -48,8 +38,44 @@ export const routes = [
         element: <PreQuestionEdit />,
       },
       {
+        path: ROUTES_PATH.LEVELLOG_ADD_ROUTE,
+        element: (
+          <TeamStatus needStatus={TEAM_STATUS.READY}>
+            <LevellogAdd />
+          </TeamStatus>
+        ),
+      },
+      {
+        path: ROUTES_PATH.LEVELLOG_EDIT,
+        element: (
+          <TeamStatus needStatus={TEAM_STATUS.READY}>
+            <LevellogEdit />
+          </TeamStatus>
+        ),
+      },
+      {
         path: ROUTES_PATH.INTERVIEW_TEAMS_EDIT,
-        element: <InterviewTeamEdit />,
+        element: (
+          <TeamStatus needStatus={TEAM_STATUS.READY}>
+            <InterviewTeamEdit />
+          </TeamStatus>
+        ),
+      },
+      {
+        path: ROUTES_PATH.FEEDBACK_ADD,
+        element: (
+          <TeamStatus needStatus={TEAM_STATUS.IN_PROGRESS}>
+            <FeedbackAdd />
+          </TeamStatus>
+        ),
+      },
+      {
+        path: ROUTES_PATH.FEEDBACK_EDIT,
+        element: (
+          <TeamStatus needStatus={TEAM_STATUS.IN_PROGRESS}>
+            <FeedbackEdit />
+          </TeamStatus>
+        ),
       },
     ],
   },

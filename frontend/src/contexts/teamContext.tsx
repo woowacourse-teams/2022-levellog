@@ -4,26 +4,26 @@ import { InterviewTeamType } from 'types/team';
 
 type InterviewTeamDispatchType = Dispatch<SetStateAction<InterviewTeamType>>;
 
-const currentTeam: InterviewTeamType = {
+const teamInfo: InterviewTeamType = {
   id: '',
   title: '',
   place: '',
   startAt: '',
   teamImage: '',
   hostId: '',
-  isClosed: false,
-  // status: '', // READY, IN_PROGRESS, CLOSED
+  status: '',
   isParticipant: false,
+  interviewerNumber: '',
   interviewers: [],
   interviewees: [],
   participants: [],
 };
 
-export const TeamContext = createContext<InterviewTeamType>(currentTeam);
+export const TeamContext = createContext<InterviewTeamType>(teamInfo);
 export const TeamDispatchContext = createContext<InterviewTeamDispatchType>(() => {});
 
 export const TeamProvider = ({ children }: { children: JSX.Element }) => {
-  const [teamState, setTeamState] = useState<InterviewTeamType>(currentTeam);
+  const [teamState, setTeamState] = useState<InterviewTeamType>(teamInfo);
 
   return (
     <TeamContext.Provider value={teamState}>

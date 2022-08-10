@@ -3,9 +3,9 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import useUser from 'hooks/useUser';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import { ROUTES_PATH } from 'constants/constants';
 
-const Auth = ({ needLogin }: AuthProps) => {
+const AuthLogin = ({ needLogin }: AuthProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { loginUserId } = useUser();
@@ -18,7 +18,7 @@ const Auth = ({ needLogin }: AuthProps) => {
 
     if (!loginUserId && accessToken) {
       navigate(ROUTES_PATH.LOGIN, { state: location, replace: true });
-
+      // 이 return 필요함?
       return;
     }
   }, [navigate]);
@@ -30,4 +30,4 @@ interface AuthProps {
   needLogin: boolean;
 }
 
-export default Auth;
+export default AuthLogin;

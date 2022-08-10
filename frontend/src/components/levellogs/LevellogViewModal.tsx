@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
+import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
+
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import UiViewer from 'components/@commons/UiViewer';
-import { LevellogCustomHookType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
 const LevellogViewModal = ({
@@ -20,6 +22,7 @@ const LevellogViewModal = ({
   const { memberId, levellogId, nickname, preQuestionId } = participant;
   const { teamId } = useParams();
   const { loginUserId } = useUser();
+  const { team } = useTeam();
 
   if (memberId === loginUserId) {
     return (
@@ -34,9 +37,11 @@ const LevellogViewModal = ({
             <UiViewer content={levellog} />
           </S.Levellog>
           <S.Footer>
-            <Link to={`/levellog/edit/teams/${teamId}/levellogs/${levellogId}`}>
-              <Button>수정하기</Button>
-            </Link>
+            {team.status === TEAM_STATUS.READY && (
+              <Link to={`/levellog/edit/teams/${teamId}/levellogs/${levellogId}`}>
+                <Button>수정하기</Button>
+              </Link>
+            )}
           </S.Footer>
         </S.Container>
       </ModalPortal>

@@ -8,6 +8,8 @@ import usePreQuestionModal from 'hooks/usePreQuestionModal';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
+import { TEAM_STATUS } from 'constants/constants';
+
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
@@ -19,7 +21,6 @@ import { InterviewTeamType, ParticipantType } from 'types/team';
 const InterviewDetail = () => {
   const { loginUserId } = useUser();
   const {
-    currentTeam,
     teamLocationState,
     team,
     getTeam,
@@ -57,8 +58,6 @@ const InterviewDetail = () => {
   }, []);
 
   if (team && Object.keys(team).length === 0) return <div></div>;
-  console.log(currentTeam);
-  console.log(team);
 
   return (
     <>
@@ -95,11 +94,17 @@ const InterviewDetail = () => {
           </FlexBox>
           {(team as InterviewTeamType).hostId === loginUserId && (
             <S.ButtonBox>
-              <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
-                <Button>팀 수정하기</Button>
-              </Link>
-              <Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</Button>
-              <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
+              {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
+                <>
+                  <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
+                    <Button>팀 수정하기</Button>
+                  </Link>
+                  <Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</Button>
+                </>
+              )}
+              {(team as InterviewTeamType).status === TEAM_STATUS.IN_PROGRESS && (
+                <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
+              )}
             </S.ButtonBox>
           )}
         </S.Header>

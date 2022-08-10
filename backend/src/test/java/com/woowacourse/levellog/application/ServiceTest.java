@@ -18,7 +18,6 @@ import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
-import com.woowacourse.levellog.team.support.TimeStandard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -36,9 +35,6 @@ abstract class ServiceTest {
 
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    protected TimeStandard timeStandard;
 
     @Autowired
     protected MemberService memberService;

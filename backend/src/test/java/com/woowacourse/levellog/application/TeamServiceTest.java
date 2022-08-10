@@ -523,7 +523,7 @@ class TeamServiceTest extends ServiceTest {
     class Delete {
 
         @Test
-        @DisplayName("delete 메서드는 id에 해당하는 팀을 deleted 상태로 만든다.")
+        @DisplayName("id에 해당하는 팀을 deleted 상태로 만든다.")
         void success() {
             // given
             final Member member1 = saveAndGetMember("릭");
@@ -542,7 +542,7 @@ class TeamServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("delete 메서드는 호스트가 아닌 멤버가 팀을 삭제하는 경우 예외를 던진다.")
+        @DisplayName("호스트가 아닌 멤버가 팀을 삭제하는 경우 예외를 던진다.")
         void hostUnauthorized_Exception() {
             // given
             final Member member1 = saveAndGetMember("릭");
@@ -573,6 +573,22 @@ class TeamServiceTest extends ServiceTest {
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }
 
+        @Test
+        @DisplayName("이미 삭제된 팀을 삭제하는 경우 호스트가 존재하지 않는다는 예외를 던진다.")
+        void alreadyDeleted_Exception() {
+            //given
+            final Member member = saveAndGetMember("릭");
+            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
+            saveAllParticipant(team, member);
+            final Long teamId = team.getId();
+            final Long memberId = member.getId();
+            teamService.deleteById(teamId, memberId);
+
+            //when & then
+            assertThatThrownBy(() -> teamService.deleteById(teamId, memberId))
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessageContaining("모든 참가자 중 호스트가 존재하지 않습니다.");
+        }
     }
 
     @Nested

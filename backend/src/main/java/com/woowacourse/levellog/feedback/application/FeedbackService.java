@@ -43,13 +43,14 @@ public class FeedbackService {
 
         final Member member = getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
-        final Team team = getLevellog(levellogId).getTeam();
+        final Team team = levellog.getTeam();
 
         levellog.validateSelfFeedback(member);
         validateTeamMember(team, member);
         validateFeedbackTime(team);
 
-        final Feedback feedback = request.getFeedback().toFeedback(member, levellog);
+        final Feedback feedback = request.getFeedback()
+                .toFeedback(member, levellog);
 
         return feedbackRepository.save(feedback)
                 .getId();
@@ -88,7 +89,7 @@ public class FeedbackService {
         final Member member = getMember(memberId);
         final Team team = getLevellog(levellogId).getTeam();
 
-        feedback.validateAuthor(member, "자신이 남긴 피드백만 수정할 수 있습니다.");
+        feedback.validateAuthor(member);
         validateFeedbackTime(team);
 
         feedback.updateFeedback(

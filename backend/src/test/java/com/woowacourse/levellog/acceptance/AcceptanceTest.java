@@ -50,19 +50,14 @@ abstract class AcceptanceTest {
     @LocalServerPort
     private int port;
 
-    /*
-     * 기본 생성 snippet은 http-request.adoc, http-response.adoc입니다.
-     * Request host는 https://api.levellog.app입니다.
-     * 응답 헤더 중 Transfer-Encoding, Date, Keep-Alive, Connection은 제외됩니다.
-     */
     @BeforeEach
-    public void setUp(final RestDocumentationContextProvider contextProvider) {
+    public void tearDown(final RestDocumentationContextProvider contextProvider) {
         setRestAssuredPort();
         setRestDocsSpec(contextProvider);
     }
 
     @AfterEach
-    public void claenDatabase() {
+    public void cleanDatabase() {
         databaseCleaner.clean();
     }
 
@@ -70,6 +65,11 @@ abstract class AcceptanceTest {
         RestAssured.port = port;
     }
 
+    /*
+     * 기본 생성 snippet은 http-request.adoc, http-response.adoc입니다.
+     * Request host는 https://api.levellog.app입니다.
+     * 응답 헤더 중 Transfer-Encoding, Date, Keep-Alive, Connection은 제외됩니다.
+     */
     private void setRestDocsSpec(final RestDocumentationContextProvider contextProvider) {
         specification = new RequestSpecBuilder()
                 .addFilter(
@@ -109,13 +109,14 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse login(final String nickname) {
         try {
             final GithubProfileDto response = new GithubProfileDto(String.valueOf(
-                    ((int) System.currentTimeMillis())), nickname,
-                    nickname + ".com");
+                    ((int) System.nanoTime())), nickname, nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);
+
             return post("/api/auth/login", new GithubCodeDto(code));
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 }

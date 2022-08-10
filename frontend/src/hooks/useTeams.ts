@@ -87,7 +87,8 @@ export const useTeam = () => {
     try {
       if (typeof teamId === 'string') {
         const res = await requestGetTeam({ teamId, accessToken });
-        setParticipants((prev) =>
+        await setTeam(res.data);
+        await setParticipants((prev) =>
           res.data.participants.map((participant) => {
             return {
               id: participant.memberId,
@@ -96,7 +97,6 @@ export const useTeam = () => {
             };
           }),
         );
-
         return res.data;
       }
     } catch (err: unknown) {

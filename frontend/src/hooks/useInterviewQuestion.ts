@@ -5,6 +5,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import { ROUTES_PATH, MESSAGE } from 'constants/constants';
 
+import useScrollDown from './useScrollDown';
 import {
   requestDeleteInterviewQuestion,
   requestEditInterviewQuestion,
@@ -14,10 +15,10 @@ import {
 import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
 const useInterviewQuestion = () => {
+  const { scrollRef: interviewQuestionContentRef, afterRequestScrollDown } = useScrollDown();
   const [interviewQuestionsInfo, setInterviewQuestions] = useState<InterviewQuestionType[]>([]);
   const navigate = useNavigate();
   const interviewQuestionRef = useRef<HTMLInputElement>(null);
-  const interviewQuestionContentRef = useRef<HTMLElement>(null);
   const { levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
@@ -99,7 +100,7 @@ const useInterviewQuestion = () => {
     getInterviewQuestion();
   };
 
-  const onClickEditInterviewQuestionButton = async ({
+  const onSubmitEditInterviewQuestion = async ({
     interviewQuestionId,
     interviewQuestion,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId' | 'interviewQuestion'>) => {
@@ -116,13 +117,10 @@ const useInterviewQuestion = () => {
         return;
       }
       await postInterviewQuestion({ interviewQuestion: interviewQuestionRef.current.value });
-      await getInterviewQuestion();
+      afterRequestScrollDown({ requestFunction: getInterviewQuestion });
+
       interviewQuestionRef.current.value = '';
       interviewQuestionRef.current.focus();
-      if (interviewQuestionContentRef.current) {
-        interviewQuestionContentRef.current.scrollTop =
-          interviewQuestionContentRef.current.scrollHeight;
-      }
     }
   };
 
@@ -132,7 +130,7 @@ const useInterviewQuestion = () => {
     interviewQuestionContentRef,
     getInterviewQuestion,
     onClickDeleteInterviewQuestionButton,
-    onClickEditInterviewQuestionButton,
+    onSubmitEditInterviewQuestion,
     handleSubmitInterviewQuestion,
   };
 };

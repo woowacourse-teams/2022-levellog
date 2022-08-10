@@ -35,12 +35,12 @@ public class InterviewQuestionService {
     public Long save(final InterviewQuestionDto request, final Long levellogId, final Long fromMemberId) {
         final Member fromMember = getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
-        validateTeamMember(fromMember, levellog);
+        validateMemberIsParticipant(fromMember, levellog);
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(fromMember, levellog);
 
         final InterviewQuestion savedInterviewQuestion = interviewQuestionRepository.save(interviewQuestion);
-        validateCanCUD(savedInterviewQuestion);
+        validateTeamInProgress(savedInterviewQuestion);
 
         return savedInterviewQuestion.getId();
     }
@@ -59,7 +59,7 @@ public class InterviewQuestionService {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member fromMember = getMember(fromMemberId);
 
-        validateCanCUD(interviewQuestion);
+        validateTeamInProgress(interviewQuestion);
 
         interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
     }
@@ -69,8 +69,8 @@ public class InterviewQuestionService {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member member = getMember(fromMemberId);
 
-        interviewQuestion.validateInterviewQuestionAuthor(member, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
-        validateCanCUD(interviewQuestion);
+        interviewQuestion.validateMemberIsAuthor(member, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
+        validateTeamInProgress(interviewQuestion);
 
         interviewQuestionRepository.delete(interviewQuestion);
     }
@@ -91,7 +91,7 @@ public class InterviewQuestionService {
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 멤버 [memberId : " + memberId + "]"));
     }
 
-    private void validateTeamMember(final Member member, final Levellog levellog) {
+    private void validateMemberIsParticipant(final Member member, final Levellog levellog) {
         final Team team = levellog.getTeam();
 
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
@@ -101,7 +101,7 @@ public class InterviewQuestionService {
         }
     }
 
-    private void validateCanCUD(final InterviewQuestion interviewQuestion) {
+    private void validateTeamInProgress(final InterviewQuestion interviewQuestion) {
         final Team team = interviewQuestion.getLevellog()
                 .getTeam();
 

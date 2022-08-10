@@ -34,8 +34,8 @@ export interface InterviewTeamType {
   teamImage: string;
   hostId: string;
   isClosed: Boolean;
+  // status: string;
   isParticipant: Boolean;
-  // interviewerNumber: string;
   interviewers: Array<number | null>;
   interviewees: Array<number | null>;
   participants: ParticipantType[];

@@ -158,7 +158,8 @@ export const useTeam = () => {
     await postTeam({ teamInfo });
   };
 
-  const onSubmitTeamEditForm = async () => {
+  const handleSubmitTeamEditForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const [title, place, date, time] = teamInfoRef.current;
     const teamInfo = {
       title: title.value,
@@ -255,7 +256,7 @@ export const useTeam = () => {
     updateMembers,
     updateParticipants,
     onSubmitTeamAddForm,
-    onSubmitTeamEditForm,
+    handleSubmitTeamEditForm,
     onClickDeleteTeamButton,
     onClickCloseTeamInterviewButton,
   };

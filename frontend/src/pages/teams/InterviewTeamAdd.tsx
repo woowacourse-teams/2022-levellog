@@ -1,12 +1,11 @@
 import React from 'react';
 import { useEffect } from 'react';
 
-import useMember from 'hooks/useMember';
 import { useTeam } from 'hooks/useTeams';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
-import TeamAddForm from 'components/teams/TeamAddForm';
+import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamAdd = () => {
   const {
@@ -38,7 +37,7 @@ const InterviewTeamAdd = () => {
       <ContentHeader title={'인터뷰 팀 생성하기'}>
         <Button type={'submit'}>만들기</Button>
       </ContentHeader>
-      <TeamAddForm
+      <TeamForm
         teamInfoRef={teamInfoRef}
         participants={participants}
         members={members}

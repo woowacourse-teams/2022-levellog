@@ -4,13 +4,13 @@ import { useTeam } from 'hooks/useTeams';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
-import TeamEditForm from 'components/teams/TeamEditForm';
+import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamEdit = () => {
   const {
     teamInfoRef,
     getTeamOnRef,
-    onSubmitTeamEditForm,
+    handleSubmitTeamEditForm,
     members,
     nicknameValue,
     setNicknameValue,
@@ -18,11 +18,6 @@ const InterviewTeamEdit = () => {
     updateMembers,
     updateParticipants,
   } = useTeam();
-
-  const handleSubmitTeamEditForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSubmitTeamEditForm();
-  };
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNicknameValue(e.target.value);
@@ -37,7 +32,7 @@ const InterviewTeamEdit = () => {
       <ContentHeader title={'인터뷰 팀 수정하기'}>
         <Button type={'submit'}>수정하기</Button>
       </ContentHeader>
-      <TeamEditForm
+      <TeamForm
         teamInfoRef={teamInfoRef}
         participants={participants}
         members={members}

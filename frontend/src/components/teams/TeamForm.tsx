@@ -4,10 +4,10 @@ import styled from 'styled-components';
 
 import Member from './Member';
 import Participant from './Participants';
-import TeamAddInput from './TeamAddInput';
+import TeamFormInput from './TeamFormInput';
 import { MemberType } from 'types/member';
 
-const TeamEditForm = ({
+const TeamForm = ({
   teamInfoRef,
   participants,
   members,
@@ -16,40 +16,41 @@ const TeamEditForm = ({
   handleChangeInput,
   updateParticipants,
   getTeamOnRef,
-}: TeamEditFormProps) => {
+}: TeamFormProps) => {
   useEffect(() => {
+    if (!getTeamOnRef) return;
     getTeamOnRef();
   }, []);
 
   return (
     <S.FormContainer>
-      <TeamAddInput
+      <TeamFormInput
         label={'제목'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[0] = el)}
         minLength={'3'}
         maxLength={'14'}
         required
       />
-      <TeamAddInput
+      <TeamFormInput
         label={'장소'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[1] = el)}
         minLength={'3'}
         maxLength={'12'}
         required
       />
-      <TeamAddInput
+      <TeamFormInput
         label={'날짜'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[2] = el)}
         type={'date'}
         required
       />
-      <TeamAddInput
+      <TeamFormInput
         label={'시간'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[3] = el)}
         type={'time'}
         required
       />
-      <TeamAddInput
+      <TeamFormInput
         label={'인터뷰어의 수'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[4] = el)}
         type={'number'}
@@ -57,7 +58,7 @@ const TeamEditForm = ({
         max={'3'}
         required
       />
-      <TeamAddInput label={'참가자'} value={nicknameValue} onChange={handleChangeInput}>
+      <TeamFormInput label={'참가자'} value={nicknameValue} onChange={handleChangeInput}>
         <S.ParticipantsBox>
           {participants.map((participant: MemberType) => (
             <Participant
@@ -67,7 +68,7 @@ const TeamEditForm = ({
             />
           ))}
         </S.ParticipantsBox>
-      </TeamAddInput>
+      </TeamFormInput>
       <S.MembersBox isNoneMember={members.length === 0}>
         {members.map((member: MemberType) => (
           <Member
@@ -82,15 +83,15 @@ const TeamEditForm = ({
   );
 };
 
-interface TeamEditFormProps {
+interface TeamFormProps {
   teamInfoRef: React.MutableRefObject<HTMLInputElement[]>;
   participants: Array<MemberType>;
   nicknameValue: string;
   members: Array<MemberType>;
-  getTeamOnRef: () => Promise<void>;
   setNicknameValue: React.Dispatch<React.SetStateAction<string>>;
   handleChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   updateParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  getTeamOnRef?: () => Promise<void>;
 }
 
 const S = {
@@ -140,4 +141,4 @@ const S = {
   `,
 };
 
-export default TeamEditForm;
+export default TeamForm;

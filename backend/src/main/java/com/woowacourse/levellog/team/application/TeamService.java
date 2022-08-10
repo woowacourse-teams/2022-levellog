@@ -118,7 +118,7 @@ public class TeamService {
         validateHost(memberId, team);
 
         participantRepository.deleteByTeam(team);
-        team.delete();
+        team.delete(timeStandard.now());
     }
 
     private Member getMember(final Long memberId) {

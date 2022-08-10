@@ -113,9 +113,16 @@ public class Team extends BaseEntity {
         }
     }
 
-    private void validateInterviewStartTime(final LocalDateTime presentTime) {
+    private void validateInterviewAfterStartAt(final LocalDateTime presentTime) {
         if (presentTime.isBefore(startAt)) {
             throw new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.", "[teamId : " + this.getId() + "]");
+        }
+    }
+
+    private void validateInterviewBeforeStartAt(final LocalDateTime presentTime, final String errorMessage) {
+        if (presentTime.isAfter(this.startAt)) {
+            throw new InterviewTimeException(errorMessage,
+                    "[teamId : " + this.getId() + " presentTime : " + presentTime + " startAt :" + this.startAt + "]");
         }
     }
 
@@ -125,15 +132,14 @@ public class Team extends BaseEntity {
         }
     }
 
-    private void validateUpdateTime(final LocalDateTime presentTime) {
-        if (presentTime.isAfter(this.startAt)) {
-            throw new InterviewTimeException("인터뷰가 시작된 이후에는 수정할 수 없습니다.",
-                    "[teamId : " + this.getId() + " presentTime : " + presentTime + " startAt :" + this.startAt + "]");
+    private void validateAlreadyDeleted() {
+        if (isDeleted()) {
+            throw new InterviewTimeException("이미 삭제된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
         }
     }
 
     public void update(final Team team, final LocalDateTime presentTime) {
-        validateUpdateTime(presentTime);
+        validateInterviewBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 수정할 수 없습니다.");
 
         this.title = team.title;
         this.place = team.place;
@@ -145,13 +151,16 @@ public class Team extends BaseEntity {
     }
 
     public void close(final LocalDateTime presentTime) {
-        validateInterviewStartTime(presentTime);
+        validateInterviewAfterStartAt(presentTime);
         validateAlreadyClosed();
 
         isClosed = true;
     }
 
-    public void delete() {
+    public void delete(final LocalDateTime presentTime) {
+        validateInterviewBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
+        validateAlreadyDeleted();
+
         this.deleted = true;
     }
 

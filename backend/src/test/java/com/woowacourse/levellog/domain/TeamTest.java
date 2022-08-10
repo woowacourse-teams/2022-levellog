@@ -380,6 +380,55 @@ class TeamTest {
     }
 
     @Nested
+    @DisplayName("delete 메서드는")
+    class Delete {
+
+        @Test
+        @DisplayName("팀을 deleted 상태로 만든다.")
+        void delete_success() {
+            // given
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
+
+            // when
+            team.delete(startAt.minusDays(1));
+
+            // then
+            assertThat(team.isDeleted()).isTrue();
+        }
+
+        @Test
+        @DisplayName("이미 삭제 상태인 팀을 삭제하려는 경우 예외가 발생한다.")
+        void delete_alreadyDeleted_exceptionThrown() {
+            // given
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
+
+            team.delete(startAt.minusDays(2));
+
+            // when & then
+            final LocalDateTime deletedTime = startAt.minusDays(1);
+            assertThatThrownBy(() -> team.delete(deletedTime))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining("이미 삭제된 인터뷰");
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 이후 삭제를 요청할 경우 예외가 발생한다.")
+        void delete_afterStart_exceptionThrown() {
+            // given
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
+
+            // when & then
+            final LocalDateTime deletedTime = startAt.plusDays(1);
+            assertThatThrownBy(() -> team.delete(deletedTime))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining("인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
+        }
+    }
+
+    @Nested
     @DisplayName("status 메서드는")
     class Status {
 

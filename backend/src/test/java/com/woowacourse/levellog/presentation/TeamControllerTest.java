@@ -737,7 +737,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("없는 팀을 제거하려고 하면 예외를 던진다.")
-        void teamNotFound_Exception() throws Exception {
+        void delete_teamNotFound_Exception() throws Exception {
             // given
             mockLogin();
 
@@ -757,6 +757,92 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/delete/exception/notfound"));
+        }
+
+        @Test
+        @DisplayName("이미 삭제된 팀 인터뷰를 종료하려고 하면 예외가 발생한다.")
+        void delete_alreadyDeleted_exceptionThrown() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final Long teamId = 1L;
+            willThrow(new InterviewTimeException("이미 삭제된 인터뷰입니다.",
+                    "[teamId : " + teamId + "]"))
+                    .given(teamService)
+                    .deleteById(teamId, 4L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("이미 삭제된 인터뷰입니다.")
+            );
+
+            // docs
+            perform.andDo(document("team/delete/exception/already-close"));
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 시간 후에 삭제하려고 하면 예외가 발생한다.")
+        void delete_afterStart_exceptionThrown() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final Long teamId = 1L;
+            willThrow(new InterviewTimeException("인터뷰가 시작된 이후에는 삭제할 수 없습니다.",
+                    "인터뷰가 시작된 이후에는 삭제할 수 없습니다. [teamId : " + teamId + "]"))
+                    .given(teamService)
+                    .deleteById(teamId, 4L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("인터뷰가 시작된 이후에는 삭제할 수 없습니다.")
+            );
+
+            // docs
+            perform.andDo(document("team/delete/exception/after-start"));
+        }
+
+        @Test
+        @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하려고 하면 예외가 발생한다.")
+        void delete_notHost_exceptionThrown() throws Exception {
+            // given
+            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+
+            final Long teamId = 1L;
+            willThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
+                    .given(teamService)
+                    .deleteById(teamId, 4L);
+
+            // when
+            final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value("호스트 권한이 없습니다.")
+            );
+
+            // docs
+            perform.andDo(document("team/delete/exception/unauthorized"));
         }
     }
 }

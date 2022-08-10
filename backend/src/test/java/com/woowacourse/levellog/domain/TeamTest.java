@@ -395,12 +395,12 @@ class TeamTest {
     }
 
     @Nested
-    @DisplayName("validateBeforeStartAt 메서드는")
-    class ValidateBeforeStartAt {
+    @DisplayName("validateAfterStartAt 메서드는")
+    class ValidateAfterStartAt {
 
         @Test
         @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이전이면 예외가 발생한다.")
-        void validate_beforeStartAt_thrownException() {
+        void validate_afterStartAt_thrownException() {
             // given
             final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public class InvalidFeedbackException extends LevellogException {
 
-    public InvalidFeedbackException(final String exceptionInfo, final String clientMessage) {
-        super(clientMessage + exceptionInfo, clientMessage, HttpStatus.BAD_REQUEST);
+    public InvalidFeedbackException(final String clientMessage, final String exceptionInfoForDev) {
+        super(clientMessage + exceptionInfoForDev, clientMessage, HttpStatus.BAD_REQUEST);
     }
 }

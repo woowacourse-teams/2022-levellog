@@ -339,6 +339,7 @@ class FeedbackServiceTest extends ServiceTest {
                     .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.");
         }
 
+        @Test
         @DisplayName("인터뷰 종료 후 피드백을 작성하면 예외를 던진다.")
         void save_alreadyClosed_exceptionThrown() {
             // given

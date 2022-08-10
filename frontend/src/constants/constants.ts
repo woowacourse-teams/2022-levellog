@@ -28,4 +28,5 @@ export const MESSAGE = Object.freeze({
   NEED_LOGIN: '로그인이 필요한 페이지입니다',
   TEAM_CREATE: '인터뷰팀 생성을 완료했습니다!',
   TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
+  WRITE_MORE: '3글자 이상 작성해주세요',
 });

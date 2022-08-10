@@ -9,10 +9,12 @@ import javax.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Where(clause = "deleted = false")
 public class Team extends BaseEntity {
 
     private static final int DEFAULT_STRING_SIZE = 255;
@@ -37,6 +39,9 @@ public class Team extends BaseEntity {
     @Column(nullable = false)
     private boolean isClosed;
 
+    @Column(nullable = false)
+    private boolean deleted;
+
     public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
                 final int interviewerNumber) {
         validate(title, place, startAt, profileUrl, interviewerNumber);
@@ -47,6 +52,7 @@ public class Team extends BaseEntity {
         this.profileUrl = profileUrl;
         this.interviewerNumber = interviewerNumber;
         this.isClosed = false;
+        this.deleted = false;
     }
 
     private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
@@ -135,6 +141,7 @@ public class Team extends BaseEntity {
         this.profileUrl = team.profileUrl;
         this.interviewerNumber = team.interviewerNumber;
         this.isClosed = false;
+        this.deleted = false;
     }
 
     public void close(final LocalDateTime presentTime) {
@@ -142,6 +149,10 @@ public class Team extends BaseEntity {
         validateAlreadyClosed();
 
         isClosed = true;
+    }
+
+    public void delete() {
+        this.deleted = true;
     }
 
     public TeamStatus status(final LocalDateTime presentTime) {

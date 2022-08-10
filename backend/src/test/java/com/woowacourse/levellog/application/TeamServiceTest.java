@@ -523,7 +523,7 @@ class TeamServiceTest extends ServiceTest {
     class Delete {
 
         @Test
-        @DisplayName("delete 메서드는 id에 해당하는 팀을 삭제한다.")
+        @DisplayName("delete 메서드는 id에 해당하는 팀을 deleted 상태로 만든다.")
         void success() {
             // given
             final Member member1 = saveAndGetMember("릭");
@@ -536,7 +536,9 @@ class TeamServiceTest extends ServiceTest {
             teamService.deleteById(team.getId(), member1.getId());
 
             // then
-            assertTrue(teamRepository.findById(team.getId()).isEmpty());
+            final Optional<Team> actual = teamRepository.findById(team.getId());
+            assertThat(actual).isPresent();
+            assertTrue(actual.get().isDeleted());
         }
 
         @Test

@@ -70,12 +70,12 @@ operation::team/create/exception/participants/empty[]
 
 operation::team/create/exception/participants/null[]
 
-[[create-exception-interviwer-number-not-positive]]
+[[create-exception-interviewer-number-not-positive]]
 ==== 저장 시 인터뷰어 수가 1미만인 경우
 
 operation::team/create/exception/interviewer-number/not-positive[]
 
-[[create-exception-interviwer-number-not-positive]]
+[[create-exception-interviewer-number-not-positive]]
 ==== 저장 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
 
 operation::team/create/exception/interviewer-number/more-than-participant[]
@@ -114,7 +114,6 @@ operation::team/find-by-id/exception/notfound[]
 == 인터뷰 역할 조회
 
 *응답 종류*
-
 
 [cols="1,1"]
 |===
@@ -203,6 +202,36 @@ operation::team/update/exception/startat/past[]
 
 operation::team/update/exception/notfound[]
 
+[[update-exception-participants-duplicate]]
+==== 수정 시 중복된 참가자가 존재하는 경우
+
+operation::team/update/exception/participants/duplicate[]
+
+[[update-exception-participants-host]]
+==== 수정 시 참가자 목록에 Host가 포함된 경우 (hostId = 1)
+
+operation::team/update/exception/participants/host[]
+
+[[update-exception-participants-empty]]
+==== 수정 시 호스트 이외의 참가자가 없는 경우
+
+operation::team/update/exception/participants/empty[]
+
+[[update-exception-participants-null]]
+==== 수정 시 participants가 null인 경우
+
+operation::team/update/exception/participants/null[]
+
+[[update-exception-interviewer-number-not-positive]]
+==== 수정 시 인터뷰어 수가 1미만인 경우
+
+operation::team/update/exception/interviewer-number/not-positive[]
+
+[[update-exception-interviewer-number-not-positive]]
+==== 수정 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
+
+operation::team/update/exception/interviewer-number/more-than-participant[]
+
 [[close]]
 == 팀 인터뷰 종료
 
@@ -234,7 +263,6 @@ include::{snippets}/team/close/exception/already-close/http-response.adoc[]
 
 include::{snippets}/team/close/exception/before-start/http-response.adoc[]
 
-
 [[delete]]
 == 팀 삭제
 
@@ -250,3 +278,18 @@ operation::team/delete[]
 ==== 없는 팀을 삭제하는 경우
 
 operation::team/delete/exception/notfound[]
+
+[[delete-exception-unauthorized]]
+==== 호스트가 아닌 사용자가 인터뷰를 삭제하려는 경우
+
+include::{snippets}/team/delete/exception/unauthorized/http-response.adoc[]
+
+[[delete-exception-alreadyClose]]
+==== 이미 종료된 인터뷰를 삭제하려는 경우
+
+include::{snippets}/team/delete/exception/already-close/http-response.adoc[]
+
+[[delete-exception-beforeStart]]
+==== 인터뷰 시작 시간 이후에 삭제하려는 경우
+
+include::{snippets}/team/delete/exception/after-start/http-response.adoc[]

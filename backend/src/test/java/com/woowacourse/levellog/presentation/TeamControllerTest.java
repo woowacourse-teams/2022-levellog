@@ -17,9 +17,9 @@ import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.TeamTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.exception.TeamTimeException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -522,6 +522,140 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/update/exception/notfound"));
+        }
+
+        @Test
+        @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
+        void participantsEmpty_Exception() throws Exception {
+            // given
+            mockLogin();
+            mockCreateTeam();
+            final TeamDto request = new TeamDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(Collections.emptyList()));
+
+            // when
+            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+
+            // then
+            perform.andExpect(status().isBadRequest());
+
+            // docs
+            perform.andDo(document("team/update/exception/participants/empty"));
+        }
+
+        @Test
+        @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
+        void participantsNull_Exception() throws Exception {
+            // given
+            mockLogin();
+            mockCreateTeam();
+            final TeamDto request = new TeamDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
+
+            // when
+            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString().contains("participants must not be null");
+
+            // docs
+            perform.andDo(document("team/update/exception/participants/null"));
+        }
+
+        @Test
+        @DisplayName("인터뷰어가 1명 미만이면 예외를 던진다.")
+        void notPositiveInterviewerNumber_exceptionThrown() throws Exception {
+            // given
+            mockLogin();
+            mockCreateTeam();
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 4L));
+            final TeamDto request = new TeamDto("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
+                    participants);
+
+            // when
+            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value(startsWith("interviewerNumber")));
+
+            // docs
+            perform.andDo(document("team/update/exception/interviewer-number/not-positive"));
+        }
+
+        @Test
+        @DisplayName("인터뷰어 수가 참가자 수보다 많거나 같으면 예외를 던진다.")
+        void interviewerMoreThanParticipant_exceptionThrown() throws Exception {
+            // given
+            mockLogin();
+            mockCreateTeam();
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L));
+            final TeamDto request = new TeamDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    participants);
+
+            willThrow(new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다."))
+                    .given(teamService)
+                    .update(request, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+
+            // then
+            perform.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("message").value("참가자 수는 인터뷰어 수 보다 많아야 합니다."));
+
+            // docs
+            perform.andDo(document("team/update/exception/interviewer-number/more-than-participant"));
+        }
+
+        @Test
+        @DisplayName("팀 구성원 목록으로 중복된 Id가 들어오면 예외를 던진다.")
+        void duplicateParticipant_exceptionThrown() throws Exception {
+            // given
+            mockLogin();
+            mockCreateTeam();
+            final TeamDto request = new TeamDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(1L, 2L, 2L)));
+            willThrow(new DuplicateParticipantsException("참가자 중복"))
+                    .given(teamService)
+                    .update(request, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("중복되는 참가자가 존재합니다."));
+
+            // docs
+            perform.andDo(document("team/update/exception/participants/duplicate"));
+        }
+
+        @Test
+        @DisplayName("팀 구성원 목록으로 호스트 Id가 들어오면 예외를 던진다.")
+        void participantsWithHostId_exceptionThrown() throws Exception {
+            // given
+            mockLogin();
+            mockCreateTeam();
+            final TeamDto request = new TeamDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(1L, 2L, 4L)));
+
+            willThrow(new DuplicateParticipantsException("참가자 중복"))
+                    .given(teamService)
+                    .update(request, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("중복되는 참가자가 존재합니다."));
+
+            // docs
+            perform.andDo(document("team/update/exception/participants/host"));
         }
     }
 

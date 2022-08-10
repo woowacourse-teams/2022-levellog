@@ -29,4 +29,5 @@ export const MESSAGE = Object.freeze({
   TEAM_CREATE: '인터뷰팀 생성을 완료했습니다!',
   TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
   WRITE_MORE: '3글자 이상 작성해주세요',
+  CAN_EDIT: '수정하고 싶은 질문을 클릭해서 수정할 수 있어요!',
 });

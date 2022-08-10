@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
+import { MESSAGE } from 'constants/constants';
+
+import FlexBox from 'components/@commons/FlexBox';
 import Input from 'components/@commons/Input';
+import ToolTip from 'components/@commons/ToolTip';
 import InterviewQuestionContent from 'components/interviewQuestion/InterviewQuestionContent';
 import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
@@ -14,7 +18,12 @@ const InterviewQuestion = ({
 }: InterviewQuestionProps) => {
   return (
     <S.Container>
-      <S.Title>Question</S.Title>
+      <FlexBox gap={1}>
+        <S.Title>인터뷰 질문</S.Title>
+        <S.ToolTipBox>
+          <ToolTip toolTipText={MESSAGE.CAN_EDIT} />
+        </S.ToolTipBox>
+      </FlexBox>
       <S.Content ref={interviewQuestionContentRef}>
         {interviewQuestionsInfo.length > 0 &&
           interviewQuestionsInfo.map((interviewQuestionInfo) => (
@@ -59,6 +68,10 @@ const S = {
   Title: styled.h2`
     margin-bottom: 1.875rem;
     font-size: 1.875rem;
+  `,
+
+  ToolTipBox: styled.div`
+    padding-top: 0.25rem;
   `,
 
   Content: styled.ul`

@@ -45,8 +45,7 @@ public class LevellogController {
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @PathVariable final Long levellogId,
                                        @Authentic final Long memberId,
-                                       @RequestBody @Valid final LevellogWriteDto request
-    ) {
+                                       @RequestBody @Valid final LevellogWriteDto request) {
         levellogService.update(request, levellogId, memberId);
         return ResponseEntity.noContent().build();
     }

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
@@ -11,12 +11,13 @@ import {
   requestGetInterviewQuestion,
   requestPostInterviewQuestion,
 } from 'apis/interviewQuestion';
-import { InterviewQuestionApiType, interviewQuestionType } from 'types/interviewQuestion';
+import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
 const useInterviewQuestion = () => {
-  const [interviewQuestionsInfo, setInterviewQuestions] = useState<interviewQuestionType[]>([]);
+  const [interviewQuestionsInfo, setInterviewQuestions] = useState<InterviewQuestionType[]>([]);
   const navigate = useNavigate();
   const interviewQuestionRef = useRef<HTMLInputElement>(null);
+  const interviewQuestionContentRef = useRef<HTMLElement>(null);
   const { levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
@@ -106,7 +107,7 @@ const useInterviewQuestion = () => {
     getInterviewQuestion();
   };
 
-  const handleSubmitInterviewQuestion = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitInterviewQuestion = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (interviewQuestionRef.current) {
       if (interviewQuestionRef.current.value.length < 3) {
@@ -114,15 +115,21 @@ const useInterviewQuestion = () => {
 
         return;
       }
-      postInterviewQuestion({ interviewQuestion: interviewQuestionRef.current.value });
+      await postInterviewQuestion({ interviewQuestion: interviewQuestionRef.current.value });
+      await getInterviewQuestion();
       interviewQuestionRef.current.value = '';
       interviewQuestionRef.current.focus();
+      if (interviewQuestionContentRef.current) {
+        interviewQuestionContentRef.current.scrollTop =
+          interviewQuestionContentRef.current.scrollHeight;
+      }
     }
   };
 
   return {
     interviewQuestionsInfo,
     interviewQuestionRef,
+    interviewQuestionContentRef,
     getInterviewQuestion,
     onClickDeleteInterviewQuestionButton,
     onClickEditInterviewQuestionButton,

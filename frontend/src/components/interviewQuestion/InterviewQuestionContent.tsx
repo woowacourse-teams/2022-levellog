@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useInterviewQuestionEdit from 'hooks/useInterviewQuestionEdit';
 
 import InterviewQuestionButton from 'components/interviewQuestion/interviewQuestionButton';
-import { InterviewQuestionApiType, interviewQuestionType } from 'types/interviewQuestion';
+import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
 const InterviewQuestionContent = ({
   interviewQuestionInfo,
@@ -13,7 +13,7 @@ const InterviewQuestionContent = ({
   const {
     isEditInterviewQuestion,
     interviewQuestionEditRef,
-    handleToggleEditInterviewQuestion,
+    handleClickEditInterviewQuestionButton,
     handleClickDeleteInterviewQuestionButton,
     handleClickEditCompleteInterviewQuestionButton,
   } = useInterviewQuestionEdit({
@@ -33,10 +33,10 @@ const InterviewQuestionContent = ({
         </>
       ) : (
         <>
-          <p onClick={handleToggleEditInterviewQuestion}>
+          <p onClick={handleClickEditInterviewQuestionButton}>
             {interviewQuestionInfo.interviewQuestion}
           </p>
-          <InterviewQuestionButton handleClick={handleToggleEditInterviewQuestion}>
+          <InterviewQuestionButton handleClick={handleClickEditInterviewQuestionButton}>
             <p>수정</p>
           </InterviewQuestionButton>
         </>
@@ -49,7 +49,7 @@ const InterviewQuestionContent = ({
 };
 
 interface InterviewQuestionContentProps {
-  interviewQuestionInfo: interviewQuestionType;
+  interviewQuestionInfo: InterviewQuestionType;
   onClickDeleteInterviewQuestionButton: ({
     interviewQuestionId,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => Promise<void>;

@@ -5,7 +5,7 @@ export interface InterviewQuestionApiType {
   interviewQuestion: string;
 }
 
-export interface interviewQuestionType {
+export interface InterviewQuestionType {
   id: string;
   interviewQuestion: string;
 }

@@ -1,12 +1,12 @@
 import axios, { AxiosPromise } from 'axios';
 
-import { InterviewQuestionApiType, interviewQuestionType } from 'types/interviewQuestion';
+import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
 export const requestGetInterviewQuestion = ({
   accessToken,
   levellogId,
 }: Pick<InterviewQuestionApiType, 'accessToken' | 'levellogId'>): AxiosPromise<
-  Record<'interviewQuestions', interviewQuestionType[]>
+  Record<'interviewQuestions', InterviewQuestionType[]>
 > => {
   return axios({
     method: 'get',

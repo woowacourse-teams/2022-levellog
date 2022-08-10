@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { InterviewQuestionApiType, interviewQuestionType } from 'types/interviewQuestion';
+import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
 const useInterviewQuestionEdit = ({
   interviewQuestionInfo,
@@ -10,7 +10,7 @@ const useInterviewQuestionEdit = ({
   const [isEditInterviewQuestion, setIsEditInterviewQuestion] = useState(false);
   const interviewQuestionEditRef = useRef<HTMLInputElement>(null);
 
-  const handleToggleEditInterviewQuestion = () => {
+  const handleClickEditInterviewQuestionButton = () => {
     setIsEditInterviewQuestion((prev) => !prev);
   };
 
@@ -38,14 +38,14 @@ const useInterviewQuestionEdit = ({
   return {
     isEditInterviewQuestion,
     interviewQuestionEditRef,
-    handleToggleEditInterviewQuestion,
+    handleClickEditInterviewQuestionButton,
     handleClickDeleteInterviewQuestionButton,
     handleClickEditCompleteInterviewQuestionButton,
   };
 };
 
 interface useInterviewQuestionEditProps {
-  interviewQuestionInfo: interviewQuestionType;
+  interviewQuestionInfo: InterviewQuestionType;
   onClickDeleteInterviewQuestionButton: ({
     interviewQuestionId,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => Promise<void>;

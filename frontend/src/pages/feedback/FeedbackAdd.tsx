@@ -24,9 +24,10 @@ const FeedbackAdd = () => {
   const {
     interviewQuestionsInfo,
     interviewQuestionRef,
+    interviewQuestionContentRef,
     getInterviewQuestion,
     onClickDeleteInterviewQuestionButton,
-    onClickEditInterviewQuestionButton,
+    onSubmitEditInterviewQuestion,
     handleSubmitInterviewQuestion,
   } = useInterviewQuestion();
   const { teamId, levellogId } = useParams();
@@ -68,8 +69,9 @@ const FeedbackAdd = () => {
           <InterviewQuestion
             interviewQuestionsInfo={interviewQuestionsInfo}
             interviewQuestionRef={interviewQuestionRef}
+            interviewQuestionContentRef={interviewQuestionContentRef}
             onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}
-            onClickEditInterviewQuestionButton={onClickEditInterviewQuestionButton}
+            onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
             handleSubmitInterviewQuestion={handleSubmitInterviewQuestion}
           />
           <FeedbackFormat feedbackRef={feedbackRef} />
@@ -81,19 +83,8 @@ const FeedbackAdd = () => {
 
 const S = {
   Container: styled.div`
-    width: 100%;
     position: relative;
-  `,
-
-  LeftContent: styled.div`
-    width: 50%;
-  `,
-
-  RightContent: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 3.125rem;
-    width: 50%;
+    width: 100%;
   `,
 
   Content: styled.div`
@@ -106,6 +97,17 @@ const S = {
     @media (max-width: 520px) {
       flex-direction: column;
     }
+  `,
+
+  LeftContent: styled.div`
+    width: 50%;
+  `,
+
+  RightContent: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 3.125rem;
+    width: 50%;
   `,
 
   RoleContent: styled.p`

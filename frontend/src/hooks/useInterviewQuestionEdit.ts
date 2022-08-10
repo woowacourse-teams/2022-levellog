@@ -5,7 +5,7 @@ import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interview
 const useInterviewQuestionEdit = ({
   interviewQuestionInfo,
   onClickDeleteInterviewQuestionButton,
-  onClickEditInterviewQuestionButton,
+  onSubmitEditInterviewQuestion,
 }: useInterviewQuestionEditProps) => {
   const [isEditInterviewQuestion, setIsEditInterviewQuestion] = useState(false);
   const interviewQuestionEditRef = useRef<HTMLInputElement>(null);
@@ -18,10 +18,10 @@ const useInterviewQuestionEdit = ({
     onClickDeleteInterviewQuestionButton({ interviewQuestionId: interviewQuestionInfo.id });
   };
 
-  const handleClickEditCompleteInterviewQuestionButton = async () => {
+  const handleSubmitEditCompleteInterviewQuestion = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsEditInterviewQuestion((prev) => !prev);
     if (interviewQuestionEditRef.current) {
-      onClickEditInterviewQuestionButton({
+      onSubmitEditInterviewQuestion({
         interviewQuestionId: interviewQuestionInfo.id,
         interviewQuestion: interviewQuestionEditRef.current.value,
       });
@@ -40,7 +40,7 @@ const useInterviewQuestionEdit = ({
     interviewQuestionEditRef,
     handleClickEditInterviewQuestionButton,
     handleClickDeleteInterviewQuestionButton,
-    handleClickEditCompleteInterviewQuestionButton,
+    handleSubmitEditCompleteInterviewQuestion,
   };
 };
 
@@ -49,7 +49,7 @@ interface useInterviewQuestionEditProps {
   onClickDeleteInterviewQuestionButton: ({
     interviewQuestionId,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => Promise<void>;
-  onClickEditInterviewQuestionButton: ({
+  onSubmitEditInterviewQuestion: ({
     interviewQuestionId,
     interviewQuestion,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId' | 'interviewQuestion'>) => Promise<void>;

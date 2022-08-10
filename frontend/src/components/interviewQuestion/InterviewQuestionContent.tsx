@@ -8,41 +8,35 @@ import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interview
 const InterviewQuestionContent = ({
   interviewQuestionInfo,
   onClickDeleteInterviewQuestionButton,
-  onClickEditInterviewQuestionButton,
+  onSubmitEditInterviewQuestion,
 }: InterviewQuestionContentProps) => {
   const {
     isEditInterviewQuestion,
     interviewQuestionEditRef,
     handleClickEditInterviewQuestionButton,
     handleClickDeleteInterviewQuestionButton,
-    handleClickEditCompleteInterviewQuestionButton,
+    handleSubmitEditCompleteInterviewQuestion,
   } = useInterviewQuestionEdit({
     interviewQuestionInfo,
     onClickDeleteInterviewQuestionButton,
-    onClickEditInterviewQuestionButton,
+    onSubmitEditInterviewQuestion,
   });
 
   return (
     <S.Container>
       {isEditInterviewQuestion ? (
-        <>
+        <form onSubmit={handleSubmitEditCompleteInterviewQuestion}>
           <S.Input ref={interviewQuestionEditRef} />
-          <InterviewQuestionButton handleClick={handleClickEditCompleteInterviewQuestionButton}>
-            <p>수정완료</p>
-          </InterviewQuestionButton>
-        </>
+        </form>
       ) : (
         <>
           <p onClick={handleClickEditInterviewQuestionButton}>
             {interviewQuestionInfo.interviewQuestion}
           </p>
-          <InterviewQuestionButton handleClick={handleClickEditInterviewQuestionButton}>
-            <p>수정</p>
-          </InterviewQuestionButton>
         </>
       )}
       <InterviewQuestionButton handleClick={handleClickDeleteInterviewQuestionButton}>
-        <p>삭제</p>
+        <p>X</p>
       </InterviewQuestionButton>
     </S.Container>
   );
@@ -53,7 +47,7 @@ interface InterviewQuestionContentProps {
   onClickDeleteInterviewQuestionButton: ({
     interviewQuestionId,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => Promise<void>;
-  onClickEditInterviewQuestionButton: ({
+  onSubmitEditInterviewQuestion: ({
     interviewQuestionId,
     interviewQuestion,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId' | 'interviewQuestion'>) => Promise<void>;
@@ -62,7 +56,7 @@ interface InterviewQuestionContentProps {
 const S = {
   Container: styled.li`
     display: grid;
-    grid-template-columns: auto 3.75rem 3.75rem;
+    grid-template-columns: auto 1.875rem;
     align-items: center;
     column-gap: 0.625rem;
   `,

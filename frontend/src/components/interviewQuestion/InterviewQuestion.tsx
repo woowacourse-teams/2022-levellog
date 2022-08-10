@@ -2,26 +2,27 @@ import styled from 'styled-components';
 
 import Input from 'components/@commons/Input';
 import InterviewQuestionContent from 'components/interviewQuestion/InterviewQuestionContent';
-import { InterviewQuestionApiType, interviewQuestionType } from 'types/interviewQuestion';
+import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
 const InterviewQuestion = ({
   interviewQuestionsInfo,
   interviewQuestionRef,
+  interviewQuestionContentRef,
   onClickDeleteInterviewQuestionButton,
-  onClickEditInterviewQuestionButton,
+  onSubmitEditInterviewQuestion,
   handleSubmitInterviewQuestion,
 }: InterviewQuestionProps) => {
   return (
     <S.Container>
       <S.Title>Question</S.Title>
-      <S.Content>
+      <S.Content ref={interviewQuestionContentRef}>
         {interviewQuestionsInfo.length > 0 &&
           interviewQuestionsInfo.map((interviewQuestionInfo) => (
             <InterviewQuestionContent
               key={interviewQuestionInfo.id}
               interviewQuestionInfo={interviewQuestionInfo}
               onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}
-              onClickEditInterviewQuestionButton={onClickEditInterviewQuestionButton}
+              onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
             />
           ))}
       </S.Content>
@@ -34,12 +35,13 @@ const InterviewQuestion = ({
 };
 
 interface InterviewQuestionProps {
-  interviewQuestionsInfo: interviewQuestionType[];
+  interviewQuestionsInfo: InterviewQuestionType[];
   interviewQuestionRef: React.Ref<HTMLInputElement>;
+  interviewQuestionContentRef: React.Ref<any>;
   onClickDeleteInterviewQuestionButton: ({
     interviewQuestionId,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => Promise<void>;
-  onClickEditInterviewQuestionButton: ({
+  onSubmitEditInterviewQuestion: ({
     interviewQuestionId,
     interviewQuestion,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId' | 'interviewQuestion'>) => Promise<void>;

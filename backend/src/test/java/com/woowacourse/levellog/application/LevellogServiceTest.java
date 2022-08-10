@@ -2,6 +2,7 @@ package com.woowacourse.levellog.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
@@ -141,7 +142,10 @@ class LevellogServiceTest extends ServiceTest {
             final LevellogDto response = levellogService.findById(levellog.getId());
 
             // then
-            assertThat(response.getContent()).isEqualTo(content);
+            assertAll(
+                    () -> assertThat(response.getAuthor().getId()).isEqualTo(member.getId()),
+                    () -> assertThat(response.getContent()).isEqualTo(content)
+            );
         }
 
         @Test

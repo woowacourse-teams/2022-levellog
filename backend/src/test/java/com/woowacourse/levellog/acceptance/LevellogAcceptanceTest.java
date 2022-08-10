@@ -82,6 +82,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
+                .body("author.id", equalTo(loginResponse1.getMemberId().intValue()))
                 .body("content", equalTo("Spring과 React를 학습했습니다."));
     }
 

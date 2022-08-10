@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.feedback.application;
 
-import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
@@ -9,14 +8,12 @@ import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
-import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
-import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.support.TimeStandard;
@@ -101,7 +98,7 @@ public class FeedbackService {
 
     private void validateFeedbackTime(final Team team) {
         team.validateAfterStartAt(timeStandard.now(), "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.");
-        team.validateAlreadyClosed();
+        team.validateBeforeClose();
     }
 
     private List<FeedbackDto> getFeedbackResponses(final List<Feedback> feedbacks) {

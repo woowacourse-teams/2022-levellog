@@ -119,7 +119,7 @@ public class Team extends BaseEntity {
 
     public void close(final LocalDateTime presentTime) {
         validateAfterStartAt(presentTime, "인터뷰가 시작되기 전에 종료할 수 없습니다.");
-        validateAlreadyClosed();
+        validateBeforeClose();
 
         isClosed = true;
     }
@@ -130,7 +130,7 @@ public class Team extends BaseEntity {
         }
     }
 
-    public void validateAlreadyClosed() {
+    public void validateBeforeClose() {
         if (isClosed) {
             throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
         }

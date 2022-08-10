@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { useTeam } from 'hooks/useTeams';
+import useTeam from 'hooks/useTeam';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';

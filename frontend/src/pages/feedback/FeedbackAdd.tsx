@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import useFeedback from 'hooks/useFeedback';
 import useLevellog from 'hooks/useLevellog';
 import useRole from 'hooks/useRole';
-import { useTeam } from 'hooks/useTeams';
+import useTeam from 'hooks/useTeam';
 
 import { ROUTES_PATH } from 'constants/constants';
 import { MESSAGE } from 'constants/constants';

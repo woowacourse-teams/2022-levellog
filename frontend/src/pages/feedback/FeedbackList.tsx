@@ -12,7 +12,7 @@ import Feedback from 'components/feedbacks/Feedback';
 import { FeedbackType } from 'types/feedback';
 
 const FeedbackList = () => {
-  const { feedbacks, getFeedbacksInTeam, onClickDeleteButton } = useFeedback();
+  const { feedbacks, getFeedbacksInTeam } = useFeedback();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
 
@@ -37,12 +37,7 @@ const FeedbackList = () => {
       <FlexBox gap={2.5}>
         {feedbacks.length !== 0 &&
           feedbacks.map((feedbackInfo: FeedbackType) => (
-            <Feedback
-              key={feedbackInfo.id}
-              levellogId={levellogId}
-              feedbackInfo={feedbackInfo}
-              onClickDeleteButton={onClickDeleteButton}
-            />
+            <Feedback key={feedbackInfo.id} feedbackInfo={feedbackInfo} />
           ))}
       </FlexBox>
     </>

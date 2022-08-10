@@ -79,7 +79,9 @@ public class MemberService {
         final Member member = request.toEntity();
         final Optional<CrewNicknameTable> crewName = crewNicknameTableRepository.findByGithubNickname(
                 request.getNickname());
-        crewName.ifPresent(name -> member.updateNickname(name.getCrewNickname()));
+        if (crewName.isPresent()) {
+            member.updateNickname(crewName.get().getCrewNickname());
+        }
 
         return member;
     }

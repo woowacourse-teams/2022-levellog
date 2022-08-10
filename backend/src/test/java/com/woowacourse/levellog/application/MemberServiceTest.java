@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.member.domain.NicknameMapping;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import com.woowacourse.levellog.member.dto.MemberDto;
@@ -64,7 +63,7 @@ class MemberServiceTest extends ServiceTest {
     class Save {
 
         @Test
-        @DisplayName("사전에 깃허브 닉네임을 등록하지 않은 새로운 멤버를 저장한다.")
+        @DisplayName("새로운 멤버를 저장한다.")
         void success() {
             // given
             final MemberCreateDto memberCreateDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
@@ -73,27 +72,7 @@ class MemberServiceTest extends ServiceTest {
             final Long id = memberService.save(memberCreateDto);
 
             // then
-            assertAll(
-                    () -> assertThat(memberRepository.findById(id)).isPresent(),
-                    () -> assertThat(memberRepository.findById(id).get().getNickname()).isEqualTo("로마")
-            );
-        }
-
-        @Test
-        @DisplayName("사전에 깃허브 닉네임에 대한 특수한 닉네임을 등록한 멤버가 저장될 때는 미리 저장한 닉네임으로 변경하여 멤버를 저장한다.")
-        void successBySpecial() {
-            // given
-            nicknameMappingRepository.save(new NicknameMapping("깃허브로마", "우테코로마"));
-            final MemberCreateDto memberCreateDto = new MemberCreateDto("깃허브로마", 12345678, "profileUrl.image");
-
-            // when
-            final Long id = memberService.save(memberCreateDto);
-
-            // then
-            assertAll(
-                    () -> assertThat(memberRepository.findById(id)).isPresent(),
-                    () -> assertThat(memberRepository.findById(id).get().getNickname()).isEqualTo("우테코로마")
-            );
+            assertThat(memberRepository.findById(id)).isPresent();
         }
 
         @Test

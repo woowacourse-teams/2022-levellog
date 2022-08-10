@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import io.restassured.RestAssured;
@@ -36,7 +36,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
-        final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
+        final LevellogDto request = LevellogDto.from("Spring과 React를 학습했습니다.");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -68,7 +68,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
-        final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
+        final LevellogDto request = LevellogDto.from("Spring과 React를 학습했습니다.");
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(), request)
                 .getLevellogId();
 
@@ -82,7 +82,6 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("author.id", equalTo(loginResponse1.getMemberId().intValue()))
                 .body("content", equalTo("Spring과 React를 학습했습니다."));
     }
 
@@ -102,10 +101,10 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
-                LevellogWriteDto.from("Spring과 React를 학습했습니다.")).getLevellogId();
+                LevellogDto.from("Spring과 React를 학습했습니다.")).getLevellogId();
 
         final String updateContent = "update content";
-        final LevellogWriteDto request = LevellogWriteDto.from(updateContent);
+        final LevellogDto request = LevellogDto.from(updateContent);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -139,7 +138,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
-                LevellogWriteDto.from("Spring과 React를 학습했습니다.")).getLevellogId();
+                LevellogDto.from("Spring과 React를 학습했습니다.")).getLevellogId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

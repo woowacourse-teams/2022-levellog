@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.acceptance;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -8,7 +9,7 @@ import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +40,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
                 .getTeamId();
 
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
         final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();
@@ -84,7 +85,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
                 .getTeamId();
 
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
         final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();
@@ -134,7 +135,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id).getTeamId();
 
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
         final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
                         levellogRequest)
                 .getLevellogId();
@@ -174,5 +175,61 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                         "feedbacks.feedback.speak", contains("수정된 Speak 피드백"),
                         "feedbacks.feedback.etc", contains("수정된 Etc 피드백")
                 );
+    }
+
+    /*
+     * Scenario: 피드백 삭제
+     *   given: 피드백이 등록되어 있다.
+     *   given: 등록된 피드백을 조회한다.
+     *   when: 조회한 피드백을 삭제한다.
+     *   then: 204 No Content 상태 코드를 응답받는다.
+     */
+
+    @Test
+    @DisplayName("피드백 삭제")
+    void deleteFeedback() {
+        // given
+        final RestAssuredResponse hostLoginResponse = login("릭");
+        hostLoginResponse.getMemberId();
+        final String rickToken = hostLoginResponse.getToken();
+
+        final RestAssuredResponse romaLoginResponse = login("로마");
+        final Long roma_id = romaLoginResponse.getMemberId();
+        final String romaToken = romaLoginResponse.getToken();
+
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
+                .getTeamId();
+
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
+        final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
+                        levellogRequest)
+                .getLevellogId();
+
+        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
+                "아이 컨텍이 좋습니다.",
+                "윙크하지 마세요.");
+        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+
+        final RestAssuredResponse saveResponse = RestAssuredTemplate
+                .post("/api/levellogs/" + rick_levellogId + "/feedbacks", romaToken, request);
+
+        final Long deleteId = Long.parseLong(saveResponse.getResponse()
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split("/")[5]);
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .filter(document("feedback/delete"))
+                .when()
+                .delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", rick_levellogId, deleteId)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.NO_CONTENT.value());
+        RestAssuredTemplate.get("/api/levellogs/" + rick_levellogId + "/feedbacks", romaToken)
+                .getResponse()
+                .body("feedbacks.id", not(contains(deleteId)));
     }
 }

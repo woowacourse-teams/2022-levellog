@@ -77,7 +77,7 @@ class MemberTest {
 
     @Nested
     @DisplayName("updateNickname 메서드는")
-    class UpdateNicknameMapping {
+    class UpdateNickname {
 
         @Test
         @DisplayName("닉네임을 변경한다.")

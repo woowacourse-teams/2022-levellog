@@ -9,7 +9,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
@@ -111,7 +111,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String team2Id = requestCreateTeam("릭,로마,페퍼", romaToken, rick_id, pepper_id).getTeamId();
 
         // 레벨로그 생성
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그1,2 내용");
+        final LevellogDto levellogRequest = LevellogDto.from("레벨로그1,2 내용");
         final String levellogId1 = post("/api/teams/" + team1Id + "/levellogs", rickToken,
                 levellogRequest)
                 .getLevellogId();
@@ -173,8 +173,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String teamId2 = post("/api/teams", hostToken, teamCreateDto2).getTeamId();
 
         // 레벨로그 생성
-        final LevellogWriteDto levellogRequest1 = LevellogWriteDto.from("레벨로그1 내용");
-        final LevellogWriteDto levellogRequest2 = LevellogWriteDto.from("레벨로그2 내용");
+        final LevellogDto levellogRequest1 = LevellogDto.from("레벨로그1 내용");
+        final LevellogDto levellogRequest2 = LevellogDto.from("레벨로그2 내용");
 
         post("/api/teams/" + teamId1 + "/levellogs", romaToken, levellogRequest1).getLevellogId();
         post("/api/teams/" + teamId2 + "/levellogs", romaToken, levellogRequest2).getLevellogId();

@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
+import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +35,7 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
         void save_alreadyExists_exception() throws Exception {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("content");
+            final LevellogDto request = LevellogDto.from("content");
             final String requestContent = objectMapper.writeValueAsString(request);
             final Long authorId = 1L;
             final Long teamId = 1L;
@@ -61,7 +61,7 @@ class LevellogControllerTest extends ControllerTest {
         void save_nameNullOrEmpty_Exception() throws Exception {
             // given
             final Long teamId = 1L;
-            final LevellogWriteDto request = LevellogWriteDto.from(" ");
+            final LevellogDto request = LevellogDto.from(" ");
             final String requestContent = objectMapper.writeValueAsString(request);
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
@@ -127,7 +127,7 @@ class LevellogControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final LevellogWriteDto request = LevellogWriteDto.from(" ");
+            final LevellogDto request = LevellogDto.from(" ");
             final String requestContent = objectMapper.writeValueAsString(request);
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
@@ -151,7 +151,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
-            final LevellogWriteDto request = LevellogWriteDto.from("update content");
+            final LevellogDto request = LevellogDto.from("update content");
             final String requestContent = objectMapper.writeValueAsString(request);
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");

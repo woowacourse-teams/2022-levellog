@@ -27,7 +27,7 @@ class MyInfoControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("updateNickname 메서드는 ")
-    class UpdateNicknameMapping {
+    class UpdateNickname {
 
         @Test
         @DisplayName("닉네임에 50자를 초과한 문자열이 들어올 경우 예외를 던진다.")

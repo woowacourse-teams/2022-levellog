@@ -12,7 +12,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.config.DatabaseCleaner;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
@@ -22,7 +21,6 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +29,12 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Import(TestConfig.class)
 @ExtendWith(RestDocumentationExtension.class)
 @ActiveProfiles("test")
@@ -44,33 +45,17 @@ abstract class AcceptanceTest {
     @Autowired
     protected ObjectMapper objectMapper;
 
-    @Autowired
-    protected DatabaseCleaner databaseCleaner;
-
     @LocalServerPort
     private int port;
-
-    @BeforeEach
-    public void tearDown(final RestDocumentationContextProvider contextProvider) {
-        setRestAssuredPort();
-        setRestDocsSpec(contextProvider);
-    }
-
-    @AfterEach
-    public void cleanDatabase() {
-        databaseCleaner.clean();
-    }
-
-    private void setRestAssuredPort() {
-        RestAssured.port = port;
-    }
 
     /*
      * 기본 생성 snippet은 http-request.adoc, http-response.adoc입니다.
      * Request host는 https://api.levellog.app입니다.
      * 응답 헤더 중 Transfer-Encoding, Date, Keep-Alive, Connection은 제외됩니다.
      */
-    private void setRestDocsSpec(final RestDocumentationContextProvider contextProvider) {
+    @BeforeEach
+    public void setUp(final RestDocumentationContextProvider contextProvider) {
+        RestAssured.port = port;
         specification = new RequestSpecBuilder()
                 .addFilter(
                         documentationConfiguration(contextProvider)
@@ -109,14 +94,13 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse login(final String nickname) {
         try {
             final GithubProfileDto response = new GithubProfileDto(String.valueOf(
-                    ((int) System.nanoTime())), nickname, nickname + ".com");
+                    ((int) System.currentTimeMillis())), nickname,
+                    nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);
-
             return post("/api/auth/login", new GithubCodeDto(code));
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 }

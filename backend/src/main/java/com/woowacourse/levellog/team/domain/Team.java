@@ -2,7 +2,7 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamTimeException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -84,10 +84,10 @@ public class Team extends BaseEntity {
 
     private void validateStartAt(final LocalDateTime startAt) {
         if (startAt == null) {
-            throw new InterviewTimeException("시작 시간이 없습니다.", "입력한 시작 시간 : [null]");
+            throw new TeamTimeException("시작 시간이 없습니다.", "입력한 시작 시간 : [null]");
         }
         if (LocalDateTime.now().isAfter(startAt)) {
-            throw new InterviewTimeException("인터뷰 시작 시간은 현재 시간 이후여야 합니다. 입력한 시작 시간 : [" + startAt + "]");
+            throw new TeamTimeException("인터뷰 시작 시간은 현재 시간 이후여야 합니다. 입력한 시작 시간 : [" + startAt + "]");
         }
     }
 
@@ -113,33 +113,33 @@ public class Team extends BaseEntity {
         }
     }
 
-    private void validateInterviewAfterStartAt(final LocalDateTime presentTime) {
+    private void validateTeamAfterStartAt(final LocalDateTime presentTime) {
         if (presentTime.isBefore(startAt)) {
-            throw new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.", "[teamId : " + this.getId() + "]");
+            throw new TeamTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.", "[teamId : " + this.getId() + "]");
         }
     }
 
-    private void validateInterviewBeforeStartAt(final LocalDateTime presentTime, final String errorMessage) {
+    private void validateTeamBeforeStartAt(final LocalDateTime presentTime, final String errorMessage) {
         if (presentTime.isAfter(this.startAt)) {
-            throw new InterviewTimeException(errorMessage,
+            throw new TeamTimeException(errorMessage,
                     "[teamId : " + this.getId() + " presentTime : " + presentTime + " startAt :" + this.startAt + "]");
         }
     }
 
     private void validateAlreadyClosed() {
         if (isClosed) {
-            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
+            throw new TeamTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
         }
     }
 
     private void validateAlreadyDeleted() {
         if (isDeleted()) {
-            throw new InterviewTimeException("이미 삭제된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
+            throw new TeamTimeException("이미 삭제된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
         }
     }
 
     public void update(final Team team, final LocalDateTime presentTime) {
-        validateInterviewBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 수정할 수 없습니다.");
+        validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 수정할 수 없습니다.");
 
         this.title = team.title;
         this.place = team.place;
@@ -151,14 +151,14 @@ public class Team extends BaseEntity {
     }
 
     public void close(final LocalDateTime presentTime) {
-        validateInterviewAfterStartAt(presentTime);
+        validateTeamAfterStartAt(presentTime);
         validateAlreadyClosed();
 
         isClosed = true;
     }
 
     public void delete(final LocalDateTime presentTime) {
-        validateInterviewBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
+        validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
         validateAlreadyDeleted();
 
         this.deleted = true;

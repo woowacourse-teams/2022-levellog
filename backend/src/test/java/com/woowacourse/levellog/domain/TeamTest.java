@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamTimeException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -99,7 +99,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("시작 시간이 없습니다.");
         }
 
@@ -114,7 +114,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("인터뷰 시작 시간은 현재 시간 이후여야 합니다.");
         }
 
@@ -266,7 +266,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(
                     () -> team.update(new Team("브라운과 카페 투어", "잠실 어드레스룸", updateStartAt, "profile.img", 2), presentTime))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("시작 시간이 없습니다.");
         }
 
@@ -281,7 +281,7 @@ class TeamTest {
             assertThatThrownBy(
                     () -> team.update(new Team("브라운과 카페 투어", "잠실 어드레스룸", presentTime.minusDays(10), "profile.img", 2),
                             presentTime))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("인터뷰 시작 시간은 현재 시간 이후여야 합니다.");
         }
 
@@ -296,7 +296,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.update(updatedTeam, presentTime))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("인터뷰가 시작된 이후에는 수정할 수 없습니다.");
         }
     }
@@ -361,7 +361,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.close(startAt.plusDays(1)))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("이미 종료된 인터뷰");
         }
 
@@ -374,7 +374,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.close(startAt.minusDays(1)))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("인터뷰가 시작되기 전에 종료할 수 없습니다.");
         }
     }
@@ -409,7 +409,7 @@ class TeamTest {
             // when & then
             final LocalDateTime deletedTime = startAt.minusDays(1);
             assertThatThrownBy(() -> team.delete(deletedTime))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("이미 삭제된 인터뷰");
         }
 
@@ -423,7 +423,7 @@ class TeamTest {
             // when & then
             final LocalDateTime deletedTime = startAt.plusDays(1);
             assertThatThrownBy(() -> team.delete(deletedTime))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
         }
     }

@@ -21,7 +21,7 @@ import com.woowacourse.levellog.team.dto.TeamDetailDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
@@ -476,7 +476,7 @@ class TeamServiceTest extends ServiceTest {
             final Long teamId = team.getId();
             final Long memberId = member.getId();
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(TeamTimeException.class)
                     .hasMessageContaining("인터뷰가 시작된 이후에는 수정할 수 없습니다.", teamId, team.getStartAt());
         }
     }

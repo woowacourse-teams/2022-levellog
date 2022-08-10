@@ -2,7 +2,6 @@ package com.woowacourse.levellog.presentation;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,7 +42,7 @@ class LevellogControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new LevellogAlreadyExistException("팀에 레벨로그를 이미 작성했습니다.")).when(levellogService)
+            willThrow(new LevellogAlreadyExistException("팀에 레벨로그를 이미 작성했습니다.")).given(levellogService)
                     .save(request, authorId, teamId);
 
             // when
@@ -90,7 +89,8 @@ class LevellogControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.")).when(levellogService)
+            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."))
+                    .given(levellogService)
                     .save(request, authorId, teamId);
 
             // when
@@ -124,7 +124,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final Long levellogId = 1000L;
 
-            doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다.")).when(levellogService)
+            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+                    .given(levellogService)
                     .findById(levellogId);
 
             // when
@@ -181,7 +182,8 @@ class LevellogControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new UnauthorizedException("권한이 없습니다.")).when(levellogService)
+            willThrow(new UnauthorizedException("권한이 없습니다."))
+                    .given(levellogService)
                     .update(request, levellogId, authorId);
 
             // when
@@ -208,7 +210,8 @@ class LevellogControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
 
-            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.")).given(levellogService)
+            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."))
+                    .given(levellogService)
                     .update(request, levellogId, authorId);
 
             // when

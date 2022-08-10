@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.presentation;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -66,8 +66,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
-                    .when(interviewQuestionService)
+            willThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
+                    .given(interviewQuestionService)
                     .save(request, 1L, 1L);
 
             // when
@@ -95,8 +95,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .save(request, invalidLevellogId, 1L);
 
             // when
@@ -126,8 +126,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn(String.valueOf(invalidMemberId));
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .save(request, levellogId, invalidMemberId);
 
             // when
@@ -158,8 +158,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final long invalidLevellogId = 20000000L;
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
 
             // when
@@ -184,8 +184,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final long levellogId = 1L;
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn(String.valueOf(invalidMemberId));
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .findAllByLevellogAndAuthor(levellogId, invalidMemberId);
 
             // when
@@ -241,8 +241,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
-                    .when(interviewQuestionService)
+            willThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
+                    .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
             // when
@@ -271,8 +271,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .update(request, invalidInterviewQuestionId, 1L);
 
             // when
@@ -301,8 +301,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new UnauthorizedException("권한이 없습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new UnauthorizedException("권한이 없습니다."))
+                    .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
             // when
@@ -334,8 +334,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
+                    .given(interviewQuestionService)
                     .deleteById(invalidInterviewQuestionId, 1L);
 
             // when
@@ -359,8 +359,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
             given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            doThrow(new UnauthorizedException("권한이 없습니다."))
-                    .when(interviewQuestionService)
+            willThrow(new UnauthorizedException("권한이 없습니다."))
+                    .given(interviewQuestionService)
                     .deleteById(1L, 1L);
 
             // when

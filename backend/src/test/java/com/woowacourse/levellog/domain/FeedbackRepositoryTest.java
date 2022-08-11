@@ -6,9 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,20 +18,15 @@ class FeedbackRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByLevellog 메서드는 입력된 레벨로그에 등록된 모든 피드백을 조회한다.")
     void findAllByLevellog() {
         // given
-        final Member eve = memberRepository.save(new Member("eve", 111, "profile.img"));
-        final Member rick = memberRepository.save(new Member("rick", 222, "profile.img"));
-        final Member toMember = memberRepository.save(new Member("toMember", 333, "profile.img"));
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "작은 강의실", LocalDateTime.now().plusDays(3), "team.img", 1));
-        participantRepository.save(new Participant(team, eve, true));
-        participantRepository.save(new Participant(team, rick, false));
-        participantRepository.save(new Participant(team, toMember, false));
-        final Levellog levellog = levellogRepository.save(Levellog.of(toMember, team, "levellog"));
+        final Member eve = saveMember("eve");
+        final Member rick = saveMember("rick");
+        final Member toMember = saveMember("toMember");
 
-        final Feedback savedFeedback1 = feedbackRepository.save(
-                new Feedback(eve, toMember, levellog, "study", "speak", "etc"));
-        final Feedback savedFeedback2 = feedbackRepository.save(
-                new Feedback(rick, toMember, levellog, "study", "speak", "etc"));
+        final Team team = saveTeam(eve, rick, toMember);
+        final Levellog levellog = saveLevellog(toMember, team);
+
+        final Feedback savedFeedback1 = saveFeedback(eve, toMember, levellog);
+        final Feedback savedFeedback2 = saveFeedback(rick, toMember, levellog);
 
         // when
         final List<Feedback> feedbacks = feedbackRepository.findAllByLevellog(levellog);
@@ -47,20 +40,15 @@ class FeedbackRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByToOrderByUpdatedAtDesc 메서드는 입력된 멤버가 받은 피드백을 수정일 기준 내림차순으로 조회한다.")
     void findAllByToOrderByUpdatedAtDesc() {
         // given
-        final Member eve = memberRepository.save(new Member("eve", 111, "profile.img"));
-        final Member rick = memberRepository.save(new Member("rick", 222, "profile.img"));
-        final Member toMember = memberRepository.save(new Member("toMember", 333, "profile.img"));
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "작은 강의실", LocalDateTime.now().plusDays(3), "team.img", 1));
-        participantRepository.save(new Participant(team, eve, true));
-        participantRepository.save(new Participant(team, rick, false));
-        participantRepository.save(new Participant(team, toMember, false));
-        final Levellog levellog = levellogRepository.save(Levellog.of(toMember, team, "levellog"));
+        final Member eve = saveMember("eve");
+        final Member rick = saveMember("rick");
+        final Member toMember = saveMember("toMember");
 
-        final Feedback savedFeedback1 = feedbackRepository.save(
-                new Feedback(eve, toMember, levellog, "study", "speak", "etc"));
-        final Feedback savedFeedback2 = feedbackRepository.save(
-                new Feedback(rick, toMember, levellog, "study", "speak", "etc"));
+        final Team team = saveTeam(eve, rick, toMember);
+        final Levellog levellog = saveLevellog(toMember, team);
+
+        final Feedback savedFeedback1 = saveFeedback(eve, toMember, levellog);
+        final Feedback savedFeedback2 = saveFeedback(rick, toMember, levellog);
 
         savedFeedback2.updateFeedback("update", "update", "update");
 
@@ -76,22 +64,20 @@ class FeedbackRepositoryTest extends RepositoryTest {
     @DisplayName("existsByLevellogIdAndFromId 메서드는 입력 받은 레벨로그 Id와 작성자 Id로 작성된 피드백의 존재 여부를 반환한다.")
     void existsByLevellogIdAndFromId() {
         // given
-        final Member fromMember = memberRepository.save(new Member("fromMember", 111, "profile.img"));
-        final Member toMember = memberRepository.save(new Member("toMember", 333, "profile.img"));
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "작은 강의실", LocalDateTime.now().plusDays(3), "team.img", 1));
-        participantRepository.save(new Participant(team, fromMember, true));
-        participantRepository.save(new Participant(team, toMember, false));
-        final Levellog levellog = levellogRepository.save(Levellog.of(toMember, team, "levellog"));
+        final Member eve = saveMember("eve");
+        final Member rick = saveMember("rick");
 
-        feedbackRepository.save(new Feedback(fromMember, toMember, levellog, "study", "speak", "etc"));
+        final Team team = saveTeam(eve, rick);
+        final Levellog levellog = saveLevellog(rick, team);
+
+        saveFeedback(eve, rick, levellog);
 
         // when
-        final boolean isExist1 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(), fromMember.getId());
+        final boolean isExist1 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(), eve.getId());
         final boolean isExist2 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId() + 1,
-                fromMember.getId());
+                eve.getId());
         final boolean isExist3 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(),
-                fromMember.getId() + 1);
+                eve.getId() + 1);
 
         // then
         assertAll(() -> {

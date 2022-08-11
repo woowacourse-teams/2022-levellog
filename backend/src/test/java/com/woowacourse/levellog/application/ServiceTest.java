@@ -114,7 +114,12 @@ abstract class ServiceTest {
     }
 
     protected Team saveTeam(final Member host, final Member... members) {
-        final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", 1));
+        return saveTeam(1, host, members);
+    }
+
+    protected Team saveTeam(final int interviewerNumber, final Member host, final Member... members) {
+        final Team team = teamRepository.save(
+                new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", interviewerNumber));
 
         participantRepository.save(new Participant(team, host, true));
 
@@ -127,8 +132,7 @@ abstract class ServiceTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {
-        final Levellog levellog = Levellog.of(author, team, "levellog content");
-        return levellogRepository.save(levellog);
+        return saveLevellog(author, team, "levellog content");
     }
 
     protected Levellog saveLevellog(final Member author, final Team team, final String content) {
@@ -150,9 +154,7 @@ abstract class ServiceTest {
     }
 
     protected PreQuestion savePreQuestion(final Levellog levellog, final Member author) {
-        final PreQuestion preQuestion = new PreQuestion(levellog, author,
-                author.getNickname() + "이 " + levellog.getId() + "에 작성한 사전질문");
-        return preQuestionRepository.save(preQuestion);
+        return savePreQuestion(levellog, author, author.getNickname() + "이 " + levellog.getId() + "에 작성한 사전질문");
     }
 
     protected PreQuestion savePreQuestion(final Levellog levellog, final Member author, final String content) {

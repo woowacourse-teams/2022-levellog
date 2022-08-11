@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.application;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -18,7 +20,6 @@ import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,12 +39,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
     }
 
     private Team getTeam(final Member host, final Member... members) {
-        return getTeam(3, host, members);
-    }
-
-    private Team getTeam(final long days, final Member host, final Member... members) {
         final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(days), "jamsil.img", 1));
+                new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1));
 
         participantRepository.save(new Participant(team, host, true));
 
@@ -80,6 +77,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
+            timeStandard.setInProgress();
+
             // when
             final Long id = interviewQuestionService.save(request, pepperLevellogId, eve.getId());
 
@@ -100,6 +99,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from(invalidContent);
             final Long authorId = eve.getId();
+
+            timeStandard.setInProgress();
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, authorId))
@@ -168,7 +169,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
-            team.close(LocalDateTime.now().plusDays(5));
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
@@ -182,7 +184,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            final Team team = getTeam(10, pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
@@ -273,6 +275,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
 
+            timeStandard.setInProgress();
+
             // when
             interviewQuestionService.update(request, interviewQuestionId, eve.getId());
 
@@ -312,6 +316,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
 
+            timeStandard.setInProgress();
+
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, otherMemberId))
                     .isInstanceOf(UnauthorizedException.class)
@@ -330,7 +336,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
 
-            team.close(LocalDateTime.now().plusDays(5));
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
@@ -344,7 +351,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            final Team team = getTeam(10, pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
@@ -369,6 +376,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+
+            timeStandard.setInProgress();
 
             // when
             interviewQuestionService.deleteById(interviewQuestionId, eve.getId());
@@ -420,7 +429,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
 
-            team.close(LocalDateTime.now().plusDays(5));
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
@@ -434,7 +444,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = getMember("페퍼");
             final Member eve = getMember("이브");
-            final Team team = getTeam(10, pepper, eve);
+            final Team team = getTeam(pepper, eve);
             final Levellog pepperLevellog = getLevellog(pepper, team);
             final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
 

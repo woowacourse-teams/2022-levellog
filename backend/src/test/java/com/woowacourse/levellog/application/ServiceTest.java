@@ -131,6 +131,11 @@ abstract class ServiceTest {
         return levellogRepository.save(levellog);
     }
 
+    protected Levellog saveLevellog(final Member author, final Team team, final String content) {
+        final Levellog levellog = Levellog.of(author, team, content);
+        return levellogRepository.save(levellog);
+    }
+
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
         final InterviewQuestionDto request = InterviewQuestionDto.from(content);

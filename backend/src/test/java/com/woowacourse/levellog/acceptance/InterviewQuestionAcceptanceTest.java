@@ -34,9 +34,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("인터뷰 질문 작성")
     void save() {
         // given
-        final RestAssuredResponse hostLoginResponse = login("페퍼");
-        hostLoginResponse.getMemberId();
-        final String pepperToken = hostLoginResponse.getToken();
+        final String pepperToken = login("페퍼").getToken();
 
         final RestAssuredResponse romaLoginResponse = login("로마");
         final Long romaId = romaLoginResponse.getMemberId();
@@ -47,8 +45,8 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
 
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
-        final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
-                levellogRequest).getLevellogId();
+        final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken, levellogRequest)
+                .getLevellogId();
 
         final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 사용하는 이유?");
 
@@ -90,8 +88,8 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
 
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
-        final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
-                levellogRequest).getLevellogId();
+        final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken, levellogRequest)
+                .getLevellogId();
 
         timeStandard.setInProgress(); // 인터뷰 시작
 
@@ -141,10 +139,9 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         timeStandard.setInProgress(); // 인터뷰 시작
 
-        final String interviewQuestionId = requestSaveInterviewQuestion(pepperLevellogId, romaToken,
-                "Spring을 사용하는 이유?").getInterviewQuestionId();
+        final String interviewQuestionId = requestSaveInterviewQuestion(pepperLevellogId, romaToken, "Spring을 사용하는 이유?")
+                .getInterviewQuestionId();
         final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
-
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -174,9 +171,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("인터뷰 질문 삭제")
     void deleteById() {
         // given
-        final RestAssuredResponse hostLoginResponse = login("페퍼");
-        hostLoginResponse.getMemberId();
-        final String pepperToken = hostLoginResponse.getToken();
+        final String pepperToken = login("페퍼").getToken();
 
         final RestAssuredResponse romaLoginResponse = login("로마");
         final Long romaId = romaLoginResponse.getMemberId();
@@ -192,8 +187,8 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         timeStandard.setInProgress(); // 인터뷰 시작
 
-        final String interviewQuestionId = requestSaveInterviewQuestion(pepperLevellogId, romaToken,
-                "Spring을 사용하는 이유?").getInterviewQuestionId();
+        final String interviewQuestionId = requestSaveInterviewQuestion(pepperLevellogId, romaToken, "Spring을 사용하는 이유?")
+                .getInterviewQuestionId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

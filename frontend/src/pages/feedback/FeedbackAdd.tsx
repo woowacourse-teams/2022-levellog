@@ -13,6 +13,7 @@ import { MESSAGE } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
+import FlexBox from 'components/@commons/FlexBox';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
 import LevellogReport from 'components/levellogs/LevellogReport';
@@ -62,7 +63,10 @@ const FeedbackAdd = () => {
       </ContentHeader>
       <S.Content>
         <S.LeftContent>
-          <S.RoleContent>나의 역할: {feedbackWriterRole}</S.RoleContent>
+          <FlexBox alignItems={'center'} gap={1}>
+            <S.FeedbackTitle>레벨로그</S.FeedbackTitle>
+            <S.RoleContent>나의 역할: {feedbackWriterRole}</S.RoleContent>
+          </FlexBox>
           <LevellogReport levellog={levellog} />
         </S.LeftContent>
         <S.RightContent>
@@ -101,6 +105,19 @@ const S = {
 
   LeftContent: styled.div`
     width: 50%;
+    @media (max-width: 520px) {
+      width: 100%;
+    }
+  `,
+
+  FeedbackTitle: styled.h2`
+    margin-bottom: 1.875rem;
+    font-size: 1.875rem;
+  `,
+
+  RoleContent: styled.p`
+    margin-bottom: 1.875rem;
+    font-weight: 700;
   `,
 
   RightContent: styled.div`
@@ -108,13 +125,9 @@ const S = {
     flex-direction: column;
     gap: 3.125rem;
     width: 50%;
-  `,
-
-  RoleContent: styled.p`
-    position: absolute;
-    top: 7.5rem;
-    left: 16.25rem;
-    font-weight: 700;
+    @media (max-width: 520px) {
+      width: 100%;
+    }
   `,
 };
 

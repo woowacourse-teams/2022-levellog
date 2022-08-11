@@ -6,7 +6,6 @@ import UiViewer from 'components/@commons/UiViewer';
 const LevellogReport = ({ levellog }: LevellogReportProps) => {
   return (
     <S.Container>
-      <FeedbackTitle>레벨로그</FeedbackTitle>
       <S.Content>
         <UiViewer content={levellog} />
       </S.Content>

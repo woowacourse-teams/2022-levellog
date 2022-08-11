@@ -106,7 +106,7 @@ public class InterviewQuestionService {
     }
 
     private void validateInProgress(final Team team) {
-        team.validateAlreadyClosed();
+        team.validateBeforeClose();
         team.validateAfterStartAt(timeStandard.now(), "인터뷰 시작 전입니다.");
     }
 }

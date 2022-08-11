@@ -1,14 +1,25 @@
 package com.woowacourse.levellog.config;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
+import static com.woowacourse.levellog.fixture.TimeFixture.BEFORE_START_TIME;
+
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.time.LocalDateTime;
 
 public class FakeTimeStandard implements TimeStandard {
 
-    public static final int PLUS_DAYS = 5;
+    private LocalDateTime now = BEFORE_START_TIME;
 
     @Override
     public LocalDateTime now() {
-        return LocalDateTime.now().plusDays(PLUS_DAYS);
+        return now;
+    }
+
+    public void setBeforeStarted() {
+        now = BEFORE_START_TIME;
+    }
+
+    public void setInProgress() {
+        now = AFTER_START_TIME;
     }
 }

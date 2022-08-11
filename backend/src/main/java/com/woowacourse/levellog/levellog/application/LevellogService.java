@@ -1,10 +1,10 @@
 package com.woowacourse.levellog.levellog.application;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWithIdDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -14,6 +14,7 @@ import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +29,16 @@ public class LevellogService {
     private final LevellogRepository levellogRepository;
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
+    private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final LevellogDto request, final Long authorId, final Long teamId) {
+    public Long save(final LevellogWriteDto request, final Long authorId, final Long teamId) {
         final Team team = getTeam(teamId);
         final Member author = getMember(authorId);
         validateLevellogExistence(authorId, teamId);
+        team.validateBeforeStartAt(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 작성이 가능합니다.");
 
-        final Levellog levellog = request.toLevellog(author, team);
-        final Levellog savedLevellog = levellogRepository.save(levellog);
+        final Levellog savedLevellog = levellogRepository.save(request.toLevellog(author, team));
 
         return savedLevellog.getId();
     }
@@ -59,20 +61,12 @@ public class LevellogService {
     }
 
     @Transactional
-    public void update(final LevellogDto request, final Long levellogId, final Long memberId) {
+    public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
         final Member member = getMember(memberId);
+        levellog.getTeam().validateBeforeStartAt(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 수정이 가능합니다.");
 
         levellog.updateContent(member, request.getContent());
-    }
-
-    @Transactional
-    public void deleteById(final Long levellogId, final Long memberId) {
-        final Levellog levellog = getById(levellogId);
-        final Member member = getMember(memberId);
-        validateAuthor(member, levellog);
-
-        levellogRepository.deleteById(levellogId);
     }
 
     private Levellog getById(final Long levellogId) {
@@ -94,14 +88,6 @@ public class LevellogService {
         final boolean isExists = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
         if (isExists) {
             throw new LevellogAlreadyExistException("레벨로그를 이미 작성하였습니다. authorId : " + authorId + " teamId : " + teamId);
-        }
-    }
-
-    private void validateAuthor(final Member member, final Levellog levellog) {
-        final boolean isNotAuthor = !levellog.isAuthor(member);
-        if (isNotAuthor) {
-            throw new UnauthorizedException("레벨로그를 삭제할 권한이 없습니다. memberId : " + member.getId()
-                    + " levellogId: " + levellog.getId());
         }
     }
 }

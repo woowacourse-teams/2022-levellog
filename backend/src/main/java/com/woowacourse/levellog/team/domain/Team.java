@@ -118,21 +118,35 @@ public class Team extends BaseEntity {
     }
 
     public void close(final LocalDateTime presentTime) {
-        validateInterviewStartTime(presentTime);
-        validateAlreadyClosed();
+        validateAfterStartAt(presentTime, "인터뷰가 시작되기 전에 종료할 수 없습니다.");
+        validateBeforeClose();
 
         isClosed = true;
     }
 
-    private void validateInterviewStartTime(final LocalDateTime presentTime) {
-        if (presentTime.isBefore(startAt)) {
-            throw new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.", "[teamId : " + this.getId() + "]");
+    public void validateAfterStartAt(final LocalDateTime presentTime, final String message) {
+        if (isBeforeStartTime(presentTime)) {
+            throw new InterviewTimeException(message, "[teamId : " + this.getId() + "]");
         }
     }
 
-    private void validateAlreadyClosed() {
+    public void validateBeforeStartAt(final LocalDateTime presentTime, final String message) {
+        if (isAfterStartTime(presentTime)) {
+            throw new InterviewTimeException(message, "[teamId : " + this.getId() + "]");
+        }
+    }
+
+    public void validateBeforeClose() {
         if (isClosed) {
             throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
         }
+    }
+
+    private boolean isAfterStartTime(final LocalDateTime presentTime) {
+        return presentTime.isAfter(startAt);
+    }
+
+    private boolean isBeforeStartTime(final LocalDateTime presentTime) {
+        return presentTime.isBefore(startAt);
     }
 }

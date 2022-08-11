@@ -34,7 +34,6 @@ const Login = () => {
 
         if (code) {
           const res = await requestGetUserLogin({ code });
-          //로그인만 해도 닉네임 주도록 API 수정가능?
           localStorage.setItem('accessToken', res.data.accessToken);
           const accessToken = localStorage.getItem('accessToken')!;
           const resLogin = await requestGetUserAuthority({ accessToken });

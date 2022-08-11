@@ -128,17 +128,17 @@ const useTeam = () => {
 
   const handleSubmitTeamEditForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const [title, place, date, time] = teamInfoRef.current;
+    const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
     const teamInfo = {
       title: title.value,
       place: place.value,
       startAt: `${date.value}T${time.value}`,
-      interviewerNumber: '', //interviewerNumber.value, // api 변경 후 수정
+      interviewerNumber: interviewerNumber.value,
       participants: {
         ids: Object.values(participants).map((participants) => participants.id),
       },
     };
-    // await editTeam({ teamInfo });
+    await editTeam({ teamInfo });
     navigate(ROUTES_PATH.HOME);
   };
 
@@ -172,7 +172,7 @@ const useTeam = () => {
     teamInfoRef.current[1].value = (team as unknown as InterviewTeamType).place;
     teamInfoRef.current[2].value = (team as unknown as InterviewTeamType).startAt.slice(0, 10);
     teamInfoRef.current[3].value = (team as unknown as InterviewTeamType).startAt.slice(-8);
-    //teamInfoRef.current[4].value = (team as unknown as InterviewTeamType).interviewerNumber;
+    teamInfoRef.current[4].value = (team as unknown as InterviewTeamType).interviewerNumber;
   };
 
   const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {

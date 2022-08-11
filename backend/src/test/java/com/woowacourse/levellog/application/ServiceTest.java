@@ -154,4 +154,9 @@ abstract class ServiceTest {
                 author.getNickname() + "이 " + levellog.getId() + "에 작성한 사전질문");
         return preQuestionRepository.save(preQuestion);
     }
+
+    protected PreQuestion savePreQuestion(final Levellog levellog, final Member author, final String content) {
+        final PreQuestion preQuestion = new PreQuestion(levellog, author, content);
+        return preQuestionRepository.save(preQuestion);
+    }
 }

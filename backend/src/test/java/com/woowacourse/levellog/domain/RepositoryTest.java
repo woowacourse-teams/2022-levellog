@@ -3,6 +3,7 @@ package com.woowacourse.levellog.domain;
 import com.woowacourse.levellog.common.config.JpaConfig;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
+import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
@@ -16,7 +17,6 @@ import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,12 +55,7 @@ abstract class RepositoryTest {
     }
 
     protected Team getTeam(final Member host, final Member... members) {
-        return getTeam(3, host, members);
-    }
-
-    protected Team getTeam(final long days, final Member host, final Member... members) {
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(days), "jamsil.img", 1));
+        final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", 1));
 
         participantRepository.save(new Participant(team, host, true));
 

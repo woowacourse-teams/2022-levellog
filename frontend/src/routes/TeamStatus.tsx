@@ -9,6 +9,8 @@ const TeamStatus = ({ needStatus, children }: TeamStatusProps) => {
   const { team } = useTeam();
   const navigate = useNavigate();
 
+  console.log('진입 TeamStatus: ', `팀:${team.status}, 요구사항 ${needStatus}`);
+
   useEffect(() => {
     if (team.status !== needStatus) {
       alert(

@@ -1,11 +1,12 @@
-import { useRef, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ROUTES_PATH, MESSAGE } from 'constants/constants';
+import useScrollDown from 'hooks/useScrollDown';
 
-import useScrollDown from './useScrollDown';
+import { MESSAGE } from 'constants/constants';
+
 import {
   requestDeleteInterviewQuestion,
   requestEditInterviewQuestion,
@@ -17,7 +18,6 @@ import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interview
 const useInterviewQuestion = () => {
   const { scrollRef: interviewQuestionContentRef, afterRequestScrollDown } = useScrollDown();
   const [interviewQuestionsInfo, setInterviewQuestions] = useState<InterviewQuestionType[]>([]);
-  const navigate = useNavigate();
   const interviewQuestionRef = useRef<HTMLInputElement>(null);
   const { levellogId } = useParams();
 
@@ -33,7 +33,6 @@ const useInterviewQuestion = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -49,7 +48,6 @@ const useInterviewQuestion = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -65,7 +63,6 @@ const useInterviewQuestion = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -88,7 +85,6 @@ const useInterviewQuestion = () => {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
         if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
       }
     }
   };
@@ -97,7 +93,9 @@ const useInterviewQuestion = () => {
     interviewQuestionId,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => {
     await deleteInterviewQuestion({ interviewQuestionId });
-    getInterviewQuestion();
+    if (typeof levellogId === 'string') {
+      getInterviewQuestion();
+    }
   };
 
   const onSubmitEditInterviewQuestion = async ({
@@ -105,7 +103,9 @@ const useInterviewQuestion = () => {
     interviewQuestion,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId' | 'interviewQuestion'>) => {
     await editInterviewQuestion({ interviewQuestionId, interviewQuestion });
-    getInterviewQuestion();
+    if (typeof levellogId === 'string') {
+      getInterviewQuestion();
+    }
   };
 
   const handleSubmitInterviewQuestion = async (e: React.FormEvent<HTMLFormElement>) => {

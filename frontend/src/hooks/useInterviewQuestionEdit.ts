@@ -14,7 +14,7 @@ const useInterviewQuestionEdit = ({
     setIsEditInterviewQuestion((prev) => !prev);
   };
 
-  const handleClickDeleteInterviewQuestionButton = async () => {
+  const handleClickDeleteInterviewQuestionButton = () => {
     onClickDeleteInterviewQuestionButton({ interviewQuestionId: interviewQuestionInfo.id });
   };
 

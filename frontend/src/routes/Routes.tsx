@@ -94,7 +94,7 @@ export const routes = [
       {
         path: ROUTES_PATH.FEEDBACK_EDIT,
         element: (
-          <Auth requireAuth={REQUIRE_AUTH.ME}>
+          <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
             <TeamStatus needStatus={TEAM_STATUS.IN_PROGRESS}>
               <FeedbackEdit />
             </TeamStatus>

@@ -21,9 +21,9 @@ import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.TeamTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.exception.TeamTimeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,63 +36,6 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("TeamService의")
 class TeamServiceTest extends ServiceTest {
-
-    @Test
-    @DisplayName("findAll 메서드는 전체 팀 목록을 조회한다.")
-    void findAll() {
-        //given
-        final Member member1 = saveAndGetMember("릭");
-        final Member member2 = saveAndGetMember("페퍼");
-        final Member member3 = saveAndGetMember("로마");
-
-        final Team team1 = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-        final Team team2 = saveAndGetTeam("선릉 브라운조", 1, LocalDateTime.now().plusDays(6));
-
-        participantRepository.save(new Participant(team1, member2, true));
-        participantRepository.save(new Participant(team1, member3, false));
-        participantRepository.save(new Participant(team2, member1, true));
-        participantRepository.save(new Participant(team2, member2, false));
-
-        team2.close(LocalDateTime.now().plusDays(7));
-
-        //when
-        final TeamAndRolesDto response = teamService.findAll(member1.getId());
-
-        //then
-        final List<String> actualTitles = response.getTeams()
-                .stream()
-                .map(TeamAndRoleDto::getTitle)
-                .collect(Collectors.toList());
-
-        final List<Long> actualHostIds = response.getTeams()
-                .stream()
-                .map(TeamAndRoleDto::getHostId)
-                .collect(Collectors.toList());
-
-        final List<Integer> actualParticipantSizes = response.getTeams()
-                .stream()
-                .map(TeamAndRoleDto::getParticipants)
-                .map(List::size)
-                .collect(Collectors.toList());
-
-        final List<TeamStatus> actualCloseStatuses = response.getTeams()
-                .stream()
-                .map(TeamAndRoleDto::getStatus)
-                .collect(Collectors.toList());
-
-        final List<Boolean> actualIsParticipants = response.getTeams()
-                .stream().map(TeamAndRoleDto::getIsParticipant)
-                .collect(Collectors.toList());
-
-        assertAll(
-                () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
-                () -> assertThat(actualHostIds).contains(member1.getId(), member2.getId()),
-                () -> assertThat(actualParticipantSizes).contains(2, 2),
-                () -> assertThat(actualCloseStatuses).containsExactly(TeamStatus.READY, TeamStatus.CLOSED),
-                () -> assertThat(actualIsParticipants).containsExactly(false, true),
-                () -> assertThat(response.getTeams()).hasSize(2)
-        );
-    }
 
     private Member saveAndGetMember(final String nickname) {
         return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
@@ -112,6 +55,93 @@ class TeamServiceTest extends ServiceTest {
             savedParticipantsMemberIds.add(savedParticipant.getMember().getId());
         }
         return savedParticipantsMemberIds;
+    }
+
+    @Nested
+    @DisplayName("findAll 메서드는")
+    class FindAll {
+
+        @Test
+        @DisplayName("전체 팀 목록을 조회한다.")
+        void findAll() {
+            //given
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Member member3 = saveAndGetMember("로마");
+
+            final Team team1 = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
+            final Team team2 = saveAndGetTeam("선릉 브라운조", 1, LocalDateTime.now().plusDays(6));
+
+            participantRepository.save(new Participant(team1, member2, true));
+            participantRepository.save(new Participant(team1, member3, false));
+            participantRepository.save(new Participant(team2, member1, true));
+            participantRepository.save(new Participant(team2, member2, false));
+
+            team2.close(LocalDateTime.now().plusDays(7));
+
+            //when
+            final TeamAndRolesDto response = teamService.findAll(member1.getId());
+
+            //then
+            final List<String> actualTitles = response.getTeams()
+                    .stream()
+                    .map(TeamAndRoleDto::getTitle)
+                    .collect(Collectors.toList());
+
+            final List<Long> actualHostIds = response.getTeams()
+                    .stream()
+                    .map(TeamAndRoleDto::getHostId)
+                    .collect(Collectors.toList());
+
+            final List<Integer> actualParticipantSizes = response.getTeams()
+                    .stream()
+                    .map(TeamAndRoleDto::getParticipants)
+                    .map(List::size)
+                    .collect(Collectors.toList());
+
+            final List<TeamStatus> actualCloseStatuses = response.getTeams()
+                    .stream()
+                    .map(TeamAndRoleDto::getStatus)
+                    .collect(Collectors.toList());
+
+            final List<Boolean> actualIsParticipants = response.getTeams()
+                    .stream().map(TeamAndRoleDto::getIsParticipant)
+                    .collect(Collectors.toList());
+
+            assertAll(
+                    () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
+                    () -> assertThat(actualHostIds).contains(member1.getId(), member2.getId()),
+                    () -> assertThat(actualParticipantSizes).contains(2, 2),
+                    () -> assertThat(actualCloseStatuses).containsExactly(TeamStatus.READY, TeamStatus.CLOSED),
+                    () -> assertThat(actualIsParticipants).containsExactly(false, true),
+                    () -> assertThat(response.getTeams()).hasSize(2)
+            );
+        }
+
+        @Test
+        @DisplayName("삭제된 팀을 제외한 팀 목록을 조회한다.")
+        void findAll_exceptDeleted() {
+            //given
+            final Member member1 = saveAndGetMember("릭");
+            final Member member2 = saveAndGetMember("페퍼");
+            final Member member3 = saveAndGetMember("로마");
+
+            final Team team1 = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
+            final Team team2 = saveAndGetTeam("선릉 브라운조", 1, LocalDateTime.now().plusDays(6));
+
+            participantRepository.save(new Participant(team1, member2, true));
+            participantRepository.save(new Participant(team1, member3, false));
+            participantRepository.save(new Participant(team2, member1, true));
+            participantRepository.save(new Participant(team2, member2, false));
+
+            team2.delete(LocalDateTime.now());
+
+            //when
+            final TeamAndRolesDto response = teamService.findAll(member1.getId());
+
+            //then
+            assertThat(response.getTeams()).hasSize(1);
+        }
     }
 
     @Nested
@@ -407,11 +437,10 @@ class TeamServiceTest extends ServiceTest {
             // given
             final Member member1 = saveAndGetMember("릭");
             final Member member2 = saveAndGetMember("페퍼");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-            final List<Long> savedParticipantsMemberIds = saveAllParticipant(team, member1, member2);
+            final Member member3 = saveAndGetMember("이브");
 
-            final Long participant3 = saveAndGetMember("이브").getId();
-            savedParticipantsMemberIds.add(participant3);
+            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
+            final List<Long> savedParticipantsMemberIds = saveAllParticipant(team, member1, member2, member3);
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 2, LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(savedParticipantsMemberIds));
 

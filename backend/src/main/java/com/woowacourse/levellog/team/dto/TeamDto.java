@@ -1,40 +1,45 @@
 package com.woowacourse.levellog.team.dto;
 
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamStatus;
 import java.time.LocalDateTime;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
 public class TeamDto {
 
-    @NotBlank
+    private Long id;
     private String title;
-
-    @NotBlank
     private String place;
-
-    @Positive
-    private int interviewerNumber;
-
-    @NotNull
     private LocalDateTime startAt;
+    private String teamImage;
+    private Long hostId;
+    private TeamStatus status;
+    private Boolean isParticipant;
+    private List<ParticipantDto> participants;
 
-    @Valid
-    @NotNull
-    private ParticipantIdsDto participants;
-
-    public Team toEntity(final String profileUrl) {
-        return new Team(title, place, startAt, profileUrl, interviewerNumber);
+    public static TeamDto from(final Team team, final Long hostId, final TeamStatus status,
+                               final Boolean isParticipant, final List<ParticipantDto> participantResponses) {
+        return new TeamDto(
+                team.getId(),
+                team.getTitle(),
+                team.getPlace(),
+                team.getStartAt(),
+                team.getProfileUrl(),
+                hostId,
+                status,
+                isParticipant,
+                participantResponses
+        );
     }
 }

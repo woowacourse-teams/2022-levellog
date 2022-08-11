@@ -11,7 +11,7 @@ import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.time.LocalDateTime;
@@ -42,7 +42,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final TeamDto teamDto = new TeamDto("롬펲 인터뷰", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamWriteDto teamDto = new TeamWriteDto("롬펲 인터뷰", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId)));
         final String teamId = post("/api/teams", pepperToken, teamDto).getTeamId();
 
@@ -85,7 +85,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final TeamDto teamDto = new TeamDto("롬펲 인터뷰", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamWriteDto teamDto = new TeamWriteDto("롬펲 인터뷰", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId)));
         final String teamId = post("/api/teams", pepperToken, teamDto).getTeamId();
 
@@ -129,7 +129,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final TeamDto teamDto = new TeamDto("롬펲 인터뷰", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamWriteDto teamDto = new TeamWriteDto("롬펲 인터뷰", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId)));
         final String teamId = post("/api/teams", pepperToken, teamDto).getTeamId();
 
@@ -177,7 +177,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final TeamDto teamDto = new TeamDto("롬펲 인터뷰", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamWriteDto teamDto = new TeamWriteDto("롬펲 인터뷰", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                 new ParticipantIdsDto(List.of(romaId)));
         final String teamId = post("/api/teams", pepperToken, teamDto).getTeamId();
 

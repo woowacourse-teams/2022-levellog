@@ -17,8 +17,8 @@ import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
-import com.woowacourse.levellog.team.dto.TeamDetailDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamTimeException;
@@ -125,7 +125,7 @@ class TeamServiceTest extends ServiceTest {
             final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
             final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
             final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
-            final TeamDto teamDto = new TeamDto("잠실 준조", "트랙룸", 2, LocalDateTime.now().plusDays(6),
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 2, LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(List.of(participant2, participant3)));
 
             //when
@@ -143,7 +143,7 @@ class TeamServiceTest extends ServiceTest {
             final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
             final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
             final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
-            final TeamDto teamDto = new TeamDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(List.of(participant1, participant2, participant3)));
 
             //when & then
@@ -157,7 +157,7 @@ class TeamServiceTest extends ServiceTest {
         void save_noParticipant_exceptionThrown() {
             //given
             final Long alienId = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
-            final TeamDto teamDto = new TeamDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(Collections.emptyList()));
 
             //when & then
@@ -412,7 +412,7 @@ class TeamServiceTest extends ServiceTest {
 
             final Long participant3 = saveAndGetMember("이브").getId();
             savedParticipantsMemberIds.add(participant3);
-            final TeamDto request = new TeamDto("잠실 준조", "트랙룸", 2, LocalDateTime.now().plusDays(6),
+            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 2, LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(savedParticipantsMemberIds));
 
             // when
@@ -437,7 +437,7 @@ class TeamServiceTest extends ServiceTest {
             final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
             final List<Long> participantsMemberIds = saveAllParticipant(team, member1, member2);
 
-            final TeamDto request = new TeamDto("잠실 네오조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(participantsMemberIds));
 
             // when, then
@@ -453,7 +453,7 @@ class TeamServiceTest extends ServiceTest {
         void teamNotFound_Exception() {
             //given
             final Long memberId = saveAndGetMember("릭").getId();
-            final TeamDto request = new TeamDto("잠실 네오조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(Collections.emptyList()));
 
             //when & then
@@ -469,7 +469,7 @@ class TeamServiceTest extends ServiceTest {
             final Member member = saveAndGetMember("릭");
             final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(3));
             final List<Long> participantsMemberIds = saveAllParticipant(team, member);
-            final TeamDto request = new TeamDto("잠실 네오조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(participantsMemberIds));
 
             //when & then
@@ -603,14 +603,14 @@ class TeamServiceTest extends ServiceTest {
             final Member harry = saveAndGetMember("해리");
             final Member alien = saveAndGetMember("알린");
 
-            final TeamDto romaTeamDto = new TeamDto("잠실 준조", "트랙룸", 1,
+            final TeamWriteDto romaTeamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1,
                     LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(List.of(harry.getId())));
-            final TeamDto romaTeamDto2 = new TeamDto("잠실 준조", "트랙룸", 1,
+            final TeamWriteDto romaTeamDto2 = new TeamWriteDto("잠실 준조", "트랙룸", 1,
                     LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(List.of(harry.getId(), alien.getId())));
 
-            final TeamDto harryTeamDto = new TeamDto("잠실 준조", "트랙룸", 1,
+            final TeamWriteDto harryTeamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1,
                     LocalDateTime.now().plusDays(6),
                     new ParticipantIdsDto(List.of(alien.getId())));
 
@@ -619,7 +619,7 @@ class TeamServiceTest extends ServiceTest {
             teamService.save(harryTeamDto, harry.getId());
 
             // when
-            final List<TeamDetailDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
+            final List<TeamDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
 
             // then
             assertThat(teams).hasSize(2);

@@ -44,7 +44,7 @@ public class FeedbackService {
 
         levellog.validateSelfFeedback(member);
         validateTeamMember(team, member, "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
-        validateFeedbackTime(team);
+        team.validateInProgress(timeStandard.now(), "인터뷰가 시작되기 전에 피드백을 작성할 수 없습니다.");
 
         final Feedback feedback = request.getFeedback()
                 .toFeedback(member, levellog);
@@ -76,7 +76,7 @@ public class FeedbackService {
         final Team team = feedback.getLevellog().getTeam();
 
         feedback.validateAuthor(member);
-        validateFeedbackTime(team);
+        team.validateInProgress(timeStandard.now(), "인터뷰가 시작되기 전에 피드백을 수정할 수 없습니다.");
 
         feedback.updateFeedback(
                 request.getFeedback().getStudy(),
@@ -94,11 +94,6 @@ public class FeedbackService {
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
             throw new UnauthorizedException(message + " [ teamId : " + team.getId() + " memberId : " + member.getId() + " ]");
         }
-    }
-
-    private void validateFeedbackTime(final Team team) {
-        team.validateAfterStartAt(timeStandard.now(), "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.");
-        team.validateBeforeClose();
     }
 
     private List<FeedbackDto> getFeedbackResponses(final List<Feedback> feedbacks) {

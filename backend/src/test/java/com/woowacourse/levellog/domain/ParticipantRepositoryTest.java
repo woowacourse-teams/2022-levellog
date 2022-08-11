@@ -3,34 +3,16 @@ package com.woowacourse.levellog.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.common.config.JpaConfig;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.Participant;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.domain.TeamRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@DataJpaTest
-@Import(JpaConfig.class)
 @DisplayName("ParticipantRepository의")
-public class ParticipantRepositoryTest {
-
-    @Autowired
-    ParticipantRepository participantRepository;
-
-    @Autowired
-    TeamRepository teamRepository;
-
-    @Autowired
-    MemberRepository memberRepository;
+class ParticipantRepositoryTest extends RepositoryTest {
 
     @Test
     @DisplayName("findByTeam은 team이 일치하는 모든 participant를 반환한다.")

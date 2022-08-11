@@ -17,24 +17,24 @@
 
 operation::myinfo/read[]
 
-[[update-nicknameMapping]]
+[[update-nickname]]
 == 닉네임 변경
 
-[[update-nicknameMapping-success]]
+[[update-nickname-success]]
 === 닉네임 변경 성공
 
-operation::myinfo/update/nicknameMapping[]
+operation::myinfo/update/nickname[]
 
-[[update-nicknameMapping-fail]]
+[[update-nickname-fail]]
 === 닉네임 변경 실패
 
-50자를 초과한 닉네임으로 요청 보낼 경우
+==== 50자를 초과한 닉네임으로 요청 보낼 경우
 
-operation::myinfo/update/nicknameMapping-invalid-length[]
+include::{snippets}/myinfo/update/nickname-invalid-length/http-response.adoc[]
 
-빈 문자열 혹은 공백으로 요청 보낼 경우
+==== 빈 문자열 혹은 공백으로 요청 보낼 경우
 
-operation::myinfo/update/nicknameMapping-blank[]
+include::{snippets}/myinfo/update/nickname-blank/http-response.adoc[]
 
 [[findAllReceivedFeedbacks]]
 == 받은 피드백 전체 조회

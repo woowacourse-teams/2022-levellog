@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.application;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -17,7 +19,8 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
-import java.time.LocalDateTime;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -30,35 +33,54 @@ import org.junit.jupiter.params.provider.ValueSource;
 @DisplayName("InterviewQuestionService 클래스의")
 class InterviewQuestionServiceTest extends ServiceTest {
 
-    private Team saveTeamAndTwoParticipants(final Member participant1, final Member participant2) {
+    private Member getMember(final String nickname) {
+        final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".org");
+        return memberRepository.save(member);
+    }
+
+    private Team getTeam(final Member host, final Member... members) {
         final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1));
-        participantRepository.save(new Participant(team, participant1, true));
-        participantRepository.save(new Participant(team, participant2, false));
+                new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1));
+
+        participantRepository.save(new Participant(team, host, true));
+
+        final List<Participant> participants = Arrays.stream(members)
+                .map(it -> new Participant(team, it, false))
+                .collect(Collectors.toList());
+        participantRepository.saveAll(participants);
+
         return team;
     }
 
-    private Long saveInterviewQuestion(final String content, final Levellog levellog, final Member author) {
+    private Levellog getLevellog(final Member author, final Team team) {
+        final Levellog levellog = Levellog.of(author, team, "levellog content");
+        return levellogRepository.save(levellog);
+    }
+
+    private InterviewQuestion getInterviewQuestion(final String content, final Levellog levellog, final Member author) {
         final InterviewQuestionDto request = InterviewQuestionDto.from(content);
-        return interviewQuestionService.save(request, levellog.getId(), author.getId());
+        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
+        return interviewQuestionRepository.save(interviewQuestion);
     }
 
     @Nested
     @DisplayName("save 메서드는")
-    class SaveTest {
+    class Save {
 
         @Test
         @DisplayName("인터뷰 질문을 저장한다.")
         void success() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
+            timeStandard.setInProgress();
+
             // when
-            final Long id = interviewQuestionService.save(request, pepperLevellog.getId(), eve.getId());
+            final Long id = interviewQuestionService.save(request, pepperLevellogId, eve.getId());
 
             // then
             assertThat(interviewQuestionRepository.findById(id))
@@ -71,12 +93,14 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 내용이 공백이나 null일 경우 예외를 던진다.")
         void save_contentBlank_exception(final String invalidContent) {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
-            final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from(invalidContent);
             final Long authorId = eve.getId();
+
+            timeStandard.setInProgress();
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, authorId))
@@ -88,11 +112,9 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문 작성자가 존재하지 않는 경우 예외를 던진다.")
         void save_memberNotFound_exception() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1));
-            participantRepository.save(new Participant(team, pepper, true));
-            final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
+            final Member pepper = getMember("페퍼");
+            final Team team = getTeam(pepper);
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
             final Long invalidMemberId = 1000L;
 
@@ -106,9 +128,9 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("레벨로그가 존재하지 않는 경우 예외를 던진다.")
         void save_levellogNotFound_exception() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
-            saveTeamAndTwoParticipants(pepper, eve);
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            getTeam(pepper, eve);
             final Long memberId = pepper.getId();
             final Long invalidLevellogId = 1000L;
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
@@ -123,11 +145,11 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("팀에 속하지 않은 멤버가 인터뷰 질문을 작성할 경우 예외를 던진다.")
         void save_otherTeamMember_exception() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
-            final Long otherTeamMemberId = memberRepository.save(new Member("알린", 3333, "alien.img")).getId();
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
-            final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Long otherTeamMemberId = getMember("알린").getId();
+            final Team team = getTeam(pepper, eve);
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
 
             // when & then
@@ -136,22 +158,57 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     .hasMessageContainingAll("같은 팀에 속한 멤버만 인터뷰 질문을 작성할 수 있습니다.", String.valueOf(team.getId()),
                             String.valueOf(pepperLevellogId), String.valueOf(otherTeamMemberId));
         }
+
+        @Test
+        @DisplayName("인터뷰가 종료된 후면 예외를 던진다.")
+        void save_isClosed_exception() {
+            // given
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
+            final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
+
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
+        }
+
+        @Test
+        @DisplayName("인터뷰가 시작 전이면 예외를 던진다.")
+        void save_isReady_exception() {
+            // given
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
+            final InterviewQuestionDto request = InterviewQuestionDto.from("스프링이란?");
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.", String.valueOf(team.getId()));
+        }
     }
 
     @Nested
     @DisplayName("findAll 메서드는")
-    class FindAllTest {
+    class FindAll {
 
         @Test
         @DisplayName("레벨로그에 대해 특정 멤버가 작성한 인터뷰 질문 목록을 조회한다.")
         void success() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
-            saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
-            saveInterviewQuestion("스프링 빈이란?", pepperLevellog, eve);
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            getInterviewQuestion("스프링이란?", pepperLevellog, eve);
+            getInterviewQuestion("스프링 빈이란?", pepperLevellog, eve);
 
             // when
             final InterviewQuestionsDto response = interviewQuestionService.findAllByLevellogAndAuthor(
@@ -174,9 +231,9 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("레벨로그가 존재하지 않는 경우 예외를 던진다.")
         void findAll_levellogNotFound_exception() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
-            saveTeamAndTwoParticipants(pepper, eve);
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            getTeam(pepper, eve);
             final Long memberId = eve.getId();
             final Long invalidLevellogId = 1000L;
 
@@ -190,11 +247,9 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문 작성자가 존재하지 않는 경우 예외를 던진다.")
         void findAll_memberNotFound_exception() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1));
-            participantRepository.save(new Participant(team, pepper, true));
-            final Long pepperLevellogId = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용")).getId();
+            final Member pepper = getMember("페퍼");
+            final Team team = getTeam(pepper);
+            final Long pepperLevellogId = getLevellog(pepper, team).getId();
             final Long invalidMemberId = 1000L;
 
             // when & then
@@ -207,18 +262,20 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("update 메서드는")
-    class UpdateTest {
+    class Update {
 
         @Test
         @DisplayName("인터뷰 질문을 수정한다.")
         void success() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
-            final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
+
+            timeStandard.setInProgress();
 
             // when
             interviewQuestionService.update(request, interviewQuestionId, eve.getId());
@@ -236,7 +293,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문이 존재하지 않는 경우 예외를 던진다.")
         void update_interviewQuestionNotFound_exception() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
+            final Member eve = getMember("이브");
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
             final Long invalidInterviewQuestionId = 1000L;
             final Long authorId = eve.getId();
@@ -251,13 +308,15 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void update_unauthorized_exception() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 2222, "image.png"));
-            final Long otherMemberId = memberRepository.save(new Member("릭", 123123, "image.png")).getId();
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
-            final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Long otherMemberId = getMember("릭").getId();
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
             final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
+
+            timeStandard.setInProgress();
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, otherMemberId))
@@ -265,21 +324,60 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     .hasMessageContainingAll("인터뷰 질문을 수정할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
                             String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
         }
+
+        @Test
+        @DisplayName("인터뷰가 종료된 후면 예외를 던진다.")
+        void update_isClosed_exception() {
+            // given
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+            final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
+
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
+        }
+
+        @Test
+        @DisplayName("인터뷰가 시작 전이면 예외를 던진다.")
+        void update_isReady_exception() {
+            // given
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+            final InterviewQuestionDto request = InterviewQuestionDto.from("업데이트된 질문 내용");
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("인터뷰 시작 전에 사전 질문을 수정 할 수 없습니다.", String.valueOf(team.getId()));
+        }
     }
 
     @Nested
     @DisplayName("deleteById 메서드는")
-    class DeleteByIdTest {
+    class DeleteById {
 
         @Test
         @DisplayName("인터뷰 질문을 삭제한다.")
         void success() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
-            final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+
+            timeStandard.setInProgress();
 
             // when
             interviewQuestionService.deleteById(interviewQuestionId, eve.getId());
@@ -291,9 +389,9 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 질문이 존재하지 않는 경우 예외를 던진다.")
-        void update_interviewQuestionNotFound_exception() {
+        void deleteById_interviewQuestionNotFound_exception() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 123123, "image.png"));
+            final Member eve = getMember("이브");
             final Long invalidInterviewQuestionId = 1000L;
             final Long authorId = eve.getId();
 
@@ -307,18 +405,53 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void deleteById_unauthorized_exception() {
             // given
-            final Member pepper = memberRepository.save(new Member("페퍼", 1111, "pepper.png"));
-            final Member eve = memberRepository.save(new Member("이브", 2222, "image.png"));
-            final Long otherMemberId = memberRepository.save(new Member("릭", 123123, "image.png")).getId();
-            final Team team = saveTeamAndTwoParticipants(pepper, eve);
-            final Levellog pepperLevellog = levellogRepository.save(Levellog.of(pepper, team, "레벨로그 작성 내용"));
-            final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Long otherMemberId = getMember("릭").getId();
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, otherMemberId))
                     .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContainingAll("인터뷰 질문을 삭제할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
                             String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
+        }
+
+        @Test
+        @DisplayName("인터뷰가 종료된 후면 예외를 던진다.")
+        void deleteById_isClosed_exception() {
+            // given
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
+        }
+
+        @Test
+        @DisplayName("인터뷰가 시작 전이면 예외를 던진다.")
+        void deleteById_isReady_exception() {
+            // given
+            final Member pepper = getMember("페퍼");
+            final Member eve = getMember("이브");
+            final Team team = getTeam(pepper, eve);
+            final Levellog pepperLevellog = getLevellog(pepper, team);
+            final Long interviewQuestionId = getInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContainingAll("인터뷰 시작 전에 사전 질문을 삭제 할 수 없습니다.", String.valueOf(team.getId()));
         }
     }
 }

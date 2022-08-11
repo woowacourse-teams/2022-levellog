@@ -36,7 +36,7 @@ public class LevellogService {
         final Team team = getTeam(teamId);
         final Member author = getMember(authorId);
         validateLevellogExistence(authorId, teamId);
-        team.validateBeforeStartAt(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 작성이 가능합니다.");
+        team.validateReady(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 작성이 가능합니다.");
 
         final Levellog savedLevellog = levellogRepository.save(request.toLevellog(author, team));
 
@@ -64,7 +64,7 @@ public class LevellogService {
     public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
         final Member member = getMember(memberId);
-        levellog.getTeam().validateBeforeStartAt(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 수정이 가능합니다.");
+        levellog.getTeam().validateReady(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 수정이 가능합니다.");
 
         levellog.updateContent(member, request.getContent());
     }

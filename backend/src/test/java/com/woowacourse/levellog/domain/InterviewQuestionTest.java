@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.domain;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -10,7 +11,6 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class InterviewQuestionTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1);
+            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
             final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
             final String content = "스프링이란?";
 
@@ -42,7 +42,7 @@ class InterviewQuestionTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1);
+            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
             final Levellog levellog = Levellog.of(to, team, "스프링을 공부하였습니다.");
             final String content = "a".repeat(256);
 
@@ -63,7 +63,7 @@ class InterviewQuestionTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1);
+            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
             final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
             final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");
 
@@ -82,7 +82,7 @@ class InterviewQuestionTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1);
+            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
             final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
             final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");
 
@@ -100,7 +100,7 @@ class InterviewQuestionTest {
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 2222, "image.png");
             final Member otherMember = new Member("릭", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil.img", 1);
+            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
             final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
             final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");
 

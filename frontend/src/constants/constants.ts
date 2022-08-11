@@ -31,4 +31,5 @@ export const MESSAGE = Object.freeze({
   TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
   WRITE_MORE: '3글자 이상 작성해주세요',
   CAN_EDIT: '수정하고 싶은 질문을 클릭해서 수정할 수 있어요!',
+  INTERVIEW_CLOSE_CONFIRM: '정말로 인터뷰를 종료하시겠습니까?',
 });

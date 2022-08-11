@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.application;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -16,7 +17,6 @@ import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionExceptio
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -402,7 +402,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
     private Team saveAndGetTeam(final String title, final String place, final String profileUrl) {
         return teamRepository.save(
-                new Team(title, place, LocalDateTime.now().plusDays(3), profileUrl, 1));
+                new Team(title, place, TEAM_START_TIME, profileUrl, 1));
     }
 
     private Member saveAndGetMember(final String nickname, final int githubId, final String profileUrl) {

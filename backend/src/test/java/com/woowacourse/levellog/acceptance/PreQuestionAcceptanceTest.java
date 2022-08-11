@@ -2,18 +2,18 @@ package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.levellog.dto.LevellogDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,10 +40,10 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(eveMemberId)));
         final String teamId = post("/api/teams", pepperToken, teamRequest).getTeamId();
-        final LevellogDto levellogRequest = LevellogDto.from("페퍼의 레벨로그");
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
@@ -81,10 +81,10 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(eveMemberId)));
         final String teamId = post("/api/teams", pepperToken, teamRequest).getTeamId();
-        final LevellogDto levellogRequest = LevellogDto.from("페퍼의 레벨로그");
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
@@ -128,10 +128,10 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(eveMemberId)));
         final String teamId = post("/api/teams", pepperToken, teamRequest).getTeamId();
-        final LevellogDto levellogRequest = LevellogDto.from("페퍼의 레벨로그");
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 
@@ -170,10 +170,10 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(eveMemberId)));
         final String teamId = post("/api/teams", pepperToken, teamRequest).getTeamId();
-        final LevellogDto levellogRequest = LevellogDto.from("페퍼의 레벨로그");
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
                 levellogRequest).getLevellogId();
 

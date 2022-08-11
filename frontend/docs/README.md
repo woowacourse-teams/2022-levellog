@@ -125,3 +125,14 @@
   - [x] `isClosed` -> 이 인터뷰 팀의 종료되었는지 여부
   - [x] `interviewers` -> 나(조회한 유저)를 인터뷰 할 참가자들
   - [x] `interviewees` -> 내(조회한 유저)가 인터뷰 할 참가자들
+
+## 프론트엔드 4차 데모데이 기능 요구사항
+
+### host가 인터뷰 팀을 종료할 수 있도록 수정
+
+- [x] `InterviewDetail`페이지에서 `host`는 인터뷰 팀을 종료할 수 있다.
+  - [x] `InterviewDetail` 페이지 `ContentHeader`에 `팀 수정하기` 버튼 옆에 `인터뷰 종료하기` 버튼을 만든다
+  - [x] 해당 버튼은 `host`에게만 보인다.
+  - [x] `인터뷰 종료하기` 버튼을 클릭하면 `confirm`으로 재확인 후에 종료한다.
+- [x] 인터뷰가 종료되면 `InterviewTeams` 페이지로 이동시킨다.
+- [x] `InterviewTeams`페이지에서 종료된 인터뷰 팀은 흐리게 보여준다.

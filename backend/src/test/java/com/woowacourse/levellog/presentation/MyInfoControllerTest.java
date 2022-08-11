@@ -3,7 +3,7 @@ package com.woowacourse.levellog.presentation;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -27,7 +27,7 @@ class MyInfoControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("updateNickname 메서드는 ")
-    class UpdateNickname {
+    class UpdateNicknameMapping {
 
         @Test
         @DisplayName("닉네임에 50자를 초과한 문자열이 들어올 경우 예외를 던진다.")
@@ -36,8 +36,8 @@ class MyInfoControllerTest extends ControllerTest {
             given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
 
-            doThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다."))
-                    .when(memberService)
+            willThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다."))
+                    .given(memberService)
                     .updateNickname(any(), any());
             final String invalidNickname = "a".repeat(51);
 

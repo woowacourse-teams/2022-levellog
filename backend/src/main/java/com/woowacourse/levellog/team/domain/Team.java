@@ -78,10 +78,12 @@ public class Team extends BaseEntity {
 
     private void validateStartAt(final LocalDateTime startAt) {
         if (startAt == null) {
-            throw new InterviewTimeException("시작 시간이 없습니다.", "입력한 시작 시간 : [null]");
+            throw new InterviewTimeException("시작 시간이 없습니다.");
         }
-        if (LocalDateTime.now().isAfter(startAt)) {
-            throw new InterviewTimeException("인터뷰 시작 시간은 현재 시간 이후여야 합니다. 입력한 시작 시간 : [" + startAt + "]");
+
+        final LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(startAt)) {
+            throw new InterviewTimeException("인터뷰 시작 시간은 현재 시간 이후여야 합니다.", getId(), startAt, now);
         }
     }
 
@@ -118,21 +120,23 @@ public class Team extends BaseEntity {
     }
 
     public void close(final LocalDateTime presentTime) {
-        validateInterviewStartTime(presentTime);
-        validateAlreadyClosed();
+        validateInProgress(presentTime, "인터뷰가 시작되기 전에 종료할 수 없습니다.");
 
         isClosed = true;
     }
 
-    private void validateInterviewStartTime(final LocalDateTime presentTime) {
+    public void validateInProgress(final LocalDateTime presentTime, final String message) {
         if (presentTime.isBefore(startAt)) {
-            throw new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.", "[teamId : " + this.getId() + "]");
+            throw new InterviewTimeException(message, getId(), startAt, presentTime);
+        }
+        if (isClosed) {
+            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", getId(), startAt, presentTime);
         }
     }
 
-    private void validateAlreadyClosed() {
-        if (isClosed) {
-            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
+    public void validateReady(final LocalDateTime presentTime, final String message) {
+        if (presentTime.isAfter(startAt)) {
+            throw new InterviewTimeException(message, getId(), startAt, presentTime);
         }
     }
 }

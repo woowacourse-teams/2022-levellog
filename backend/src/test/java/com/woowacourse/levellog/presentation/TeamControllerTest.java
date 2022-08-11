@@ -1,5 +1,8 @@
 package com.woowacourse.levellog.presentation;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
+import static com.woowacourse.levellog.fixture.TimeFixture.BEFORE_START_TIME;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
@@ -643,8 +646,7 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다.",
-                    "[teamId : " + teamId + "]"))
+            willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다.", teamId, TEAM_START_TIME, AFTER_START_TIME))
                     .given(teamService)
                     .close(teamId, 4L);
 
@@ -672,8 +674,7 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.",
-                    "인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]"))
+            willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.", teamId, TEAM_START_TIME, BEFORE_START_TIME))
                     .given(teamService)
                     .close(teamId, 4L);
 

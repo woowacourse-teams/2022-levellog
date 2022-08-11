@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
@@ -9,13 +10,12 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.levellog.dto.LevellogDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamCreateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.hamcrest.Matchers;
@@ -111,7 +111,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String team2Id = requestCreateTeam("릭,로마,페퍼", romaToken, rick_id, pepper_id).getTeamId();
 
         // 레벨로그 생성
-        final LevellogDto levellogRequest = LevellogDto.from("레벨로그1,2 내용");
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그1,2 내용");
         final String levellogId1 = post("/api/teams/" + team1Id + "/levellogs", rickToken,
                 levellogRequest)
                 .getLevellogId();
@@ -120,6 +120,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
                 .getLevellogId();
 
         // 피드백 작성
+        timeStandard.setInProgress();
+
         final FeedbackContentDto feedbackContentDto1 = new FeedbackContentDto("로마 study 리뷰", "로마 speak 리뷰",
                 "로마 etc 리뷰");
         final FeedbackContentDto feedbackContentDto2 = new FeedbackContentDto("페퍼 study 리뷰", "페퍼 speak 리뷰",
@@ -164,17 +166,17 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String hostToken = hostLoginResponse.getToken();
 
         // 팀 생성
-        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(romaId)));
-        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(romaId)));
 
         final String teamId1 = post("/api/teams", hostToken, teamCreateDto1).getTeamId();
         final String teamId2 = post("/api/teams", hostToken, teamCreateDto2).getTeamId();
 
         // 레벨로그 생성
-        final LevellogDto levellogRequest1 = LevellogDto.from("레벨로그1 내용");
-        final LevellogDto levellogRequest2 = LevellogDto.from("레벨로그2 내용");
+        final LevellogWriteDto levellogRequest1 = LevellogWriteDto.from("레벨로그1 내용");
+        final LevellogWriteDto levellogRequest2 = LevellogWriteDto.from("레벨로그2 내용");
 
         post("/api/teams/" + teamId1 + "/levellogs", romaToken, levellogRequest1).getLevellogId();
         post("/api/teams/" + teamId2 + "/levellogs", romaToken, levellogRequest2).getLevellogId();
@@ -214,9 +216,9 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final Long alienId = login("알린").getMemberId();
 
         // 팀 생성
-        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto1 = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(romaId, pepperId)));
-        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, LocalDateTime.now().plusDays(3),
+        final TeamCreateDto teamCreateDto2 = new TeamCreateDto("잠실 브리조", "톱오브스윙방", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(romaId, alienId)));
 
         post("/api/teams", hostToken, teamCreateDto1);

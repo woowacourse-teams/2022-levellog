@@ -112,7 +112,7 @@ export const authHandlers = [
   }),
 ];
 
-export const TeamHandlers = [
+export const teamHandlers = [
   rest.get('/api/teams', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(interviewTeams));
   }),

@@ -507,7 +507,8 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
             mockCreateTeam();
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-            final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(10), participantIds);
+            final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(10),
+                    participantIds);
 
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .given(teamService)
@@ -918,7 +919,7 @@ class TeamControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("이미 삭제된 팀 인터뷰를 종료하려고 하면 예외가 발생한다.")
+        @DisplayName("이미 삭제된 팀을 삭제하려고 하면 예외가 발생한다.")
         void delete_alreadyDeleted_exceptionThrown() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
@@ -931,10 +932,7 @@ class TeamControllerTest extends ControllerTest {
                     .deleteById(teamId, 4L);
 
             // when
-            final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestDelete("/api/teams/" + teamId, TOKEN);
 
             // then
             perform.andExpectAll(
@@ -943,7 +941,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/delete/exception/already-close"));
+            perform.andDo(document("team/delete/exception/already-deleted"));
         }
 
         @Test
@@ -976,7 +974,7 @@ class TeamControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하려고 하면 예외가 발생한다.")
+        @DisplayName("호스트가 아닌 사용자가 팀을 삭제하려고 하면 예외가 발생한다.")
         void delete_notHost_exceptionThrown() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");

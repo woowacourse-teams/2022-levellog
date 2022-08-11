@@ -17,14 +17,14 @@ class InterviewQuestionRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByLevellogAndAuthor 메서드는 levellog와 author 멤버가 모두 일치하는 인터뷰 질문 목록를 반환한다.")
     void findAllByLevellogAndAuthor() {
         // given
-        final Member eve = getMember("eve");
-        final Member toMember = getMember("toMember");
+        final Member eve = saveMember("eve");
+        final Member toMember = saveMember("toMember");
 
-        final Team team = getTeam(eve, toMember);
-        final Levellog levellog = getLevellog(toMember, team);
+        final Team team = saveTeam(eve, toMember);
+        final Levellog levellog = saveLevellog(toMember, team);
 
-        final InterviewQuestion savedInterviewQuestion1 = getInterviewQuestion("스프링을 왜 사용하였나요?", levellog, eve);
-        final InterviewQuestion savedInterviewQuestion2 = getInterviewQuestion("AOP란?", levellog, eve);
+        final InterviewQuestion savedInterviewQuestion1 = saveInterviewQuestion("스프링을 왜 사용하였나요?", levellog, eve);
+        final InterviewQuestion savedInterviewQuestion2 = saveInterviewQuestion("AOP란?", levellog, eve);
 
         // when
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(

@@ -49,6 +49,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 "윙크하지 마세요.");
         final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
+        timeStandard.setInProgress();
+
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
@@ -93,6 +95,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 "아이 컨텍이 좋습니다.",
                 "윙크하지 마세요.");
         final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+
+        timeStandard.setInProgress();
 
         RestAssuredTemplate.post("/api/levellogs/" + levellogId + "/feedbacks", romaToken, request);
 
@@ -142,6 +146,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final FeedbackContentDto givenFeedbackContentDto = new FeedbackContentDto(
                 "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
         final FeedbackWriteDto givenRequest = new FeedbackWriteDto(givenFeedbackContentDto);
+
+        timeStandard.setInProgress();
 
         final RestAssuredResponse saveResponse = RestAssuredTemplate.post(
                 "/api/levellogs/" + rick_levellogId + "/feedbacks",

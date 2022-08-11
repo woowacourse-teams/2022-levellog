@@ -413,6 +413,24 @@ class TeamTest {
     }
 
     @Nested
+    @DisplayName("validateBeforeStartAt 메서드는")
+    class ValidateBeforeStartAt {
+
+        @Test
+        @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이후면 예외가 발생한다.")
+        void validate_beforeStartAt_thrownException() {
+            // given
+            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
+            final Team team = new Team("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", startAt, "profileUrl", 2);
+
+            // when & then
+            assertThatThrownBy(() -> team.validateBeforeStartAt(startAt.plusDays(1), "피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다."))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining("피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다.");
+        }
+    }
+
+    @Nested
     @DisplayName("validateBeforeClose 메서드는")
     class ValidateBeforeClose {
 

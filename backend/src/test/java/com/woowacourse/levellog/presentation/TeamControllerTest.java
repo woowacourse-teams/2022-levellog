@@ -648,7 +648,6 @@ class TeamControllerTest extends ControllerTest {
             // when
             final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
 
-
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
@@ -656,6 +655,31 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/update/exception/participants/host"));
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 이후에 팀을 수정하려고 하면 예외를 던진다.")
+        void updateAfterStartAt_Exception() throws Exception {
+            // given
+            mockLogin();
+            mockCreateTeam();
+            final TeamDto request = new TeamDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    new ParticipantIdsDto(List.of(1L, 2L, 4L)));
+
+            willThrow(new TeamTimeException("인터뷰가 시작된 이후에는 수정할 수 없습니다."))
+                    .given(teamService)
+                    .update(request, 1L, 4L);
+
+            // when
+            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("인터뷰가 시작된 이후에는 수정할 수 없습니다."));
+
+            // docs
+            perform.andDo(document("team/update/exception/after-start-at"));
         }
     }
 

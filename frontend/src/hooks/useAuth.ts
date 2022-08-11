@@ -7,7 +7,6 @@ import useTeam from './useTeam';
 import useUser from './useUser';
 
 const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
-  const accessToken = localStorage.getItem('accessToken');
   const { loginUserId } = useUser();
   const { team, getTeam } = useTeam();
   const { levellogId } = useParams();
@@ -20,22 +19,6 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
       participant.levellogId,
     ]);
     await getTeam();
-
-    if (!accessToken) {
-      await setIsLoad(false);
-      await setIsError(true);
-      alert(MESSAGE.NEED_LOGIN);
-
-      return;
-    }
-
-    if (!loginUserId && accessToken) {
-      await setIsLoad(false);
-      await setIsError(true);
-      alert(MESSAGE.NEED_LOGIN);
-
-      return;
-    }
 
     if (requireAuth === (REQUIRE_AUTH.IN_TEAM || REQUIRE_AUTH.ME || REQUIRE_AUTH.NOT_ME)) {
       if (

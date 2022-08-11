@@ -9,7 +9,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamCreateDto;
+import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.util.List;
@@ -33,7 +33,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteDto teamRequest = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
         final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
@@ -65,7 +65,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteDto teamRequest = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
         final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
@@ -98,7 +98,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         // given
         final RestAssuredResponse loginResponse1 = login("페퍼");
         final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamCreateDto teamRequest = new TeamCreateDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteDto teamRequest = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
         final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
         final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),

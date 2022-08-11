@@ -22,22 +22,22 @@ operation::pre-question/create[]
 [[create-exception-prequestion-null]]
 ==== 등록 시 preQuestion이 null 또는 공백인 경우
 
-operation::pre-question/create/exception/null-and-blank[]
+include::{snippets}/pre-question/create/exception/null-and-blank/http-response.adoc[]
 
 [[create-exception-not-participant]]
 ==== 팀의 참가자가 아닌데 사전 질문을 등록하는 경우
 
-operation::pre-question/create/exception/not-participant[]
+include::{snippets}/pre-question/create/exception/not-participant/http-response.adoc[]
 
 [[create-exception-my-levellog]]
 ==== 내 레벨로그에 사전 질문을 등록하는 경우
 
-operation::pre-question/create/exception/levellog-is-mine[]
+include::{snippets}/pre-question/create/exception/levellog-is-mine/http-response.adoc[]
 
 [[create-exception-already-exist]]
 ==== 사전 질문이 이미 등록되었을 때 사전 질문을 등록하는 경우
 
-operation::pre-question/create/exception/already-exist[]
+include::{snippets}/pre-question/create/exception/already-exist/http-response.adoc[]
 
 [[find-my]]
 == 사전 질문 상세 조회
@@ -53,12 +53,12 @@ operation::pre-question/find-my[]
 [[find-my-exception-not-exist-levellog]]
 ==== 레벨로그가 존재하지 않는 경우
 
-operation::pre-question/find-my/exception/not-exist-levellog[]
+include::{snippets}/pre-question/find-my/exception/not-exist-levellog/http-response.adoc[]
 
 [[find-my-exception-not-exist-pre-question]]
 ==== 레벨로그에 대한 사전 질문이 존재하지 않는 경우
 
-operation::pre-question/find-my/exception/not-exist-pre-question[]
+include::{snippets}/pre-question/find-my/exception/not-exist-pre-question/http-response.adoc[]
 
 [[update]]
 == 사전 질문 수정
@@ -74,22 +74,22 @@ operation::pre-question/update[]
 [[update-exception-prequestion-null]]
 ==== 수정 시 preQuestion이 null 또는 공백인 경우
 
-operation::pre-question/update/exception/null-and-blank[]
+include::{snippets}/pre-question/update/exception/null-and-blank/http-response.adoc[]
 
 [[update-exception-prequestion-wrong-levellog]]
 ==== url의 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
 
-operation::pre-question/update/exception/wrong-levellog[]
+include::{snippets}/pre-question/update/exception/wrong-levellog/http-response.adoc[]
 
 [[update-exception-notfound]]
 ==== 없는 사전 질문을 수정하는 경우
 
-operation::pre-question/update/exception/notfound[]
+include::{snippets}/pre-question/update/exception/notfound/http-response.adoc[]
 
 [[update-exception-not-my-pre-question]]
 ==== 다른 사용자의 사전 질문을 수정하는 경우
 
-operation::pre-question/update/exception/not-my-pre-question[]
+include::{snippets}/pre-question/update/exception/not-my-pre-question/http-response.adoc[]
 
 [[delete]]
 == 사전 질문 삭제
@@ -105,9 +105,9 @@ operation::pre-question/delete[]
 [[delete-exception-wrong-levellog]]
 ==== url의 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
 
-operation::pre-question/delete/exception/wrong-levellog[]
+include::{snippets}/pre-question/delete/exception/wrong-levellog/http-response.adoc[]
 
 [[delete-exception-notfound]]
 ==== 타인의 사전 질문을 삭제하는 경우
 
-operation::pre-question/delete/exception/not-my-pre-question[]
+include::{snippets}/pre-question/delete/exception/not-my-pre-question/http-response.adoc[]

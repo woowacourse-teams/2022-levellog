@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TeamCreateDto {
+public class TeamWriteDto {
 
     @NotBlank
     private String title;

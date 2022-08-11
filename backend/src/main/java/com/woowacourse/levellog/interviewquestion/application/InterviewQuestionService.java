@@ -37,7 +37,8 @@ public class InterviewQuestionService {
         final Levellog levellog = getLevellog(levellogId);
 
         validateMemberIsParticipant(fromMember, levellog);
-        validateInProgress(levellog.getTeam());
+        levellog.getTeam()
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.");
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(fromMember, levellog);
 
@@ -59,9 +60,9 @@ public class InterviewQuestionService {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member fromMember = getMember(fromMemberId);
 
-        final Team team = interviewQuestion.getLevellog()
-                .getTeam();
-        validateInProgress(team);
+        interviewQuestion.getLevellog()
+                .getTeam()
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 수정 할 수 없습니다.");
 
         interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
     }
@@ -72,9 +73,9 @@ public class InterviewQuestionService {
         final Member member = getMember(fromMemberId);
 
         interviewQuestion.validateMemberIsAuthor(member, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
-        final Team team = interviewQuestion.getLevellog()
-                .getTeam();
-        validateInProgress(team);
+        interviewQuestion.getLevellog()
+                .getTeam()
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 삭제 할 수 없습니다.");
 
         interviewQuestionRepository.delete(interviewQuestion);
     }
@@ -103,10 +104,5 @@ public class InterviewQuestionService {
                     "같은 팀에 속한 멤버만 인터뷰 질문을 작성할 수 있습니다. [memberId :" + member.getId() + " teamId : " + team.getId()
                             + " levellogId : " + levellog.getId() + "]");
         }
-    }
-
-    private void validateInProgress(final Team team) {
-        team.validateBeforeClose();
-        team.validateAfterStartAt(timeStandard.now(), "인터뷰 시작 전입니다.");
     }
 }

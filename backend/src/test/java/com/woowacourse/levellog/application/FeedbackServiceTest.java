@@ -191,7 +191,7 @@ class FeedbackServiceTest extends ServiceTest {
                             new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
                     feedback1.getId(), roma.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.");
+                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 수정할 수 없습니다.");
         }
 
         @Test
@@ -336,7 +336,7 @@ class FeedbackServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.");
+                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성할 수 없습니다.");
         }
 
         @Test

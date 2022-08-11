@@ -9,12 +9,14 @@ import javax.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Where(clause = "deleted = false")
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE team SET deleted = true WHERE id=?")
 public class Team extends BaseEntity {
 
     private static final int DEFAULT_STRING_SIZE = 255;

@@ -3,7 +3,6 @@ package com.woowacourse.levellog.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
@@ -563,11 +562,14 @@ class TeamServiceTest extends ServiceTest {
 
             // when
             teamService.deleteById(team.getId(), member1.getId());
+            entityManager.flush();
+            entityManager.clear();
 
             // then
-            final Optional<Team> actual = teamRepository.findById(team.getId());
-            assertThat(actual).isPresent();
-            assertTrue(actual.get().isDeleted());
+            final Optional<Team> actualTeam = teamRepository.findById(team.getId());
+            assertThat(actualTeam).isEmpty();
+            final List<Participant> actualParticipants = participantRepository.findByTeam(team);
+            assertThat(actualParticipants).isEmpty();
         }
 
         @Test
@@ -603,7 +605,7 @@ class TeamServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("이미 삭제된 팀을 삭제하는 경우 호스트가 존재하지 않는다는 예외를 던진다.")
+        @DisplayName("이미 삭제된 팀을 삭제하는 경우 팀이 존재하지 않는다는 예외를 던진다.")
         void alreadyDeleted_Exception() {
             //given
             final Member member = saveAndGetMember("릭");
@@ -612,11 +614,13 @@ class TeamServiceTest extends ServiceTest {
             final Long teamId = team.getId();
             final Long memberId = member.getId();
             teamService.deleteById(teamId, memberId);
+            entityManager.flush();
+            entityManager.clear();
 
             //when & then
             assertThatThrownBy(() -> teamService.deleteById(teamId, memberId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContaining("모든 참가자 중 호스트가 존재하지 않습니다.");
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("팀이 존재하지 않습니다.");
         }
     }
 

@@ -18,15 +18,15 @@ class FeedbackRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByLevellog 메서드는 입력된 레벨로그에 등록된 모든 피드백을 조회한다.")
     void findAllByLevellog() {
         // given
-        final Member eve = getMember("eve");
-        final Member rick = getMember("rick");
-        final Member toMember = getMember("toMember");
+        final Member eve = saveMember("eve");
+        final Member rick = saveMember("rick");
+        final Member toMember = saveMember("toMember");
 
-        final Team team = getTeam(eve, rick, toMember);
-        final Levellog levellog = getLevellog(toMember, team);
+        final Team team = saveTeam(eve, rick, toMember);
+        final Levellog levellog = saveLevellog(toMember, team);
 
-        final Feedback savedFeedback1 = getFeedback(eve, toMember, levellog);
-        final Feedback savedFeedback2 = getFeedback(rick, toMember, levellog);
+        final Feedback savedFeedback1 = saveFeedback(eve, toMember, levellog);
+        final Feedback savedFeedback2 = saveFeedback(rick, toMember, levellog);
 
         // when
         final List<Feedback> feedbacks = feedbackRepository.findAllByLevellog(levellog);
@@ -40,15 +40,15 @@ class FeedbackRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByToOrderByUpdatedAtDesc 메서드는 입력된 멤버가 받은 피드백을 수정일 기준 내림차순으로 조회한다.")
     void findAllByToOrderByUpdatedAtDesc() {
         // given
-        final Member eve = getMember("eve");
-        final Member rick = getMember("rick");
-        final Member toMember = getMember("toMember");
+        final Member eve = saveMember("eve");
+        final Member rick = saveMember("rick");
+        final Member toMember = saveMember("toMember");
 
-        final Team team = getTeam(eve, rick, toMember);
-        final Levellog levellog = getLevellog(toMember, team);
+        final Team team = saveTeam(eve, rick, toMember);
+        final Levellog levellog = saveLevellog(toMember, team);
 
-        final Feedback savedFeedback1 = getFeedback(eve, toMember, levellog);
-        final Feedback savedFeedback2 = getFeedback(rick, toMember, levellog);
+        final Feedback savedFeedback1 = saveFeedback(eve, toMember, levellog);
+        final Feedback savedFeedback2 = saveFeedback(rick, toMember, levellog);
 
         savedFeedback2.updateFeedback("update", "update", "update");
 
@@ -64,13 +64,13 @@ class FeedbackRepositoryTest extends RepositoryTest {
     @DisplayName("existsByLevellogIdAndFromId 메서드는 입력 받은 레벨로그 Id와 작성자 Id로 작성된 피드백의 존재 여부를 반환한다.")
     void existsByLevellogIdAndFromId() {
         // given
-        final Member eve = getMember("eve");
-        final Member rick = getMember("rick");
+        final Member eve = saveMember("eve");
+        final Member rick = saveMember("rick");
 
-        final Team team = getTeam(eve, rick);
-        final Levellog levellog = getLevellog(rick, team);
+        final Team team = saveTeam(eve, rick);
+        final Levellog levellog = saveLevellog(rick, team);
 
-        getFeedback(eve, rick, levellog);
+        saveFeedback(eve, rick, levellog);
 
         // when
         final boolean isExist1 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(), eve.getId());

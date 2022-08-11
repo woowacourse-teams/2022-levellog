@@ -49,12 +49,12 @@ abstract class RepositoryTest {
     @Autowired
     protected TeamRepository teamRepository;
 
-    protected Member getMember(final String nickname) {
+    protected Member saveMember(final String nickname) {
         final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".org");
         return memberRepository.save(member);
     }
 
-    protected Team getTeam(final Member host, final Member... members) {
+    protected Team saveTeam(final Member host, final Member... members) {
         final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", 1));
 
         participantRepository.save(new Participant(team, host, true));
@@ -67,25 +67,25 @@ abstract class RepositoryTest {
         return team;
     }
 
-    protected Levellog getLevellog(final Member author, final Team team) {
+    protected Levellog saveLevellog(final Member author, final Team team) {
         final Levellog levellog = Levellog.of(author, team, "levellog content");
         return levellogRepository.save(levellog);
     }
 
-    protected InterviewQuestion getInterviewQuestion(final String content, final Levellog levellog,
-                                                     final Member author) {
+    protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
+                                                      final Member author) {
         final InterviewQuestionDto request = InterviewQuestionDto.from(content);
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
         return interviewQuestionRepository.save(interviewQuestion);
     }
 
-    protected Feedback getFeedback(final Member from, final Member to, final Levellog levellog) {
+    protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {
         final Feedback feedback = new Feedback(from, to, levellog, "study from " + from.getNickname(),
                 "speak from " + from.getNickname(), "etc from " + from.getNickname());
         return feedbackRepository.save(feedback);
     }
 
-    protected PreQuestion getPreQuestion(final Levellog levellog, final Member author) {
+    protected PreQuestion savePreQuestion(final Levellog levellog, final Member author) {
         final PreQuestion preQuestion = new PreQuestion(levellog, author,
                 author.getNickname() + "이 " + levellog.getId() + "에 작성한 사전질문");
         return preQuestionRepository.save(preQuestion);

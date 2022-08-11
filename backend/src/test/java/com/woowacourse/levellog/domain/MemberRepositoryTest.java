@@ -15,7 +15,7 @@ class MemberRepositoryTest extends RepositoryTest {
     @DisplayName("findByGithubId 메서드는 특정 GithubId가 포함된 멤버 객체를 반환한다.")
     void findByGithubId() {
         // given
-        final Member member = getMember("릭");
+        final Member member = saveMember("릭");
         final Integer githubId = member.getGithubId();
 
         // when
@@ -29,14 +29,14 @@ class MemberRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByNicknameContains 메서드는 입력한 문자열이 포함된 nickname을 가진 멤버를 모두 조회한다.")
     void findAllByNicknameContains() {
         // given
-        getMember("roma");
-        getMember("pepper");
-        getMember("rick");
-        getMember("eve");
-        getMember("kyul");
-        getMember("harry");
+        saveMember("roma");
+        saveMember("pepper");
+        saveMember("rick");
+        saveMember("eve");
+        saveMember("kyul");
+        saveMember("harry");
 
-        final Member alien = getMember("alien");
+        final Member alien = saveMember("alien");
 
         // when
         final List<Member> actual = memberRepository.findAllByNicknameContains("ali");

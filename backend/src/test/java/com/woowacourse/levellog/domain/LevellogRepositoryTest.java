@@ -21,9 +21,9 @@ class LevellogRepositoryTest extends RepositoryTest {
     @DisplayName("findByAuthorIdAndTeamId 메서드는 memberId와 teamId이 모두 일치하는 레벨로그를 반환한다.")
     void findByAuthorIdAndTeamId() {
         // given
-        final Member author = getMember("pepper");
-        final Team team = getTeam(author);
-        final Levellog levellog = getLevellog(author, team);
+        final Member author = saveMember("pepper");
+        final Team team = saveTeam(author);
+        final Levellog levellog = saveLevellog(author, team);
 
         final Long authorId = author.getId();
         final Long teamId = team.getId();
@@ -39,15 +39,15 @@ class LevellogRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByAuthor 메서드는 주어진 author가 작성한 레벨로그를 모두 반환한다.")
     void findAllByAuthor() {
         // given
-        final Member author = getMember("pepper");
-        final Member anotherAuthor = getMember("roma");
+        final Member author = saveMember("pepper");
+        final Member anotherAuthor = saveMember("roma");
 
-        final Team team = getTeam(author);
-        final Team team2 = getTeam(anotherAuthor, author);
+        final Team team = saveTeam(author);
+        final Team team2 = saveTeam(anotherAuthor, author);
 
-        final Levellog authorLevellog1 = getLevellog(author, team);
-        final Levellog authorLevellog2 = getLevellog(author, team2);
-        getLevellog(anotherAuthor, team);
+        final Levellog authorLevellog1 = saveLevellog(author, team);
+        final Levellog authorLevellog2 = saveLevellog(author, team2);
+        saveLevellog(anotherAuthor, team);
 
         // when
         final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author);
@@ -67,9 +67,9 @@ class LevellogRepositoryTest extends RepositoryTest {
         @DisplayName("memberId와 teamId이 모두 일치하는 레벨로그가 존재하는 경우 true를 반환한다.")
         void exists() {
             // given
-            final Member author = getMember("pepper");
-            final Team team = getTeam(author);
-            getLevellog(author, team);
+            final Member author = saveMember("pepper");
+            final Team team = saveTeam(author);
+            saveLevellog(author, team);
 
             final Long authorId = author.getId();
             final Long teamId = team.getId();
@@ -85,9 +85,9 @@ class LevellogRepositoryTest extends RepositoryTest {
         @DisplayName("memberId와 teamId이 모두 일치하는 레벨로그가 존재하지 않는 경우 false를 반환한다.")
         void notExists() {
             // given
-            final Member author = getMember("pepper");
-            final Team team = getTeam(author);
-            getLevellog(author, team);
+            final Member author = saveMember("pepper");
+            final Team team = saveTeam(author);
+            saveLevellog(author, team);
 
             final Long anotherAuthorId = author.getId() + 1;
             final Long teamId = team.getId();

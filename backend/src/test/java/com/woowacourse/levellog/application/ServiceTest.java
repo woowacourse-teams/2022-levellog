@@ -3,6 +3,7 @@ package com.woowacourse.levellog.application;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
@@ -12,11 +13,13 @@ import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.domain.MemberRepository;
+import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
+import org.junit.jupiter.api.BeforeEach;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,9 @@ abstract class ServiceTest {
 
     @Autowired
     protected JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    protected FakeTimeStandard timeStandard;
 
     @Autowired
     protected MemberService memberService;
@@ -65,6 +71,9 @@ abstract class ServiceTest {
     protected MemberRepository memberRepository;
 
     @Autowired
+    protected NicknameMappingRepository nicknameMappingRepository;
+
+    @Autowired
     protected LevellogRepository levellogRepository;
 
     @Autowired
@@ -81,4 +90,9 @@ abstract class ServiceTest {
 
     @Autowired
     protected PreQuestionRepository preQuestionRepository;
+
+    @BeforeEach
+    void setUp() {
+        timeStandard.setBeforeStarted();
+    }
 }

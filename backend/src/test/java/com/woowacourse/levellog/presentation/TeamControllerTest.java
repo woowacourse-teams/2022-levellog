@@ -17,9 +17,9 @@ import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
-import com.woowacourse.levellog.team.exception.TeamTimeException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -667,7 +667,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 4L)));
 
-            willThrow(new TeamTimeException("인터뷰가 시작된 이후에는 수정할 수 없습니다."))
+            willThrow(new InterviewTimeException("인터뷰가 시작된 이후에는 수정할 수 없습니다."))
                     .given(teamService)
                     .update(request, 1L, 4L);
 
@@ -811,8 +811,7 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new TeamTimeException("이미 종료된 인터뷰입니다.",
-                    "[teamId : " + teamId + "]"))
+            willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다."))
                     .given(teamService)
                     .close(teamId, 4L);
 
@@ -840,8 +839,7 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new TeamTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다.",
-                    "인터뷰가 시작되기 전에 종료할 수 없습니다. [teamId : " + teamId + "]"))
+            willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다."))
                     .given(teamService)
                     .close(teamId, 4L);
 
@@ -926,8 +924,7 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new TeamTimeException("이미 삭제된 인터뷰입니다.",
-                    "[teamId : " + teamId + "]"))
+            willThrow(new InterviewTimeException("이미 삭제된 인터뷰입니다."))
                     .given(teamService)
                     .deleteById(teamId, 4L);
 
@@ -952,8 +949,7 @@ class TeamControllerTest extends ControllerTest {
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
-            willThrow(new TeamTimeException("인터뷰가 시작된 이후에는 삭제할 수 없습니다.",
-                    "인터뷰가 시작된 이후에는 삭제할 수 없습니다. [teamId : " + teamId + "]"))
+            willThrow(new InterviewTimeException("인터뷰가 시작된 이후에는 삭제할 수 없습니다."))
                     .given(teamService)
                     .deleteById(teamId, 4L);
 

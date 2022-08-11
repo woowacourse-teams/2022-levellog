@@ -1,4 +1,4 @@
-= Levellog
+= InterviewQuestion
 :toc: left
 :toclevels: 2
 :sectlinks:
@@ -22,19 +22,27 @@ operation::interview-question/save[]
 
 ==== 인터뷰 질문 내용이 공백인 경우
 
-operation::interview-question/save/exception-contents-blank[]
+include::{snippets}/interview-question/save/exception/contents/blank/http-response.adoc[]
 
 ==== 인터뷰 질문 내용 길이가 255 글자 초과인 경우
 
-operation::interview-question/save/exception-contents-length[]
+include::{snippets}/interview-question/save/exception/contents/length/http-response.adoc[]
 
 ==== 인터뷰 질문에 해당하는 레벨로그가 존재하지 않는 경우
 
-operation::interview-question/save/exception-levellog[]
+include::{snippets}/interview-question/save/exception/levellog-not-found/http-response.adoc[]
 
 ==== 인터뷰 질문 작성자 멤버를 찾을 수 없는 경우
 
-operation::interview-question/save/exception-member[]
+include::{snippets}/interview-question/save/exception/member-not-found/http-response.adoc[]
+
+==== 인터뷰가 이미 종료된 경우
+
+include::{snippets}/interview-question/save/exception/is-closed/http-response.adoc[]
+
+==== 인터뷰가 시작 전인 경우
+
+include::{snippets}/interview-question/save/exception/is-ready/http-response.adoc[]
 
 [[findAll]]
 == 인터뷰 질문 목록 조회
@@ -49,11 +57,11 @@ operation::interview-question/findAll[]
 
 ==== 인터뷰 질문에 해당하는 레벨로그가 존재하지 않는 경우
 
-operation::interview-question/findAll/exception-levellog[]
+include::{snippets}/interview-question/findAll/exception/levellog-not-found/http-response.adoc[]
 
 ==== 인터뷰 질문 작성자 멤버를 찾을 수 없는 경우
 
-operation::interview-question/findAll/exception-member[]
+include::{snippets}/interview-question/findAll/exception/member-not-found/http-response.adoc[]
 
 [[update]]
 == 인터뷰 질문 내용 수정
@@ -68,19 +76,27 @@ operation::interview-question/update[]
 
 ==== 인터뷰 질문이 존재하지 않는 경우
 
-operation::interview-question/update/exception-interview-question[]
+include::{snippets}/interview-question/update/exception/not-found/http-response.adoc[]
 
 ==== 인터뷰 질문 작성자가 아닌 멤버가 수정하려는 경우
 
-operation::interview-question/update/exception-unauthorized[]
+include::{snippets}/interview-question/update/exception/unauthorized/http-response.adoc[]
 
 ==== 인터뷰 질문 내용이 공백인 경우
 
-operation::interview-question/update/exception-contents-blank[]
+include::{snippets}/interview-question/update/exception/contents/blank/http-response.adoc[]
 
 ==== 인터뷰 질문 내용 길이가 255 글자 초과인 경우
 
-operation::interview-question/update/exception-contents-length[]
+include::{snippets}/interview-question/update/exception/contents/length/http-response.adoc[]
+
+==== 인터뷰가 이미 종료된 경우
+
+include::{snippets}/interview-question/update/exception/is-closed/http-response.adoc[]
+
+==== 인터뷰가 시작 전인 경우
+
+include::{snippets}/interview-question/update/exception/is-ready/http-response.adoc[]
 
 [[delete]]
 == 인터뷰 질문 삭제
@@ -95,8 +111,16 @@ operation::interview-question/delete[]
 
 ==== 인터뷰 질문이 존재하지 않는 경우
 
-operation::interview-question/delete/exception-interview-question[]
+include::{snippets}/interview-question/delete/exception/not-found/http-response.adoc[]
 
 ==== 인터뷰 질문 작성자가 아닌 멤버가 삭제하려는 경우
 
-operation::interview-question/delete/exception-unauthorized[]
+include::{snippets}/interview-question/delete/exception/unauthorized/http-response.adoc[]
+
+==== 인터뷰가 이미 종료된 경우
+
+include::{snippets}/interview-question/delete/exception/is-closed/http-response.adoc[]
+
+==== 인터뷰가 시작 전인 경우
+
+include::{snippets}/interview-question/delete/exception/is-ready/http-response.adoc[]

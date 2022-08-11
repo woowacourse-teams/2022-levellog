@@ -12,6 +12,7 @@ import {
   requestPostTeam,
   requestDeleteTeam,
   requestEditTeam,
+  requestCloseTeamInterview,
 } from 'apis/teams';
 import { MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
@@ -116,6 +117,18 @@ export const useTeam = () => {
     }
   };
 
+  const closeTeamInterview = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
+    try {
+      await requestCloseTeamInterview({ teamId, accessToken });
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const responseBody: AxiosResponse = err.response!;
+        if (err instanceof Error) alert(responseBody.data.message);
+        navigate(ROUTES_PATH.HOME);
+      }
+    }
+  };
+
   const onSubmitTeamAddForm = async ({ participants }: Record<'participants', MemberType[]>) => {
     const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
     const teamInfo = {
@@ -150,6 +163,15 @@ export const useTeam = () => {
     }
   };
 
+  const onClickCloseTeamInterviewButton = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
+    if (confirm(MESSAGE.INTERVIEW_CLOSE_CONFIRM)) {
+      await closeTeamInterview({ teamId });
+      navigate(ROUTES_PATH.HOME);
+
+      return;
+    }
+  };
+
   const getTeamOnRef = async () => {
     const team = await getTeam();
     if (team && Object.keys(team).length === 0) {
@@ -177,5 +199,6 @@ export const useTeam = () => {
     onSubmitTeamAddForm,
     onSubmitTeamEditForm,
     onClickDeleteTeamButton,
+    onClickCloseTeamInterviewButton,
   };
 };

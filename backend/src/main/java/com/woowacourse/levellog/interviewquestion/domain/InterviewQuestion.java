@@ -54,7 +54,7 @@ public class InterviewQuestion extends BaseEntity {
         }
     }
 
-    public void validateInterviewQuestionAuthor(final Member member, final String errorMessage) {
+    public void validateMemberIsAuthor(final Member member, final String errorMessage) {
         final boolean isNotAuthor = !author.equals(member);
         if (isNotAuthor) {
             throw new UnauthorizedException(
@@ -65,7 +65,7 @@ public class InterviewQuestion extends BaseEntity {
 
     public void updateContent(final String content, final Member member) {
         validateContent(content);
-        validateInterviewQuestionAuthor(member, "인터뷰 질문을 수정할 수 있는 권한이 없습니다.");
+        validateMemberIsAuthor(member, "인터뷰 질문을 수정할 수 있는 권한이 없습니다.");
 
         this.content = content;
     }

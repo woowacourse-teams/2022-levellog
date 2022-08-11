@@ -69,12 +69,6 @@ public class TeamService {
         return new TeamAndRolesDto(teamAndRoles);
     }
 
-    public TeamsDto findAllByMemberId(final Long memberId) {
-        final List<Team> teams = getTeamsByMemberId(memberId);
-
-        return new TeamsDto(getTeamResponses(teams, memberId));
-    }
-
     public TeamAndRoleDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
@@ -85,6 +79,12 @@ public class TeamService {
 
         return TeamAndRoleDto.from(team, participants.toHostId(), status, interviewers, interviewees,
                 getParticipantResponses(participants, memberId), participants.isContains(memberId));
+    }
+
+    public TeamsDto findAllByMemberId(final Long memberId) {
+        final List<Team> teams = getTeamsByMemberId(memberId);
+
+        return new TeamsDto(getTeamResponses(teams, memberId));
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {

@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.domain;
 
 
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -13,7 +14,6 @@ import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +47,7 @@ class ParticipantsTest {
         void success(final int interviewerNumber, final Long targetMemberId, final String expectedIds) {
             // given
             final List<Long> expected = toIdList(expectedIds);
-            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
 
             final List<Participant> values = List.of(
@@ -73,7 +73,7 @@ class ParticipantsTest {
         void emptyList() {
             // given
             final int interviewerNumber = 1;
-            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
 
             final List<Participant> values = List.of(
@@ -102,7 +102,7 @@ class ParticipantsTest {
             // given
             final List<Long> expected = toIdList(expectedIds);
 
-            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
 
             final List<Participant> values = List.of(
@@ -128,7 +128,7 @@ class ParticipantsTest {
         void emptyList() {
             // given
             final int interviewerNumber = 1;
-            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
 
             final List<Participant> values = List.of(
@@ -157,7 +157,7 @@ class ParticipantsTest {
             // given
             final int interviewerNumber = 2;
             final Team team = MockEntityFactory.setId(1L,
-                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                    new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
@@ -181,7 +181,7 @@ class ParticipantsTest {
             // given
             final int interviewerNumber = 2;
             final Team team = MockEntityFactory.setId(1L,
-                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                    new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
@@ -203,7 +203,7 @@ class ParticipantsTest {
             // given
             final int interviewerNumber = 2;
             final Team team = MockEntityFactory.setId(1L,
-                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                    new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
@@ -224,7 +224,7 @@ class ParticipantsTest {
             // given
             final int interviewerNumber = 2;
             final Team team = MockEntityFactory.setId(1L,
-                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                    new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
@@ -246,7 +246,7 @@ class ParticipantsTest {
         // given
         final int interviewerNumber = 2;
         final Team team = MockEntityFactory.setId(1L,
-                new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
         final Member rick = getMember("릭", 1L);
         final List<Participant> values = List.of(

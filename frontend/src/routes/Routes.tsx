@@ -38,6 +38,15 @@ export const routes = [
         element: <PreQuestionEdit />,
       },
       {
+        path: ROUTES_PATH.FEEDBACK_ADD,
+        element: (
+          // 제대로 되는지 백엔드 머지 후 테스트해야함
+          <TeamStatus needStatus={TEAM_STATUS.READY || TEAM_STATUS.IN_PROGRESS}>
+            <FeedbackAdd />
+          </TeamStatus>
+        ),
+      },
+      {
         path: ROUTES_PATH.LEVELLOG_ADD_ROUTE,
         element: (
           <TeamStatus needStatus={TEAM_STATUS.READY}>
@@ -58,14 +67,6 @@ export const routes = [
         element: (
           <TeamStatus needStatus={TEAM_STATUS.READY}>
             <InterviewTeamEdit />
-          </TeamStatus>
-        ),
-      },
-      {
-        path: ROUTES_PATH.FEEDBACK_ADD,
-        element: (
-          <TeamStatus needStatus={TEAM_STATUS.IN_PROGRESS}>
-            <FeedbackAdd />
           </TeamStatus>
         ),
       },

@@ -70,12 +70,13 @@ const Interviewer = ({
             </>
           ) : (
             <>
-              {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
+              {(team as InterviewTeamType).status === TEAM_STATUS.READY ? (
                 <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
                   <S.InterviewerButton>레벨로그 작성</S.InterviewerButton>
                 </Link>
+              ) : (
+                <S.InterviewerButton disabled>레벨로그 작성</S.InterviewerButton>
               )}
-              {/*현재 해당 케이스에서 어떤 버튼도 나타나지 않음*/}
             </>
           )}
         </S.Content>

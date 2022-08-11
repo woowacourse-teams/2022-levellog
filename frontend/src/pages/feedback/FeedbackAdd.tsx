@@ -8,7 +8,7 @@ import useLevellog from 'hooks/useLevellog';
 import useRole from 'hooks/useRole';
 import useTeam from 'hooks/useTeam';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 import { MESSAGE } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -22,7 +22,7 @@ const FeedbackAdd = () => {
   const { feedbackRef, onClickFeedbackAddButton } = useFeedback();
   const { levellog, getLevellog } = useLevellog();
   const { teamId, levellogId } = useParams();
-  const { getTeam } = useTeam();
+  const { team, getTeam } = useTeam();
   const { loginUserRole, getLoginUserRole } = useRole();
   const navigate = useNavigate();
   const [writer, setWriter] = useState('');
@@ -37,7 +37,7 @@ const FeedbackAdd = () => {
     navigate(ROUTES_PATH.HOME);
   };
 
-  //임시용
+  //임시용 -> 레벨로그 조회 응답 바뀌어서 이제 수정할 수 있음, 이슈 파서 작업
   const init = async () => {
     if (typeof teamId === 'string' && typeof levellogId === 'string') {
       getLevellog({ teamId, levellogId });
@@ -64,7 +64,11 @@ const FeedbackAdd = () => {
     <FlexBox gap={1.875}>
       <S.Container>
         <ContentHeader title={`${writer}의 레벨 인터뷰 피드백`}>
-          <Button onClick={handleClickFeedbackAddButton}>등록하기</Button>
+          {team.status === TEAM_STATUS.IN_PROGRESS ? (
+            <Button onClick={handleClickFeedbackAddButton}>등록하기</Button>
+          ) : (
+            <Button disabled>등록하기</Button>
+          )}
         </ContentHeader>
         <S.Content>
           <S.RoleContent>나의 역할: {loginUserRole}</S.RoleContent>

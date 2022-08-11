@@ -7,11 +7,13 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 public class Participant extends BaseEntity {
 
@@ -24,10 +26,4 @@ public class Participant extends BaseEntity {
     private Member member;
 
     private boolean isHost;
-
-    public Participant(final Team team, final Member member, final boolean isHost) {
-        this.team = team;
-        this.member = member;
-        this.isHost = isHost;
-    }
 }

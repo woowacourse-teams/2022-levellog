@@ -132,12 +132,6 @@ public class Team extends BaseEntity {
         }
     }
 
-    private void validateAlreadyDeleted() {
-        if (isDeleted()) {
-            throw new TeamTimeException("이미 삭제된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
-        }
-    }
-
     public void update(final Team team, final LocalDateTime presentTime) {
         validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 수정할 수 없습니다.");
 
@@ -146,8 +140,6 @@ public class Team extends BaseEntity {
         this.startAt = team.startAt;
         this.profileUrl = team.profileUrl;
         this.interviewerNumber = team.interviewerNumber;
-        this.isClosed = false;
-        this.deleted = false;
     }
 
     public void close(final LocalDateTime presentTime) {
@@ -159,7 +151,6 @@ public class Team extends BaseEntity {
 
     public void delete(final LocalDateTime presentTime) {
         validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
-        validateAlreadyDeleted();
 
         this.deleted = true;
     }

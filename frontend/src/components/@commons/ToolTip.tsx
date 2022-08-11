@@ -27,7 +27,7 @@ const ToolTipContent = styled.div`
   background-color: ${(props) => props.theme.default.WHITE};
   line-height: 1.25rem;
   opacity: 0;
-  transition: all 1s;
+  transition: all 0.5s;
   &:before {
     position: absolute;
     top: 30%;

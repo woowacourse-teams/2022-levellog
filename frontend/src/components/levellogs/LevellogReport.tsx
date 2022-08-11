@@ -20,8 +20,7 @@ interface LevellogReportProps {
 
 const S = {
   Container: styled.div`
-    overflow: auto;
-    width: 48rem;
+    width: 100%;
     @media (max-width: 520px) {
       max-width: 22.875rem;
     }

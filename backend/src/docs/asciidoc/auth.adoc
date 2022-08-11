@@ -22,8 +22,8 @@ operation::auth/login[]
 
 ==== 유효하지 않은 authorizationCode
 
-operation::auth/login/null[]
+include::{snippets}/auth/login/null/http-response.adoc[]
 
 ==== 깃허브에서 토큰 받아오기 실패
 
-operation::auth/login/github-fail[]
+include::{snippets}/auth/login/github-fail/http-response.adoc[]

@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.application;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -18,7 +20,6 @@ import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ class FeedbackServiceTest extends ServiceTest {
 
     private Team saveAndGetTeam(final String title, final int interviewerNumber) {
         return teamRepository.save(
-                new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png", interviewerNumber));
+                new Team(title, "피니시방", TEAM_START_TIME, "jason.png", interviewerNumber));
     }
 
     private void saveAllParticipant(final Team team, final Member host, final Member... participants) {
@@ -53,7 +54,7 @@ class FeedbackServiceTest extends ServiceTest {
         final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
         final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
         final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
+                new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1));
         final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
         feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
         feedbackRepository.save(new Feedback(eve, roma, levellog, "이브 스터디", "이브 말하기", "이브 기타"));
@@ -132,11 +133,13 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "profile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "profile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
             final Feedback feedback1 = feedbackRepository.save(
                     new Feedback(roma, eve, levellog, "로마가 이브에게 스터디", "로마가 이브에게 말하기", "로마가 이브에게 기타"));
+
+            timeStandard.setInProgress();
 
             // when
             feedbackService.update(new FeedbackWriteDto(
@@ -158,7 +161,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
             final Feedback feedback1 = feedbackRepository.save(
@@ -180,7 +183,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(10), "profile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "profile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
             final Feedback feedback1 = feedbackRepository.save(
@@ -191,7 +194,7 @@ class FeedbackServiceTest extends ServiceTest {
                             new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
                     feedback1.getId(), roma.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.");
+                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 수정할 수 없습니다.");
         }
 
         @Test
@@ -201,16 +204,16 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
 
-            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", startAt, "profile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "profile.img", 1));
 
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
             final Feedback feedback1 = feedbackRepository.save(
                     new Feedback(roma, eve, levellog, "로마가 이브에게 스터디", "로마가 이브에게 말하기", "로마가 이브에게 기타"));
 
-            team.close(startAt.plusDays(1));
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
 
             // when & then
             assertThatThrownBy(() -> feedbackService.update(new FeedbackWriteDto(
@@ -232,7 +235,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
             participantRepository.save(new Participant(team, eve, true));
             participantRepository.save(new Participant(team, roma, false));
@@ -240,6 +243,8 @@ class FeedbackServiceTest extends ServiceTest {
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
             final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+
+            timeStandard.setInProgress();
 
             // when
             final Long id = feedbackService.save(request, levellog.getId(), roma.getId());
@@ -257,7 +262,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
 
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1));
 
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
             feedbackRepository.save(new Feedback(roma, eve, levellog, "study", "speak", "etc"));
@@ -278,7 +283,7 @@ class FeedbackServiceTest extends ServiceTest {
             // given
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1));
             participantRepository.save(new Participant(team, eve, true));
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
@@ -301,7 +306,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
 
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1));
             participantRepository.save(new Participant(team, eve, true));
             participantRepository.save(new Participant(team, alien, false));
 
@@ -323,7 +328,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
 
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(10), "progile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1));
             participantRepository.save(new Participant(team, eve, true));
             participantRepository.save(new Participant(team, roma, false));
 
@@ -336,7 +341,7 @@ class FeedbackServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.");
+                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성할 수 없습니다.");
         }
 
         @Test
@@ -346,15 +351,15 @@ class FeedbackServiceTest extends ServiceTest {
             final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
             final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
 
-            final LocalDateTime startAt = LocalDateTime.now().plusDays(3);
             final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", startAt, "progile.img", 1));
+                    new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1));
             participantRepository.save(new Participant(team, eve, true));
             participantRepository.save(new Participant(team, roma, false));
 
             final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
 
-            team.close(startAt.plusDays(1));
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
 
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");

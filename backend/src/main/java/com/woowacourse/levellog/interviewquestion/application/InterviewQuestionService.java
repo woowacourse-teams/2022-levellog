@@ -14,6 +14,7 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,16 @@ public class InterviewQuestionService {
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
     private final ParticipantRepository participantRepository;
+    private final TimeStandard timeStandard;
 
     @Transactional
     public Long save(final InterviewQuestionDto request, final Long levellogId, final Long fromMemberId) {
         final Member fromMember = getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
-        validateTeamMember(fromMember, levellog);
+
+        validateMemberIsParticipant(fromMember, levellog);
+        levellog.getTeam()
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.");
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(fromMember, levellog);
 
@@ -55,6 +60,10 @@ public class InterviewQuestionService {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member fromMember = getMember(fromMemberId);
 
+        interviewQuestion.getLevellog()
+                .getTeam()
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 수정 할 수 없습니다.");
+
         interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
     }
 
@@ -63,7 +72,10 @@ public class InterviewQuestionService {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member member = getMember(fromMemberId);
 
-        interviewQuestion.validateInterviewQuestionAuthor(member, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
+        interviewQuestion.validateMemberIsAuthor(member, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
+        interviewQuestion.getLevellog()
+                .getTeam()
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 삭제 할 수 없습니다.");
 
         interviewQuestionRepository.delete(interviewQuestion);
     }
@@ -84,7 +96,7 @@ public class InterviewQuestionService {
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 멤버 [memberId : " + memberId + "]"));
     }
 
-    private void validateTeamMember(final Member member, final Levellog levellog) {
+    private void validateMemberIsParticipant(final Member member, final Levellog levellog) {
         final Team team = levellog.getTeam();
 
         if (!participantRepository.existsByMemberAndTeam(member, team)) {

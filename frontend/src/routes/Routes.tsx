@@ -1,7 +1,8 @@
 import Login from 'pages/Login';
 import NotFound from 'pages/NotFound';
 import FeedbackAdd from 'pages/feedback/FeedbackAdd';
-import FeedbackList from 'pages/feedback/FeedbackList';
+import Feedbacks from 'pages/feedback/Feedbacks';
+import InterviewQuestions from 'pages/interviewQuestion/InterviewQuestions';
 import LevellogAdd from 'pages/levellogs/LevellogAdd';
 import LevellogEdit from 'pages/levellogs/LevellogEdit';
 import PreQuestionAdd from 'pages/preQuestion/PreQuestionAdd';
@@ -21,7 +22,7 @@ export const routes = [
     children: [
       {
         path: ROUTES_PATH.FEEDBACK_ROUTE,
-        element: <FeedbackList />,
+        element: <Feedbacks />,
       },
       {
         path: ROUTES_PATH.FEEDBACK_ADD,
@@ -50,6 +51,10 @@ export const routes = [
       {
         path: ROUTES_PATH.INTERVIEW_TEAMS_EDIT,
         element: <InterviewTeamEdit />,
+      },
+      {
+        path: ROUTES_PATH.INTERVIEW_QUESTION,
+        element: <InterviewQuestions />,
       },
     ],
   },

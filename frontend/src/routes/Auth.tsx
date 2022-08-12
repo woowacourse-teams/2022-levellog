@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import useUser from 'hooks/useUser';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import { ROUTES_PATH } from 'constants/constants';
 
 const Auth = ({ needLogin }: AuthProps) => {
   const navigate = useNavigate();

@@ -4,6 +4,8 @@ import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -108,6 +110,67 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("interviewQuestions.content", contains("Spring을 사용하는 이유?", "스프링 빈이란?"));
+    }
+
+    /*
+     * Scenario: 레벨로그에 작성된 인터뷰 질문 목록 조회
+     *   given: 페퍼, 로마, 릭이 참가자인 팀이 있다.
+     *   given: 페퍼는 레벨로그를 작성한다.
+     *   given: 인터뷰를 시작한다.
+     *   given: 로마와 릭은 페퍼의 레벨로그에 대한 인터뷰 질문을 작성한다.
+     *   when: 페퍼의 레벨로그에 작성된 모든 인터뷰 질문 목록을 조회힌다.
+     *   then: 200 OK 상태 코드와 레벨로그에 작성된 모든 인터뷰 질문을 응답 받는다.
+     */
+    @Test
+    @DisplayName("레벨로그에 작성된 인터뷰 질문 목록 조회")
+    void findAllByLevellog() {
+        // given
+        final RestAssuredResponse pepper = login("페퍼");
+        final RestAssuredResponse roma = login("로마");
+        final RestAssuredResponse rick = login("릭");
+
+        final String pepperToken = pepper.getToken();
+        final TeamWriteDto teamDto = new TeamWriteDto("롬펲 인터뷰", "트랙룸", 1, TEAM_START_TIME,
+                new ParticipantIdsDto(List.of(roma.getMemberId(), rick.getMemberId())));
+        final String teamId = post("/api/teams", pepperToken, teamDto).getTeamId();
+
+        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
+        final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken, levellogRequest)
+                .getLevellogId();
+
+        timeStandard.setInProgress();
+
+        final String url = "/api/levellogs/" + pepperLevellogId + "/interview-questions";
+        final String rickToken = rick.getToken();
+        final String romaToken = roma.getToken();
+
+        post(url, rickToken, InterviewQuestionDto.from("111"));
+
+        post(url, romaToken, InterviewQuestionDto.from("222"));
+        post(url, romaToken, InterviewQuestionDto.from("333"));
+
+        post(url, rickToken, InterviewQuestionDto.from("444"));
+
+        post(url, romaToken, InterviewQuestionDto.from("555"));
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("interview-question/find-all-by-levellog"))
+                .when()
+                .get("/api/levellogs/{levellogId}/interview-questions", pepperLevellogId)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("interviewQuestions", hasSize(2),
+
+                        "interviewQuestions[0].author.nickname", equalTo("릭"),
+                        "interviewQuestions[0].contents.content", contains("111", "444"),
+
+                        "interviewQuestions[1].author.nickname", equalTo("로마"),
+                        "interviewQuestions[1].contents.content", contains("222", "333", "555")
+                );
     }
 
     /*

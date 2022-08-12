@@ -9,10 +9,14 @@ import javax.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE team SET deleted = true WHERE id=?")
 public class Team extends BaseEntity {
 
     private static final int DEFAULT_STRING_SIZE = 255;
@@ -37,6 +41,9 @@ public class Team extends BaseEntity {
     @Column(nullable = false)
     private boolean isClosed;
 
+    @Column(nullable = false)
+    private boolean deleted;
+
     public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
                 final int interviewerNumber) {
         validate(title, place, startAt, profileUrl, interviewerNumber);
@@ -47,6 +54,7 @@ public class Team extends BaseEntity {
         this.profileUrl = profileUrl;
         this.interviewerNumber = interviewerNumber;
         this.isClosed = false;
+        this.deleted = false;
     }
 
     private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
@@ -78,10 +86,12 @@ public class Team extends BaseEntity {
 
     private void validateStartAt(final LocalDateTime startAt) {
         if (startAt == null) {
-            throw new InterviewTimeException("시작 시간이 없습니다.", "입력한 시작 시간 : [null]");
+            throw new InterviewTimeException("시작 시간이 없습니다.");
         }
-        if (LocalDateTime.now().isAfter(startAt)) {
-            throw new InterviewTimeException("인터뷰 시작 시간은 현재 시간 이후여야 합니다. 입력한 시작 시간 : [" + startAt + "]");
+
+        final LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(startAt)) {
+            throw new InterviewTimeException("인터뷰 시작 시간은 현재 시간 이후여야 합니다.", getId(), startAt, now);
         }
     }
 
@@ -101,14 +111,14 @@ public class Team extends BaseEntity {
         }
     }
 
-    public void update(final String title, final String place, final LocalDateTime startAt) {
-        validateTitle(title);
-        validatePlace(place);
-        validateStartAt(startAt);
+    public void update(final Team team, final LocalDateTime presentTime) {
+        validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 수정할 수 없습니다.");
 
-        this.title = title;
-        this.place = place;
-        this.startAt = startAt;
+        this.title = team.title;
+        this.place = team.place;
+        this.startAt = team.startAt;
+        this.profileUrl = team.profileUrl;
+        this.interviewerNumber = team.interviewerNumber;
     }
 
     public void validParticipantNumber(final int participantNumber) {
@@ -117,36 +127,46 @@ public class Team extends BaseEntity {
         }
     }
 
+    private void validateTeamBeforeStartAt(final LocalDateTime presentTime, final String errorMessage) {
+        if (presentTime.isAfter(this.startAt)) {
+            throw new InterviewTimeException(errorMessage, getId(), startAt, presentTime);
+        }
+    }
+
     public void close(final LocalDateTime presentTime) {
-        validateAfterStartAt(presentTime, "인터뷰가 시작되기 전에 종료할 수 없습니다.");
-        validateBeforeClose();
+        validateInProgress(presentTime, "인터뷰가 시작되기 전에 종료할 수 없습니다.");
 
         isClosed = true;
     }
 
-    public void validateAfterStartAt(final LocalDateTime presentTime, final String message) {
-        if (isBeforeStartTime(presentTime)) {
-            throw new InterviewTimeException(message, "[teamId : " + this.getId() + "]");
+    public void validateInProgress(final LocalDateTime presentTime, final String message) {
+        if (presentTime.isBefore(startAt)) {
+            throw new InterviewTimeException(message, getId(), startAt, presentTime);
         }
-    }
-
-    public void validateBeforeStartAt(final LocalDateTime presentTime, final String message) {
-        if (isAfterStartTime(presentTime)) {
-            throw new InterviewTimeException(message, "[teamId : " + this.getId() + "]");
-        }
-    }
-
-    public void validateBeforeClose() {
         if (isClosed) {
-            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", "[teamId : " + this.getId() + "]");
+            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", getId(), startAt, presentTime);
         }
     }
 
-    private boolean isAfterStartTime(final LocalDateTime presentTime) {
-        return presentTime.isAfter(startAt);
+    public void validateReady(final LocalDateTime presentTime, final String message) {
+        if (presentTime.isAfter(startAt)) {
+            throw new InterviewTimeException(message, getId(), startAt, presentTime);
+        }
     }
 
-    private boolean isBeforeStartTime(final LocalDateTime presentTime) {
-        return presentTime.isBefore(startAt);
+    public void delete(final LocalDateTime presentTime) {
+        validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
+
+        this.deleted = true;
+    }
+
+    public TeamStatus status(final LocalDateTime presentTime) {
+        if (isClosed) {
+            return TeamStatus.CLOSED;
+        }
+        if (startAt.isAfter(presentTime)) {
+            return TeamStatus.READY;
+        }
+        return TeamStatus.IN_PROGRESS;
     }
 }

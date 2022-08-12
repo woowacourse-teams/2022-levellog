@@ -18,7 +18,7 @@ import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamCreateDto;
+import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
@@ -105,7 +105,7 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse requestCreateTeam(final String title, final String token,
                                                     final Long... participantIds) {
         final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(List.of(participantIds));
-        final TeamCreateDto request = new TeamCreateDto(title, title + "place", 1, TEAM_START_TIME,
+        final TeamWriteDto request = new TeamWriteDto(title, title + "place", 1, TEAM_START_TIME,
                 participantIdsDto);
 
         return post("/api/teams", token, request);

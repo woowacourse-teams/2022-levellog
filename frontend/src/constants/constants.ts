@@ -28,6 +28,8 @@ export const MESSAGE = Object.freeze({
   NEED_LOGIN: '로그인이 필요한 페이지입니다',
   NEED_IN_TEAM: '해당 팀에 소속된 유저만 접근할 수 있습니다!',
   NEED_HOST: '호스트만 접근할 수 있습니다!',
+  NEED_ME: '본인이 작성하지 않은 글을 수정할 수 없습니다',
+  NEED_NOT_ME: '본인이 본인에 대한 질문,피드백을 작성,수정할 수 없습니다.',
   TEAM_CREATE: '인터뷰팀 생성을 완료했습니다!',
   TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
   INTERVIEW_CLOSE_CONFIRM: '정말로 인터뷰를 종료하시겠습니까?',

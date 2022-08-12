@@ -36,10 +36,8 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
       participant.memberId,
       participant.levellogId,
     ]);
-    console.log('진입: checkAuth');
 
     if (requireAuth === (REQUIRE_AUTH.IN_TEAM || REQUIRE_AUTH.ME || REQUIRE_AUTH.NOT_ME)) {
-      console.log('진입: checkInTeam');
       if (
         team &&
         Object.values(team.participants)
@@ -57,7 +55,6 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     }
 
     if (requireAuth === REQUIRE_AUTH.HOST) {
-      console.log('진입: checkHost');
       if (String(team.hostId) !== String(loginUserId)) {
         setIsLoad(false);
         setIsError(true);
@@ -68,7 +65,6 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     }
 
     if (requireAuth === REQUIRE_AUTH.ME) {
-      console.log('진입: checkMe');
       if (
         !idsAndLevellogIds.some(
           (idAndLevellogId) =>
@@ -78,14 +74,12 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
       ) {
         setIsLoad(false);
         setIsError(true);
-        // alert(MESSAGE.WRONG_ACCESS);
-        alert('본인이 작성하지 않은 글을 수정할 수 없습니다');
+        alert(MESSAGE.NEED_ME);
         return;
       }
     }
 
     if (requireAuth === REQUIRE_AUTH.NOT_ME) {
-      console.log('진입: checkNotMe');
       if (
         idsAndLevellogIds.some(
           (idAndLevellogId) =>
@@ -95,12 +89,10 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
       ) {
         setIsLoad(false);
         setIsError(true);
-        // alert(MESSAGE.WRONG_ACCESS);
-        alert('본인이 본인에 대한 질문,피드백을 작성,수정할 수 없습니다.');
+        alert(MESSAGE.NEED_NOT_ME);
         return;
       }
     }
-    console.log('에러 없이 탈출');
     setIsLoad(false);
   };
 

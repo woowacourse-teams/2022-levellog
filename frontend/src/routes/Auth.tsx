@@ -6,8 +6,6 @@ import Loading from 'pages/status/Loading';
 const Auth = ({ children, requireAuth }: AuthProps) => {
   const [isLoad, isError] = useAuth({ requireAuth });
 
-  console.log('Load, Error: ', isLoad, isError);
-
   if (isLoad) return <Loading />;
   if (isError) return <Error />;
 

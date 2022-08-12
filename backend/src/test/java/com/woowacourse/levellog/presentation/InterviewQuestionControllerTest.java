@@ -23,16 +23,14 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("InterviewQuestionController 의")
 class InterviewQuestionControllerTest extends ControllerTest {
 
-    private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.Y5wT9jBcP1lvMtjRqxaF0gMNDlgY5xs8SPhBKYChRn8";
-
     private void mockLogin() {
-        given(jwtTokenProvider.getPayload(TOKEN)).willReturn("1");
-        given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+        given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
+        given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
     }
 
     private void mockLogin(final Long memberId) {
-        given(jwtTokenProvider.getPayload(TOKEN)).willReturn(String.valueOf(memberId));
-        given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+        given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn(String.valueOf(memberId));
+        given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
     }
 
     private String getUrl(final long levellogId) {
@@ -55,7 +53,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
 
             // when
-            final ResultActions perform = requestPost(getUrl(1), TOKEN, request);
+            final ResultActions perform = requestPost(getUrl(1), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -77,7 +75,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .save(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPost(getUrl(1), TOKEN, request);
+            final ResultActions perform = requestPost(getUrl(1), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -101,7 +99,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .save(request, invalidLevellogId, 1L);
 
             // when
-            final ResultActions perform = requestPost(getUrl(invalidLevellogId), TOKEN, request);
+            final ResultActions perform = requestPost(getUrl(invalidLevellogId), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -125,7 +123,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .save(request, levellogId, invalidMemberId);
 
             // when
-            final ResultActions perform = requestPost(getUrl(levellogId), TOKEN, request);
+            final ResultActions perform = requestPost(getUrl(levellogId), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -150,7 +148,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .save(request, levellogId, 1L);
 
             // when
-            final ResultActions perform = requestPost(getUrl(levellogId), TOKEN, request);
+            final ResultActions perform = requestPost(getUrl(levellogId), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -176,7 +174,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
 
             // when
-            final ResultActions perform = requestGet(getUrl(invalidLevellogId), TOKEN);
+            final ResultActions perform = requestGet(getUrl(invalidLevellogId), VALID_TOKEN);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -198,7 +196,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .findAllByLevellogAndAuthor(levellogId, invalidMemberId);
 
             // when
-            final ResultActions perform = requestGet(getUrl(levellogId), TOKEN);
+            final ResultActions perform = requestGet(getUrl(levellogId), VALID_TOKEN);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -221,7 +219,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, 1L), TOKEN, request);
+            final ResultActions perform = requestPut(getUrl(1L, 1L), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -243,7 +241,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, 1L), TOKEN, request);
+            final ResultActions perform = requestPut(getUrl(1L, 1L), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -266,7 +264,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .update(request, invalidInterviewQuestionId, 1L);
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, invalidInterviewQuestionId), TOKEN, request);
+            final ResultActions perform = requestPut(getUrl(1L, invalidInterviewQuestionId), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -288,7 +286,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, 1L), TOKEN, request);
+            final ResultActions perform = requestPut(getUrl(1L, 1L), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isUnauthorized())
@@ -311,7 +309,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, 1L), TOKEN, request);
+            final ResultActions perform = requestPut(getUrl(1L, 1L), VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -338,7 +336,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .deleteById(invalidInterviewQuestionId, 1L);
 
             // when
-            final ResultActions perform = requestDelete(getUrl(1L, invalidInterviewQuestionId), TOKEN);
+            final ResultActions perform = requestDelete(getUrl(1L, invalidInterviewQuestionId), VALID_TOKEN);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -358,7 +356,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .deleteById(1L, 1L);
 
             // when
-            final ResultActions perform = requestDelete(getUrl(1L, 1L), TOKEN);
+            final ResultActions perform = requestDelete(getUrl(1L, 1L), VALID_TOKEN);
 
             // then
             perform.andExpect(status().isUnauthorized())
@@ -379,7 +377,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .deleteById(1L, 1L);
 
             // when
-            final ResultActions perform = requestDelete(getUrl(1L, 1L), TOKEN);
+            final ResultActions perform = requestDelete(getUrl(1L, 1L), VALID_TOKEN);
 
             // then
             perform.andExpect(status().isBadRequest())

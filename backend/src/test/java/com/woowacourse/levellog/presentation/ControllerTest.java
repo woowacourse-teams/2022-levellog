@@ -54,6 +54,8 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class ControllerTest {
 
+    protected static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0";
+
     @MockBean
     protected LevellogService levellogService;
 

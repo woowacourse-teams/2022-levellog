@@ -19,8 +19,6 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("LevellogController의")
 class LevellogControllerTest extends ControllerTest {
 
-    private static final String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.Y5wT9jBcP1lvMtjRqxaF0gMNDlgY5xs8SPhBKYChRn8";
-
     @Nested
     @DisplayName("save 메서드는")
     class Save {
@@ -33,8 +31,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
             willThrow(new LevellogAlreadyExistException("팀에 레벨로그를 이미 작성했습니다.")).given(levellogService)
                     .save(request, authorId, teamId);
 
@@ -56,8 +54,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from(" ");
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             // when
             final ResultActions perform = requestSaveLevellog(teamId, request);
@@ -78,8 +76,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
             willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."))
                     .given(levellogService)
                     .save(request, authorId, teamId);
@@ -96,7 +94,7 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         private ResultActions requestSaveLevellog(final Long teamId, final Object request) throws Exception {
-            return requestPost("/api/teams/" + teamId + "/levellogs", ACCESS_TOKEN, request);
+            return requestPost("/api/teams/" + teamId + "/levellogs", VALID_TOKEN, request);
         }
     }
 
@@ -116,7 +114,7 @@ class LevellogControllerTest extends ControllerTest {
                     .findById(levellogId);
 
             // when
-            final ResultActions perform = requestGet("/api/teams/" + teamId + "/levellogs/" + levellogId, ACCESS_TOKEN);
+            final ResultActions perform = requestGet("/api/teams/" + teamId + "/levellogs/" + levellogId, VALID_TOKEN);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -139,8 +137,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long levellogId = 2L;
             final LevellogWriteDto request = LevellogWriteDto.from(" ");
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             // when
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
@@ -162,8 +160,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
             willThrow(new UnauthorizedException("권한이 없습니다."))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
@@ -188,8 +186,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("new content");
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 수정이 가능합니다."))
                     .given(levellogService)
@@ -208,7 +206,7 @@ class LevellogControllerTest extends ControllerTest {
 
         private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId, final Object request)
                 throws Exception {
-            return requestPut("/api/teams/" + teamId + "/levellogs/" + levellogId, ACCESS_TOKEN, request);
+            return requestPut("/api/teams/" + teamId + "/levellogs/" + levellogId, VALID_TOKEN, request);
         }
     }
 }

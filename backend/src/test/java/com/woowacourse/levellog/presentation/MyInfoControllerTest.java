@@ -48,7 +48,7 @@ class MyInfoControllerTest extends ControllerTest {
             final ResultActions perform = mockMvc.perform(put("/api/my-info")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN))
                     .andDo(print());
 
             // then
@@ -75,7 +75,7 @@ class MyInfoControllerTest extends ControllerTest {
             final ResultActions perform = mockMvc.perform(put("/api/my-info")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN))
                     .andDo(print());
 
             // then

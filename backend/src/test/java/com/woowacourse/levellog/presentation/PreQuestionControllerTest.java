@@ -24,8 +24,6 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("PreQuestionController의")
 class PreQuestionControllerTest extends ControllerTest {
 
-    private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-
     @Nested
     @DisplayName("save 메서드는")
     class Save {
@@ -36,13 +34,13 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
         void save_PreQuestionNullAndBlank_Exception(final String preQuestion) throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, preQuestionDto);
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", VALID_TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -57,8 +55,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("참가자가 아닌 멤버가 사전 질문을 등록하는 경우 예외를 던진다.")
         void save_FromNotParticipant_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -67,7 +65,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .save(preQuestionDto, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, preQuestionDto);
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", VALID_TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -82,8 +80,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("내 레벨로그에 사전 질문을 등록하는 경우 예외를 던진다.")
         void save_LevellogIsMine_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -92,7 +90,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .save(preQuestionDto, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, preQuestionDto);
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", VALID_TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -107,8 +105,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("사전 질문이 이미 등록되었을 때 사전 질문을 등록하는 경우 예외를 던진다.")
         void save_PreQuestionAlreadyExist_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -117,7 +115,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .save(preQuestionDto, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", TOKEN, preQuestionDto);
+            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", VALID_TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -139,13 +137,13 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
         void update_PreQuestionNullAndBlank_Exception(final String preQuestion) throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, preQuestionDto);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", VALID_TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -160,8 +158,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("잘못된 레벨로그의 사전 질문을 수정하면 예외를 던진다.")
         void update_LevellogWrongId_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -170,7 +168,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, preQuestionDto);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", VALID_TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -185,8 +183,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("저장되어있지 않은 사전 질문을 수정하는 경우 예외를 던진다.")
         void update_PreQuestionNotFound_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -195,7 +193,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, preQuestionDto);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", VALID_TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -210,8 +208,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("타인의 사전 질문을 수정하는 경우 예외를 던진다.")
         void update_FromNotMyPreQuestion_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -220,7 +218,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", TOKEN, preQuestionDto);
+            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", VALID_TOKEN, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -240,15 +238,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("레벨로그가 존재하지 않으면 예외를 던진다.")
         void findMy_LevellogWrongId_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
                     .given(preQuestionService)
                     .findMy(999L, 4L);
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/999/pre-questions/my", TOKEN);
+            final ResultActions perform = requestGet("/api/levellogs/999/pre-questions/my", VALID_TOKEN);
 
             // then
             perform.andExpectAll(
@@ -263,15 +261,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("사전 질문이 존재하지 않으면 예외를 던진다.")
         void findMy_PreQuestionNotFound_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             willThrow(new PreQuestionNotFoundException("사전 질문이 존재하지 않습니다."))
                     .given(preQuestionService)
                     .findMy(1L, 4L);
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", TOKEN);
+            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my", VALID_TOKEN);
 
             // then
             perform.andExpectAll(
@@ -291,15 +289,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("잘못된 레벨로그의 사전 질문을 삭제하면 예외를 던진다.")
         void deleteById_LevellogWrongId_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             willThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", TOKEN);
+            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", VALID_TOKEN);
 
             // then
             perform.andExpectAll(
@@ -314,15 +312,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("저장되어있지 않은 사전 질문을 삭제하는 경우 예외를 던진다.")
         void deleteById_PreQuestionNotFound_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", TOKEN);
+            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", VALID_TOKEN);
 
             // then
             perform.andExpectAll(
@@ -337,15 +335,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("타인의 사전 질문을 삭제하는 경우 예외를 던진다.")
         void deleteById_FromNotMyPreQuestion_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 4L);
 
             // when
-            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", TOKEN);
+            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1", VALID_TOKEN);
 
             // then
             perform.andExpectAll(

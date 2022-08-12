@@ -36,11 +36,9 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("TeamController의")
 class TeamControllerTest extends ControllerTest {
 
-    private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-
     private void mockLogin() {
-        given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-        given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+        given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+        given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
     }
 
     private void mockCreateTeam() {
@@ -67,7 +65,7 @@ class TeamControllerTest extends ControllerTest {
                     participantIds);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+            final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -93,7 +91,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 4L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+            final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -116,7 +114,7 @@ class TeamControllerTest extends ControllerTest {
                     participantIds);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+            final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -142,7 +140,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 4L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+            final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -162,7 +160,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, null, participantIds);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+            final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -187,7 +185,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 4L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+            final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -201,8 +199,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
         void participantsEmpty_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(Collections.emptyList()));
@@ -210,7 +208,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))
                     .andDo(print());
@@ -230,7 +228,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+            final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -251,7 +249,7 @@ class TeamControllerTest extends ControllerTest {
                     participants);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+            final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -276,7 +274,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 4L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", TOKEN, request);
+            final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -302,7 +300,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))
                     .andDo(print());
@@ -332,7 +330,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestContent))
                     .andDo(print());
@@ -365,7 +363,7 @@ class TeamControllerTest extends ControllerTest {
                     participantIds);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -392,7 +390,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, id, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -416,7 +414,7 @@ class TeamControllerTest extends ControllerTest {
                     participantIds);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -443,7 +441,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, id, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -464,7 +462,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, null, participantIds);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -490,7 +488,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, id, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + id, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -515,7 +513,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 10000000L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 10000000L, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + 10000000L, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -535,7 +533,7 @@ class TeamControllerTest extends ControllerTest {
                     new ParticipantIdsDto(Collections.emptyList()));
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest());
@@ -553,7 +551,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -574,7 +572,7 @@ class TeamControllerTest extends ControllerTest {
                     participants);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -599,7 +597,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -622,7 +620,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
 
             // then
             perform.andExpectAll(
@@ -647,7 +645,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
 
             // then
             perform.andExpectAll(
@@ -672,7 +670,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 1L, 4L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, TOKEN, request);
+            final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
 
             // then
             perform.andExpectAll(
@@ -700,7 +698,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(get("/api/teams/" + 10000000L)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .accept(MediaType.ALL))
                     .andDo(print());
@@ -732,7 +730,7 @@ class TeamControllerTest extends ControllerTest {
             // when
             final ResultActions perform = mockMvc.perform(
                             get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                                     .accept(MediaType.ALL))
                     .andDo(print());
 
@@ -758,7 +756,7 @@ class TeamControllerTest extends ControllerTest {
             // when
             final ResultActions perform = mockMvc.perform(
                             get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                                     .accept(MediaType.ALL))
                     .andDo(print());
 
@@ -779,8 +777,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("존재하지 않는 팀의 인터뷰를 종료하려고 하면 예외가 발생한다.")
         void close_notFoundTeam_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final Long teamId = 200_000L;
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. [teamId : " + teamId + "]", "팀이 존재하지 않습니다."))
@@ -789,7 +787,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 
@@ -807,8 +805,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("이미 종료된 팀 인터뷰를 종료하려고 하면 예외가 발생한다.")
         void close_alreadyClosed_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
             willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다."))
@@ -817,7 +815,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 
@@ -835,8 +833,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰 시작 시간 전에 종료하려고 하면 예외가 발생한다.")
         void close_beforeStart_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
             willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다."))
@@ -845,7 +843,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 
@@ -863,8 +861,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하려고 하면 예외가 발생한다.")
         void close_notHost_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
             willThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
@@ -873,7 +871,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 
@@ -904,7 +902,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(delete("/api/teams/" + 10000000L)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 
@@ -920,8 +918,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰 시작 시간 후에 삭제하려고 하면 예외가 발생한다.")
         void delete_afterStart_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
             willThrow(new InterviewTimeException("인터뷰가 시작된 이후에는 삭제할 수 없습니다."))
@@ -930,7 +928,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 
@@ -948,8 +946,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("호스트가 아닌 사용자가 팀을 삭제하려고 하면 예외가 발생한다.")
         void delete_notHost_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
+            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
+            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             final Long teamId = 1L;
             willThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
@@ -958,7 +956,7 @@ class TeamControllerTest extends ControllerTest {
 
             // when
             final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print());
 

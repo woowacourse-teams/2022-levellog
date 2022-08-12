@@ -18,8 +18,6 @@ const AuthLogin = ({ needLogin }: AuthProps) => {
 
     if (!loginUserId && accessToken) {
       navigate(ROUTES_PATH.LOGIN, { state: location, replace: true });
-      // 이 return 필요함?
-      return;
     }
   }, [navigate]);
 

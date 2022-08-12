@@ -12,7 +12,7 @@ import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamCreateDto;
+import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.util.List;
@@ -40,9 +40,9 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("롬펲 인터뷰", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteDto teamDto = new TeamWriteDto("롬펲 인터뷰", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(romaId)));
-        final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
+        final String teamId = post("/api/teams", pepperToken, teamDto).getTeamId();
 
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken, levellogRequest)
@@ -83,9 +83,9 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("롬펲 인터뷰", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteDto teamDto = new TeamWriteDto("롬펲 인터뷰", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(romaId)));
-        final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
+        final String teamId = post("/api/teams", pepperToken, teamDto).getTeamId();
 
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken, levellogRequest)
@@ -129,9 +129,9 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("롬펲 인터뷰", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteDto teamDto = new TeamWriteDto("롬펲 인터뷰", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(romaId)));
-        final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
+        final String teamId = post("/api/teams", pepperToken, teamDto).getTeamId();
 
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
@@ -177,9 +177,9 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final TeamCreateDto teamCreateDto = new TeamCreateDto("롬펲 인터뷰", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteDto teamDto = new TeamWriteDto("롬펲 인터뷰", "트랙룸", 1, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(romaId)));
-        final String teamId = post("/api/teams", pepperToken, teamCreateDto).getTeamId();
+        final String teamId = post("/api/teams", pepperToken, teamDto).getTeamId();
 
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
         final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,

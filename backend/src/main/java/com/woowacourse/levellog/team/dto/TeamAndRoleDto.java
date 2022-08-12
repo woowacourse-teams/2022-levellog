@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.team.dto;
 
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -23,15 +24,15 @@ public class TeamAndRoleDto {
     private LocalDateTime startAt;
     private String teamImage;
     private Long hostId;
-    private Boolean isClosed;
+    private TeamStatus status;
     private Boolean isParticipant;
     private List<Long> interviewers;
     private List<Long> interviewees;
     private List<ParticipantDto> participants;
 
-    public static TeamAndRoleDto from(final Team team, final Long hostId, final List<Long> interviewers,
-                                      final List<Long> interviewees, final List<ParticipantDto> participantResponses,
-                                      final Boolean isParticipant) {
+    public static TeamAndRoleDto from(final Team team, final Long hostId, final TeamStatus status,
+                                      final List<Long> interviewers, final List<Long> interviewees,
+                                      final List<ParticipantDto> participantResponses, final Boolean isParticipant) {
         return new TeamAndRoleDto(
                 team.getId(),
                 team.getTitle(),
@@ -39,7 +40,7 @@ public class TeamAndRoleDto {
                 team.getStartAt(),
                 team.getProfileUrl(),
                 hostId,
-                team.isClosed(),
+                status,
                 isParticipant,
                 interviewers,
                 interviewees,

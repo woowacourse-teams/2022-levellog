@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.authentication.dto.LoginDto;
-import com.woowacourse.levellog.member.dto.MemberCreateDto;
+import com.woowacourse.levellog.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,9 +43,10 @@ class OAuthServiceTest extends ServiceTest {
         @DisplayName("첫 로그인이 아닌 경우 회원가입 하지 않고 토큰과 이미지 URL를 반환한다.")
         void login_notFirst_signIn() throws Exception {
             // given
-            final Long savedId = memberService.save(new MemberCreateDto("로마", 12345, "imageUrl"));
+            final Member member = saveMember("로마");
 
-            final GithubProfileDto request = new GithubProfileDto("12345", "로마", "imageUrl");
+            final GithubProfileDto request = new GithubProfileDto(member.getGithubId().toString(), member.getNickname(),
+                    member.getProfileUrl());
 
             // when
             final LoginDto tokenResponse = oAuthService.login(
@@ -54,8 +55,7 @@ class OAuthServiceTest extends ServiceTest {
             // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
             assertAll(
-                    () -> assertThat(Long.parseLong(payload)).isEqualTo(savedId),
-                    () -> assertThat(tokenResponse.getProfileUrl()).isEqualTo("imageUrl"),
+                    () -> assertThat(Long.parseLong(payload)).isEqualTo(member.getId()),
                     () -> assertThat(tokenResponse.getId()).isNotNull()
             );
         }

@@ -34,4 +34,27 @@ class InterviewQuestionRepositoryTest extends RepositoryTest {
         assertThat(interviewQuestions).hasSize(2)
                 .contains(savedInterviewQuestion1, savedInterviewQuestion2);
     }
+
+    @Test
+    @DisplayName("findAllByLevellog 메서드는 levellog가 일치하는 인터뷰 질문 목록을 반환한다.")
+    void findAllByLevellog() {
+        // given
+        final Member pepper = saveMember("페퍼");
+        final Member rick = saveMember("릭");
+        final Member roma = saveMember("로마");
+
+        final Team team = saveTeam(pepper, rick, roma);
+        final Levellog levellog = saveLevellog(pepper, team);
+
+        final InterviewQuestion InterviewQuestion1 = saveInterviewQuestion("로마가 씀", levellog, roma);
+        final InterviewQuestion InterviewQuestion2 = saveInterviewQuestion("릭이 씀", levellog, rick);
+        final InterviewQuestion interviewQuestion3 = saveInterviewQuestion("로마가 씀 - 꼬리 질문", levellog, roma);
+
+        // when
+        final List<InterviewQuestion> actual = interviewQuestionRepository.findAllByLevellog(levellog);
+
+        // then
+        assertThat(actual).hasSize(3)
+                .containsExactly(InterviewQuestion1, InterviewQuestion2, interviewQuestion3);
+    }
 }

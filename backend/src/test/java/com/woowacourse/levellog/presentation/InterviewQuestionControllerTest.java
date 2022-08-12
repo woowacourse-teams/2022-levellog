@@ -162,6 +162,34 @@ class InterviewQuestionControllerTest extends ControllerTest {
     }
 
     @Nested
+    @DisplayName("findAllByLevellog 메서드는")
+    class FindAllByLevellog {
+
+        @Test
+        @DisplayName("존재하지 않는 레벨로그 정보로 인터뷰 질문 목록 조회를 요청하면 예외를 던진다.")
+        void findAllByLevellog_levellogNotFound_exception() throws Exception {
+            // given
+            mockLogin();
+            final long invalidLevellogId = 20000000L;
+            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+                    .given(interviewQuestionService)
+                    .findAllByLevellog(invalidLevellogId);
+
+            // when
+            final ResultActions perform = requestGet(getUrl(invalidLevellogId), TOKEN);
+
+            // then
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("레벨로그가 존재하지 않습니다.")
+            );
+
+            // docs
+            perform.andDo(document("interview-question/find-all-by-levellog/exception/levellog-not-found"));
+        }
+    }
+
+    @Nested
     @DisplayName("findAllMyInterviewQuestion 메서드는")
     class FindAllMyInterviewQuestion {
 

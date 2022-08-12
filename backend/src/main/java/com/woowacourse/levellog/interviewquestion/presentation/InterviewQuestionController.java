@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.interviewquestion.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionResponses;
@@ -35,6 +36,7 @@ public class InterviewQuestionController {
     }
 
     @GetMapping
+    @PublicAPI
     public ResponseEntity<InterviewQuestionResponses> findAllByLevellog(@PathVariable final Long levellogId) {
         final InterviewQuestionResponses response = interviewQuestionService.findAllByLevellog(levellogId);
         return ResponseEntity.ok(response);

@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.application;
 
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -38,10 +37,9 @@ class LevellogServiceTest extends ServiceTest {
         void success() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
-            final Long authorId = memberRepository.save(new Member("알린", 1111, "alien.img"))
-                    .getId();
-            final Long teamId = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1))
-                    .getId();
+            final Member author = saveMember("알린");
+            final Long authorId = author.getId();
+            final Long teamId = saveTeam(author).getId();
 
             // when
             final Long savedLevellogId = levellogService.save(request, authorId, teamId);
@@ -56,7 +54,7 @@ class LevellogServiceTest extends ServiceTest {
         void save_teamNotFound_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("스프링에 대해 학습하였습니다.");
-            final Long authorId = memberRepository.save(new Member("알린", 1111, "alien.img"))
+            final Long authorId = saveMember("알린")
                     .getId();
             final Long teamId = 1000L;
 
@@ -71,9 +69,9 @@ class LevellogServiceTest extends ServiceTest {
         void save_memberNotFound_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("스프링에 대해 학습하였습니다.");
+            final Member member = saveMember("알린");
+            final Long teamId = saveTeam(member).getId();
             final Long authorId = 1000L;
-            final Long teamId = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1))
-                    .getId();
 
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
@@ -86,10 +84,9 @@ class LevellogServiceTest extends ServiceTest {
         void save_alreadyExist_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("굳굳");
-            final Long authorId = memberRepository.save(new Member("알린", 1111, "alien.img"))
-                    .getId();
-            final Long teamId = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1))
-                    .getId();
+            final Member author = saveMember("알린");
+            final Long authorId = author.getId();
+            final Long teamId = saveTeam(author).getId();
 
             levellogService.save(request, authorId, teamId);
 
@@ -106,10 +103,9 @@ class LevellogServiceTest extends ServiceTest {
         void save_contentBlank_exception(final String invalidContent) {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from(invalidContent);
-            final Long authorId = memberRepository.save(new Member("알린", 1111, "alien.img"))
-                    .getId();
-            final Long teamId = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1))
-                    .getId();
+            final Member author = saveMember("알린");
+            final Long authorId = author.getId();
+            final Long teamId = saveTeam(author).getId();
 
             //  when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
@@ -122,10 +118,9 @@ class LevellogServiceTest extends ServiceTest {
         void save_afterStart_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
-            final Long authorId = memberRepository.save(new Member("알린", 1111, "alien.img"))
-                    .getId();
-            final Long teamId = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1))
-                    .getId();
+            final Member author = saveMember("알린");
+            final Long authorId = author.getId();
+            final Long teamId = saveTeam(author).getId();
 
             timeStandard.setInProgress();
 
@@ -144,10 +139,10 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 레벨로그를 조회한다.")
         void success() {
             // given
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
+            final Member author = saveMember("알린");
+            final Team team = saveTeam(author);
             final String content = "content";
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, content));
+            final Levellog levellog = saveLevellog(author, team, content);
 
             // when
             final LevellogDto response = levellogService.findById(levellog.getId());
@@ -177,10 +172,10 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 레벨로그를 변경한다.")
         void success() {
             // given
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
+            final Member author = saveMember("알린");
+            final Team team = saveTeam(author);
 
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "original content"));
+            final Levellog levellog = saveLevellog(author, team);
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
 
             // when
@@ -196,8 +191,7 @@ class LevellogServiceTest extends ServiceTest {
         void update_notFound_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
-            final Long authorId = memberRepository.save(new Member("알린", 1111, "alien.img"))
-                    .getId();
+            final Long authorId = saveMember("알린").getId();
             final Long levellogId = 1000L;
 
             // when & then
@@ -210,10 +204,9 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("memberId에 해당하는 멤버가 존재하지 않는 경우 예외를 던진다.")
         void update_memberNotFound_exception() {
             // given
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
-            final Long levellogId = levellogRepository.save(Levellog.of(author, team, "Spring을 학습하였습니다."))
-                    .getId();
+            final Member author = saveMember("알린");
+            final Team team = saveTeam(author);
+            final Long levellogId = saveLevellog(author, team).getId();
 
             final LevellogWriteDto request = LevellogWriteDto.from("JPA를 학습하였습니다.");
             final Long memberId = 1000L;
@@ -228,15 +221,12 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("작성자의 id와 로그인한 id가 다를 경우 권한 없음 예외를 던진다.")
         void update_unauthorized_Exception() {
             // given
-            final Member author = memberRepository.save(new Member("알린", 2222, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
-            final Long levellogId = levellogRepository.save(Levellog.of(author, team, "original content"))
-                    .getId();
+            final Member author = saveMember("알린");
+            final Team team = saveTeam(author);
+            final Long levellogId = saveLevellog(author, team).getId();
 
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
-
-            final Long otherMemberId = memberRepository.save(new Member("페퍼", 1111, "pepper.img"))
-                    .getId();
+            final Long otherMemberId = saveMember("페퍼").getId();
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, otherMemberId))
@@ -250,11 +240,9 @@ class LevellogServiceTest extends ServiceTest {
         void update_contentBlank_exception(final String invalidContent) {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from(invalidContent);
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
-
-            final Long levellogId = levellogRepository.save(Levellog.of(author, team, "original content"))
-                    .getId();
+            final Member author = saveMember("알린");
+            final Team team = saveTeam(author);
+            final Long levellogId = saveLevellog(author, team).getId();
             final Long authorId = author.getId();
 
             //  when & then
@@ -268,15 +256,14 @@ class LevellogServiceTest extends ServiceTest {
         void update_afterStart_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
-            final Member author = memberRepository.save(new Member("알린", 1111, "alien.img"));
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
-
-            final Levellog levellog = levellogRepository.save(Levellog.of(author, team, "original content"));
+            final Member author = saveMember("알린");
+            final Team team = saveTeam(author);
+            final Long levellogId = saveLevellog(author, team).getId();
 
             timeStandard.setInProgress();
 
             // when & then
-            assertThatThrownBy(() -> levellogService.update(request, levellog.getId(), author.getId()))
+            assertThatThrownBy(() -> levellogService.update(request, levellogId, author.getId()))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 수정이 가능합니다.", String.valueOf(team.getId()));
         }
@@ -290,13 +277,13 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("주어진 authorId에 해당하는 레벨로그를 모두 조회한다.")
         void success() {
             // given
-            final Member author = memberRepository.save(new Member("페퍼", 1111, "pepper.img"));
+            final Member author = saveMember("페퍼");
 
-            final Team team = teamRepository.save(new Team("잠실 네오조", "잠실 트랙룸", TEAM_START_TIME, "profileUrl", 1));
-            final Team team2 = teamRepository.save(new Team("선릉 제이슨조", "선릉 트랙룸", TEAM_START_TIME, "profileUrl", 1));
+            final Team team = saveTeam(author);
+            final Team team2 = saveTeam(author);
 
-            levellogRepository.save(Levellog.of(author, team, "content1"));
-            levellogRepository.save(Levellog.of(author, team2, "content2"));
+            saveLevellog(author, team);
+            saveLevellog(author, team2);
 
             // when
             final LevellogsDto levellogsDto = levellogService.findAllByAuthorId(author.getId());

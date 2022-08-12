@@ -306,11 +306,6 @@ include::{snippets}/team/delete/exception/notfound/http-response.adoc[]
 
 include::{snippets}/team/delete/exception/unauthorized/http-response.adoc[]
 
-[[delete-exception-alreadyClose]]
-==== 이미 종료된 팀을 삭제하려는 경우
-
-include::{snippets}/team/delete/exception/already-close/http-response.adoc[]
-
 [[delete-exception-beforeStart]]
 ==== 인터뷰 시작 시간 이후에 삭제하려는 경우
 

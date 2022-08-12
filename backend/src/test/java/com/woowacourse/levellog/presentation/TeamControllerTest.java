@@ -917,31 +917,6 @@ class TeamControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("이미 삭제된 팀을 삭제하려고 하면 예외가 발생한다.")
-        void delete_alreadyDeleted_exceptionThrown() throws Exception {
-            // given
-            given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
-
-            final Long teamId = 1L;
-            willThrow(new InterviewTimeException("이미 삭제된 인터뷰입니다."))
-                    .given(teamService)
-                    .deleteById(teamId, 4L);
-
-            // when
-            final ResultActions perform = requestDelete("/api/teams/" + teamId, TOKEN);
-
-            // then
-            perform.andExpectAll(
-                    status().isBadRequest(),
-                    jsonPath("message").value("이미 삭제된 인터뷰입니다.")
-            );
-
-            // docs
-            perform.andDo(document("team/delete/exception/already-deleted"));
-        }
-
-        @Test
         @DisplayName("인터뷰 시작 시간 후에 삭제하려고 하면 예외가 발생한다.")
         void delete_afterStart_exceptionThrown() throws Exception {
             // given

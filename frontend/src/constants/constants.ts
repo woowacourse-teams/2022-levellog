@@ -7,7 +7,6 @@ export const ROUTES_PATH = Object.freeze({
   FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedbacks/:feedbackId`,
   //FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedbacks/:feedbackId/edit`,
   LOGIN: '/login',
-  LEVELLOG: '/levellog',
   LEVELLOG_ADD: '/levellog/add',
   LEVELLOG_ADD_ROUTE: '/levellog/add/:teamId',
   LEVELLOG_EDIT: '/levellog/edit/teams/:teamId/levellogs/:levellogId',

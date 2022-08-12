@@ -49,6 +49,7 @@ export interface ParticipantType {
   preQuestionId: string;
 }
 
+//제거 하고 멤버타입 활용하기
 export interface ParticipantSmallType {
   id: string;
   nickname: string;

@@ -21,7 +21,7 @@ const TeamStatus = ({ needStatus, children }: TeamStatusProps) => {
       navigate(ROUTES_PATH.HOME);
     }
   }, [navigate]);
-  return <Outlet />;
+  return children;
 };
 
 interface TeamStatusProps {

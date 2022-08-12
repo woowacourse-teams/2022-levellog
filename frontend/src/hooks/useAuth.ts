@@ -18,6 +18,7 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     const team = await getTeam();
 
     if (!accessToken) {
+      alert(MESSAGE.NEED_LOGIN);
       return;
     }
 
@@ -78,7 +79,7 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
         await setIsLoad(false);
         await setIsError(true);
         // alert(MESSAGE.WRONG_ACCESS);
-        alert('본인의 소유가 아닌 정보를 수정할 수 없습니다');
+        alert('본인이 작성하지 않은 글을 수정할 수 없습니다');
         return;
       }
     }
@@ -95,8 +96,7 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
         await setIsLoad(false);
         await setIsError(true);
         // alert(MESSAGE.WRONG_ACCESS);
-        alert('본인은 본인이 받은 피드백을 수정할 수 없습니다.');
-
+        alert('본인이 본인에 대한 질문,피드백을 작성,수정할 수 없습니다.');
         return;
       }
     }

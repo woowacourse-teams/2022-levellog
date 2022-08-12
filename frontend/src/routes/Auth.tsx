@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router-dom';
-
 import useAuth from 'hooks/useAuth';
 
 import Error from 'pages/status/Error';

@@ -53,7 +53,6 @@ export const routes = [
       {
         path: ROUTES_PATH.FEEDBACK_ADD,
         element: (
-          // 제대로 되는지 백엔드 머지 후 테스트해야함
           <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
             <TeamStatus needStatus={TEAM_STATUS.READY || TEAM_STATUS.IN_PROGRESS}>
               <FeedbackAdd />

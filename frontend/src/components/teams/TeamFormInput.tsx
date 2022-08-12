@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import Input from 'components/@commons/Input';
 
-const TeamAddInput = ({ label, inputRef, children, ...props }: TeamAddInputProps) => {
+const TeamFormInput = ({ label, inputRef, children, ...props }: TeamFormInputProps) => {
   return (
     <S.InputContainer>
       <S.Label>{label}</S.Label>
@@ -12,7 +12,7 @@ const TeamAddInput = ({ label, inputRef, children, ...props }: TeamAddInputProps
   );
 };
 
-interface TeamAddInputProps {
+interface TeamFormInputProps {
   label: string;
   inputRef?: (el: HTMLInputElement) => HTMLInputElement;
   children?: JSX.Element;
@@ -44,4 +44,4 @@ const S = {
   `,
 };
 
-export default TeamAddInput;
+export default TeamFormInput;

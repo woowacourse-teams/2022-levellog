@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import { useTeams } from 'hooks/useTeams';
+import useTeams from 'hooks/useTeams';
 
 import { ROUTES_PATH } from 'constants/constants';
 

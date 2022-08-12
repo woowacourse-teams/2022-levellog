@@ -34,7 +34,7 @@ const Feedbacks = () => {
       <ContentHeader title={'레벨 인터뷰 피드백'}>
         <>
           {/* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */}
-          {team.status === TEAM_STATUS.IN_PROGRESS && (
+          {team.status !== TEAM_STATUS.CLOSED && (
             <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}>
               <Button>추가하기</Button>
             </Link>

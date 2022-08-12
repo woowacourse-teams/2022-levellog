@@ -3,28 +3,21 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 import useTeam from 'hooks/useTeam';
 
-import { MESSAGE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
-const TeamStatus = ({ needStatus, children }: TeamStatusProps) => {
+const TeamStatus = ({ allowedStatuses, children }: any) => {
   const { team } = useTeam();
   const navigate = useNavigate();
 
+  // 추가로 수정 필요함
   useEffect(() => {
-    if (team.status !== needStatus) {
-      alert(
-        needStatus === TEAM_STATUS.IN_PROGRESS
-          ? MESSAGE.INTERVIEW_STATUS_NOT_IN_PROGRESS
-          : MESSAGE.INTERVIEW_STATUS_NOT_READY,
-      );
+    if (!allowedStatuses.some((needStatus: any) => needStatus === team.status)) {
+      alert(MESSAGE.WRONG_ACCESS);
       navigate(ROUTES_PATH.HOME);
     }
   }, [navigate]);
+
   return children;
 };
-
-interface TeamStatusProps {
-  needStatus: string;
-  children: JSX.Element;
-}
 
 export default TeamStatus;

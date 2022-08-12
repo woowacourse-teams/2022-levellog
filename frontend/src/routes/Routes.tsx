@@ -55,7 +55,7 @@ export const routes = [
         path: ROUTES_PATH.FEEDBACK_ADD,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
-            <TeamStatus needStatus={TEAM_STATUS.READY || TEAM_STATUS.IN_PROGRESS}>
+            <TeamStatus allowedStatuses={[TEAM_STATUS.READY, TEAM_STATUS.IN_PROGRESS]}>
               <FeedbackAdd />
             </TeamStatus>
           </Auth>
@@ -65,7 +65,7 @@ export const routes = [
         path: ROUTES_PATH.LEVELLOG_ADD_ROUTE,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
-            <TeamStatus needStatus={TEAM_STATUS.READY}>
+            <TeamStatus allowedStatuses={[TEAM_STATUS.READY]}>
               <LevellogAdd />
             </TeamStatus>
           </Auth>
@@ -75,7 +75,7 @@ export const routes = [
         path: ROUTES_PATH.LEVELLOG_EDIT,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.ME}>
-            <TeamStatus needStatus={TEAM_STATUS.READY}>
+            <TeamStatus allowedStatuses={[TEAM_STATUS.READY]}>
               <LevellogEdit />
             </TeamStatus>
           </Auth>
@@ -85,7 +85,7 @@ export const routes = [
         path: ROUTES_PATH.INTERVIEW_TEAMS_EDIT,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.HOST}>
-            <TeamStatus needStatus={TEAM_STATUS.READY}>
+            <TeamStatus allowedStatuses={[TEAM_STATUS.READY]}>
               <InterviewTeamEdit />
             </TeamStatus>
           </Auth>
@@ -95,7 +95,7 @@ export const routes = [
         path: ROUTES_PATH.FEEDBACK_EDIT,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
-            <TeamStatus needStatus={TEAM_STATUS.IN_PROGRESS}>
+            <TeamStatus allowedStatuses={[TEAM_STATUS.IN_PROGRESS]}>
               <FeedbackEdit />
             </TeamStatus>
           </Auth>

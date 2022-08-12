@@ -40,15 +40,3 @@ export const requestEditLevellog = ({
     data: levellogContent,
   });
 };
-
-export const requestDeleteLevellog = ({
-  accessToken,
-  teamId,
-  levellogId,
-}: Omit<LevellogApiType, 'levellogContent'>): AxiosPromise<void> => {
-  return axios({
-    method: 'delete',
-    url: `${process.env.API_URI}/teams/${teamId}/levellogs/${levellogId}`,
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-};

@@ -6,12 +6,12 @@ import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';
 
-const Participant = ({ participant, updateParticipants }: ParticipantProps) => {
+const Participant = ({ participant, removeToParticipants }: ParticipantProps) => {
   const { loginUserId } = useUser();
   const { id, nickname, profileUrl } = participant;
 
   const handleClickDeleteButton = () => {
-    updateParticipants({ id, nickname, profileUrl });
+    removeToParticipants({ id, nickname, profileUrl });
   };
 
   return (
@@ -25,7 +25,7 @@ const Participant = ({ participant, updateParticipants }: ParticipantProps) => {
 
 interface ParticipantProps {
   participant: MemberType;
-  updateParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  removeToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
 }
 
 const S = {

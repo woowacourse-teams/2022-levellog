@@ -23,8 +23,8 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     }
 
     if (!team) {
-      await setIsLoad(false);
-      await setIsError(true);
+      setIsLoad(false);
+      setIsError(true);
       alert(MESSAGE.WRONG_ACCESS);
 
       return;
@@ -48,8 +48,8 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
             return String(memberId) !== String(loginUserId);
           })
       ) {
-        await setIsLoad(false);
-        await setIsError(true);
+        setIsLoad(false);
+        setIsError(true);
         alert(MESSAGE.NEED_IN_TEAM);
 
         return;
@@ -59,8 +59,8 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     if (requireAuth === REQUIRE_AUTH.HOST) {
       console.log('진입: checkHost');
       if (String(team.hostId) !== String(loginUserId)) {
-        await setIsLoad(false);
-        await setIsError(true);
+        setIsLoad(false);
+        setIsError(true);
         alert(MESSAGE.NEED_HOST);
 
         return;
@@ -76,8 +76,8 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
             String(loginUserId) === String(idAndLevellogId[0]),
         )
       ) {
-        await setIsLoad(false);
-        await setIsError(true);
+        setIsLoad(false);
+        setIsError(true);
         // alert(MESSAGE.WRONG_ACCESS);
         alert('본인이 작성하지 않은 글을 수정할 수 없습니다');
         return;
@@ -93,15 +93,15 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
             String(loginUserId) === String(idAndLevellogId[0]),
         )
       ) {
-        await setIsLoad(false);
-        await setIsError(true);
+        setIsLoad(false);
+        setIsError(true);
         // alert(MESSAGE.WRONG_ACCESS);
         alert('본인이 본인에 대한 질문,피드백을 작성,수정할 수 없습니다.');
         return;
       }
     }
     console.log('에러 없이 탈출');
-    await setIsLoad(false);
+    setIsLoad(false);
   };
 
   useEffect(() => {

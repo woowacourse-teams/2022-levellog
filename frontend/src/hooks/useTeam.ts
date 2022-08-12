@@ -3,10 +3,11 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useUser from 'hooks/useUser';
+import useUtil from 'hooks/useUtil';
+
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
-import useUser from './useUser';
-import useUtil from './useUtil';
 import { requestGetMembers } from 'apis/member';
 import {
   requestGetTeam,
@@ -15,7 +16,6 @@ import {
   requestEditTeam,
   requestCloseTeamInterview,
 } from 'apis/teams';
-import Member from 'components/teams/Member';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 import { MembersCustomHookType, MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
@@ -114,7 +114,7 @@ const useTeam = () => {
     }
   };
 
-  const onSubmitTeamAddForm = async ({ participants }: Record<'participants', MemberType[]>) => {
+  const onSubmitTeamAddForm = ({ participants }: Record<'participants', MemberType[]>) => {
     const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
     const teamInfo = {
       title: title.value,
@@ -125,10 +125,10 @@ const useTeam = () => {
         ids: Object.values(participants).map((participants) => participants.id),
       },
     };
-    await postTeam({ teamInfo });
+    postTeam({ teamInfo });
   };
 
-  const handleSubmitTeamEditForm = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitTeamEditForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
     const teamInfo = {
@@ -140,22 +140,22 @@ const useTeam = () => {
         ids: Object.values(participants).map((participants) => participants.id),
       },
     };
-    await editTeam({ teamInfo });
+    editTeam({ teamInfo });
     navigate(ROUTES_PATH.HOME);
   };
 
-  const onClickDeleteTeamButton = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
+  const onClickDeleteTeamButton = ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     if (confirm(MESSAGE.TEAM_DELETE_CONFIRM)) {
-      await deleteTeam({ teamId });
+      deleteTeam({ teamId });
       navigate(ROUTES_PATH.HOME);
 
       return;
     }
   };
 
-  const onClickCloseTeamInterviewButton = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
+  const onClickCloseTeamInterviewButton = ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     if (confirm(MESSAGE.INTERVIEW_CLOSE_CONFIRM)) {
-      await closeTeamInterview({ teamId });
+      closeTeamInterview({ teamId });
       navigate(ROUTES_PATH.HOME);
 
       return;
@@ -180,11 +180,11 @@ const useTeam = () => {
   const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {
     try {
       if (isThrottle()) return;
+
       const res = await requestGetMembers({ accessToken, nickname: nicknameValue });
       const members = res.data.members.filter((member) =>
         participants.every((participant) => participant.id !== member.id),
       );
-
       setMembers(members);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -232,5 +232,3 @@ const useTeam = () => {
 };
 
 export default useTeam;
-
-// request나, 반환이 없는 await 제거하고 테스트

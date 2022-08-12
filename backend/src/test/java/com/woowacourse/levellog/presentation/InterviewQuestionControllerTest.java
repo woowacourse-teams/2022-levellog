@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
@@ -52,7 +52,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_contentBlank_exception() throws Exception {
             // given
             mockLogin();
-            final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(" ");
 
             // when
             final ResultActions perform = requestPost(getUrl(1), TOKEN, request);
@@ -71,7 +71,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             mockLogin();
 
-            final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             willThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
                     .given(interviewQuestionService)
                     .save(request, 1L, 1L);
@@ -94,7 +94,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             mockLogin();
 
             final long invalidLevellogId = 20000000L;
-            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
             willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
                     .given(interviewQuestionService)
@@ -117,7 +117,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final long invalidMemberId = 20000000L;
             final long levellogId = 1L;
-            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
             mockLogin(invalidMemberId);
             willThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
@@ -142,7 +142,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_interviewTime_exception(final String message, final String snippet) throws Exception {
             // given
             final long levellogId = 1L;
-            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
             mockLogin();
             willThrow(new InterviewTimeException(message))
@@ -246,7 +246,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void update_contentBlank_exception() throws Exception {
             // given
             mockLogin();
-            final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(" ");
 
             // when
             final ResultActions perform = requestPut(getUrl(1L, 1L), TOKEN, request);
@@ -263,7 +263,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
         void update_interviewQuestionInvalidLength_Exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
 
             mockLogin();
             willThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
@@ -286,7 +286,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void update_interviewQuestionNotFound_exception() throws Exception {
             // given
             final Long invalidInterviewQuestionId = 1000L;
-            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
 
             mockLogin();
             willThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
@@ -308,7 +308,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void update_unauthorized_exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
 
             mockLogin();
             willThrow(new UnauthorizedException("권한이 없습니다."))
@@ -331,7 +331,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 수정 정책에 위반되면 예외를 던진다.")
         void update_interviewTime_exception(final String message, final String snippet) throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
 
             mockLogin();
             willThrow(new InterviewTimeException(message))

@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewQuestionDetailDto {
+public class InterviewQuestionContentDto {
 
     private Long id;
     private String content;
 
-    public static InterviewQuestionDetailDto of(final InterviewQuestion interviewQuestion) {
-        return new InterviewQuestionDetailDto(interviewQuestion.getId(), interviewQuestion.getContent());
+    public static InterviewQuestionContentDto of(final InterviewQuestion interviewQuestion) {
+        return new InterviewQuestionContentDto(interviewQuestion.getId(), interviewQuestion.getContent());
     }
 }

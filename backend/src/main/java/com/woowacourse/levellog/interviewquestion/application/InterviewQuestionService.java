@@ -3,9 +3,9 @@ package com.woowacourse.levellog.interviewquestion.application;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionResponses;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -33,7 +33,7 @@ public class InterviewQuestionService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final InterviewQuestionDto request, final Long levellogId, final Long fromMemberId) {
+    public Long save(final InterviewQuestionWriteDto request, final Long levellogId, final Long fromMemberId) {
         final Member fromMember = getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
 
@@ -47,24 +47,24 @@ public class InterviewQuestionService {
                 .getId();
     }
 
-    public InterviewQuestionResponses findAllByLevellog(final Long levellogId) {
+    public InterviewQuestionsDto findAllByLevellog(final Long levellogId) {
         final Levellog levellog = getLevellog(levellogId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellog(levellog);
 
-        return InterviewQuestionResponses.from(interviewQuestions);
+        return InterviewQuestionsDto.from(interviewQuestions);
     }
 
-    public InterviewQuestionsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
+    public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
         final Levellog levellog = getLevellog(levellogId);
         final Member fromMember = getMember(fromMemberId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(
                 levellog, fromMember);
 
-        return InterviewQuestionsDto.from(interviewQuestions);
+        return InterviewQuestionContentsDto.from(interviewQuestions);
     }
 
     @Transactional
-    public void update(final InterviewQuestionDto request, final Long interviewQuestionId, final Long fromMemberId) {
+    public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId, final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member fromMember = getMember(fromMemberId);
 

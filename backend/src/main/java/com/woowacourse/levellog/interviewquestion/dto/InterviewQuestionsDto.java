@@ -1,6 +1,9 @@
 package com.woowacourse.levellog.interviewquestion.dto;
 
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
+import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.dto.MemberDto;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -15,11 +18,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InterviewQuestionsDto {
 
-    private List<InterviewQuestionDetailDto> interviewQuestions;
+    private List<InterviewQuestionDto> interviewQuestions;
 
     public static InterviewQuestionsDto from(final List<InterviewQuestion> interviewQuestions) {
-        return new InterviewQuestionsDto(interviewQuestions.stream()
-                .map(InterviewQuestionDetailDto::of)
-                .collect(Collectors.toList()));
+        final List<Member> authors = interviewQuestions.stream()
+                .map(InterviewQuestion::getAuthor)
+                .distinct()
+                .collect(Collectors.toList());
+
+        final List<InterviewQuestionDto> responses = new ArrayList<>();
+        for (final Member author : authors) {
+            final List<InterviewQuestionContentDto> contents = interviewQuestions.stream()
+                    .filter(it -> it.getAuthor().equals(author))
+                    .map(InterviewQuestionContentDto::of)
+                    .collect(Collectors.toList());
+
+            final InterviewQuestionDto response = new InterviewQuestionDto(MemberDto.from(author), contents);
+            responses.add(response);
+        }
+
+        return new InterviewQuestionsDto(responses);
     }
 }

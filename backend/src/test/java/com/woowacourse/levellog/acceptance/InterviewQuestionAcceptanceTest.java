@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
@@ -50,7 +50,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final String pepperLevellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken, levellogRequest)
                 .getLevellogId();
 
-        final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 사용하는 이유?");
+        final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 사용하는 이유?");
 
         timeStandard.setInProgress();
 
@@ -151,11 +151,11 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final String romaContent2 = "전략 패턴이 무엇인가요?";
         final String romaContent3 = "프레임워크와 라이브러리의 차이는?";
 
-        post(url, rickToken, InterviewQuestionDto.from(rickContent1));
-        post(url, romaToken, InterviewQuestionDto.from(romaContent1));
-        post(url, romaToken, InterviewQuestionDto.from(romaContent2));
-        post(url, rickToken, InterviewQuestionDto.from(rickContent2));
-        post(url, romaToken, InterviewQuestionDto.from(romaContent3));
+        post(url, rickToken, InterviewQuestionWriteDto.from(rickContent1));
+        post(url, romaToken, InterviewQuestionWriteDto.from(romaContent1));
+        post(url, romaToken, InterviewQuestionWriteDto.from(romaContent2));
+        post(url, rickToken, InterviewQuestionWriteDto.from(rickContent2));
+        post(url, romaToken, InterviewQuestionWriteDto.from(romaContent3));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -208,7 +208,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         final String interviewQuestionId = requestSaveInterviewQuestion(pepperLevellogId, romaToken, "Spring을 사용하는 이유?")
                 .getInterviewQuestionId();
-        final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+        final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -277,7 +277,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
                                                              final String fromMemberToken,
                                                              final String interviewQuestion) {
         return post("/api/levellogs/" + levellogId + "/interview-questions", fromMemberToken,
-                InterviewQuestionDto.from(interviewQuestion));
+                InterviewQuestionWriteDto.from(interviewQuestion));
     }
 
     private ValidatableResponse requestFindAllMyInterviewQuestion(final String levellogId,

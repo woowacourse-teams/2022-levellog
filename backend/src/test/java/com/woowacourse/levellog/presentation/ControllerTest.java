@@ -57,6 +57,12 @@ public abstract class ControllerTest {
 
     protected static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0";
 
+    @Autowired
+    protected MockMvc mockMvc;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
+
     @MockBean
     protected LevellogService levellogService;
 
@@ -80,12 +86,6 @@ public abstract class ControllerTest {
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    protected MockMvc mockMvc;
-
-    @Autowired
-    protected ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp(final WebApplicationContext context, final RestDocumentationContextProvider provider) {

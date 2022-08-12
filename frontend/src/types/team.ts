@@ -33,8 +33,9 @@ export interface InterviewTeamType {
   startAt: string;
   teamImage: string;
   hostId: string;
-  isClosed: Boolean;
+  status: string;
   isParticipant: Boolean;
+  interviewerNumber: string;
   interviewers: Array<number | null>;
   interviewees: Array<number | null>;
   participants: ParticipantType[];
@@ -46,4 +47,11 @@ export interface ParticipantType {
   nickname: string;
   profileUrl: string;
   preQuestionId: string;
+}
+
+//제거 하고 멤버타입 활용하기
+export interface ParticipantSmallType {
+  id: string;
+  nickname: string;
+  profileUrl: string;
 }

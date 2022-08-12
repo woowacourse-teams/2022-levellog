@@ -4,31 +4,25 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
+import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
+
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import UiViewer from 'components/@commons/UiViewer';
-import { LevellogCustomHookType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
 const LevellogViewModal = ({
   levellog,
   participant,
   userInTeam,
-  getTeam,
-  onClickDeleteLevellog,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
   const { memberId, levellogId, nickname, preQuestionId } = participant;
   const { teamId } = useParams();
   const { loginUserId } = useUser();
-
-  const handleClickDeleteLevellog = async () => {
-    if (teamId && levellogId) {
-      await onClickDeleteLevellog({ teamId, levellogId });
-      getTeam();
-    }
-  };
+  const { team } = useTeam();
 
   if (memberId === loginUserId) {
     return (
@@ -43,10 +37,11 @@ const LevellogViewModal = ({
             <UiViewer content={levellog} />
           </S.Levellog>
           <S.Footer>
-            <Link to={`/levellog/edit/teams/${teamId}/levellogs/${levellogId}`}>
-              <Button>수정하기</Button>
-            </Link>
-            <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>
+            {team.status === TEAM_STATUS.READY && (
+              <Link to={`/levellog/edit/teams/${teamId}/levellogs/${levellogId}`}>
+                <Button>수정하기</Button>
+              </Link>
+            )}
           </S.Footer>
         </S.Container>
       </ModalPortal>
@@ -88,11 +83,6 @@ interface LevellogViewModalProps {
   levellog: string;
   participant: ParticipantType;
   userInTeam: Boolean;
-  getTeam: () => void;
-  onClickDeleteLevellog: ({
-    teamId,
-    levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>) => Promise<void>;
   handleClickCloseLevellogModal: (e: React.MouseEvent<HTMLElement>) => void;
 }
 

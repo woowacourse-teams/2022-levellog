@@ -89,7 +89,10 @@ public class TeamService {
     }
 
     public TeamStatusDto findStatus(final Long teamId) {
-        return null;
+        final Team team = getTeam(teamId);
+        final TeamStatus status = team.status(timeStandard.now());
+
+        return new TeamStatusDto(status);
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {

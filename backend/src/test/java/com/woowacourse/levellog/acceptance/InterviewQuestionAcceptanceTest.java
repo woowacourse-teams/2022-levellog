@@ -107,7 +107,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("interviewQuestions.interviewQuestion", contains("Spring을 사용하는 이유?", "스프링 빈이란?"));
+                .body("interviewQuestions.content", contains("Spring을 사용하는 이유?", "스프링 빈이란?"));
     }
 
     /*
@@ -157,7 +157,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
         requestFindAllMyInterviewQuestion(pepperLevellogId, romaToken)
-                .body("interviewQuestions.interviewQuestion", contains("수정된 인터뷰 질문"));
+                .body("interviewQuestions.content", contains("수정된 인터뷰 질문"));
     }
 
     /*

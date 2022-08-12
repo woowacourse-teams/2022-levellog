@@ -185,7 +185,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // then
             final List<String> actualInterviewQuestionContents = response.getInterviewQuestions()
                     .stream()
-                    .map(InterviewQuestionDetailDto::getInterviewQuestion)
+                    .map(InterviewQuestionDetailDto::getContent)
                     .collect(Collectors.toList());
 
             assertAll(

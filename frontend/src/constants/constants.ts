@@ -13,8 +13,9 @@ export const ROUTES_PATH = Object.freeze({
   INTERVIEW_TEAMS_DETAIL: `/interview/teams/:teamId`,
   INTERVIEW_TEAMS_ADD: `/interview/teams/add`,
   INTERVIEW_TEAMS_EDIT: `/interview/teams/:teamId/edit`,
-  PREQUESTION_ADD: '/pre-questions/teams/:teamId/levellog/:levellogId',
+  PREQUESTION_ADD: '/pre-questions/teams/:teamId/levellogs/:levellogId',
   PREQUESTION_EDIT: '/pre-questions/teams/:teamId/levellog/:levellogId/pre-question/:preQuestionId',
+  INTERVIEW_QUESTION: '/interview-questions/levellogs/:levellogId',
   NOT_FOUND: '*',
 });
 
@@ -28,5 +29,7 @@ export const MESSAGE = Object.freeze({
   NEED_LOGIN: '로그인이 필요한 페이지입니다',
   TEAM_CREATE: '인터뷰팀 생성을 완료했습니다!',
   TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
+  WRITE_MORE: '3글자 이상 작성해주세요',
+  CAN_EDIT: '수정하고 싶은 질문을 클릭해서 수정할 수 있어요!',
   INTERVIEW_CLOSE_CONFIRM: '정말로 인터뷰를 종료하시겠습니까?',
 });

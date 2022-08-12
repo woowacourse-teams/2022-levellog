@@ -36,16 +36,11 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("TeamController의")
 class TeamControllerTest extends ControllerTest {
 
-    private void mockLogin() {
-        given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
-        given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
-    }
-
     private void mockCreateTeam() {
         final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
         final TeamWriteDto createRequest = new TeamWriteDto("네오와 함께하는 레벨 인터뷰", "트랙룸", 1,
                 LocalDateTime.now().plusDays(3), participantIds);
-        given(teamService.save(createRequest, 4L)).willReturn(1L);
+        given(teamService.save(createRequest, 1L)).willReturn(1L);
     }
 
     @Nested
@@ -60,7 +55,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
 
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
@@ -81,14 +76,14 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
 
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final String title = "네오".repeat(128);
             final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
             willThrow(new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]"))
                     .given(teamService)
-                    .save(request, 4L);
+                    .save(request, 1L);
 
             // when
             final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
@@ -109,7 +104,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
 
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
@@ -130,14 +125,14 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
 
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final String place = "선릉".repeat(128);
             final TeamWriteDto request = new TeamWriteDto("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
             willThrow(new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]"))
                     .given(teamService)
-                    .save(request, 4L);
+                    .save(request, 1L);
 
             // when
             final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
@@ -156,7 +151,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
 
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, null, participantIds);
 
             // when
@@ -176,13 +171,13 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
 
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
             final TeamWriteDto request = new TeamWriteDto("네오 인터뷰", "선릉 트랙룸", 1, startAt, participantIds);
 
             willThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
                     .given(teamService)
-                    .save(request, 4L);
+                    .save(request, 1L);
 
             // when
             final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
@@ -199,8 +194,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
         void participantsEmpty_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
+            mockLogin();
 
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(Collections.emptyList()));
@@ -244,7 +238,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
 
-            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 4L));
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 1L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
                     participants);
 
@@ -265,13 +259,13 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
 
-            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 4L));
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 1L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 4, LocalDateTime.now().plusDays(3),
                     participants);
 
             willThrow(new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다."))
                     .given(teamService)
-                    .save(request, 4L);
+                    .save(request, 1L);
 
             // when
             final ResultActions perform = requestPost("/api/teams", VALID_TOKEN, request);
@@ -296,7 +290,7 @@ class TeamControllerTest extends ControllerTest {
 
             willThrow(new DuplicateParticipantsException("참가자 중복"))
                     .given(teamService)
-                    .save(request, 4L);
+                    .save(request, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams")
@@ -321,12 +315,12 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
 
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                    new ParticipantIdsDto(List.of(1L, 2L, 4L)));
+                    new ParticipantIdsDto(List.of(1L, 2L, 1L)));
             final String requestContent = objectMapper.writeValueAsString(request);
 
             willThrow(new DuplicateParticipantsException("참가자 중복"))
                     .given(teamService)
-                    .save(request, 4L);
+                    .save(request, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams")
@@ -358,7 +352,7 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
             mockCreateTeam();
             final long id = 1;
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
@@ -381,13 +375,13 @@ class TeamControllerTest extends ControllerTest {
             mockCreateTeam();
             final long id = 1;
             final String title = "네오".repeat(128);
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
             willThrow(new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]"))
                     .given(teamService)
-                    .update(request, id, 4L);
+                    .update(request, id, 1L);
 
             // when
             final ResultActions perform = requestPut("/api/teams/" + id, VALID_TOKEN, request);
@@ -409,7 +403,7 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
             mockCreateTeam();
             final long id = 1;
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
@@ -432,13 +426,13 @@ class TeamControllerTest extends ControllerTest {
             mockCreateTeam();
             final long id = 1;
             final String place = "거실".repeat(128);
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
             willThrow(new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]"))
                     .given(teamService)
-                    .update(request, id, 4L);
+                    .update(request, id, 1L);
 
             // when
             final ResultActions perform = requestPut("/api/teams/" + id, VALID_TOKEN, request);
@@ -458,7 +452,7 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
             mockCreateTeam();
             final long id = 1;
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, null, participantIds);
 
             // when
@@ -480,12 +474,12 @@ class TeamControllerTest extends ControllerTest {
             mockCreateTeam();
             final long id = 1;
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, startAt, participantIds);
 
             willThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
                     .given(teamService)
-                    .update(request, id, 4L);
+                    .update(request, id, 1L);
 
             // when
             final ResultActions perform = requestPut("/api/teams/" + id, VALID_TOKEN, request);
@@ -504,13 +498,13 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
             mockCreateTeam();
-            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
+            final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(10),
                     participantIds);
 
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .given(teamService)
-                    .update(request, 10000000L, 4L);
+                    .update(request, 10000000L, 1L);
 
             // when
             final ResultActions perform = requestPut("/api/teams/" + 10000000L, VALID_TOKEN, request);
@@ -567,7 +561,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             mockLogin();
             mockCreateTeam();
-            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 4L));
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 1L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
                     participants);
 
@@ -594,7 +588,7 @@ class TeamControllerTest extends ControllerTest {
 
             willThrow(new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다."))
                     .given(teamService)
-                    .update(request, 1L, 4L);
+                    .update(request, 1L, 1L);
 
             // when
             final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
@@ -614,10 +608,10 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
             mockCreateTeam();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                    new ParticipantIdsDto(List.of(1L, 2L, 2L)));
+                    new ParticipantIdsDto(List.of(2L, 2L, 3L)));
             willThrow(new DuplicateParticipantsException("참가자 중복"))
                     .given(teamService)
-                    .update(request, 1L, 4L);
+                    .update(request, 1L, 1L);
 
             // when
             final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
@@ -638,11 +632,11 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
             mockCreateTeam();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                    new ParticipantIdsDto(List.of(1L, 2L, 4L)));
+                    new ParticipantIdsDto(List.of(1L, 2L, 1L)));
 
             willThrow(new DuplicateParticipantsException("참가자 중복"))
                     .given(teamService)
-                    .update(request, 1L, 4L);
+                    .update(request, 1L, 1L);
 
             // when
             final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
@@ -663,11 +657,11 @@ class TeamControllerTest extends ControllerTest {
             mockLogin();
             mockCreateTeam();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                    new ParticipantIdsDto(List.of(1L, 2L, 4L)));
+                    new ParticipantIdsDto(List.of(1L, 2L, 1L)));
 
             willThrow(new InterviewTimeException("인터뷰가 시작된 이후에는 수정할 수 없습니다."))
                     .given(teamService)
-                    .update(request, 1L, 4L);
+                    .update(request, 1L, 1L);
 
             // when
             final ResultActions perform = requestPut("/api/teams/" + 1L, VALID_TOKEN, request);
@@ -694,7 +688,7 @@ class TeamControllerTest extends ControllerTest {
 
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .given(teamService)
-                    .findByTeamIdAndMemberId(10000000L, 4L);
+                    .findByTeamIdAndMemberId(10000000L, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(get("/api/teams/" + 10000000L)
@@ -724,7 +718,7 @@ class TeamControllerTest extends ControllerTest {
             final Long memberId = 5L;
 
             mockLogin();
-            given(teamService.findMyRole(teamId, memberId, 4L))
+            given(teamService.findMyRole(teamId, memberId, 1L))
                     .willThrow(new UnauthorizedException("권한이 없습니다."));
 
             // when
@@ -750,7 +744,7 @@ class TeamControllerTest extends ControllerTest {
             final Long memberId = 5L;
 
             mockLogin();
-            given(teamService.findMyRole(teamId, memberId, 4L))
+            given(teamService.findMyRole(teamId, memberId, 1L))
                     .willThrow(new ParticipantNotFoundException("팀에 참가자가 아닙니다."));
 
             // when
@@ -777,13 +771,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("존재하지 않는 팀의 인터뷰를 종료하려고 하면 예외가 발생한다.")
         void close_notFoundTeam_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
+            mockLogin();
 
             final Long teamId = 200_000L;
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. [teamId : " + teamId + "]", "팀이 존재하지 않습니다."))
                     .given(teamService)
-                    .close(teamId, 4L);
+                    .close(teamId, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
@@ -805,13 +798,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("이미 종료된 팀 인터뷰를 종료하려고 하면 예외가 발생한다.")
         void close_alreadyClosed_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
+            mockLogin();
 
             final Long teamId = 1L;
             willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다."))
                     .given(teamService)
-                    .close(teamId, 4L);
+                    .close(teamId, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
@@ -833,13 +825,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰 시작 시간 전에 종료하려고 하면 예외가 발생한다.")
         void close_beforeStart_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
+            mockLogin();
 
             final Long teamId = 1L;
             willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다."))
                     .given(teamService)
-                    .close(teamId, 4L);
+                    .close(teamId, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
@@ -861,13 +852,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하려고 하면 예외가 발생한다.")
         void close_notHost_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
+            mockLogin();
 
             final Long teamId = 1L;
             willThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
                     .given(teamService)
-                    .close(teamId, 4L);
+                    .close(teamId, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
@@ -898,7 +888,7 @@ class TeamControllerTest extends ControllerTest {
 
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
                     .given(teamService)
-                    .deleteById(10000000L, 4L);
+                    .deleteById(10000000L, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(delete("/api/teams/" + 10000000L)
@@ -918,13 +908,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰 시작 시간 후에 삭제하려고 하면 예외가 발생한다.")
         void delete_afterStart_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
+            mockLogin();
 
             final Long teamId = 1L;
             willThrow(new InterviewTimeException("인터뷰가 시작된 이후에는 삭제할 수 없습니다."))
                     .given(teamService)
-                    .deleteById(teamId, 4L);
+                    .deleteById(teamId, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)
@@ -946,13 +935,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("호스트가 아닌 사용자가 팀을 삭제하려고 하면 예외가 발생한다.")
         void delete_notHost_exceptionThrown() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("4");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
+            mockLogin();
 
             final Long teamId = 1L;
             willThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
                     .given(teamService)
-                    .deleteById(teamId, 4L);
+                    .deleteById(teamId, 1L);
 
             // when
             final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)

@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.presentation;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,12 +26,12 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
         void save_alreadyExists_exception() throws Exception {
             // given
+            mockLogin();
+
             final LevellogWriteDto request = LevellogWriteDto.from("content");
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
             willThrow(new LevellogAlreadyExistException("팀에 레벨로그를 이미 작성했습니다.")).given(levellogService)
                     .save(request, authorId, teamId);
 
@@ -51,11 +50,10 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
         void save_nameNullOrEmpty_Exception() throws Exception {
             // given
+            mockLogin();
+
             final Long teamId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from(" ");
-
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             // when
             final ResultActions perform = requestSaveLevellog(teamId, request);
@@ -72,12 +70,12 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 저장하는 경우 예외를 던진다.")
         void save_afterStart_exception() throws Exception {
             // given
+            mockLogin();
+
             final LevellogWriteDto request = LevellogWriteDto.from("content");
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
             willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."))
                     .given(levellogService)
                     .save(request, authorId, teamId);
@@ -133,12 +131,11 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
         void update_nameNullOrEmpty_Exception() throws Exception {
             // given
+            mockLogin();
+
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final LevellogWriteDto request = LevellogWriteDto.from(" ");
-
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             // when
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
@@ -155,13 +152,13 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("본인이 작성하지 않은 레벨로그를 수정하려는 경우 예외를 던진다.")
         void update_unauthorized_Exception() throws Exception {
             // given
+            mockLogin();
+
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
 
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
             willThrow(new UnauthorizedException("권한이 없습니다."))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
@@ -181,13 +178,12 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 수정하는 경우 예외를 던진다.")
         void update_afterStart_exception() throws Exception {
             // given
+            mockLogin();
+
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("new content");
-
-            given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
 
             willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 수정이 가능합니다."))
                     .given(levellogService)

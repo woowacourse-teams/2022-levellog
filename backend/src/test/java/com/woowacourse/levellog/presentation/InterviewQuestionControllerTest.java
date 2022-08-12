@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.presentation;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -11,7 +10,6 @@ import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -23,15 +21,6 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("InterviewQuestionController 의")
 class InterviewQuestionControllerTest extends ControllerTest {
 
-    private void mockLogin() {
-        given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
-        given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
-    }
-
-    private void mockLogin(final Long memberId) {
-        given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn(String.valueOf(memberId));
-        given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
-    }
 
     private String getUrl(final long levellogId) {
         return "/api/levellogs/" + levellogId + "/interview-questions";
@@ -50,6 +39,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_contentBlank_exception() throws Exception {
             // given
             mockLogin();
+
             final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
 
             // when
@@ -109,40 +99,16 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document("interview-question/save/exception/levellog-not-found"));
         }
 
-        @Test
-        @DisplayName("존재하지 않는 멤버가 인터뷰 질문 작성을 요청하면 예외를 던진다.")
-        void save_memberNotFound_exception() throws Exception {
-            // given
-            final long invalidMemberId = 20000000L;
-            final long levellogId = 1L;
-            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
-
-            mockLogin(invalidMemberId);
-            willThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
-                    .given(interviewQuestionService)
-                    .save(request, levellogId, invalidMemberId);
-
-            // when
-            final ResultActions perform = requestPost(getUrl(levellogId), VALID_TOKEN, request);
-
-            // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message").value("멤버가 존재하지 않습니다."));
-
-            // docs
-            perform.andDo(document("interview-question/save/exception/member-not-found"));
-        }
-
-
         @ParameterizedTest
         @CsvSource(value = {"이미 종료된 인터뷰입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
         @DisplayName("인터뷰 생성 정책에 위반되면 예외를 던진다.")
         void save_interviewTime_exception(final String message, final String snippet) throws Exception {
             // given
+            mockLogin();
+
             final long levellogId = 1L;
             final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
 
-            mockLogin();
             willThrow(new InterviewTimeException(message))
                     .given(interviewQuestionService)
                     .save(request, levellogId, 1L);
@@ -168,6 +134,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void findAll_levellogNotFound_exception() throws Exception {
             // given
             mockLogin();
+
             final long invalidLevellogId = 20000000L;
             willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
                     .given(interviewQuestionService)
@@ -182,28 +149,6 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("interview-question/findAll/exception/levellog-not-found"));
-        }
-
-        @Test
-        @DisplayName("존재하지 않는 멤버가 작성한 인터뷰 질문 목록 조회를 요청하면 예외를 던진다.")
-        void findAll_memberNotFound_exception() throws Exception {
-            // given
-            final long invalidMemberId = 20000000L;
-            final long levellogId = 1L;
-            mockLogin(invalidMemberId);
-            willThrow(new MemberNotFoundException("멤버가 존재하지 않습니다."))
-                    .given(interviewQuestionService)
-                    .findAllByLevellogAndAuthor(levellogId, invalidMemberId);
-
-            // when
-            final ResultActions perform = requestGet(getUrl(levellogId), VALID_TOKEN);
-
-            // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message").value("멤버가 존재하지 않습니다."));
-
-            // docs
-            perform.andDo(document("interview-question/findAll/exception/member-not-found"));
         }
     }
 
@@ -233,9 +178,9 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
         void update_interviewQuestionInvalidLength_Exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
-
             mockLogin();
+
+            final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
             willThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
@@ -255,10 +200,11 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("존재하지 않는 인터뷰 질문을 수정하면 예외를 던진다.")
         void update_interviewQuestionNotFound_exception() throws Exception {
             // given
+            mockLogin();
+
             final Long invalidInterviewQuestionId = 1000L;
             final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
 
-            mockLogin();
             willThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
                     .given(interviewQuestionService)
                     .update(request, invalidInterviewQuestionId, 1L);
@@ -278,9 +224,9 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void update_unauthorized_exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
-
             mockLogin();
+
+            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
             willThrow(new UnauthorizedException("권한이 없습니다."))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
@@ -301,9 +247,9 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 수정 정책에 위반되면 예외를 던진다.")
         void update_interviewTime_exception(final String message, final String snippet) throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
-
             mockLogin();
+
+            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
             willThrow(new InterviewTimeException(message))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
@@ -328,9 +274,9 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("존재하지 않는 인터뷰 질문을 삭제하면 예외를 던진다.")
         void deleteById_interviewQuestionNotFound_exception() throws Exception {
             // given
-            final Long invalidInterviewQuestionId = 1000L;
-
             mockLogin();
+
+            final Long invalidInterviewQuestionId = 1000L;
             willThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
                     .given(interviewQuestionService)
                     .deleteById(invalidInterviewQuestionId, 1L);

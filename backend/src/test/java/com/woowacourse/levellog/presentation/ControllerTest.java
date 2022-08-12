@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.presentation;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
 import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -145,5 +146,10 @@ public abstract class ControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print());
+    }
+
+    protected void mockLogin() {
+        given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
+        given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
     }
 }

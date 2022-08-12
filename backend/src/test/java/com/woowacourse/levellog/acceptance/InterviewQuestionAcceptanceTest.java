@@ -68,14 +68,14 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
     }
 
     /*
-     * Scenario: 인터뷰 질문 목록 조회
+     * Scenario: 내가 작성한 인터뷰 질문 목록 조회
      *   given: 인터뷰 질문이 등록되어있다.
      *   when: 등록된 모든 인터뷰 질문을 조회한다.
      *   then: 200 OK 상태 코드와 모든 인터뷰 질문을 응답 받는다.
      */
     @Test
-    @DisplayName("인터뷰 질문 목록 조회")
-    void findAll() {
+    @DisplayName("내가 작성한 인터뷰 질문 목록 조회")
+    void findAllMyInterviewQuestion() {
         // given
         final String pepperToken = login("페퍼").getToken();
 
@@ -100,9 +100,9 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("interview-question/findAll"))
+                .filter(document("interview-question/find-all-my-interview-question"))
                 .when()
-                .get("/api/levellogs/{levellogId}/interview-questions", pepperLevellogId)
+                .get("/api/levellogs/{levellogId}/interview-questions/my", pepperLevellogId)
                 .then().log().all();
 
         // then
@@ -156,7 +156,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindAllInterviewQuestion(pepperLevellogId, romaToken)
+        requestFindAllMyInterviewQuestion(pepperLevellogId, romaToken)
                 .body("interviewQuestions.interviewQuestion", contains("수정된 인터뷰 질문"));
     }
 
@@ -202,7 +202,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindAllInterviewQuestion(pepperLevellogId, romaToken)
+        requestFindAllMyInterviewQuestion(pepperLevellogId, romaToken)
                 .body("interviewQuestions.id", not(contains(interviewQuestionId)));
     }
 
@@ -213,9 +213,9 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
                 InterviewQuestionDto.from(interviewQuestion));
     }
 
-    private ValidatableResponse requestFindAllInterviewQuestion(final String levellogId,
-                                                                final String fromMemberToken) {
-        return get("/api/levellogs/" + levellogId + "/interview-questions", fromMemberToken)
+    private ValidatableResponse requestFindAllMyInterviewQuestion(final String levellogId,
+                                                                  final String fromMemberToken) {
+        return get("/api/levellogs/" + levellogId + "/interview-questions/my", fromMemberToken)
                 .getResponse();
     }
 }

@@ -44,24 +44,24 @@ include::{snippets}/interview-question/save/exception/is-closed/http-response.ad
 
 include::{snippets}/interview-question/save/exception/is-ready/http-response.adoc[]
 
-[[findAll]]
-== 인터뷰 질문 목록 조회
+[[find-all-my-interview-question]]
+== 내가 작성한 인터뷰 질문 목록 조회
 
-[[findAll-success]]
-=== 인터뷰 질문 목록 조회 성공
+[[find-all-my-interview-question-success]]
+=== 내가 작성한 인터뷰 질문 목록 조회 성공
 
-operation::interview-question/findAll[]
+operation::interview-question/find-all-my-interview-question[]
 
-[[findAll-exception]]
-=== 인터뷰 질문 조회 실패
+[[find-all-my-interview-question-exception]]
+=== 내가 작성한 인터뷰 질문 조회 실패
 
 ==== 인터뷰 질문에 해당하는 레벨로그가 존재하지 않는 경우
 
-include::{snippets}/interview-question/findAll/exception/levellog-not-found/http-response.adoc[]
+include::{snippets}/interview-question/find-all-my-interview-question/exception/levellog-not-found/http-response.adoc[]
 
 ==== 인터뷰 질문 작성자 멤버를 찾을 수 없는 경우
 
-include::{snippets}/interview-question/findAll/exception/member-not-found/http-response.adoc[]
+include::{snippets}/interview-question/find-all-my-interview-question/exception/member-not-found/http-response.adoc[]
 
 [[update]]
 == 인터뷰 질문 내용 수정

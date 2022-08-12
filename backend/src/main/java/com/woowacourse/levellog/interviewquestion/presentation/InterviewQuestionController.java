@@ -33,7 +33,7 @@ public class InterviewQuestionController {
                 URI.create("/api/levellogs/" + levellogId + "/interview-questions/" + interviewQuestionId)).build();
     }
 
-    @GetMapping
+    @GetMapping("/my")
     public ResponseEntity<InterviewQuestionsDto> findAllMyInterviewQuestion(@PathVariable final Long levellogId,
                                                                             @Authentic final Long memberId) {
         final InterviewQuestionsDto response = interviewQuestionService.findAllByLevellogAndAuthor(levellogId,

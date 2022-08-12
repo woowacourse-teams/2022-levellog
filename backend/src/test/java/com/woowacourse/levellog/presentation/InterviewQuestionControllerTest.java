@@ -162,12 +162,12 @@ class InterviewQuestionControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("findAll 메서드는")
-    class FindAll {
+    @DisplayName("findAllMyInterviewQuestion 메서드는")
+    class FindAllMyInterviewQuestion {
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 인터뷰 질문 목록 조회를 요청하면 예외를 던진다.")
-        void findAll_levellogNotFound_exception() throws Exception {
+        void findAllMyInterviewQuestion_levellogNotFound_exception() throws Exception {
             // given
             mockLogin();
             final long invalidLevellogId = 20000000L;
@@ -176,19 +176,19 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
 
             // when
-            final ResultActions perform = requestGet(getUrl(invalidLevellogId), TOKEN);
+            final ResultActions perform = requestGet(getUrl(invalidLevellogId) + "/my", TOKEN);
 
             // then
             perform.andExpect(status().isNotFound())
                     .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/findAll/exception/levellog-not-found"));
+            perform.andDo(document("interview-question/find-all-my-interview-question/exception/levellog-not-found"));
         }
 
         @Test
         @DisplayName("존재하지 않는 멤버가 작성한 인터뷰 질문 목록 조회를 요청하면 예외를 던진다.")
-        void findAll_memberNotFound_exception() throws Exception {
+        void findAllMyInterviewQuestion_memberNotFound_exception() throws Exception {
             // given
             final long invalidMemberId = 20000000L;
             final long levellogId = 1L;
@@ -198,14 +198,14 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .findAllByLevellogAndAuthor(levellogId, invalidMemberId);
 
             // when
-            final ResultActions perform = requestGet(getUrl(levellogId), TOKEN);
+            final ResultActions perform = requestGet(getUrl(levellogId) + "/my", TOKEN);
 
             // then
             perform.andExpect(status().isNotFound())
                     .andExpect(jsonPath("message").value("멤버가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/findAll/exception/member-not-found"));
+            perform.andDo(document("interview-question/find-all-my-interview-question/exception/member-not-found"));
         }
     }
 

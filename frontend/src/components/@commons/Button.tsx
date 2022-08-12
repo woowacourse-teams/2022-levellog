@@ -24,8 +24,7 @@ interface ButtonProps {
   [props: string]: any;
 }
 
-const ButtonStyle = styled.button`
-  white-space: pre;
+export const ButtonStyle = styled.button`
   width: fit-content;
   padding: 0.625rem 1.125rem;
   border: none;
@@ -33,6 +32,7 @@ const ButtonStyle = styled.button`
   background-color: ${(props) => props.theme.default.GRAY};
   font-size: 1rem;
   font-weight: 500;
+  white-space: pre;
 `;
 
 export default Button;

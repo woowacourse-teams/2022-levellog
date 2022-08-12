@@ -11,7 +11,7 @@ import FlexBox from 'components/@commons/FlexBox';
 import Feedback from 'components/feedbacks/Feedback';
 import { FeedbackType } from 'types/feedback';
 
-const FeedbackList = () => {
+const Feedbacks = () => {
   const { feedbacks, getFeedbacksInTeam, onClickDeleteButton } = useFeedback();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
@@ -49,4 +49,4 @@ const FeedbackList = () => {
   );
 };
 
-export default FeedbackList;
+export default Feedbacks;

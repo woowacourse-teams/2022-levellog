@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import { MESSAGE } from 'constants/constants';
 
+import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Input from 'components/@commons/Input';
 import ToolTip from 'components/@commons/ToolTip';
@@ -94,10 +95,11 @@ const S = {
     padding-right: 0.5rem;
     background-color: ${(props) => props.theme.default.WHITE};
   `,
-  // 공통 button 컴포넌트로 수정
-  InputButton: styled.button`
+
+  InputButton: styled(Button)`
     width: 6.625rem;
     height: 2.5rem;
+    padding: 0;
     border: none;
     border-radius: 0.375rem;
     background-color: ${(props) => props.theme.default.GRAY};

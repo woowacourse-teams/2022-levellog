@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 import useInterviewQuestionEdit from 'hooks/useInterviewQuestionEdit';
 
-import InterviewQuestionButton from 'components/interviewQuestion/InterviewQuestionButton';
 import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
+import Button from 'components/@commons/Button';
 
 const InterviewQuestionContent = ({
   interviewQuestionInfo,
@@ -33,9 +33,11 @@ const InterviewQuestionContent = ({
           {interviewQuestionInfo.interviewQuestion}
         </p>
       )}
-      <InterviewQuestionButton handleClick={handleClickDeleteInterviewQuestionButton}>
+      <S.DeleteButton onClick={handleClickDeleteInterviewQuestionButton}>
         <p>X</p>
-      </InterviewQuestionButton>
+      </S.DeleteButton>
+      {/* <InterviewQuestionButton handleClick={handleClickDeleteInterviewQuestionButton}> */}
+      {/* </InterviewQuestionButton> */}
     </S.Container>
   );
 };
@@ -66,6 +68,15 @@ const S = {
     border: none;
     border-bottom: 0.0625rem solid ${(props) => props.theme.default.BLACK};
     font-size: 1rem;
+  `,
+
+  DeleteButton: styled(Button)`
+    width: 1.875rem;
+    height: 1.875rem;
+    padding: 0;
+    border: none;
+    border-radius: 0.9375rem;
+    background-color: ${(props) => props.theme.default.GRAY};
   `,
 };
 

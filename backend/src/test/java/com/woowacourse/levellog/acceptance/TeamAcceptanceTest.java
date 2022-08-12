@@ -214,7 +214,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("status", equalTo(TeamStatus.IN_PROGRESS));
+                .body("status", equalTo(String.valueOf(TeamStatus.IN_PROGRESS)));
     }
 
     /*

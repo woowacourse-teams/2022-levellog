@@ -23,7 +23,7 @@ const FeedbackAdd = () => {
   const { levellog, getLevellog } = useLevellog();
   const { levellogWriter, feedbackWriterRole, getWriterInfo } = useRole();
   const {
-    interviewQuestionsInfo,
+    interviewQuestionInfos,
     interviewQuestionRef,
     interviewQuestionContentRef,
     getInterviewQuestion,
@@ -71,7 +71,7 @@ const FeedbackAdd = () => {
         </S.LeftContent>
         <S.RightContent>
           <InterviewQuestion
-            interviewQuestionsInfo={interviewQuestionsInfo}
+            interviewQuestionInfos={interviewQuestionInfos}
             interviewQuestionRef={interviewQuestionRef}
             interviewQuestionContentRef={interviewQuestionContentRef}
             onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}

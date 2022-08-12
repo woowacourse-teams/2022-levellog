@@ -9,7 +9,7 @@ import InterviewQuestionContent from 'components/interviewQuestion/InterviewQues
 import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
 const InterviewQuestion = ({
-  interviewQuestionsInfo,
+  interviewQuestionInfos,
   interviewQuestionRef,
   interviewQuestionContentRef,
   onClickDeleteInterviewQuestionButton,
@@ -25,8 +25,8 @@ const InterviewQuestion = ({
         </S.ToolTipBox>
       </FlexBox>
       <S.Content ref={interviewQuestionContentRef}>
-        {interviewQuestionsInfo.length > 0 &&
-          interviewQuestionsInfo.map((interviewQuestionInfo) => (
+        {interviewQuestionInfos.length > 0 &&
+          interviewQuestionInfos.map((interviewQuestionInfo) => (
             <InterviewQuestionContent
               key={interviewQuestionInfo.id}
               interviewQuestionInfo={interviewQuestionInfo}
@@ -44,7 +44,7 @@ const InterviewQuestion = ({
 };
 
 interface InterviewQuestionProps {
-  interviewQuestionsInfo: InterviewQuestionType[];
+  interviewQuestionInfos: InterviewQuestionType[];
   interviewQuestionRef: React.Ref<HTMLInputElement>;
   interviewQuestionContentRef: React.Ref<any>;
   onClickDeleteInterviewQuestionButton: ({
@@ -94,7 +94,7 @@ const S = {
     padding-right: 0.5rem;
     background-color: ${(props) => props.theme.default.WHITE};
   `,
-
+  // 공통 button 컴포넌트로 수정
   InputButton: styled.button`
     width: 6.625rem;
     height: 2.5rem;

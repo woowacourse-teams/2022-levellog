@@ -29,11 +29,9 @@ const InterviewQuestionContent = ({
           <S.Input ref={interviewQuestionEditRef} />
         </form>
       ) : (
-        <>
-          <p onClick={handleClickEditInterviewQuestionButton}>
-            {interviewQuestionInfo.interviewQuestion}
-          </p>
-        </>
+        <p onClick={handleClickEditInterviewQuestionButton}>
+          {interviewQuestionInfo.interviewQuestion}
+        </p>
       )}
       <InterviewQuestionButton handleClick={handleClickDeleteInterviewQuestionButton}>
         <p>X</p>

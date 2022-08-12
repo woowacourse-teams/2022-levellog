@@ -8,7 +8,7 @@ import ContentHeader from 'components/@commons/ContentHeader';
 import { InterviewQuestionType } from 'types/interviewQuestion';
 
 const InterviewQuestions = () => {
-  const { interviewQuestionsInfo, getInterviewQuestion } = useInterviewQuestion();
+  const { interviewQuestionInfos, getInterviewQuestion } = useInterviewQuestion();
 
   useEffect(() => {
     getInterviewQuestion();
@@ -18,11 +18,11 @@ const InterviewQuestions = () => {
     <>
       <ContentHeader title={'내가 받은 인터뷰 질문'}></ContentHeader>
       <S.InterviewQuestionContent>
-        {interviewQuestionsInfo.length !== 0 &&
-          interviewQuestionsInfo.map((interviewQuestion: InterviewQuestionType) => (
-            <S.InterviewQuestionBox key={interviewQuestion.id}>
+        {interviewQuestionInfos.length !== 0 &&
+          interviewQuestionInfos.map((interviewQuestionInfo: InterviewQuestionType) => (
+            <S.InterviewQuestionBox key={interviewQuestionInfo.id}>
               <S.InterviewQuestionText>
-                {interviewQuestion.interviewQuestion}
+                {interviewQuestionInfo.interviewQuestion}
               </S.InterviewQuestionText>
             </S.InterviewQuestionBox>
           ))}

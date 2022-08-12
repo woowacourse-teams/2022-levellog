@@ -17,7 +17,7 @@ import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interview
 
 const useInterviewQuestion = () => {
   const { scrollRef: interviewQuestionContentRef, afterRequestScrollDown } = useScrollDown();
-  const [interviewQuestionsInfo, setInterviewQuestions] = useState<InterviewQuestionType[]>([]);
+  const [interviewQuestionInfos, setInterviewQuestions] = useState<InterviewQuestionType[]>([]);
   const interviewQuestionRef = useRef<HTMLInputElement>(null);
   const { levellogId } = useParams();
 
@@ -125,7 +125,7 @@ const useInterviewQuestion = () => {
   };
 
   return {
-    interviewQuestionsInfo,
+    interviewQuestionInfos,
     interviewQuestionRef,
     interviewQuestionContentRef,
     getInterviewQuestion,

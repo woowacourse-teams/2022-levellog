@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+// 공통 button 컴포넌트로 수정
 const InterviewQuestionButton = ({ handleClick, children }: InterviewQuestionButtonProps) => {
   return <S.Button onClick={handleClick}>{children}</S.Button>;
 };

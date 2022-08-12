@@ -4,6 +4,7 @@ import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionResponses;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -24,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class InterviewQuestionService {
-
     private final InterviewQuestionRepository interviewQuestionRepository;
+
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
     private final ParticipantRepository participantRepository;
@@ -44,6 +45,10 @@ public class InterviewQuestionService {
 
         return interviewQuestionRepository.save(interviewQuestion)
                 .getId();
+    }
+
+    public InterviewQuestionResponses findAllByLevellog(final Long levellogId) {
+        return null;
     }
 
     public InterviewQuestionsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {

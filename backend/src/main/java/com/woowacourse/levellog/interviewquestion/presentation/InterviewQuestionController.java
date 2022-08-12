@@ -3,6 +3,7 @@ package com.woowacourse.levellog.interviewquestion.presentation;
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionResponses;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
 import java.net.URI;
 import javax.validation.Valid;
@@ -31,6 +32,12 @@ public class InterviewQuestionController {
         final Long interviewQuestionId = interviewQuestionService.save(request, levellogId, memberId);
         return ResponseEntity.created(
                 URI.create("/api/levellogs/" + levellogId + "/interview-questions/" + interviewQuestionId)).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<InterviewQuestionResponses> findAllByLevellog(@PathVariable final Long levellogId) {
+        final InterviewQuestionResponses response = interviewQuestionService.findAllByLevellog(levellogId);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/my")

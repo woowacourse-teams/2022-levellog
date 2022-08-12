@@ -4,7 +4,7 @@ import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
 
 const Auth = ({ children, requireAuth }: AuthProps) => {
-  const [isLoad, isError] = useAuth({ requireAuth });
+  const { isLoad, isError } = useAuth({ requireAuth });
 
   if (isLoad) return <Loading />;
   if (isError) return <Error />;

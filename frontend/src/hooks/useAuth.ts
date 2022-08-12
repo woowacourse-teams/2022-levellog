@@ -100,7 +100,7 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     checkAuth();
   }, []);
 
-  return [isLoad, isError];
+  return { isLoad, isError };
 };
 
 interface AuthCustomHookProps {

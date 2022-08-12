@@ -6,12 +6,7 @@ import axios, { AxiosResponse } from 'axios';
 import { ROUTES_PATH } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
-import {
-  requestPostFeedback,
-  requestGetFeedbacksInTeam,
-  requestEditFeedback,
-  requestDeleteFeedback,
-} from 'apis/feedback';
+import { requestPostFeedback, requestGetFeedbacksInTeam, requestEditFeedback } from 'apis/feedback';
 import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
 const useFeedback = () => {
@@ -66,31 +61,6 @@ const useFeedback = () => {
     }
   };
 
-  const deleteFeedback = async ({
-    levellogId,
-    feedbackId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId'>) => {
-    try {
-      await requestDeleteFeedback({ accessToken, levellogId, feedbackId });
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
-      }
-    }
-  };
-
-  const onClickDeleteButton = async ({
-    feedbackInfo,
-    levellogId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackInfo'>) => {
-    const feedbackId = String(feedbackInfo.id);
-
-    await deleteFeedback({ levellogId, feedbackId });
-    await getFeedbacksInTeam({ levellogId });
-  };
-
   const onClickFeedbackAddButton = async ({
     teamId,
     levellogId,
@@ -108,14 +78,17 @@ const useFeedback = () => {
     navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 
+  //레벨로그id, 피드백id, FeedbackFormatType의 값 필요함
+  const onClickFeedbackEditButton = () => {};
+
   return {
     feedbacks,
     feedbackRef,
     getFeedbacksInTeam,
     postFeedback,
     editFeedback,
-    onClickDeleteButton,
     onClickFeedbackAddButton,
+    onClickFeedbackEditButton,
   };
 };
 

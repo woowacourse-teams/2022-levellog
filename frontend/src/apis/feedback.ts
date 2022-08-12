@@ -41,15 +41,3 @@ export const requestEditFeedback = ({
     data: { ...feedbackResult },
   });
 };
-
-export const requestDeleteFeedback = ({
-  accessToken,
-  levellogId,
-  feedbackId,
-}: Omit<FeedbackApiType, 'feedbackResult'>): AxiosPromise<void> => {
-  return axios({
-    method: 'delete',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks/${feedbackId}`,
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-};

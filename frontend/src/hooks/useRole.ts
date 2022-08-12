@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { useTeam } from 'hooks/useTeams';
+import useTeam from 'hooks/useTeam';
 
 import { ROUTES_PATH } from 'constants/constants';
 

@@ -12,7 +12,6 @@ import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
 import UiEditor from 'components/@commons/UiEditor';
-import UiViewer from 'components/@commons/UiViewer';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
 const PreQuestionEdit = () => {

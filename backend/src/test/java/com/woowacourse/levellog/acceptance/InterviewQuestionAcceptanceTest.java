@@ -144,14 +144,18 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final String rickToken = rick.getToken();
         final String romaToken = roma.getToken();
 
-        post(url, rickToken, InterviewQuestionDto.from("111"));
+        final String rickContent1 = "트랜잭션 전파 옵션 종류는?";
+        final String rickContent2 = "프로세스와 스레드의 차이는?";
 
-        post(url, romaToken, InterviewQuestionDto.from("222"));
-        post(url, romaToken, InterviewQuestionDto.from("333"));
+        final String romaContent1 = "AOP에 대해 설명해주세요.";
+        final String romaContent2 = "전략 패턴이 무엇인가요?";
+        final String romaContent3 = "프레임워크와 라이브러리의 차이는?";
 
-        post(url, rickToken, InterviewQuestionDto.from("444"));
-
-        post(url, romaToken, InterviewQuestionDto.from("555"));
+        post(url, rickToken, InterviewQuestionDto.from(rickContent1));
+        post(url, romaToken, InterviewQuestionDto.from(romaContent1));
+        post(url, romaToken, InterviewQuestionDto.from(romaContent2));
+        post(url, rickToken, InterviewQuestionDto.from(rickContent2));
+        post(url, romaToken, InterviewQuestionDto.from(romaContent3));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -166,10 +170,10 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
                 .body("interviewQuestions", hasSize(2),
 
                         "interviewQuestions[0].author.nickname", equalTo("릭"),
-                        "interviewQuestions[0].contents.content", contains("111", "444"),
+                        "interviewQuestions[0].contents.content", contains(rickContent1, rickContent2),
 
                         "interviewQuestions[1].author.nickname", equalTo("로마"),
-                        "interviewQuestions[1].contents.content", contains("222", "333", "555")
+                        "interviewQuestions[1].contents.content", contains(romaContent1, romaContent2, romaContent3)
                 );
     }
 

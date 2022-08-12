@@ -44,6 +44,14 @@ include::{snippets}/interview-question/save/exception/is-closed/http-response.ad
 
 include::{snippets}/interview-question/save/exception/is-ready/http-response.adoc[]
 
+[[find-all-by-levellog]]
+== 레벨로그에 작성된 인터뷰 질문 목록 조회
+
+[[find-all-by-levellog-success]]
+=== 레벨로그에 작성된 인터뷰 질문 목록 조회 성공
+
+operation::interview-question/find-all-by-levellog[]
+
 [[find-all-my-interview-question]]
 == 내가 작성한 인터뷰 질문 목록 조회
 

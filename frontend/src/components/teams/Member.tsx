@@ -5,12 +5,12 @@ import styled from 'styled-components';
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';
 
-const Member = ({ member, setNicknameValue, updateParticipants }: MemberProps) => {
+const Member = ({ member, setNicknameValue, addToParticipants }: MemberProps) => {
   const { id, nickname, profileUrl } = member;
 
   const handleClickMember = () => {
     setNicknameValue('');
-    updateParticipants({ id, nickname, profileUrl });
+    addToParticipants({ id, nickname, profileUrl });
   };
 
   return (
@@ -24,7 +24,7 @@ const Member = ({ member, setNicknameValue, updateParticipants }: MemberProps) =
 interface MemberProps {
   member: MemberType;
   setNicknameValue: Dispatch<SetStateAction<string>>;
-  updateParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  addToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
 }
 
 const S = {

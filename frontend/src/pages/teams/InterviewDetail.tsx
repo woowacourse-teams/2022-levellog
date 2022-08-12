@@ -5,8 +5,10 @@ import styled, { CSSProperties } from 'styled-components';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import usePreQuestionModal from 'hooks/usePreQuestionModal';
-import { useTeam } from 'hooks/useTeams';
+import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
+
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -30,7 +32,6 @@ const InterviewDetail = () => {
     levellogParticipant,
     isLevellogModalOpen,
     onClickOpenLevellogModal,
-    onClickDeleteLevellog,
     handleClickCloseLevellogModal,
   } = useLevellogModal();
   const {
@@ -65,8 +66,6 @@ const InterviewDetail = () => {
           levellog={levellog}
           participant={levellogParticipant}
           userInTeam={(team as InterviewTeamType).isParticipant}
-          getTeam={getTeam}
-          onClickDeleteLevellog={onClickDeleteLevellog}
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}
         />
       )}
@@ -95,11 +94,17 @@ const InterviewDetail = () => {
           </FlexBox>
           {(team as InterviewTeamType).hostId === loginUserId && (
             <S.ButtonBox>
-              <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
-                <Button>팀 수정하기</Button>
-              </Link>
-              <Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</Button>
-              <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
+              {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
+                <>
+                  <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
+                    <Button>팀 수정하기</Button>
+                  </Link>
+                  <Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</Button>
+                </>
+              )}
+              {(team as InterviewTeamType).status === TEAM_STATUS.IN_PROGRESS && (
+                <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
+              )}
             </S.ButtonBox>
           )}
         </S.Header>
@@ -120,6 +125,7 @@ const InterviewDetail = () => {
             return (
               <Interviewer
                 key={participant.memberId}
+                teamStatus={team.status}
                 participant={participant}
                 role={role}
                 userInTeam={(team as InterviewTeamType).isParticipant}

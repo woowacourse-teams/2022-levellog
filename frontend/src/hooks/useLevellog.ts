@@ -6,12 +6,7 @@ import axios, { AxiosResponse } from 'axios';
 import { ROUTES_PATH } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
-import {
-  requestDeleteLevellog,
-  requestEditLevellog,
-  requestGetLevellog,
-  requestPostLevellog,
-} from 'apis/levellog';
+import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
 import { LevellogCustomHookType, LevellogFormatType } from 'types/levellog';
 
 const useLevellog = () => {
@@ -59,22 +54,6 @@ const useLevellog = () => {
       setLevellog(res.data.content);
 
       return res.data.content;
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
-      }
-    }
-  };
-
-  const deleteLevellog = async ({
-    teamId,
-    levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>) => {
-    try {
-      await requestDeleteLevellog({ accessToken, teamId, levellogId });
-      navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
@@ -145,7 +124,6 @@ const useLevellog = () => {
     postLevellog,
     getLevellog,
     editLevellog,
-    deleteLevellog,
     getLevellogOnRef,
     onClickLevellogAddButton,
     onClickLevellogEditButton,

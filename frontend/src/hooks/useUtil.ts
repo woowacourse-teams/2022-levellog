@@ -4,17 +4,17 @@ import { MemberType } from 'types/member';
 import { ParticipantType } from 'types/team';
 
 const useUtil = () => {
-  const [throttle, setThrottle] = useState<boolean>(false);
+  const [debounce, setDebounce] = useState<boolean>(false);
 
-  const isThrottle = () => {
-    if (!throttle) {
-      setThrottle(true);
+  const isDebounce = () => {
+    if (debounce) {
+      setDebounce(false);
       setTimeout(() => {
-        setThrottle(false);
+        setDebounce(true);
       }, 100);
-      return false;
+      return true;
     }
-    return true;
+    return false;
   };
 
   // 코드 고쳐서 써야함
@@ -29,7 +29,7 @@ const useUtil = () => {
     return smallParticipants;
   };
 
-  return { isThrottle, participantsToSmallType };
+  return { isDebounce, participantsToSmallType };
 };
 
 export default useUtil;

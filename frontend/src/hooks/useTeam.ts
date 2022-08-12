@@ -31,7 +31,7 @@ const useTeam = () => {
   const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const { teamId } = useParams();
   const navigate = useNavigate();
-  const { isThrottle } = useUtil();
+  const { isDebounce } = useUtil();
   const teamLocationState: InterviewTeamType | undefined = location.state;
   const accessToken = localStorage.getItem('accessToken');
   // participants는 인터뷰 생성 폼, 인터뷰 수정 폼에서만 사용해야함!
@@ -179,7 +179,7 @@ const useTeam = () => {
 
   const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {
     try {
-      if (isThrottle()) return;
+      if (isDebounce()) return;
 
       const res = await requestGetMembers({ accessToken, nickname: nicknameValue });
       const members = res.data.members.filter((member) =>

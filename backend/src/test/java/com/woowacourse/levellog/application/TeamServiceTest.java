@@ -1,5 +1,8 @@
 package com.woowacourse.levellog.application;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
+import static com.woowacourse.levellog.fixture.TimeFixture.BEFORE_START_TIME;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -23,8 +26,6 @@ import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -36,26 +37,6 @@ import org.junit.jupiter.api.Test;
 @DisplayName("TeamService의")
 class TeamServiceTest extends ServiceTest {
 
-    private Member saveAndGetMember(final String nickname) {
-        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
-    }
-
-    private Team saveAndGetTeam(final String title, final int interviewerNumber, final LocalDateTime startAt) {
-        return teamRepository.save(
-                new Team(title, "피니시방", startAt, "jason.png", interviewerNumber));
-    }
-
-    private List<Long> saveAllParticipant(final Team team, final Member host, final Member... participants) {
-        final List<Long> savedParticipantsMemberIds = new ArrayList<>();
-        final Participant hostParticipant = participantRepository.save(new Participant(team, host, true));
-        savedParticipantsMemberIds.add(hostParticipant.getMember().getId());
-        for (final Member participant : participants) {
-            final Participant savedParticipant = participantRepository.save(new Participant(team, participant, false));
-            savedParticipantsMemberIds.add(savedParticipant.getMember().getId());
-        }
-        return savedParticipantsMemberIds;
-    }
-
     @Nested
     @DisplayName("findAll 메서드는")
     class FindAll {
@@ -64,22 +45,17 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("전체 팀 목록을 조회한다.")
         void findAll() {
             //given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Member member3 = saveAndGetMember("로마");
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
 
-            final Team team1 = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-            final Team team2 = saveAndGetTeam("선릉 브라운조", 1, LocalDateTime.now().plusDays(6));
+            final Team team1 = saveTeam(pepper, roma);
+            final Team team2 = saveTeam(rick, pepper);
 
-            participantRepository.save(new Participant(team1, member2, true));
-            participantRepository.save(new Participant(team1, member3, false));
-            participantRepository.save(new Participant(team2, member1, true));
-            participantRepository.save(new Participant(team2, member2, false));
-
-            team2.close(LocalDateTime.now().plusDays(7));
+            team2.close(AFTER_START_TIME);
 
             //when
-            final TeamAndRolesDto response = teamService.findAll(member1.getId());
+            final TeamAndRolesDto response = teamService.findAll(rick.getId());
 
             //then
             final List<String> actualTitles = response.getTeams()
@@ -109,7 +85,7 @@ class TeamServiceTest extends ServiceTest {
 
             assertAll(
                     () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
-                    () -> assertThat(actualHostIds).contains(member1.getId(), member2.getId()),
+                    () -> assertThat(actualHostIds).contains(rick.getId(), pepper.getId()),
                     () -> assertThat(actualParticipantSizes).contains(2, 2),
                     () -> assertThat(actualCloseStatuses).containsExactly(TeamStatus.READY, TeamStatus.CLOSED),
                     () -> assertThat(actualIsParticipants).containsExactly(false, true),
@@ -121,22 +97,17 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("삭제된 팀을 제외한 팀 목록을 조회한다.")
         void findAll_exceptDeleted() {
             //given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Member member3 = saveAndGetMember("로마");
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
 
-            final Team team1 = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-            final Team team2 = saveAndGetTeam("선릉 브라운조", 1, LocalDateTime.now().plusDays(6));
+            saveTeam(pepper, roma);
+            final Team team = saveTeam(rick, pepper);
 
-            participantRepository.save(new Participant(team1, member2, true));
-            participantRepository.save(new Participant(team1, member3, false));
-            participantRepository.save(new Participant(team2, member1, true));
-            participantRepository.save(new Participant(team2, member2, false));
-
-            team2.delete(LocalDateTime.now());
+            team.delete(BEFORE_START_TIME);
 
             //when
-            final TeamAndRolesDto response = teamService.findAll(member1.getId());
+            final TeamAndRolesDto response = teamService.findAll(rick.getId());
 
             //then
             assertThat(response.getTeams()).hasSize(1);
@@ -151,14 +122,15 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("팀을 생성한다.")
         void save() {
             //given
-            final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
-            final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
-            final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
-            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 2, LocalDateTime.now().plusDays(6),
-                    new ParticipantIdsDto(List.of(participant2, participant3)));
+            final Long alien = saveMember("알린").getId();
+            final Long pepper = saveMember("페퍼").getId();
+            final Long roma = saveMember("로마").getId();
+
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 2, TEAM_START_TIME,
+                    new ParticipantIdsDto(List.of(pepper, roma)));
 
             //when
-            final Long id = teamService.save(teamDto, participant1);
+            final Long id = teamService.save(teamDto, alien);
 
             //then
             final Optional<Team> team = teamRepository.findById(id);
@@ -169,14 +141,15 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("참가자가 중복되면 예외가 발생한다.")
         void save_duplicate_exceptionThrown() {
             //given
-            final Long participant1 = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
-            final Long participant2 = memberRepository.save(new Member("페퍼", 2222, "pepper.png")).getId();
-            final Long participant3 = memberRepository.save(new Member("로마", 3333, "roma.png")).getId();
-            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
-                    new ParticipantIdsDto(List.of(participant1, participant2, participant3)));
+            final Long alien = saveMember("알린").getId();
+            final Long pepper = saveMember("페퍼").getId();
+            final Long roma = saveMember("로마").getId();
+
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+                    new ParticipantIdsDto(List.of(alien, pepper, roma)));
 
             //when & then
-            assertThatThrownBy(() -> teamService.save(teamDto, participant1))
+            assertThatThrownBy(() -> teamService.save(teamDto, alien))
                     .isInstanceOf(DuplicateParticipantsException.class)
                     .hasMessageContaining("참가자 중복");
         }
@@ -185,8 +158,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
         void save_noParticipant_exceptionThrown() {
             //given
-            final Long alienId = memberRepository.save(new Member("알린", 1111, "alien.png")).getId();
-            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
+            final Long alienId = saveMember("알린").getId();
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     new ParticipantIdsDto(Collections.emptyList()));
 
             //when & then
@@ -204,17 +177,15 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - interviewer")
         void success_interviewer() {
             // given
-            final Team team = saveAndGetTeam("레벨로그 모의 인터뷰", 1, LocalDateTime.now().plusDays(6));
+            final Member rick = saveMember("릭");
+            final Member harry = saveMember("해리");
+            final Member alien = saveMember("알린");
 
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("해리");
-            final Member member3 = saveAndGetMember("알린");
-
-            saveAllParticipant(team, member1, member2, member3);
+            final Team team = saveTeam(rick, harry, alien);
 
             final Long teamId = team.getId();
-            final Long targetMemberId = member1.getId();
-            final Long requestMemberId = member2.getId();
+            final Long targetMemberId = rick.getId();
+            final Long requestMemberId = harry.getId();
 
             // when
             final InterviewRoleDto actual = teamService.findMyRole(teamId, targetMemberId, requestMemberId);
@@ -227,17 +198,15 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - observer")
         void success_observer() {
             // given
-            final Team team = saveAndGetTeam("레벨로그 모의 인터뷰", 1, LocalDateTime.now().plusDays(6));
+            final Member rick = saveMember("릭");
+            final Member harry = saveMember("해리");
+            final Member alien = saveMember("알린");
 
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("해리");
-            final Member member3 = saveAndGetMember("알린");
-
-            saveAllParticipant(team, member1, member2, member3);
+            final Team team = saveTeam(rick, harry, alien);
 
             final Long teamId = team.getId();
-            final Long targetMemberId = member1.getId();
-            final Long requestMemberId = member3.getId();
+            final Long targetMemberId = rick.getId();
+            final Long requestMemberId = alien.getId();
 
             // when
             final InterviewRoleDto actual = teamService.findMyRole(teamId, targetMemberId, requestMemberId);
@@ -250,17 +219,15 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("팀의 참가자가 아닌 member가 요청하면 예외를 던진다.")
         void iAmNotParticipant_exceptionThrown() {
             // given
-            final Team team = saveAndGetTeam("레벨로그 모의 인터뷰", 1, LocalDateTime.now().plusDays(6));
+            final Member rick = saveMember("릭");
+            final Member harry = saveMember("해리");
+            final Member alien = saveMember("알린");
 
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("해리");
-            final Member member3 = saveAndGetMember("알린");
-
-            saveAllParticipant(team, member1, member2);
+            final Team team = saveTeam(rick, harry);
 
             final Long teamId = team.getId();
-            final Long targetMemberId = member1.getId();
-            final Long requestMemberId = member3.getId();
+            final Long targetMemberId = rick.getId();
+            final Long requestMemberId = alien.getId();
 
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, requestMemberId))
@@ -271,17 +238,15 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("targetMember가 팀의 참가자가 아니면 예외를 던진다.")
         void targetNotParticipant_exceptionThrown() {
             // given
-            final Team team = saveAndGetTeam("레벨로그 모의 인터뷰", 1, LocalDateTime.now().plusDays(6));
+            final Member rick = saveMember("릭");
+            final Member harry = saveMember("해리");
+            final Member alien = saveMember("알린");
 
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("해리");
-            final Member member3 = saveAndGetMember("알린");
-
-            saveAllParticipant(team, member1, member2);
+            final Team team = saveTeam(rick, harry);
 
             final Long teamId = team.getId();
-            final Long targetMemberId = member3.getId();
-            final Long requestMemberId = member1.getId();
+            final Long targetMemberId = alien.getId();
+            final Long requestMemberId = rick.getId();
 
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, requestMemberId))
@@ -297,20 +262,17 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 팀을 조회한다.")
         void findByTeamIdAndMemberId() {
             //given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 2, LocalDateTime.now().plusDays(6));
-
-            participantRepository.save(new Participant(team, member1, true));
-            participantRepository.save(new Participant(team, member2, false));
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Team team = saveTeam(rick, pepper);
 
             //when
-            final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), member1.getId());
+            final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), rick.getId());
 
             //then
             assertAll(
                     () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
-                    () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
+                    () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                     () -> assertThat(response.getStatus()).isEqualTo(TeamStatus.READY),
                     () -> assertThat(response.getParticipants()).hasSize(2)
             );
@@ -333,14 +295,13 @@ class TeamServiceTest extends ServiceTest {
             @DisplayName("인터뷰어와 인터뷰이, isParticipant를 true로 응답한다.")
             void findByTeamIdAndMemberId() {
                 //given
-                final Member rick = saveAndGetMember("릭");
-                final Member pepper = saveAndGetMember("페퍼");
-                final Member roma = saveAndGetMember("로마");
-                final Member alien = saveAndGetMember("알린");
-                final Member eve = saveAndGetMember("이브");
-                final Team team = saveAndGetTeam("잠실 제이슨조", 2, LocalDateTime.now().plusDays(6));
+                final Member rick = saveMember("릭");
+                final Member pepper = saveMember("페퍼");
+                final Member roma = saveMember("로마");
+                final Member alien = saveMember("알린");
+                final Member eve = saveMember("이브");
 
-                saveAllParticipant(team, rick, pepper, roma, alien, eve);
+                final Team team = saveTeam(2, rick, pepper, roma, alien, eve);
 
                 //when
                 final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndMemberId(team.getId(),
@@ -370,12 +331,11 @@ class TeamServiceTest extends ServiceTest {
             @DisplayName("참가자가 3명이고, 인터뷰어 수는 2명이면 인터뷰어와 인터뷰이가 동일하다.")
             void findByTeamIdAndMemberId_manyInterviewerNumber() {
                 //given
-                final Member rick = saveAndGetMember("릭");
-                final Member pepper = saveAndGetMember("페퍼");
-                final Member roma = saveAndGetMember("로마");
-                final Team team = saveAndGetTeam("잠실 제이슨조", 2, LocalDateTime.now().plusDays(6));
+                final Member rick = saveMember("릭");
+                final Member pepper = saveMember("페퍼");
+                final Member roma = saveMember("로마");
 
-                saveAllParticipant(team, rick, pepper, roma);
+                final Team team = saveTeam(2, rick, pepper, roma);
 
                 //when
                 final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), pepper.getId());
@@ -401,22 +361,20 @@ class TeamServiceTest extends ServiceTest {
             @DisplayName("인터뷰어와 인터뷰이가 빈 상태이고 isParticipant를 false로 응답한다.")
             void findByTeamIdAndMemberId() {
                 //given
-                final Member member1 = saveAndGetMember("릭");
-                final Member member2 = saveAndGetMember("페퍼");
-                final Member member3 = saveAndGetMember("로마");
-                final Member member4 = saveAndGetMember("알린");
-                final Team team = saveAndGetTeam("잠실 제이슨조", 2, LocalDateTime.now().plusDays(6));
+                final Member rick = saveMember("릭");
+                final Member pepper = saveMember("페퍼");
+                final Member roma = saveMember("로마");
+                final Member alien = saveMember("알린");
 
-                saveAllParticipant(team, member1, member2, member3);
+                final Team team = saveTeam(rick, pepper, roma);
 
                 //when
-                final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(),
-                        member4.getId());
+                final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), alien.getId());
 
                 //then
                 assertAll(
                         () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
-                        () -> assertThat(response.getHostId()).isEqualTo(member1.getId()),
+                        () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(response.getParticipants()).hasSize(3),
                         () -> assertThat(response.getInterviewers()).isEmpty(),
                         () -> assertThat(response.getInterviewees()).isEmpty(),
@@ -434,17 +392,18 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 팀 정보를 변경한다.")
         void success() {
             // given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Member member3 = saveAndGetMember("이브");
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Member eve = saveMember("이브");
 
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-            final List<Long> savedParticipantsMemberIds = saveAllParticipant(team, member1, member2, member3);
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 2, LocalDateTime.now().plusDays(6),
+            final Team team = saveTeam(rick, pepper, eve);
+
+            final List<Long> savedParticipantsMemberIds = List.of(rick.getId(), pepper.getId());
+            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 2, AFTER_START_TIME,
                     new ParticipantIdsDto(savedParticipantsMemberIds));
 
             // when
-            teamService.update(request, team.getId(), member1.getId());
+            teamService.update(request, team.getId(), rick.getId());
 
             // then
             final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
@@ -460,16 +419,16 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트가 아닌 멤버가 팀을 수정하는 경우 예외를 던진다.")
         void hostUnauthorized_Exception() {
             // given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-            final List<Long> participantsMemberIds = saveAllParticipant(team, member1, member2);
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
 
-            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
-                    new ParticipantIdsDto(participantsMemberIds));
+            final Team team = saveTeam(rick, pepper);
+
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, AFTER_START_TIME,
+                    new ParticipantIdsDto(List.of(rick.getId())));
 
             // when, then
-            final Long memberId = member2.getId();
+            final Long memberId = pepper.getId();
             final Long teamId = team.getId();
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
                     .isInstanceOf(HostUnauthorizedException.class)
@@ -480,8 +439,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
         void teamNotFound_Exception() {
             //given
-            final Long memberId = saveAndGetMember("릭").getId();
-            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
+            final Long memberId = saveMember("릭").getId();
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
                     new ParticipantIdsDto(Collections.emptyList()));
 
             //when & then
@@ -494,11 +453,12 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("인터뷰 시작 이후에 팀을 수정하려고 하면 예외를 던진다.")
         void updateAfterStartAt_Exception() {
             //given
-            final Member member = saveAndGetMember("릭");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(3));
-            final List<Long> participantsMemberIds = saveAllParticipant(team, member);
-            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, LocalDateTime.now().plusDays(6),
-                    new ParticipantIdsDto(participantsMemberIds));
+            final Member member = saveMember("릭");
+            final Team team = saveTeam(member);
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
+                    new ParticipantIdsDto(List.of(member.getId())));
+
+            timeStandard.setInProgress();
 
             //when & then
             final Long teamId = team.getId();
@@ -517,9 +477,10 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("입력 받은 팀의 인터뷰를 종료한다.")
         void close() {
             // given
-            final Member rick = saveAndGetMember("릭");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(3));
-            participantRepository.save(new Participant(team, rick, true));
+            final Member rick = saveMember("릭");
+            final Team team = saveTeam(rick);
+
+            timeStandard.setInProgress();
 
             // when
             teamService.close(team.getId(), rick.getId());
@@ -533,11 +494,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하면 예외가 발생한다.")
         void close_notHost_exceptionThrown() {
             // given
-            final Member rick = saveAndGetMember("릭");
-            final Member alien = saveAndGetMember("알린");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-            participantRepository.save(new Participant(team, rick, true));
-            participantRepository.save(new Participant(team, alien, false));
+            final Member rick = saveMember("릭");
+            final Member alien = saveMember("알린");
+            final Team team = saveTeam(rick, alien);
 
             // when & then
             assertThatThrownBy(() -> teamService.close(team.getId(), alien.getId()))
@@ -554,14 +513,12 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 팀을 deleted 상태로 만든다.")
         void success() {
             // given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-
-            saveAllParticipant(team, member1, member2);
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Team team = saveTeam(rick, pepper);
 
             // when
-            teamService.deleteById(team.getId(), member1.getId());
+            teamService.deleteById(team.getId(), rick.getId());
             entityManager.flush();
             entityManager.clear();
 
@@ -576,14 +533,12 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트가 아닌 멤버가 팀을 삭제하는 경우 예외를 던진다.")
         void hostUnauthorized_Exception() {
             // given
-            final Member member1 = saveAndGetMember("릭");
-            final Member member2 = saveAndGetMember("페퍼");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-
-            saveAllParticipant(team, member1, member2);
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Team team = saveTeam(rick, pepper);
 
             // when, then
-            final Long memberId = member2.getId();
+            final Long memberId = pepper.getId();
             final Long teamId = team.getId();
             assertThatThrownBy(() -> teamService.deleteById(teamId, memberId))
                     .isInstanceOf(HostUnauthorizedException.class)
@@ -594,9 +549,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
         void teamNotFound_Exception() {
             //given
-            final Member member = saveAndGetMember("릭");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-            saveAllParticipant(team, member);
+            final Member member = saveMember("릭");
+            final Team team = saveTeam(member);
 
             //when & then
             assertThatThrownBy(() -> teamService.deleteById(1000L, member.getId()))
@@ -608,9 +562,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("이미 삭제된 팀을 삭제하는 경우 팀이 존재하지 않는다는 예외를 던진다.")
         void alreadyDeleted_Exception() {
             //given
-            final Member member = saveAndGetMember("릭");
-            final Team team = saveAndGetTeam("잠실 제이슨조", 1, LocalDateTime.now().plusDays(6));
-            saveAllParticipant(team, member);
+            final Member member = saveMember("릭");
+            final Team team = saveTeam(member);
             final Long teamId = team.getId();
             final Long memberId = member.getId();
             teamService.deleteById(teamId, memberId);
@@ -632,24 +585,13 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("주어진 memberId의 멤버가 참가한 모든 팀을 조회한다.")
         void success() {
             // given
-            final Member roma = saveAndGetMember("로마");
-            final Member harry = saveAndGetMember("해리");
-            final Member alien = saveAndGetMember("알린");
+            final Member roma = saveMember("로마");
+            final Member harry = saveMember("해리");
+            final Member alien = saveMember("알린");
 
-            final TeamWriteDto romaTeamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1,
-                    LocalDateTime.now().plusDays(6),
-                    new ParticipantIdsDto(List.of(harry.getId())));
-            final TeamWriteDto romaTeamDto2 = new TeamWriteDto("잠실 준조", "트랙룸", 1,
-                    LocalDateTime.now().plusDays(6),
-                    new ParticipantIdsDto(List.of(harry.getId(), alien.getId())));
-
-            final TeamWriteDto harryTeamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1,
-                    LocalDateTime.now().plusDays(6),
-                    new ParticipantIdsDto(List.of(alien.getId())));
-
-            teamService.save(romaTeamDto, roma.getId());
-            teamService.save(romaTeamDto2, roma.getId());
-            teamService.save(harryTeamDto, harry.getId());
+            saveTeam(roma, harry);
+            saveTeam(roma, harry, alien);
+            saveTeam(harry, alien);
 
             // when
             final List<TeamDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();

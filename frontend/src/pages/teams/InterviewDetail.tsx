@@ -125,6 +125,7 @@ const InterviewDetail = () => {
             return (
               <Interviewer
                 key={participant.memberId}
+                teamStatus={team.status}
                 participant={participant}
                 role={role}
                 userInTeam={(team as InterviewTeamType).isParticipant}

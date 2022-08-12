@@ -2,7 +2,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
 import { ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
@@ -19,11 +18,11 @@ const Interviewer = ({
   participant,
   userInTeam,
   role,
+  teamStatus,
   onClickOpenLevellogModal,
   onClickOpenPreQuestionModal,
 }: InterviewerProps) => {
   const navigate = useNavigate();
-  const { team } = useTeam();
   const { teamId } = useParams();
   const { loginUserId } = useUser();
 
@@ -70,7 +69,7 @@ const Interviewer = ({
             </>
           ) : (
             <>
-              {(team as InterviewTeamType).status === TEAM_STATUS.READY ? (
+              {teamStatus === TEAM_STATUS.READY ? (
                 <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
                   <S.InterviewerButton>레벨로그 작성</S.InterviewerButton>
                 </Link>
@@ -133,6 +132,7 @@ const Interviewer = ({
 
 interface InterviewerProps {
   participant: ParticipantType;
+  teamStatus: string;
   role: RoleType;
   userInTeam: Boolean;
   onClickOpenLevellogModal: ({ teamId, participant }: LevellogParticipantType) => void;

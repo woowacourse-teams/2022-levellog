@@ -1,20 +1,24 @@
+import { Link } from 'react-router-dom';
+
 import styled from 'styled-components';
+
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import UiViewer from 'components/@commons/UiViewer';
-import { FeedbackCustomHookType, FeedbackType } from 'types/feedback';
+import { FeedbackType } from 'types/feedback';
 
-const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackProps) => {
-  const handleClickDeleteButton = () => {
-    onClickDeleteButton({ feedbackInfo, levellogId });
-  };
-
+const Feedback = ({ feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
   return (
     <S.Container>
       <S.Header>
         <h3>{feedbackInfo.from.nickname}의 피드백</h3>
-        <Button onClick={handleClickDeleteButton}>삭제하기</Button>
+        {teamStatus === TEAM_STATUS.IN_PROGRESS && (
+          <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackInfo.id}/edit`}>
+            <Button>수정하기</Button>
+          </Link>
+        )}
       </S.Header>
       <FlexBox gap={1.5}>
         <FlexBox flexFlow={'column'} gap={1.25}>
@@ -42,11 +46,9 @@ const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackPro
 
 interface FeedbackProps {
   feedbackInfo: FeedbackType;
+  teamId: string;
   levellogId: string;
-  onClickDeleteButton: ({
-    feedbackInfo,
-    levellogId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackInfo'>) => Promise<void>;
+  teamStatus: string;
 }
 
 const S = {

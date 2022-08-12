@@ -127,6 +127,37 @@ include::{snippets}/team/find/not-my-team/http-response.adoc[]
 
 include::{snippets}/team/find-by-id/exception/notfound/http-response.adoc[]
 
+[[find-status]]
+== 팀 상태 조회
+
+*STATUS 응답 종류*
+
+[cols="1,1"]
+|===
+|*응답*
+|*설명*
+
+|READY
+|인터뷰 시작 전 상태이다.
+
+|IN_PROGRESS
+|인터뷰 진행 중인 상태이다.
+
+|CLOSED
+|인터뷰가 종료된 상태이다.
+|===
+
+
+[[find-status-success]]
+=== 팀 상태 조회 성공
+
+operation::team/find-status[]
+
+[[find-status-exception]]
+=== 팀 상태 조회 예외
+
+include::{snippets}/team/find-status/exception/team-not-found/http-response.adoc[]
+
 [[find-my-role]]
 == 인터뷰 역할 조회
 
@@ -244,7 +275,7 @@ include::{snippets}/team/update/exception/participants/null/http-response.adoc[]
 
 include::{snippets}/team/update/exception/interviewer-number/not-positive/http-response.adoc[]
 
-[[update-exception-interviewer-number-not-positive]]
+[[update-exception-interviewer-number-more-than-participant]]
 ==== 수정 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
 
 include::{snippets}/team/update/exception/interviewer-number/more-than-participant/http-response.adoc[]

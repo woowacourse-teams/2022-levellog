@@ -26,8 +26,6 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
         void save_alreadyExists_exception() throws Exception {
             // given
-            mockLogin();
-
             final LevellogWriteDto request = LevellogWriteDto.from("content");
             final Long authorId = 1L;
             final Long teamId = 1L;
@@ -50,8 +48,6 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
         void save_nameNullOrEmpty_Exception() throws Exception {
             // given
-            mockLogin();
-
             final Long teamId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from(" ");
 
@@ -70,8 +66,6 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 저장하는 경우 예외를 던진다.")
         void save_afterStart_exception() throws Exception {
             // given
-            mockLogin();
-
             final LevellogWriteDto request = LevellogWriteDto.from("content");
             final Long authorId = 1L;
             final Long teamId = 1L;
@@ -92,7 +86,7 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         private ResultActions requestSaveLevellog(final Long teamId, final Object request) throws Exception {
-            return requestPost("/api/teams/" + teamId + "/levellogs", VALID_TOKEN, request);
+            return requestPost("/api/teams/" + teamId + "/levellogs", request);
         }
     }
 
@@ -106,13 +100,12 @@ class LevellogControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
             final Long levellogId = 1000L;
-
             willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
                     .given(levellogService)
                     .findById(levellogId);
 
             // when
-            final ResultActions perform = requestGet("/api/teams/" + teamId + "/levellogs/" + levellogId, VALID_TOKEN);
+            final ResultActions perform = requestGet("/api/teams/" + teamId + "/levellogs/" + levellogId);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -131,8 +124,6 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
         void update_nameNullOrEmpty_Exception() throws Exception {
             // given
-            mockLogin();
-
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final LevellogWriteDto request = LevellogWriteDto.from(" ");
@@ -152,8 +143,6 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("본인이 작성하지 않은 레벨로그를 수정하려는 경우 예외를 던진다.")
         void update_unauthorized_Exception() throws Exception {
             // given
-            mockLogin();
-
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
@@ -178,8 +167,6 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 수정하는 경우 예외를 던진다.")
         void update_afterStart_exception() throws Exception {
             // given
-            mockLogin();
-
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
@@ -202,7 +189,7 @@ class LevellogControllerTest extends ControllerTest {
 
         private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId, final Object request)
                 throws Exception {
-            return requestPut("/api/teams/" + teamId + "/levellogs/" + levellogId, VALID_TOKEN, request);
+            return requestPut("/api/teams/" + teamId + "/levellogs/" + levellogId, request);
         }
     }
 }

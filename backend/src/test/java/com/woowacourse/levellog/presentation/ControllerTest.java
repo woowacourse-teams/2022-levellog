@@ -89,6 +89,12 @@ public abstract class ControllerTest {
 
     @BeforeEach
     void setUp(final WebApplicationContext context, final RestDocumentationContextProvider provider) {
+        setMockMvcRestDocsSpec(context, provider);
+        mockLogin();
+    }
+
+    private void setMockMvcRestDocsSpec(final WebApplicationContext context,
+                                        final RestDocumentationContextProvider provider) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .apply(documentationConfiguration(provider)
                         .snippets()
@@ -112,44 +118,44 @@ public abstract class ControllerTest {
                 ).build();
     }
 
-    protected ResultActions requestGet(final String url, final String token) throws Exception {
+    private void mockLogin() {
+        given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
+        given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
+    }
+
+    protected ResultActions requestGet(final String url) throws Exception {
         return mockMvc.perform(get(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print());
     }
 
-    protected ResultActions requestPost(final String url, final String token, final Object request)
+    protected ResultActions requestPost(final String url, final Object request)
             throws Exception {
         final String content = objectMapper.writeValueAsString(request);
 
         return mockMvc.perform(post(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
                 .andDo(print());
     }
 
-    protected ResultActions requestPut(final String url, final String token, final Object request)
+    protected ResultActions requestPut(final String url, final Object request)
             throws Exception {
         final String content = objectMapper.writeValueAsString(request);
 
         return mockMvc.perform(put(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
                 .andDo(print());
     }
 
-    protected ResultActions requestDelete(final String url, final String token) throws Exception {
+    protected ResultActions requestDelete(final String url) throws Exception {
         return mockMvc.perform(delete(url)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print());
-    }
-
-    protected void mockLogin() {
-        given(jwtTokenProvider.getPayload(VALID_TOKEN)).willReturn("1");
-        given(jwtTokenProvider.validateToken(VALID_TOKEN)).willReturn(true);
     }
 }

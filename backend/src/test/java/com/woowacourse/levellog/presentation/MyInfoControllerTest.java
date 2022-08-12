@@ -1,8 +1,6 @@
 package com.woowacourse.levellog.presentation;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -33,9 +31,6 @@ class MyInfoControllerTest extends ControllerTest {
         @DisplayName("닉네임에 50자를 초과한 문자열이 들어올 경우 예외를 던진다.")
         void nicknameInvalidLength_Exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-
             willThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다."))
                     .given(memberService)
                     .updateNickname(any(), any());
@@ -65,9 +60,6 @@ class MyInfoControllerTest extends ControllerTest {
         @DisplayName("닉네임에 null 또는 빈 값이 들어온 경우 예외를 던진다.")
         void nicknameNullAndEmpty_Exception(final String invalidNickname) throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-
             final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto(invalidNickname);
             final String requestContent = objectMapper.writeValueAsString(nicknameUpdateDto);
 

@@ -48,7 +48,10 @@ public class InterviewQuestionService {
     }
 
     public InterviewQuestionResponses findAllByLevellog(final Long levellogId) {
-        return null;
+        final Levellog levellog = getLevellog(levellogId);
+        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellog(levellog);
+
+        return InterviewQuestionResponses.from(interviewQuestions);
     }
 
     public InterviewQuestionsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {

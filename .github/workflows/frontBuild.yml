@@ -8,14 +8,12 @@ on:
   pull_request: # 모든 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
       - '*'
-    types: [ labeled ]
 
 # 참고사항
 # push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.
 
 jobs:
   build:
-    if: ${{ github.event.label.name == '🧑🏻‍💻 프론트엔드' }}
     runs-on: ubuntu-22.04 # 실행 환경 지정
 
     steps:
@@ -35,5 +33,4 @@ jobs:
 
       - name: Prod Build # React Prod Build
         working-directory: ./frontend
-        run: yarn build-prod
-        
+        run: yarn build-prod        

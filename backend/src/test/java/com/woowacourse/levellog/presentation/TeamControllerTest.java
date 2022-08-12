@@ -701,6 +701,37 @@ class TeamControllerTest extends ControllerTest {
     }
 
     @Nested
+    @DisplayName("findStatus 메서드는")
+    class FindStatus {
+
+        @Test
+        @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
+        void findStatus_teamNotFound_Exception() throws Exception {
+            // given
+            final String message = "팀이 존재하지 않습니다.";
+            final long teamId = 10000000L;
+            willThrow(new TeamNotFoundException(message + " 입력한 팀 id : [10000000]", message))
+                    .given(teamService)
+                    .findStatus(teamId);
+
+            // when
+            final ResultActions perform = mockMvc.perform(get("/api/teams/" + teamId + "/status")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .accept(MediaType.ALL))
+                    .andDo(print());
+
+            // then
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document("team/find-status/exception/team-not-found"));
+        }
+    }
+
+    @Nested
     @DisplayName("findMyRole 메서드는")
     class FindMyRole {
 

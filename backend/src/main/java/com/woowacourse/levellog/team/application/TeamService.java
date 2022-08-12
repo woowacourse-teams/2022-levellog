@@ -20,6 +20,7 @@ import com.woowacourse.levellog.team.dto.ParticipantDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
@@ -85,6 +86,10 @@ public class TeamService {
         final List<Team> teams = getTeamsByMemberId(memberId);
 
         return new TeamsDto(getTeamResponses(teams, memberId));
+    }
+
+    public TeamStatusDto findStatus(final Long teamId) {
+        return null;
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {

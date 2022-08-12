@@ -8,3 +8,9 @@ export interface RoleType {
   interviewee: boolean;
   interviewer: boolean;
 }
+
+export interface RoleCustomHookType {
+  teamId: string;
+  levellogId: string;
+  participantId: string;
+}

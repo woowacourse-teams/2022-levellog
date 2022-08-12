@@ -1,7 +1,8 @@
 import Login from 'pages/Login';
 import FeedbackAdd from 'pages/feedback/FeedbackAdd';
 import FeedbackEdit from 'pages/feedback/FeedbackEdit';
-import FeedbackList from 'pages/feedback/FeedbackList';
+import Feedbacks from 'pages/feedback/Feedbacks';
+import InterviewQuestions from 'pages/interviewQuestion/InterviewQuestions';
 import LevellogAdd from 'pages/levellogs/LevellogAdd';
 import LevellogEdit from 'pages/levellogs/LevellogEdit';
 import PreQuestionAdd from 'pages/preQuestion/PreQuestionAdd';
@@ -26,7 +27,7 @@ export const routes = [
         path: ROUTES_PATH.FEEDBACK_ROUTE,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
-            <FeedbackList />
+            <Feedbacks />
           </Auth>
         ),
       },
@@ -99,6 +100,10 @@ export const routes = [
             </TeamStatus>
           </Auth>
         ),
+      },
+      {
+        path: ROUTES_PATH.INTERVIEW_QUESTION,
+        element: <InterviewQuestions />,
       },
     ],
   },

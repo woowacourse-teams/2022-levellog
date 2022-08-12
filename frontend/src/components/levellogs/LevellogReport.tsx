@@ -6,7 +6,6 @@ import UiViewer from 'components/@commons/UiViewer';
 const LevellogReport = ({ levellog }: LevellogReportProps) => {
   return (
     <S.Container>
-      <FeedbackTitle>레벨로그</FeedbackTitle>
       <S.Content>
         <UiViewer content={levellog} />
       </S.Content>
@@ -20,8 +19,7 @@ interface LevellogReportProps {
 
 const S = {
   Container: styled.div`
-    overflow: auto;
-    width: 48rem;
+    width: 100%;
     @media (max-width: 520px) {
       max-width: 22.875rem;
     }

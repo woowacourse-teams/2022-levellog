@@ -37,7 +37,7 @@ const Interviewer = ({
   };
 
   const handleClickPreQuestionButton = () => {
-    navigate(`/pre-questions/teams/${teamId}/levellog/${participant.levellogId}`);
+    navigate(`/pre-questions/teams/${teamId}/levellogs/${participant.levellogId}`);
   };
 
   const handleClickFeedbackButton = () => {
@@ -61,6 +61,11 @@ const Interviewer = ({
               <S.InterviewerButton onClick={handleClickOpenLevellogModal}>
                 레벨로그 보기
               </S.InterviewerButton>
+              <Link to={`/interview-questions/levellogs/${participant.levellogId}`}>
+                <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
+                  인터뷰 질문 보기
+                </S.InterviewerButton>
+              </Link>
               <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
                 <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
                   피드백

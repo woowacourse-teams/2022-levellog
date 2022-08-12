@@ -7,7 +7,7 @@ import UiEditor from 'components/@commons/UiEditor';
 const FeedbackFormat = ({ feedbackRef }: FeedbackFormProps) => {
   return (
     <S.Container>
-      <FeedbackTitle>Feedback</FeedbackTitle>
+      <FeedbackTitle>피드백</FeedbackTitle>
       <S.Content>
         <p>학습 측면에서 좋은 점과 부족한 점은?</p>
         <UiEditor
@@ -45,7 +45,7 @@ interface FeedbackFormProps {
 const S = {
   Container: styled.div`
     overflow: auto;
-    width: 48rem;
+    width: 100%;
     @media (max-width: 520px) {
       max-width: 22.875rem;
     }

@@ -15,6 +15,7 @@ import {
   requestEditTeam,
   requestCloseTeamInterview,
 } from 'apis/teams';
+import Member from 'components/teams/Member';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 import { MembersCustomHookType, MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
@@ -33,6 +34,7 @@ const useTeam = () => {
   const { isThrottle } = useUtil();
   const teamLocationState: InterviewTeamType | undefined = location.state;
   const accessToken = localStorage.getItem('accessToken');
+  // participants는 인터뷰 생성 폼, 인터뷰 수정 폼에서만 사용해야함!
   const [participants, setParticipants] = useState<MemberType[]>([
     { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
   ]);
@@ -55,8 +57,8 @@ const useTeam = () => {
     try {
       if (typeof teamId === 'string') {
         const res = await requestGetTeam({ teamId, accessToken });
-        await teamInfoDispatch(res.data);
-        await setParticipants((prev) =>
+        teamInfoDispatch(res.data);
+        setParticipants(
           res.data.participants.map((participant) => {
             return {
               id: participant.memberId,
@@ -192,17 +194,15 @@ const useTeam = () => {
     }
   };
 
-  const updateParticipants = ({ id, nickname, profileUrl }: MemberType) => {
-    const inputtedParticipant = { id, nickname, profileUrl };
-
-    if (participants.every((participant) => inputtedParticipant.id !== participant.id)) {
-      setParticipants((prev) => prev.concat(inputtedParticipant));
-
-      return;
+  const addToParticipants = ({ id, nickname, profileUrl }: MemberType) => {
+    // 비동기로 불러오는 동안 두 번 클릭하면 두 번 들어가는 버그 때문에 일단 분기로 체크해야함
+    if (participants.every((participant) => id !== participant.id)) {
+      setParticipants((prev) => prev.concat({ id, nickname, profileUrl }));
     }
-    setParticipants(
-      participants.filter((participant) => inputtedParticipant.id !== participant.id),
-    );
+  };
+
+  const removeToParticipants = ({ id }: Pick<MemberType, 'id'>) => {
+    setParticipants(participants.filter((participant) => id !== participant.id));
   };
 
   useEffect(() => {
@@ -222,7 +222,8 @@ const useTeam = () => {
     teamInfoRef,
     getTeamOnRef,
     updateMembers,
-    updateParticipants,
+    addToParticipants,
+    removeToParticipants,
     onSubmitTeamAddForm,
     handleSubmitTeamEditForm,
     onClickDeleteTeamButton,
@@ -231,3 +232,5 @@ const useTeam = () => {
 };
 
 export default useTeam;
+
+// request나, 반환이 없는 await 제거하고 테스트

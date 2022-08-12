@@ -16,7 +16,8 @@ const InterviewTeamEdit = () => {
     setNicknameValue,
     participants,
     updateMembers,
-    updateParticipants,
+    addToParticipants,
+    removeToParticipants,
   } = useTeam();
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +41,8 @@ const InterviewTeamEdit = () => {
         nicknameValue={nicknameValue}
         setNicknameValue={setNicknameValue}
         handleChangeInput={handleChangeInput}
-        updateParticipants={updateParticipants}
+        addToParticipants={addToParticipants}
+        removeToParticipants={removeToParticipants}
       />
     </form>
   );

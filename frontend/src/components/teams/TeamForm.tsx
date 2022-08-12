@@ -14,7 +14,8 @@ const TeamForm = ({
   nicknameValue,
   setNicknameValue,
   handleChangeInput,
-  updateParticipants,
+  addToParticipants,
+  removeToParticipants,
   getTeamOnRef,
 }: TeamFormProps) => {
   useEffect(() => {
@@ -64,7 +65,7 @@ const TeamForm = ({
             <Participant
               key={participant.id}
               participant={participant}
-              updateParticipants={updateParticipants}
+              removeToParticipants={removeToParticipants}
             />
           ))}
         </S.ParticipantsBox>
@@ -75,7 +76,7 @@ const TeamForm = ({
             key={member.id}
             member={member}
             setNicknameValue={setNicknameValue}
-            updateParticipants={updateParticipants}
+            addToParticipants={addToParticipants}
           />
         ))}
       </S.MembersBox>
@@ -90,7 +91,8 @@ interface TeamFormProps {
   members: Array<MemberType>;
   setNicknameValue: React.Dispatch<React.SetStateAction<string>>;
   handleChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  updateParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  addToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  removeToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
   getTeamOnRef?: () => Promise<void>;
 }
 

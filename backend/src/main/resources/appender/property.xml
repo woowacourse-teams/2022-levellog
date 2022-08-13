@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+    <property name="INFO_PATTERN" value="%blue([%-5level])[%d{MM-dd HH:mm:ss}] - %msg %n"/>
+    <property name="WARN_PATTERN" value="%red([%-5level])[%d{MM-dd HH:mm:ss}] - %msg %n"/>
+    <property name="ERROR_PATTERN" value="%boldRed([%-5level])[%d{MM-dd HH:mm:ss}] - %msg %n"/>
+
+    <property name="CONSOLE_PATTERN" value="%highlight([%-5level])[%d{HH:mm:ss}]%highlight([%logger{20}]) - %msg %n"/>
+    <property name="QUERY_PATTERN" value="%yellow([%d{HH:mm:ss}]) %msg %n"/>
+    <property name="PARAMETER_PATTERN" value="%yellow(#) %msg %n"/>
+
+    <property name="LOGS_PATH" value="./logs"/>
+    <property name="ARCHIVE_PATH" value="./was-logs"/>
+
+    <timestamp key="DATE_FORMAT" datePattern="yyyy-MM-dd"/>
+</included>

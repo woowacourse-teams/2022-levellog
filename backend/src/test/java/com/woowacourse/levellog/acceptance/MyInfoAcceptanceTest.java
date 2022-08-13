@@ -1,13 +1,10 @@
 package com.woowacourse.levellog.acceptance;
 
-import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
-import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import io.restassured.RestAssured;
@@ -109,14 +106,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
 
         timeStandard.setInProgress();
 
-        final FeedbackContentDto feedbackContentDto1 = new FeedbackContentDto("로마 study 리뷰", "로마 speak 리뷰",
-                "로마 etc 리뷰");
-        final FeedbackContentDto feedbackContentDto2 = new FeedbackContentDto("페퍼 study 리뷰", "페퍼 speak 리뷰",
-                "페퍼 etc 리뷰");
-        final FeedbackWriteDto request1 = new FeedbackWriteDto(feedbackContentDto1);
-        final FeedbackWriteDto request2 = new FeedbackWriteDto(feedbackContentDto2);
-        post("/api/levellogs/" + levellog1Id + "/feedbacks", romaToken, request1); // 로마 -> 릭 리뷰
-        post("/api/levellogs/" + levellog2Id + "/feedbacks", pepperToken, request2); // 페퍼 -> 릭 리뷰
+        requestCreateFeedback("로마 피드백", levellog1Id, romaToken);
+        requestCreateFeedback("페퍼 피드백", levellog2Id, pepperToken);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -129,9 +120,9 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("feedbacks.from.nickname", containsInAnyOrder("페퍼", "로마"),
-                        "feedbacks.feedback.study", containsInAnyOrder("페퍼 study 리뷰", "로마 study 리뷰"),
-                        "feedbacks.feedback.speak", containsInAnyOrder("페퍼 speak 리뷰", "로마 speak 리뷰"),
-                        "feedbacks.feedback.etc", containsInAnyOrder("페퍼 etc 리뷰", "로마 etc 리뷰"));
+                        "feedbacks.feedback.study", containsInAnyOrder("study 페퍼 피드백", "study 로마 피드백"),
+                        "feedbacks.feedback.speak", containsInAnyOrder("speak 페퍼 피드백", "speak 로마 피드백"),
+                        "feedbacks.feedback.etc", containsInAnyOrder("etc 페퍼 피드백", "etc 로마 피드백"));
     }
 
     /*

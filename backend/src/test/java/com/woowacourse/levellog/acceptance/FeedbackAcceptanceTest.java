@@ -11,6 +11,7 @@ import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +37,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long roma_id = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(roma_id))
                 .getTeamId();
 
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그");
@@ -83,7 +84,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long roma_id = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(roma_id))
                 .getTeamId();
 
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그");
@@ -136,7 +137,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long roma_id = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id).getTeamId();
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(roma_id)).getTeamId();
 
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그");
         final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,

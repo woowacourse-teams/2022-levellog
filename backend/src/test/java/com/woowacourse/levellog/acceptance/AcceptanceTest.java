@@ -22,6 +22,7 @@ import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -101,21 +102,10 @@ abstract class AcceptanceTest {
                 ).build();
     }
 
-    @Deprecated
-    protected RestAssuredResponse requestCreateTeam(final String title, final String token,
-                                                    final Long... participantIds) {
-        final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(List.of(participantIds));
-        final TeamWriteDto request = new TeamWriteDto(title, title + "place", 1, TEAM_START_TIME,
-                participantIdsDto);
-
-        return post("/api/teams", token, request);
-    }
-
-    @Deprecated
     protected RestAssuredResponse login(final String nickname) {
         try {
-            final GithubProfileDto response = new GithubProfileDto(String.valueOf(
-                    ((int) System.nanoTime())), nickname, nickname + ".com");
+            final GithubProfileDto response = new GithubProfileDto(
+                    String.valueOf(((int) System.nanoTime())), nickname, nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);
 
             return post("/api/auth/login", new GithubCodeDto(code));
@@ -124,5 +114,20 @@ abstract class AcceptanceTest {
         }
 
         return null;
+    }
+
+    protected RestAssuredResponse requestCreateTeam(final String title, final String token,
+                                                    final int interviewerNumber, final List<Long> participantIds) {
+        return requestCreateTeam(title, token, interviewerNumber, participantIds, TEAM_START_TIME);
+    }
+
+    protected RestAssuredResponse requestCreateTeam(final String title, final String token,
+                                                    final int interviewerNumber, final List<Long> participantIds,
+                                                    final LocalDateTime startTime) {
+        final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
+        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, startTime,
+                participantIdsDto);
+
+        return post("/api/teams", token, request);
     }
 }

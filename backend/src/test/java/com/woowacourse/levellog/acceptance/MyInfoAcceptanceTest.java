@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
@@ -12,8 +11,6 @@ import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
-import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.util.List;
@@ -107,8 +104,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String pepperToken = pepperLoginResponse.getToken();
 
         // 팀 생성
-        final String team1Id = requestCreateTeam("릭,로마", rickToken, roma_id).getTeamId();
-        final String team2Id = requestCreateTeam("릭,로마,페퍼", romaToken, rick_id, pepper_id).getTeamId();
+        final String team1Id = requestCreateTeam("릭,로마", rickToken, 1, List.of(roma_id)).getTeamId();
+        final String team2Id = requestCreateTeam("릭,로마,페퍼", romaToken, 1, List.of(rick_id, pepper_id)).getTeamId();
 
         // 레벨로그 생성
         final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그1,2 내용");
@@ -166,13 +163,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final String hostToken = hostLoginResponse.getToken();
 
         // 팀 생성
-        final TeamWriteDto teamDto1 = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(romaId)));
-        final TeamWriteDto teamDto2 = new TeamWriteDto("잠실 브리조", "톱오브스윙방", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(romaId)));
-
-        final String teamId1 = post("/api/teams", hostToken, teamDto1).getTeamId();
-        final String teamId2 = post("/api/teams", hostToken, teamDto2).getTeamId();
+        final String teamId1 = requestCreateTeam("잠실 제이슨조", hostToken, 1, List.of(romaId)).getTeamId();
+        final String teamId2 = requestCreateTeam("잠실 브리조", hostToken, 1, List.of(romaId)).getTeamId();
 
         // 레벨로그 생성
         final LevellogWriteDto levellogRequest1 = LevellogWriteDto.from("레벨로그1 내용");
@@ -216,13 +208,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final Long alienId = login("알린").getMemberId();
 
         // 팀 생성
-        final TeamWriteDto teamDto1 = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(romaId, pepperId)));
-        final TeamWriteDto teamDto2 = new TeamWriteDto("잠실 브리조", "톱오브스윙방", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(romaId, alienId)));
-
-        post("/api/teams", hostToken, teamDto1);
-        post("/api/teams", hostToken, teamDto2);
+        requestCreateTeam("잠실 제이슨조", hostToken, 1, List.of(romaId, pepperId));
+        requestCreateTeam("잠실 브리조", hostToken, 1, List.of(romaId, alienId));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

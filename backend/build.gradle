@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.woowacourse'
@@ -56,6 +57,8 @@ ext {
 test {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
+
+	finalizedBy 'jacocoTestReport'
 }
 
 asciidoctor {
@@ -75,5 +78,50 @@ bootJar {
 	dependsOn createDocument
 	from("${asciidoctor.outputDir}") {
 		into 'static/docs'
+	}
+}
+
+jacoco {
+	toolVersion('0.8.7')
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+		csv.enabled true
+		xml.enabled false
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(
+				files(classDirectories.files.collect {
+					fileTree(dir: it, excludes: ['**/support/**', '**/dto/**', '**/*Application*', '**/*BaseEntity*', '**/*Github*'])
+				})
+		)
+	}
+
+	finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = true
+			element = 'CLASS'
+
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.80
+			}
+
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.80
+			}
+
+			excludes = ['*support*', '*dto*', '*Application*', '*BaseEntity*', '*Github*']
+		}
 	}
 }

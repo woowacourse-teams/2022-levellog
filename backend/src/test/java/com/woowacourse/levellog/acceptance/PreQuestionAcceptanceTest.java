@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
-import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -48,7 +47,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("pre-question/create"))
                 .when()
-                .post("/api/levellogs/" + levellogId + "/pre-questions")
+                .post("/api/levellogs/{levellogId}/pre-questions", levellogId)
                 .then().log().all();
 
         // then
@@ -76,26 +75,23 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
         final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
-        final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
-        final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";
-        final String preQuestionId = post(baseUrl, eveToken, saveRequestDto)
-                .getPreQuestionId();
-
-        final PreQuestionDto request = PreQuestionDto.from("이브가 수정한 사전 질문");
+        final String preQuestionId = requestCreatePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken).getPreQuestionId();
 
         // when
+        final PreQuestionDto request = PreQuestionDto.from("이브가 수정한 사전 질문");
+
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + eveToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("pre-question/update"))
                 .when()
-                .put(baseUrl + preQuestionId)
+                .put("/api/levellogs/{levellogId}/pre-questions/{preQuestionId}", levellogId, preQuestionId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        get(baseUrl + "my", eveToken).getResponse()
+        requestFindMyPreQuestions(levellogId, eveToken)
                 .body("preQuestion", equalTo("이브가 수정한 사전 질문"));
     }
 
@@ -119,9 +115,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
         final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
-        final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
-        final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";
-        post(baseUrl, eveToken, saveRequestDto);
+        requestCreatePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -129,7 +123,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("pre-question/find-my"))
                 .when()
-                .get(baseUrl + "my")
+                .get("/api/levellogs/{levellogId}/pre-questions/my", levellogId)
                 .then().log().all();
 
         // then
@@ -157,10 +151,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
         final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
-        final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
-        final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";
-        final String preQuestionId = post(baseUrl, eveToken, saveRequestDto)
-                .getPreQuestionId();
+        final String preQuestionId = requestCreatePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken).getPreQuestionId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -168,12 +159,16 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("pre-question/delete"))
                 .when()
-                .delete(baseUrl + preQuestionId)
+                .delete("/api/levellogs/{levellogId}/pre-questions/{preQuestionId}", levellogId, preQuestionId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        get(baseUrl + "my", eveToken).getResponse()
+        requestFindMyPreQuestions(levellogId, eveToken)
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    private ValidatableResponse requestFindMyPreQuestions(final String levellogId, final String token) {
+        return get("/api/levellogs/" + levellogId + "/pre-questions/" + "my", token).getResponse();
     }
 }

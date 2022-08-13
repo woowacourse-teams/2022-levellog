@@ -19,6 +19,7 @@ import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
@@ -123,9 +124,8 @@ abstract class AcceptanceTest {
         return requestCreateTeam(title, token, interviewerNumber, participantIds, TEAM_START_TIME);
     }
 
-    protected RestAssuredResponse requestCreateTeam(final String title, final String token,
-                                                    final int interviewerNumber, final List<Long> participantIds,
-                                                    final LocalDateTime startTime) {
+    protected RestAssuredResponse requestCreateTeam(final String title, final String token, final int interviewerNumber,
+                                                    final List<Long> participantIds, final LocalDateTime startTime) {
         final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
         final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, startTime,
                 participantIdsDto);
@@ -141,8 +141,16 @@ abstract class AcceptanceTest {
 
     protected RestAssuredResponse requestCreateFeedback(final String content, final String levellogId,
                                                         final String token) {
-        final FeedbackWriteDto request = FeedbackWriteDto.from("study " + content, "speak " + content, "etc " + content);
+        final FeedbackWriteDto request = FeedbackWriteDto.from(
+                "study " + content, "speak " + content, "etc " + content);
 
         return post("/api/levellogs/" + levellogId + "/feedbacks", token, request);
+    }
+
+    protected RestAssuredResponse requestCreatePreQuestion(final String content, final String levellogId,
+                                                           final String token) {
+        final PreQuestionDto request = PreQuestionDto.from(content);
+
+        return post("/api/levellogs/" + levellogId + "/pre-questions/", token, request);
     }
 }

@@ -7,15 +7,14 @@ export const ROUTES_PATH = Object.freeze({
 
   FEEDBACK_ROUTE: '/teams/:teamId/levellogs/:levellogId/feedbacks',
   FEEDBACK_ADD: `/teams/:teamId/levellogs/:levellogId/feedbacks/add`,
-  FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedbacks/:feedbackId/edit`,
-  //FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedbacks/:feedbackId/:writerId/edit`,
+  FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedbacks/:feedbackId/author/:authorId/edit`,
 
   LOGIN: '/login',
 
   LEVELLOG_ADD: '/levellog/add',
   LEVELLOG_ADD_ROUTE: '/levellog/add/:teamId',
   LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId',
-  // LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId/:writerId/edit',
+  // LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId/author/:authorId/edit',
 
   INTERVIEW_TEAMS: '/interview/teams',
   INTERVIEW_TEAMS_DETAIL: `/interview/teams/:teamId`,
@@ -24,6 +23,7 @@ export const ROUTES_PATH = Object.freeze({
 
   PREQUESTION_ADD: '/pre-questions/teams/:teamId/levellogs/:levellogId',
   PREQUESTION_EDIT: '/pre-questions/teams/:teamId/levellog/:levellogId/pre-question/:preQuestionId',
+  // PREQUESTION_EDIT: 'teams/:teamId/levellog/:levellogId/pre-question/:preQuestionId/author/:authorId/edit',
 
   INTERVIEW_QUESTION: '/interview-questions/levellogs/:levellogId',
 
@@ -43,6 +43,7 @@ export const MESSAGE = Object.freeze({
   NEED_HOST: '호스트만 접근할 수 있습니다!',
   NEED_ME: '본인이 작성하지 않은 글을 수정할 수 없습니다',
   NEED_NOT_ME: '본인이 본인에 대한 질문,피드백을 작성,수정할 수 없습니다.',
+  NEED_AUTHOR: '작성자만 글을 수정할 수 있습니다.',
 
   TEAM_CREATE: '인터뷰팀 생성을 완료했습니다!',
   TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
@@ -67,4 +68,5 @@ export const REQUIRE_AUTH = Object.freeze({
   HOST: 'host',
   ME: 'me',
   NOT_ME: 'notMe',
+  AUTHOR: 'author',
 });

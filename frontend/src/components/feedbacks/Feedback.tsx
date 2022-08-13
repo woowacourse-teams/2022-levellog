@@ -15,7 +15,9 @@ const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }:
       <S.Header>
         <h3>{feedbackInfo.from.nickname}의 피드백</h3>
         {teamStatus === TEAM_STATUS.IN_PROGRESS && String(feedbackInfo.from.id) === loginUserId && (
-          <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackInfo.id}/edit`}>
+          <Link
+            to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackInfo.id}/writer/${feedbackInfo.from.id}/edit`}
+          >
             <Button>수정하기</Button>
           </Link>
         )}

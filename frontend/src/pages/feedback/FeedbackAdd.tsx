@@ -32,7 +32,6 @@ const FeedbackAdd = () => {
     handleSubmitInterviewQuestion,
   } = useInterviewQuestion();
   const { teamId, levellogId } = useParams();
-
   const navigate = useNavigate();
 
   const handleClickFeedbackAddButton = () => {

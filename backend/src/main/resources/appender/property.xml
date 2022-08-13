@@ -8,7 +8,7 @@
     <property name="ERROR_PATTERN"
               value="%boldRed([%-5level])[%d{MM-dd HH:mm:ss}]%highlight([%logger{20}:%line]) %boldRed(-) %msg %n"/>
 
-    <property name="CONSOLE_PATTERN" value="%highlight([%-5level])[%d{HH:mm:ss}]%highlight([%logger{20}]) - %msg %n"/>
+    <property name="CONSOLE_PATTERN" value="%highlight([%-5level])[%d{HH:mm:ss}]%highlight([%replace(%logger{20}){'\\w\\.', ''}]) - %msg %n"/>
     <property name="QUERY_PATTERN" value="%yellow([%d{HH:mm:ss}]) %msg %n"/>
     <property name="PARAMETER_PATTERN" value="%yellow(#) %msg %n"/>
 

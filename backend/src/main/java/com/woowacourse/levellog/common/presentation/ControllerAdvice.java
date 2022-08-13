@@ -17,7 +17,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(LevellogException.class)
     public ResponseEntity<ExceptionResponse> handleLevellogException(final LevellogException e) {
-        log.info("[{}]{} : {}", getCorrelationId(), e.getClass().getSimpleName(), e.getMessage());
+        log.info("[{}] {} : {}", getCorrelationId(), e.getClass().getSimpleName(), e.getMessage());
         return toResponseEntity(e.getClientMessage(), e.getHttpStatus());
     }
 

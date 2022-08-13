@@ -26,7 +26,6 @@ const useTeam = () => {
   const [nicknameValue, setNicknameValue] = useState('');
   const team = useContext(TeamContext);
   const teamInfoDispatch = useContext(TeamDispatchContext);
-
   const location = useLocation() as { state: InterviewTeamType };
   const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const { teamId } = useParams();
@@ -34,7 +33,6 @@ const useTeam = () => {
   const { isDebounce } = useUtil();
   const teamLocationState: InterviewTeamType | undefined = location.state;
   const accessToken = localStorage.getItem('accessToken');
-  // participants는 인터뷰 생성 폼, 인터뷰 수정 폼에서만 사용해야함!
   const [participants, setParticipants] = useState<MemberType[]>([
     { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
   ]);
@@ -82,6 +80,7 @@ const useTeam = () => {
     try {
       if (typeof teamId !== 'string') throw Error;
       await requestEditTeam({ teamId, teamInfo, accessToken });
+      navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
@@ -141,7 +140,6 @@ const useTeam = () => {
       },
     };
     editTeam({ teamInfo });
-    navigate(ROUTES_PATH.HOME);
   };
 
   const onClickDeleteTeamButton = ({ teamId }: Pick<TeamApiType, 'teamId'>) => {

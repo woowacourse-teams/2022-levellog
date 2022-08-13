@@ -28,7 +28,7 @@ public class LogInterceptor implements HandlerInterceptor {
             queryString = "?" + queryString;
         }
 
-        log.info("[{}] {} {}{}", correlationId, httpMethod, uri, queryString);
+        log.info("{} {}{}", httpMethod, uri, queryString);
 
         return true;
     }

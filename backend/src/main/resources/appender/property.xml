@@ -2,14 +2,14 @@
 
 <included>
     <property name="INFO_PATTERN"
-              value="%blue([%-5level])[%d{MM-dd HH:mm:ss}]%blue([%replace(%logger{20}){'\\w\\.', ''}]) %blue(-) %msg %n"/>
+              value="[%blue(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%blue(%replace(%logger{20}){'\\w\\.', ''})] %msg %n"/>
     <property name="WARN_PATTERN"
-              value="%red([%level])[%d{MM-dd HH:mm:ss}]%red([%replace(%logger{20}){'\\w\\.', ''}:%line]) %red(-) %msg %n"/>
+              value="[%red(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%red(%replace(%logger{20}){'\\w\\.', ''}:%line)] %msg %n"/>
     <property name="ERROR_PATTERN"
-              value="%boldRed([%level])[%d{MM-dd HH:mm:ss}]%boldRed([%replace(%logger{20}){'\\w\\.', ''}:%line]) %boldRed(-) %msg %n"/>
+              value="[%boldRed(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%boldRed(%replace(%logger{20}){'\\w\\.', ''}:%line)] %msg %n"/>
 
     <property name="CONSOLE_PATTERN"
-              value="%highlight([%-5level])[%d{HH:mm:ss}]%highlight([%replace(%logger{20}){'\\w\\.', ''}]) - %msg %n"/>
+              value="[%highlight(%-5level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%highlight(%replace(%logger{20}){'\\w\\.', ''})] %msg %n"/>
     <property name="QUERY_PATTERN"
               value="%yellow([%d{HH:mm:ss}]) %msg %n"/>
     <property name="PARAMETER_PATTERN"

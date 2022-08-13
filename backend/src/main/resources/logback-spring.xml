@@ -36,6 +36,7 @@
             <appender-ref ref="warn-appender"/>
             <appender-ref ref="error-appender"/>
         </root>
+
     </springProfile>
 
 </configuration>

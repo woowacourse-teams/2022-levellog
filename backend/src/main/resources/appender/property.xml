@@ -9,7 +9,7 @@
               value="[%boldRed(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%boldRed(%replace(%logger{20}){'\\w\\.', ''}:%line)] %msg %n"/>
 
     <property name="CONSOLE_PATTERN"
-              value="[%highlight(%-5level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%highlight(%replace(%logger{20}){'\\w\\.', ''})] %msg %n"/>
+              value="[%highlight(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%highlight(%replace(%logger{20}){'\\w\\.', ''})] %msg %n"/>
     <property name="QUERY_PATTERN"
               value="%yellow([%d{HH:mm:ss}]) %msg %n"/>
     <property name="PARAMETER_PATTERN"

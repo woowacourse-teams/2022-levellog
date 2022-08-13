@@ -18,6 +18,7 @@ import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
@@ -152,5 +153,11 @@ abstract class AcceptanceTest {
         final PreQuestionDto request = PreQuestionDto.from(content);
 
         return post("/api/levellogs/" + levellogId + "/pre-questions/", token, request);
+    }
+
+    protected RestAssuredResponse requestCreateInterviewQuestion(final String content, final String levellogId,
+                                                                 final String token) {
+        return post("/api/levellogs/" + levellogId + "/interview-questions", token,
+                InterviewQuestionDto.from(content));
     }
 }

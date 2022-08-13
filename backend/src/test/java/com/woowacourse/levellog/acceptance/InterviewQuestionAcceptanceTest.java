@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
-import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
@@ -39,11 +38,11 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(romaId)).getTeamId();
         final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
-        final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 사용하는 이유?");
-
         timeStandard.setInProgress();
 
         // when
+        final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 사용하는 이유?");
+
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
                 .body(request)
@@ -79,8 +78,8 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         timeStandard.setInProgress(); // 인터뷰 시작
 
-        requestSaveInterviewQuestion(levellogId, romaToken, "Spring을 사용하는 이유?");
-        requestSaveInterviewQuestion(levellogId, romaToken, "스프링 빈이란?");
+        requestCreateInterviewQuestion("Spring을 사용하는 이유?", levellogId, romaToken);
+        requestCreateInterviewQuestion("스프링 빈이란?", levellogId, romaToken);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -118,11 +117,12 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         timeStandard.setInProgress(); // 인터뷰 시작
 
-        final String interviewQuestionId = requestSaveInterviewQuestion(levellogId, romaToken, "Spring을 사용하는 이유?")
+        final String interviewQuestionId = requestCreateInterviewQuestion("Spring을 사용하는 이유?", levellogId, romaToken)
                 .getInterviewQuestionId();
-        final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
 
         // when
+        final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
                 .body(request)
@@ -161,7 +161,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         timeStandard.setInProgress(); // 인터뷰 시작
 
-        final String interviewQuestionId = requestSaveInterviewQuestion(levellogId, romaToken, "Spring을 사용하는 이유?")
+        final String interviewQuestionId = requestCreateInterviewQuestion("Spring을 사용하는 이유?", levellogId, romaToken)
                 .getInterviewQuestionId();
 
         // when
@@ -180,15 +180,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
                 .body("interviewQuestions.id", not(contains(interviewQuestionId)));
     }
 
-    private RestAssuredResponse requestSaveInterviewQuestion(final String levellogId,
-                                                             final String fromMemberToken,
-                                                             final String interviewQuestion) {
-        return post("/api/levellogs/" + levellogId + "/interview-questions", fromMemberToken,
-                InterviewQuestionDto.from(interviewQuestion));
-    }
-
-    private ValidatableResponse requestFindAllInterviewQuestion(final String levellogId,
-                                                                final String fromMemberToken) {
+    private ValidatableResponse requestFindAllInterviewQuestion(final String levellogId, final String fromMemberToken) {
         return get("/api/levellogs/" + levellogId + "/interview-questions", fromMemberToken)
                 .getResponse();
     }

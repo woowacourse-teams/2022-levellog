@@ -38,7 +38,7 @@ const LevellogViewModal = ({
           </S.Levellog>
           <S.Footer>
             {team.status === TEAM_STATUS.READY && (
-              <Link to={`/levellog/edit/teams/${teamId}/levellogs/${levellogId}`}>
+              <Link to={`/teams/${teamId}/levellogs/${levellogId}`}>
                 <Button>수정하기</Button>
               </Link>
             )}

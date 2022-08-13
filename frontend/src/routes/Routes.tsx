@@ -19,6 +19,10 @@ import Auth from 'routes/Auth';
 import AuthLogin from 'routes/AuthLogin';
 import TeamStatus from 'routes/TeamStatus';
 
+// 인증&인가가 잘못되었음
+// ME, NOT_ME -> WRITER로 바뀌어야하며, ~edit페이지 URI에 writerId가 추가되어야함
+// 백엔드에서 단일조회에 관해 author에 대한 정보를 줘야함
+
 export const routes = [
   {
     element: <AuthLogin needLogin={true} />,

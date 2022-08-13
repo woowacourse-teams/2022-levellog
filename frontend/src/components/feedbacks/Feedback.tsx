@@ -9,12 +9,12 @@ import FlexBox from 'components/@commons/FlexBox';
 import UiViewer from 'components/@commons/UiViewer';
 import { FeedbackType } from 'types/feedback';
 
-const Feedback = ({ feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
+const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
   return (
     <S.Container>
       <S.Header>
         <h3>{feedbackInfo.from.nickname}의 피드백</h3>
-        {teamStatus === TEAM_STATUS.IN_PROGRESS && (
+        {teamStatus === TEAM_STATUS.IN_PROGRESS && String(feedbackInfo.from.id) === loginUserId && (
           <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackInfo.id}/edit`}>
             <Button>수정하기</Button>
           </Link>
@@ -45,6 +45,7 @@ const Feedback = ({ feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProp
 };
 
 interface FeedbackProps {
+  loginUserId: string;
   feedbackInfo: FeedbackType;
   teamId: string;
   levellogId: string;

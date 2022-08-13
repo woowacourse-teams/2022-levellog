@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
@@ -41,10 +40,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         timeStandard.setInProgress();
 
         // when
-        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
-                "아이 컨텍이 좋습니다.",
-                "윙크하지 마세요.");
-        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+        final FeedbackWriteDto request = FeedbackWriteDto.from("Spring에 대한 학습을 충분히 하였습니다.",
+                "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
@@ -126,9 +123,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String feedbackId = requestCreateFeedback("test", levellogId, romaToken).getFeedbackId();
 
         // when
-        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
-                "수정된 Study 피드백", "수정된 Speak 피드백", "수정된 Etc 피드백");
-        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+        final FeedbackWriteDto request = FeedbackWriteDto.from("수정된 Study 피드백", "수정된 Speak 피드백", "수정된 Etc 피드백");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)

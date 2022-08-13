@@ -16,7 +16,6 @@ import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.config.DatabaseCleaner;
 import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
@@ -142,8 +141,7 @@ abstract class AcceptanceTest {
 
     protected RestAssuredResponse requestCreateFeedback(final String content, final String levellogId,
                                                         final String token) {
-        final FeedbackWriteDto request = new FeedbackWriteDto(
-                new FeedbackContentDto("study " + content, "speak " + content, "etc " + content));
+        final FeedbackWriteDto request = FeedbackWriteDto.from("study " + content, "speak " + content, "etc " + content);
 
         return post("/api/levellogs/" + levellogId + "/feedbacks", token, request);
     }

@@ -74,7 +74,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("title must not be blank");
 
             // docs
-            perform.andDo(document("team/create/exception/title/null-and-blank"));
+            perform.andDo(document("team/create/exception/title-blank"));
         }
 
         @Test
@@ -100,7 +100,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("잘못된 팀 이름을 입력했습니다.");
 
             // docs
-            perform.andDo(document("team/create/exception/title/length"));
+            perform.andDo(document("team/create/exception/title-length"));
         }
 
         @ParameterizedTest
@@ -123,7 +123,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("place must not be blank");
 
             // docs
-            perform.andDo(document("team/create/exception/place/null-and-blank"));
+            perform.andDo(document("team/create/exception/place-blank"));
         }
 
         @Test
@@ -149,7 +149,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("잘못된 장소를 입력했습니다.");
 
             // docs
-            perform.andDo(document("team/create/exception/place/length"));
+            perform.andDo(document("team/create/exception/place-length"));
         }
 
         @Test
@@ -169,7 +169,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("startAt must not be null");
 
             // docs
-            perform.andDo(document("team/create/exception/startat/null"));
+            perform.andDo(document("team/create/exception/start-at-null"));
         }
 
         @Test
@@ -194,7 +194,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("잘못된 시작 시간을 입력했습니다.");
 
             // docs
-            perform.andDo(document("team/create/exception/startat/past"));
+            perform.andDo(document("team/create/exception/start-at-past"));
         }
 
         @Test
@@ -219,7 +219,7 @@ class TeamControllerTest extends ControllerTest {
             perform.andExpect(status().isBadRequest());
 
             // docs
-            perform.andDo(document("team/create/exception/participants/empty"));
+            perform.andDo(document("team/create/exception/participants-empty"));
         }
 
         @Test
@@ -237,7 +237,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("participants must not be null");
 
             // docs
-            perform.andDo(document("team/create/exception/participants/null"));
+            perform.andDo(document("team/create/exception/participants-null"));
         }
 
         @Test
@@ -258,7 +258,7 @@ class TeamControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value(startsWith("interviewerNumber")));
 
             // docs
-            perform.andDo(document("team/create/exception/interviewer-number/not-positive"));
+            perform.andDo(document("team/create/exception/interviewer-number-not-positive"));
         }
 
         @Test
@@ -283,7 +283,7 @@ class TeamControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("참가자 수는 인터뷰어 수 보다 많아야 합니다."));
 
             // docs
-            perform.andDo(document("team/create/exception/interviewer-number/more-than-participant"));
+            perform.andDo(document("team/create/exception/interviewer-number-more-than-participant"));
         }
 
         @Test
@@ -313,7 +313,7 @@ class TeamControllerTest extends ControllerTest {
                     jsonPath("message").value("중복되는 참가자가 존재합니다."));
 
             // docs
-            perform.andDo(document("team/create/exception/participants/duplicate"));
+            perform.andDo(document("team/create/exception/participants-duplicate"));
         }
 
         @Test
@@ -343,7 +343,7 @@ class TeamControllerTest extends ControllerTest {
                     jsonPath("message").value("중복되는 참가자가 존재합니다."));
 
             // docs
-            perform.andDo(document("team/create/exception/participants/host"));
+            perform.andDo(document("team/create/exception/participants-have-host"));
         }
     }
 
@@ -372,7 +372,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("팀 이름이 null 또는 공백입니다.");
 
             // docs
-            perform.andDo(document("team/update/exception/title/null-and-blank"));
+            perform.andDo(document("team/update/exception/title-blank"));
         }
 
         @Test
@@ -399,7 +399,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("잘못된 팀 이름을 입력했습니다.");
 
             // docs
-            perform.andDo(document("team/update/exception/title/length"));
+            perform.andDo(document("team/update/exception/title-length"));
         }
 
         @ParameterizedTest
@@ -423,7 +423,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("장소가 null 또는 공백입니다.");
 
             // docs
-            perform.andDo(document("team/update/exception/place/null-and-blank"));
+            perform.andDo(document("team/update/exception/place-blank"));
         }
 
         @Test
@@ -450,7 +450,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("잘못된 장소를 입력했습니다.");
 
             // docs
-            perform.andDo(document("team/update/exception/place/length"));
+            perform.andDo(document("team/update/exception/place-length"));
         }
 
         @Test
@@ -471,7 +471,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("시작 시간이 없습니다.");
 
             // docs
-            perform.andDo(document("team/update/exception/startat/null"));
+            perform.andDo(document("team/update/exception/start-at-null"));
         }
 
         @Test
@@ -497,7 +497,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("잘못된 시작 시간을 입력했습니다.");
 
             // docs
-            perform.andDo(document("team/update/exception/startat/past"));
+            perform.andDo(document("team/update/exception/start-at-past"));
         }
 
         @Test
@@ -522,7 +522,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("팀이 존재하지 않습니다.");
 
             // docs
-            perform.andDo(document("team/update/exception/notfound"));
+            perform.andDo(document("team/update/exception/not-found"));
         }
 
         @Test
@@ -541,7 +541,7 @@ class TeamControllerTest extends ControllerTest {
             perform.andExpect(status().isBadRequest());
 
             // docs
-            perform.andDo(document("team/update/exception/participants/empty"));
+            perform.andDo(document("team/update/exception/participants-empty"));
         }
 
         @Test
@@ -560,7 +560,7 @@ class TeamControllerTest extends ControllerTest {
                     .andReturn().getResponse().getContentAsString().contains("participants must not be null");
 
             // docs
-            perform.andDo(document("team/update/exception/participants/null"));
+            perform.andDo(document("team/update/exception/participants-null"));
         }
 
         @Test
@@ -581,7 +581,7 @@ class TeamControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value(startsWith("interviewerNumber")));
 
             // docs
-            perform.andDo(document("team/update/exception/interviewer-number/not-positive"));
+            perform.andDo(document("team/update/exception/interviewer-number-not-positive"));
         }
 
         @Test
@@ -606,7 +606,7 @@ class TeamControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("참가자 수는 인터뷰어 수 보다 많아야 합니다."));
 
             // docs
-            perform.andDo(document("team/update/exception/interviewer-number/more-than-participant"));
+            perform.andDo(document("team/update/exception/interviewer-number-more-than-participant"));
         }
 
         @Test
@@ -630,7 +630,7 @@ class TeamControllerTest extends ControllerTest {
                     jsonPath("message").value("중복되는 참가자가 존재합니다."));
 
             // docs
-            perform.andDo(document("team/update/exception/participants/duplicate"));
+            perform.andDo(document("team/update/exception/participants-duplicate"));
         }
 
         @Test
@@ -655,7 +655,7 @@ class TeamControllerTest extends ControllerTest {
                     jsonPath("message").value("중복되는 참가자가 존재합니다."));
 
             // docs
-            perform.andDo(document("team/update/exception/participants/host"));
+            perform.andDo(document("team/update/exception/participants-have-host"));
         }
 
         @Test

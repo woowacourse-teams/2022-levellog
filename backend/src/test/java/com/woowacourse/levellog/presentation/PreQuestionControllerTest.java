@@ -50,7 +50,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value("preQuestion must not be blank"));
 
             // docs
-            perform.andDo(document("pre-question/create/exception/null-and-blank"));
+            perform.andDo(document("pre-question/create/exception/blank"));
         }
 
         @Test
@@ -153,7 +153,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value("preQuestion must not be blank"));
 
             // docs
-            perform.andDo(document("pre-question/update/exception/null-and-blank"));
+            perform.andDo(document("pre-question/update/exception/blank"));
         }
 
         @Test

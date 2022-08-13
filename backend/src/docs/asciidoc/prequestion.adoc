@@ -6,6 +6,7 @@
 
 [[home]]
 == home
+
 * link:index.html[목록으로 가기]
 
 [[create]]
@@ -20,9 +21,9 @@ operation::pre-question/create[]
 === 사전 질문 등록 예외
 
 [[create-exception-prequestion-null]]
-==== 등록 시 preQuestion이 null 또는 공백인 경우
+==== 등록 시 preQuestion 이 null 또는 공백인 경우
 
-include::{snippets}/pre-question/create/exception/null-and-blank/http-response.adoc[]
+include::{snippets}/pre-question/create/exception/blank/http-response.adoc[]
 
 [[create-exception-not-participant]]
 ==== 팀의 참가자가 아닌데 사전 질문을 등록하는 경우
@@ -72,12 +73,12 @@ operation::pre-question/update[]
 === 사전 질문 수정 예외
 
 [[update-exception-prequestion-null]]
-==== 수정 시 preQuestion이 null 또는 공백인 경우
+==== 수정 시 preQuestion 이 null 또는 공백인 경우
 
-include::{snippets}/pre-question/update/exception/null-and-blank/http-response.adoc[]
+include::{snippets}/pre-question/update/exception/blank/http-response.adoc[]
 
 [[update-exception-prequestion-wrong-levellog]]
-==== url의 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
+==== 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
 
 include::{snippets}/pre-question/update/exception/wrong-levellog/http-response.adoc[]
 
@@ -103,7 +104,7 @@ operation::pre-question/delete[]
 === 사전 질문 삭제 예외
 
 [[delete-exception-wrong-levellog]]
-==== url의 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
+==== 레벨로그 id와 사전 질문의 레벨로그 id가 일치하지 않는 경우
 
 include::{snippets}/pre-question/delete/exception/wrong-levellog/http-response.adoc[]
 

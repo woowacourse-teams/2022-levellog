@@ -100,7 +100,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("interview-question/findAll"))
+                .filter(document("interview-question/find-all"))
                 .when()
                 .get("/api/levellogs/{levellogId}/interview-questions", pepperLevellogId)
                 .then().log().all();

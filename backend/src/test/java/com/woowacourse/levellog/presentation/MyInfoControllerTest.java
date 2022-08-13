@@ -56,7 +56,7 @@ class MyInfoControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("닉네임은 50자 이하여야합니다."));
 
             // docs
-            perform.andDo(document("myinfo/update/nickname-invalid-length"));
+            perform.andDo(document("my-info/update/nickname-invalid-length"));
         }
 
         @ParameterizedTest
@@ -84,7 +84,7 @@ class MyInfoControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("myinfo/update/nickname-blank"));
+            perform.andDo(document("my-info/update/nickname-blank"));
         }
     }
 }

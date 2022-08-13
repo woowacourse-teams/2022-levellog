@@ -46,7 +46,7 @@ class LevellogControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("팀에 레벨로그를 이미 작성했습니다."));
 
             // docs
-            perform.andDo(document("levellog/save/exception-already-exists"));
+            perform.andDo(document("levellog/save/exception/already-exists"));
         }
 
         @Test
@@ -67,7 +67,7 @@ class LevellogControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("content must not be blank"));
 
             // docs
-            perform.andDo(document("levellog/save/exception-contents"));
+            perform.andDo(document("levellog/save/exception/contents"));
         }
 
         @Test
@@ -92,7 +92,7 @@ class LevellogControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."));
 
             // docs
-            perform.andDo(document("levellog/save/exception-after-start"));
+            perform.andDo(document("levellog/save/exception/after-start"));
         }
 
         private ResultActions requestSaveLevellog(final Long teamId, final Object request) throws Exception {
@@ -123,7 +123,7 @@ class LevellogControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("levellog/find/exception-exist"));
+            perform.andDo(document("levellog/find/exception/exist"));
         }
     }
 
@@ -150,7 +150,7 @@ class LevellogControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("content must not be blank"));
 
             // docs
-            perform.andDo(document("levellog/update/exception-contents"));
+            perform.andDo(document("levellog/update/exception/blank"));
         }
 
         @Test
@@ -176,7 +176,7 @@ class LevellogControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("권한이 없습니다."));
 
             // docs
-            perform.andDo(document("levellog/update/exception-author"));
+            perform.andDo(document("levellog/update/exception/not-author"));
         }
 
         @Test
@@ -203,7 +203,7 @@ class LevellogControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 수정이 가능합니다."));
 
             // docs
-            perform.andDo(document("levellog/update/exception-after-start"));
+            perform.andDo(document("levellog/update/exception/after-start"));
         }
 
         private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId, final Object request)

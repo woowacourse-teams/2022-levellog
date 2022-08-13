@@ -235,7 +235,7 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/update/exception/author"));
+            perform.andDo(document("feedback/update/exception/not-author"));
         }
 
         @Test

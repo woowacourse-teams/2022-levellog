@@ -183,7 +183,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/findAll/exception/levellog-not-found"));
+            perform.andDo(document("interview-question/find-all/exception/levellog-not-found"));
         }
 
         @Test
@@ -205,7 +205,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .andExpect(jsonPath("message").value("멤버가 존재하지 않습니다."));
 
             // docs
-            perform.andDo(document("interview-question/findAll/exception/member-not-found"));
+            perform.andDo(document("interview-question/find-all/exception/member-not-found"));
         }
     }
 

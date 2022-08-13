@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+    <property name="INFO_PATTERN" value="%highlight([%-5level])[%d{MM-dd HH:mm:ss}] - %msg %n"/>
+    <property name="WARN_PATTERN" value="%highlight([%-5level])[%d{MM-dd HH:mm:ss}] - %msg %n"/>
+    <property name="SQL_PATTERN" value="%yellow([%d{HH:mm:ss}]) %msg%n"/>
+</included>

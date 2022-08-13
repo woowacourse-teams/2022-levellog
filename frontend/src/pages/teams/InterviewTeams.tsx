@@ -16,10 +16,8 @@ const InterviewTeams = () => {
   const { teams, getTeams, handleClickInterviewGroup } = useTeams();
 
   useEffect(() => {
-    console.log(getTeams());
+    getTeams();
   }, []);
-
-  console.log(teams);
 
   return (
     <>

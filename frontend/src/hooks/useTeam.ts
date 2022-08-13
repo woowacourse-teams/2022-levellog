@@ -168,11 +168,14 @@ const useTeam = () => {
     if (teamInfoRef.current[0] === null) {
       return;
     }
+
     teamInfoRef.current[0].value = (team as unknown as InterviewTeamType).title;
     teamInfoRef.current[1].value = (team as unknown as InterviewTeamType).place;
     teamInfoRef.current[2].value = (team as unknown as InterviewTeamType).startAt.slice(0, 10);
     teamInfoRef.current[3].value = (team as unknown as InterviewTeamType).startAt.slice(-8);
-    teamInfoRef.current[4].value = (team as unknown as InterviewTeamType).interviewerNumber;
+    teamInfoRef.current[4].value = String(
+      (team as unknown as InterviewTeamType).interviewers.length,
+    );
   };
 
   const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {

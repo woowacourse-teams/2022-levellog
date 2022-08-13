@@ -2,15 +2,18 @@
 
 <included>
     <property name="INFO_PATTERN"
-              value="%blue([%-5level])[%d{MM-dd HH:mm:ss}] %blue(-) %msg %n"/>
+              value="%blue([%-5level])[%d{MM-dd HH:mm:ss}]%blue([%replace(%logger{20}){'\\w\\.', ''}]) %blue(-) %msg %n"/>
     <property name="WARN_PATTERN"
-              value="%red([%-5level])[%d{MM-dd HH:mm:ss}]%highlight([%logger{20}:%line]) %red(-) %msg %n"/>
+              value="%red([%level])[%d{MM-dd HH:mm:ss}]%red([%replace(%logger{20}){'\\w\\.', ''}:%line]) %red(-) %msg %n"/>
     <property name="ERROR_PATTERN"
-              value="%boldRed([%-5level])[%d{MM-dd HH:mm:ss}]%highlight([%logger{20}:%line]) %boldRed(-) %msg %n"/>
+              value="%boldRed([%level])[%d{MM-dd HH:mm:ss}]%boldRed([%replace(%logger{20}){'\\w\\.', ''}:%line]) %boldRed(-) %msg %n"/>
 
-    <property name="CONSOLE_PATTERN" value="%highlight([%-5level])[%d{HH:mm:ss}]%highlight([%replace(%logger{20}){'\\w\\.', ''}]) - %msg %n"/>
-    <property name="QUERY_PATTERN" value="%yellow([%d{HH:mm:ss}]) %msg %n"/>
-    <property name="PARAMETER_PATTERN" value="%yellow(#) %replace(%msg){'binding parameter \\[(\\d*)\\] as \\[\\w*\\] - ', '$1 - '} %n"/>
+    <property name="CONSOLE_PATTERN"
+              value="%highlight([%-5level])[%d{HH:mm:ss}]%highlight([%replace(%logger{20}){'\\w\\.', ''}]) - %msg %n"/>
+    <property name="QUERY_PATTERN"
+              value="%yellow([%d{HH:mm:ss}]) %msg %n"/>
+    <property name="PARAMETER_PATTERN"
+              value="%yellow(#) %replace(%msg){'binding parameter \\[(\\d*)\\] as \\[\\w*\\] - ', '$1 - '} %n"/>
 
     <property name="LOG_PATH" value="./logs"/>
     <property name="ARCHIVE_PATH" value="./was-logs"/>

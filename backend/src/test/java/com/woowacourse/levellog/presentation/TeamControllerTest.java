@@ -4,10 +4,6 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,8 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("TeamController의")
@@ -184,14 +178,9 @@ class TeamControllerTest extends ControllerTest {
             // given
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(Collections.emptyList()));
-            final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/teams")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestPost("/api/teams", request);
 
             // then
             perform.andExpect(status().isBadRequest());
@@ -265,18 +254,13 @@ class TeamControllerTest extends ControllerTest {
             // given
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 2L)));
-            final String requestContent = objectMapper.writeValueAsString(request);
 
             willThrow(new DuplicateParticipantsException("참가자 중복"))
                     .given(teamService)
                     .save(request, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/teams")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestPost("/api/teams", request);
 
             // then
             perform.andExpectAll(
@@ -293,18 +277,13 @@ class TeamControllerTest extends ControllerTest {
             // given
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 1L)));
-            final String requestContent = objectMapper.writeValueAsString(request);
 
             willThrow(new DuplicateParticipantsException("참가자 중복"))
                     .given(teamService)
                     .save(request, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/teams")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestPost("/api/teams", request);
 
             // then
             perform.andExpectAll(
@@ -652,11 +631,7 @@ class TeamControllerTest extends ControllerTest {
                     .findByTeamIdAndMemberId(10000000L, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(get("/api/teams/" + 10000000L)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .accept(MediaType.ALL))
-                    .andDo(print());
+            final ResultActions perform = requestGet("/api/teams/" + 10000000L);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -682,11 +657,7 @@ class TeamControllerTest extends ControllerTest {
                     .willThrow(new UnauthorizedException("권한이 없습니다."));
 
             // when
-            final ResultActions perform = mockMvc.perform(
-                            get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                                    .accept(MediaType.ALL))
-                    .andDo(print());
+            final ResultActions perform = requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
 
             // then
             perform.andExpect(status().isUnauthorized())
@@ -707,11 +678,7 @@ class TeamControllerTest extends ControllerTest {
                     .willThrow(new ParticipantNotFoundException("팀에 참가자가 아닙니다."));
 
             // when
-            final ResultActions perform = mockMvc.perform(
-                            get("/api/teams/{teamId}/members/{memberId}/my-role", teamId, memberId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                                    .accept(MediaType.ALL))
-                    .andDo(print());
+            final ResultActions perform = requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
 
             // then
             perform.andExpect(status().isNotFound())
@@ -736,11 +703,7 @@ class TeamControllerTest extends ControllerTest {
                     .close(teamId, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
-
+            final ResultActions perform = requestPost("/api/teams/" + teamId + "/close");
             // then
             perform.andExpectAll(
                     status().isNotFound(),
@@ -761,10 +724,7 @@ class TeamControllerTest extends ControllerTest {
                     .close(teamId, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestPost("/api/teams/" + teamId + "/close");
 
             // then
             perform.andExpectAll(
@@ -786,10 +746,7 @@ class TeamControllerTest extends ControllerTest {
                     .close(teamId, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestPost("/api/teams/" + teamId + "/close");
 
             // then
             perform.andExpectAll(
@@ -811,10 +768,7 @@ class TeamControllerTest extends ControllerTest {
                     .close(teamId, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/teams/" + teamId + "/close")
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestPost("/api/teams/" + teamId + "/close");
 
             // then
             perform.andExpectAll(
@@ -840,10 +794,7 @@ class TeamControllerTest extends ControllerTest {
                     .deleteById(10000000L, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(delete("/api/teams/" + 10000000L)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestDelete("/api/teams/" + 10000000L);
 
             // then
             perform.andExpect(status().isNotFound())
@@ -863,10 +814,7 @@ class TeamControllerTest extends ControllerTest {
                     .deleteById(teamId, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestDelete("/api/teams/" + teamId);
 
             // then
             perform.andExpectAll(
@@ -888,10 +836,7 @@ class TeamControllerTest extends ControllerTest {
                     .deleteById(teamId, 1L);
 
             // when
-            final ResultActions perform = mockMvc.perform(delete("/api/teams/" + teamId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print());
+            final ResultActions perform = requestDelete("/api/teams/" + teamId);
 
             // then
             perform.andExpectAll(

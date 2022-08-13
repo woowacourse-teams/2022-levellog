@@ -3,21 +3,17 @@ package com.woowacourse.levellog.presentation;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
-import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("MyInfoController의")
@@ -36,15 +32,10 @@ class MyInfoControllerTest extends ControllerTest {
                     .updateNickname(any(), any());
             final String invalidNickname = "a".repeat(51);
 
-            final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto(invalidNickname);
-            final String requestContent = objectMapper.writeValueAsString(nicknameUpdateDto);
+            final NicknameUpdateDto requestContent = new NicknameUpdateDto(invalidNickname);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/my-info")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN))
-                    .andDo(print());
+            final ResultActions perform = requestPut("/api/my-info", requestContent);
 
             // then
             perform.andExpect(status().isBadRequest())
@@ -60,15 +51,10 @@ class MyInfoControllerTest extends ControllerTest {
         @DisplayName("닉네임에 null 또는 빈 값이 들어온 경우 예외를 던진다.")
         void nicknameNullAndEmpty_Exception(final String invalidNickname) throws Exception {
             // given
-            final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto(invalidNickname);
-            final String requestContent = objectMapper.writeValueAsString(nicknameUpdateDto);
+            final NicknameUpdateDto requestContent = new NicknameUpdateDto(invalidNickname);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/my-info")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + VALID_TOKEN))
-                    .andDo(print());
+            final ResultActions perform = requestPut("/api/my-info", requestContent);
 
             // then
             perform.andExpect(

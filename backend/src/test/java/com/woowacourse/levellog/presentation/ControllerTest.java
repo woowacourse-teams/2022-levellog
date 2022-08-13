@@ -130,8 +130,11 @@ public abstract class ControllerTest {
                 .andDo(print());
     }
 
-    protected ResultActions requestPost(final String url, final Object request)
-            throws Exception {
+    protected ResultActions requestPost(final String url) throws Exception {
+        return requestPost(url, null);
+    }
+
+    protected ResultActions requestPost(final String url, final Object request) throws Exception {
         final String content = objectMapper.writeValueAsString(request);
 
         return mockMvc.perform(post(url)
@@ -141,8 +144,7 @@ public abstract class ControllerTest {
                 .andDo(print());
     }
 
-    protected ResultActions requestPut(final String url, final Object request)
-            throws Exception {
+    protected ResultActions requestPut(final String url, final Object request) throws Exception {
         final String content = objectMapper.writeValueAsString(request);
 
         return mockMvc.perform(put(url)

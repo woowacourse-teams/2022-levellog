@@ -17,6 +17,7 @@ import com.woowacourse.levellog.config.DatabaseCleaner;
 import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
@@ -129,5 +130,10 @@ abstract class AcceptanceTest {
                 participantIdsDto);
 
         return post("/api/teams", token, request);
+    }
+
+    protected RestAssuredResponse requestCreateLevellog(final String content, final String teamId, final String token) {
+        final LevellogWriteDto request = LevellogWriteDto.from(content);
+        return post("/api/teams/" + teamId + "/levellogs", token, request);
     }
 }

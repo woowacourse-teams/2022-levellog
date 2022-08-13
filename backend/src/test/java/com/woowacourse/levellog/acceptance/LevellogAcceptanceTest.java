@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.acceptance;
 
-import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
@@ -28,14 +27,15 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 작성")
     void createLevellog() {
         // given
-        final RestAssuredResponse pepperLogin = login("페퍼");
+        final String pepperToken = login("페퍼").getToken();
         final Long eveId = login("이브").getMemberId();
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperLogin.getToken(), 1, List.of(eveId)).getTeamId();
+
+        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
         final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperLogin.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/save"))
@@ -59,11 +59,13 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     void findLevellog() {
         // given
         final RestAssuredResponse pepperLogin = login("페퍼");
+        final String pepperToken = pepperLogin.getToken();
+        final Long pepperId = pepperLogin.getMemberId();
+
         final Long eveId = login("이브").getMemberId();
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperLogin.getToken(), 1, List.of(eveId)).getTeamId();
-        final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
-        final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperLogin.getToken(), request)
-                .getLevellogId();
+
+        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
+        final String levellogId = requestCreateLevellog("Spring과 React를 학습했습니다.", teamId, pepperToken).getLevellogId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -75,7 +77,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("author.id", equalTo(pepperLogin.getMemberId().intValue()))
+                .body("author.id", equalTo(pepperId.intValue()))
                 .body("content", equalTo("Spring과 React를 학습했습니다."));
     }
 
@@ -89,18 +91,18 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 수정")
     void updateLevellog() {
         // given
-        final RestAssuredResponse pepperLogin = login("페퍼");
+        final String pepperToken = login("페퍼").getToken();
         final Long eveId = login("이브").getMemberId();
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperLogin.getToken(), 1, List.of(eveId)).getTeamId();
-        final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperLogin.getToken(),
-                LevellogWriteDto.from("Spring과 React를 학습했습니다.")).getLevellogId();
+
+        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
+        final String levellogId = requestCreateLevellog("Spring과 React를 학습했습니다.", teamId, pepperToken).getLevellogId();
 
         final String updateContent = "update content";
         final LevellogWriteDto request = LevellogWriteDto.from(updateContent);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperLogin.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/update"))

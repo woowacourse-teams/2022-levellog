@@ -7,7 +7,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
@@ -31,16 +30,14 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("사전 질문 등록하기")
     void create() {
         // given
-        final RestAssuredResponse pepperResponse = login("페퍼");
+        final String pepperToken = login("페퍼").getToken();
+
         final RestAssuredResponse eveResponse = login("이브");
-        final String pepperToken = pepperResponse.getToken();
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
         final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
-        final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
-                levellogRequest).getLevellogId();
+        final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
         final PreQuestionDto request = PreQuestionDto.from("이브가 쓴 사전 질문");
 
@@ -77,9 +74,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final Long eveMemberId = eveResponse.getMemberId();
 
         final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
-        final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
-                levellogRequest).getLevellogId();
+        final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
         final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
         final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";
@@ -115,16 +110,14 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("내가 작성한 사전 질문 조회하기")
     void findMy() {
         // given
-        final RestAssuredResponse pepperResponse = login("페퍼");
+        final String pepperToken = login("페퍼").getToken();
+
         final RestAssuredResponse eveResponse = login("이브");
-        final String pepperToken = pepperResponse.getToken();
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
         final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
-        final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
-                levellogRequest).getLevellogId();
+        final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
         final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
         final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";
@@ -155,16 +148,14 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("사전 질문 제거하기")
     void delete() {
         // given
-        final RestAssuredResponse pepperResponse = login("페퍼");
+        final String pepperToken = login("페퍼").getToken();
+
         final RestAssuredResponse eveResponse = login("이브");
-        final String pepperToken = pepperResponse.getToken();
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
         final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("페퍼의 레벨로그");
-        final String levellogId = post("/api/teams/" + teamId + "/levellogs", pepperToken,
-                levellogRequest).getLevellogId();
+        final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
         final PreQuestionDto saveRequestDto = PreQuestionDto.from("이브가 쓴 사전 질문");
         final String baseUrl = "/api/levellogs/" + levellogId + "/pre-questions/";

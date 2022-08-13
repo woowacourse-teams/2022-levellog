@@ -8,7 +8,6 @@ import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.util.List;
@@ -30,20 +29,14 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 작성")
     void createFeedback() {
         // given
-        final RestAssuredResponse hostLoginResponse = login("릭");
-        final String rickToken = hostLoginResponse.getToken();
+        final String rickToken = login("릭").getToken();
 
         final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long roma_id = romaLoginResponse.getMemberId();
+        final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(roma_id))
-                .getTeamId();
-
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그");
-        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
-                        levellogRequest)
-                .getLevellogId();
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(romaId)).getTeamId();
+        final String levellogId = requestCreateLevellog("레벨로그", teamId, rickToken).getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
@@ -77,20 +70,14 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 조회")
     void findAllFeedbacks() {
         // given
-        final RestAssuredResponse hostLoginResponse = login("릭");
-        final String rickToken = hostLoginResponse.getToken();
+        final String rickToken = login("릭").getToken();
 
         final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long roma_id = romaLoginResponse.getMemberId();
+        final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(roma_id))
-                .getTeamId();
-
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그");
-        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
-                        levellogRequest)
-                .getLevellogId();
+        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(romaId)).getTeamId();
+        final String levellogId = requestCreateLevellog("레벨로그", teamId, rickToken).getLevellogId();
 
         final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.",
@@ -130,19 +117,14 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 수정")
     void updateFeedback() {
         // given
-        final RestAssuredResponse hostLoginResponse = login("릭");
-        final String rickToken = hostLoginResponse.getToken();
+        final String rickToken = login("릭").getToken();
 
         final RestAssuredResponse romaLoginResponse = login("로마");
         final Long roma_id = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
         final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(roma_id)).getTeamId();
-
-        final LevellogWriteDto levellogRequest = LevellogWriteDto.from("레벨로그");
-        final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
-                        levellogRequest)
-                .getLevellogId();
+        final String levellogId = requestCreateLevellog("레벨로그", teamId, rickToken).getLevellogId();
 
         final FeedbackContentDto givenFeedbackContentDto = new FeedbackContentDto(
                 "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
@@ -151,7 +133,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         timeStandard.setInProgress();
 
         final RestAssuredResponse saveResponse = RestAssuredTemplate.post(
-                "/api/levellogs/" + rick_levellogId + "/feedbacks",
+                "/api/levellogs/" + levellogId + "/feedbacks",
                 romaToken, givenRequest);
 
         final Long updateId = Long.parseLong(saveResponse.getResponse()
@@ -170,12 +152,12 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("feedback/update"))
                 .when()
-                .put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", rick_levellogId, updateId)
+                .put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, updateId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        RestAssuredTemplate.get("/api/levellogs/" + rick_levellogId + "/feedbacks", romaToken)
+        RestAssuredTemplate.get("/api/levellogs/" + levellogId + "/feedbacks", romaToken)
                 .getResponse()
                 .body("feedbacks.feedback.study", contains("수정된 Study 피드백"),
                         "feedbacks.feedback.speak", contains("수정된 Speak 피드백"),

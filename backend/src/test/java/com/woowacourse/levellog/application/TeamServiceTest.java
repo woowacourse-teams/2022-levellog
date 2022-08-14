@@ -395,23 +395,32 @@ class TeamServiceTest extends ServiceTest {
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
             final Member eve = saveMember("이브");
-
+            final Member alien = saveMember("알린");
+            final Member roma = saveMember("로마");
             final Team team = saveTeam(rick, pepper, eve);
 
-            final List<Long> savedParticipantsMemberIds = List.of(rick.getId(), pepper.getId());
+            final List<Long> participantsIds = List.of(eve.getId(), alien.getId(), roma.getId());
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 2, AFTER_START_TIME,
-                    new ParticipantIdsDto(savedParticipantsMemberIds));
+                    new ParticipantIdsDto(participantsIds));
 
             // when
             teamService.update(request, team.getId(), rick.getId());
 
             // then
             final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
+            final List<Long> actualParticipantsIds = participantRepository.findByTeam(actualTeam)
+                    .stream()
+                    .map(Participant::getMember)
+                    .map(Member::getId)
+                    .collect(Collectors.toList());
+
             assertAll(
                     () -> assertThat(actualTeam.getTitle()).isEqualTo(request.getTitle()),
                     () -> assertThat(actualTeam.getPlace()).isEqualTo(request.getPlace()),
                     () -> assertThat(actualTeam.getStartAt()).isEqualTo(request.getStartAt()),
-                    () -> assertThat(actualTeam.getInterviewerNumber()).isEqualTo(request.getInterviewerNumber())
+                    () -> assertThat(actualTeam.getInterviewerNumber()).isEqualTo(request.getInterviewerNumber()),
+                    () -> assertThat(actualParticipantsIds).isEqualTo(
+                            List.of(rick.getId(), eve.getId(), alien.getId(), roma.getId()))
             );
         }
 
@@ -466,6 +475,44 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("인터뷰가 시작된 이후에는 수정할 수 없습니다.", teamId, team.getStartAt());
+        }
+
+        @Test
+        @DisplayName("참가자가 중복되면 예외가 발생한다.")
+        void duplicate_exceptionThrown() {
+            //given
+            final Member alien = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+
+            final Long teamId = saveTeam(alien, pepper, roma).getId();
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
+                    new ParticipantIdsDto(List.of(pepper.getId(), pepper.getId())));
+
+            //when & then
+            final Long memberId = alien.getId();
+            assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
+                    .isInstanceOf(DuplicateParticipantsException.class)
+                    .hasMessageContaining("참가자 중복");
+        }
+
+        @Test
+        @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
+        void noParticipant_exceptionThrown() {
+            //given
+            final Member alien = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+
+            final Long teamId = saveTeam(alien, pepper, roma).getId();
+            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+                    new ParticipantIdsDto(Collections.emptyList()));
+
+            //when & then
+            final Long memberId = alien.getId();
+            assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("호스트 이외의 참가자가 존재하지 않습니다.");
         }
     }
 
@@ -550,7 +597,6 @@ class TeamServiceTest extends ServiceTest {
         void teamNotFound_Exception() {
             //given
             final Member member = saveMember("릭");
-            final Team team = saveTeam(member);
 
             //when & then
             assertThatThrownBy(() -> teamService.deleteById(1000L, member.getId()))

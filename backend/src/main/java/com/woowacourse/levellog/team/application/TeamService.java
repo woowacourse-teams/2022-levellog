@@ -51,7 +51,7 @@ public class TeamService {
     public Long save(final TeamWriteDto request, final Long hostId) {
         final Member host = getMember(hostId);
         final Team team = request.toEntity(host.getProfileUrl());
-        final Participants participants = getParticipants(team, hostId, request.getParticipants().getIds());
+        final Participants participants = createParticipants(team, hostId, request.getParticipants().getIds());
         team.validParticipantNumber(participants.size());
 
         final Team savedTeam = teamRepository.save(team);
@@ -100,8 +100,12 @@ public class TeamService {
     public void update(final TeamWriteDto request, final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         validateHost(memberId, team);
-
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
+        
+        final Participants updatedParticipants = createParticipants(team, memberId, request.getParticipants().getIds());
+        team.validParticipantNumber(updatedParticipants.size());
+        participantRepository.deleteByTeam(team);
+        participantRepository.saveAll(updatedParticipants.getValues());
     }
 
     @Transactional
@@ -141,7 +145,7 @@ public class TeamService {
                 .collect(Collectors.toList());
     }
 
-    private Participants getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
+    private Participants createParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         validateOtherParticipantExistence(memberIds);
         validateParticipantDuplication(memberIds, hostId);
 

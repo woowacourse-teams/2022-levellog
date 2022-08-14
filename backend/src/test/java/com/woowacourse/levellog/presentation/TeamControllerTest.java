@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.presentation;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
@@ -29,13 +30,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("TeamController의")
 class TeamControllerTest extends ControllerTest {
-
-    private void mockCreateTeam() {
-        final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(4L, 5L));
-        final TeamWriteDto createRequest = new TeamWriteDto("네오와 함께하는 레벨 인터뷰", "트랙룸", 1,
-                LocalDateTime.now().plusDays(3), participantIds);
-        given(teamService.save(createRequest, 1L)).willReturn(1L);
-    }
 
     @Nested
     @DisplayName("save 메서드는")
@@ -305,7 +299,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 명으로 null이 들어오면 예외를 던진다.")
         void titleNull_Exception(final String title) throws Exception {
             // given
-            mockCreateTeam();
             final long id = 1;
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
@@ -326,7 +319,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 명으로 255자를 초과할 경우 예외를 던진다.")
         void titleInvalidLength_Exception() throws Exception {
             // given
-            mockCreateTeam();
             final long id = 1;
             final String title = "네오".repeat(128);
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
@@ -354,7 +346,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("장소로 null이 들어오면 예외를 던진다.")
         void placeNull_Exception(final String place) throws Exception {
             // given
-            mockCreateTeam();
+//            eam();
             final long id = 1;
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
@@ -375,7 +367,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("장소로 255자를 초과할 경우 예외를 던진다.")
         void placeInvalidLength_Exception() throws Exception {
             // given
-            mockCreateTeam();
             final long id = 1;
             final String place = "거실".repeat(128);
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
@@ -401,7 +392,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰 시작 시간으로 null이 들어오면 예외를 던진다.")
         void startAtNull_Exception() throws Exception {
             // given
-            mockCreateTeam();
             final long id = 1;
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, null, participantIds);
@@ -421,7 +411,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰 시작 시간이 현재 시간 기준으로 과거면 예외를 던진다.")
         void startAtPast_Exception() throws Exception {
             // given
-            mockCreateTeam();
             final long id = 1;
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
@@ -446,7 +435,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("없는 팀을 수정하려고 하면 예외를 던진다.")
         void teamNotFound_Exception() throws Exception {
             // given
-            mockCreateTeam();
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(10),
                     participantIds);
@@ -470,7 +458,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
         void participantsEmpty_Exception() throws Exception {
             // given
-            mockCreateTeam();
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(Collections.emptyList()));
 
@@ -488,7 +475,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
         void participantsNull_Exception() throws Exception {
             // given
-            mockCreateTeam();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
 
             // when
@@ -506,7 +492,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰어가 1명 미만이면 예외를 던진다.")
         void notPositiveInterviewerNumber_exceptionThrown() throws Exception {
             // given
-            mockCreateTeam();
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L, 1L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
                     participants);
@@ -526,7 +511,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰어 수가 참가자 수보다 많거나 같으면 예외를 던진다.")
         void interviewerMoreThanParticipant_exceptionThrown() throws Exception {
             // given
-            mockCreateTeam();
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 3L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participants);
@@ -550,7 +534,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 중복된 Id가 들어오면 예외를 던진다.")
         void duplicateParticipant_exceptionThrown() throws Exception {
             // given
-            mockCreateTeam();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(2L, 2L, 3L)));
             willThrow(new DuplicateParticipantsException("참가자 중복"))
@@ -573,7 +556,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 호스트 Id가 들어오면 예외를 던진다.")
         void participantsWithHostId_exceptionThrown() throws Exception {
             // given
-            mockCreateTeam();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 1L)));
 
@@ -597,7 +579,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰 시작 이후에 팀을 수정하려고 하면 예외를 던진다.")
         void updateAfterStartAt_Exception() throws Exception {
             // given
-            mockCreateTeam();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 1L)));
 

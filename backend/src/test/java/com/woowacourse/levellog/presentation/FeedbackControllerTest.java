@@ -42,7 +42,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .willThrow(new FeedbackAlreadyExistException(message));
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
             perform.andExpectAll(
@@ -70,7 +70,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .willThrow(new InvalidFeedbackException(message, " [levellogId : " + levellogId + "]"));
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
             perform.andExpectAll(
@@ -98,7 +98,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .willThrow(new InvalidFeedbackException(message, " [memberId :" + memberId + "]"));
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
             perform.andExpectAll(
@@ -126,7 +126,7 @@ class FeedbackControllerTest extends ControllerTest {
                     new LevellogNotFoundException(message));
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
             perform.andExpectAll(
@@ -154,7 +154,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .willThrow(new InterviewTimeException(message));
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
             perform.andExpectAll(
@@ -182,7 +182,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .willThrow(new InterviewTimeException(message));
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
             perform.andExpectAll(
@@ -218,8 +218,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .update(request, feedbackId, memberId);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId,
-                    request);
+            final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
 
             // then
             perform.andExpectAll(
@@ -249,8 +248,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .update(request, feedbackId, memberId);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId,
-                    request);
+            final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
 
             // then
             perform.andExpectAll(
@@ -280,8 +278,8 @@ class FeedbackControllerTest extends ControllerTest {
                     .update(request, feedbackId, memberId);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId,
-                    request);
+            final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
+
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
@@ -310,8 +308,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .update(request, feedbackId, memberId);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId,
-                    request);
+            final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
 
             // then
             perform.andExpectAll(
@@ -340,7 +337,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .willThrow(new LevellogNotFoundException(message));
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/" + levellogId + "/feedbacks");
+            final ResultActions perform = requestFindAllFeedback(levellogId);
 
             // then
             perform.andExpectAll(
@@ -364,7 +361,7 @@ class FeedbackControllerTest extends ControllerTest {
                     .willThrow(new UnauthorizedException(message));
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/" + levellogId + "/feedbacks");
+            final ResultActions perform = requestFindAllFeedback(levellogId);
 
             // then
             perform.andExpectAll(
@@ -375,5 +372,19 @@ class FeedbackControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("feedback/find-all/exception/not-my-team"));
         }
+    }
+
+    private ResultActions requestCreateFeedback(final Long levellogId, final FeedbackWriteDto request)
+            throws Exception {
+        return requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
+    }
+
+    private ResultActions requestUpdateFeedback(final Long levellogId, final Long feedbackId,
+                                                final FeedbackWriteDto request) throws Exception {
+        return requestPut("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId, request);
+    }
+
+    private ResultActions requestFindAllFeedback(final Long levellogId) throws Exception {
+        return requestGet("/api/levellogs/" + levellogId + "/feedbacks");
     }
 }

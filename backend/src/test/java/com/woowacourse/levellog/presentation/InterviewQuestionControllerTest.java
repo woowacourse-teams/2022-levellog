@@ -22,14 +22,6 @@ import org.springframework.test.web.servlet.ResultActions;
 class InterviewQuestionControllerTest extends ControllerTest {
 
 
-    private String getUrl(final long levellogId) {
-        return "/api/levellogs/" + levellogId + "/interview-questions";
-    }
-
-    private String getUrl(final long levellogId, final long interviewQuestionId) {
-        return "/api/levellogs/" + levellogId + "/interview-questions/" + interviewQuestionId;
-    }
-
     @Nested
     @DisplayName("save 메서드는")
     class Save {
@@ -41,7 +33,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
 
             // when
-            final ResultActions perform = requestPost(getUrl(1), request);
+            final ResultActions perform = requestCreateInterviewQuestion(1L, request);
 
             // then
             perform.andExpectAll(
@@ -65,7 +57,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .save(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPost(getUrl(1), request);
+            final ResultActions perform = requestCreateInterviewQuestion(1L, request);
 
             // then
             perform.andExpectAll(
@@ -90,7 +82,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .save(request, invalidLevellogId, 1L);
 
             // when
-            final ResultActions perform = requestPost(getUrl(invalidLevellogId), request);
+            final ResultActions perform = requestCreateInterviewQuestion(invalidLevellogId, request);
 
             // then
             perform.andExpectAll(
@@ -115,7 +107,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .save(request, levellogId, 1L);
 
             // when
-            final ResultActions perform = requestPost(getUrl(levellogId), request);
+            final ResultActions perform = requestCreateInterviewQuestion(levellogId, request);
 
             // then
             perform.andExpectAll(
@@ -143,7 +135,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
 
             // when
-            final ResultActions perform = requestGet(getUrl(invalidLevellogId));
+            final ResultActions perform = requestFindAllInterviewQuestion(invalidLevellogId);
 
             // then
             perform.andExpectAll(
@@ -167,7 +159,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, 1L), request);
+            final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
 
             // then
             perform.andExpectAll(
@@ -190,7 +182,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, 1L), request);
+            final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
 
             // then
             perform.andExpectAll(
@@ -215,7 +207,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .update(request, invalidInterviewQuestionId, 1L);
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, invalidInterviewQuestionId), request);
+            final ResultActions perform = requestUpdateInterviewQuestion(1L, invalidInterviewQuestionId, request);
 
             // then
             perform.andExpectAll(
@@ -238,7 +230,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, 1L), request);
+            final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
 
             // then
             perform.andExpectAll(
@@ -261,7 +253,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut(getUrl(1L, 1L), request);
+            final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
 
             // then
             perform.andExpectAll(
@@ -289,7 +281,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .deleteById(invalidInterviewQuestionId, 1L);
 
             // when
-            final ResultActions perform = requestDelete(getUrl(1L, invalidInterviewQuestionId));
+            final ResultActions perform = requestDeleteInterviewQuestion(1L, invalidInterviewQuestionId);
 
             // then
             perform.andExpectAll(
@@ -311,7 +303,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .deleteById(1L, 1L);
 
             // when
-            final ResultActions perform = requestDelete(getUrl(1L, 1L));
+            final ResultActions perform = requestDeleteInterviewQuestion(1L, 1L);
 
             // then
             perform.andExpectAll(
@@ -333,7 +325,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
                     .deleteById(1L, 1L);
 
             // when
-            final ResultActions perform = requestDelete(getUrl(1L, 1L));
+            final ResultActions perform = requestDeleteInterviewQuestion(1L, 1L);
 
             // then
             perform.andExpectAll(
@@ -345,4 +337,24 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document("interview-question/delete/exception/" + snippet));
         }
     }
+
+    private ResultActions requestCreateInterviewQuestion(final Long levellogId, final InterviewQuestionDto request)
+            throws Exception {
+        return requestPost("/api/levellogs/" + levellogId + "/interview-questions", request);
+    }
+
+    private ResultActions requestFindAllInterviewQuestion(final Long levellogId) throws Exception {
+        return requestGet("/api/levellogs/" + levellogId + "/interview-questions");
+    }
+
+    private ResultActions requestUpdateInterviewQuestion(final Long levellogId, final Long interviewQuestionId,
+                                                         final InterviewQuestionDto request) throws Exception {
+        return requestPut("/api/levellogs/" + levellogId + "/interview-questions/" + interviewQuestionId, request);
+    }
+
+    private ResultActions requestDeleteInterviewQuestion(final Long levellogId,
+                                                         final Long invalidInterviewQuestionId) throws Exception {
+        return requestDelete("/api/levellogs/" + levellogId + "/interview-questions/" + invalidInterviewQuestionId);
+    }
+
 }

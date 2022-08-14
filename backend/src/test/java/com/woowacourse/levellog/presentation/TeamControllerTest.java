@@ -46,7 +46,7 @@ class TeamControllerTest extends ControllerTest {
                     participantIds);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -73,7 +73,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -96,7 +96,7 @@ class TeamControllerTest extends ControllerTest {
                     participantIds);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -123,7 +123,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -143,7 +143,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, null, participantIds);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -169,7 +169,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -189,7 +189,7 @@ class TeamControllerTest extends ControllerTest {
                     new ParticipantIdsDto(Collections.emptyList()));
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -207,7 +207,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -228,7 +228,7 @@ class TeamControllerTest extends ControllerTest {
                     participants);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -254,7 +254,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -279,7 +279,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -304,7 +304,7 @@ class TeamControllerTest extends ControllerTest {
                     .save(request, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams", request);
+            final ResultActions perform = requestCreateTeam(request);
 
             // then
             perform.andExpectAll(
@@ -333,7 +333,7 @@ class TeamControllerTest extends ControllerTest {
                     participantIds);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, request);
+            final ResultActions perform = requestUpdateTeam(id, request);
 
             // then
             perform.andExpectAll(
@@ -361,7 +361,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, id, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, request);
+            final ResultActions perform = requestUpdateTeam(id, request);
 
             // then
             perform.andExpectAll(
@@ -386,7 +386,7 @@ class TeamControllerTest extends ControllerTest {
                     participantIds);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, request);
+            final ResultActions perform = requestUpdateTeam(id, request);
 
             // then
             perform.andExpectAll(
@@ -414,7 +414,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, id, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, request);
+            final ResultActions perform = requestUpdateTeam(id, request);
 
             // then
             perform.andExpectAll(
@@ -435,7 +435,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, null, participantIds);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, request);
+            final ResultActions perform = requestUpdateTeam(id, request);
 
             // then
             perform.andExpectAll(
@@ -461,7 +461,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, id, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + id, request);
+            final ResultActions perform = requestUpdateTeam(id, request);
 
             // then
             perform.andExpectAll(
@@ -487,7 +487,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 10000000L, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 10000000L, request);
+            final ResultActions perform = requestUpdateTeam(10000000L, request);
 
             // then
             perform.andExpectAll(
@@ -507,7 +507,7 @@ class TeamControllerTest extends ControllerTest {
                     new ParticipantIdsDto(Collections.emptyList()));
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, request);
+            final ResultActions perform = requestUpdateTeam(1L, request);
 
             // then
             perform.andExpect(status().isBadRequest());
@@ -523,7 +523,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, request);
+            final ResultActions perform = requestUpdateTeam(1L, request);
 
             // then
             perform.andExpectAll(
@@ -544,7 +544,7 @@ class TeamControllerTest extends ControllerTest {
                     participants);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, request);
+            final ResultActions perform = requestUpdateTeam(1L, request);
 
             // then
             perform.andExpectAll(
@@ -570,7 +570,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, request);
+            final ResultActions perform = requestUpdateTeam(1L, request);
 
             // then
             perform.andExpectAll(
@@ -594,7 +594,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, request);
+            final ResultActions perform = requestUpdateTeam(1L, request);
 
             // then
             perform.andExpectAll(
@@ -619,7 +619,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, request);
+            final ResultActions perform = requestUpdateTeam(1L, request);
 
             // then
             perform.andExpectAll(
@@ -644,7 +644,7 @@ class TeamControllerTest extends ControllerTest {
                     .update(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/teams/" + 1L, request);
+            final ResultActions perform = requestUpdateTeam(1L, request);
 
             // then
             perform.andExpectAll(
@@ -671,7 +671,7 @@ class TeamControllerTest extends ControllerTest {
                     .findByTeamIdAndMemberId(10000000L, 1L);
 
             // when
-            final ResultActions perform = requestGet("/api/teams/" + 10000000L);
+            final ResultActions perform = requestFindTeam(10000000L);
 
             // then
             perform.andExpectAll(
@@ -700,7 +700,7 @@ class TeamControllerTest extends ControllerTest {
                     .willThrow(new UnauthorizedException(message));
 
             // when
-            final ResultActions perform = requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
+            final ResultActions perform = requestFindMyRole(teamId, memberId);
 
             // then
             perform.andExpectAll(
@@ -724,7 +724,7 @@ class TeamControllerTest extends ControllerTest {
                     .willThrow(new ParticipantNotFoundException(message));
 
             // when
-            final ResultActions perform = requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
+            final ResultActions perform = requestFindMyRole(teamId, memberId);
 
             // then
             perform.andExpectAll(
@@ -753,7 +753,7 @@ class TeamControllerTest extends ControllerTest {
                     .close(teamId, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams/" + teamId + "/close");
+            final ResultActions perform = requestCloseTeam(teamId);
             // then
             perform.andExpectAll(
                     status().isNotFound(),
@@ -776,7 +776,7 @@ class TeamControllerTest extends ControllerTest {
                     .close(teamId, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams/" + teamId + "/close");
+            final ResultActions perform = requestCloseTeam(teamId);
 
             // then
             perform.andExpectAll(
@@ -800,7 +800,7 @@ class TeamControllerTest extends ControllerTest {
                     .close(teamId, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams/" + teamId + "/close");
+            final ResultActions perform = requestCloseTeam(teamId);
 
             // then
             perform.andExpectAll(
@@ -824,7 +824,7 @@ class TeamControllerTest extends ControllerTest {
                     .close(teamId, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/teams/" + teamId + "/close");
+            final ResultActions perform = requestCloseTeam(teamId);
 
             // then
             perform.andExpectAll(
@@ -851,7 +851,7 @@ class TeamControllerTest extends ControllerTest {
                     .deleteById(10000000L, 1L);
 
             // when
-            final ResultActions perform = requestDelete("/api/teams/" + 10000000L);
+            final ResultActions perform = requestDeleteTeam(10000000L);
 
             // then
             perform.andExpectAll(
@@ -874,7 +874,7 @@ class TeamControllerTest extends ControllerTest {
                     .deleteById(teamId, 1L);
 
             // when
-            final ResultActions perform = requestDelete("/api/teams/" + teamId);
+            final ResultActions perform = requestDeleteTeam(teamId);
 
             // then
             perform.andExpectAll(
@@ -898,7 +898,7 @@ class TeamControllerTest extends ControllerTest {
                     .deleteById(teamId, 1L);
 
             // when
-            final ResultActions perform = requestDelete("/api/teams/" + teamId);
+            final ResultActions perform = requestDeleteTeam(teamId);
 
             // then
             perform.andExpectAll(
@@ -909,5 +909,29 @@ class TeamControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("team/delete/exception/unauthorized"));
         }
+    }
+
+    private ResultActions requestCreateTeam(final TeamWriteDto request) throws Exception {
+        return requestPost("/api/teams", request);
+    }
+
+    private ResultActions requestFindTeam(final Long teamId) throws Exception {
+        return requestGet("/api/teams/" + teamId);
+    }
+
+    private ResultActions requestUpdateTeam(final Long teamId, final TeamWriteDto request) throws Exception {
+        return requestPut("/api/teams/" + teamId, request);
+    }
+
+    private ResultActions requestFindMyRole(final Long teamId, final Long memberId) throws Exception {
+        return requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
+    }
+
+    private ResultActions requestCloseTeam(final Long teamId) throws Exception {
+        return requestPost("/api/teams/" + teamId + "/close");
+    }
+
+    private ResultActions requestDeleteTeam(Long teamId) throws Exception {
+        return requestDelete("/api/teams/" + teamId);
     }
 }

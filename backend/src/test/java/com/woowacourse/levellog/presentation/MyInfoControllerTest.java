@@ -36,7 +36,7 @@ class MyInfoControllerTest extends ControllerTest {
             final NicknameUpdateDto request = new NicknameUpdateDto(invalidNickname);
 
             // when
-            final ResultActions perform = requestPut("/api/my-info", request);
+            final ResultActions perform = requestUpdateNickname(request);
 
             // then
             perform.andExpectAll(
@@ -57,7 +57,7 @@ class MyInfoControllerTest extends ControllerTest {
             final NicknameUpdateDto request = new NicknameUpdateDto(invalidNickname);
 
             // when
-            final ResultActions perform = requestPut("/api/my-info", request);
+            final ResultActions perform = requestUpdateNickname(request);
 
             // then
             perform.andExpectAll(
@@ -67,5 +67,10 @@ class MyInfoControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("myinfo/update/nickname-blank"));
         }
+
+    }
+
+    private ResultActions requestUpdateNickname(final NicknameUpdateDto request) throws Exception {
+        return requestPut("/api/my-info", request);
     }
 }

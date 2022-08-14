@@ -36,7 +36,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", preQuestionDto);
+            final ResultActions perform = requestCreatePreQuestion(1L, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -58,7 +58,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .save(preQuestionDto, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", preQuestionDto);
+            final ResultActions perform = requestCreatePreQuestion(1L, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -81,7 +81,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .save(preQuestionDto, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", preQuestionDto);
+            final ResultActions perform = requestCreatePreQuestion(1L, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -104,7 +104,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .save(preQuestionDto, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPost("/api/levellogs/1/pre-questions", preQuestionDto);
+            final ResultActions perform = requestCreatePreQuestion(1L, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -129,7 +129,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", preQuestionDto);
+            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -152,7 +152,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", preQuestionDto);
+            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -175,7 +175,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", preQuestionDto);
+            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -198,7 +198,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .update(preQuestionDto, 1L, 1L, 1L);
 
             // when
-            final ResultActions perform = requestPut("/api/levellogs/1/pre-questions/1", preQuestionDto);
+            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, preQuestionDto);
 
             // then
             perform.andExpectAll(
@@ -224,7 +224,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .findMy(999L, 1L);
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/999/pre-questions/my");
+            final ResultActions perform = requestFindMyPreQuestion(999L);
 
             // then
             perform.andExpectAll(
@@ -246,7 +246,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .findMy(1L, 1L);
 
             // when
-            final ResultActions perform = requestGet("/api/levellogs/1/pre-questions/my");
+            final ResultActions perform = requestFindMyPreQuestion(1L);
 
             // then
             perform.andExpectAll(
@@ -273,7 +273,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .deleteById(1L, 1L, 1L);
 
             // when
-            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1");
+            final ResultActions perform = requestDeletePreQuestion(1L, 1L);
 
             // then
             perform.andExpectAll(
@@ -295,7 +295,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .deleteById(1L, 1L, 1L);
 
             // when
-            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1");
+            final ResultActions perform = requestDeletePreQuestion(1L, 1L);
 
             // then
             perform.andExpectAll(
@@ -317,7 +317,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     .deleteById(1L, 1L, 1L);
 
             // when
-            final ResultActions perform = requestDelete("/api/levellogs/1/pre-questions/1");
+            final ResultActions perform = requestDeletePreQuestion(1L, 1L);
 
             // then
             perform.andExpectAll(
@@ -328,5 +328,24 @@ class PreQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("pre-question/delete/exception/not-my-pre-question"));
         }
+    }
+
+    private ResultActions requestCreatePreQuestion(final Long levellogId,
+                                                   final PreQuestionDto preQuestionDto) throws Exception {
+        return requestPost("/api/levellogs/" + levellogId + "/pre-questions", preQuestionDto);
+    }
+
+    private ResultActions requestFindMyPreQuestion(final Long levellogId) throws Exception {
+        return requestGet("/api/levellogs/" + levellogId + "/pre-questions/my");
+    }
+
+    private ResultActions requestUpdatePreQuestion(final Long levellogId,
+                                                   final Long preQuestionId,
+                                                   final PreQuestionDto request) throws Exception {
+        return requestPut("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId, request);
+    }
+
+    private ResultActions requestDeletePreQuestion(final Long levellogId, final Long preQuestionId) throws Exception {
+        return requestDelete("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId);
     }
 }

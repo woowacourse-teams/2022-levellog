@@ -49,8 +49,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("title must not be blank");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("title must not be blank")
+            );
 
             // docs
             perform.andDo(document("team/create/exception/title/null-and-blank"));
@@ -73,8 +75,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("잘못된 팀 이름을 입력했습니다.");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(containsString("잘못된 팀 이름을 입력했습니다."))
+            );
 
             // docs
             perform.andDo(document("team/create/exception/title/length"));
@@ -94,8 +98,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("place must not be blank");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(containsString("place must not be blank"))
+            );
 
             // docs
             perform.andDo(document("team/create/exception/place/null-and-blank"));
@@ -118,8 +124,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("잘못된 장소를 입력했습니다.");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(containsString("잘못된 장소를 입력했습니다."))
+            );
 
             // docs
             perform.andDo(document("team/create/exception/place/length"));
@@ -136,8 +144,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("startAt must not be null");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(startsWith("startAt must not be null"))
+            );
 
             // docs
             perform.andDo(document("team/create/exception/startat/null"));
@@ -159,8 +169,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("잘못된 시작 시간을 입력했습니다.");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(containsString("잘못된 시작 시간을 입력했습니다."))
+            );
 
             // docs
             perform.andDo(document("team/create/exception/startat/past"));
@@ -193,8 +205,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("participants must not be null");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(containsString("participants must not be null"))
+            );
 
             // docs
             perform.andDo(document("team/create/exception/participants/null"));
@@ -212,8 +226,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value(startsWith("interviewerNumber")));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(startsWith("interviewerNumber"))
+            );
 
             // docs
             perform.andDo(document("team/create/exception/interviewer-number/not-positive"));
@@ -235,8 +251,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("참가자 수는 인터뷰어 수 보다 많아야 합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("참가자 수는 인터뷰어 수 보다 많아야 합니다.")
+            );
 
             // docs
             perform.andDo(document("team/create/exception/interviewer-number/more-than-participant"));
@@ -259,7 +277,8 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("중복되는 참가자가 존재합니다."));
+                    jsonPath("message").value("중복되는 참가자가 존재합니다.")
+            );
 
             // docs
             perform.andDo(document("team/create/exception/participants/duplicate"));
@@ -282,7 +301,8 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("중복되는 참가자가 존재합니다."));
+                    jsonPath("message").value("중복되는 참가자가 존재합니다.")
+            );
 
             // docs
             perform.andDo(document("team/create/exception/participants/host"));
@@ -308,8 +328,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + id, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("팀 이름이 null 또는 공백입니다.");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("title must not be blank")
+            );
 
             // docs
             perform.andDo(document("team/update/exception/title/null-and-blank"));
@@ -333,8 +355,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + id, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("잘못된 팀 이름을 입력했습니다.");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(containsString("잘못된 팀 이름을 입력했습니다."))
+            );
 
             // docs
             perform.andDo(document("team/update/exception/title/length"));
@@ -356,8 +380,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + id, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("장소가 null 또는 공백입니다.");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("place must not be blank")
+            );
 
             // docs
             perform.andDo(document("team/update/exception/place/null-and-blank"));
@@ -381,8 +407,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + id, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("잘못된 장소를 입력했습니다.");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(containsString("잘못된 장소를 입력했습니다."))
+            );
 
             // docs
             perform.andDo(document("team/update/exception/place/length"));
@@ -400,8 +428,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + id, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("시작 시간이 없습니다.");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("startAt must not be null")
+            );
 
             // docs
             perform.andDo(document("team/update/exception/startat/null"));
@@ -424,8 +454,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + id, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("잘못된 시작 시간을 입력했습니다.");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(containsString("잘못된 시작 시간을 입력했습니다."))
+            );
 
             // docs
             perform.andDo(document("team/update/exception/startat/past"));
@@ -447,8 +479,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + 10000000L, request);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andReturn().getResponse().getContentAsString().contains("팀이 존재하지 않습니다.");
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(containsString("팀이 존재하지 않습니다."))
+            );
 
             // docs
             perform.andDo(document("team/update/exception/notfound"));
@@ -481,8 +515,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + 1L, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString().contains("participants must not be null");
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("participants must not be null")
+            );
 
             // docs
             perform.andDo(document("team/update/exception/participants/null"));
@@ -500,8 +536,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + 1L, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value(startsWith("interviewerNumber")));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(startsWith("interviewerNumber"))
+            );
 
             // docs
             perform.andDo(document("team/update/exception/interviewer-number/not-positive"));
@@ -523,8 +561,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPut("/api/teams/" + 1L, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("참가자 수는 인터뷰어 수 보다 많아야 합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(startsWith("참가자 수는 인터뷰어 수 보다 많아야 합니다."))
+            );
 
             // docs
             perform.andDo(document("team/update/exception/interviewer-number/more-than-participant"));
@@ -546,7 +586,8 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("중복되는 참가자가 존재합니다."));
+                    jsonPath("message").value("중복되는 참가자가 존재합니다.")
+            );
 
             // docs
             perform.andDo(document("team/update/exception/participants/duplicate"));
@@ -569,7 +610,8 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("중복되는 참가자가 존재합니다."));
+                    jsonPath("message").value("중복되는 참가자가 존재합니다.")
+            );
 
             // docs
             perform.andDo(document("team/update/exception/participants/host"));
@@ -592,7 +634,8 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("인터뷰가 시작된 이후에는 수정할 수 없습니다."));
+                    jsonPath("message").value("인터뷰가 시작된 이후에는 수정할 수 없습니다.")
+            );
 
             // docs
             perform.andDo(document("team/update/exception/after-start-at"));
@@ -615,8 +658,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestGet("/api/teams/" + 10000000L);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andReturn().getResponse().getContentAsString().contains("팀이 존재하지 않습니다.");
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(startsWith("팀이 존재하지 않습니다."))
+            );
 
             // docs
             perform.andDo(document("team/find-by-id/exception/notfound"));
@@ -641,8 +686,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
 
             // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value("권한이 없습니다.")
+            );
 
             // docs
             perform.andDo(document("team/find-my-role/exception/not-my-team"));
@@ -662,8 +709,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message").value("참가자를 찾을 수 없습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value("참가자를 찾을 수 없습니다.")
+            );
 
             // docs
             perform.andDo(document("team/find-my-role/exception/target-not-participant"));
@@ -778,8 +827,10 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestDelete("/api/teams/" + 10000000L);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andReturn().getResponse().getContentAsString().contains("팀이 존재하지 않습니다.");
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(startsWith("팀이 존재하지 않습니다."))
+            );
 
             // docs
             perform.andDo(document("team/delete/exception/notfound"));

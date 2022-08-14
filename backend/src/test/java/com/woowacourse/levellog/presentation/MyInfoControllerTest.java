@@ -27,19 +27,22 @@ class MyInfoControllerTest extends ControllerTest {
         @DisplayName("닉네임에 50자를 초과한 문자열이 들어올 경우 예외를 던진다.")
         void nicknameInvalidLength_Exception() throws Exception {
             // given
-            willThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다."))
+            final String message = "닉네임은 50자 이하여야합니다.";
+            willThrow(new InvalidFieldException(message))
                     .given(memberService)
                     .updateNickname(any(), any());
             final String invalidNickname = "a".repeat(51);
 
-            final NicknameUpdateDto requestContent = new NicknameUpdateDto(invalidNickname);
+            final NicknameUpdateDto request = new NicknameUpdateDto(invalidNickname);
 
             // when
-            final ResultActions perform = requestPut("/api/my-info", requestContent);
+            final ResultActions perform = requestPut("/api/my-info", request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("닉네임은 50자 이하여야합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("myinfo/update/nickname-invalid-length"));
@@ -51,13 +54,13 @@ class MyInfoControllerTest extends ControllerTest {
         @DisplayName("닉네임에 null 또는 빈 값이 들어온 경우 예외를 던진다.")
         void nicknameNullAndEmpty_Exception(final String invalidNickname) throws Exception {
             // given
-            final NicknameUpdateDto requestContent = new NicknameUpdateDto(invalidNickname);
+            final NicknameUpdateDto request = new NicknameUpdateDto(invalidNickname);
 
             // when
-            final ResultActions perform = requestPut("/api/my-info", requestContent);
+            final ResultActions perform = requestPut("/api/my-info", request);
 
             // then
-            perform.andExpect(
+            perform.andExpectAll(
                     status().isBadRequest()
             );
 

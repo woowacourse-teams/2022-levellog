@@ -30,15 +30,18 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            willThrow(new LevellogAlreadyExistException("팀에 레벨로그를 이미 작성했습니다.")).given(levellogService)
+            final String message = "팀에 레벨로그를 이미 작성했습니다.";
+            willThrow(new LevellogAlreadyExistException(message)).given(levellogService)
                     .save(request, authorId, teamId);
 
             // when
             final ResultActions perform = requestSaveLevellog(teamId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("팀에 레벨로그를 이미 작성했습니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("levellog/save/exception-already-exists"));
@@ -55,8 +58,10 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestSaveLevellog(teamId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("content must not be blank"));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("content must not be blank")
+            );
 
             // docs
             perform.andDo(document("levellog/save/exception-contents"));
@@ -70,7 +75,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."))
+            final String message = "인터뷰 시작 전에만 레벨로그 작성이 가능합니다.";
+            willThrow(new InterviewTimeException(message))
                     .given(levellogService)
                     .save(request, authorId, teamId);
 
@@ -78,8 +84,10 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestSaveLevellog(teamId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("levellog/save/exception-after-start"));
@@ -100,7 +108,9 @@ class LevellogControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
             final Long levellogId = 1000L;
-            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+
+            final String message = "레벨로그가 존재하지 않습니다.";
+            willThrow(new LevellogNotFoundException(message))
                     .given(levellogService)
                     .findById(levellogId);
 
@@ -108,8 +118,10 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestGet("/api/teams/" + teamId + "/levellogs/" + levellogId);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("levellog/find/exception-exist"));
@@ -132,8 +144,10 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("content must not be blank"));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("content must not be blank")
+            );
 
             // docs
             perform.andDo(document("levellog/update/exception-contents"));
@@ -148,7 +162,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
 
-            willThrow(new UnauthorizedException("권한이 없습니다."))
+            final String message = "권한이 없습니다.";
+            willThrow(new UnauthorizedException(message))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
 
@@ -156,8 +171,10 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
 
             // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("levellog/update/exception-author"));
@@ -172,7 +189,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("new content");
 
-            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 수정이 가능합니다."))
+            final String message = "인터뷰 시작 전에만 레벨로그 수정이 가능합니다.";
+            willThrow(new InterviewTimeException(message))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
 
@@ -180,8 +198,10 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 수정이 가능합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("levellog/update/exception-after-start"));

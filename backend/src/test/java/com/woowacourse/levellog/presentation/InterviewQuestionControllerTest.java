@@ -44,8 +44,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPost(getUrl(1), request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("interviewQuestion must not be blank"));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("interviewQuestion must not be blank")
+            );
 
             // docs
             perform.andDo(document("interview-question/save/exception/contents/blank"));
@@ -56,7 +58,9 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_interviewQuestionInvalidLength_Exception() throws Exception {
             // given
             final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
-            willThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
+
+            final String message = "인터뷰 질문은 255자 이하여야합니다.";
+            willThrow(new InvalidFieldException(message))
                     .given(interviewQuestionService)
                     .save(request, 1L, 1L);
 
@@ -64,8 +68,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPost(getUrl(1), request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("인터뷰 질문은 255자 이하여야합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/save/exception/contents/length"));
@@ -78,7 +84,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final long invalidLevellogId = 20000000L;
             final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
 
-            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+            final String message = "레벨로그가 존재하지 않습니다.";
+            willThrow(new LevellogNotFoundException(message))
                     .given(interviewQuestionService)
                     .save(request, invalidLevellogId, 1L);
 
@@ -86,8 +93,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPost(getUrl(invalidLevellogId), request);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/save/exception/levellog-not-found"));
@@ -109,8 +118,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPost(getUrl(levellogId), request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value(message));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/save/exception/" + snippet));
@@ -126,7 +137,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void findAll_levellogNotFound_exception() throws Exception {
             // given
             final long invalidLevellogId = 20000000L;
-            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+            final String message = "레벨로그가 존재하지 않습니다.";
+            willThrow(new LevellogNotFoundException(message))
                     .given(interviewQuestionService)
                     .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
 
@@ -134,8 +146,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestGet(getUrl(invalidLevellogId));
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/findAll/exception/levellog-not-found"));
@@ -156,8 +170,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPut(getUrl(1L, 1L), request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("interviewQuestion must not be blank"));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("interviewQuestion must not be blank")
+            );
 
             // docs
             perform.andDo(document("interview-question/update/exception/contents/blank"));
@@ -168,7 +184,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void update_interviewQuestionInvalidLength_Exception() throws Exception {
             // given
             final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
-            willThrow(new InvalidFieldException("인터뷰 질문은 255자 이하여야합니다."))
+            final String message = "인터뷰 질문은 255자 이하여야합니다.";
+            willThrow(new InvalidFieldException(message))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
@@ -176,8 +193,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPut(getUrl(1L, 1L), request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("인터뷰 질문은 255자 이하여야합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/update/exception/contents/length"));
@@ -190,7 +209,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final Long invalidInterviewQuestionId = 1000L;
             final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
 
-            willThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
+            final String message = "인터뷰 질문이 존재하지 않습니다.";
+            willThrow(new InterviewQuestionNotFoundException(message))
                     .given(interviewQuestionService)
                     .update(request, invalidInterviewQuestionId, 1L);
 
@@ -198,8 +218,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPut(getUrl(1L, invalidInterviewQuestionId), request);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message").value("인터뷰 질문이 존재하지 않습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/update/exception/not-found"));
@@ -210,7 +232,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void update_unauthorized_exception() throws Exception {
             // given
             final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
-            willThrow(new UnauthorizedException("권한이 없습니다."))
+            final String message = "권한이 없습니다.";
+            willThrow(new UnauthorizedException(message))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
@@ -218,8 +241,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPut(getUrl(1L, 1L), request);
 
             // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/update/exception/unauthorized"));
@@ -239,8 +264,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestPut(getUrl(1L, 1L), request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value(message));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/update/exception/" + snippet));
@@ -256,7 +283,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void deleteById_interviewQuestionNotFound_exception() throws Exception {
             // given
             final Long invalidInterviewQuestionId = 1000L;
-            willThrow(new InterviewQuestionNotFoundException("인터뷰 질문이 존재하지 않습니다."))
+            final String message = "인터뷰 질문이 존재하지 않습니다.";
+            willThrow(new InterviewQuestionNotFoundException(message))
                     .given(interviewQuestionService)
                     .deleteById(invalidInterviewQuestionId, 1L);
 
@@ -264,8 +292,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestDelete(getUrl(1L, invalidInterviewQuestionId));
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message").value("인터뷰 질문이 존재하지 않습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/delete/exception/not-found"));
@@ -275,7 +305,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void deleteById_unauthorized_exception() throws Exception {
             // given
-            willThrow(new UnauthorizedException("권한이 없습니다."))
+            final String message = "권한이 없습니다.";
+            willThrow(new UnauthorizedException(message))
                     .given(interviewQuestionService)
                     .deleteById(1L, 1L);
 
@@ -283,8 +314,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestDelete(getUrl(1L, 1L));
 
             // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/delete/exception/unauthorized"));
@@ -303,8 +336,10 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final ResultActions perform = requestDelete(getUrl(1L, 1L));
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value(message));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("interview-question/delete/exception/" + snippet));

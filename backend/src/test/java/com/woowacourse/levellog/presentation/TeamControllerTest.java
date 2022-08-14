@@ -67,7 +67,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
-            willThrow(new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]"))
+            final String message = "잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]";
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -77,7 +78,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(containsString("잘못된 팀 이름을 입력했습니다."))
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -100,7 +101,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(containsString("place must not be blank"))
+                    jsonPath("message").value("place must not be blank")
             );
 
             // docs
@@ -116,7 +117,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
-            willThrow(new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]"))
+            final String message = "잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]";
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -126,7 +128,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(containsString("잘못된 장소를 입력했습니다."))
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -161,7 +163,8 @@ class TeamControllerTest extends ControllerTest {
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
             final TeamWriteDto request = new TeamWriteDto("네오 인터뷰", "선릉 트랙룸", 1, startAt, participantIds);
 
-            willThrow(new InvalidFieldException("잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]"))
+            final String message = "잘못된 시작 시간을 입력했습니다. 입력한 시작 시간 : [" + startAt + "]";
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -171,7 +174,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(containsString("잘못된 시작 시간을 입력했습니다."))
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -189,7 +192,9 @@ class TeamControllerTest extends ControllerTest {
             final ResultActions perform = requestPost("/api/teams", request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest()
+            );
 
             // docs
             perform.andDo(document("team/create/exception/participants/empty"));
@@ -228,7 +233,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(startsWith("interviewerNumber"))
+                    jsonPath("message").value("interviewerNumber must be greater than 0")
             );
 
             // docs
@@ -243,7 +248,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 4, LocalDateTime.now().plusDays(3),
                     participants);
 
-            willThrow(new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다."))
+            final String message = "참가자 수는 인터뷰어 수 보다 많아야 합니다.";
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -253,7 +259,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("참가자 수는 인터뷰어 수 보다 많아야 합니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -267,7 +273,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 2L)));
 
-            willThrow(new DuplicateParticipantsException("참가자 중복"))
+            final String message = "중복되는 참가자가 존재합니다.";
+            willThrow(new DuplicateParticipantsException(message))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -277,7 +284,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("중복되는 참가자가 존재합니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -291,7 +298,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 1L)));
 
-            willThrow(new DuplicateParticipantsException("참가자 중복"))
+            final String message = "중복되는 참가자가 존재합니다.";
+            willThrow(new DuplicateParticipantsException(message))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -301,7 +309,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("중복되는 참가자가 존재합니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -347,7 +355,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
-            willThrow(new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]"))
+            final String message = "잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]";
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .update(request, id, 1L);
 
@@ -357,7 +366,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(containsString("잘못된 팀 이름을 입력했습니다."))
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -399,7 +408,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
                     participantIds);
 
-            willThrow(new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]"))
+            final String message = "잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]";
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .update(request, id, 1L);
 
@@ -409,7 +419,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(containsString("잘못된 장소를 입력했습니다."))
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -471,7 +481,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(10),
                     participantIds);
 
-            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
+            final String message = "팀이 존재하지 않습니다.";
+            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", message))
                     .given(teamService)
                     .update(request, 10000000L, 1L);
 
@@ -481,7 +492,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value(containsString("팀이 존재하지 않습니다."))
+                    jsonPath("message").value(containsString(message))
             );
 
             // docs
@@ -538,7 +549,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(startsWith("interviewerNumber"))
+                    jsonPath("message").value("interviewerNumber must be greater than 0")
             );
 
             // docs
@@ -553,7 +564,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participants);
 
-            willThrow(new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다."))
+            final String message = "참가자 수는 인터뷰어 수 보다 많아야 합니다.";
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .update(request, 1L, 1L);
 
@@ -563,7 +575,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(startsWith("참가자 수는 인터뷰어 수 보다 많아야 합니다."))
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -576,7 +588,8 @@ class TeamControllerTest extends ControllerTest {
             // given
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(2L, 2L, 3L)));
-            willThrow(new DuplicateParticipantsException("참가자 중복"))
+            final String message = "중복되는 참가자가 존재합니다.";
+            willThrow(new DuplicateParticipantsException(message))
                     .given(teamService)
                     .update(request, 1L, 1L);
 
@@ -586,7 +599,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("중복되는 참가자가 존재합니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -600,7 +613,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 1L)));
 
-            willThrow(new DuplicateParticipantsException("참가자 중복"))
+            final String message = "중복되는 참가자가 존재합니다.";
+            willThrow(new DuplicateParticipantsException(message))
                     .given(teamService)
                     .update(request, 1L, 1L);
 
@@ -610,7 +624,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("중복되는 참가자가 존재합니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -624,7 +638,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 1L)));
 
-            willThrow(new InterviewTimeException("인터뷰가 시작된 이후에는 수정할 수 없습니다."))
+            final String message = "인터뷰가 시작된 이후에는 수정할 수 없습니다.";
+            willThrow(new InterviewTimeException(message))
                     .given(teamService)
                     .update(request, 1L, 1L);
 
@@ -634,7 +649,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("인터뷰가 시작된 이후에는 수정할 수 없습니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -650,7 +665,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
         void teamNotFound_Exception() throws Exception {
             // given
-            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
+            final String message = "팀이 존재하지 않습니다.";
+            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", message))
                     .given(teamService)
                     .findByTeamIdAndMemberId(10000000L, 1L);
 
@@ -660,7 +676,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value(startsWith("팀이 존재하지 않습니다."))
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -679,8 +695,9 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 2L;
             final Long memberId = 5L;
 
+            final String message = "권한이 없습니다.";
             given(teamService.findMyRole(teamId, memberId, 1L))
-                    .willThrow(new UnauthorizedException("권한이 없습니다."));
+                    .willThrow(new UnauthorizedException(message));
 
             // when
             final ResultActions perform = requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
@@ -688,7 +705,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isUnauthorized(),
-                    jsonPath("message").value("권한이 없습니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -702,8 +719,9 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 2L;
             final Long memberId = 5L;
 
+            final String message = "참가자를 찾을 수 없습니다.";
             given(teamService.findMyRole(teamId, memberId, 1L))
-                    .willThrow(new ParticipantNotFoundException("팀에 참가자가 아닙니다."));
+                    .willThrow(new ParticipantNotFoundException(message));
 
             // when
             final ResultActions perform = requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
@@ -711,7 +729,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value("참가자를 찾을 수 없습니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -728,7 +746,9 @@ class TeamControllerTest extends ControllerTest {
         void close_notFoundTeam_exceptionThrown() throws Exception {
             // given
             final Long teamId = 200_000L;
-            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. [teamId : " + teamId + "]", "팀이 존재하지 않습니다."))
+
+            final String message = "팀이 존재하지 않습니다.";
+            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. [teamId : " + teamId + "]", message))
                     .given(teamService)
                     .close(teamId, 1L);
 
@@ -737,7 +757,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value("팀이 존재하지 않습니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -749,7 +769,9 @@ class TeamControllerTest extends ControllerTest {
         void close_alreadyClosed_exceptionThrown() throws Exception {
             // given
             final Long teamId = 1L;
-            willThrow(new InterviewTimeException("이미 종료된 인터뷰입니다."))
+
+            final String message = "이미 종료된 인터뷰입니다.";
+            willThrow(new InterviewTimeException(message))
                     .given(teamService)
                     .close(teamId, 1L);
 
@@ -759,7 +781,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("이미 종료된 인터뷰입니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -771,7 +793,9 @@ class TeamControllerTest extends ControllerTest {
         void close_beforeStart_exceptionThrown() throws Exception {
             // given
             final Long teamId = 1L;
-            willThrow(new InterviewTimeException("인터뷰가 시작되기 전에 종료할 수 없습니다."))
+
+            final String message = "인터뷰가 시작되기 전에 종료할 수 없습니다.";
+            willThrow(new InterviewTimeException(message))
                     .given(teamService)
                     .close(teamId, 1L);
 
@@ -781,7 +805,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("인터뷰가 시작되기 전에 종료할 수 없습니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -793,7 +817,9 @@ class TeamControllerTest extends ControllerTest {
         void close_notHost_exceptionThrown() throws Exception {
             // given
             final Long teamId = 1L;
-            willThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
+
+            final String message = "호스트 권한이 없습니다.";
+            willThrow(new HostUnauthorizedException(message))
                     .given(teamService)
                     .close(teamId, 1L);
 
@@ -803,7 +829,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isUnauthorized(),
-                    jsonPath("message").value("호스트 권한이 없습니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -819,7 +845,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("없는 팀을 제거하려고 하면 예외를 던진다.")
         void delete_teamNotFound_Exception() throws Exception {
             // given
-            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", "팀이 존재하지 않습니다."))
+            final String message = "팀이 존재하지 않습니다.";
+            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", message))
                     .given(teamService)
                     .deleteById(10000000L, 1L);
 
@@ -829,7 +856,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value(startsWith("팀이 존재하지 않습니다."))
+                    jsonPath("message").value(startsWith(message))
             );
 
             // docs
@@ -841,7 +868,8 @@ class TeamControllerTest extends ControllerTest {
         void delete_afterStart_exceptionThrown() throws Exception {
             // given
             final Long teamId = 1L;
-            willThrow(new InterviewTimeException("인터뷰가 시작된 이후에는 삭제할 수 없습니다."))
+            final String message = "인터뷰가 시작된 이후에는 삭제할 수 없습니다.";
+            willThrow(new InterviewTimeException(message))
                     .given(teamService)
                     .deleteById(teamId, 1L);
 
@@ -851,7 +879,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("인터뷰가 시작된 이후에는 삭제할 수 없습니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs
@@ -863,7 +891,9 @@ class TeamControllerTest extends ControllerTest {
         void delete_notHost_exceptionThrown() throws Exception {
             // given
             final Long teamId = 1L;
-            willThrow(new HostUnauthorizedException("호스트 권한이 없습니다."))
+
+            final String message = "호스트 권한이 없습니다.";
+            willThrow(new HostUnauthorizedException(message))
                     .given(teamService)
                     .deleteById(teamId, 1L);
 
@@ -873,7 +903,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isUnauthorized(),
-                    jsonPath("message").value("호스트 권한이 없습니다.")
+                    jsonPath("message").value(message)
             );
 
             // docs

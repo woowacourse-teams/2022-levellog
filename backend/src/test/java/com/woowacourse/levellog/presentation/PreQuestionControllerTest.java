@@ -52,7 +52,8 @@ class PreQuestionControllerTest extends ControllerTest {
         void save_FromNotParticipant_Exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            willThrow(new UnauthorizedException("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다."))
+            final String message = "권한이 없습니다.";
+            willThrow(new UnauthorizedException(message))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 1L);
 
@@ -62,7 +63,7 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isUnauthorized(),
-                    jsonPath("message").value("권한이 없습니다."));
+                    jsonPath("message").value(message));
 
             // docs
             perform.andDo(document("pre-question/create/exception/not-participant"));
@@ -73,7 +74,9 @@ class PreQuestionControllerTest extends ControllerTest {
         void save_LevellogIsMine_Exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            willThrow(new InvalidPreQuestionException("[levellogId : 1]", "자기 자신에게 사전 질문을 등록할 수 없습니다."))
+
+            final String message = "자기 자신에게 사전 질문을 등록할 수 없습니다.";
+            willThrow(new InvalidPreQuestionException("[levellogId : 1]", message))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 1L);
 
@@ -83,7 +86,7 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("자기 자신에게 사전 질문을 등록할 수 없습니다."));
+                    jsonPath("message").value(message));
 
             // docs
             perform.andDo(document("pre-question/create/exception/levellog-is-mine"));
@@ -94,7 +97,9 @@ class PreQuestionControllerTest extends ControllerTest {
         void save_PreQuestionAlreadyExist_Exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            willThrow(new PreQuestionAlreadyExistException("사전 질문을 이미 작성하였습니다. levellogId : 1 authorId : 4"))
+
+            final String message = "레벨로그의 사전 질문을 이미 작성했습니다.";
+            willThrow(new PreQuestionAlreadyExistException(message))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 1L);
 
@@ -104,7 +109,7 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("레벨로그의 사전 질문을 이미 작성했습니다."));
+                    jsonPath("message").value(message));
 
             // docs
             perform.andDo(document("pre-question/create/exception/already-exist"));
@@ -141,7 +146,8 @@ class PreQuestionControllerTest extends ControllerTest {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            willThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
+            final String message = "입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1";
+            willThrow(new InvalidFieldException(message))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 1L);
 
@@ -151,7 +157,7 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
+                    jsonPath("message").value(message));
 
             // docs
             perform.andDo(document("pre-question/update/exception/wrong-levellog"));
@@ -162,7 +168,9 @@ class PreQuestionControllerTest extends ControllerTest {
         void update_PreQuestionNotFound_Exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
+
+            final String message = "사전 질문이 존재하지 않습니다.";
+            willThrow(new PreQuestionNotFoundException(message))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 1L);
 
@@ -172,7 +180,7 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value("사전 질문이 존재하지 않습니다."));
+                    jsonPath("message").value(message));
 
             // docs
             perform.andDo(document("pre-question/update/exception/notfound"));
@@ -183,7 +191,9 @@ class PreQuestionControllerTest extends ControllerTest {
         void update_FromNotMyPreQuestion_Exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
+
+            final String message = "권한이 없습니다.";
+            willThrow(new UnauthorizedException(message))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 1L);
 
@@ -193,7 +203,7 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isUnauthorized(),
-                    jsonPath("message").value("권한이 없습니다."));
+                    jsonPath("message").value(message));
 
             // docs
             perform.andDo(document("pre-question/update/exception/not-my-pre-question"));
@@ -208,7 +218,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("레벨로그가 존재하지 않으면 예외를 던진다.")
         void findMy_LevellogWrongId_Exception() throws Exception {
             // given
-            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+            final String message = "레벨로그가 존재하지 않습니다.";
+            willThrow(new LevellogNotFoundException(message))
                     .given(preQuestionService)
                     .findMy(999L, 1L);
 
@@ -218,7 +229,8 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value("레벨로그가 존재하지 않습니다."));
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("pre-question/find-my/exception/not-exist-levellog"));
@@ -228,7 +240,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("사전 질문이 존재하지 않으면 예외를 던진다.")
         void findMy_PreQuestionNotFound_Exception() throws Exception {
             // given
-            willThrow(new PreQuestionNotFoundException("사전 질문이 존재하지 않습니다."))
+            final String message = "사전 질문이 존재하지 않습니다.";
+            willThrow(new PreQuestionNotFoundException(message))
                     .given(preQuestionService)
                     .findMy(1L, 1L);
 
@@ -238,7 +251,8 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value("사전 질문이 존재하지 않습니다."));
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("pre-question/find-my/exception/not-exist-pre-question"));
@@ -253,7 +267,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("잘못된 레벨로그의 사전 질문을 삭제하면 예외를 던진다.")
         void deleteById_LevellogWrongId_Exception() throws Exception {
             // given
-            willThrow(new InvalidFieldException("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"))
+            final String message = "입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1";
+            willThrow(new InvalidFieldException(message))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 1L);
 
@@ -263,7 +278,8 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1"));
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("pre-question/delete/exception/wrong-levellog"));
@@ -273,7 +289,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("저장되어있지 않은 사전 질문을 삭제하는 경우 예외를 던진다.")
         void deleteById_PreQuestionNotFound_Exception() throws Exception {
             // given
-            willThrow(new PreQuestionNotFoundException("작성한 사전 질문이 존재하지 않습니다."))
+            final String message = "사전 질문이 존재하지 않습니다.";
+            willThrow(new PreQuestionNotFoundException(message))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 1L);
 
@@ -283,7 +300,8 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isNotFound(),
-                    jsonPath("message").value("사전 질문이 존재하지 않습니다."));
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("pre-question/delete/exception/notfound"));
@@ -293,7 +311,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("타인의 사전 질문을 삭제하는 경우 예외를 던진다.")
         void deleteById_FromNotMyPreQuestion_Exception() throws Exception {
             // given
-            willThrow(new UnauthorizedException("자신의 사전 질문이 아닙니다."))
+            final String message = "권한이 없습니다.";
+            willThrow(new UnauthorizedException(message))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 1L);
 
@@ -303,7 +322,8 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isUnauthorized(),
-                    jsonPath("message").value("권한이 없습니다."));
+                    jsonPath("message").value(message)
+            );
 
             // docs
             perform.andDo(document("pre-question/delete/exception/not-my-pre-question"));

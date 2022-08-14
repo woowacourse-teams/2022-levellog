@@ -39,8 +39,12 @@ class OAuthControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andDo(document("auth/login/null"));
+            perform.andExpectAll(
+                    status().isBadRequest()
+            );
+
+            // docs
+            perform.andDo(document("auth/login/null"));
         }
 
         @Test
@@ -60,8 +64,12 @@ class OAuthControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isInternalServerError())
-                    .andDo(document("auth/login/github-fail"));
+            perform.andExpectAll(
+                    status().isInternalServerError()
+            );
+
+            // docs
+            perform.andDo(document("auth/login/github-fail"));
         }
     }
 }

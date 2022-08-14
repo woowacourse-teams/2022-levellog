@@ -13,7 +13,6 @@ import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -32,7 +31,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
-        void save_alreadyExist_exceptionThrown() throws Exception {
+        void save_alreadyExist_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -60,7 +59,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
-        void save_selfFeedback_exceptionThrown() throws Exception {
+        void save_selfFeedback_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -89,7 +88,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_otherMember_exceptionThrown() throws Exception {
+        void save_otherMember_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -118,7 +117,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 작성을 요청하면 예외가 발생한다.")
-        void save_notFoundLevellog_exceptionThrown() throws Exception {
+        void save_notFoundLevellog_exception() throws Exception {
             // given
             final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
@@ -146,7 +145,7 @@ class FeedbackControllerTest extends ControllerTest {
         }
         @Test
         @DisplayName("팀 인터뷰 시작 전에 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_beforeStartAt_exceptionThrown() throws Exception {
+        void save_beforeStartAt_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -174,7 +173,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 인터뷰 종료 후에 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_alreadyClosed_exceptionThrown() throws Exception {
+        void save_alreadyClosed_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -207,7 +206,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("피드백에 관련이 없는 멤버가 피드백을 수정하면 예외가 발생한다.")
-        void update_otherMember_exceptionThrown() throws Exception {
+        void update_otherMember_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -240,7 +239,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("존재하지 않는 피드백 정보로 피드백 수정을 요청하면 예외가 발생한다.")
-        void update_notFoundFeedback_exceptionThrown() throws Exception {
+        void update_notFoundFeedback_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -272,7 +271,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 시작 전에 피드백을 수정하면 예외가 발생한다.")
-        void update_beforeStartAt_exceptionThrown() throws Exception {
+        void update_beforeStartAt_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -303,7 +302,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 종료 후에 피드백을 수정하면 예외가 발생한다.")
-        void update_alreadyClosed_exceptionThrown() throws Exception {
+        void update_alreadyClosed_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);
@@ -340,7 +339,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
-        void findAll_notFoundLevellog_exceptionThrown() throws Exception {
+        void findAll_notFoundLevellog_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(token)).willReturn("1");
             given(jwtTokenProvider.validateToken(token)).willReturn(true);

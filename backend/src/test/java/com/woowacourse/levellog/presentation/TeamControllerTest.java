@@ -58,7 +58,7 @@ class TeamControllerTest extends ControllerTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("팀 명으로 null이 들어오면 예외를 던진다.")
-        void titleNull_Exception(final String title) throws Exception {
+        void save_titleNull_exception(final String title) throws Exception {
             // given
             mockLogin();
 
@@ -79,7 +79,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 명으로 255자를 초과할 경우 예외를 던진다.")
-        void titleInvalidLength_Exception() throws Exception {
+        void save_titleInvalidLength_exception() throws Exception {
             // given
             mockLogin();
 
@@ -107,7 +107,7 @@ class TeamControllerTest extends ControllerTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("장소로 null이 들어오면 예외를 던진다.")
-        void placeNull_Exception(final String place) throws Exception {
+        void save_placeNull_exception(final String place) throws Exception {
             // given
             mockLogin();
 
@@ -128,7 +128,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("장소로 255자를 초과할 경우 예외를 던진다.")
-        void placeInvalidLength_Exception() throws Exception {
+        void save_placeInvalidLength_exception() throws Exception {
             // given
             mockLogin();
 
@@ -154,7 +154,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간으로 null이 들어오면 예외를 던진다.")
-        void startAtNull_Exception() throws Exception {
+        void save_startAtNull_exception() throws Exception {
             // given
             mockLogin();
 
@@ -174,7 +174,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간이 현재 시간 기준으로 과거면 예외를 던진다.")
-        void startAtPast_Exception() throws Exception {
+        void save_startAtPast_exception() throws Exception {
             // given
             mockLogin();
 
@@ -199,7 +199,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
-        void participantsEmpty_Exception() throws Exception {
+        void save_participantsEmpty_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -224,7 +224,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
-        void participantsNull_Exception() throws Exception {
+        void save_participantsNull_exception() throws Exception {
             // given
             mockLogin();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
@@ -242,7 +242,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰어가 1명 미만이면 예외를 던진다.")
-        void notPositiveInterviewerNumber_exceptionThrown() throws Exception {
+        void save_notPositiveInterviewerNumber_exception() throws Exception {
             // given
             mockLogin();
 
@@ -263,7 +263,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰어 수가 참가자 수보다 많거나 같으면 예외를 던진다.")
-        void interviewerMoreThanParticipant_exceptionThrown() throws Exception {
+        void save_interviewerMoreThanParticipant_exception() throws Exception {
             // given
             mockLogin();
 
@@ -288,7 +288,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 구성원 목록으로 중복된 Id가 들어오면 예외를 던진다.")
-        void save_duplicateParticipant_exceptionThrown() throws Exception {
+        void save_duplicateParticipant_exception() throws Exception {
             // given
             mockLogin();
 
@@ -318,7 +318,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 구성원 목록으로 호스트 Id가 들어오면 예외를 던진다.")
-        void save_participantsWithHostId_exceptionThrown() throws Exception {
+        void save_participantsWithHostId_exception() throws Exception {
             // given
             mockLogin();
 
@@ -355,7 +355,7 @@ class TeamControllerTest extends ControllerTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("팀 명으로 null이 들어오면 예외를 던진다.")
-        void titleNull_Exception(final String title) throws Exception {
+        void update_titleNull_exception(final String title) throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -377,7 +377,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 명으로 255자를 초과할 경우 예외를 던진다.")
-        void titleInvalidLength_Exception() throws Exception {
+        void update_titleInvalidLength_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -406,7 +406,7 @@ class TeamControllerTest extends ControllerTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("장소로 null이 들어오면 예외를 던진다.")
-        void placeNull_Exception(final String place) throws Exception {
+        void update_placeNull_exception(final String place) throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -428,7 +428,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("장소로 255자를 초과할 경우 예외를 던진다.")
-        void placeInvalidLength_Exception() throws Exception {
+        void update_placeInvalidLength_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -455,7 +455,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간으로 null이 들어오면 예외를 던진다.")
-        void startAtNull_Exception() throws Exception {
+        void update_startAtNull_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -476,7 +476,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간이 현재 시간 기준으로 과거면 예외를 던진다.")
-        void startAtPast_Exception() throws Exception {
+        void update_startAtPast_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -502,7 +502,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("없는 팀을 수정하려고 하면 예외를 던진다.")
-        void teamNotFound_Exception() throws Exception {
+        void update_teamNotFound_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -527,7 +527,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
-        void participantsEmpty_Exception() throws Exception {
+        void update_participantsEmpty_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -546,7 +546,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
-        void participantsNull_Exception() throws Exception {
+        void update_participantsNull_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -565,7 +565,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰어가 1명 미만이면 예외를 던진다.")
-        void notPositiveInterviewerNumber_exceptionThrown() throws Exception {
+        void update_notPositiveInterviewerNumber_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -586,7 +586,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰어 수가 참가자 수보다 많거나 같으면 예외를 던진다.")
-        void interviewerMoreThanParticipant_exceptionThrown() throws Exception {
+        void update_interviewerMoreThanParticipant_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -611,7 +611,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 구성원 목록으로 중복된 Id가 들어오면 예외를 던진다.")
-        void duplicateParticipant_exceptionThrown() throws Exception {
+        void update_duplicateParticipant_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -635,7 +635,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 구성원 목록으로 호스트 Id가 들어오면 예외를 던진다.")
-        void participantsWithHostId_exceptionThrown() throws Exception {
+        void update_participantsWithHostId_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -660,7 +660,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 시작 이후에 팀을 수정하려고 하면 예외를 던진다.")
-        void updateAfterStartAt_Exception() throws Exception {
+        void update_updateAfterStartAt_exception() throws Exception {
             // given
             mockLogin();
             mockCreateTeam();
@@ -690,7 +690,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
-        void teamNotFound_Exception() throws Exception {
+        void findById_teamNotFound_exception() throws Exception {
             // given
             mockLogin();
 
@@ -720,7 +720,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("요청한 사용자가 소속된 팀이 아니면 예외를 던진다.")
-        void notMyTeam_exceptionThrown() throws Exception {
+        void findMyRole_notMyTeam_exception() throws Exception {
             // given
             final Long teamId = 2L;
             final Long memberId = 5L;
@@ -746,7 +746,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("타겟 멤버가 팀의 참가자가 아니면 예외를 던진다.")
-        void targetNotParticipant_exceptionThrown() throws Exception {
+        void findMyRole_targetNotParticipant_exception() throws Exception {
             // given
             final Long teamId = 2L;
             final Long memberId = 5L;
@@ -777,7 +777,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("존재하지 않는 팀의 인터뷰를 종료하려고 하면 예외가 발생한다.")
-        void close_notFoundTeam_exceptionThrown() throws Exception {
+        void close_notFoundTeam_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -805,7 +805,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("이미 종료된 팀 인터뷰를 종료하려고 하면 예외가 발생한다.")
-        void close_alreadyClosed_exceptionThrown() throws Exception {
+        void close_alreadyClosed_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -833,7 +833,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간 전에 종료하려고 하면 예외가 발생한다.")
-        void close_beforeStart_exceptionThrown() throws Exception {
+        void close_beforeStart_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -861,7 +861,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하려고 하면 예외가 발생한다.")
-        void close_notHost_exceptionThrown() throws Exception {
+        void close_notHost_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -894,7 +894,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("없는 팀을 제거하려고 하면 예외를 던진다.")
-        void delete_teamNotFound_Exception() throws Exception {
+        void delete_teamNotFound_exception() throws Exception {
             // given
             mockLogin();
 
@@ -918,7 +918,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간 후에 삭제하려고 하면 예외가 발생한다.")
-        void delete_afterStart_exceptionThrown() throws Exception {
+        void delete_afterStart_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -946,7 +946,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("호스트가 아닌 사용자가 팀을 삭제하려고 하면 예외가 발생한다.")
-        void delete_notHost_exceptionThrown() throws Exception {
+        void delete_notHost_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);

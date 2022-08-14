@@ -27,11 +27,11 @@ class MyInfoControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("updateNickname 메서드는 ")
-    class UpdateNicknameMapping {
+    class UpdateNickname {
 
         @Test
         @DisplayName("닉네임에 50자를 초과한 문자열이 들어올 경우 예외를 던진다.")
-        void nicknameInvalidLength_Exception() throws Exception {
+        void updateNickname_nicknameInvalidLength_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);
@@ -63,7 +63,7 @@ class MyInfoControllerTest extends ControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("닉네임에 null 또는 빈 값이 들어온 경우 예외를 던진다.")
-        void nicknameNullAndEmpty_Exception(final String invalidNickname) throws Exception {
+        void updateNickname_nicknameNullAndEmpty_exception(final String invalidNickname) throws Exception {
             // given
             given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
             given(jwtTokenProvider.validateToken(any())).willReturn(true);

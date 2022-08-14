@@ -67,7 +67,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
-        void save_interviewQuestionInvalidLength_Exception() throws Exception {
+        void save_interviewQuestionInvalidLength_exception() throws Exception {
             // given
             mockLogin();
 
@@ -233,7 +233,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
-        void update_interviewQuestionInvalidLength_Exception() throws Exception {
+        void update_interviewQuestionInvalidLength_exception() throws Exception {
             // given
             final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
 

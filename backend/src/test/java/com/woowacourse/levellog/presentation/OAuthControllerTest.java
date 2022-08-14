@@ -29,7 +29,7 @@ class OAuthControllerTest extends ControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("코드에 공백이나 null이 들어오면 예외를 던진다.")
-        void login_nullAndEmptyCode_exceptionThrown(final String code) throws Exception {
+        void login_nullAndEmptyCode_exception(final String code) throws Exception {
             // given
             final GithubCodeDto request = new GithubCodeDto(code);
             final String requestContent = objectMapper.writeValueAsString(request);
@@ -47,7 +47,7 @@ class OAuthControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("깃허브에 accessToken 요청에 실패하면 예외를 던진다.")
-        void login_failToGetAccessToken_exceptionThrown() throws Exception {
+        void login_failToGetAccessToken_exception() throws Exception {
             // given
             final GithubCodeDto request = new GithubCodeDto(AUTHORIZATION_CODE);
             final String requestContent = objectMapper.writeValueAsString(request);

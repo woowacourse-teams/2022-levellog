@@ -51,7 +51,7 @@ class LevellogControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
-        void save_nameNullOrEmpty_Exception() throws Exception {
+        void save_nameNullOrEmpty_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from(" ");
@@ -106,7 +106,7 @@ class LevellogControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("존재하지 않는 레벨로그를 조회하면 예외를 던진다.")
-        void find_levellogNoExist_Exception() throws Exception {
+        void find_levellogNoExist_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final Long levellogId = 1000L;
@@ -133,7 +133,7 @@ class LevellogControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
-        void update_nameNullOrEmpty_Exception() throws Exception {
+        void update_nameNullOrEmpty_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;
@@ -155,7 +155,7 @@ class LevellogControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("본인이 작성하지 않은 레벨로그를 수정하려는 경우 예외를 던진다.")
-        void update_unauthorized_Exception() throws Exception {
+        void update_unauthorized_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;

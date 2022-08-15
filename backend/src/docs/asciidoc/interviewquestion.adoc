@@ -32,10 +32,6 @@ include::{snippets}/interview-question/save/exception/contents/length/http-respo
 
 include::{snippets}/interview-question/save/exception/levellog-not-found/http-response.adoc[]
 
-==== 인터뷰 질문 작성자 멤버를 찾을 수 없는 경우
-
-include::{snippets}/interview-question/save/exception/member-not-found/http-response.adoc[]
-
 ==== 인터뷰가 이미 종료된 경우
 
 include::{snippets}/interview-question/save/exception/is-closed/http-response.adoc[]
@@ -73,10 +69,6 @@ operation::interview-question/find-all-my-interview-question[]
 ==== 인터뷰 질문에 해당하는 레벨로그가 존재하지 않는 경우
 
 include::{snippets}/interview-question/find-all-my-interview-question/exception/levellog-not-found/http-response.adoc[]
-
-==== 인터뷰 질문 작성자 멤버를 찾을 수 없는 경우
-
-include::{snippets}/interview-question/find-all-my-interview-question/exception/member-not-found/http-response.adoc[]
 
 [[update]]
 == 인터뷰 질문 내용 수정

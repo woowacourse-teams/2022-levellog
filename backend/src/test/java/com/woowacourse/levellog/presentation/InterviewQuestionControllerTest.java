@@ -8,8 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
+import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,7 +32,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문이 공백인 경우 예외를 던진다.")
         void save_contentBlank_exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(" ");
 
             // when
             final ResultActions perform = requestCreateInterviewQuestion(1L, request);
@@ -49,8 +51,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
         void save_interviewQuestionInvalidLength_Exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
-
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
             willThrow(new InvalidFieldException(message))
                     .given(interviewQuestionService)
@@ -74,7 +75,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_levellogNotFound_exception() throws Exception {
             // given
             final long invalidLevellogId = 20000000L;
-            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
             final String message = "레벨로그가 존재하지 않습니다.";
             willThrow(new LevellogNotFoundException(message))
@@ -100,7 +101,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_interviewTime_exception(final String message, final String snippet) throws Exception {
             // given
             final long levellogId = 1L;
-            final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
             willThrow(new InterviewTimeException(message))
                     .given(interviewQuestionService)
@@ -119,28 +120,28 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document("interview-question/save/exception/" + snippet));
         }
 
-        private ResultActions requestCreateInterviewQuestion(final Long levellogId, final InterviewQuestionDto request)
+        private ResultActions requestCreateInterviewQuestion(final Long levellogId, final InterviewQuestionWriteDto request)
                 throws Exception {
             return requestPost("/api/levellogs/" + levellogId + "/interview-questions", request);
         }
     }
 
     @Nested
-    @DisplayName("findAll 메서드는")
-    class FindAll {
+    @DisplayName("findAllByLevellog 메서드는")
+    class FindAllByLevellog {
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 인터뷰 질문 목록 조회를 요청하면 예외를 던진다.")
-        void findAll_levellogNotFound_exception() throws Exception {
+        void findAllByLevellog_levellogNotFound_exception() throws Exception {
             // given
             final long invalidLevellogId = 20000000L;
             final String message = "레벨로그가 존재하지 않습니다.";
             willThrow(new LevellogNotFoundException(message))
                     .given(interviewQuestionService)
-                    .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
+                    .findAllByLevellog(invalidLevellogId);
 
             // when
-            final ResultActions perform = requestFindAllInterviewQuestion(invalidLevellogId);
+            final ResultActions perform = requestFindAllByLevellog(invalidLevellogId);
 
             // then
             perform.andExpectAll(
@@ -149,11 +150,43 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/findAll/exception/levellog-not-found"));
+            perform.andDo(document("interview-question/find-all-by-levellog/exception/levellog-not-found"));
         }
 
-        private ResultActions requestFindAllInterviewQuestion(final Long levellogId) throws Exception {
+        private ResultActions requestFindAllByLevellog(final Long levellogId) throws Exception {
             return requestGet("/api/levellogs/" + levellogId + "/interview-questions");
+        }
+    }
+
+    @Nested
+    @DisplayName("findAllMyInterviewQuestion 메서드는")
+    class FindAllMyInterviewQuestion {
+
+        @Test
+        @DisplayName("존재하지 않는 레벨로그 정보로 인터뷰 질문 목록 조회를 요청하면 예외를 던진다.")
+        void findAllMyInterviewQuestion_levellogNotFound_exception() throws Exception {
+            // given
+            final long invalidLevellogId = 20000000L;
+            final String message = "레벨로그가 존재하지 않습니다.";
+            willThrow(new LevellogNotFoundException(message))
+                    .given(interviewQuestionService)
+                    .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
+
+            // when
+            final ResultActions perform = requestFindAllMyInterviewQuestion(invalidLevellogId);
+
+            // then
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document("interview-question/find-all-my-interview-question/exception/levellog-not-found"));
+        }
+
+        private ResultActions requestFindAllMyInterviewQuestion(final Long levellogId) throws Exception {
+            return requestGet("/api/levellogs/" + levellogId + "/interview-questions/my");
         }
     }
 
@@ -165,7 +198,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문이 공백인 경우 예외를 던진다.")
         void update_contentBlank_exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from(" ");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(" ");
 
             // when
             final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
@@ -184,7 +217,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
         void update_interviewQuestionInvalidLength_Exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("a".repeat(256));
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
             willThrow(new InvalidFieldException(message))
                     .given(interviewQuestionService)
@@ -208,7 +241,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void update_interviewQuestionNotFound_exception() throws Exception {
             // given
             final Long invalidInterviewQuestionId = 1000L;
-            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
 
             final String message = "인터뷰 질문이 존재하지 않습니다.";
             willThrow(new InterviewQuestionNotFoundException(message))
@@ -232,7 +265,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void update_unauthorized_exception() throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
             final String message = "권한이 없습니다.";
             willThrow(new UnauthorizedException(message))
                     .given(interviewQuestionService)
@@ -256,7 +289,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 수정 정책에 위반되면 예외를 던진다.")
         void update_interviewTime_exception(final String message, final String snippet) throws Exception {
             // given
-            final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
             willThrow(new InterviewTimeException(message))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
@@ -275,7 +308,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         }
 
         private ResultActions requestUpdateInterviewQuestion(final Long levellogId, final Long interviewQuestionId,
-                                                             final InterviewQuestionDto request) throws Exception {
+                                                             final InterviewQuestionWriteDto request) throws Exception {
             return requestPut("/api/levellogs/" + levellogId + "/interview-questions/" + interviewQuestionId, request);
         }
     }

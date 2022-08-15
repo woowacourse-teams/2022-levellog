@@ -12,7 +12,7 @@ import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -142,7 +142,7 @@ abstract class ServiceTest {
 
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
-        final InterviewQuestionDto request = InterviewQuestionDto.from(content);
+        final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(content);
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
         return interviewQuestionRepository.save(interviewQuestion);
     }

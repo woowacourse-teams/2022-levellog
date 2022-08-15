@@ -34,14 +34,14 @@ public class InterviewQuestionService {
 
     @Transactional
     public Long save(final InterviewQuestionWriteDto request, final Long levellogId, final Long fromMemberId) {
-        final Member fromMember = getMember(fromMemberId);
+        final Member author = getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
 
-        validateMemberIsParticipant(fromMember, levellog);
+        validateMemberIsParticipant(author, levellog);
         levellog.getTeam()
                 .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.");
 
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(fromMember, levellog);
+        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
 
         return interviewQuestionRepository.save(interviewQuestion)
                 .getId();
@@ -56,9 +56,9 @@ public class InterviewQuestionService {
 
     public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
         final Levellog levellog = getLevellog(levellogId);
-        final Member fromMember = getMember(fromMemberId);
+        final Member author = getMember(fromMemberId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(
-                levellog, fromMember);
+                levellog, author);
 
         return InterviewQuestionContentsDto.from(interviewQuestions);
     }
@@ -66,21 +66,21 @@ public class InterviewQuestionService {
     @Transactional
     public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId, final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
-        final Member fromMember = getMember(fromMemberId);
+        final Member author = getMember(fromMemberId);
 
         interviewQuestion.getLevellog()
                 .getTeam()
                 .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 수정 할 수 없습니다.");
 
-        interviewQuestion.updateContent(request.getInterviewQuestion(), fromMember);
+        interviewQuestion.updateContent(request.getInterviewQuestion(), author);
     }
 
     @Transactional
     public void deleteById(final Long interviewQuestionId, final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
-        final Member member = getMember(fromMemberId);
+        final Member author = getMember(fromMemberId);
 
-        interviewQuestion.validateMemberIsAuthor(member, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
+        interviewQuestion.validateMemberIsAuthor(author, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
         interviewQuestion.getLevellog()
                 .getTeam()
                 .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 삭제 할 수 없습니다.");

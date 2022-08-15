@@ -715,7 +715,7 @@ class TeamControllerTest extends ControllerTest {
                     .findStatus(teamId);
 
             // when
-            final ResultActions perform = requestGet("/api/teams/" + teamId + "/status", TOKEN);
+            final ResultActions perform = requestFindStatus(teamId);
 
             // then
             perform.andExpectAll(
@@ -725,6 +725,10 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/find-status/exception/team-not-found"));
+        }
+
+        private ResultActions requestFindStatus(final Long teamId) throws Exception {
+            return requestGet("/api/teams/" + teamId + "/status");
         }
     }
 

@@ -37,10 +37,10 @@ jobs:
       - name: 소나큐브 빌드 진행
         working-directory: ./backend
         run: ./gradlew test sonarqube
-            -Dsonar.projectKey=${{ env.SONARQUBE_ID }} 
-            -Dsonar.host.url=${{ env.SONARQUBE_URL }} 
-            -Dsonar.projectName=${{ env.SONARQUBE_ID }}-${{ env.PR_NUMBER }} 
-            -Dsonar.login=${{ secrets.SONARQUBE_ACCESS_TOKEN }}
+             -Dsonar.projectKey=${{ env.SONARQUBE_ID }} 
+             -Dsonar.host.url=${{ env.SONARQUBE_URL }} 
+             -Dsonar.projectName=${{ env.SONARQUBE_ID }}-${{ env.PR_NUMBER }} 
+             -Dsonar.login=${{ secrets.SONARQUBE_ACCESS_TOKEN }}
 
       - name: Comment Sonarqube URL
         uses: actions/github-script@v2
@@ -52,7 +52,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `📊 ${ SONARQUBE_ID } 분석 결과 확인하기 [링크]($SONARQUBE_URL})`})
+              body: `📊 ${ SONARQUBE_ID } 분석 결과 확인하기 [링크](${ SONARQUBE_URL })`})
 
   test:
     runs-on: ubuntu-22.04 # 실행 환경 지정

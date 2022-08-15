@@ -17,9 +17,8 @@ import LevellogReport from 'components/levellogs/LevellogReport';
 const PreQuestionAdd = () => {
   const { levellog, getLevellog } = useLevellog();
   const { preQuestionRef, onClickPreQuestionAddButton } = usePreQuestion();
-
-  const navigate = useNavigate();
   const { teamId, levellogId } = useParams();
+  const navigate = useNavigate();
 
   const handleClickPreQuestionAddButton = () => {
     if (typeof teamId === 'string' && typeof levellogId === 'string') {

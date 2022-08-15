@@ -1,24 +1,24 @@
 import React from 'react';
 import { useEffect } from 'react';
 
-import useMember from 'hooks/useMember';
-import { useTeam } from 'hooks/useTeams';
+import useTeam from 'hooks/useTeam';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
-import TeamAddForm from 'components/teams/TeamAddForm';
+import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamAdd = () => {
   const {
+    teamInfoRef,
+    onSubmitTeamAddForm,
     members,
     nicknameValue,
     setNicknameValue,
     participants,
     updateMembers,
-    updateParticipants,
-  } = useMember();
-
-  const { teamInfoRef, onSubmitTeamAddForm } = useTeam();
+    addToParticipants,
+    removeToParticipants,
+  } = useTeam();
 
   const handleSubmitTeamAddForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,14 +38,15 @@ const InterviewTeamAdd = () => {
       <ContentHeader title={'인터뷰 팀 생성하기'}>
         <Button type={'submit'}>만들기</Button>
       </ContentHeader>
-      <TeamAddForm
+      <TeamForm
         teamInfoRef={teamInfoRef}
         participants={participants}
         members={members}
         nicknameValue={nicknameValue}
         setNicknameValue={setNicknameValue}
         handleChangeInput={handleChangeInput}
-        updateParticipants={updateParticipants}
+        addToParticipants={addToParticipants}
+        removeToParticipants={removeToParticipants}
       />
     </form>
   );

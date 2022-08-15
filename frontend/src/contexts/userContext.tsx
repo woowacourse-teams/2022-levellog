@@ -14,7 +14,7 @@ export const UserContext = createContext<UserInfoType>(userInfo);
 export const UserDispatchContext = createContext<UserDispatchType>(() => {});
 
 export const UserProvider = ({ children }: { children: JSX.Element }) => {
-  const [userState, setUserState] = useState(userInfo);
+  const [userState, setUserState] = useState<UserInfoType>(userInfo);
 
   return (
     <UserContext.Provider value={userState}>

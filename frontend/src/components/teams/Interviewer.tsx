@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import useUser from 'hooks/useUser';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
@@ -12,12 +12,13 @@ import Role from 'components/@commons/Role';
 import { LevellogParticipantType } from 'types/levellog';
 import { PreQuestionParticipantType } from 'types/preQuestion';
 import { RoleType } from 'types/role';
-import { ParticipantType } from 'types/team';
+import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const Interviewer = ({
   participant,
   userInTeam,
   role,
+  teamStatus,
   onClickOpenLevellogModal,
   onClickOpenPreQuestionModal,
 }: InterviewerProps) => {
@@ -36,7 +37,7 @@ const Interviewer = ({
   };
 
   const handleClickPreQuestionButton = () => {
-    navigate(`/pre-questions/teams/${teamId}/levellog/${participant.levellogId}`);
+    navigate(`/pre-questions/teams/${teamId}/levellogs/${participant.levellogId}`);
   };
 
   const handleClickFeedbackButton = () => {
@@ -60,6 +61,11 @@ const Interviewer = ({
               <S.InterviewerButton onClick={handleClickOpenLevellogModal}>
                 레벨로그 보기
               </S.InterviewerButton>
+              <Link to={`/interview-questions/levellogs/${participant.levellogId}`}>
+                <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
+                  인터뷰 질문 보기
+                </S.InterviewerButton>
+              </Link>
               <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
                 <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
                   피드백
@@ -67,9 +73,15 @@ const Interviewer = ({
               </Link>
             </>
           ) : (
-            <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
-              <S.InterviewerButton>레벨로그 작성</S.InterviewerButton>
-            </Link>
+            <>
+              {teamStatus === TEAM_STATUS.READY ? (
+                <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
+                  <S.InterviewerButton>레벨로그 작성</S.InterviewerButton>
+                </Link>
+              ) : (
+                <S.InterviewerButton disabled>레벨로그 작성</S.InterviewerButton>
+              )}
+            </>
           )}
         </S.Content>
       </S.Container>
@@ -125,6 +137,7 @@ const Interviewer = ({
 
 interface InterviewerProps {
   participant: ParticipantType;
+  teamStatus: string;
   role: RoleType;
   userInTeam: Boolean;
   onClickOpenLevellogModal: ({ teamId, participant }: LevellogParticipantType) => void;

@@ -15,7 +15,7 @@ const PreQuestionViewModal = ({
   getTeam,
   onClickDeletePreQuestion,
   handleClickClosePreQuestionModal,
-}: LevellogViewModalProps) => {
+}: PreQuestionViewModalProps) => {
   const { levellogId, preQuestionId, nickname } = participant;
   const { teamId } = useParams();
 
@@ -36,9 +36,9 @@ const PreQuestionViewModal = ({
             X
           </S.CloseButton>
         </S.Header>
-        <S.Levellog>
+        <S.PreQuestion>
           <UiViewer content={preQuestion} />
-        </S.Levellog>
+        </S.PreQuestion>
         <S.Footer>
           <Link
             to={`/pre-questions/teams/${teamId}/levellog/${levellogId}/pre-question/${preQuestionId}`}
@@ -52,7 +52,7 @@ const PreQuestionViewModal = ({
   );
 };
 
-interface LevellogViewModalProps {
+interface PreQuestionViewModalProps {
   preQuestion: string;
   participant: ParticipantType;
   getTeam: () => void;
@@ -110,7 +110,7 @@ const S = {
     cursor: pointer;
   `,
 
-  Levellog: styled.div`
+  PreQuestion: styled.div`
     overflow: auto;
     width: 42.5rem;
     height: 40.5rem;

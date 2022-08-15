@@ -7,10 +7,13 @@ import { ROUTES_PATH } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
-import { LevellogCustomHookType, LevellogFormatType } from 'types/levellog';
+import { LevellogCustomHookType, LevellogFormatType, LevellogInfoType } from 'types/levellog';
 
 const useLevellog = () => {
-  const [levellog, setLevellog] = useState('');
+  const [levellogInfo, setLevellogInfo] = useState<LevellogInfoType>(
+    {} as unknown as LevellogInfoType,
+  );
+
   const levellogRef = useRef<Editor>(null);
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
@@ -48,12 +51,14 @@ const useLevellog = () => {
   const getLevellog = async ({
     teamId,
     levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>): Promise<string | void> => {
+  }: Omit<LevellogCustomHookType, 'inputValue'>): Promise<LevellogInfoType | undefined> => {
     try {
       const res = await requestGetLevellog({ accessToken, teamId, levellogId });
-      setLevellog(res.data.content);
+      if ('content' in res.data) {
+        setLevellogInfo(res.data);
+      }
 
-      return res.data.content;
+      return res.data;
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
@@ -86,12 +91,9 @@ const useLevellog = () => {
     teamId,
     levellogId,
   }: Omit<LevellogCustomHookType, 'inputValue'>) => {
-    const levellog = await getLevellog({ teamId, levellogId });
-    if (typeof levellog === 'string') {
-      setLevellog(levellog);
-    }
-    if (typeof levellog === 'string' && levellogRef.current) {
-      levellogRef.current.getInstance().setMarkdown(levellog);
+    const levellogInfo = await getLevellog({ teamId, levellogId });
+    if (levellogInfo && levellogRef.current) {
+      levellogRef.current.getInstance().setMarkdown(levellogInfo.content);
     }
   };
 
@@ -119,7 +121,7 @@ const useLevellog = () => {
   };
 
   return {
-    levellog,
+    levellogInfo,
     levellogRef,
     postLevellog,
     getLevellog,

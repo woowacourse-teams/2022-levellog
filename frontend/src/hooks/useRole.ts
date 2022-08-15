@@ -3,32 +3,22 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import useTeam from 'hooks/useTeam';
-
 import { ROUTES_PATH } from 'constants/constants';
 
 import { requestGetLoginUserRole } from 'apis/role';
 import { RoleCustomHookType } from 'types/role';
-import { InterviewTeamType } from 'types/team';
 
 const useRole = () => {
-  const { getTeam } = useTeam();
   const [feedbackWriterRole, setFeedbackWriterRole] = useState('');
-  const [levellogWriter, setLevellogWriter] = useState('');
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accessToken');
 
   const getWriterInfo = async ({
     teamId,
-    levellogId,
-  }: Omit<RoleCustomHookType, 'participantId'>) => {
+    participantId,
+  }: Omit<RoleCustomHookType, 'levellogId'>) => {
     try {
-      const team = await getTeam();
-      const levellogWriter = (team as InterviewTeamType).participants.find(
-        (participant) => Number(participant.levellogId) === Number(levellogId),
-      );
-      setLevellogWriter(levellogWriter!.nickname);
-      getFeedbackWriterRole({ teamId, participantId: levellogWriter!.memberId });
+      getFeedbackWriterRole({ teamId, participantId });
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
@@ -55,7 +45,6 @@ const useRole = () => {
   };
 
   return {
-    levellogWriter,
     feedbackWriterRole,
     getWriterInfo,
   };

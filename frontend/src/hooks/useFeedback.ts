@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
 import { requestPostFeedback, requestGetFeedbacksInTeam, requestEditFeedback } from 'apis/feedback';
@@ -21,6 +21,7 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackResult'>) => {
     try {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
+      alert(MESSAGE.FEEDBACK_CREATE);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;

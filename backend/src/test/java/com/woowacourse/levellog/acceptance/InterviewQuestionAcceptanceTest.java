@@ -71,9 +71,9 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
     /*
      * Scenario: 내가 작성한 인터뷰 질문 목록 조회
-     *   given: 인터뷰 질문이 등록되어있다.
-     *   when: 등록된 모든 인터뷰 질문을 조회한다.
-     *   then: 200 OK 상태 코드와 모든 인터뷰 질문을 응답 받는다.
+     *   given: 레벨로그와 인터뷰 질문이 등록되어있다.
+     *   when: 등록된 레벨로그에 내가 작성한 모든 인터뷰 질문을 조회한다.
+     *   then: 200 OK 상태 코드와 내가 작성한 모든 인터뷰 질문을 응답 받는다.
      */
     @Test
     @DisplayName("내가 작성한 인터뷰 질문 목록 조회")

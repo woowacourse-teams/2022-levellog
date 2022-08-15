@@ -20,6 +20,7 @@ import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
@@ -381,6 +382,71 @@ class TeamServiceTest extends ServiceTest {
                         () -> assertThat(response.getIsParticipant()).isFalse()
                 );
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("findStatus 메서드는")
+    class FindStatus {
+
+        @Test
+        @DisplayName("인터뷰 시작 전인 팀의 상태를 조회하면 READY를 반환한다.")
+        void success_ready() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭");
+
+            final Team team = saveTeam(pepper, rick);
+
+            // when
+            final TeamStatusDto actual = teamService.findStatus(team.getId());
+
+            // then
+            assertThat(actual.getStatus()).isEqualTo(TeamStatus.READY);
+        }
+
+        @Test
+        @DisplayName("인터뷰 진행 중인 팀의 상태를 조회하면 IN_PROGRESS를 반환한다.")
+        void success_inProgress() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭");
+
+            final Team team = saveTeam(pepper, rick);
+
+            timeStandard.setInProgress();
+
+            // when
+            final TeamStatusDto actual = teamService.findStatus(team.getId());
+
+            // then
+            assertThat(actual.getStatus()).isEqualTo(TeamStatus.IN_PROGRESS);
+        }
+
+        @Test
+        @DisplayName("인터뷰 종료 후인 팀의 상태를 조회하면 CLOSED를 반환한다.")
+        void success_closed() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭");
+
+            final Team team = saveTeam(pepper, rick);
+
+            team.close(AFTER_START_TIME);
+
+            // when
+            final TeamStatusDto actual = teamService.findStatus(team.getId());
+
+            // then
+            assertThat(actual.getStatus()).isEqualTo(TeamStatus.CLOSED);
+        }
+
+        @Test
+        @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
+        void findStatus_notExistTeam_exceptionThrown() {
+            // when & then
+            assertThatThrownBy(() -> teamService.findStatus(999L))
+                    .isInstanceOf(TeamNotFoundException.class);
         }
     }
 

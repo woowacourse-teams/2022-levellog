@@ -63,6 +63,10 @@ public class InterviewQuestion extends BaseEntity {
         }
     }
 
+    public boolean isAuthor(final Member member) {
+        return author.equals(member);
+    }
+
     public void updateContent(final String content, final Member member) {
         validateContent(content);
         validateMemberIsAuthor(member, "인터뷰 질문을 수정할 수 있는 권한이 없습니다.");

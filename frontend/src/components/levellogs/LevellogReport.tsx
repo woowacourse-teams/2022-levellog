@@ -1,20 +1,20 @@
 import styled from 'styled-components';
 
-import { FeedbackTitle } from 'components/@commons/Style';
 import UiViewer from 'components/@commons/UiViewer';
+import { LevellogInfoType } from 'types/levellog';
 
-const LevellogReport = ({ levellog }: LevellogReportProps) => {
+const LevellogReport = ({ levellogInfo }: LevellogReportProps) => {
   return (
     <S.Container>
       <S.Content>
-        <UiViewer content={levellog} />
+        <UiViewer content={levellogInfo.content} />
       </S.Content>
     </S.Container>
   );
 };
 
 interface LevellogReportProps {
-  levellog: string;
+  levellogInfo: LevellogInfoType;
 }
 
 const S = {

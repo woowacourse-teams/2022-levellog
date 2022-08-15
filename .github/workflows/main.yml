@@ -16,6 +16,12 @@ jobs:
   sonarqube-build:
     runs-on: ubuntu-22.04
 
+    env:
+      # KEY - VALUE
+      SONARQUBE_ID: ${{ secrets.SONARQUBE_KEY }}
+      SONARQUBE_URL: ${{ secrets.SONARQUBE_HOST_URL }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -30,7 +36,23 @@ jobs:
 
       - name: 소나큐브 빌드 진행
         working-directory: ./backend
-        run: ./gradlew sonarqube -Dsonar.projectKey=${{ secrets.SONARQUBE_KEY }} -Dsonar.host.url=${{ secrets.SONARQUBE_HOST_URL }} -Dsonar.login=${{ secrets.SONARQUBE_ACCESS_TOKEN }}
+        run: ./gradlew test sonarqube
+            -Dsonar.projectKey=${{ env.SONARQUBE_ID }} 
+            -Dsonar.host.url=${{ env.SONARQUBE_URL }} 
+            -Dsonar.projectName=${{ env.SONARQUBE_ID }}-${{ env.PR_NUMBER }} 
+            -Dsonar.login=${{ secrets.SONARQUBE_ACCESS_TOKEN }}
+
+      - name: Comment Sonarqube URL
+        uses: actions/github-script@v2
+        with:
+          # 이슈에 코멘트를 달아주는 스크립트 실행
+          script: |
+            const { SONARQUBE_ID, SONARQUBE_URL, PR_NUMBER } = process.env
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `📊 ${ SONARQUBE_ID } 분석 결과 확인하기 [링크]($SONARQUBE_URL})`})
 
   test:
     runs-on: ubuntu-22.04 # 실행 환경 지정

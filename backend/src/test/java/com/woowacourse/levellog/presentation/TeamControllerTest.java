@@ -715,10 +715,7 @@ class TeamControllerTest extends ControllerTest {
                     .findStatus(teamId);
 
             // when
-            final ResultActions perform = mockMvc.perform(get("/api/teams/" + teamId + "/status")
-                            .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .accept(MediaType.ALL))
-                    .andDo(print());
+            final ResultActions perform = requestGet("/api/teams/" + teamId + "/status", TOKEN);
 
             // then
             perform.andExpectAll(

@@ -26,7 +26,6 @@ import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -109,7 +108,7 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse login(final String nickname) {
         try {
             final GithubProfileDto response = new GithubProfileDto(
-                    String.valueOf(((int) System.nanoTime())), nickname, nickname + ".com");
+                    String.valueOf((int) System.nanoTime()), nickname, nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);
 
             return post("/api/auth/login", new GithubCodeDto(code));
@@ -120,43 +119,38 @@ abstract class AcceptanceTest {
         return null;
     }
 
-    protected RestAssuredResponse requestCreateTeam(final String title, final String token,
-                                                    final int interviewerNumber, final List<Long> participantIds) {
-        return requestCreateTeam(title, token, interviewerNumber, participantIds, TEAM_START_TIME);
-    }
-
-    protected RestAssuredResponse requestCreateTeam(final String title, final String token, final int interviewerNumber,
-                                                    final List<Long> participantIds, final LocalDateTime startTime) {
+    protected RestAssuredResponse saveTeam(final String title, final String token, final int interviewerNumber,
+                                           final List<Long> participantIds) {
         final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
-        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, startTime,
+        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, TEAM_START_TIME,
                 participantIdsDto);
 
         return post("/api/teams", token, request);
     }
 
-    protected RestAssuredResponse requestCreateLevellog(final String content, final String teamId, final String token) {
+    protected RestAssuredResponse saveLevellog(final String content, final String teamId, final String token) {
         final LevellogWriteDto request = LevellogWriteDto.from(content);
 
         return post("/api/teams/" + teamId + "/levellogs", token, request);
     }
 
-    protected RestAssuredResponse requestCreateFeedback(final String content, final String levellogId,
-                                                        final String token) {
+    protected RestAssuredResponse saveFeedback(final String content, final String levellogId,
+                                               final String token) {
         final FeedbackWriteDto request = FeedbackWriteDto.from(
                 "study " + content, "speak " + content, "etc " + content);
 
         return post("/api/levellogs/" + levellogId + "/feedbacks", token, request);
     }
 
-    protected RestAssuredResponse requestCreatePreQuestion(final String content, final String levellogId,
-                                                           final String token) {
+    protected RestAssuredResponse savePreQuestion(final String content, final String levellogId,
+                                                  final String token) {
         final PreQuestionDto request = PreQuestionDto.from(content);
 
         return post("/api/levellogs/" + levellogId + "/pre-questions/", token, request);
     }
 
-    protected RestAssuredResponse requestCreateInterviewQuestion(final String content, final String levellogId,
-                                                                 final String token) {
+    protected RestAssuredResponse saveInterviewQuestion(final String content, final String levellogId,
+                                                        final String token) {
         return post("/api/levellogs/" + levellogId + "/interview-questions", token,
                 InterviewQuestionDto.from(content));
     }

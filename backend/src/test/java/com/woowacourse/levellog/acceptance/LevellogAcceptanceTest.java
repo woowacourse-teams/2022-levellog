@@ -30,7 +30,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final String pepperToken = login("페퍼").getToken();
         final Long eveId = login("이브").getMemberId();
 
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
         final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
 
         // when
@@ -64,8 +64,8 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         final Long eveId = login("이브").getMemberId();
 
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
-        final String levellogId = requestCreateLevellog("Spring과 React를 학습했습니다.", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
+        final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, pepperToken).getLevellogId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -94,8 +94,8 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final String pepperToken = login("페퍼").getToken();
         final Long eveId = login("이브").getMemberId();
 
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
-        final String levellogId = requestCreateLevellog("Spring과 React를 학습했습니다.", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
+        final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, pepperToken).getLevellogId();
 
         final String updateContent = "update content";
         final LevellogWriteDto request = LevellogWriteDto.from(updateContent);

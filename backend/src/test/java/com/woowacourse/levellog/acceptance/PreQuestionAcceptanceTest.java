@@ -35,8 +35,8 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
         final PreQuestionDto request = PreQuestionDto.from("이브가 쓴 사전 질문");
 
@@ -72,10 +72,10 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
-        final String preQuestionId = requestCreatePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken).getPreQuestionId();
+        final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken).getPreQuestionId();
 
         // when
         final PreQuestionDto request = PreQuestionDto.from("이브가 수정한 사전 질문");
@@ -112,10 +112,10 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
-        requestCreatePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken);
+        savePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -148,10 +148,10 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String eveToken = eveResponse.getToken();
         final Long eveMemberId = eveResponse.getMemberId();
 
-        final String teamId = requestCreateTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final String levellogId = requestCreateLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
 
-        final String preQuestionId = requestCreatePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken).getPreQuestionId();
+        final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken).getPreQuestionId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

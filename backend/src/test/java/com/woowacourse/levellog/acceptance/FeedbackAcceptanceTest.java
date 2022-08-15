@@ -34,8 +34,8 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(romaId)).getTeamId();
-        final String levellogId = requestCreateLevellog("레벨로그", teamId, rickToken).getLevellogId();
+        final String teamId = saveTeam("릭 and 로마", rickToken, 1, List.of(romaId)).getTeamId();
+        final String levellogId = saveLevellog("레벨로그", teamId, rickToken).getLevellogId();
 
         timeStandard.setInProgress();
 
@@ -73,12 +73,12 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long romaId = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(romaId)).getTeamId();
-        final String levellogId = requestCreateLevellog("레벨로그", teamId, rickToken).getLevellogId();
+        final String teamId = saveTeam("릭 and 로마", rickToken, 1, List.of(romaId)).getTeamId();
+        final String levellogId = saveLevellog("레벨로그", teamId, rickToken).getLevellogId();
 
         timeStandard.setInProgress();
 
-        requestCreateFeedback("test", levellogId, romaToken);
+        saveFeedback("test", levellogId, romaToken);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -115,12 +115,12 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final Long roma_id = romaLoginResponse.getMemberId();
         final String romaToken = romaLoginResponse.getToken();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, 1, List.of(roma_id)).getTeamId();
-        final String levellogId = requestCreateLevellog("레벨로그", teamId, rickToken).getLevellogId();
+        final String teamId = saveTeam("릭 and 로마", rickToken, 1, List.of(roma_id)).getTeamId();
+        final String levellogId = saveLevellog("레벨로그", teamId, rickToken).getLevellogId();
 
         timeStandard.setInProgress();
 
-        final String feedbackId = requestCreateFeedback("test", levellogId, romaToken).getFeedbackId();
+        final String feedbackId = saveFeedback("test", levellogId, romaToken).getFeedbackId();
 
         // when
         final FeedbackWriteDto request = FeedbackWriteDto.from("수정된 Study 피드백", "수정된 Speak 피드백", "수정된 Etc 피드백");

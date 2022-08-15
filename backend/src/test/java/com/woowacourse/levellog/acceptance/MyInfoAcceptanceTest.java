@@ -98,16 +98,16 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final Long pepperId = pepperLoginResponse.getMemberId();
         final String pepperToken = pepperLoginResponse.getToken();
 
-        final String team1Id = requestCreateTeam("릭,로마", rickToken, 1, List.of(romaId)).getTeamId();
-        final String team2Id = requestCreateTeam("릭,로마,페퍼", romaToken, 1, List.of(rickId, pepperId)).getTeamId();
+        final String team1Id = saveTeam("릭,로마", rickToken, 1, List.of(romaId)).getTeamId();
+        final String team2Id = saveTeam("릭,로마,페퍼", romaToken, 1, List.of(rickId, pepperId)).getTeamId();
 
-        final String levellog1Id = requestCreateLevellog("레벨로그1", team1Id, rickToken).getLevellogId();
-        final String levellog2Id = requestCreateLevellog("레벨로그2", team2Id, rickToken).getLevellogId();
+        final String levellog1Id = saveLevellog("레벨로그1", team1Id, rickToken).getLevellogId();
+        final String levellog2Id = saveLevellog("레벨로그2", team2Id, rickToken).getLevellogId();
 
         timeStandard.setInProgress();
 
-        requestCreateFeedback("로마 피드백", levellog1Id, romaToken);
-        requestCreateFeedback("페퍼 피드백", levellog2Id, pepperToken);
+        saveFeedback("로마 피드백", levellog1Id, romaToken);
+        saveFeedback("페퍼 피드백", levellog2Id, pepperToken);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -142,11 +142,11 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final RestAssuredResponse hostLoginResponse = login("호스트");
         final String hostToken = hostLoginResponse.getToken();
 
-        final String teamId1 = requestCreateTeam("잠실 제이슨조", hostToken, 1, List.of(romaId)).getTeamId();
-        final String teamId2 = requestCreateTeam("잠실 브리조", hostToken, 1, List.of(romaId)).getTeamId();
+        final String teamId1 = saveTeam("잠실 제이슨조", hostToken, 1, List.of(romaId)).getTeamId();
+        final String teamId2 = saveTeam("잠실 브리조", hostToken, 1, List.of(romaId)).getTeamId();
 
-        requestCreateLevellog("레벨로그1", teamId1, romaToken);
-        requestCreateLevellog("레벨로그2", teamId2, romaToken);
+        saveLevellog("레벨로그1", teamId1, romaToken);
+        saveLevellog("레벨로그2", teamId2, romaToken);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -180,8 +180,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final Long pepperId = login("페퍼").getMemberId();
         final Long alienId = login("알린").getMemberId();
 
-        requestCreateTeam("잠실 제이슨조", hostToken, 1, List.of(romaId, pepperId));
-        requestCreateTeam("잠실 브리조", hostToken, 1, List.of(romaId, alienId));
+        saveTeam("잠실 제이슨조", hostToken, 1, List.of(romaId, pepperId));
+        saveTeam("잠실 브리조", hostToken, 1, List.of(romaId, alienId));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

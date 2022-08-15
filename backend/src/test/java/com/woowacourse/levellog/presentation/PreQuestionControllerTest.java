@@ -284,8 +284,8 @@ class PreQuestionControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("delete 메서드는")
-    class Delete {
+    @DisplayName("deleteById 메서드는")
+    class DeleteById {
 
         @Test
         @DisplayName("잘못된 레벨로그의 사전 질문을 삭제하면 예외를 던진다.")

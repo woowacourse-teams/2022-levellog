@@ -685,12 +685,12 @@ class TeamControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("findById 메서드는")
-    class FindById {
+    @DisplayName("findByTeamIdAndMemberId 메서드는")
+    class FindByTeamIdAndMemberId {
 
         @Test
         @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
-        void findById_teamNotFound_exception() throws Exception {
+        void findByTeamIdAndMemberId_teamNotFound_exception() throws Exception {
             // given
             mockLogin();
 
@@ -889,12 +889,12 @@ class TeamControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("delete 메서드는")
-    class Delete {
+    @DisplayName("deleteById 메서드는")
+    class DeleteById {
 
         @Test
         @DisplayName("없는 팀을 제거하려고 하면 예외를 던진다.")
-        void delete_teamNotFound_exception() throws Exception {
+        void deleteById_teamNotFound_exception() throws Exception {
             // given
             mockLogin();
 
@@ -918,7 +918,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간 후에 삭제하려고 하면 예외가 발생한다.")
-        void delete_afterStart_exception() throws Exception {
+        void deleteById_afterStart_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);
@@ -946,7 +946,7 @@ class TeamControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("호스트가 아닌 사용자가 팀을 삭제하려고 하면 예외가 발생한다.")
-        void delete_notHost_exception() throws Exception {
+        void deleteById_notHost_exception() throws Exception {
             // given
             given(jwtTokenProvider.getPayload(TOKEN)).willReturn("4");
             given(jwtTokenProvider.validateToken(TOKEN)).willReturn(true);

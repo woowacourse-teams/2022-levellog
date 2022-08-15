@@ -19,7 +19,7 @@ import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.fixture.MemberFixture;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
@@ -159,6 +159,6 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse saveInterviewQuestion(final String content, final String levellogId,
                                                         final MemberFixture author) {
         return post("/api/levellogs/" + levellogId + "/interview-questions", author.getToken(),
-                InterviewQuestionDto.from(content));
+                InterviewQuestionWriteDto.from(content));
     }
 }

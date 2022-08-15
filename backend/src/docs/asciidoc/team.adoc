@@ -147,7 +147,6 @@ include::{snippets}/team/find-by-id/exception/notfound/http-response.adoc[]
 |인터뷰가 종료된 상태이다.
 |===
 
-
 [[find-status-success]]
 === 팀 상태 조회 성공
 
@@ -155,6 +154,8 @@ operation::team/find-status[]
 
 [[find-status-exception]]
 === 팀 상태 조회 예외
+
+==== id에 해당하는 팀이 존재하지 않는 경우
 
 include::{snippets}/team/find-status/exception/team-not-found/http-response.adoc[]
 

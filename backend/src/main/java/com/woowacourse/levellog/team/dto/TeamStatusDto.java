@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.team.dto;
 
-import java.util.List;
+import com.woowacourse.levellog.team.domain.TeamStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class TeamsDto {
+public class TeamStatusDto {
 
-    private List<TeamDto> teams;
+    private TeamStatus status;
 }

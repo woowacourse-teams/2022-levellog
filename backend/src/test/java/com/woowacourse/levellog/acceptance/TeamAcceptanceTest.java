@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
+import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
@@ -167,6 +168,36 @@ class TeamAcceptanceTest extends AcceptanceTest {
                         "participants.nickname", contains("페퍼", "이브", "릭", "로마"),
                         "interviewers", empty(),
                         "interviewees", empty());
+    }
+
+    /*
+     * Scenario: 팀 상태 조회하기
+     *   given: 팀이 등록되어 있다.
+     *   when: 로그인하지 않고 팀 상태 조회를 요청한다.
+     *   then: 200 Ok 상태 코드와 팀 상태를 응답받는다.
+     */
+    @Test
+    @DisplayName("팀 상태 조회하기")
+    void findStatus() {
+        // given
+        PEPPER.save();
+        RICK.save();
+
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, RICK).getTeamId();
+
+        timeStandard.setInProgress(); // 인터뷰 시작
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find-status"))
+                .when()
+                .get("/api/teams/{teamId}/status", teamId)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("status", equalTo(TeamStatus.IN_PROGRESS.name()));
     }
 
     /*

@@ -29,7 +29,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("사전 질문을 생성한다.")
-        void save() {
+        void success() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
@@ -53,7 +53,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("참가자가 아닌 멤버가 사전 질문을 등록하는 경우 예외를 던진다.")
-        void save_FromNotParticipant_Exception() {
+        void save_fromNotParticipant_exception() {
             // given
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
@@ -73,7 +73,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("내 레벨로그에 사전 질문을 등록하는 경우 예외를 던진다.")
-        void save_LevellogIsMine_Exception() {
+        void save_levellogIsMine_exception() {
             // given
             final String preQuestion = "알린이 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
@@ -91,7 +91,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("사전 질문이 이미 등록되었을 때 사전 질문을 등록하는 경우 예외를 던진다.")
-        void save_PreQuestionAlreadyExist_Exception() {
+        void save_preQuestionAlreadyExist_exception() {
             // given
             final String preQuestion = "알린이 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
@@ -118,7 +118,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("사전 질문을 조회한다.")
-        void findMy() {
+        void success() {
             //given
             final String content = "로마가 쓴 사전 질문";
 
@@ -138,7 +138,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("레벨로그가 존재하지 않으면 예외를 던진다.")
-        void findMy_LevellogWrongId_Exception() {
+        void findMy_levellogWrongId_exception() {
             //given
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -155,7 +155,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("사전 질문이 존재하지 않으면 예외를 던진다.")
-        void findMy_PreQuestionNotFound_Exception() {
+        void findMy_preQuestionNotFound_exception() {
             // given
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -175,7 +175,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("사전 질문을 수정한다.")
-        void update() {
+        void success() {
             //given
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -194,7 +194,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("저장되어있지 않은 사전 질문을 수정하는 경우 예외를 던진다.")
-        void update_PreQuestionNotFound_Exception() {
+        void update_preQuestionNotFound_exception() {
             // given
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
@@ -213,7 +213,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("타인의 사전 질문을 수정하는 경우 예외를 던진다.")
-        void update_FromNotMyPreQuestion_Exception() {
+        void update_fromNotMyPreQuestion_exception() {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
 
@@ -236,7 +236,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("잘못된 레벨로그의 사전 질문을 수정하면 예외를 던진다.")
-        void update_LevellogWrongId_Exception() {
+        void update_levellogWrongId_exception() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
@@ -266,7 +266,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("사전 질문을 삭제한다.")
-        void deleteById() {
+        void success() {
             //given
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -284,7 +284,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("타인의 사전 질문을 삭제하는 경우 예외를 던진다.")
-        void deleteById_FromNotMyPreQuestion_Exception() {
+        void deleteById_fromNotMyPreQuestion_exception() {
             // given
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -303,7 +303,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("저장되어있지 않은 사전 질문을 삭제하는 경우 예외를 던진다.")
-        void deleteById_PreQuestionNotFound_Exception() {
+        void deleteById_preQuestionNotFound_exception() {
             // given
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -318,7 +318,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("잘못된 레벨로그의 사전 질문을 삭제하면 예외를 던진다.")
-        void deleteById_LevellogWrongId_Exception() {
+        void deleteById_levellogWrongId_exception() {
             //given
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");

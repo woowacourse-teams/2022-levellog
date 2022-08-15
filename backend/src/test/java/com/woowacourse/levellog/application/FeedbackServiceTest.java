@@ -104,11 +104,11 @@ class FeedbackServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("update 메서드는")
-    class update {
+    class Update {
 
         @Test
         @DisplayName("피드백을 수정한다.")
-        void update_feedback_success() {
+        void success() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -133,7 +133,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("작성자가 아닌 사용자가 피드백을 수정하려는 경우 예외를 발생시킨다.")
-        void update_noAuthor_exceptionThrown() {
+        void update_noAuthor_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -154,7 +154,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간 이전에 피드백을 수정하려는 경우 예외가 발생한다.")
-        void update_beforeStartAt_exceptionThrown() {
+        void update_beforeStartAt_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -173,7 +173,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 종료 이후에 피드백을 수정하려는 경우 예외가 발생한다.")
-        void update_alreadyClosed_exceptionThrown() {
+        void update_alreadyClosed_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -197,11 +197,11 @@ class FeedbackServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("save 메서드는")
-    class save {
+    class Save {
 
         @Test
         @DisplayName("피드백을 저장한다.")
-        void save_feedback_success() {
+        void success() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -224,7 +224,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
-        void save_alreadyExist_exceptionThrown() {
+        void save_alreadyExist_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -246,7 +246,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
-        void save_selfFeedback_exceptionThrown() {
+        void save_selfFeedback_exception() {
             // given
             final Member eve = saveMember("이브");
             final Team team = saveTeam(eve);
@@ -264,7 +264,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_otherMember_exceptionThrown() {
+        void save_otherMember_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -283,7 +283,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 시작 전 피드백을 작성하면 예외를 던진다.")
-        void save_beforeStartAt_exceptionThrown() {
+        void save_beforeStartAt_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -303,7 +303,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 종료 후 피드백을 작성하면 예외를 던진다.")
-        void save_alreadyClosed_exceptionThrown() {
+        void save_alreadyClosed_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");

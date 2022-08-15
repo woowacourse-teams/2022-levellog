@@ -81,7 +81,7 @@ class MemberServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("사전에 깃허브 닉네임에 대한 특수한 닉네임을 등록한 멤버가 저장될 때는 미리 저장한 닉네임으로 변경하여 멤버를 저장한다.")
-        void successBySpecial() {
+        void save_nicknameMapping_success() {
             // given
             nicknameMappingRepository.save(new NicknameMapping("깃허브로마", "우테코로마"));
             final MemberCreateDto memberCreateDto = new MemberCreateDto("깃허브로마", 12345678, "profileUrl.image");
@@ -98,7 +98,7 @@ class MemberServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("동일한 깃허브로 가입한 멤버가 존재하면 예외를 던진다.")
-        void memberAlreadyExist_exception() {
+        void save_memberAlreadyExist_exception() {
             // given
             final MemberCreateDto beforeSavedDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
             memberService.save(beforeSavedDto);
@@ -134,7 +134,7 @@ class MemberServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("존재하지 않는 Id로 요청을 보낼 경우 예외를 던진다.")
-        void memberNotFound_exception() {
+        void findMemberById_memberNotFound_exception() {
             // when & then
             assertThatThrownBy(() -> memberService.findMemberById(1000L))
                     .isInstanceOf(MemberNotFoundException.class)
@@ -149,7 +149,7 @@ class MemberServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("깃허브 아이디로 저장된 멤버가 있으면 가입된 멤버의 ID를 반환한다.")
-        void ifExist_returnSavedId() {
+        void saveIfNotExist_ifExist_success() {
             // given
             final Member savedMember = saveMember("로마");
             final Integer githubId = savedMember.getGithubId();
@@ -165,12 +165,12 @@ class MemberServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("깃허브 아이디로 저장된 멤버가 없으면 새 멤버를 저장하고 멤버의 ID를 반환한다.")
-        void ifNotExist_saveAndReturnSavedId() {
+        void saveIfNotExist_ifNotExist_success() {
             // given
             final Member savedMember = saveMember("로마");
-            final Integer githubId = savedMember.getGithubId() + 999;
+            final int githubId = savedMember.getGithubId() + 999;
 
-            final GithubProfileDto githubProfileDto = new GithubProfileDto(githubId.toString(), "test", "test.image");
+            final GithubProfileDto githubProfileDto = new GithubProfileDto(Integer.toString(githubId), "test", "test.image");
 
             // when
             final Long id = memberService.saveIfNotExist(githubProfileDto, githubId);

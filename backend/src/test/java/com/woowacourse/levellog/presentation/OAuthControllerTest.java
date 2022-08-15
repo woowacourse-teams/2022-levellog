@@ -19,8 +19,6 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("OAuthController의")
 class OAuthControllerTest extends ControllerTest {
 
-    private static final String AUTHORIZATION_CODE = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODk3MjQ0LCJleHAiOjE2NTg5MzMyNDR9";
-
     @Nested
     @DisplayName("login 메서드는")
     class Login {
@@ -35,25 +33,26 @@ class OAuthControllerTest extends ControllerTest {
             final String requestContent = objectMapper.writeValueAsString(request);
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/auth/login")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestLoginWithoutToken(requestContent);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andDo(document("auth/login/exception/blank"));
+            perform.andExpectAll(
+                    status().isBadRequest()
+            );
+
+            // docs
+            perform.andDo(document("auth/login/null"));
         }
 
         @Test
         @DisplayName("깃허브에 accessToken 요청에 실패하면 예외를 던진다.")
         void login_failToGetAccessToken_exception() throws Exception {
             // given
-            final GithubCodeDto request = new GithubCodeDto(AUTHORIZATION_CODE);
+            final GithubCodeDto request = new GithubCodeDto(VALID_TOKEN);
             final String requestContent = objectMapper.writeValueAsString(request);
 
             given(oAuthService.login(request))
-                    .willThrow(new IllegalStateException("Github 로그인 요청 실패 - authorizationCode:" + AUTHORIZATION_CODE));
+                    .willThrow(new IllegalStateException("Github 로그인 요청 실패 - authorizationCode:" + VALID_TOKEN));
 
             // when
             final ResultActions perform = mockMvc.perform(post("/api/auth/login")
@@ -62,8 +61,19 @@ class OAuthControllerTest extends ControllerTest {
                     .andDo(print());
 
             // then
-            perform.andExpect(status().isInternalServerError())
-                    .andDo(document("auth/login/exception/github-fail"));
+            perform.andExpectAll(
+                    status().isInternalServerError()
+            );
+
+            // docs
+            perform.andDo(document("auth/login/github-fail"));
+        }
+
+        private ResultActions requestLoginWithoutToken(final String requestContent) throws Exception {
+            return mockMvc.perform(post("/api/auth/login")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
         }
     }
 }

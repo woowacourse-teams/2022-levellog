@@ -1,15 +1,16 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.MemberFixture.EVE;
+import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.fixture.RestAssuredResponse;
+import com.woowacourse.levellog.fixture.MemberFixture;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -29,20 +30,17 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("사전 질문 등록하기")
     void create() {
         // given
-        final String pepperToken = login("페퍼").getToken();
+        PEPPER.save();
+        EVE.save();
 
-        final RestAssuredResponse eveResponse = login("이브");
-        final String eveToken = eveResponse.getToken();
-        final Long eveMemberId = eveResponse.getMemberId();
-
-        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         final PreQuestionDto request = PreQuestionDto.from("이브가 쓴 사전 질문");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + eveToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + EVE.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("pre-question/create"))
@@ -66,22 +64,19 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("사전 질문 수정하기")
     void update() {
         // given
-        final String pepperToken = login("페퍼").getToken();
+        PEPPER.save();
+        EVE.save();
 
-        final RestAssuredResponse eveResponse = login("이브");
-        final String eveToken = eveResponse.getToken();
-        final Long eveMemberId = eveResponse.getMemberId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
-        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
-
-        final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken).getPreQuestionId();
+        final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, EVE).getPreQuestionId();
 
         // when
         final PreQuestionDto request = PreQuestionDto.from("이브가 수정한 사전 질문");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + eveToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + EVE.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("pre-question/update"))
@@ -91,7 +86,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindMyPreQuestions(levellogId, eveToken)
+        requestFindMyPreQuestions(levellogId, EVE)
                 .body("preQuestion", equalTo("이브가 수정한 사전 질문"));
     }
 
@@ -106,20 +101,17 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("내가 작성한 사전 질문 조회하기")
     void findMy() {
         // given
-        final String pepperToken = login("페퍼").getToken();
+        PEPPER.save();
+        EVE.save();
 
-        final RestAssuredResponse eveResponse = login("이브");
-        final String eveToken = eveResponse.getToken();
-        final Long eveMemberId = eveResponse.getMemberId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
-        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
-
-        savePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken);
+        savePreQuestion("이브가 쓴 사전 질문", levellogId, EVE);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + eveToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + EVE.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("pre-question/find-my"))
                 .when()
@@ -142,20 +134,16 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("사전 질문 제거하기")
     void delete() {
         // given
-        final String pepperToken = login("페퍼").getToken();
+        PEPPER.save();
+        EVE.save();
 
-        final RestAssuredResponse eveResponse = login("이브");
-        final String eveToken = eveResponse.getToken();
-        final Long eveMemberId = eveResponse.getMemberId();
-
-        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveMemberId)).getTeamId();
-        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
-
-        final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, eveToken).getPreQuestionId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
+        final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, EVE).getPreQuestionId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + eveToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + EVE.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("pre-question/delete"))
                 .when()
@@ -164,11 +152,11 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindMyPreQuestions(levellogId, eveToken)
+        requestFindMyPreQuestions(levellogId, EVE)
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    private ValidatableResponse requestFindMyPreQuestions(final String levellogId, final String token) {
-        return get("/api/levellogs/" + levellogId + "/pre-questions/" + "my", token).getResponse();
+    private ValidatableResponse requestFindMyPreQuestions(final String levellogId, final MemberFixture member) {
+        return get("/api/levellogs/" + levellogId + "/pre-questions/" + "my", member.getToken()).getResponse();
     }
 }

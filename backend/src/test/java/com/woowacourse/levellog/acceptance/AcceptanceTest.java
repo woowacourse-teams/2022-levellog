@@ -17,6 +17,7 @@ import com.woowacourse.levellog.config.DatabaseCleaner;
 import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
+import com.woowacourse.levellog.fixture.MemberFixture;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
@@ -26,7 +27,9 @@ import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -119,39 +122,43 @@ abstract class AcceptanceTest {
         return null;
     }
 
-    protected RestAssuredResponse saveTeam(final String title, final String token, final int interviewerNumber,
-                                           final List<Long> participantIds) {
+    protected RestAssuredResponse saveTeam(final String title, final MemberFixture host, final int interviewerNumber,
+                                           final MemberFixture... participants) {
+        final List<Long> participantIds = Arrays.stream(participants)
+                .map(MemberFixture::getId)
+                .collect(Collectors.toList());
         final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
+
         final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, TEAM_START_TIME,
                 participantIdsDto);
 
-        return post("/api/teams", token, request);
+        return post("/api/teams", host.getToken(), request);
     }
 
-    protected RestAssuredResponse saveLevellog(final String content, final String teamId, final String token) {
+    protected RestAssuredResponse saveLevellog(final String content, final String teamId, final MemberFixture author) {
         final LevellogWriteDto request = LevellogWriteDto.from(content);
 
-        return post("/api/teams/" + teamId + "/levellogs", token, request);
+        return post("/api/teams/" + teamId + "/levellogs", author.getToken(), request);
     }
 
     protected RestAssuredResponse saveFeedback(final String content, final String levellogId,
-                                               final String token) {
+                                               final MemberFixture author) {
         final FeedbackWriteDto request = FeedbackWriteDto.from(
                 "study " + content, "speak " + content, "etc " + content);
 
-        return post("/api/levellogs/" + levellogId + "/feedbacks", token, request);
+        return post("/api/levellogs/" + levellogId + "/feedbacks", author.getToken(), request);
     }
 
     protected RestAssuredResponse savePreQuestion(final String content, final String levellogId,
-                                                  final String token) {
+                                                  final MemberFixture author) {
         final PreQuestionDto request = PreQuestionDto.from(content);
 
-        return post("/api/levellogs/" + levellogId + "/pre-questions/", token, request);
+        return post("/api/levellogs/" + levellogId + "/pre-questions/", author.getToken(), request);
     }
 
     protected RestAssuredResponse saveInterviewQuestion(final String content, final String levellogId,
-                                                        final String token) {
-        return post("/api/levellogs/" + levellogId + "/interview-questions", token,
+                                                        final MemberFixture author) {
+        return post("/api/levellogs/" + levellogId + "/interview-questions", author.getToken(),
                 InterviewQuestionDto.from(content));
     }
 }

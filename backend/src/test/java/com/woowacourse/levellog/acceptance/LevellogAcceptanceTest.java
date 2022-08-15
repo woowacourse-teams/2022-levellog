@@ -1,14 +1,14 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.MemberFixture.EVE;
+import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -27,15 +27,15 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 작성")
     void createLevellog() {
         // given
-        final String pepperToken = login("페퍼").getToken();
-        final Long eveId = login("이브").getMemberId();
+        PEPPER.save();
+        EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
         final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/save"))
@@ -58,14 +58,11 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 상세 조회")
     void findLevellog() {
         // given
-        final RestAssuredResponse pepperLogin = login("페퍼");
-        final String pepperToken = pepperLogin.getToken();
-        final Long pepperId = pepperLogin.getMemberId();
+        PEPPER.save();
+        EVE.save();
 
-        final Long eveId = login("이브").getMemberId();
-
-        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
-        final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, PEPPER).getLevellogId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -77,7 +74,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("author.id", equalTo(pepperId.intValue()))
+                .body("author.id", equalTo(PEPPER.getId().intValue()))
                 .body("content", equalTo("Spring과 React를 학습했습니다."));
     }
 
@@ -91,18 +88,18 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 수정")
     void updateLevellog() {
         // given
-        final String pepperToken = login("페퍼").getToken();
-        final Long eveId = login("이브").getMemberId();
+        PEPPER.save();
+        EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(eveId)).getTeamId();
-        final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, PEPPER).getLevellogId();
 
         final String updateContent = "update content";
         final LevellogWriteDto request = LevellogWriteDto.from(updateContent);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + pepperToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/update"))

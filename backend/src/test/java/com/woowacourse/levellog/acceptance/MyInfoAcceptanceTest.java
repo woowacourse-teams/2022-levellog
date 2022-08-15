@@ -1,15 +1,17 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.MemberFixture.ALIEN;
+import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
+import static com.woowacourse.levellog.fixture.MemberFixture.RICK;
+import static com.woowacourse.levellog.fixture.MemberFixture.ROMA;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -86,32 +88,24 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
     @DisplayName("내가 받은 피드백 조회")
     void findAllFeedbackToMe() {
         // given
-        final RestAssuredResponse hostLoginResponse = login("릭");
-        final Long rickId = hostLoginResponse.getMemberId();
-        final String rickToken = hostLoginResponse.getToken();
+        RICK.save();
+        ROMA.save();
+        PEPPER.save();
 
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long romaId = romaLoginResponse.getMemberId();
-        final String romaToken = romaLoginResponse.getToken();
+        final String team1Id = saveTeam("릭,로마", RICK, 1, ROMA).getTeamId();
+        final String team2Id = saveTeam("릭,로마,페퍼", ROMA, 1, RICK, PEPPER).getTeamId();
 
-        final RestAssuredResponse pepperLoginResponse = login("페퍼");
-        final Long pepperId = pepperLoginResponse.getMemberId();
-        final String pepperToken = pepperLoginResponse.getToken();
-
-        final String team1Id = saveTeam("릭,로마", rickToken, 1, List.of(romaId)).getTeamId();
-        final String team2Id = saveTeam("릭,로마,페퍼", romaToken, 1, List.of(rickId, pepperId)).getTeamId();
-
-        final String levellog1Id = saveLevellog("레벨로그1", team1Id, rickToken).getLevellogId();
-        final String levellog2Id = saveLevellog("레벨로그2", team2Id, rickToken).getLevellogId();
+        final String levellog1Id = saveLevellog("레벨로그1", team1Id, RICK).getLevellogId();
+        final String levellog2Id = saveLevellog("레벨로그2", team2Id, RICK).getLevellogId();
 
         timeStandard.setInProgress();
 
-        saveFeedback("로마 피드백", levellog1Id, romaToken);
-        saveFeedback("페퍼 피드백", levellog2Id, pepperToken);
+        saveFeedback("로마 피드백", levellog1Id, ROMA);
+        saveFeedback("페퍼 피드백", levellog2Id, PEPPER);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + rickToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + RICK.getToken())
                 .filter(document("myinfo/findAllReceivedFeedbacks"))
                 .when()
                 .get("/api/my-info/feedbacks")
@@ -135,22 +129,18 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
     @DisplayName("내가 작성한 레벨로그 조회")
     void findAllMyLevellogs() {
         // given
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final String romaToken = romaLoginResponse.getToken();
-        final Long romaId = romaLoginResponse.getMemberId();
+        ROMA.save();
+        PEPPER.save();
 
-        final RestAssuredResponse hostLoginResponse = login("호스트");
-        final String hostToken = hostLoginResponse.getToken();
+        final String teamId1 = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
+        final String teamId2 = saveTeam("잠실 브리조", PEPPER, 1, ROMA).getTeamId();
 
-        final String teamId1 = saveTeam("잠실 제이슨조", hostToken, 1, List.of(romaId)).getTeamId();
-        final String teamId2 = saveTeam("잠실 브리조", hostToken, 1, List.of(romaId)).getTeamId();
-
-        saveLevellog("레벨로그1", teamId1, romaToken);
-        saveLevellog("레벨로그2", teamId2, romaToken);
+        saveLevellog("레벨로그1", teamId1, ROMA);
+        saveLevellog("레벨로그2", teamId2, ROMA);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
                 .filter(document("myinfo/findAllMyLevellogs"))
                 .when()
                 .get("/api/my-info/levellogs")
@@ -171,21 +161,17 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
     @DisplayName("내가 참여한 팀 조회")
     void findAllMyTeams() {
         // given
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final String romaToken = romaLoginResponse.getToken();
-        final Long romaId = romaLoginResponse.getMemberId();
+        ROMA.save();
+        RICK.save();
+        PEPPER.save();
+        ALIEN.save();
 
-        final String hostToken = login("호스트").getToken();
-
-        final Long pepperId = login("페퍼").getMemberId();
-        final Long alienId = login("알린").getMemberId();
-
-        saveTeam("잠실 제이슨조", hostToken, 1, List.of(romaId, pepperId));
-        saveTeam("잠실 브리조", hostToken, 1, List.of(romaId, alienId));
+        saveTeam("잠실 제이슨조", RICK, 1, ROMA, PEPPER);
+        saveTeam("잠실 브리조", RICK, 1, ROMA, ALIEN);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
                 .filter(document("myinfo/findAllMyTeam"))
                 .when()
                 .get("/api/my-info/teams")

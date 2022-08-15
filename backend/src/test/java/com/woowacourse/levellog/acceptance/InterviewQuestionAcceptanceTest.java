@@ -1,16 +1,17 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
+import static com.woowacourse.levellog.fixture.MemberFixture.ROMA;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.fixture.RestAssuredResponse;
+import com.woowacourse.levellog.fixture.MemberFixture;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -29,14 +30,11 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("인터뷰 질문 작성")
     void save() {
         // given
-        final String pepperToken = login("페퍼").getToken();
+        PEPPER.save();
+        ROMA.save();
 
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long romaId = romaLoginResponse.getMemberId();
-        final String romaToken = romaLoginResponse.getToken();
-
-        final String teamId = saveTeam("잠실 제이슨조", pepperToken, 1, List.of(romaId)).getTeamId();
-        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         timeStandard.setInProgress();
 
@@ -44,7 +42,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         final InterviewQuestionDto request = InterviewQuestionDto.from("Spring을 사용하는 이유?");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("interview-question/save"))
@@ -67,23 +65,20 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("인터뷰 질문 목록 조회")
     void findAll() {
         // given
-        final String pepperToken = login("페퍼").getToken();
+        PEPPER.save();
+        ROMA.save();
 
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long romaId = romaLoginResponse.getMemberId();
-        final String romaToken = romaLoginResponse.getToken();
-
-        final String teamId = saveTeam("롬펲 인터뷰", pepperToken, 1, List.of(romaId)).getTeamId();
-        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         timeStandard.setInProgress(); // 인터뷰 시작
 
-        saveInterviewQuestion("Spring을 사용하는 이유?", levellogId, romaToken);
-        saveInterviewQuestion("스프링 빈이란?", levellogId, romaToken);
+        saveInterviewQuestion("Spring을 사용하는 이유?", levellogId, ROMA);
+        saveInterviewQuestion("스프링 빈이란?", levellogId, ROMA);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("interview-question/findAll"))
                 .when()
@@ -106,25 +101,22 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("인터뷰 질문 수정")
     void update() {
         // given
-        final String pepperToken = login("페퍼").getToken();
+        PEPPER.save();
+        ROMA.save();
 
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long romaId = romaLoginResponse.getMemberId();
-        final String romaToken = romaLoginResponse.getToken();
-
-        final String teamId = saveTeam("롬펲 인터뷰", pepperToken, 1, List.of(romaId)).getTeamId();
-        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         timeStandard.setInProgress(); // 인터뷰 시작
 
-        final String interviewQuestionId = saveInterviewQuestion("Spring을 사용하는 이유?", levellogId, romaToken)
+        final String interviewQuestionId = saveInterviewQuestion("Spring을 사용하는 이유?", levellogId, ROMA)
                 .getInterviewQuestionId();
 
         // when
         final InterviewQuestionDto request = InterviewQuestionDto.from("수정된 인터뷰 질문");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("interview-question/update"))
@@ -135,7 +127,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindAllInterviewQuestion(levellogId, romaToken)
+        requestFindAllInterviewQuestion(levellogId, ROMA)
                 .body("interviewQuestions.interviewQuestion", contains("수정된 인터뷰 질문"));
     }
 
@@ -150,23 +142,20 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
     @DisplayName("인터뷰 질문 삭제")
     void deleteById() {
         // given
-        final String pepperToken = login("페퍼").getToken();
+        PEPPER.save();
+        ROMA.save();
 
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long romaId = romaLoginResponse.getMemberId();
-        final String romaToken = romaLoginResponse.getToken();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
+        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
-        final String teamId = saveTeam("롬펲 인터뷰", pepperToken, 1, List.of(romaId)).getTeamId();
-        final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, pepperToken).getLevellogId();
+        timeStandard.setInProgress();
 
-        timeStandard.setInProgress(); // 인터뷰 시작
-
-        final String interviewQuestionId = saveInterviewQuestion("Spring을 사용하는 이유?", levellogId, romaToken)
+        final String interviewQuestionId = saveInterviewQuestion("Spring을 사용하는 이유?", levellogId, ROMA)
                 .getInterviewQuestionId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("interview-question/delete"))
                 .when()
@@ -176,12 +165,12 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        requestFindAllInterviewQuestion(levellogId, romaToken)
+        requestFindAllInterviewQuestion(levellogId, ROMA)
                 .body("interviewQuestions.id", not(contains(interviewQuestionId)));
     }
 
-    private ValidatableResponse requestFindAllInterviewQuestion(final String levellogId, final String fromMemberToken) {
-        return get("/api/levellogs/" + levellogId + "/interview-questions", fromMemberToken)
+    private ValidatableResponse requestFindAllInterviewQuestion(final String levellogId, final MemberFixture from) {
+        return get("/api/levellogs/" + levellogId + "/interview-questions", from.getToken())
                 .getResponse();
     }
 }

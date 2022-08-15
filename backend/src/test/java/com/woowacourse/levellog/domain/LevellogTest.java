@@ -22,7 +22,7 @@ class LevellogTest {
 
     @Nested
     @DisplayName("생성자는")
-    class ConstructorTest {
+    class Constructor {
 
         @Test
         @DisplayName("레벨로그를 생성한다.")
@@ -54,7 +54,7 @@ class LevellogTest {
 
     @Nested
     @DisplayName("updateContent 메서드는")
-    class UpdateContentTest {
+    class UpdateContent {
 
         @Test
         @DisplayName("레벨로그 내용을 업데이트한다.")

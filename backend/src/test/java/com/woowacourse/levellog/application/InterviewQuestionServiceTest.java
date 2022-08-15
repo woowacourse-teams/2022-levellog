@@ -202,11 +202,11 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final List<InterviewQuestionDto> actual = interviewQuestionService.findAllByLevellog(levellogId)
                     .getInterviewQuestions();
 
+            // then
             final InterviewQuestionDto romaResponse = actual.get(0);
             final InterviewQuestionDto rickResponse = actual.get(1);
             final InterviewQuestionDto pepperResponse = actual.get(2);
 
-            // then
             assertAll(
                     () -> assertThat(actual).hasSize(3),
 

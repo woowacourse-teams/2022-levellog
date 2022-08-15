@@ -50,6 +50,11 @@ class InterviewQuestionRepositoryTest extends RepositoryTest {
         final InterviewQuestion InterviewQuestion2 = saveInterviewQuestion("릭이 씀", levellog, rick);
         final InterviewQuestion interviewQuestion3 = saveInterviewQuestion("로마가 씀 - 꼬리 질문", levellog, roma);
 
+        final Levellog rickLevellog = saveLevellog(rick, team);
+
+        saveInterviewQuestion("조회되면 안되는 인터뷰 질문 1", rickLevellog, roma);
+        saveInterviewQuestion("조회되면 안되는 인터뷰 질문 2", rickLevellog, pepper);
+
         // when
         final List<InterviewQuestion> actual = interviewQuestionRepository.findAllByLevellog(levellog);
 

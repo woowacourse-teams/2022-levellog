@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
@@ -32,10 +31,8 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "피드백이 이미 존재합니다.";
             given(feedbackService.save(request, levellogId, memberId))
@@ -60,10 +57,8 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "자기 자신에게 피드백을 할 수 없습니다.";
             given(feedbackService.save(request, levellogId, memberId))
@@ -88,10 +83,8 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.";
             given(feedbackService.save(request, levellogId, memberId))
@@ -116,10 +109,8 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 20000000L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "레벨로그가 존재하지 않습니다.";
             given(feedbackService.save(request, levellogId, memberId)).willThrow(
@@ -144,10 +135,8 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.";
             given(feedbackService.save(request, levellogId, memberId))
@@ -172,10 +161,8 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "이미 종료된 인터뷰입니다.";
             given(feedbackService.save(request, levellogId, memberId))
@@ -211,10 +198,8 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "자신이 남긴 피드백만 수정할 수 있습니다.";
             willThrow(new InvalidFeedbackException(
@@ -242,10 +227,8 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 1000000L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "존재하지 않는 피드백입니다.";
             willThrow(new FeedbackNotFoundException(message))
@@ -272,10 +255,8 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.";
             willThrow(new InterviewTimeException(message))
@@ -302,10 +283,8 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             final String message = "이미 종료된 인터뷰입니다.";
             willThrow(new InterviewTimeException(message))

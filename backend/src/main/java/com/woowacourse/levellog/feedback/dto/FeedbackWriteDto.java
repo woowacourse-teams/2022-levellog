@@ -17,4 +17,8 @@ public class FeedbackWriteDto {
     @NotNull
     @Valid
     private FeedbackContentDto feedback;
+
+    public static FeedbackWriteDto from(final String study, final String speak, final String etc) {
+        return new FeedbackWriteDto(new FeedbackContentDto(study, speak, etc));
+    }
 }

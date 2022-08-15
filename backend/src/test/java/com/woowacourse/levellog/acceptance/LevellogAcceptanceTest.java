@@ -1,18 +1,14 @@
 package com.woowacourse.levellog.acceptance;
 
-import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
+import static com.woowacourse.levellog.fixture.MemberFixture.EVE;
+import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
-import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -31,16 +27,15 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 작성")
     void createLevellog() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamWriteDto teamRequest = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
+        PEPPER.save();
+        EVE.save();
+
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
         final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/save"))
@@ -63,14 +58,11 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 상세 조회")
     void findLevellog() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamWriteDto teamRequest = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
-        final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
-        final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(), request)
-                .getLevellogId();
+        PEPPER.save();
+        EVE.save();
+
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, PEPPER).getLevellogId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -82,7 +74,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("author.id", equalTo(loginResponse1.getMemberId().intValue()))
+                .body("author.id", equalTo(PEPPER.getId().intValue()))
                 .body("content", equalTo("Spring과 React를 학습했습니다."));
     }
 
@@ -96,20 +88,18 @@ class LevellogAcceptanceTest extends AcceptanceTest {
     @DisplayName("레벨로그 수정")
     void updateLevellog() {
         // given
-        final RestAssuredResponse loginResponse1 = login("페퍼");
-        final RestAssuredResponse loginResponse2 = login("이브");
-        final TeamWriteDto teamRequest = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(loginResponse2.getMemberId())));
-        final String teamId = post("/api/teams", loginResponse1.getToken(), teamRequest).getTeamId();
-        final String levellogId = post("/api/teams/" + teamId + "/levellogs", loginResponse1.getToken(),
-                LevellogWriteDto.from("Spring과 React를 학습했습니다.")).getLevellogId();
+        PEPPER.save();
+        EVE.save();
+
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, PEPPER).getLevellogId();
 
         final String updateContent = "update content";
         final LevellogWriteDto request = LevellogWriteDto.from(updateContent);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse1.getToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("levellog/update"))

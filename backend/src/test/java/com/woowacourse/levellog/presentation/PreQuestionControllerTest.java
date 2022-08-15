@@ -27,6 +27,8 @@ class PreQuestionControllerTest extends ControllerTest {
     @DisplayName("save 메서드는")
     class Save {
 
+        private static final String BASE_SNIPPET_PATH = "pre-question/create/exception/";
+
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
@@ -44,7 +46,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value("preQuestion must not be blank"));
 
             // docs
-            perform.andDo(document("pre-question/create/exception/blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "blank"));
         }
 
         @Test
@@ -66,7 +68,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/create/exception/not-participant"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-participant"));
         }
 
         @Test
@@ -89,7 +91,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/create/exception/levellog-is-mine"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-is-mine"));
         }
 
         @Test
@@ -112,7 +114,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/create/exception/already-exist"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "already-exist"));
         }
 
         private ResultActions requestCreatePreQuestion(final Long levellogId,
@@ -124,6 +126,8 @@ class PreQuestionControllerTest extends ControllerTest {
     @Nested
     @DisplayName("update 메서드는")
     class Update {
+
+        private static final String BASE_SNIPPET_PATH = "pre-question/update/exception/";
 
         @ParameterizedTest
         @NullAndEmptySource
@@ -142,7 +146,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value("preQuestion must not be blank"));
 
             // docs
-            perform.andDo(document("pre-question/update/exception/blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "blank"));
         }
 
         @Test
@@ -165,7 +169,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/update/exception/wrong-levellog"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "wrong-levellog"));
         }
 
         @Test
@@ -188,7 +192,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/update/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
@@ -211,7 +215,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/update/exception/not-my-pre-question"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-pre-question"));
         }
 
         private ResultActions requestUpdatePreQuestion(final Long levellogId,
@@ -278,6 +282,8 @@ class PreQuestionControllerTest extends ControllerTest {
     @DisplayName("deleteById 메서드는")
     class DeleteById {
 
+        private final String BASE_SNIPPET_PATH = "pre-question/delete/exception/";
+
         @Test
         @DisplayName("잘못된 레벨로그의 사전 질문을 삭제하면 예외를 던진다.")
         void deleteById_levellogWrongId_exception() throws Exception {
@@ -297,7 +303,7 @@ class PreQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("pre-question/delete/exception/wrong-levellog"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "wrong-levellog"));
         }
 
         @Test
@@ -319,7 +325,7 @@ class PreQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("pre-question/delete/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
@@ -341,7 +347,7 @@ class PreQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("pre-question/delete/exception/not-my-pre-question"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-pre-question"));
         }
 
         private ResultActions requestDeletePreQuestion(final Long levellogId, final Long preQuestionId)

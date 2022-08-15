@@ -106,7 +106,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + RICK.getToken())
-                .filter(document("myinfo/find-all-received-feedbacks"))
+                .filter(document("my-info/find-all-received-feedbacks"))
                 .when()
                 .get("/api/my-info/feedbacks")
                 .then().log().all();

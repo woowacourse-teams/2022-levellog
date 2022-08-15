@@ -300,7 +300,7 @@ operation::team/close[]
 [[close-exception-notfound]]
 ==== 없는 팀의 인터뷰를 종료하려는 경우
 
-include::{snippets}/team/close/exception/notfound/http-response.adoc[]
+include::{snippets}/team/close/exception/not-found/http-response.adoc[]
 
 [[close-exception-unauthorized]]
 ==== 호스트가 아닌 사용자가 인터뷰를 종료하려는 경우

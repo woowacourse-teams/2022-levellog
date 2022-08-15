@@ -35,6 +35,8 @@ class TeamControllerTest extends ControllerTest {
     @DisplayName("save 메서드는")
     class Save {
 
+        private static final String BASE_SNIPPET_PATH = "team/create/exception/";
+
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
@@ -55,7 +57,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/title-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "title-blank"));
         }
 
         @Test
@@ -82,7 +84,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/title-length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "title-length"));
         }
 
         @ParameterizedTest
@@ -105,7 +107,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/place-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "place-blank"));
         }
 
         @Test
@@ -132,7 +134,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/place-length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "place-length"));
         }
 
         @Test
@@ -152,7 +154,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/start-at-null"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "start-at-null"));
         }
 
         @Test
@@ -178,7 +180,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/start-at-past"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "start-at-past"));
         }
 
         @Test
@@ -197,7 +199,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/participants-empty"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-empty"));
         }
 
         @Test
@@ -216,7 +218,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/participants-null"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-null"));
         }
 
         @Test
@@ -237,7 +239,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/interviewer-number-not-positive"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "interviewer-number-not-positive"));
         }
 
         @Test
@@ -263,7 +265,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/interviewer-number-more-than-participant"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "interviewer-number-more-than-participant"));
         }
 
         @Test
@@ -289,7 +291,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/participants-duplicate"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-duplicate"));
         }
 
         @Test
@@ -315,7 +317,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/participants-have-host"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-have-host"));
         }
 
         private ResultActions requestCreateTeam(final TeamWriteDto request) throws Exception {
@@ -326,6 +328,8 @@ class TeamControllerTest extends ControllerTest {
     @Nested
     @DisplayName("update 메서드는")
     class Update {
+
+        private static final String BASE_SNIPPET_PATH = "team/update/exception/";
 
         @ParameterizedTest
         @NullAndEmptySource
@@ -348,7 +352,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/title-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "title-blank"));
         }
 
         @Test
@@ -376,7 +380,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/title-length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "title-length"));
         }
 
         @ParameterizedTest
@@ -385,7 +389,6 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("장소로 null이 들어오면 예외를 던진다.")
         void update_placeNull_exception(final String place) throws Exception {
             // given
-//            eam();
             final long id = 1;
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
@@ -401,7 +404,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/place-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "place-blank"));
         }
 
         @Test
@@ -429,7 +432,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/place-length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "place-length"));
         }
 
         @Test
@@ -450,7 +453,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/start-at-null"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "start-at-null"));
         }
 
         @Test
@@ -476,7 +479,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/start-at-past"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "start-at-past"));
         }
 
         @Test
@@ -502,7 +505,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/not-found"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
@@ -519,7 +522,7 @@ class TeamControllerTest extends ControllerTest {
             perform.andExpect(status().isBadRequest());
 
             // docs
-            perform.andDo(document("team/update/exception/participants-empty"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-empty"));
         }
 
         @Test
@@ -538,7 +541,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/participants-null"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-null"));
         }
 
         @Test
@@ -559,7 +562,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/interviewer-number-not-positive"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "interviewer-number-not-positive"));
         }
 
         @Test
@@ -585,7 +588,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/interviewer-number-more-than-participant"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "interviewer-number-more-than-participant"));
         }
 
         @Test
@@ -610,7 +613,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/participants-duplicate"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-duplicate"));
         }
 
         @Test
@@ -635,7 +638,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/participants-have-host"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-have-host"));
         }
 
         @Test
@@ -661,7 +664,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/after-start-at"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-start-at"));
         }
 
         private ResultActions requestUpdateTeam(final Long teamId, final TeamWriteDto request) throws Exception {
@@ -672,6 +675,8 @@ class TeamControllerTest extends ControllerTest {
     @Nested
     @DisplayName("findByTeamIdAndMemberId 메서드는")
     class FindByTeamIdAndMemberId {
+
+        private static final String BASE_SNIPPET_PATH = "team/find-by-id/exception/";
 
         @Test
         @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
@@ -692,7 +697,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/find-by-id/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "notfound"));
         }
 
         private ResultActions requestFindTeam(final Long teamId) throws Exception {
@@ -703,6 +708,8 @@ class TeamControllerTest extends ControllerTest {
     @Nested
     @DisplayName("findStatus 메서드는")
     class FindStatus {
+
+        private static final String BASE_SNIPPET_PATH = "team/find-status/exception/";
 
         @Test
         @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
@@ -724,7 +731,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/find-status/exception/team-not-found"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "team-not-found"));
         }
 
         private ResultActions requestFindStatus(final Long teamId) throws Exception {
@@ -735,6 +742,8 @@ class TeamControllerTest extends ControllerTest {
     @Nested
     @DisplayName("findMyRole 메서드는")
     class FindMyRole {
+
+        private static final String BASE_SNIPPET_PATH = "team/find-my-role/exception/";
 
         @Test
         @DisplayName("요청한 사용자가 소속된 팀이 아니면 예외를 던진다.")
@@ -757,7 +766,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/find-my-role/exception/not-my-team"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-team"));
         }
 
         @Test
@@ -781,7 +790,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/find-my-role/exception/target-not-participant"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "target-not-participant"));
         }
 
         private ResultActions requestFindMyRole(final Long teamId, final Long memberId) throws Exception {
@@ -792,6 +801,8 @@ class TeamControllerTest extends ControllerTest {
     @Nested
     @DisplayName("close 메서드는")
     class Close {
+
+        private static final String BASE_SNIPPET_PATH = "team/close/exception/";
 
         @Test
         @DisplayName("존재하지 않는 팀의 인터뷰를 종료하려고 하면 예외가 발생한다.")
@@ -813,7 +824,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/close/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
@@ -837,7 +848,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/close/exception/already-close"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "already-close"));
         }
 
         @Test
@@ -861,7 +872,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/close/exception/before-start"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "before-start"));
         }
 
         @Test
@@ -885,7 +896,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/close/exception/unauthorized"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
         private ResultActions requestCloseTeam(final Long teamId) throws Exception {
@@ -896,6 +907,8 @@ class TeamControllerTest extends ControllerTest {
     @Nested
     @DisplayName("deleteById 메서드는")
     class DeleteById {
+
+        private static final String BASE_SNIPPET_PATH = "team/delete/exception/";
 
         @Test
         @DisplayName("없는 팀을 제거하려고 하면 예외를 던진다.")
@@ -916,7 +929,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/delete/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "notfound"));
         }
 
         @Test
@@ -939,7 +952,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/delete/exception/after-start"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-start"));
         }
 
         @Test
@@ -963,7 +976,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/delete/exception/unauthorized"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
         private ResultActions requestDeleteTeam(final Long teamId) throws Exception {

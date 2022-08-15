@@ -22,6 +22,8 @@ class LevellogControllerTest extends ControllerTest {
     @DisplayName("save 메서드는")
     class Save {
 
+        private static final String BASE_SNIPPET_PATH = "levellog/save/exception/";
+
         @Test
         @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
         void save_alreadyExists_exception() throws Exception {
@@ -44,7 +46,7 @@ class LevellogControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("levellog/save/exception/already-exists"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "already-exists"));
         }
 
         @Test
@@ -64,7 +66,7 @@ class LevellogControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("levellog/save/exception/contents"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "contents"));
         }
 
         @Test
@@ -90,7 +92,7 @@ class LevellogControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("levellog/save/exception/after-start"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-start"));
         }
 
         private ResultActions requestCreateLevellog(final Long teamId, final LevellogWriteDto request)
@@ -102,6 +104,8 @@ class LevellogControllerTest extends ControllerTest {
     @Nested
     @DisplayName("find 메서드는")
     class Find {
+
+        private static final String BASE_SNIPPET_PATH = "levellog/find/exception/";
 
         @Test
         @DisplayName("존재하지 않는 레벨로그를 조회하면 예외를 던진다.")
@@ -125,7 +129,7 @@ class LevellogControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("levellog/find/exception/exist"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "exist"));
         }
 
         private ResultActions requestFindLevellog(final Long teamId, final Long levellogId) throws Exception {
@@ -137,6 +141,8 @@ class LevellogControllerTest extends ControllerTest {
     @Nested
     @DisplayName("update 메서드는")
     class Update {
+
+        private static final String BASE_SNIPPET_PATH = "levellog/update/exception/";
 
         @Test
         @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
@@ -156,7 +162,7 @@ class LevellogControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("levellog/update/exception/blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "blank"));
         }
 
         @Test
@@ -183,7 +189,7 @@ class LevellogControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("levellog/update/exception/not-author"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-author"));
         }
 
         @Test
@@ -210,7 +216,7 @@ class LevellogControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("levellog/update/exception/after-start"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-start"));
         }
 
         private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId,

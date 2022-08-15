@@ -85,7 +85,7 @@ include::{snippets}/pre-question/update/exception/wrong-levellog/http-response.a
 [[update-exception-notfound]]
 ==== 없는 사전 질문을 수정하는 경우
 
-include::{snippets}/pre-question/update/exception/notfound/http-response.adoc[]
+include::{snippets}/pre-question/update/exception/not-found/http-response.adoc[]
 
 [[update-exception-not-my-pre-question]]
 ==== 다른 사용자의 사전 질문을 수정하는 경우

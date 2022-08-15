@@ -23,6 +23,8 @@ class OAuthControllerTest extends ControllerTest {
     @DisplayName("login 메서드는")
     class Login {
 
+        private static final String BASE_SNIPPET_PATH = "auth/login/exception/";
+
         @ParameterizedTest
         @ValueSource(strings = {" "})
         @NullAndEmptySource
@@ -41,7 +43,7 @@ class OAuthControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("auth/login/null"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "null"));
         }
 
         @Test
@@ -66,7 +68,7 @@ class OAuthControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("auth/login/github-fail"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "github-fail"));
         }
 
         private ResultActions requestLoginWithoutToken(final String requestContent) throws Exception {

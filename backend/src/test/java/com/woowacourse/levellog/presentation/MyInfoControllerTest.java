@@ -23,6 +23,8 @@ class MyInfoControllerTest extends ControllerTest {
     @DisplayName("updateNickname 메서드는 ")
     class UpdateNickname {
 
+        private static final String BASE_SNIPPET_PATH = "my-info/update/";
+
         @Test
         @DisplayName("닉네임에 50자를 초과한 문자열이 들어올 경우 예외를 던진다.")
         void updateNickname_nicknameInvalidLength_exception() throws Exception {
@@ -45,7 +47,7 @@ class MyInfoControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("my-info/update/nickname-invalid-length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "nickname-invalid-length"));
         }
 
         @ParameterizedTest
@@ -65,7 +67,7 @@ class MyInfoControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("my-info/update/nickname-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "nickname-blank"));
         }
 
         private ResultActions requestUpdateNickname(final NicknameUpdateDto request) throws Exception {

@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 
-import { LevellogApiType, LevellogFormatType } from 'types/levellog';
+import { LevellogApiType, LevellogInfoType } from 'types/levellog';
 
 export const requestPostLevellog = ({
   accessToken,
@@ -19,7 +19,7 @@ export const requestGetLevellog = ({
   accessToken,
   teamId,
   levellogId,
-}: Omit<LevellogApiType, 'levellogContent'>): AxiosPromise<LevellogFormatType> => {
+}: Omit<LevellogApiType, 'levellogContent'>): AxiosPromise<LevellogInfoType> => {
   return axios({
     method: 'get',
     url: `${process.env.API_URI}/teams/${teamId}/levellogs/${levellogId}`,

@@ -68,9 +68,8 @@ class MyInfoControllerTest extends ControllerTest {
             perform.andDo(document("myinfo/update/nickname-blank"));
         }
 
-    }
-
-    private ResultActions requestUpdateNickname(final NicknameUpdateDto request) throws Exception {
-        return requestPut("/api/my-info", request);
+        private ResultActions requestUpdateNickname(final NicknameUpdateDto request) throws Exception {
+            return requestPut("/api/my-info", request);
+        }
     }
 }

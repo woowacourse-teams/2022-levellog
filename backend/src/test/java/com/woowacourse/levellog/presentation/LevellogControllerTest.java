@@ -92,6 +92,11 @@ class LevellogControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("levellog/save/exception-after-start"));
         }
+
+        private ResultActions requestCreateLevellog(final Long teamId, final LevellogWriteDto request)
+                throws Exception {
+            return requestPost("/api/teams/" + teamId + "/levellogs", request);
+        }
     }
 
     @Nested
@@ -122,6 +127,11 @@ class LevellogControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("levellog/find/exception-exist"));
         }
+
+        private ResultActions requestFindLevellog(final Long teamId, final Long levellogId) throws Exception {
+            return requestGet("/api/teams/" + teamId + "/levellogs/" + levellogId);
+        }
+
     }
 
     @Nested
@@ -202,18 +212,10 @@ class LevellogControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("levellog/update/exception-after-start"));
         }
-    }
 
-    private ResultActions requestCreateLevellog(final Long teamId, final LevellogWriteDto request) throws Exception {
-        return requestPost("/api/teams/" + teamId + "/levellogs", request);
-    }
-
-    private ResultActions requestFindLevellog(final Long teamId, final Long levellogId) throws Exception {
-        return requestGet("/api/teams/" + teamId + "/levellogs/" + levellogId);
-    }
-
-    private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId,
-                                                final LevellogWriteDto request) throws Exception {
-        return requestPut("/api/teams/" + teamId + "/levellogs/" + levellogId, request);
+        private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId,
+                                                    final LevellogWriteDto request) throws Exception {
+            return requestPut("/api/teams/" + teamId + "/levellogs/" + levellogId, request);
+        }
     }
 }

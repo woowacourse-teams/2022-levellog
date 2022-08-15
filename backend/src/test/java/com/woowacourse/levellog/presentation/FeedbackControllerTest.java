@@ -193,6 +193,11 @@ class FeedbackControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("feedback/save/exception/after-interview"));
         }
+
+        private ResultActions requestCreateFeedback(final Long levellogId, final FeedbackWriteDto request)
+                throws Exception {
+            return requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
+        }
     }
 
     @Nested
@@ -319,6 +324,11 @@ class FeedbackControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("feedback/update/exception/after-interview"));
         }
+
+        private ResultActions requestUpdateFeedback(final Long levellogId, final Long feedbackId,
+                                                    final FeedbackWriteDto request) throws Exception {
+            return requestPut("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId, request);
+        }
     }
 
     @Nested
@@ -372,19 +382,9 @@ class FeedbackControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("feedback/find-all/exception/not-my-team"));
         }
-    }
 
-    private ResultActions requestCreateFeedback(final Long levellogId, final FeedbackWriteDto request)
-            throws Exception {
-        return requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
-    }
-
-    private ResultActions requestUpdateFeedback(final Long levellogId, final Long feedbackId,
-                                                final FeedbackWriteDto request) throws Exception {
-        return requestPut("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId, request);
-    }
-
-    private ResultActions requestFindAllFeedback(final Long levellogId) throws Exception {
-        return requestGet("/api/levellogs/" + levellogId + "/feedbacks");
+        private ResultActions requestFindAllFeedback(final Long levellogId) throws Exception {
+            return requestGet("/api/levellogs/" + levellogId + "/feedbacks");
+        }
     }
 }

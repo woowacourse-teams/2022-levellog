@@ -114,6 +114,11 @@ class PreQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("pre-question/create/exception/already-exist"));
         }
+
+        private ResultActions requestCreatePreQuestion(final Long levellogId,
+                                                       final PreQuestionDto preQuestionDto) throws Exception {
+            return requestPost("/api/levellogs/" + levellogId + "/pre-questions", preQuestionDto);
+        }
     }
 
     @Nested
@@ -208,6 +213,12 @@ class PreQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("pre-question/update/exception/not-my-pre-question"));
         }
+
+        private ResultActions requestUpdatePreQuestion(final Long levellogId,
+                                                       final Long preQuestionId,
+                                                       final PreQuestionDto request) throws Exception {
+            return requestPut("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId, request);
+        }
     }
 
     @Nested
@@ -256,6 +267,10 @@ class PreQuestionControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("pre-question/find-my/exception/not-exist-pre-question"));
+        }
+
+        private ResultActions requestFindMyPreQuestion(final Long levellogId) throws Exception {
+            return requestGet("/api/levellogs/" + levellogId + "/pre-questions/my");
         }
     }
 
@@ -328,24 +343,10 @@ class PreQuestionControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("pre-question/delete/exception/not-my-pre-question"));
         }
-    }
 
-    private ResultActions requestCreatePreQuestion(final Long levellogId,
-                                                   final PreQuestionDto preQuestionDto) throws Exception {
-        return requestPost("/api/levellogs/" + levellogId + "/pre-questions", preQuestionDto);
-    }
-
-    private ResultActions requestFindMyPreQuestion(final Long levellogId) throws Exception {
-        return requestGet("/api/levellogs/" + levellogId + "/pre-questions/my");
-    }
-
-    private ResultActions requestUpdatePreQuestion(final Long levellogId,
-                                                   final Long preQuestionId,
-                                                   final PreQuestionDto request) throws Exception {
-        return requestPut("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId, request);
-    }
-
-    private ResultActions requestDeletePreQuestion(final Long levellogId, final Long preQuestionId) throws Exception {
-        return requestDelete("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId);
+        private ResultActions requestDeletePreQuestion(final Long levellogId, final Long preQuestionId)
+                throws Exception {
+            return requestDelete("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId);
+        }
     }
 }

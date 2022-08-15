@@ -317,6 +317,10 @@ class TeamControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("team/create/exception/participants/host"));
         }
+
+        private ResultActions requestCreateTeam(final TeamWriteDto request) throws Exception {
+            return requestPost("/api/teams", request);
+        }
     }
 
     @Nested
@@ -659,6 +663,10 @@ class TeamControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("team/update/exception/after-start-at"));
         }
+
+        private ResultActions requestUpdateTeam(final Long teamId, final TeamWriteDto request) throws Exception {
+            return requestPut("/api/teams/" + teamId, request);
+        }
     }
 
     @Nested
@@ -685,6 +693,10 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/find-by-id/exception/notfound"));
+        }
+
+        private ResultActions requestFindTeam(final Long teamId) throws Exception {
+            return requestGet("/api/teams/" + teamId);
         }
     }
 
@@ -738,6 +750,10 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document("team/find-my-role/exception/target-not-participant"));
+        }
+
+        private ResultActions requestFindMyRole(final Long teamId, final Long memberId) throws Exception {
+            return requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
         }
     }
 
@@ -839,6 +855,10 @@ class TeamControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("team/close/exception/unauthorized"));
         }
+
+        private ResultActions requestCloseTeam(final Long teamId) throws Exception {
+            return requestPost("/api/teams/" + teamId + "/close");
+        }
     }
 
     @Nested
@@ -913,29 +933,9 @@ class TeamControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("team/delete/exception/unauthorized"));
         }
-    }
 
-    private ResultActions requestCreateTeam(final TeamWriteDto request) throws Exception {
-        return requestPost("/api/teams", request);
-    }
-
-    private ResultActions requestFindTeam(final Long teamId) throws Exception {
-        return requestGet("/api/teams/" + teamId);
-    }
-
-    private ResultActions requestUpdateTeam(final Long teamId, final TeamWriteDto request) throws Exception {
-        return requestPut("/api/teams/" + teamId, request);
-    }
-
-    private ResultActions requestFindMyRole(final Long teamId, final Long memberId) throws Exception {
-        return requestGet("/api/teams/" + teamId + "/members/" + memberId + "/my-role");
-    }
-
-    private ResultActions requestCloseTeam(final Long teamId) throws Exception {
-        return requestPost("/api/teams/" + teamId + "/close");
-    }
-
-    private ResultActions requestDeleteTeam(Long teamId) throws Exception {
-        return requestDelete("/api/teams/" + teamId);
+        private ResultActions requestDeleteTeam(final Long teamId) throws Exception {
+            return requestDelete("/api/teams/" + teamId);
+        }
     }
 }

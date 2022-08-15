@@ -68,12 +68,12 @@ class OAuthControllerTest extends ControllerTest {
             // docs
             perform.andDo(document("auth/login/github-fail"));
         }
-    }
 
-    private ResultActions requestLoginWithoutToken(final String requestContent) throws Exception {
-        return mockMvc.perform(post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestContent))
-                .andDo(print());
+        private ResultActions requestLoginWithoutToken(final String requestContent) throws Exception {
+            return mockMvc.perform(post("/api/auth/login")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestContent))
+                    .andDo(print());
+        }
     }
 }

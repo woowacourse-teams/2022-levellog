@@ -35,6 +35,7 @@ export const MESSAGE = Object.freeze({
   TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
   WRITE_MORE: '3글자 이상 작성해주세요',
   CAN_EDIT: '수정하고 싶은 질문을 클릭해서 수정할 수 있어요!',
+  FEEDBACK_CREATE: '피드백 작성을 완료하였습니다.',
   INTERVIEW_CLOSE_CONFIRM: '정말로 인터뷰를 종료하시겠습니까?',
   INTERVIEW_STATUS_NOT_READY: '인터뷰가 시작 전이 아닙니다!',
   INTERVIEW_STATUS_NOT_IN_PROGRESS: '인터뷰가 진행 중이 아닙니다!',

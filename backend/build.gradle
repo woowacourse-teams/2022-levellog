@@ -57,8 +57,6 @@ ext {
 test {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
-
-	finalizedBy 'jacocoTestReport'
 }
 
 asciidoctor {
@@ -99,8 +97,6 @@ jacocoTestReport {
 				})
 		)
 	}
-
-	finalizedBy 'jacocoTestCoverageVerification'
 }
 
 jacocoTestCoverageVerification {
@@ -124,4 +120,14 @@ jacocoTestCoverageVerification {
 			excludes = ['*support*', '*dto*', '*Application*', '*BaseEntity*', '*Github*']
 		}
 	}
+}
+
+task testCoverage {
+	group 'verification'
+	description 'Runs the unit tests with coverage'
+
+	dependsOn('test', 'jacocoTestReport', 'jacocoTestCoverageVerification')
+
+	tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+	tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
 }

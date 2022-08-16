@@ -65,7 +65,7 @@ class MemberServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("사전에 깃허브 닉네임을 등록하지 않은 새로운 멤버를 저장한다.")
-        void success() {
+        void save_notRegistered_success() {
             // given
             final MemberCreateDto memberCreateDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
 

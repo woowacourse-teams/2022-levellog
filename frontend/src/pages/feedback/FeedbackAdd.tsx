@@ -31,7 +31,7 @@ const FeedbackAdd = () => {
       <S.Content>
         <S.LeftContent>
           <FlexBox alignItems={'center'} gap={1}>
-            <S.FeedbackTitle>레벨로그</S.FeedbackTitle>
+            <S.LevellogTitle>레벨로그</S.LevellogTitle>
             <S.RoleContent>나의 역할: {feedbackWriterRole}</S.RoleContent>
           </FlexBox>
           <LevellogReport levellogInfo={levellogInfo} />
@@ -77,7 +77,7 @@ const S = {
     }
   `,
 
-  FeedbackTitle: styled.h2`
+  LevellogTitle: styled.h2`
     margin-bottom: 1.875rem;
     font-size: 1.875rem;
   `,

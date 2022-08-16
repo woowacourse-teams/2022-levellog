@@ -1,89 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+    <include resource="appender/property.xml"/>
+
     <!-- Console 로그 설정 -->
     <springProfile name="test, local, default">
-        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-            <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>%highlight([%-5level])[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread]%highlight([%logger{20}]) - %msg%n
-                </pattern>
-            </layout>
-        </appender>
 
-        <root level="INFO">
-            <appender-ref ref="STDOUT"/>
-        </root>
+        <include resource="appender/console/query-appender.xml"/>
+        <include resource="appender/console/parameter-appender.xml"/>
+        <include resource="appender/console/console-appender.xml"/>
+
+        <logger name="org.hibernate.SQL" level="DEBUG">
+            <appender-ref ref="query-appender"/>
+        </logger>
+
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE">
+            <appender-ref ref="parameter-appender"/>
+        </logger>
+
+        <logger name="com.woowacourse.levellog" level="INFO">
+            <appender-ref ref="console-appender"/>
+        </logger>
+
     </springProfile>
-    <!-- Console 로그 설정 끝 -->
 
     <!-- RollingFile 로그 설정 -->
     <springProfile name="prod, dev">
-        <property name="LOGS_ABSOLUTE_PATH" value="./logs"/>
-        <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./logs/info.log</file>
-            <filter class="ch.qos.logback.classic.filter.LevelFilter">
-                <level>INFO</level>
-                <onMatch>ACCEPT</onMatch>
-                <onMismatch>DENY</onMismatch>
-            </filter>
-            <encoder>
-                <pattern>%highlight([%-5level])[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread]%blue([%logger{20}]) - %msg%n
-                </pattern>
-            </encoder>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>./was-logs/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                    <maxFileSize>100MB</maxFileSize>
-                </timeBasedFileNamingAndTriggeringPolicy>
-                <maxHistory>180</maxHistory>
-            </rollingPolicy>
-        </appender>
 
-        <appender name="WARN_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./logs/warn.log</file>
-            <filter class="ch.qos.logback.classic.filter.LevelFilter">
-                <level>WARN</level>
-                <onMatch>ACCEPT</onMatch>
-                <onMismatch>DENY</onMismatch>
-            </filter>
-            <encoder>
-                <pattern>%highlight([%-5level])[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread]%red([%logger{20}]) - %msg%n
-                </pattern>
-            </encoder>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>./was-logs/warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                    <maxFileSize>100MB</maxFileSize>
-                </timeBasedFileNamingAndTriggeringPolicy>
-                <maxHistory>180</maxHistory>
-            </rollingPolicy>
-        </appender>
+        <include resource="appender/file/info-appender.xml"/>
+        <include resource="appender/file/warn-appender.xml"/>
+        <include resource="appender/file/error-appender.xml"/>
 
-        <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>./logs/error.log</file>
-            <filter class="ch.qos.logback.classic.filter.LevelFilter">
-                <level>ERROR</level>
-                <onMatch>ACCEPT</onMatch>
-                <onMismatch>DENY</onMismatch>
-            </filter>
-            <encoder>
-                <pattern>%highlight([%-5level])[%d{yyyy-MM-dd HH:mm:ss.SSS}][%thread]%boldRed([%logger{20}]) - %msg%n
-                </pattern>
-            </encoder>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>./was-logs/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                    <maxFileSize>100MB</maxFileSize>
-                </timeBasedFileNamingAndTriggeringPolicy>
-                <maxHistory>180</maxHistory>
-            </rollingPolicy>
-        </appender>
         <root level="INFO">
-            <appender-ref ref="INFO_LOG"/>
-            <appender-ref ref="WARN_LOG"/>
-            <appender-ref ref="ERROR_LOG"/>
+            <appender-ref ref="info-appender"/>
+            <appender-ref ref="warn-appender"/>
+            <appender-ref ref="error-appender"/>
         </root>
+
     </springProfile>
-    <!-- RollingFile 로그 설정 끝 -->
 
 </configuration>

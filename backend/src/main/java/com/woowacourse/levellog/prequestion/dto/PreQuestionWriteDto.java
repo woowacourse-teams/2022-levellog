@@ -17,13 +17,13 @@ import lombok.NoArgsConstructor;
 public class PreQuestionWriteDto {
 
     @NotBlank
-    private String preQuestion;
+    private String content;
 
-    public static PreQuestionWriteDto from(String content) {
+    public static PreQuestionWriteDto from(final String content) {
         return new PreQuestionWriteDto(content);
     }
 
     public PreQuestion toEntity(final Levellog levellog, final Member from) {
-        return new PreQuestion(levellog, from, preQuestion);
+        return new PreQuestion(levellog, from, content);
     }
 }

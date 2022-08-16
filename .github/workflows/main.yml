@@ -38,13 +38,13 @@ jobs:
       - name: 소나큐브 빌드 진행
         working-directory: ./backend
         run: ./gradlew testCoverage sonarqube
-             -Dsonar.projectKey=${{ env.SONARQUBE_ID }} 
-             -Dsonar.host.url=${{ env.SONARQUBE_URL }} 
-             -Dsonar.projectName=${{ env.SONARQUBE_ID }}-${{ env.PR_NUMBER }} 
-             -Dsonar.login=${{ secrets.SONARQUBE_ACCESS_TOKEN }}
+          -Dsonar.projectKey=${{ env.SONARQUBE_ID }}
+          -Dsonar.host.url=${{ env.SONARQUBE_URL }}
+          -Dsonar.projectName=${{ env.SONARQUBE_ID }}-${{ env.PR_NUMBER }}
+          -Dsonar.login=${{ secrets.SONARQUBE_ACCESS_TOKEN }}
 
       - name: get analysis results
-        id: analysis_results
+        id: sonarqube_results
         run: |
           RESPONSE=$(curl -X GET -G '${{ env.SONARQUBE_AUTH_URL }}/api/measures/search' \
           -d projectKeys=${{ env.SONARQUBE_ID }} \
@@ -59,7 +59,7 @@ jobs:
             if [ $BEST_VALUE == true ] || [ $BEST_VALUE == null ]; then
               echo "::set-output name=${METRIC}_best_value::✅"
             else
-              echo "::set-output name=${METRIC}_best_value::❌"                 
+              echo "::set-output name=${METRIC}_best_value::❌"
             fi
           done
 
@@ -75,12 +75,12 @@ jobs:
               repo: context.repo.repo,
               body: `## 🏃‍♀️💨 Code Analysis Results By SonarQube
                      ${ SONARQUBE_ID }-${ PR_NUMBER }
-                     
+            
                      Bugs :    ${{ steps.sonarqube_results.outputs.bugs_value }}    ${{ steps.sonarqube_results.outputs.bugs_best_value }}
-                     Vulnerabilities :    ${{ steps.analysis_results.outputs.vulnerabilities_value }}    ${{ steps.analysis_results.outputs.vulnerabilities_best_value }}
+                     Vulnerabilities :    ${{ steps.sonarqube_results.outputs.vulnerabilities_value }}    ${{ steps.sonarqube_results.outputs.vulnerabilities_best_value }}
                      Code Smells :    ${{ steps.sonarqube_results.outputs.code_smells_value }}    ${{ steps.sonarqube_results.outputs.code_smells_best_value }} 
                      Coverage :    ${{ steps.sonarqube_results.outputs.coverage_value }}    ${{ steps.sonarqube_results.outputs.coverage_best_value }} 
-                     
+            
                      [리포트 확인하기](${SONARQUBE_URL})`})
 
   test:

@@ -8,7 +8,7 @@ import { ROUTES_PATH } from 'constants/constants';
 import { Editor } from '@toast-ui/react-editor';
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
-import { LevellogCustomHookType } from 'types/levellog';
+import { LevellogCustomHookType, LevellogInfoType } from 'types/levellog';
 
 const useLevellog = () => {
   const [levellogInfo, setLevellogInfo] = useState<LevellogInfoType>(

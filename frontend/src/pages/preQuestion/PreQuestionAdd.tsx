@@ -46,7 +46,7 @@ const PreQuestionAdd = () => {
           <S.LeftContent>
             <FlexBox alignItems={'center'} gap={1}>
               <S.LevellogTitle>레벨로그</S.LevellogTitle>
-              <LevellogReport levellog={levellog} />
+              <LevellogReport levellogInfo={levellogInfo} />
             </FlexBox>
           </S.LeftContent>
           <S.RightContent>

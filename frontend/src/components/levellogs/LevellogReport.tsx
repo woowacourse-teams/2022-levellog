@@ -6,7 +6,7 @@ import { LevellogInfoType } from 'types/levellog';
 const LevellogReport = ({ levellogInfo }: LevellogReportProps) => {
   return (
     <S.Container>
-      <UiViewer content={levellog} />
+      <UiViewer content={levellogInfo.content} />
     </S.Container>
   );
 };

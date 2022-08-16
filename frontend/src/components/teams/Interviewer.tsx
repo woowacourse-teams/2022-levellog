@@ -12,7 +12,7 @@ import Role from 'components/@commons/Role';
 import { LevellogParticipantType } from 'types/levellog';
 import { PreQuestionParticipantType } from 'types/preQuestion';
 import { RoleType } from 'types/role';
-import { InterviewTeamType, ParticipantType } from 'types/team';
+import { ParticipantType } from 'types/team';
 
 const Interviewer = ({
   participant,
@@ -91,8 +91,9 @@ const Interviewer = ({
   return (
     <S.Container>
       <S.Profile>
-        {role.interviewee && <Role role={'인터뷰이'} />}
-        {role.interviewer && <Role role={'인터뷰어'} />}
+        {role.interviewee && role.interviewer === false && <Role role={'인터뷰이'} />}
+        {role.interviewer && role.interviewee === false && <Role role={'인터뷰어'} />}
+        {role.interviewee && role.interviewer && <Role role={'상호 인터뷰'} />}
         <Image src={participant.profileUrl} sizes={'HUGE'} />
         <S.Nickname>
           <p>{participant.nickname}</p>

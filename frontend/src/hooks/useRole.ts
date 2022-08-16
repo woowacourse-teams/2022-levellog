@@ -2,16 +2,12 @@ import { useState } from 'react';
 
 import axios, { AxiosResponse } from 'axios';
 
-
-import useTeam from 'hooks/useTeam';
-
 import { requestGetLoginUserRole } from 'apis/role';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { RoleCustomHookType } from 'types/role';
 
 const useRole = () => {
   const [feedbackWriterRole, setFeedbackWriterRole] = useState('');
-  const [levellogWriter, setLevellogWriter] = useState('');
 
   const accessToken = localStorage.getItem('accessToken');
 

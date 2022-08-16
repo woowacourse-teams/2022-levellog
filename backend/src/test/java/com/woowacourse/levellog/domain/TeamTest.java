@@ -41,7 +41,7 @@ class TeamTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("팀 이름이 null 또는 공백이 들어오면 예외를 던진다.")
-        void titleNullOrBlank_Exception(final String title) {
+        void constructor_titleNullOrBlank_exception(final String title) {
             // given
             final String place = "선릉 트랙룸";
             final String profileUrl = "profile.img";
@@ -54,7 +54,7 @@ class TeamTest {
 
         @Test
         @DisplayName("팀 이름이 255자를 초과할 경우 예외를 던진다.")
-        void titleInvalidLength_Exception() {
+        void constructor_titleInvalidLength_exception() {
             // given
             final String title = "a".repeat(256);
             final String place = "선릉 트랙룸";
@@ -70,7 +70,7 @@ class TeamTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("팀 장소가 null 또는 공백이 들어오면 예외를 던진다.")
-        void placeNullOrBlank_Exception(final String place) {
+        void constructor_placeNullOrBlank_exception(final String place) {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String profileUrl = "profile.img";
@@ -83,7 +83,7 @@ class TeamTest {
 
         @Test
         @DisplayName("팀 장소가 255자를 초과할 경우 예외를 던진다.")
-        void placeInvalidLength_Exception() {
+        void constructor_placeInvalidLength_exception() {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String place = "a".repeat(256);
@@ -98,7 +98,7 @@ class TeamTest {
         @ParameterizedTest
         @NullSource
         @DisplayName("인터뷰 시작 시간이 null이 들어오면 예외를 던진다.")
-        void startAtNull_Exception(final LocalDateTime startAt) {
+        void constructor_startAtNull_exception(final LocalDateTime startAt) {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String place = "선릉 트랙룸";
@@ -112,7 +112,7 @@ class TeamTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간이 과거인 경우 예외를 던진다.")
-        void startAtInvalidDateTime_Exception() {
+        void constructor_startAtInvalidDateTime_exception() {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String place = "선릉 트랙룸";
@@ -129,7 +129,7 @@ class TeamTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("팀 프로필 사진 url이 null 또는 공백이 들어오면 예외를 던진다.")
-        void profileUrlNullOrBlank_Exception(final String profileUrl) {
+        void constructor_profileUrlNullOrBlank_exception(final String profileUrl) {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String place = "선릉 트랙룸";
@@ -142,7 +142,7 @@ class TeamTest {
 
         @Test
         @DisplayName("팀 프로필 사진 url이 2048자를 초과할 경우 예외를 던진다.")
-        void profileUrlInvalidLength_Exception() {
+        void constructor_profileUrlInvalidLength_exception() {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String place = "선릉 트랙룸";
@@ -156,7 +156,7 @@ class TeamTest {
 
         @Test
         @DisplayName("인터뷰어 수가 1명 미만이면 예외를 던진다.")
-        void minInterviewerNumber_exceptionThrown() {
+        void constructor_minInterviewerNumber_exception() {
             // given
             final String title = "네오와 함께하는 레벨 인터뷰";
             final String place = "선릉 트랙룸";
@@ -175,7 +175,7 @@ class TeamTest {
 
         @Test
         @DisplayName("팀 이름, 장소, 시작 시간을 수정한다.")
-        void update() {
+        void success() {
             // given
             final Team team = saveTeam();
             final Team updatedTeam = new Team("브라운과 카페 투어", "잠실 어드레스룸", TEAM_START_TIME, "profile.img", 2);
@@ -194,7 +194,7 @@ class TeamTest {
 
         @Test
         @DisplayName("인터뷰 시작 이후인 경우 예외를 던진다.")
-        void updateAfterStartAt_Exception() {
+        void update_updateAfterStartAt_exception() {
             // given
             final Team team = saveTeam();
             final Team updatedTeam = new Team("브라운과 카페 투어", "잠실 어드레스룸", TEAM_START_TIME, "profile.img", 2);
@@ -208,12 +208,12 @@ class TeamTest {
 
     @Nested
     @DisplayName("validParticipantNumber 메서드는")
-    class validParticipantNumber {
+    class ValidParticipantNumber {
 
         @ParameterizedTest
         @CsvSource(value = {"1,1", "2,1", "2,2"})
         @DisplayName("isValidParticipantNumber 메서드는 인터뷰어 수를 참고해서 참가자 수가 유효한지 계산한다.")
-        void throwException(final int interviewerNumber, final int participantNumber) {
+        void validParticipantNumber_ifNotValid_exception(final int interviewerNumber, final int participantNumber) {
             // given
             final Team team = saveTeam(interviewerNumber);
 
@@ -225,7 +225,7 @@ class TeamTest {
         @ParameterizedTest
         @CsvSource(value = {"1,2", "2,3"})
         @DisplayName("isValidParticipantNumber 메서드는 인터뷰어 수를 참고해서 참가자 수가 유효한지 계산한다.")
-        void notThrownException(final int interviewerNumber, final int participantNumber) {
+        void validParticipantNumber_ifValid_success(final int interviewerNumber, final int participantNumber) {
             // given
             final Team team = saveTeam(interviewerNumber);
 
@@ -241,7 +241,7 @@ class TeamTest {
 
         @Test
         @DisplayName("팀 인터뷰를 종료 상태로 바꾼다.")
-        void close_success() {
+        void success() {
             // given
             final Team team = saveTeam();
 
@@ -254,7 +254,7 @@ class TeamTest {
 
         @Test
         @DisplayName("이미 종료된 인터뷰를 종료하려는 경우 예외가 발생한다.")
-        void close_alreadyClosed_exceptionThrown() {
+        void close_alreadyClosed_exception() {
             // given
             final Team team = saveTeam();
 
@@ -268,7 +268,7 @@ class TeamTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간 전 종료를 요청할 경우 예외가 발생한다.")
-        void close_beforeStart_exceptionThrown() {
+        void close_beforeStart_exception() {
             // given
             final Team team = saveTeam();
 
@@ -285,7 +285,7 @@ class TeamTest {
 
         @Test
         @DisplayName("팀을 deleted 상태로 만든다.")
-        void delete_success() {
+        void success() {
             // given
             final Team team = saveTeam();
 
@@ -298,7 +298,7 @@ class TeamTest {
 
         @Test
         @DisplayName("인터뷰 시작 이후 삭제를 요청할 경우 예외가 발생한다.")
-        void delete_afterStart_exceptionThrown() {
+        void delete_afterStart_exception() {
             // given
             final Team team = saveTeam();
 
@@ -318,7 +318,7 @@ class TeamTest {
 
         @Test
         @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이전이면 예외가 발생한다.")
-        void validate_afterStartAt_thrownException() {
+        void validate_afterStartAt_exception() {
             // given
             final Team team = saveTeam();
 
@@ -330,7 +330,7 @@ class TeamTest {
 
         @Test
         @DisplayName("팀 인터뷰가 이미 종료된 상태면 예외를 발생시킨다.")
-        void validate_BeforeClose_thrownException() {
+        void validate_beforeClose_exception() {
             // given
             final Team team = saveTeam();
 
@@ -367,7 +367,7 @@ class TeamTest {
 
         @Test
         @DisplayName("현재 시간이 인터뷰 시작 시간보다 이전인 경우 READY를 반환한다.")
-        void readyStatus_success() {
+        void status_ready_success() {
             // given
             final Team team = saveTeam();
 
@@ -380,7 +380,7 @@ class TeamTest {
 
         @Test
         @DisplayName("인터뷰 시작시간이 현재 시간보다 이후이면서 종료되지 않은 경우 IN_PROGRESS를 반환한다.")
-        void inProgressStatus_success() {
+        void status_inProgress_success() {
             // given
             final Team team = saveTeam();
 
@@ -393,7 +393,7 @@ class TeamTest {
 
         @Test
         @DisplayName("인터뷰가 종료된 경우 CLOSED를 반환한다.")
-        void closedStatus_success() {
+        void status_closed_success() {
             // given
             final Team team = saveTeam();
             team.close(AFTER_START_TIME);

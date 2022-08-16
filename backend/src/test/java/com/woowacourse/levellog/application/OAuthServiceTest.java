@@ -16,11 +16,11 @@ class OAuthServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("login 메서드는")
-    class login {
+    class Login {
 
         @Test
         @DisplayName("첫 로그인 시 회원가입하고 id, 토큰, 이미지 URL를 반환한다.")
-        void login_first_signUp() throws Exception {
+        void login_ifFirst_success() throws Exception {
             // given
             final GithubProfileDto request = new GithubProfileDto("1234", "릭", "rick.org");
 
@@ -41,7 +41,7 @@ class OAuthServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("첫 로그인이 아닌 경우 회원가입 하지 않고 토큰과 이미지 URL를 반환한다.")
-        void login_notFirst_signIn() throws Exception {
+        void login_ifNotFirst_success() throws Exception {
             // given
             final Member member = saveMember("로마");
 

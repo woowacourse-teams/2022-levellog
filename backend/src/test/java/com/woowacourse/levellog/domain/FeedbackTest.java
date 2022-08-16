@@ -18,11 +18,11 @@ class FeedbackTest {
 
     @Nested
     @DisplayName("생성자는")
-    class create {
+    class Create {
 
         @Test
         @DisplayName("Study 피드백의 길이가 1000자 초과일 경우 예외를 발생시킨다.")
-        void feedback_studyLength_exceptionThrown() {
+        void create_feedbackStudyLength_exception() {
             // given
             final String feedback = "f".repeat(1001);
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
@@ -41,7 +41,7 @@ class FeedbackTest {
 
         @Test
         @DisplayName("Speak 피드백의 길이가 1000자 초과일 경우 예외를 발생시킨다.")
-        void feedback_SpeakLength_exceptionThrown() {
+        void create_feedbackSpeakLength_exception() {
             // given
             final String feedback = "f".repeat(1001);
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
@@ -60,7 +60,7 @@ class FeedbackTest {
 
         @Test
         @DisplayName("Etc 피드백의 길이가 1000자 초과일 경우 예외를 발생시킨다.")
-        void feedback_EtcLength_exceptionThrown() {
+        void create_feedbackEtcLength_exception() {
             // given
             final String feedback = "f".repeat(1001);
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
@@ -80,11 +80,11 @@ class FeedbackTest {
 
     @Nested
     @DisplayName("updateFeedback 메소드는")
-    class update {
+    class Update {
 
         @Test
         @DisplayName("Study 피드백의 길이가 1000자 초과일 경우 예외를 발생시킨다.")
-        void update_studyLength_exceptionThrown() {
+        void update_studyLength_exception() {
             // given
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
@@ -105,7 +105,7 @@ class FeedbackTest {
 
         @Test
         @DisplayName("Speak 피드백의 길이가 1000자 초과일 경우 예외를 발생시킨다.")
-        void update_SpeakLength_exceptionThrown() {
+        void update_speakLength_exception() {
             // given
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
@@ -126,7 +126,7 @@ class FeedbackTest {
 
         @Test
         @DisplayName("Etc 피드백의 길이가 1000자 초과일 경우 예외를 발생시킨다.")
-        void update_EtcLength_exceptionThrown() {
+        void update_etcLength_exception() {
             // given
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Study 피드백", "Speak 피드백", "Etc 피드백");

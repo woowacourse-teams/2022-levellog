@@ -25,9 +25,11 @@ class FeedbackControllerTest extends ControllerTest {
     @DisplayName("save 메서드는")
     class Save {
 
+        private static final String BASE_SNIPPET_PATH = "feedback/save/exception/";
+
         @Test
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
-        void save_alreadyExist_exceptionThrown() throws Exception {
+        void save_alreadyExist_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -48,12 +50,12 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/save/exception/exist"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "exist"));
         }
 
         @Test
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
-        void save_selfFeedback_exceptionThrown() throws Exception {
+        void save_selfFeedback_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -74,12 +76,12 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/save/exception/self"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "self"));
         }
 
         @Test
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_otherMember_exceptionThrown() throws Exception {
+        void save_otherMember_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -100,12 +102,12 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/save/exception/team"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "team"));
         }
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 작성을 요청하면 예외가 발생한다.")
-        void save_notFoundLevellog_exceptionThrown() throws Exception {
+        void save_notFoundLevellog_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 20000000L;
@@ -126,12 +128,12 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/save/exception/levellog"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog"));
         }
 
         @Test
         @DisplayName("팀 인터뷰 시작 전에 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_beforeStartAt_exceptionThrown() throws Exception {
+        void save_beforeStartAt_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -152,12 +154,12 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/save/exception/before-interview"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "before-interview"));
         }
 
         @Test
         @DisplayName("팀 인터뷰 종료 후에 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_alreadyClosed_exceptionThrown() throws Exception {
+        void save_alreadyClosed_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -178,7 +180,7 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/save/exception/after-interview"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-interview"));
         }
 
         private ResultActions requestCreateFeedback(final Long levellogId, final FeedbackWriteDto request)
@@ -191,9 +193,11 @@ class FeedbackControllerTest extends ControllerTest {
     @DisplayName("update 메서드는")
     class Update {
 
+        private static final String BASE_SNIPPET_PATH = "feedback/update/exception/";
+
         @Test
         @DisplayName("피드백에 관련이 없는 멤버가 피드백을 수정하면 예외가 발생한다.")
-        void update_otherMember_exceptionThrown() throws Exception {
+        void update_otherMember_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -217,12 +221,12 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/update/exception/author"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-author"));
         }
 
         @Test
         @DisplayName("존재하지 않는 피드백 정보로 피드백 수정을 요청하면 예외가 발생한다.")
-        void update_notFoundFeedback_exceptionThrown() throws Exception {
+        void update_notFoundFeedback_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -245,12 +249,12 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/update/exception/feedback"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "feedback"));
         }
 
         @Test
         @DisplayName("인터뷰 시작 전에 피드백을 수정하면 예외가 발생한다.")
-        void update_beforeStartAt_exceptionThrown() throws Exception {
+        void update_beforeStartAt_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -273,12 +277,12 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/update/exception/before-interview"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "before-interview"));
         }
 
         @Test
         @DisplayName("인터뷰 종료 후에 피드백을 수정하면 예외가 발생한다.")
-        void update_alreadyClosed_exceptionThrown() throws Exception {
+        void update_alreadyClosed_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -301,7 +305,7 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/update/exception/after-interview"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-interview"));
         }
 
         private ResultActions requestUpdateFeedback(final Long levellogId, final Long feedbackId,
@@ -314,9 +318,11 @@ class FeedbackControllerTest extends ControllerTest {
     @DisplayName("findAll 메서드는")
     class FindAll {
 
+        private static final String BASE_SNIPPET_PATH = "feedback/find-all/exception/";
+
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
-        void findAll_notFoundLevellog_exceptionThrown() throws Exception {
+        void findAll_notFoundLevellog_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 200000L;
@@ -335,7 +341,7 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/find-all/exception/levellog"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog"));
         }
 
         @Test
@@ -359,7 +365,7 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/find-all/exception/not-my-team"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-team"));
         }
 
         private ResultActions requestFindAllFeedback(final Long levellogId) throws Exception {

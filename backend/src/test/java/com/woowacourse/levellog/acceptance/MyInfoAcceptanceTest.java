@@ -39,7 +39,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("myinfo/read"))
+                .filter(document("my-info/read"))
                 .when()
                 .get("/api/my-info")
                 .then().log().all();
@@ -69,7 +69,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .body(nicknameDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("myinfo/update/nickname"))
+                .filter(document("my-info/update/nickname"))
                 .when()
                 .put("/api/my-info")
                 .then().log().all();
@@ -106,7 +106,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + RICK.getToken())
-                .filter(document("myinfo/findAllReceivedFeedbacks"))
+                .filter(document("my-info/find-all-received-feedbacks"))
                 .when()
                 .get("/api/my-info/feedbacks")
                 .then().log().all();
@@ -141,7 +141,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
-                .filter(document("myinfo/findAllMyLevellogs"))
+                .filter(document("my-info/find-all-my-levellogs"))
                 .when()
                 .get("/api/my-info/levellogs")
                 .then().log().all();
@@ -172,7 +172,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
-                .filter(document("myinfo/findAllMyTeam"))
+                .filter(document("my-info/find-all-my-team"))
                 .when()
                 .get("/api/my-info/teams")
                 .then().log().all();

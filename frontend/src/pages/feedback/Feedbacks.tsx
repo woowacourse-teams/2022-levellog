@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import useFeedback from 'hooks/useFeedback';
 import useTeam from 'hooks/useTeam';
+import useUser from 'hooks/useUser';
 
 import { MESSAGE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
@@ -16,6 +17,7 @@ const Feedbacks = () => {
   const { feedbacks, getFeedbacksInTeam } = useFeedback();
   const { teamId, levellogId } = useParams();
   const { team } = useTeam();
+  const { loginUserId } = useUser();
   const navigate = useNavigate();
 
   if (typeof levellogId !== 'string' || typeof teamId !== 'string') {
@@ -46,6 +48,7 @@ const Feedbacks = () => {
           feedbacks.map((feedbackInfo: FeedbackType) => (
             <Feedback
               key={feedbackInfo.id}
+              loginUserId={loginUserId}
               feedbackInfo={feedbackInfo}
               teamId={teamId}
               levellogId={levellogId}

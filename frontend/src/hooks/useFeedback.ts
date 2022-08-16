@@ -3,17 +3,17 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
-
 import { Editor } from '@toast-ui/react-editor';
 import { requestPostFeedback, requestGetFeedbacksInTeam, requestEditFeedback } from 'apis/feedback';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
 const useFeedback = () => {
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const feedbackRef = useRef<Editor[]>([]);
-  const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
+
+  const accessToken = localStorage.getItem('accessToken');
 
   const postFeedback = async ({
     levellogId,
@@ -23,10 +23,11 @@ const useFeedback = () => {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
       alert(MESSAGE.FEEDBACK_CREATE);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -38,10 +39,11 @@ const useFeedback = () => {
 
       setFeedbacks(feedbacks);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -54,10 +56,11 @@ const useFeedback = () => {
     try {
       await requestEditFeedback({ accessToken, levellogId, feedbackId, feedbackResult });
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };

@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
@@ -104,11 +103,11 @@ class FeedbackServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("update 메서드는")
-    class update {
+    class Update {
 
         @Test
         @DisplayName("피드백을 수정한다.")
-        void update_feedback_success() {
+        void success() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -120,8 +119,7 @@ class FeedbackServiceTest extends ServiceTest {
             timeStandard.setInProgress();
 
             // when
-            feedbackService.update(new FeedbackWriteDto(
-                            new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
+            feedbackService.update(FeedbackWriteDto.from("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
                     feedbackId, roma.getId());
 
             // then
@@ -133,7 +131,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("작성자가 아닌 사용자가 피드백을 수정하려는 경우 예외를 발생시킨다.")
-        void update_noAuthor_exceptionThrown() {
+        void update_noAuthor_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -145,8 +143,7 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() ->
-                    feedbackService.update(new FeedbackWriteDto(
-                                    new FeedbackContentDto("수정된 스터디", "수정된 말하기", "수정된 기타")),
+                    feedbackService.update(FeedbackWriteDto.from("수정된 스터디", "수정된 말하기", "수정된 기타"),
                             feedbackId, alien.getId()))
                     .isInstanceOf(InvalidFeedbackException.class)
                     .hasMessageContaining("자신이 남긴 피드백만 수정할 수 있습니다.");
@@ -154,7 +151,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간 이전에 피드백을 수정하려는 경우 예외가 발생한다.")
-        void update_beforeStartAt_exceptionThrown() {
+        void update_beforeStartAt_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -164,8 +161,8 @@ class FeedbackServiceTest extends ServiceTest {
             final Long feedbackId = saveFeedback(roma, eve, levellog).getId();
 
             // when & then
-            assertThatThrownBy(() -> feedbackService.update(new FeedbackWriteDto(
-                            new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
+            assertThatThrownBy(() -> feedbackService.update(
+                    FeedbackWriteDto.from("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
                     feedbackId, roma.getId()))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 수정할 수 없습니다.");
@@ -173,7 +170,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 종료 이후에 피드백을 수정하려는 경우 예외가 발생한다.")
-        void update_alreadyClosed_exceptionThrown() {
+        void update_alreadyClosed_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -187,8 +184,8 @@ class FeedbackServiceTest extends ServiceTest {
             team.close(AFTER_START_TIME);
 
             // when & then
-            assertThatThrownBy(() -> feedbackService.update(new FeedbackWriteDto(
-                            new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
+            assertThatThrownBy(() -> feedbackService.update(
+                    FeedbackWriteDto.from("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
                     feedbackId, roma.getId()))
                     .isInstanceOf(InterviewTimeException.class)
                     .hasMessageContaining("이미 종료된 인터뷰입니다.");
@@ -197,20 +194,19 @@ class FeedbackServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("save 메서드는")
-    class save {
+    class Save {
 
         @Test
         @DisplayName("피드백을 저장한다.")
-        void save_feedback_success() {
+        void success() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             timeStandard.setInProgress();
 
@@ -224,7 +220,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
-        void save_alreadyExist_exceptionThrown() {
+        void save_alreadyExist_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -234,9 +230,8 @@ class FeedbackServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(eve, team);
             saveFeedback(roma, eve, levellog);
 
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
@@ -246,15 +241,14 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
-        void save_selfFeedback_exceptionThrown() {
+        void save_selfFeedback_exception() {
             // given
             final Member eve = saveMember("이브");
             final Team team = saveTeam(eve);
             final Levellog levellog = saveLevellog(eve, team);
 
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), eve.getId()))
@@ -264,7 +258,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_otherMember_exceptionThrown() {
+        void save_otherMember_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -274,8 +268,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(eve, team);
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(new FeedbackWriteDto(
-                            new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타")),
+            assertThatThrownBy(() -> feedbackService.save(FeedbackWriteDto.from("로마 스터디", "로마 말하기", "로마 기타"),
                     levellog.getId(), roma.getId()))
                     .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContaining("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
@@ -283,7 +276,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 시작 전 피드백을 작성하면 예외를 던진다.")
-        void save_beforeStartAt_exceptionThrown() {
+        void save_beforeStartAt_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -291,9 +284,8 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
@@ -303,7 +295,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 종료 후 피드백을 작성하면 예외를 던진다.")
-        void save_alreadyClosed_exceptionThrown() {
+        void save_alreadyClosed_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -314,9 +306,8 @@ class FeedbackServiceTest extends ServiceTest {
             timeStandard.setInProgress();
             team.close(AFTER_START_TIME);
 
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))

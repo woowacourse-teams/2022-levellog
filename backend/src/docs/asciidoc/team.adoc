@@ -23,62 +23,62 @@ operation::team/create[]
 [[create-exception-participants-duplicate]]
 ==== 저장 시 중복된 참가자가 존재하는 경우
 
-include::{snippets}/team/create/exception/participants/duplicate/http-response.adoc[]
+include::{snippets}/team/create/exception/participants-duplicate/http-response.adoc[]
 
 [[create-exception-participants-host]]
 ==== 저장 시 참가자 목록에 Host가 포함된 경우
 
-include::{snippets}/team/create/exception/participants/host/http-response.adoc[]
+include::{snippets}/team/create/exception/participants-have-host/http-response.adoc[]
 
 [[create-exception-title-null]]
 ==== 저장 시 title이 null 또는 공백인 경우
 
-include::{snippets}/team/create/exception/title/null-and-blank/http-response.adoc[]
+include::{snippets}/team/create/exception/title-blank/http-response.adoc[]
 
 [[create-exception-title-length]]
 ==== 저장 시 title의 길이가 255자 초과인 경우
 
-include::{snippets}/team/create/exception/title/length/http-response.adoc[]
+include::{snippets}/team/create/exception/title-length/http-response.adoc[]
 
 [[create-exception-place-null]]
 ==== 저장 시 place이 null 또는 공백인 경우
 
-include::{snippets}/team/create/exception/place/null-and-blank/http-response.adoc[]
+include::{snippets}/team/create/exception/place-blank/http-response.adoc[]
 
 [[create-exception-place-length]]
 ==== 저장 시 place의 길이가 255자 초과인 경우
 
-include::{snippets}/team/create/exception/place/length/http-response.adoc[]
+include::{snippets}/team/create/exception/place-length/http-response.adoc[]
 
 [[create-exception-start-at-null]]
 ==== 저장 시 startAt가 null인 경우
 
-include::{snippets}/team/create/exception/startat/null/http-response.adoc[]
+include::{snippets}/team/create/exception/start-at-null/http-response.adoc[]
 
 [[create-exception-start-at-past]]
 ==== 저장 시 startAt가 과거인 경우
 
-include::{snippets}/team/create/exception/startat/past/http-response.adoc[]
+include::{snippets}/team/create/exception/start-at-past/http-response.adoc[]
 
 [[create-exception-participants-empty]]
 ==== 저장 시 호스트 이외의 참가자가 없는 경우
 
-include::{snippets}/team/create/exception/participants/empty/http-response.adoc[]
+include::{snippets}/team/create/exception/participants-empty/http-response.adoc[]
 
 [[create-exception-participants-null]]
 ==== 저장 시 participants가 null인 경우
 
-include::{snippets}/team/create/exception/participants/null/http-response.adoc[]
+include::{snippets}/team/create/exception/participants-null/http-response.adoc[]
 
 [[create-exception-interviewer-number-not-positive]]
 ==== 저장 시 인터뷰어 수가 1미만인 경우
 
-include::{snippets}/team/create/exception/interviewer-number/not-positive/http-response.adoc[]
+include::{snippets}/team/create/exception/interviewer-number-not-positive/http-response.adoc[]
 
 [[create-exception-interviewer-number-not-positive]]
 ==== 저장 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
 
-include::{snippets}/team/create/exception/interviewer-number/more-than-participant/http-response.adoc[]
+include::{snippets}/team/create/exception/interviewer-number-more-than-participant/http-response.adoc[]
 
 [[findAll]]
 == 팀 목록 조회
@@ -100,10 +100,10 @@ include::{snippets}/team/create/exception/interviewer-number/more-than-participa
 |인터뷰가 종료된 상태이다.
 |===
 
-[[findAll-success]]
+[[find-all-success]]
 === 팀 목록 조회 성공
 
-operation::team/findAll[]
+operation::team/find-all[]
 
 [[find]]
 == 팀 상세 조회
@@ -126,6 +126,38 @@ include::{snippets}/team/find/not-my-team/http-response.adoc[]
 ==== 없는 팀을 상세 조회하는 경우
 
 include::{snippets}/team/find-by-id/exception/notfound/http-response.adoc[]
+
+[[find-status]]
+== 팀 상태 조회
+
+*STATUS 응답 종류*
+
+[cols="1,1"]
+|===
+|*응답*
+|*설명*
+
+|READY
+|인터뷰 시작 전 상태이다.
+
+|IN_PROGRESS
+|인터뷰 진행 중인 상태이다.
+
+|CLOSED
+|인터뷰가 종료된 상태이다.
+|===
+
+[[find-status-success]]
+=== 팀 상태 조회 성공
+
+operation::team/find-status[]
+
+[[find-status-exception]]
+=== 팀 상태 조회 예외
+
+==== id에 해당하는 팀이 존재하지 않는 경우
+
+include::{snippets}/team/find-status/exception/team-not-found/http-response.adoc[]
 
 [[find-my-role]]
 == 인터뷰 역할 조회
@@ -187,67 +219,67 @@ operation::team/update[]
 [[update-exception-title-null]]
 ==== 수정 시 title이 null 또는 공백인 경우
 
-include::{snippets}/team/update/exception/title/null-and-blank/http-response.adoc[]
+include::{snippets}/team/update/exception/title-blank/http-response.adoc[]
 
 [[update-exception-title-length]]
 ==== 수정 시 title의 길이가 255자 초과인 경우
 
-include::{snippets}/team/update/exception/title/length/http-response.adoc[]
+include::{snippets}/team/update/exception/title-length/http-response.adoc[]
 
 [[update-exception-place-null]]
 ==== 수정 시 place이 null 또는 공백인 경우
 
-include::{snippets}/team/update/exception/place/null-and-blank/http-response.adoc[]
+include::{snippets}/team/update/exception/place-blank/http-response.adoc[]
 
 [[update-exception-place-length]]
 ==== 수정 시 place의 길이가 255자 초과인 경우
 
-include::{snippets}/team/update/exception/place/length/http-response.adoc[]
+include::{snippets}/team/update/exception/place-length/http-response.adoc[]
 
 [[update-exception-start-at-null]]
 ==== 수정 시 startAt가 null인 경우
 
-include::{snippets}/team/update/exception/startat/null/http-response.adoc[]
+include::{snippets}/team/update/exception/start-at-null/http-response.adoc[]
 
 [[update-exception-start-at-past]]
 ==== 수정 시 startAt가 과거인 경우
 
-include::{snippets}/team/update/exception/startat/past/http-response.adoc[]
+include::{snippets}/team/update/exception/start-at-past/http-response.adoc[]
 
 [[update-exception-notFound]]
 ==== 없는 팀을 수정하는 경우
 
-include::{snippets}/team/update/exception/notfound/http-response.adoc[]
+include::{snippets}/team/update/exception/not-found/http-response.adoc[]
 
 [[update-exception-participants-duplicate]]
 ==== 수정 시 중복된 참가자가 존재하는 경우
 
-include::{snippets}/team/update/exception/participants/duplicate/http-response.adoc[]
+include::{snippets}/team/update/exception/participants-duplicate/http-response.adoc[]
 
 [[update-exception-participants-host]]
 ==== 수정 시 참가자 목록에 Host가 포함된 경우 (hostId = 1)
 
-include::{snippets}/team/update/exception/participants/host/http-response.adoc[]
+include::{snippets}/team/update/exception/participants-have-host/http-response.adoc[]
 
 [[update-exception-participants-empty]]
 ==== 수정 시 호스트 이외의 참가자가 없는 경우
 
-include::{snippets}/team/update/exception/participants/empty/http-response.adoc[]
+include::{snippets}/team/update/exception/participants-empty/http-response.adoc[]
 
 [[update-exception-participants-null]]
 ==== 수정 시 participants가 null인 경우
 
-include::{snippets}/team/update/exception/participants/null/http-response.adoc[]
+include::{snippets}/team/update/exception/participants-null/http-response.adoc[]
 
 [[update-exception-interviewer-number-not-positive]]
 ==== 수정 시 인터뷰어 수가 1미만인 경우
 
-include::{snippets}/team/update/exception/interviewer-number/not-positive/http-response.adoc[]
+include::{snippets}/team/update/exception/interviewer-number-not-positive/http-response.adoc[]
 
-[[update-exception-interviewer-number-not-positive]]
+[[update-exception-interviewer-number-more-than-participant]]
 ==== 수정 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
 
-include::{snippets}/team/update/exception/interviewer-number/more-than-participant/http-response.adoc[]
+include::{snippets}/team/update/exception/interviewer-number-more-than-participant/http-response.adoc[]
 
 [[update-exception-after-start-at]]
 ==== 수정 시 인터뷰 시작 이후인 경우
@@ -268,7 +300,7 @@ operation::team/close[]
 [[close-exception-notfound]]
 ==== 없는 팀의 인터뷰를 종료하려는 경우
 
-include::{snippets}/team/close/exception/notfound/http-response.adoc[]
+include::{snippets}/team/close/exception/not-found/http-response.adoc[]
 
 [[close-exception-unauthorized]]
 ==== 호스트가 아닌 사용자가 인터뷰를 종료하려는 경우

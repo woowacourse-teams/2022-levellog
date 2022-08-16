@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ROUTES_PATH } from 'constants/constants';
-
 import { requestGetTeams } from 'apis/teams';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { InterviewTeamType } from 'types/team';
 
 const useTeams = () => {
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);
   const navigate = useNavigate();
+
   const accessToken = localStorage.getItem('accessToken');
 
   const getTeams = async () => {
@@ -18,10 +18,11 @@ const useTeams = () => {
       const res = await requestGetTeams({ accessToken });
       setTeams(res.data.teams);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };

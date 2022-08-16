@@ -3,6 +3,7 @@ package com.woowacourse.levellog.prequestion.presentation;
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class PreQuestionController {
     private final PreQuestionService preQuestionService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid final PreQuestionDto request,
+    public ResponseEntity<Void> save(@RequestBody @Valid final PreQuestionWriteDto request,
                                      @PathVariable final Long levellogId,
                                      @Authentic final Long memberId) {
         final Long preQuestionId = preQuestionService.save(request, levellogId, memberId);
@@ -39,7 +40,7 @@ public class PreQuestionController {
     }
 
     @PutMapping("/{preQuestionId}")
-    public ResponseEntity<Void> update(@RequestBody @Valid final PreQuestionDto request,
+    public ResponseEntity<Void> update(@RequestBody @Valid final PreQuestionWriteDto request,
                                        @PathVariable final Long levellogId,
                                        @PathVariable final Long preQuestionId,
                                        @Authentic final Long memberId) {

@@ -43,7 +43,7 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("preQuestion must not be blank"));
+                    jsonPath("message").value("content must not be blank"));
 
             // docs
             perform.andDo(document(BASE_SNIPPET_PATH + "blank"));
@@ -143,7 +143,7 @@ class PreQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("preQuestion must not be blank"));
+                    jsonPath("message").value("content must not be blank"));
 
             // docs
             perform.andDo(document(BASE_SNIPPET_PATH + "blank"));

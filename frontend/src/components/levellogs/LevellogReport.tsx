@@ -6,9 +6,7 @@ import { LevellogInfoType } from 'types/levellog';
 const LevellogReport = ({ levellogInfo }: LevellogReportProps) => {
   return (
     <S.Container>
-      <S.Content>
-        <UiViewer content={levellogInfo.content} />
-      </S.Content>
+      <UiViewer content={levellogInfo.content} />
     </S.Container>
   );
 };
@@ -19,13 +17,6 @@ interface LevellogReportProps {
 
 const S = {
   Container: styled.div`
-    width: 100%;
-    @media (max-width: 520px) {
-      max-width: 22.875rem;
-    }
-  `,
-
-  Content: styled.div`
     overflow: auto;
     width: 100%;
     height: 60rem;

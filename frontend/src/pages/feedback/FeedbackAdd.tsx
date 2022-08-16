@@ -5,19 +5,27 @@ import useFeedbackAddPage from 'hooks/useFeedbackAddPage';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
+import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
-import LevellogReport from 'components/levellogs/LevellogReport';
 
 const FeedbackAdd = () => {
   const {
-    state: { levellogInfo, feedbackWriterRole, interviewQuestionInfos },
+    state: {
+      levellogInfo,
+      feedbackWriterRole,
+      interviewQuestionInfos,
+      preQuestion,
+      whichContentShow,
+    },
     ref: { feedbackRef, interviewQuestionRef, interviewQuestionContentRef },
     handler: {
       onClickDeleteInterviewQuestionButton,
       onSubmitEditInterviewQuestion,
       handleClickFeedbackAddButton,
       handleSubmitInterviewQuestion,
+      handleClickLevellogTag,
+      handleClickPreQuestionTag,
     },
   } = useFeedbackAddPage();
 
@@ -31,10 +39,17 @@ const FeedbackAdd = () => {
       <S.Content>
         <S.LeftContent>
           <FlexBox alignItems={'center'} gap={1}>
-            <S.FeedbackTitle>레벨로그</S.FeedbackTitle>
+            {whichContentShow.levellog && <S.LevellogTitle>레벨로그</S.LevellogTitle>}
+            {whichContentShow.preQuestion && <S.LevellogTitle>사전질문</S.LevellogTitle>}
             <S.RoleContent>나의 역할: {feedbackWriterRole}</S.RoleContent>
           </FlexBox>
-          <LevellogReport levellogInfo={levellogInfo} />
+          <WriterDocument
+            levellogInfo={levellogInfo}
+            preQuestion={preQuestion}
+            whichContentShow={whichContentShow}
+            handleClickLevellogTag={handleClickLevellogTag}
+            handleClickPreQuestionTag={handleClickPreQuestionTag}
+          />
         </S.LeftContent>
         <S.RightContent>
           <InterviewQuestion
@@ -77,7 +92,7 @@ const S = {
     }
   `,
 
-  FeedbackTitle: styled.h2`
+  LevellogTitle: styled.h2`
     margin-bottom: 1.875rem;
     font-size: 1.875rem;
   `,

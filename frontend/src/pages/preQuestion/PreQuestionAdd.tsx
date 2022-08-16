@@ -15,7 +15,7 @@ import UiEditor from 'components/@commons/UiEditor';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
 const PreQuestionAdd = () => {
-  const { levellog, getLevellog } = useLevellog();
+  const { levellogInfo, getLevellog } = useLevellog();
   const { preQuestionRef, onClickPreQuestionAddButton } = usePreQuestion();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const PreQuestionAdd = () => {
           <S.LeftContent>
             <FlexBox alignItems={'center'} gap={1}>
               <S.LevellogTitle>레벨로그</S.LevellogTitle>
-              <LevellogReport levellog={levellog} />
+              <LevellogReport levellogInfo={levellogInfo} />
             </FlexBox>
           </S.LeftContent>
           <S.RightContent>

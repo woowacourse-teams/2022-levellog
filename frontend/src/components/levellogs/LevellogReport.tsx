@@ -1,17 +1,18 @@
 import styled from 'styled-components';
 
 import UiViewer from 'components/@commons/UiViewer';
+import { LevellogInfoType } from 'types/levellog';
 
-const LevellogReport = ({ levellog }: LevellogReportProps) => {
+const LevellogReport = ({ levellogInfo }: LevellogReportProps) => {
   return (
     <S.Container>
-      <UiViewer content={levellog} />
+      <UiViewer content={levellogInfo.content} />
     </S.Container>
   );
 };
 
 interface LevellogReportProps {
-  levellog: string;
+  levellogInfo: LevellogInfoType;
 }
 
 const S = {

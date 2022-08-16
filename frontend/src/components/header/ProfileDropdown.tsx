@@ -59,7 +59,7 @@ const S = {
     left: 0;
     top: 3.9375rem;
     width: 12.5rem;
-    border-bottom: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,
 
   Content: styled.div`

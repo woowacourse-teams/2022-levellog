@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useTeams from 'hooks/useTeams';
+import useUser from 'hooks/useUser';
 
 import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
+import FilterButton from 'components/@commons/FilterButton';
 import InterviewTeam from 'components/teams/InterviewTeam';
 import { InterviewTeamType } from 'types/team';
 
@@ -22,9 +24,12 @@ const InterviewTeams = () => {
   return (
     <>
       <ContentHeader title={'인터뷰 팀'}>
-        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
-          <Button>추가하기</Button>
-        </Link>
+        <div>
+          <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>
+          <FilterButton>종료된 인터뷰</FilterButton>
+          <FilterButton>나의 인터뷰</FilterButton>
+        </div>
+        <span />
       </ContentHeader>
       <S.Container onClick={handleClickInterviewGroup}>
         {teams.map((team: InterviewTeamType) => (

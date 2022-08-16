@@ -9,9 +9,9 @@ import { requestGetUserAuthority } from 'apis/login';
 
 const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
   const { getTeam } = useTeam();
+  const { levellogId, authorId } = useParams();
   const [isLoad, setIsLoad] = useState(true);
   const [isError, setIsError] = useState(false);
-  const { levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
 
@@ -92,6 +92,14 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
         setIsError(true);
         alert(MESSAGE.NEED_NOT_ME);
         return;
+      }
+    }
+
+    if (requireAuth === REQUIRE_AUTH.AUTHOR) {
+      if (loginUserId !== authorId) {
+        setIsLoad(false);
+        setIsError(true);
+        alert(MESSAGE.NEED_AUTHOR);
       }
     }
     setIsLoad(false);

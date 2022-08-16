@@ -7,23 +7,15 @@ import { ROUTES_PATH } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
-import { LevellogCustomHookType, LevellogFormatType } from 'types/levellog';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
+import { LevellogCustomHookType } from 'types/levellog';
 
 const useLevellog = () => {
   const [levellog, setLevellog] = useState('');
   const levellogRef = useRef<Editor>(null);
-  const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
-  const stringToLevellog = ({
-    inputValue,
-  }: Pick<LevellogCustomHookType, 'inputValue'>): LevellogFormatType => {
-    const levellogContent = {
-      content: inputValue,
-    };
-
-    return levellogContent;
-  };
+  const accessToken = localStorage.getItem('accessToken');
 
   const postLevellog = async ({
     teamId,
@@ -33,14 +25,15 @@ const useLevellog = () => {
       await requestPostLevellog({
         accessToken,
         teamId,
-        levellogContent: stringToLevellog({ inputValue }),
+        levellogContent: { content: inputValue },
       });
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -55,10 +48,11 @@ const useLevellog = () => {
 
       return res.data.content;
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -69,15 +63,16 @@ const useLevellog = () => {
         accessToken,
         teamId,
         levellogId,
-        levellogContent: stringToLevellog({ inputValue }),
+        levellogContent: { content: inputValue },
       });
       alert('레벨로그 수정이 완료되었습니다.');
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };

@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 import useInterviewQuestionEdit from 'hooks/useInterviewQuestionEdit';
 
-import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 import Button from 'components/@commons/Button';
+import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
 const InterviewQuestionContent = ({
   interviewQuestionInfo,
@@ -36,8 +36,6 @@ const InterviewQuestionContent = ({
       <S.DeleteButton onClick={handleClickDeleteInterviewQuestionButton}>
         <p>X</p>
       </S.DeleteButton>
-      {/* <InterviewQuestionButton handleClick={handleClickDeleteInterviewQuestionButton}> */}
-      {/* </InterviewQuestionButton> */}
     </S.Container>
   );
 };

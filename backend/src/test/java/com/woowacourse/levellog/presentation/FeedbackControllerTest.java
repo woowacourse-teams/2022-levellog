@@ -378,6 +378,8 @@ class FeedbackControllerTest extends ControllerTest {
     @DisplayName("findById 메서드는")
     class FindById {
 
+        private static final String BASE_SNIPPET_PATH = "feedback/find-by-id/exception/";
+
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
         void findById_notFoundLevellog_exception() throws Exception {
@@ -400,7 +402,7 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/find-by-id/exception/levellog-not-found"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-not-found"));
         }
 
         @Test
@@ -425,7 +427,7 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/find-by-id/exception/not-my-team"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-team"));
         }
 
         @Test
@@ -450,7 +452,7 @@ class FeedbackControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("feedback/find-by-id/exception/levellog-wrong-id"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-wrong-id"));
         }
 
         private ResultActions requestFindByIdFeedback(final Long levellogId, final Long feedbackId) throws Exception {

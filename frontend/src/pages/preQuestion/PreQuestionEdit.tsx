@@ -15,7 +15,7 @@ import UiEditor from 'components/@commons/UiEditor';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
 const PreQuestionEdit = () => {
-  const { levellog, getLevellog } = useLevellog();
+  const { levellogInfo, getLevellog } = useLevellog();
   const { preQuestionRef, getPreQuestionOnRef, onClickPreQuestionEditButton } = usePreQuestion();
 
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ const PreQuestionEdit = () => {
           <Button onClick={handleClickPreQuestionEditButton}>수정하기</Button>
         </ContentHeader>
         <S.Content>
-          <LevellogReport levellog={levellog} />
+          <LevellogReport levellogInfo={levellogInfo} />
           <S.UiEditorContainer>
             <S.Title>사전 질문</S.Title>
             <UiEditor

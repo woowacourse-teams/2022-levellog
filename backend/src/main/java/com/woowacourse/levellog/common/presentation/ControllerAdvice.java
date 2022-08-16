@@ -3,7 +3,6 @@ package com.woowacourse.levellog.common.presentation;
 import com.woowacourse.levellog.common.dto.ExceptionResponse;
 import com.woowacourse.levellog.common.exception.LevellogException;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -17,7 +16,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(LevellogException.class)
     public ResponseEntity<ExceptionResponse> handleLevellogException(final LevellogException e) {
-        log.info("[{}]{} : {}", getCorrelationId(), e.getClass().getSimpleName(), e.getMessage());
+        log.info("{} : {}", e.getClass().getSimpleName(), e.getMessage());
         return toResponseEntity(e.getClientMessage(), e.getHttpStatus());
     }
 
@@ -31,7 +30,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleUnexpectedException(final Exception e) {
-        log.warn("[{}]", getCorrelationId(), e);
+        log.warn("Internal server error", e);
         return toResponseEntity("예상치 못한 예외가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -40,9 +39,5 @@ public class ControllerAdvice {
         return ResponseEntity
                 .status(httpStatus)
                 .body(response);
-    }
-
-    private String getCorrelationId() {
-        return MDC.get("correlationId");
     }
 }

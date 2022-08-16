@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
@@ -259,7 +259,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(
                     () -> preQuestionService.update(preQuestionWriteDto, id, levellog2.getId(), questioner.getId()))
-                    .isInstanceOf(InvalidFieldException.class)
+                    .isInstanceOf(InvalidLevellogException.class)
                     .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
         }
     }
@@ -337,7 +337,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> preQuestionService.deleteById(id, levellog2.getId(), questioner.getId()))
-                    .isInstanceOf(InvalidFieldException.class)
+                    .isInstanceOf(InvalidLevellogException.class)
                     .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
         }
     }

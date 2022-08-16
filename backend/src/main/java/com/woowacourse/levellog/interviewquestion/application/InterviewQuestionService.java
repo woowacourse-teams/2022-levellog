@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class InterviewQuestionService {
+
     private final InterviewQuestionRepository interviewQuestionRepository;
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
@@ -35,10 +36,11 @@ public class InterviewQuestionService {
     public Long save(final InterviewQuestionWriteDto request, final Long levellogId, final Long fromMemberId) {
         final Member author = getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
+        final Team team = levellog.getTeam();
 
+        levellog.validateSelfInterviewQuestion(author);
         validateMemberIsParticipant(author, levellog);
-        levellog.getTeam()
-                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.");
+        team.validateInProgress(timeStandard.now(), "인터뷰 시작 전에 인터뷰 질문을 작성 할 수 없습니다.");
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
 
@@ -63,13 +65,14 @@ public class InterviewQuestionService {
     }
 
     @Transactional
-    public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId, final Long fromMemberId) {
+    public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId,
+                       final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member author = getMember(fromMemberId);
 
         interviewQuestion.getLevellog()
                 .getTeam()
-                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 수정 할 수 없습니다.");
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.");
 
         interviewQuestion.updateContent(request.getContent(), author);
     }
@@ -82,7 +85,7 @@ public class InterviewQuestionService {
         interviewQuestion.validateMemberIsAuthor(author, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
         interviewQuestion.getLevellog()
                 .getTeam()
-                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 삭제 할 수 없습니다.");
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 인터뷰 질문을 삭제 할 수 없습니다.");
 
         interviewQuestionRepository.delete(interviewQuestion);
     }

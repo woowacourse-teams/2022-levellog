@@ -62,6 +62,17 @@ public class FeedbackService {
         return new FeedbacksDto(responses);
     }
 
+    public FeedbackDto findById(final Long levellogId, final Long feedbackId, final Long memberId) {
+        final Feedback feedback = getFeedback(feedbackId);
+        final Levellog levellog = getLevellog(levellogId);
+        final Member member = getMember(memberId);
+
+        validateTeamMember(levellog.getTeam(), member, "자신이 속한 팀의 피드백만 조회할 수 있습니다.");
+        validateLevellog(feedback, levellog);
+
+        return FeedbackDto.from(feedback);
+    }
+
     public FeedbacksDto findAllByTo(final Long memberId) {
         final Member member = getMember(memberId);
         final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(member);
@@ -92,8 +103,13 @@ public class FeedbackService {
 
     private void validateTeamMember(final Team team, final Member member, final String message) {
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
-            throw new UnauthorizedException(message + " [ teamId : " + team.getId() + " memberId : " + member.getId() + " ]");
+            throw new UnauthorizedException(
+                    message + " [ teamId : " + team.getId() + " memberId : " + member.getId() + " ]");
         }
+    }
+
+    private void validateLevellog(final Feedback feedback, final Levellog levellog) {
+        feedback.validateLevellog(levellog);
     }
 
     private List<FeedbackDto> getFeedbackResponses(final List<Feedback> feedbacks) {

@@ -57,7 +57,7 @@ public class PreQuestion extends BaseEntity {
         this.content = content;
     }
 
-    public boolean isSameLevellog(final Levellog levellog) {
+    private boolean isSameLevellog(final Levellog levellog) {
         return this.levellog.equals(levellog);
     }
 

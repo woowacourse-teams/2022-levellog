@@ -91,10 +91,62 @@ class FeedbackServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(eve, team);
             saveFeedback(roma, eve, levellog);
 
-            // when & then
             final Long memberId = alien.getId();
             final Long levellogId = levellog.getId();
+
+            // when & then
             assertThatThrownBy(() -> feedbackService.findAll(levellogId, memberId))
+                    .isInstanceOf(UnauthorizedException.class)
+                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.", String.valueOf(team.getId()),
+                            String.valueOf(memberId), String.valueOf(levellogId));
+        }
+    }
+
+    @Nested
+    @DisplayName("findById 메서드는")
+    class FindById {
+
+        @Test
+        @DisplayName("특정 id의 피드백을 조회한다.")
+        void success() {
+            // given
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린");
+            final Team team = saveTeam(eve, roma, alien);
+
+            final Levellog levellog = saveLevellog(eve, team);
+            final Feedback feedback = saveFeedback(roma, eve, levellog);
+            saveFeedback(alien, eve, levellog);
+
+            // when
+            final FeedbackDto feedbacksResponse = feedbackService.findById(
+                    levellog.getId(), feedback.getId(), eve.getId());
+
+            // then
+            assertAll(
+                    () -> assertThat(feedbacksResponse.getId()).isEqualTo(feedback.getId()),
+                    () -> assertThat(feedbacksResponse.getFrom().getId()).isEqualTo(roma.getId()),
+                    () -> assertThat(feedbacksResponse.getTo().getId()).isEqualTo(eve.getId())
+            );
+        }
+
+        @Test
+        @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findById_notMyTeam_exception() {
+            // given
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린");
+            final Team team = saveTeam(eve, roma);
+            final Levellog levellog = saveLevellog(eve, team);
+            final Feedback feedback = saveFeedback(roma, eve, levellog);
+
+            final Long memberId = alien.getId();
+            final Long levellogId = levellog.getId();
+
+            // when & then
+            assertThatThrownBy(() -> feedbackService.findById(levellog.getId(), feedback.getId(), alien.getId()))
                     .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.", String.valueOf(team.getId()),
                             String.valueOf(memberId), String.valueOf(levellogId));

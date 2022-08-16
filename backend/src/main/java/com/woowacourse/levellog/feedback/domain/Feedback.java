@@ -83,4 +83,15 @@ public class Feedback extends BaseEntity {
                     " [feedbackId : " + getId() + ", memberId : " + member.getId() + "]");
         }
     }
+
+    public void validateLevellog(final Levellog levellog) {
+        if (!isSameLevellog(levellog)) {
+            throw new InvalidFieldException(
+                    "입력한 levellogId와 피드백의 levellogId가 다릅니다. 입력한 levellogId : " + levellog.getId());
+        }
+    }
+
+    private boolean isSameLevellog(final Levellog levellog) {
+        return this.levellog.equals(levellog);
+    }
 }

@@ -61,7 +61,7 @@ public class PreQuestionService {
         validateLevellog(preQuestion, levellog);
         validateMyQuestion(preQuestion, questioner);
 
-        preQuestion.update(request.getPreQuestion());
+        preQuestion.update(request.getContent());
     }
 
     @Transactional

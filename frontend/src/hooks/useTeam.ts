@@ -39,9 +39,6 @@ const useTeam = () => {
 
   const teamLocationState: InterviewTeamType | undefined = location.state;
   const accessToken = localStorage.getItem('accessToken');
-  const [participants, setParticipants] = useState<MemberType[]>([
-    { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
-  ]);
 
   const postTeam = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
     try {

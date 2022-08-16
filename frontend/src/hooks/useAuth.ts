@@ -12,7 +12,6 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
   const { levellogId, authorId } = useParams();
   const [isLoad, setIsLoad] = useState(true);
   const [isError, setIsError] = useState(false);
-  const { levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
 

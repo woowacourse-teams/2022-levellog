@@ -28,7 +28,7 @@ const InterviewDetail = () => {
     onClickCloseTeamInterviewButton,
   } = useTeam();
   const {
-    levellog,
+    levellogInfo,
     levellogParticipant,
     isLevellogModalOpen,
     onClickOpenLevellogModal,
@@ -63,7 +63,7 @@ const InterviewDetail = () => {
     <>
       {isLevellogModalOpen && (
         <LevellogViewModal
-          levellog={levellog}
+          levellogInfo={levellogInfo}
           participant={levellogParticipant}
           userInTeam={(team as InterviewTeamType).isParticipant}
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}

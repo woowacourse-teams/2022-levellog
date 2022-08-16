@@ -11,30 +11,31 @@ import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import UiViewer from 'components/@commons/UiViewer';
+import { LevellogInfoType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
 const LevellogViewModal = ({
-  levellog,
+  levellogInfo,
   participant,
   userInTeam,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
-  const { memberId, levellogId, nickname, preQuestionId } = participant;
+  const { levellogId, preQuestionId } = participant;
   const { teamId } = useParams();
   const { loginUserId } = useUser();
   const { team } = useTeam();
 
-  if (memberId === loginUserId) {
+  if (levellogInfo.author.id === loginUserId) {
     return (
       <ModalPortal>
         <S.Dimmer onClick={handleClickCloseLevellogModal} />
         <S.Container>
           <S.Header>
-            <S.Title>{nickname}의 Levellog</S.Title>
+            <S.Title>{levellogInfo.author.nickname}의 Levellog</S.Title>
             <S.CloseButton onClick={handleClickCloseLevellogModal}>X</S.CloseButton>
           </S.Header>
           <S.Levellog>
-            <UiViewer content={levellog} />
+            <UiViewer content={levellogInfo.content} />
           </S.Levellog>
           <S.Footer>
             {team.status === TEAM_STATUS.READY && (
@@ -53,11 +54,11 @@ const LevellogViewModal = ({
       <S.Dimmer onClick={handleClickCloseLevellogModal} />
       <S.Container>
         <S.Header>
-          <S.Title>{nickname}의 Levellog</S.Title>
+          <S.Title>{levellogInfo.author.nickname}의 Levellog</S.Title>
           <S.CloseButton onClick={handleClickCloseLevellogModal}>X</S.CloseButton>
         </S.Header>
         <S.Levellog>
-          <UiViewer content={levellog} />
+          <UiViewer content={levellogInfo.content} />
         </S.Levellog>
         <S.Footer>
           {loginUserId &&
@@ -69,7 +70,7 @@ const LevellogViewModal = ({
                 <Button>사전 질문 수정</Button>
               </Link>
             ) : (
-              <Link to={`/pre-questions/teams/${teamId}/levellog/${levellogId}`}>
+              <Link to={`/pre-questions/teams/${teamId}/levellogs/${levellogId}`}>
                 <Button>사전 질문 작성</Button>
               </Link>
             ))}
@@ -80,7 +81,7 @@ const LevellogViewModal = ({
 };
 
 interface LevellogViewModalProps {
-  levellog: string;
+  levellogInfo: LevellogInfoType;
   participant: ParticipantType;
   userInTeam: Boolean;
   handleClickCloseLevellogModal: (e: React.MouseEvent<HTMLElement>) => void;

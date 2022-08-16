@@ -39,6 +39,7 @@ export const MESSAGE = Object.freeze({
   INTERVIEW_CLOSE_CONFIRM: '정말로 인터뷰를 종료하시겠습니까?',
   INTERVIEW_STATUS_NOT_READY: '인터뷰가 시작 전이 아닙니다!',
   INTERVIEW_STATUS_NOT_IN_PROGRESS: '인터뷰가 진행 중이 아닙니다!',
+  WRONG_TOKEN: '유효하지 않은 토큰입니다.',
 });
 
 export const TEAM_STATUS = Object.freeze({

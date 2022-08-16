@@ -29,7 +29,7 @@ export const 토큰이올바르지못한경우홈페이지로 = ({
     return false;
   }
 
-  if (message === '유효하지 않은 토큰입니다.') {
+  if (message === MESSAGE.WRONG_TOKEN) {
     alert(MESSAGE.NEED_RELOGIN);
     localStorage.removeItem('accessToken');
     window.location.href = '/';

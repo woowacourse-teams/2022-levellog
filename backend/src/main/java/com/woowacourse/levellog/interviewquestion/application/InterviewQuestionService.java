@@ -40,7 +40,7 @@ public class InterviewQuestionService {
 
         levellog.validateSelfInterviewQuestion(author);
         validateMemberIsParticipant(author, levellog);
-        team.validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.");
+        team.validateInProgress(timeStandard.now(), "인터뷰 시작 전에 인터뷰 질문을 작성 할 수 없습니다.");
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
 
@@ -72,7 +72,7 @@ public class InterviewQuestionService {
 
         interviewQuestion.getLevellog()
                 .getTeam()
-                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 수정 할 수 없습니다.");
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.");
 
         interviewQuestion.updateContent(request.getInterviewQuestion(), author);
     }
@@ -85,7 +85,7 @@ public class InterviewQuestionService {
         interviewQuestion.validateMemberIsAuthor(author, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
         interviewQuestion.getLevellog()
                 .getTeam()
-                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 삭제 할 수 없습니다.");
+                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 인터뷰 질문을 삭제 할 수 없습니다.");
 
         interviewQuestionRepository.delete(interviewQuestion);
     }

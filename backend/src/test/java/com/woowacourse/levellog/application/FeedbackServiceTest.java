@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
@@ -97,8 +98,8 @@ class FeedbackServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> feedbackService.findAll(levellogId, memberId))
                     .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.", String.valueOf(team.getId()),
-                            String.valueOf(memberId), String.valueOf(levellogId));
+                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.",
+                            String.valueOf(team.getId()), String.valueOf(memberId));
         }
     }
 
@@ -148,8 +149,28 @@ class FeedbackServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> feedbackService.findById(levellog.getId(), feedback.getId(), alien.getId()))
                     .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.", String.valueOf(team.getId()),
-                            String.valueOf(memberId), String.valueOf(levellogId));
+                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.",
+                            String.valueOf(team.getId()), String.valueOf(memberId));
+        }
+
+        @Test
+        @DisplayName("잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findById_levellogWrongId_exception() {
+            // given
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Team team = saveTeam(eve, roma);
+
+            final Levellog levellog1 = saveLevellog(eve, team);
+            final Levellog levellog2 = saveLevellog(roma, team);
+
+            final Feedback feedback = saveFeedback(roma, eve, levellog1);
+
+            // when & then
+            assertThatThrownBy(() -> feedbackService.findById(levellog2.getId(), feedback.getId(), roma.getId()))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContainingAll("입력한 levellogId와 피드백의 levellogId가 다릅니다.",
+                            String.valueOf(levellog2.getId()));
         }
     }
 

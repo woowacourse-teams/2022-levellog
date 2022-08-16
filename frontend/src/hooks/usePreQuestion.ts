@@ -16,8 +16,8 @@ import { PreQuestionCustomHookType } from 'types/preQuestion';
 
 const usePreQuestion = () => {
   const [preQuestion, setPreQuestion] = useState('');
-  const navigate = useNavigate();
   const preQuestionRef = useRef<Editor>(null);
+  const navigate = useNavigate();
 
   const accessToken = localStorage.getItem('accessToken');
 

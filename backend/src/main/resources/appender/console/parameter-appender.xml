@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<included>
+    <appender name="parameter-appender" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${PARAMETER_PATTERN}</pattern>
+        </layout>
+    </appender>
+</included>

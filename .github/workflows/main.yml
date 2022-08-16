@@ -74,14 +74,15 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `## 🏃‍♀️💨 Code Analysis Results By SonarQube
-                     ${ SONARQUBE_ID }-${ PR_NUMBER }
+            ${ SONARQUBE_ID }-${ PR_NUMBER }
             
-                     Bugs :    ${{ steps.sonarqube_results.outputs.bugs_value }}    ${{ steps.sonarqube_results.outputs.bugs_best_value }}
-                     Vulnerabilities :    ${{ steps.sonarqube_results.outputs.vulnerabilities_value }}    ${{ steps.sonarqube_results.outputs.vulnerabilities_best_value }}
-                     Code Smells :    ${{ steps.sonarqube_results.outputs.code_smells_value }}    ${{ steps.sonarqube_results.outputs.code_smells_best_value }} 
-                     Coverage :    ${{ steps.sonarqube_results.outputs.coverage_value }}    ${{ steps.sonarqube_results.outputs.coverage_best_value }} `
+            Bugs :    ${{ steps.sonarqube_results.outputs.bugs_value }}    ${{ steps.sonarqube_results.outputs.bugs_best_value }}
+            Vulnerabilities :    ${{ steps.sonarqube_results.outputs.vulnerabilities_value }}    ${{ steps.sonarqube_results.outputs.vulnerabilities_best_value }}
+            Code Smells :    ${{ steps.sonarqube_results.outputs.code_smells_value }}    ${{ steps.sonarqube_results.outputs.code_smells_best_value }} 
+            Coverage :    ${{ steps.sonarqube_results.outputs.coverage_value }}    ${{ steps.sonarqube_results.outputs.coverage_best_value }} 
             
-                     [리포트 확인하기](${SONARQUBE_URL})})
+            [리포트 확인하기](${SONARQUBE_URL})`
+            })
 
   test:
     runs-on: ubuntu-22.04 # 실행 환경 지정

@@ -2,15 +2,14 @@ import { useState } from 'react';
 
 import axios, { AxiosResponse } from 'axios';
 
+
 import useTeam from 'hooks/useTeam';
 
 import { requestGetLoginUserRole } from 'apis/role';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { RoleCustomHookType } from 'types/role';
-import { InterviewTeamType } from 'types/team';
 
 const useRole = () => {
-  const { getTeam } = useTeam();
   const [feedbackWriterRole, setFeedbackWriterRole] = useState('');
   const [levellogWriter, setLevellogWriter] = useState('');
 
@@ -18,15 +17,10 @@ const useRole = () => {
 
   const getWriterInfo = async ({
     teamId,
-    levellogId,
-  }: Omit<RoleCustomHookType, 'participantId'>) => {
+    participantId,
+  }: Omit<RoleCustomHookType, 'levellogId'>) => {
     try {
-      const team = await getTeam();
-      const levellogWriter = (team as InterviewTeamType).participants.find(
-        (participant) => Number(participant.levellogId) === Number(levellogId),
-      );
-      setLevellogWriter(levellogWriter!.nickname);
-      getFeedbackWriterRole({ teamId, participantId: levellogWriter!.memberId });
+      getFeedbackWriterRole({ teamId, participantId });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -55,7 +49,6 @@ const useRole = () => {
   };
 
   return {
-    levellogWriter,
     feedbackWriterRole,
     getWriterInfo,
   };

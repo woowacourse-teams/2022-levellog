@@ -19,6 +19,9 @@ import Auth from 'routes/Auth';
 import AuthLogin from 'routes/AuthLogin';
 import TeamStatus from 'routes/TeamStatus';
 
+// 인증&인가가 잘못되었음
+// AUTHOR 인증&인가가 추가되어야 하며 , ~edit페이지 URI에 writerId가 추가되어야함
+
 export const routes = [
   {
     element: <AuthLogin needLogin={true} />,
@@ -46,6 +49,7 @@ export const routes = [
       {
         path: ROUTES_PATH.PREQUESTION_EDIT,
         element: (
+          //author로 변경
           <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
             <PreQuestionEdit />
           </Auth>
@@ -74,6 +78,7 @@ export const routes = [
       {
         path: ROUTES_PATH.LEVELLOG_EDIT,
         element: (
+          //author로 변경
           <Auth requireAuth={REQUIRE_AUTH.ME}>
             <TeamStatus allowedStatuses={[TEAM_STATUS.READY]}>
               <LevellogEdit />
@@ -94,7 +99,7 @@ export const routes = [
       {
         path: ROUTES_PATH.FEEDBACK_EDIT,
         element: (
-          <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
+          <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
             <TeamStatus allowedStatuses={[TEAM_STATUS.IN_PROGRESS]}>
               <FeedbackEdit />
             </TeamStatus>

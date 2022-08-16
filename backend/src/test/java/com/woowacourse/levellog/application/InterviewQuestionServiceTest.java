@@ -162,7 +162,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 작성 할 수 없습니다.", String.valueOf(team.getId()));
         }
 
         @Test
@@ -419,7 +419,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 사전 질문을 수정 할 수 없습니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.", String.valueOf(team.getId()));
         }
     }
 
@@ -511,7 +511,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 사전 질문을 삭제 할 수 없습니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 삭제 할 수 없습니다.", String.valueOf(team.getId()));
         }
     }
 }

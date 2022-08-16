@@ -83,7 +83,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/findAll"))
+                .filter(document("team/find-all"))
                 .when()
                 .get("/api/teams")
                 .then().log().all();

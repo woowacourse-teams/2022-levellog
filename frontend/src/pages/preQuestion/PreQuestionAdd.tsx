@@ -43,8 +43,13 @@ const PreQuestionAdd = () => {
           <Button onClick={handleClickPreQuestionAddButton}>작성하기</Button>
         </ContentHeader>
         <S.Content>
-          <LevellogReport levellogInfo={levellogInfo} />
-          <S.UiEditorContainer>
+          <S.LeftContent>
+            <FlexBox alignItems={'center'} gap={1}>
+              <S.LevellogTitle>레벨로그</S.LevellogTitle>
+              <LevellogReport levellogInfo={levellogInfo} />
+            </FlexBox>
+          </S.LeftContent>
+          <S.RightContent>
             <S.Title>사전 질문</S.Title>
             <UiEditor
               needToolbar={true}
@@ -53,7 +58,7 @@ const PreQuestionAdd = () => {
               contentRef={preQuestionRef}
               initialEditType={'markdown'}
             />
-          </S.UiEditorContainer>
+          </S.RightContent>
         </S.Content>
       </S.Container>
     </FlexBox>
@@ -66,19 +71,6 @@ const S = {
     width: 100%;
   `,
 
-  UiEditorContainer: styled.div`
-    overflow: auto;
-    width: 48rem;
-    @media (max-width: 520px) {
-      max-width: 22.875rem;
-    }
-  `,
-
-  Title: styled.h2`
-    margin-bottom: 1.875rem;
-    font-size: 1.875rem;
-  `,
-
   Content: styled.div`
     display: flex;
     overflow: auto;
@@ -89,6 +81,38 @@ const S = {
     @media (max-width: 520px) {
       flex-direction: column;
     }
+  `,
+
+  LeftContent: styled.div`
+    width: 50%;
+    @media (max-width: 520px) {
+      width: 100%;
+    }
+  `,
+
+  LevellogTitle: styled.h2`
+    margin-bottom: 1.875rem;
+    font-size: 1.875rem;
+  `,
+
+  RightContent: styled.div`
+    width: 50%;
+    @media (max-width: 520px) {
+      width: 100%;
+    }
+  `,
+
+  UiEditorContainer: styled.div`
+    overflow: auto;
+    width: 50%;
+    @media (max-width: 520px) {
+      max-width: 22.875rem;
+    }
+  `,
+
+  Title: styled.h2`
+    margin-bottom: 1.875rem;
+    font-size: 1.875rem;
   `,
 };
 

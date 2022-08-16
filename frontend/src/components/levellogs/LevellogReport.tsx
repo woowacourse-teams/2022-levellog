@@ -25,7 +25,6 @@ const S = {
     background-color: ${(props) => props.theme.default.WHITE};
     @media (max-width: 520px) {
       flex-direction: column;
-      max-width: 22.875rem;
       min-height: 0;
     }
   `,

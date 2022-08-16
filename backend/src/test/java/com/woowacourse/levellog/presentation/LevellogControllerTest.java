@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.presentation;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -19,11 +18,11 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("LevellogController의")
 class LevellogControllerTest extends ControllerTest {
 
-    private static final String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.Y5wT9jBcP1lvMtjRqxaF0gMNDlgY5xs8SPhBKYChRn8";
-
     @Nested
     @DisplayName("save 메서드는")
     class Save {
+
+        private static final String BASE_SNIPPET_PATH = "levellog/save/exception/";
 
         @Test
         @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
@@ -33,41 +32,41 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            willThrow(new LevellogAlreadyExistException("팀에 레벨로그를 이미 작성했습니다.")).given(levellogService)
+            final String message = "팀에 레벨로그를 이미 작성했습니다.";
+            willThrow(new LevellogAlreadyExistException(message)).given(levellogService)
                     .save(request, authorId, teamId);
 
             // when
-            final ResultActions perform = requestSaveLevellog(teamId, request);
+            final ResultActions perform = requestCreateLevellog(teamId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("팀에 레벨로그를 이미 작성했습니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("levellog/save/exception-already-exists"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "already-exists"));
         }
 
         @Test
         @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
-        void save_nameNullOrEmpty_Exception() throws Exception {
+        void save_nameNullOrEmpty_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from(" ");
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-
             // when
-            final ResultActions perform = requestSaveLevellog(teamId, request);
+            final ResultActions perform = requestCreateLevellog(teamId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("content must not be blank"));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("content must not be blank")
+            );
 
             // docs
-            perform.andDo(document("levellog/save/exception-contents"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "contents"));
         }
 
         @Test
@@ -78,25 +77,27 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."))
+            final String message = "인터뷰 시작 전에만 레벨로그 작성이 가능합니다.";
+            willThrow(new InterviewTimeException(message))
                     .given(levellogService)
                     .save(request, authorId, teamId);
 
             // when
-            final ResultActions perform = requestSaveLevellog(teamId, request);
+            final ResultActions perform = requestCreateLevellog(teamId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 작성이 가능합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("levellog/save/exception-after-start"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-start"));
         }
 
-        private ResultActions requestSaveLevellog(final Long teamId, final Object request) throws Exception {
-            return requestPost("/api/teams/" + teamId + "/levellogs", ACCESS_TOKEN, request);
+        private ResultActions requestCreateLevellog(final Long teamId, final LevellogWriteDto request)
+                throws Exception {
+            return requestPost("/api/teams/" + teamId + "/levellogs", request);
         }
     }
 
@@ -104,67 +105,77 @@ class LevellogControllerTest extends ControllerTest {
     @DisplayName("find 메서드는")
     class Find {
 
+        private static final String BASE_SNIPPET_PATH = "levellog/find/exception/";
+
         @Test
         @DisplayName("존재하지 않는 레벨로그를 조회하면 예외를 던진다.")
-        void find_levellogNoExist_Exception() throws Exception {
+        void find_levellogNoExist_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final Long levellogId = 1000L;
 
-            willThrow(new LevellogNotFoundException("레벨로그가 존재하지 않습니다."))
+            final String message = "레벨로그가 존재하지 않습니다.";
+            willThrow(new LevellogNotFoundException(message))
                     .given(levellogService)
                     .findById(levellogId);
 
             // when
-            final ResultActions perform = requestGet("/api/teams/" + teamId + "/levellogs/" + levellogId, ACCESS_TOKEN);
+            final ResultActions perform = requestFindLevellog(teamId, levellogId);
 
             // then
-            perform.andExpect(status().isNotFound())
-                    .andExpect(jsonPath("message").value("레벨로그가 존재하지 않습니다."));
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("levellog/find/exception-exist"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "exist"));
         }
+
+        private ResultActions requestFindLevellog(final Long teamId, final Long levellogId) throws Exception {
+            return requestGet("/api/teams/" + teamId + "/levellogs/" + levellogId);
+        }
+
     }
 
     @Nested
     @DisplayName("update 메서드는")
     class Update {
 
+        private static final String BASE_SNIPPET_PATH = "levellog/update/exception/";
+
         @Test
         @DisplayName("내용으로 공백이 들어오면 예외를 던진다.")
-        void update_nameNullOrEmpty_Exception() throws Exception {
+        void update_nameNullOrEmpty_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final LevellogWriteDto request = LevellogWriteDto.from(" ");
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-
             // when
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("content must not be blank"));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("content must not be blank")
+            );
 
             // docs
-            perform.andDo(document("levellog/update/exception-contents"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "blank"));
         }
 
         @Test
         @DisplayName("본인이 작성하지 않은 레벨로그를 수정하려는 경우 예외를 던진다.")
-        void update_unauthorized_Exception() throws Exception {
+        void update_unauthorized_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-            willThrow(new UnauthorizedException("권한이 없습니다."))
+            final String message = "권한이 없습니다.";
+            willThrow(new UnauthorizedException(message))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
 
@@ -172,11 +183,13 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
 
             // then
-            perform.andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("message").value("권한이 없습니다."));
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("levellog/update/exception-author"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-author"));
         }
 
         @Test
@@ -188,10 +201,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("new content");
 
-            given(jwtTokenProvider.getPayload(ACCESS_TOKEN)).willReturn("1");
-            given(jwtTokenProvider.validateToken(ACCESS_TOKEN)).willReturn(true);
-
-            willThrow(new InterviewTimeException("인터뷰 시작 전에만 레벨로그 수정이 가능합니다."))
+            final String message = "인터뷰 시작 전에만 레벨로그 수정이 가능합니다.";
+            willThrow(new InterviewTimeException(message))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
 
@@ -199,16 +210,18 @@ class LevellogControllerTest extends ControllerTest {
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("인터뷰 시작 전에만 레벨로그 수정이 가능합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("levellog/update/exception-after-start"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-start"));
         }
 
-        private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId, final Object request)
-                throws Exception {
-            return requestPut("/api/teams/" + teamId + "/levellogs/" + levellogId, ACCESS_TOKEN, request);
+        private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId,
+                                                    final LevellogWriteDto request) throws Exception {
+            return requestPut("/api/teams/" + teamId + "/levellogs/" + levellogId, request);
         }
     }
 }

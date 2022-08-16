@@ -20,7 +20,7 @@ class InterviewQuestionTest {
 
     @Nested
     @DisplayName("생성자는")
-    class ConstructorTest {
+    class Constructor {
 
         @Test
         @DisplayName("인터뷰 질문을 생성한다.")
@@ -38,7 +38,7 @@ class InterviewQuestionTest {
 
         @Test
         @DisplayName("인터뷰 질문의 길이가 255자 초과일 경우 예외를 던진다.")
-        void interviewQuestion_contentLength_exception() {
+        void constructor_interviewQuestionContentLength_exception() {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
@@ -55,7 +55,7 @@ class InterviewQuestionTest {
 
     @Nested
     @DisplayName("updateContent 메서드는")
-    class UpdateContentTest {
+    class UpdateContent {
 
         @Test
         @DisplayName("인터뷰 질문 내용을 수정한다.")

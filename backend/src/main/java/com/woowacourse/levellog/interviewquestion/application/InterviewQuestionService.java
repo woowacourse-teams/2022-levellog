@@ -3,9 +3,9 @@ package com.woowacourse.levellog.interviewquestion.application;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -25,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class InterviewQuestionService {
-    private final InterviewQuestionRepository interviewQuestionRepository;
 
+    private final InterviewQuestionRepository interviewQuestionRepository;
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
     private final ParticipantRepository participantRepository;
@@ -64,7 +64,8 @@ public class InterviewQuestionService {
     }
 
     @Transactional
-    public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId, final Long fromMemberId) {
+    public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId,
+                       final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member author = getMember(fromMemberId);
 

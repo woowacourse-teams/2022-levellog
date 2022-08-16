@@ -7,9 +7,9 @@ import { GITHUB_LOGIN_URL, ROUTES_PATH } from 'constants/constants';
 import { UserContext, UserDispatchContext } from 'contexts/userContext';
 
 const useUser = () => {
+  const [isShowProfileDropdown, setIsShowProfileDropdown] = useState(false);
   const { id, nickname, profileUrl } = useContext(UserContext);
   const userInfoDispatch = useContext(UserDispatchContext);
-  const [isShowProfileDropdown, setIsShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
 
   const handleClickProfileImage = () => {

@@ -16,7 +16,7 @@ const useLevellogModal = () => {
     setLevellogParticipant(participant);
   };
 
-  const handleClickCloseLevellogModal = (e: React.MouseEvent<HTMLElement>) => {
+  const handleClickCloseLevellogModal = () => {
     setIsLevellogModalOpen(false);
   };
 

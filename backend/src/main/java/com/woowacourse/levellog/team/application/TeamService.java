@@ -20,6 +20,7 @@ import com.woowacourse.levellog.team.dto.ParticipantDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
@@ -51,7 +52,7 @@ public class TeamService {
     public Long save(final TeamWriteDto request, final Long hostId) {
         final Member host = getMember(hostId);
         final Team team = request.toEntity(host.getProfileUrl());
-        final Participants participants = getParticipants(team, hostId, request.getParticipants().getIds());
+        final Participants participants = createParticipants(team, hostId, request.getParticipants().getIds());
         team.validParticipantNumber(participants.size());
 
         final Team savedTeam = teamRepository.save(team);
@@ -87,6 +88,13 @@ public class TeamService {
         return new TeamsDto(getTeamResponses(teams, memberId));
     }
 
+    public TeamStatusDto findStatus(final Long teamId) {
+        final Team team = getTeam(teamId);
+        final TeamStatus status = team.status(timeStandard.now());
+
+        return new TeamStatusDto(status);
+    }
+
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
         final Team team = getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
@@ -100,8 +108,12 @@ public class TeamService {
     public void update(final TeamWriteDto request, final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
         validateHost(memberId, team);
-
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
+        
+        final Participants participants = createParticipants(team, memberId, request.getParticipants().getIds());
+        team.validParticipantNumber(participants.size());
+        participantRepository.deleteByTeam(team);
+        participantRepository.saveAll(participants.getValues());
     }
 
     @Transactional
@@ -141,7 +153,7 @@ public class TeamService {
                 .collect(Collectors.toList());
     }
 
-    private Participants getParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
+    private Participants createParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
         validateOtherParticipantExistence(memberIds);
         validateParticipantDuplication(memberIds, hostId);
 

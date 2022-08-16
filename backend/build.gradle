@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.woowacourse'
@@ -76,4 +77,59 @@ bootJar {
 	from("${asciidoctor.outputDir}") {
 		into 'static/docs'
 	}
+}
+
+jacoco {
+	toolVersion('0.8.7')
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+		csv.enabled false
+		xml.enabled true
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(
+				files(classDirectories.files.collect {
+					fileTree(dir: it,
+							excludes: ['**/support/**', '**/dto/**', '**/*Application*', '**/*BaseEntity*',
+									   '**/*Github*', '**/aspect/**', '**/*Config*'])
+				})
+		)
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = true
+			element = 'CLASS'
+
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.80
+			}
+
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.80
+			}
+
+			excludes = ['*support*', '*dto*', '*Application*', '*BaseEntity*', '*Github*', '*aspect*', '*Config*']
+		}
+	}
+}
+
+task testCoverage {
+	group 'verification'
+	description 'Run tests with coverage'
+
+	dependsOn('test', 'jacocoTestReport', 'jacocoTestCoverageVerification')
+
+	tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+	tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
 }

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
@@ -14,6 +13,7 @@ import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.team.domain.Team;
@@ -168,7 +168,7 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> feedbackService.findById(levellog2.getId(), feedback.getId(), roma.getId()))
-                    .isInstanceOf(InvalidFieldException.class)
+                    .isInstanceOf(InvalidLevellogException.class)
                     .hasMessageContainingAll("입력한 levellogId와 피드백의 levellogId가 다릅니다.",
                             String.valueOf(levellog2.getId()));
         }

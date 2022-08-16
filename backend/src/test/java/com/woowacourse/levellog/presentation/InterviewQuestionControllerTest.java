@@ -7,8 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
+import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
@@ -120,9 +122,32 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + snippet));
         }
 
+        @Test
+        @DisplayName("자신에게 인터뷰 질문을 작성하려 할 때 예외를 던진다.")
+        void save_selfInterviewQuestion_exception() throws Exception {
+            // given
+            final long levellogId = 1L;
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
+
+            willThrow(new InvalidInterviewQuestionException("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.", DebugMessage.init()))
+                    .given(interviewQuestionService)
+                    .save(request, levellogId, 1L);
+
+            // when
+            final ResultActions perform = requestCreateInterviewQuestion(1L, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.")
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "self-interview-question"));
+        }
+
         private ResultActions requestCreateInterviewQuestion(final Long levellogId,
-                                                             final InterviewQuestionWriteDto request)
-                throws Exception {
+                                                             final InterviewQuestionWriteDto request) throws Exception {
             return requestPost("/api/levellogs/" + levellogId + "/interview-questions", request);
         }
     }

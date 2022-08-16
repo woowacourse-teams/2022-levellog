@@ -36,10 +36,11 @@ public class InterviewQuestionService {
     public Long save(final InterviewQuestionWriteDto request, final Long levellogId, final Long fromMemberId) {
         final Member author = getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
+        final Team team = levellog.getTeam();
 
+        levellog.validateSelfInterviewQuestion(author);
         validateMemberIsParticipant(author, levellog);
-        levellog.getTeam()
-                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.");
+        team.validateInProgress(timeStandard.now(), "인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.");
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
 

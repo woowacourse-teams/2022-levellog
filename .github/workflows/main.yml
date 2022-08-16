@@ -43,7 +43,7 @@ jobs:
           -Dsonar.projectName=${{ env.SONARQUBE_ID }}-${{ env.PR_NUMBER }}
           -Dsonar.login=${{ secrets.SONARQUBE_ACCESS_TOKEN }}
 
-      - name: get analysis results
+      - name: Get Sonarqube Results
         id: sonarqube_results
         run: |
           RESPONSE=$(curl -X GET -G '${{ env.SONARQUBE_AUTH_URL }}/api/measures/search' \
@@ -79,9 +79,9 @@ jobs:
                      Bugs :    ${{ steps.sonarqube_results.outputs.bugs_value }}    ${{ steps.sonarqube_results.outputs.bugs_best_value }}
                      Vulnerabilities :    ${{ steps.sonarqube_results.outputs.vulnerabilities_value }}    ${{ steps.sonarqube_results.outputs.vulnerabilities_best_value }}
                      Code Smells :    ${{ steps.sonarqube_results.outputs.code_smells_value }}    ${{ steps.sonarqube_results.outputs.code_smells_best_value }} 
-                     Coverage :    ${{ steps.sonarqube_results.outputs.coverage_value }}    ${{ steps.sonarqube_results.outputs.coverage_best_value }} 
+                     Coverage :    ${{ steps.sonarqube_results.outputs.coverage_value }}    ${{ steps.sonarqube_results.outputs.coverage_best_value }} `
             
-                     [리포트 확인하기](${SONARQUBE_URL})`})
+                     [리포트 확인하기](${SONARQUBE_URL})})
 
   test:
     runs-on: ubuntu-22.04 # 실행 환경 지정

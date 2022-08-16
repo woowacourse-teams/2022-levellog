@@ -54,7 +54,7 @@ const S = {
       padding: 0 5rem;
     }
     @media (max-width: 560px) {
-      padding: 0 2.5rem;
+      padding: 0 1.25rem;
     }
   `,
 

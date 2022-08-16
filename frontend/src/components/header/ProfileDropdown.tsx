@@ -38,10 +38,10 @@ const S = {
     background-color: ${(props) => props.theme.default.WHITE};
     transition: all 0.2s;
     @media (max-width: 1024px) {
-      right: 5rem;
+      right: 2.5rem;
     }
     @media (max-width: 560px) {
-      right: 2.5rem;
+      right: 1.25rem;
     }
   `,
 
@@ -57,7 +57,7 @@ const S = {
   Line: styled.div`
     position: absolute;
     left: 0;
-    top: 3.75rem;
+    top: 3.9375rem;
     width: 12.5rem;
     border-bottom: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,

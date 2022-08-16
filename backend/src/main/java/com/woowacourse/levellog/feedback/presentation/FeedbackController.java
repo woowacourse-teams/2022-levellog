@@ -40,7 +40,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/{feedbackId}")
-    public ResponseEntity<FeedbackDto> findAll(@PathVariable final Long levellogId,
+    public ResponseEntity<FeedbackDto> findById(@PathVariable final Long levellogId,
                                                @PathVariable final Long feedbackId,
                                                @Authentic final Long memberId) {
         final FeedbackDto response = feedbackService.findById(levellogId, feedbackId, memberId);

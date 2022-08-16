@@ -68,7 +68,7 @@ public class FeedbackService {
         final Member member = getMember(memberId);
 
         validateTeamMember(levellog.getTeam(), member, "자신이 속한 팀의 피드백만 조회할 수 있습니다.");
-        validateLevellog(feedback, levellog);
+        feedback.validateLevellog(levellog);
 
         return FeedbackDto.from(feedback);
     }
@@ -106,10 +106,6 @@ public class FeedbackService {
             throw new UnauthorizedException(
                     message + " [ teamId : " + team.getId() + " memberId : " + member.getId() + " ]");
         }
-    }
-
-    private void validateLevellog(final Feedback feedback, final Levellog levellog) {
-        feedback.validateLevellog(levellog);
     }
 
     private List<FeedbackDto> getFeedbackResponses(final List<Feedback> feedbacks) {

@@ -380,7 +380,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
-        void findById_notFoundLevellog_exceptionThrown() throws Exception {
+        void findById_notFoundLevellog_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long feedbackId = 1L;

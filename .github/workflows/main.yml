@@ -36,7 +36,7 @@ jobs:
 
       - name: 소나큐브 빌드 진행
         working-directory: ./backend
-        run: ./gradlew test sonarqube
+        run: ./gradlew testCoverage sonarqube
              -Dsonar.projectKey=${{ env.SONARQUBE_ID }} 
              -Dsonar.host.url=${{ env.SONARQUBE_URL }} 
              -Dsonar.projectName=${{ env.SONARQUBE_ID }}-${{ env.PR_NUMBER }} 

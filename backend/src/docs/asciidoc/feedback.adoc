@@ -59,6 +59,29 @@ operation::feedback/find-all[]
 
 include::{snippets}/feedback/find-all/exception/levellog/http-response.adoc[]
 
+[[find-by-id]]
+== 피드백 상세 조회
+
+[[find-by-id-success]]
+=== 피드백 상세 조회 성공
+
+operation::feedback/find-by-id[]
+
+[[find-by-id-exception]]
+=== 피드백 상세 조회 예외
+
+==== 존재하지 않는 레벨로그 정보로 피드백 상세 조회를 요청하면 예외가 발생한다.
+
+include::{snippets}/feedback/find-by-id/exception/levellog-not-found/http-response.adoc[]
+
+==== 속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.
+
+include::{snippets}/feedback/find-by-id/exception/not-my-team/http-response.adoc[]
+
+==== 잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.
+
+include::{snippets}/feedback/find-by-id/exception/levellog-wrong-id/http-response.adoc[]
+
 [[update]]
 == 피드백 수정
 

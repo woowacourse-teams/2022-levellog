@@ -102,10 +102,10 @@ public class TeamService {
         validateHost(memberId, team);
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
         
-        final Participants updatedParticipants = createParticipants(team, memberId, request.getParticipants().getIds());
-        team.validParticipantNumber(updatedParticipants.size());
+        final Participants participants = createParticipants(team, memberId, request.getParticipants().getIds());
+        team.validParticipantNumber(participants.size());
         participantRepository.deleteByTeam(team);
-        participantRepository.saveAll(updatedParticipants.getValues());
+        participantRepository.saveAll(participants.getValues());
     }
 
     @Transactional

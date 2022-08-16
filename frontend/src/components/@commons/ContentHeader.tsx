@@ -2,7 +2,6 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 
 const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderProps) => {
@@ -13,7 +12,7 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
       <ContentHeaderStyle>
         <LeftBox>
           <FlexBox>
-            {imageUrl && <Image src={imageUrl} sizes={'MEDIUM'} margin={'0 10px 0 0'} />}
+            {imageUrl && <Image src={imageUrl} sizes={'MEDIUM'} margin={'0 0.625rem 0 0'} />}
             <TitleBox>
               <Title>{title}</Title>
               {subTitle && <SubTitle>{subTitle}</SubTitle>}
@@ -58,7 +57,7 @@ const LeftBox = styled.div`
   display: flex;
   @media (max-width: 750px) {
     flex-direction: column;
-    margin-bottom: 5px;
+    margin-bottom: 0.3125rem;
   }
 `;
 
@@ -66,7 +65,7 @@ const FlexBox = styled.div`
   display: flex;
   align-items: center;
   @media (max-width: 750px) {
-    margin-bottom: 5px;
+    margin-bottom: 0.3125rem;
   }
 `;
 

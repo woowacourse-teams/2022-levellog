@@ -1,10 +1,4 @@
-import { Link } from 'react-router-dom';
-
 import styled from 'styled-components';
-
-import levellogLogo from 'assets/images/levellogLogo.png';
-
-import { LogoStyle } from 'components/@commons/Style';
 
 const Footer = () => {
   return (

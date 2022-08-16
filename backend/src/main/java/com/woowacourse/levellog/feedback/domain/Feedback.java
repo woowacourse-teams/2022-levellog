@@ -4,6 +4,7 @@ import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -86,8 +87,8 @@ public class Feedback extends BaseEntity {
 
     public void validateLevellog(final Levellog levellog) {
         if (!isSameLevellog(levellog)) {
-            throw new InvalidFieldException(
-                    "입력한 levellogId와 피드백의 levellogId가 다릅니다. 입력한 levellogId : " + levellog.getId());
+            throw new InvalidLevellogException(
+                    "입력한 levellogId와 피드백의 levellogId가 다릅니다.", "[ 입력한 levellogId : " + levellog.getId() + " ] ");
         }
     }
 

@@ -6,12 +6,12 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
+import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
@@ -440,7 +440,7 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "입력한 levellogId와 피드백의 levellogId가 다릅니다.";
             given(feedbackService.findById(levellogId, feedbackId, memberId))
-                    .willThrow(new InvalidFieldException(message));
+                    .willThrow(new InvalidLevellogException(message, "[ 입력한 levellogId : 1 ]"));
 
             // when
             final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);

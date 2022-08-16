@@ -7,11 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -27,6 +25,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
     @Nested
     @DisplayName("save 메서드는")
     class Save {
+
+        private static final String BASE_SNIPPET_PATH = "interview-question/save/exception/";
 
         @Test
         @DisplayName("인터뷰 질문이 공백인 경우 예외를 던진다.")
@@ -44,12 +44,12 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/save/exception/contents/blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "contents-blank"));
         }
 
         @Test
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
-        void save_interviewQuestionInvalidLength_Exception() throws Exception {
+        void save_interviewQuestionInvalidLength_exception() throws Exception {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
@@ -67,7 +67,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/save/exception/contents/length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "contents-length"));
         }
 
         @Test
@@ -92,7 +92,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/save/exception/levellog-not-found"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-not-found"));
         }
 
         @ParameterizedTest
@@ -117,10 +117,11 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/save/exception/" + snippet));
+            perform.andDo(document(BASE_SNIPPET_PATH + snippet));
         }
 
-        private ResultActions requestCreateInterviewQuestion(final Long levellogId, final InterviewQuestionWriteDto request)
+        private ResultActions requestCreateInterviewQuestion(final Long levellogId,
+                                                             final InterviewQuestionWriteDto request)
                 throws Exception {
             return requestPost("/api/levellogs/" + levellogId + "/interview-questions", request);
         }
@@ -129,6 +130,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
     @Nested
     @DisplayName("findAllByLevellog 메서드는")
     class FindAllByLevellog {
+
+        private static final String BASE_SNIPPET_PATH = "interview-question/find-all-by-levellog/exception/";
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 인터뷰 질문 목록 조회를 요청하면 예외를 던진다.")
@@ -150,7 +153,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/find-all-by-levellog/exception/levellog-not-found"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-not-found"));
         }
 
         private ResultActions requestFindAllByLevellog(final Long levellogId) throws Exception {
@@ -161,6 +164,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
     @Nested
     @DisplayName("findAllMyInterviewQuestion 메서드는")
     class FindAllMyInterviewQuestion {
+
+        private static final String BASE_SNIPPET_PATH = "interview-question/find-all-my-interview-question/exception/";
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 인터뷰 질문 목록 조회를 요청하면 예외를 던진다.")
@@ -182,7 +187,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/find-all-my-interview-question/exception/levellog-not-found"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-not-found"));
         }
 
         private ResultActions requestFindAllMyInterviewQuestion(final Long levellogId) throws Exception {
@@ -193,6 +198,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
     @Nested
     @DisplayName("update 메서드는")
     class Update {
+
+        private static final String BASE_SNIPPET_PATH = "interview-question/update/exception/";
 
         @Test
         @DisplayName("인터뷰 질문이 공백인 경우 예외를 던진다.")
@@ -210,12 +217,12 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/update/exception/contents/blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "contents-blank"));
         }
 
         @Test
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
-        void update_interviewQuestionInvalidLength_Exception() throws Exception {
+        void update_interviewQuestionInvalidLength_exception() throws Exception {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
@@ -233,7 +240,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/update/exception/contents/length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "contents-length"));
         }
 
         @Test
@@ -258,7 +265,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/update/exception/not-found"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
@@ -281,7 +288,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/update/exception/unauthorized"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
         @ParameterizedTest
@@ -304,7 +311,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/update/exception/" + snippet));
+            perform.andDo(document(BASE_SNIPPET_PATH + snippet));
         }
 
         private ResultActions requestUpdateInterviewQuestion(final Long levellogId, final Long interviewQuestionId,
@@ -316,6 +323,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
     @Nested
     @DisplayName("deleteById 메서드는")
     class DeleteById {
+
+        private static final String BASE_SNIPPET_PATH = "interview-question/delete/exception/";
 
         @Test
         @DisplayName("존재하지 않는 인터뷰 질문을 삭제하면 예외를 던진다.")
@@ -337,7 +346,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/delete/exception/not-found"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
@@ -359,7 +368,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/delete/exception/unauthorized"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
         @ParameterizedTest
@@ -381,7 +390,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("interview-question/delete/exception/" + snippet));
+            perform.andDo(document(BASE_SNIPPET_PATH + "" + snippet));
         }
 
         private ResultActions requestDeleteInterviewQuestion(final Long levellogId,

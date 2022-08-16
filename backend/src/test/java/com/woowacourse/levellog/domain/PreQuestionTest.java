@@ -28,7 +28,7 @@ public class PreQuestionTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("사전 질문이 null 또는 공백이 들어오면 예외를 던진다.")
-        void constructor_PreQuestionNullOrBlank_Exception(final String preQuestion) {
+        void constructor_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
             final Member author = new Member("알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
@@ -44,7 +44,7 @@ public class PreQuestionTest {
 
         @Test
         @DisplayName("내가 쓴 레벨로그의 사전 질문을 작성하면 예외를 던진다.")
-        void constructor_PreQuestionMyLevellog_Exception() {
+        void constructor_preQuestionMyLevellog_exception() {
             // given
             final Member author = new Member("알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
@@ -65,7 +65,7 @@ public class PreQuestionTest {
 
         @Test
         @DisplayName("사전 질문을 수정한다.")
-        void update() {
+        void success() {
             // given
             final Member author = new Member("알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
@@ -86,7 +86,7 @@ public class PreQuestionTest {
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("사전 질문이 null 또는 공백이 들어오면 예외를 던진다.")
-        void update_PreQuestionNullOrBlank_Exception(final String preQuestion) {
+        void update_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
             final Member author = new Member("알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);

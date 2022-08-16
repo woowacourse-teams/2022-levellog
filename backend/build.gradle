@@ -86,8 +86,8 @@ jacoco {
 jacocoTestReport {
 	reports {
 		html.enabled true
-		csv.enabled true
-		xml.enabled false
+		csv.enabled false
+		xml.enabled true
 	}
 
 	afterEvaluate {

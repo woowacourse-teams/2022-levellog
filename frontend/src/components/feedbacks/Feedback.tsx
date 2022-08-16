@@ -23,24 +23,24 @@ const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }:
         )}
       </S.Header>
       <FlexBox gap={1.5}>
-        <FlexBox flexFlow={'column'} gap={1.25}>
-          <h3>학습 측면에서 좋은 점과 부족한 점은?</h3>
+        <S.FeedbackBox>
+          <S.Title>학습 측면에서 좋은 점과 부족한 점은?</S.Title>
           <S.Content>
             <UiViewer content={feedbackInfo.feedback.study} />
           </S.Content>
-        </FlexBox>
-        <FlexBox flexFlow={'column'} gap={1.25}>
-          <h3>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</h3>
+        </S.FeedbackBox>
+        <S.FeedbackBox>
+          <S.Title>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</S.Title>
           <S.Content>
             <UiViewer content={feedbackInfo.feedback.speak} />
           </S.Content>
-        </FlexBox>
-        <FlexBox flexFlow={'column'} gap={1.25}>
-          <h3>기타 피드백 (위 2 질문 외에 다른 피드백을 주세요.)</h3>
+        </S.FeedbackBox>
+        <S.FeedbackBox>
+          <S.Title>기타 피드백 (위 2 질문 외에 다른 피드백을 주세요.)</S.Title>
           <S.Content>
             <UiViewer content={feedbackInfo.feedback.etc} />
           </S.Content>
-        </FlexBox>
+        </S.FeedbackBox>
       </FlexBox>
     </S.Container>
   );
@@ -56,14 +56,13 @@ interface FeedbackProps {
 
 const S = {
   Container: styled.div`
-    overflow: hidden;
     width: 46.75rem;
     min-width: 46.75rem;
     min-height: 35.25rem;
     padding: 1.25rem 1.5625rem 1.25rem 1.5rem;
     background-color: ${(props) => props.theme.default.WHITE};
     border-radius: 0.5rem;
-    @media (max-width: 560px) {
+    @media (max-width: 840px) {
       min-width: 15rem;
     }
   `,
@@ -75,8 +74,19 @@ const S = {
     margin-bottom: 1.875rem;
   `,
 
+  FeedbackBox: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+  `,
+
+  Title: styled.h2`
+    font-size: 1.25rem;
+  `,
+
   Content: styled.div`
-    width: 43.75rem;
+    width: 100%;
     min-height: 6.25rem;
     padding: 0 1rem;
     border-radius: 0.5rem;

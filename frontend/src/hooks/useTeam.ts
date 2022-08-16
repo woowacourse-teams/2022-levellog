@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
@@ -16,21 +16,27 @@ import {
   requestEditTeam,
   requestCloseTeamInterview,
 } from 'apis/teams';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 import { MembersCustomHookType, MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
 
 const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
+  const { isDebounce } = useUtil();
+  // participants는 인터뷰 생성 폼, 인터뷰 수정 폼에서만 사용해야함!
+  const [participants, setParticipants] = useState<MemberType[]>([
+    { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
+  ]);
   const [members, setMembers] = useState<MemberType[]>([]);
   const [nicknameValue, setNicknameValue] = useState('');
   const team = useContext(TeamContext);
   const teamInfoDispatch = useContext(TeamDispatchContext);
   const location = useLocation() as { state: InterviewTeamType };
   const teamInfoRef = useRef<HTMLInputElement[]>([]);
-  const { teamId } = useParams();
   const navigate = useNavigate();
-  const { isDebounce } = useUtil();
+  const { teamId } = useParams();
+
   const teamLocationState: InterviewTeamType | undefined = location.state;
   const accessToken = localStorage.getItem('accessToken');
   const [participants, setParticipants] = useState<MemberType[]>([
@@ -44,9 +50,11 @@ const useTeam = () => {
       alert(MESSAGE.TEAM_CREATE);
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -68,10 +76,11 @@ const useTeam = () => {
         return res.data;
       }
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -82,9 +91,11 @@ const useTeam = () => {
       await requestEditTeam({ teamId, teamInfo, accessToken });
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -93,10 +104,11 @@ const useTeam = () => {
     try {
       await requestDeleteTeam({ teamId, accessToken });
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };

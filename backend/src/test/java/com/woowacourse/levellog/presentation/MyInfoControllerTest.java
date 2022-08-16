@@ -1,25 +1,19 @@
 package com.woowacourse.levellog.presentation;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
-import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("MyInfoController의")
@@ -27,64 +21,57 @@ class MyInfoControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("updateNickname 메서드는 ")
-    class UpdateNicknameMapping {
+    class UpdateNickname {
+
+        private static final String BASE_SNIPPET_PATH = "my-info/update/";
 
         @Test
         @DisplayName("닉네임에 50자를 초과한 문자열이 들어올 경우 예외를 던진다.")
-        void nicknameInvalidLength_Exception() throws Exception {
+        void updateNickname_nicknameInvalidLength_exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-
-            willThrow(new InvalidFieldException("닉네임은 50자 이하여야합니다."))
+            final String message = "닉네임은 50자 이하여야합니다.";
+            willThrow(new InvalidFieldException(message))
                     .given(memberService)
                     .updateNickname(any(), any());
             final String invalidNickname = "a".repeat(51);
 
-            final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto(invalidNickname);
-            final String requestContent = objectMapper.writeValueAsString(nicknameUpdateDto);
+            final NicknameUpdateDto request = new NicknameUpdateDto(invalidNickname);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/my-info")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
-                    .andDo(print());
+            final ResultActions perform = requestUpdateNickname(request);
 
             // then
-            perform.andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("message").value("닉네임은 50자 이하여야합니다."));
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("myinfo/update/nickname-invalid-length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "nickname-invalid-length"));
         }
 
         @ParameterizedTest
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("닉네임에 null 또는 빈 값이 들어온 경우 예외를 던진다.")
-        void nicknameNullAndEmpty_Exception(final String invalidNickname) throws Exception {
+        void updateNickname_nicknameNullAndEmpty_exception(final String invalidNickname) throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(anyString())).willReturn("123");
-            given(jwtTokenProvider.validateToken(any())).willReturn(true);
-
-            final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto(invalidNickname);
-            final String requestContent = objectMapper.writeValueAsString(nicknameUpdateDto);
+            final NicknameUpdateDto request = new NicknameUpdateDto(invalidNickname);
 
             // when
-            final ResultActions perform = mockMvc.perform(put("/api/my-info")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer token"))
-                    .andDo(print());
+            final ResultActions perform = requestUpdateNickname(request);
 
             // then
-            perform.andExpect(
+            perform.andExpectAll(
                     status().isBadRequest()
             );
 
             // docs
-            perform.andDo(document("myinfo/update/nickname-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "nickname-blank"));
+        }
+
+        private ResultActions requestUpdateNickname(final NicknameUpdateDto request) throws Exception {
+            return requestPut("/api/my-info", request);
         }
     }
 }

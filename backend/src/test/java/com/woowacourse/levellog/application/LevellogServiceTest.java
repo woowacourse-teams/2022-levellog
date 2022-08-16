@@ -219,7 +219,7 @@ class LevellogServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("작성자의 id와 로그인한 id가 다를 경우 권한 없음 예외를 던진다.")
-        void update_unauthorized_Exception() {
+        void update_unauthorized_exception() {
             // given
             final Member author = saveMember("알린");
             final Team team = saveTeam(author);

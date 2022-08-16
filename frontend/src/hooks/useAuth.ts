@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import useTeam from 'hooks/useTeam';
+
 import { MESSAGE, REQUIRE_AUTH } from 'constants/constants';
 
-import useTeam from './useTeam';
-import useUser from './useUser';
 import { requestGetUserAuthority } from 'apis/login';
 
 const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
@@ -12,6 +12,8 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
   const { levellogId, authorId } = useParams();
   const [isLoad, setIsLoad] = useState(true);
   const [isError, setIsError] = useState(false);
+  const { levellogId } = useParams();
+
   const accessToken = localStorage.getItem('accessToken');
 
   const checkAuth = async () => {

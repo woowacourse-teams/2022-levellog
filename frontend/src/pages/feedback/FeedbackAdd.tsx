@@ -1,15 +1,6 @@
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
 import styled from 'styled-components';
 
-import useFeedback from 'hooks/useFeedback';
-import useInterviewQuestion from 'hooks/useInterviewQuestion';
-import useLevellog from 'hooks/useLevellog';
-import useRole from 'hooks/useRole';
-
-import { ROUTES_PATH } from 'constants/constants';
-import { MESSAGE } from 'constants/constants';
+import useFeedbackAddPage from 'hooks/useFeedbackAddPage';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -19,55 +10,31 @@ import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
 const FeedbackAdd = () => {
-  const { feedbackRef, onClickFeedbackAddButton } = useFeedback();
-  const { levellog, getLevellog } = useLevellog();
-  const { levellogWriter, feedbackWriterRole, getWriterInfo } = useRole();
   const {
-    interviewQuestionInfos,
-    interviewQuestionRef,
-    interviewQuestionContentRef,
-    getInterviewQuestion,
-    onClickDeleteInterviewQuestionButton,
-    onSubmitEditInterviewQuestion,
-    handleSubmitInterviewQuestion,
-  } = useInterviewQuestion();
-  const { teamId, levellogId } = useParams();
-  const navigate = useNavigate();
-
-  const handleClickFeedbackAddButton = () => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      onClickFeedbackAddButton({ teamId, levellogId });
-
-      return;
-    }
-    alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
-  };
-
-  useEffect(() => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      getLevellog({ teamId, levellogId });
-      getWriterInfo({ teamId, levellogId });
-      getInterviewQuestion();
-
-      return;
-    }
-    alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
-  }, []);
+    state: { levellogInfo, feedbackWriterRole, interviewQuestionInfos },
+    ref: { feedbackRef, interviewQuestionRef, interviewQuestionContentRef },
+    handler: {
+      onClickDeleteInterviewQuestionButton,
+      onSubmitEditInterviewQuestion,
+      handleClickFeedbackAddButton,
+      handleSubmitInterviewQuestion,
+    },
+  } = useFeedbackAddPage();
 
   return (
     <S.Container>
-      <ContentHeader title={`${levellogWriter}의 레벨 인터뷰 피드백`}>
+      <ContentHeader
+        title={`${levellogInfo.author && levellogInfo.author.nickname}의 레벨 인터뷰 피드백`}
+      >
         <Button onClick={handleClickFeedbackAddButton}>등록하기</Button>
       </ContentHeader>
       <S.Content>
         <S.LeftContent>
           <FlexBox alignItems={'center'} gap={1}>
-            <S.FeedbackTitle>레벨로그</S.FeedbackTitle>
+            <S.LevellogTitle>레벨로그</S.LevellogTitle>
             <S.RoleContent>나의 역할: {feedbackWriterRole}</S.RoleContent>
           </FlexBox>
-          <LevellogReport levellog={levellog} />
+          <LevellogReport levellogInfo={levellogInfo} />
         </S.LeftContent>
         <S.RightContent>
           <InterviewQuestion
@@ -110,7 +77,7 @@ const S = {
     }
   `,
 
-  FeedbackTitle: styled.h2`
+  LevellogTitle: styled.h2`
     margin-bottom: 1.875rem;
     font-size: 1.875rem;
   `,

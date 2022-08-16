@@ -7,23 +7,18 @@ import { ROUTES_PATH } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
-import { LevellogCustomHookType, LevellogFormatType } from 'types/levellog';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
+import { LevellogCustomHookType, LevellogInfoType } from 'types/levellog';
 
 const useLevellog = () => {
-  const [levellog, setLevellog] = useState('');
+  const [levellogInfo, setLevellogInfo] = useState<LevellogInfoType>(
+    {} as unknown as LevellogInfoType,
+  );
+
   const levellogRef = useRef<Editor>(null);
-  const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
-  const stringToLevellog = ({
-    inputValue,
-  }: Pick<LevellogCustomHookType, 'inputValue'>): LevellogFormatType => {
-    const levellogContent = {
-      content: inputValue,
-    };
-
-    return levellogContent;
-  };
+  const accessToken = localStorage.getItem('accessToken');
 
   const postLevellog = async ({
     teamId,
@@ -33,14 +28,15 @@ const useLevellog = () => {
       await requestPostLevellog({
         accessToken,
         teamId,
-        levellogContent: stringToLevellog({ inputValue }),
+        levellogContent: { content: inputValue },
       });
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -48,17 +44,20 @@ const useLevellog = () => {
   const getLevellog = async ({
     teamId,
     levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>): Promise<string | void> => {
+  }: Omit<LevellogCustomHookType, 'inputValue'>): Promise<LevellogInfoType | undefined> => {
     try {
       const res = await requestGetLevellog({ accessToken, teamId, levellogId });
-      setLevellog(res.data.content);
+      if ('content' in res.data) {
+        setLevellogInfo(res.data);
+      }
 
-      return res.data.content;
+      return res.data;
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -69,15 +68,16 @@ const useLevellog = () => {
         accessToken,
         teamId,
         levellogId,
-        levellogContent: stringToLevellog({ inputValue }),
+        levellogContent: { content: inputValue },
       });
       alert('레벨로그 수정이 완료되었습니다.');
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -86,12 +86,9 @@ const useLevellog = () => {
     teamId,
     levellogId,
   }: Omit<LevellogCustomHookType, 'inputValue'>) => {
-    const levellog = await getLevellog({ teamId, levellogId });
-    if (typeof levellog === 'string') {
-      setLevellog(levellog);
-    }
-    if (typeof levellog === 'string' && levellogRef.current) {
-      levellogRef.current.getInstance().setMarkdown(levellog);
+    const levellogInfo = await getLevellog({ teamId, levellogId });
+    if (levellogInfo && levellogRef.current) {
+      levellogRef.current.getInstance().setMarkdown(levellogInfo.content);
     }
   };
 
@@ -119,7 +116,7 @@ const useLevellog = () => {
   };
 
   return {
-    levellog,
+    levellogInfo,
     levellogRef,
     postLevellog,
     getLevellog,

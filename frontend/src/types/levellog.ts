@@ -20,3 +20,12 @@ export interface LevellogFormatType {
 export interface LevellogParticipantType extends Pick<LevellogCustomHookType, 'teamId'> {
   participant: ParticipantType;
 }
+
+export interface LevellogInfoType {
+  author: {
+    id: string;
+    nickname: string;
+    profileUrl: string;
+  };
+  content: string;
+}

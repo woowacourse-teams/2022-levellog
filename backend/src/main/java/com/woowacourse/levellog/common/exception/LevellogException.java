@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.common.exception;
 
+import com.woowacourse.levellog.common.support.DebugMessage;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -11,6 +12,13 @@ public abstract class LevellogException extends RuntimeException {
 
     protected LevellogException(final String message, final String clientMessage, final HttpStatus httpStatus) {
         super(message);
+        this.clientMessage = clientMessage;
+        this.httpStatus = httpStatus;
+    }
+
+    protected LevellogException(final String clientMessage, final DebugMessage debugMessage,
+                                final HttpStatus httpStatus) {
+        super(clientMessage + debugMessage.build());
         this.clientMessage = clientMessage;
         this.httpStatus = httpStatus;
     }

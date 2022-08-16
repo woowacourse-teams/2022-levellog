@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("JwtTokenProviderTest 클래스의")
+@DisplayName("JwtTokenProvider의")
 class JwtTokenProviderTest {
 
     private static final String SECRET_KEY = "fe164d0918ae5aa4b159c57f2916fe37cbfc2a3282bc8da7f79b67c06730370115fe172bdec88d81d369790416ccf3c2044d6a3ebbb2e92a93225b026dae6c36";

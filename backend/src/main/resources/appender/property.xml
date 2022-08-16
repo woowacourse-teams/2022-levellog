@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+    <property name="INFO_PATTERN"
+              value="[%blue(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%blue(%replace(%logger{20}){'\\w\\.', ''})] %msg %n"/>
+    <property name="WARN_PATTERN"
+              value="[%red(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%red(%replace(%logger{20}){'\\w\\.', ''}:%line)] %msg %n"/>
+    <property name="ERROR_PATTERN"
+              value="[%boldRed(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%boldRed(%replace(%logger{20}){'\\w\\.', ''}:%line)] %msg %n"/>
+
+    <property name="CONSOLE_PATTERN"
+              value="[%highlight(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%highlight(%replace(%logger{20}){'\\w\\.', ''})] %msg %n"/>
+    <property name="QUERY_PATTERN"
+              value="%yellow([%d{HH:mm:ss}]) %msg %n"/>
+    <property name="PARAMETER_PATTERN"
+              value="%yellow(#) %replace(%msg){'binding parameter \\[(\\d*)\\] as \\[\\w*\\] - ', '$1 - '} %n"/>
+
+    <property name="LOG_PATH" value="./logs"/>
+    <property name="ARCHIVE_PATH" value="./was-logs"/>
+</included>

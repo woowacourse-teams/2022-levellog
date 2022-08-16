@@ -44,7 +44,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("전체 팀 목록을 조회한다.")
-        void findAll() {
+        void findAll_allTeam_success() {
             //given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -96,7 +96,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("삭제된 팀을 제외한 팀 목록을 조회한다.")
-        void findAll_exceptDeleted() {
+        void findAll_exceptDeletedTeam_success() {
             //given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -121,7 +121,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("팀을 생성한다.")
-        void save() {
+        void success() {
             //given
             final Long alien = saveMember("알린").getId();
             final Long pepper = saveMember("페퍼").getId();
@@ -140,7 +140,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("참가자가 중복되면 예외가 발생한다.")
-        void save_duplicate_exceptionThrown() {
+        void save_duplicate_exception() {
             //given
             final Long alien = saveMember("알린").getId();
             final Long pepper = saveMember("페퍼").getId();
@@ -157,7 +157,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
-        void save_noParticipant_exceptionThrown() {
+        void save_noParticipant_exception() {
             //given
             final Long alienId = saveMember("알린").getId();
             final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
@@ -176,7 +176,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - interviewer")
-        void success_interviewer() {
+        void findMyRole_interviewer_success() {
             // given
             final Member rick = saveMember("릭");
             final Member harry = saveMember("해리");
@@ -197,7 +197,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - observer")
-        void success_observer() {
+        void findMyRole_observer_success() {
             // given
             final Member rick = saveMember("릭");
             final Member harry = saveMember("해리");
@@ -218,7 +218,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("팀의 참가자가 아닌 member가 요청하면 예외를 던진다.")
-        void iAmNotParticipant_exceptionThrown() {
+        void findMyRole_iAmNotParticipant_exception() {
             // given
             final Member rick = saveMember("릭");
             final Member harry = saveMember("해리");
@@ -237,7 +237,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("targetMember가 팀의 참가자가 아니면 예외를 던진다.")
-        void targetNotParticipant_exceptionThrown() {
+        void findMyRole_targetNotParticipant_exception() {
             // given
             final Member rick = saveMember("릭");
             final Member harry = saveMember("해리");
@@ -261,7 +261,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("id에 해당하는 팀을 조회한다.")
-        void findByTeamIdAndMemberId() {
+        void success() {
             //given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -281,7 +281,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
-        void teamNotFound_Exception() {
+        void findByTeamIdAndMemberId_notFound_exception() {
             // when & then
             assertThatThrownBy(() -> teamService.findByTeamIdAndMemberId(1000L, 1L))
                     .isInstanceOf(TeamNotFoundException.class)
@@ -294,7 +294,7 @@ class TeamServiceTest extends ServiceTest {
 
             @Test
             @DisplayName("인터뷰어와 인터뷰이, isParticipant를 true로 응답한다.")
-            void findByTeamIdAndMemberId() {
+            void findByTeamIdAndMemberId_intervieweeAndInterviewer_success() {
                 //given
                 final Member rick = saveMember("릭");
                 final Member pepper = saveMember("페퍼");
@@ -330,7 +330,7 @@ class TeamServiceTest extends ServiceTest {
 
             @Test
             @DisplayName("참가자가 3명이고, 인터뷰어 수는 2명이면 인터뷰어와 인터뷰이가 동일하다.")
-            void findByTeamIdAndMemberId_manyInterviewerNumber() {
+            void findByTeamIdAndMemberId_manyInterviewerNumber_success() {
                 //given
                 final Member rick = saveMember("릭");
                 final Member pepper = saveMember("페퍼");
@@ -360,7 +360,7 @@ class TeamServiceTest extends ServiceTest {
 
             @Test
             @DisplayName("인터뷰어와 인터뷰이가 빈 상태이고 isParticipant를 false로 응답한다.")
-            void findByTeamIdAndMemberId() {
+            void success() {
                 //given
                 final Member rick = saveMember("릭");
                 final Member pepper = saveMember("페퍼");
@@ -391,7 +391,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 시작 전인 팀의 상태를 조회하면 READY를 반환한다.")
-        void success_ready() {
+        void findStatus_ready_success() {
             // given
             final Member pepper = saveMember("페퍼");
             final Member rick = saveMember("릭");
@@ -407,7 +407,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 진행 중인 팀의 상태를 조회하면 IN_PROGRESS를 반환한다.")
-        void success_inProgress() {
+        void findStatus_inProgress_success() {
             // given
             final Member pepper = saveMember("페퍼");
             final Member rick = saveMember("릭");
@@ -425,7 +425,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 종료 후인 팀의 상태를 조회하면 CLOSED를 반환한다.")
-        void success_closed() {
+        void findStatus_closed_success() {
             // given
             final Member pepper = saveMember("페퍼");
             final Member rick = saveMember("릭");
@@ -443,7 +443,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
-        void findStatus_notExistTeam_exceptionThrown() {
+        void findStatus_notExistTeam_exception() {
             // when & then
             assertThatThrownBy(() -> teamService.findStatus(999L))
                     .isInstanceOf(TeamNotFoundException.class);
@@ -492,7 +492,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("호스트가 아닌 멤버가 팀을 수정하는 경우 예외를 던진다.")
-        void hostUnauthorized_Exception() {
+        void update_hostUnauthorized_exception() {
             // given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -512,7 +512,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
-        void teamNotFound_Exception() {
+        void update_teamNotFound_exception() {
             //given
             final Long memberId = saveMember("릭").getId();
             final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
@@ -526,7 +526,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 시작 이후에 팀을 수정하려고 하면 예외를 던진다.")
-        void updateAfterStartAt_Exception() {
+        void update_afterStartAt_exception() {
             //given
             final Member member = saveMember("릭");
             final Team team = saveTeam(member);
@@ -545,7 +545,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("참가자가 중복되면 예외가 발생한다.")
-        void duplicate_exceptionThrown() {
+        void update_duplicate_exception() {
             //given
             final Member alien = saveMember("알린");
             final Member pepper = saveMember("페퍼");
@@ -564,7 +564,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
-        void noParticipant_exceptionThrown() {
+        void update_noParticipant_exception() {
             //given
             final Member alien = saveMember("알린");
             final Member pepper = saveMember("페퍼");
@@ -588,7 +588,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("입력 받은 팀의 인터뷰를 종료한다.")
-        void close() {
+        void success() {
             // given
             final Member rick = saveMember("릭");
             final Team team = saveTeam(rick);
@@ -605,7 +605,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하면 예외가 발생한다.")
-        void close_notHost_exceptionThrown() {
+        void close_notHost_exception() {
             // given
             final Member rick = saveMember("릭");
             final Member alien = saveMember("알린");
@@ -644,7 +644,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("호스트가 아닌 멤버가 팀을 삭제하는 경우 예외를 던진다.")
-        void hostUnauthorized_Exception() {
+        void delete_hostUnauthorized_exception() {
             // given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -660,7 +660,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
-        void teamNotFound_Exception() {
+        void delete_teamNotFound_exception() {
             //given
             final Member member = saveMember("릭");
 
@@ -672,7 +672,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("이미 삭제된 팀을 삭제하는 경우 팀이 존재하지 않는다는 예외를 던진다.")
-        void alreadyDeleted_Exception() {
+        void delete_alreadyDeleted_exception() {
             //given
             final Member member = saveMember("릭");
             final Team team = saveTeam(member);
@@ -714,7 +714,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("주어진 memberId의 멤버가 존재하지 않을 때 예외를 던진다.")
-        void memberNotFound_exception() {
+        void findAllByMemberId_memberNotFound_exception() {
             // when & then
             assertThatThrownBy(() -> teamService.findAllByMemberId(100_000L))
                     .isInstanceOf(MemberNotFoundException.class)

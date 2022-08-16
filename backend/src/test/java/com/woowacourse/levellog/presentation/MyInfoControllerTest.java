@@ -21,11 +21,13 @@ class MyInfoControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("updateNickname 메서드는 ")
-    class UpdateNicknameMapping {
+    class UpdateNickname {
+
+        private static final String BASE_SNIPPET_PATH = "my-info/update/";
 
         @Test
         @DisplayName("닉네임에 50자를 초과한 문자열이 들어올 경우 예외를 던진다.")
-        void nicknameInvalidLength_Exception() throws Exception {
+        void updateNickname_nicknameInvalidLength_exception() throws Exception {
             // given
             final String message = "닉네임은 50자 이하여야합니다.";
             willThrow(new InvalidFieldException(message))
@@ -45,14 +47,14 @@ class MyInfoControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("myinfo/update/nickname-invalid-length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "nickname-invalid-length"));
         }
 
         @ParameterizedTest
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("닉네임에 null 또는 빈 값이 들어온 경우 예외를 던진다.")
-        void nicknameNullAndEmpty_Exception(final String invalidNickname) throws Exception {
+        void updateNickname_nicknameNullAndEmpty_exception(final String invalidNickname) throws Exception {
             // given
             final NicknameUpdateDto request = new NicknameUpdateDto(invalidNickname);
 
@@ -65,7 +67,7 @@ class MyInfoControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("myinfo/update/nickname-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "nickname-blank"));
         }
 
         private ResultActions requestUpdateNickname(final NicknameUpdateDto request) throws Exception {

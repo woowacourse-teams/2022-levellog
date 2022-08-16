@@ -8,7 +8,6 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.team.domain.Team;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -73,11 +72,11 @@ class PreQuestionRepositoryTest extends RepositoryTest {
 
     @Nested
     @DisplayName("existsByLevellogAndAuthor 메서드는")
-    class ExistsByLevellogAndAuthorTest {
+    class ExistsByLevellogAndAuthor {
 
         @Test
         @DisplayName("levellog와 사전 질문의 author가 모두 일치하는 사전 질문이 존재하는 경우 true를 반환한다.")
-        void exists() {
+        void existsByLevellogAndAuthor_exists_success() {
             // given
             final Member levellogAuthor = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -95,7 +94,7 @@ class PreQuestionRepositoryTest extends RepositoryTest {
 
         @Test
         @DisplayName("levellog와 사전 질문의 author가 모두 일치하는 사전 질문이 존재하지 않는 경우 false를 반환한다.")
-        void notExists() {
+        void existsByLevellogAndAuthor_notExists_success() {
             // given
             final Member levellogAuthor = saveMember("알린");
             final Member questioner = saveMember("로마");

@@ -35,11 +35,13 @@ class TeamControllerTest extends ControllerTest {
     @DisplayName("save 메서드는")
     class Save {
 
+        private static final String BASE_SNIPPET_PATH = "team/create/exception/";
+
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("팀 명으로 null이 들어오면 예외를 던진다.")
-        void titleNull_Exception(final String title) throws Exception {
+        void save_titleNull_exception(final String title) throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
             final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
@@ -55,12 +57,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/title/null-and-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "title-blank"));
         }
 
         @Test
         @DisplayName("팀 명으로 255자를 초과할 경우 예외를 던진다.")
-        void titleInvalidLength_Exception() throws Exception {
+        void save_titleInvalidLength_exception() throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
             final String title = "네오".repeat(128);
@@ -82,14 +84,14 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/title/length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "title-length"));
         }
 
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("장소로 null이 들어오면 예외를 던진다.")
-        void placeNull_Exception(final String place) throws Exception {
+        void save_placeNull_exception(final String place) throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
             final TeamWriteDto request = new TeamWriteDto("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
@@ -105,12 +107,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/place/null-and-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "place-blank"));
         }
 
         @Test
         @DisplayName("장소로 255자를 초과할 경우 예외를 던진다.")
-        void placeInvalidLength_Exception() throws Exception {
+        void save_placeInvalidLength_exception() throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
             final String place = "선릉".repeat(128);
@@ -132,12 +134,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/place/length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "place-length"));
         }
 
         @Test
         @DisplayName("인터뷰 시작 시간으로 null이 들어오면 예외를 던진다.")
-        void startAtNull_Exception() throws Exception {
+        void save_startAtNull_exception() throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(1L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, null, participantIds);
@@ -152,12 +154,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/startat/null"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "start-at-null"));
         }
 
         @Test
         @DisplayName("인터뷰 시작 시간이 현재 시간 기준으로 과거면 예외를 던진다.")
-        void startAtPast_Exception() throws Exception {
+        void save_startAtPast_exception() throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
@@ -178,12 +180,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/startat/past"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "start-at-past"));
         }
 
         @Test
         @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
-        void participantsEmpty_Exception() throws Exception {
+        void save_participantsEmpty_exception() throws Exception {
             // given
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(Collections.emptyList()));
@@ -197,12 +199,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/participants/empty"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-empty"));
         }
 
         @Test
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
-        void participantsNull_Exception() throws Exception {
+        void save_participantsNull_exception() throws Exception {
             // given
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
 
@@ -216,12 +218,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/participants/null"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-null"));
         }
 
         @Test
         @DisplayName("인터뷰어가 1명 미만이면 예외를 던진다.")
-        void notPositiveInterviewerNumber_exceptionThrown() throws Exception {
+        void save_notPositiveInterviewerNumber_exception() throws Exception {
             // given
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(2L, 3L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
@@ -237,12 +239,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/interviewer-number/not-positive"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "interviewer-number-not-positive"));
         }
 
         @Test
         @DisplayName("인터뷰어 수가 참가자 수보다 많거나 같으면 예외를 던진다.")
-        void interviewerMoreThanParticipant_exceptionThrown() throws Exception {
+        void save_interviewerMoreThanParticipant_exception() throws Exception {
             // given
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(2L, 3L, 4L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 4, LocalDateTime.now().plusDays(3),
@@ -263,12 +265,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/interviewer-number/more-than-participant"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "interviewer-number-more-than-participant"));
         }
 
         @Test
         @DisplayName("팀 구성원 목록으로 중복된 Id가 들어오면 예외를 던진다.")
-        void save_duplicateParticipant_exceptionThrown() throws Exception {
+        void save_duplicateParticipant_exception() throws Exception {
             // given
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(2L, 2L, 3L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
@@ -289,12 +291,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/participants/duplicate"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-duplicate"));
         }
 
         @Test
         @DisplayName("팀 구성원 목록으로 호스트 Id가 들어오면 예외를 던진다.")
-        void save_participantsWithHostId_exceptionThrown() throws Exception {
+        void save_participantsWithHostId_exception() throws Exception {
             // given
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 2L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
@@ -315,7 +317,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/create/exception/participants/host"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-have-host"));
         }
 
         private ResultActions requestCreateTeam(final TeamWriteDto request) throws Exception {
@@ -327,11 +329,13 @@ class TeamControllerTest extends ControllerTest {
     @DisplayName("update 메서드는")
     class Update {
 
+        private static final String BASE_SNIPPET_PATH = "team/update/exception/";
+
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("팀 명으로 null이 들어오면 예외를 던진다.")
-        void titleNull_Exception(final String title) throws Exception {
+        void update_titleNull_exception(final String title) throws Exception {
             // given
             final long id = 1;
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
@@ -348,12 +352,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/title/null-and-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "title-blank"));
         }
 
         @Test
         @DisplayName("팀 명으로 255자를 초과할 경우 예외를 던진다.")
-        void titleInvalidLength_Exception() throws Exception {
+        void update_titleInvalidLength_exception() throws Exception {
             // given
             final long id = 1;
             final String title = "네오".repeat(128);
@@ -376,16 +380,15 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/title/length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "title-length"));
         }
 
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("장소로 null이 들어오면 예외를 던진다.")
-        void placeNull_Exception(final String place) throws Exception {
+        void update_placeNull_exception(final String place) throws Exception {
             // given
-//            eam();
             final long id = 1;
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
@@ -401,12 +404,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/place/null-and-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "place-blank"));
         }
 
         @Test
         @DisplayName("장소로 255자를 초과할 경우 예외를 던진다.")
-        void placeInvalidLength_Exception() throws Exception {
+        void update_placeInvalidLength_exception() throws Exception {
             // given
             final long id = 1;
             final String place = "거실".repeat(128);
@@ -429,12 +432,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/place/length"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "place-length"));
         }
 
         @Test
         @DisplayName("인터뷰 시작 시간으로 null이 들어오면 예외를 던진다.")
-        void startAtNull_Exception() throws Exception {
+        void update_startAtNull_exception() throws Exception {
             // given
             final long id = 1;
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
@@ -450,12 +453,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/startat/null"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "start-at-null"));
         }
 
         @Test
         @DisplayName("인터뷰 시작 시간이 현재 시간 기준으로 과거면 예외를 던진다.")
-        void startAtPast_Exception() throws Exception {
+        void update_startAtPast_exception() throws Exception {
             // given
             final long id = 1;
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
@@ -476,12 +479,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/startat/past"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "start-at-past"));
         }
 
         @Test
         @DisplayName("없는 팀을 수정하려고 하면 예외를 던진다.")
-        void teamNotFound_Exception() throws Exception {
+        void update_teamNotFound_exception() throws Exception {
             // given
             final ParticipantIdsDto participantIds = new ParticipantIdsDto(List.of(2L, 3L));
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(10),
@@ -502,12 +505,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
         @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
-        void participantsEmpty_Exception() throws Exception {
+        void update_participantsEmpty_exception() throws Exception {
             // given
             final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(Collections.emptyList()));
@@ -519,12 +522,12 @@ class TeamControllerTest extends ControllerTest {
             perform.andExpect(status().isBadRequest());
 
             // docs
-            perform.andDo(document("team/update/exception/participants/empty"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-empty"));
         }
 
         @Test
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
-        void participantsNull_Exception() throws Exception {
+        void update_participantsNull_exception() throws Exception {
             // given
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null);
 
@@ -538,12 +541,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/participants/null"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-null"));
         }
 
         @Test
         @DisplayName("인터뷰어가 1명 미만이면 예외를 던진다.")
-        void notPositiveInterviewerNumber_exceptionThrown() throws Exception {
+        void update_notPositiveInterviewerNumber_exception() throws Exception {
             // given
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(2L, 3L, 4L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
@@ -559,12 +562,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/interviewer-number/not-positive"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "interviewer-number-not-positive"));
         }
 
         @Test
         @DisplayName("인터뷰어 수가 참가자 수보다 많거나 같으면 예외를 던진다.")
-        void interviewerMoreThanParticipant_exceptionThrown() throws Exception {
+        void update_interviewerMoreThanParticipant_exception() throws Exception {
             // given
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(2L, 3L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
@@ -585,12 +588,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/interviewer-number/more-than-participant"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "interviewer-number-more-than-participant"));
         }
 
         @Test
         @DisplayName("팀 구성원 목록으로 중복된 Id가 들어오면 예외를 던진다.")
-        void duplicateParticipant_exceptionThrown() throws Exception {
+        void update_duplicateParticipant_exception() throws Exception {
             // given
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(2L, 2L, 3L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
@@ -610,12 +613,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/participants/duplicate"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-duplicate"));
         }
 
         @Test
         @DisplayName("팀 구성원 목록으로 호스트 Id가 들어오면 예외를 던진다.")
-        void participantsWithHostId_exceptionThrown() throws Exception {
+        void update_participantsWithHostId_exception() throws Exception {
             // given
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     new ParticipantIdsDto(List.of(1L, 2L, 1L)));
@@ -635,12 +638,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/participants/host"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "participants-have-host"));
         }
 
         @Test
         @DisplayName("인터뷰 시작 이후에 팀을 수정하려고 하면 예외를 던진다.")
-        void updateAfterStartAt_Exception() throws Exception {
+        void update_updateAfterStartAt_exception() throws Exception {
             // given
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(2L, 3L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
@@ -661,7 +664,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/update/exception/after-start-at"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-start-at"));
         }
 
         private ResultActions requestUpdateTeam(final Long teamId, final TeamWriteDto request) throws Exception {
@@ -670,12 +673,14 @@ class TeamControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("findById 메서드는")
-    class FindById {
+    @DisplayName("findByTeamIdAndMemberId 메서드는")
+    class FindByTeamIdAndMemberId {
+
+        private static final String BASE_SNIPPET_PATH = "team/find-by-id/exception/";
 
         @Test
         @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
-        void teamNotFound_Exception() throws Exception {
+        void findByTeamIdAndMemberId_teamNotFound_exception() throws Exception {
             // given
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", message))
@@ -692,7 +697,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/find-by-id/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "notfound"));
         }
 
         private ResultActions requestFindTeam(final Long teamId) throws Exception {
@@ -703,6 +708,8 @@ class TeamControllerTest extends ControllerTest {
     @Nested
     @DisplayName("findStatus 메서드는")
     class FindStatus {
+
+        private static final String BASE_SNIPPET_PATH = "team/find-status/exception/";
 
         @Test
         @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
@@ -724,7 +731,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/find-status/exception/team-not-found"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "team-not-found"));
         }
 
         private ResultActions requestFindStatus(final Long teamId) throws Exception {
@@ -736,9 +743,11 @@ class TeamControllerTest extends ControllerTest {
     @DisplayName("findMyRole 메서드는")
     class FindMyRole {
 
+        private static final String BASE_SNIPPET_PATH = "team/find-my-role/exception/";
+
         @Test
         @DisplayName("요청한 사용자가 소속된 팀이 아니면 예외를 던진다.")
-        void notMyTeam_exceptionThrown() throws Exception {
+        void findMyRole_notMyTeam_exception() throws Exception {
             // given
             final Long teamId = 2L;
             final Long memberId = 5L;
@@ -757,12 +766,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/find-my-role/exception/not-my-team"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-team"));
         }
 
         @Test
         @DisplayName("타겟 멤버가 팀의 참가자가 아니면 예외를 던진다.")
-        void targetNotParticipant_exceptionThrown() throws Exception {
+        void findMyRole_targetNotParticipant_exception() throws Exception {
             // given
             final Long teamId = 2L;
             final Long memberId = 5L;
@@ -781,7 +790,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/find-my-role/exception/target-not-participant"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "target-not-participant"));
         }
 
         private ResultActions requestFindMyRole(final Long teamId, final Long memberId) throws Exception {
@@ -793,9 +802,11 @@ class TeamControllerTest extends ControllerTest {
     @DisplayName("close 메서드는")
     class Close {
 
+        private static final String BASE_SNIPPET_PATH = "team/close/exception/";
+
         @Test
         @DisplayName("존재하지 않는 팀의 인터뷰를 종료하려고 하면 예외가 발생한다.")
-        void close_notFoundTeam_exceptionThrown() throws Exception {
+        void close_notFoundTeam_exception() throws Exception {
             // given
             final Long teamId = 200_000L;
 
@@ -813,12 +824,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/close/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
         @DisplayName("이미 종료된 팀 인터뷰를 종료하려고 하면 예외가 발생한다.")
-        void close_alreadyClosed_exceptionThrown() throws Exception {
+        void close_alreadyClosed_exception() throws Exception {
             // given
             final Long teamId = 1L;
 
@@ -837,12 +848,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/close/exception/already-close"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "already-close"));
         }
 
         @Test
         @DisplayName("인터뷰 시작 시간 전에 종료하려고 하면 예외가 발생한다.")
-        void close_beforeStart_exceptionThrown() throws Exception {
+        void close_beforeStart_exception() throws Exception {
             // given
             final Long teamId = 1L;
 
@@ -861,12 +872,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/close/exception/before-start"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "before-start"));
         }
 
         @Test
         @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하려고 하면 예외가 발생한다.")
-        void close_notHost_exceptionThrown() throws Exception {
+        void close_notHost_exception() throws Exception {
             // given
             final Long teamId = 1L;
 
@@ -885,7 +896,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/close/exception/unauthorized"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
         private ResultActions requestCloseTeam(final Long teamId) throws Exception {
@@ -894,12 +905,14 @@ class TeamControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("delete 메서드는")
-    class Delete {
+    @DisplayName("deleteById 메서드는")
+    class DeleteById {
+
+        private static final String BASE_SNIPPET_PATH = "team/delete/exception/";
 
         @Test
         @DisplayName("없는 팀을 제거하려고 하면 예외를 던진다.")
-        void delete_teamNotFound_Exception() throws Exception {
+        void deleteById_teamNotFound_exception() throws Exception {
             // given
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", message))
@@ -916,12 +929,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/delete/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "notfound"));
         }
 
         @Test
         @DisplayName("인터뷰 시작 시간 후에 삭제하려고 하면 예외가 발생한다.")
-        void delete_afterStart_exceptionThrown() throws Exception {
+        void deleteById_afterStart_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final String message = "인터뷰가 시작된 이후에는 삭제할 수 없습니다.";
@@ -939,12 +952,12 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/delete/exception/after-start"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-start"));
         }
 
         @Test
         @DisplayName("호스트가 아닌 사용자가 팀을 삭제하려고 하면 예외가 발생한다.")
-        void delete_notHost_exceptionThrown() throws Exception {
+        void deleteById_notHost_exception() throws Exception {
             // given
             final Long teamId = 1L;
 
@@ -963,7 +976,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("team/delete/exception/unauthorized"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
         private ResultActions requestDeleteTeam(final Long teamId) throws Exception {

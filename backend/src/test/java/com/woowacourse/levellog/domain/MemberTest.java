@@ -21,7 +21,7 @@ class MemberTest {
 
         @Test
         @DisplayName("닉네임이 50자를 초과할 경우 예외를 던진다.")
-        void nicknameInvalidLength_exception() {
+        void constructor_nicknameInvalidLength_exception() {
             // given
             final String invalidNickname = "a".repeat(51);
 
@@ -35,7 +35,7 @@ class MemberTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("닉네임이 공백이나 null일 경우 예외를 던진다.")
-        void nicknameBlank_exception(final String invalidNickname) {
+        void constructor_nicknameBlank_exception(final String invalidNickname) {
             // when & then
             assertThatThrownBy(() -> new Member(invalidNickname, 123456, "validProfileUrl"))
                     .isInstanceOf(InvalidFieldException.class)
@@ -44,7 +44,7 @@ class MemberTest {
 
         @Test
         @DisplayName("githubId가 null일 경우 예외를 던진다.")
-        void githubIdNull_exception() {
+        void constructor_githubIdNull_exception() {
             // when & then
             assertThatThrownBy(() -> new Member("test", null, "validProfileUrl"))
                     .isInstanceOf(InvalidFieldException.class)
@@ -53,7 +53,7 @@ class MemberTest {
 
         @Test
         @DisplayName("프로필 url은 2048자를 초과할 경우 예외를 던진다.")
-        void profileUrlInvalidLength_exception() {
+        void constructor_profileUrlInvalidLength_exception() {
             // given
             final String invalidProfileUrl = "a".repeat(2049);
 
@@ -67,7 +67,7 @@ class MemberTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("프로필 url이 공백이나 null일 경우 예외를 던진다.")
-        void profileUrlBlank_exception(final String invalidProfileUrl) {
+        void constructor_profileUrlBlank_exception(final String invalidProfileUrl) {
             // when & then
             assertThatThrownBy(() -> new Member("test", 123456, invalidProfileUrl))
                     .isInstanceOf(InvalidFieldException.class)
@@ -77,7 +77,7 @@ class MemberTest {
 
     @Nested
     @DisplayName("updateNickname 메서드는")
-    class UpdateNicknameMapping {
+    class UpdateNickname {
 
         @Test
         @DisplayName("닉네임을 변경한다.")
@@ -94,7 +94,7 @@ class MemberTest {
 
         @Test
         @DisplayName("닉네임이 50자를 초과할 경우 예외를 던진다.")
-        void nicknameInvalidLength_exception() {
+        void updateNickname_nicknameInvalidLength_exception() {
             // given
             final Member member = new Member("로마", 123456, "image.png");
             final String invalidNickname = "a".repeat(51);
@@ -109,7 +109,7 @@ class MemberTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         @DisplayName("닉네임이 공백이나 null일 경우 예외를 던진다.")
-        void nicknameBlank_exception(final String invalidNickname) {
+        void updateNickname_nicknameBlank_exception(final String invalidNickname) {
             // given
             final Member member = new Member("로마", 123456, "image.png");
 

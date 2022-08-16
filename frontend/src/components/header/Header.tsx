@@ -4,20 +4,21 @@ import styled from 'styled-components';
 
 import useUser from 'hooks/useUser';
 
-import levellogLogo from 'assets/images/levellogLogo.png';
+import defaultProfile from 'assets/images/defaultProfile.png';
+import levellogLogo from 'assets/images/levellogNewLogo.png';
 
-import Button from 'components/@commons/Button';
 import { LogoStyle } from 'components/@commons/Style';
-import ProfileDropdown from 'components/ProfileDropdown';
+import Profile from 'components/header/Profile';
+import ProfileDropdown from 'components/header/ProfileDropdown';
 
 const Header = () => {
   const {
     loginUserProfileUrl,
+    loginUserNickname,
     isShowProfileDropdown,
     handleClickLogoutButton,
-    handleClickProfileImage,
-    handleClickLoginButton,
-    handleErrorProfileImage,
+    handleClickProfile,
+    handleErrorProfile,
   } = useUser();
 
   return (
@@ -25,18 +26,15 @@ const Header = () => {
       <Link to={'/'}>
         <LogoStyle src={levellogLogo} alt={'레벨로그 로고'} />
       </Link>
-      {loginUserProfileUrl ? (
-        <S.ProfileImage
-          onClick={handleClickProfileImage}
-          onError={handleErrorProfileImage}
-          src={loginUserProfileUrl}
-          alt={'프로필 이미지'}
-        />
-      ) : (
-        <Button onClick={handleClickLoginButton}>로그인</Button>
-      )}
+      <Profile
+        isShowProfileDropdown={isShowProfileDropdown}
+        loginUserProfileUrl={loginUserProfileUrl ? loginUserProfileUrl : defaultProfile}
+        handleClickProfile={handleClickProfile}
+        handleErrorProfile={handleErrorProfile}
+      />
       <ProfileDropdown
         isShowProfileDropdown={isShowProfileDropdown}
+        loginUserNickname={loginUserNickname}
         handleClickLogoutButton={handleClickLogoutButton}
       />
     </S.Container>
@@ -51,7 +49,7 @@ const S = {
     align-items: center;
     height: 4.375rem;
     padding: 0 10rem;
-    border-bottom: 0.0625rem solid ${(props) => props.theme.default.BLACK};
+    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     @media (max-width: 1024px) {
       padding: 0 5rem;
     }

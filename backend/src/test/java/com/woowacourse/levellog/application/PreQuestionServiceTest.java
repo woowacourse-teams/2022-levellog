@@ -12,6 +12,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
@@ -32,7 +33,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void success() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
+            final PreQuestionWriteDto preQuestionWriteDto = PreQuestionWriteDto.from(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -40,7 +41,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(author, team);
 
             //when
-            final Long id = preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId());
+            final Long id = preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId());
 
             //then
             final PreQuestion actual = preQuestionRepository.findById(id).orElseThrow();
@@ -56,7 +57,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void save_fromNotParticipant_exception() {
             // given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
+            final PreQuestionWriteDto preQuestionWriteDto = PreQuestionWriteDto.from(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -66,7 +67,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             participantRepository.save(new Participant(team, author, true));
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))
                     .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContaining("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다.");
         }
@@ -76,7 +77,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void save_levellogIsMine_exception() {
             // given
             final String preQuestion = "알린이 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
+            final PreQuestionWriteDto preQuestionWriteDto = PreQuestionWriteDto.from(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -84,7 +85,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(author, team);
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.save(preQuestionDto, levellog.getId(), author.getId()))
+            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), author.getId()))
                     .isInstanceOf(InvalidPreQuestionException.class)
                     .hasMessageContaining("자기 자신에게 사전 질문을 등록할 수 없습니다.");
         }
@@ -94,7 +95,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void save_preQuestionAlreadyExist_exception() {
             // given
             final String preQuestion = "알린이 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
+            final PreQuestionWriteDto preQuestionWriteDto = PreQuestionWriteDto.from(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -104,7 +105,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             savePreQuestion(levellog, questioner);
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))
                     .isInstanceOf(PreQuestionAlreadyExistException.class)
                     .hasMessageContainingAll("사전 질문을 이미 작성하였습니다.",
                             String.valueOf(levellog.getId()),
@@ -133,7 +134,10 @@ public class PreQuestionServiceTest extends ServiceTest {
             final PreQuestionDto response = preQuestionService.findMy(levellog.getId(), questioner.getId());
 
             //then
-            assertThat(response.getPreQuestion()).isEqualTo(content);
+            assertAll(
+                    () -> assertThat(response.getContent()).isEqualTo(content),
+                    () -> assertThat(response.getAuthor().getId()).isEqualTo(questioner.getId())
+            );
         }
 
         @Test
@@ -185,11 +189,11 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Long id = savePreQuestion(levellog, questioner).getId();
 
             //when
-            preQuestionService.update(PreQuestionDto.from("수정된 사전 질문"), id, levellog.getId(), questioner.getId());
+            preQuestionService.update(PreQuestionWriteDto.from("수정된 사전 질문"), id, levellog.getId(), questioner.getId());
 
             //then
             final PreQuestionDto response = preQuestionService.findMy(levellog.getId(), questioner.getId());
-            assertThat(response.getPreQuestion()).isEqualTo("수정된 사전 질문");
+            assertThat(response.getContent()).isEqualTo("수정된 사전 질문");
         }
 
         @Test
@@ -197,7 +201,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void update_preQuestionNotFound_exception() {
             // given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
+            final PreQuestionWriteDto preQuestionWriteDto = PreQuestionWriteDto.from(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -206,7 +210,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(
-                    () -> preQuestionService.update(preQuestionDto, 1L, levellog.getId(), questioner.getId()))
+                    () -> preQuestionService.update(preQuestionWriteDto, 1L, levellog.getId(), questioner.getId()))
                     .isInstanceOf(PreQuestionNotFoundException.class)
                     .hasMessageContaining("사전 질문이 존재하지 않습니다.");
         }
@@ -215,7 +219,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("타인의 사전 질문을 수정하는 경우 예외를 던진다.")
         void update_fromNotMyPreQuestion_exception() {
             // given
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
+            final PreQuestionWriteDto preQuestionWriteDto = PreQuestionWriteDto.from("로마가 쓴 사전 질문");
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -228,7 +232,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(
-                    () -> preQuestionService.update(preQuestionDto, preQuestionId, levellog.getId(),
+                    () -> preQuestionService.update(preQuestionWriteDto, preQuestionId, levellog.getId(),
                             questioner.getId()))
                     .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContaining("자신의 사전 질문이 아닙니다.");
@@ -239,7 +243,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void update_levellogWrongId_exception() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
+            final PreQuestionWriteDto preQuestionWriteDto = PreQuestionWriteDto.from(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -250,11 +254,11 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Team team2 = saveTeam(author2);
             final Levellog levellog2 = saveLevellog(author2, team2);
 
-            final Long id = preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId());
+            final Long id = preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId());
 
             // when, then
             assertThatThrownBy(
-                    () -> preQuestionService.update(preQuestionDto, id, levellog2.getId(), questioner.getId()))
+                    () -> preQuestionService.update(preQuestionWriteDto, id, levellog2.getId(), questioner.getId()))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
         }

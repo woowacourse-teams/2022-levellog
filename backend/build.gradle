@@ -93,7 +93,9 @@ jacocoTestReport {
 	afterEvaluate {
 		classDirectories.setFrom(
 				files(classDirectories.files.collect {
-					fileTree(dir: it, excludes: ['**/support/**', '**/dto/**', '**/*Application*', '**/*BaseEntity*', '**/*Github*'])
+					fileTree(dir: it,
+							excludes: ['**/support/**', '**/dto/**', '**/*Application*', '**/*BaseEntity*',
+									   '**/*Github*', '**/aspect/**', '**/*Config*'])
 				})
 		)
 	}
@@ -117,14 +119,14 @@ jacocoTestCoverageVerification {
 				minimum = 0.80
 			}
 
-			excludes = ['*support*', '*dto*', '*Application*', '*BaseEntity*', '*Github*']
+			excludes = ['*support*', '*dto*', '*Application*', '*BaseEntity*', '*Github*', '*aspect*', '*Config*']
 		}
 	}
 }
 
 task testCoverage {
 	group 'verification'
-	description 'Runs the unit tests with coverage'
+	description 'Run tests with coverage'
 
 	dependsOn('test', 'jacocoTestReport', 'jacocoTestCoverageVerification')
 

@@ -61,11 +61,11 @@ class LevellogRepositoryTest extends RepositoryTest {
 
     @Nested
     @DisplayName("existsByAuthorIdAndTeamId 메서드는")
-    class ExistsByAuthorIdAndTeamIdTest {
+    class ExistsByAuthorIdAndTeamId {
 
         @Test
         @DisplayName("memberId와 teamId이 모두 일치하는 레벨로그가 존재하는 경우 true를 반환한다.")
-        void exists() {
+        void existsByAuthorIdAndTeamId_exists_success() {
             // given
             final Member author = saveMember("pepper");
             final Team team = saveTeam(author);
@@ -83,7 +83,7 @@ class LevellogRepositoryTest extends RepositoryTest {
 
         @Test
         @DisplayName("memberId와 teamId이 모두 일치하는 레벨로그가 존재하지 않는 경우 false를 반환한다.")
-        void notExists() {
+        void existsByAuthorIdAndTeamId_notExists_success() {
             // given
             final Member author = saveMember("pepper");
             final Team team = saveTeam(author);

@@ -223,7 +223,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("id에 해당하는 레벨로그가 존재하지 않으면 예외를 던진다.")
-        void findAllByLevellog_levellogNotExist_exceptionThrown() {
+        void findAllByLevellog_levellogNotExist_exception() {
             // given
             final Long invalidLevellogId = 999L;
 

@@ -27,11 +27,13 @@ class PreQuestionControllerTest extends ControllerTest {
     @DisplayName("save 메서드는")
     class Save {
 
+        private static final String BASE_SNIPPET_PATH = "pre-question/create/exception/";
+
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
-        void save_PreQuestionNullAndBlank_Exception(final String preQuestion) throws Exception {
+        void save_preQuestionNullAndBlank_exception(final String preQuestion) throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
@@ -44,12 +46,12 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value("preQuestion must not be blank"));
 
             // docs
-            perform.andDo(document("pre-question/create/exception/null-and-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "blank"));
         }
 
         @Test
         @DisplayName("참가자가 아닌 멤버가 사전 질문을 등록하는 경우 예외를 던진다.")
-        void save_FromNotParticipant_Exception() throws Exception {
+        void save_fromNotParticipant_exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
             final String message = "권한이 없습니다.";
@@ -66,12 +68,12 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/create/exception/not-participant"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-participant"));
         }
 
         @Test
         @DisplayName("내 레벨로그에 사전 질문을 등록하는 경우 예외를 던진다.")
-        void save_LevellogIsMine_Exception() throws Exception {
+        void save_levellogIsMine_exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -89,12 +91,12 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/create/exception/levellog-is-mine"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-is-mine"));
         }
 
         @Test
         @DisplayName("사전 질문이 이미 등록되었을 때 사전 질문을 등록하는 경우 예외를 던진다.")
-        void save_PreQuestionAlreadyExist_Exception() throws Exception {
+        void save_preQuestionAlreadyExist_exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -112,7 +114,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/create/exception/already-exist"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "already-exist"));
         }
 
         private ResultActions requestCreatePreQuestion(final Long levellogId,
@@ -125,11 +127,13 @@ class PreQuestionControllerTest extends ControllerTest {
     @DisplayName("update 메서드는")
     class Update {
 
+        private static final String BASE_SNIPPET_PATH = "pre-question/update/exception/";
+
         @ParameterizedTest
         @NullAndEmptySource
         @ValueSource(strings = {" "})
         @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
-        void update_PreQuestionNullAndBlank_Exception(final String preQuestion) throws Exception {
+        void update_preQuestionNullAndBlank_exception(final String preQuestion) throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
@@ -142,12 +146,12 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value("preQuestion must not be blank"));
 
             // docs
-            perform.andDo(document("pre-question/update/exception/null-and-blank"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "blank"));
         }
 
         @Test
         @DisplayName("잘못된 레벨로그의 사전 질문을 수정하면 예외를 던진다.")
-        void update_LevellogWrongId_Exception() throws Exception {
+        void update_levellogWrongId_exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -165,12 +169,12 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/update/exception/wrong-levellog"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "wrong-levellog"));
         }
 
         @Test
         @DisplayName("저장되어있지 않은 사전 질문을 수정하는 경우 예외를 던진다.")
-        void update_PreQuestionNotFound_Exception() throws Exception {
+        void update_preQuestionNotFound_exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -188,12 +192,12 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/update/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
         @DisplayName("타인의 사전 질문을 수정하는 경우 예외를 던진다.")
-        void update_FromNotMyPreQuestion_Exception() throws Exception {
+        void update_fromNotMyPreQuestion_exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
@@ -211,7 +215,7 @@ class PreQuestionControllerTest extends ControllerTest {
                     jsonPath("message").value(message));
 
             // docs
-            perform.andDo(document("pre-question/update/exception/not-my-pre-question"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-pre-question"));
         }
 
         private ResultActions requestUpdatePreQuestion(final Long levellogId,
@@ -227,7 +231,7 @@ class PreQuestionControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("레벨로그가 존재하지 않으면 예외를 던진다.")
-        void findMy_LevellogWrongId_Exception() throws Exception {
+        void findMy_levellogWrongId_exception() throws Exception {
             // given
             final String message = "레벨로그가 존재하지 않습니다.";
             willThrow(new LevellogNotFoundException(message))
@@ -249,7 +253,7 @@ class PreQuestionControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("사전 질문이 존재하지 않으면 예외를 던진다.")
-        void findMy_PreQuestionNotFound_Exception() throws Exception {
+        void findMy_preQuestionNotFound_exception() throws Exception {
             // given
             final String message = "사전 질문이 존재하지 않습니다.";
             willThrow(new PreQuestionNotFoundException(message))
@@ -275,12 +279,14 @@ class PreQuestionControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("delete 메서드는")
-    class Delete {
+    @DisplayName("deleteById 메서드는")
+    class DeleteById {
+
+        private final String BASE_SNIPPET_PATH = "pre-question/delete/exception/";
 
         @Test
         @DisplayName("잘못된 레벨로그의 사전 질문을 삭제하면 예외를 던진다.")
-        void deleteById_LevellogWrongId_Exception() throws Exception {
+        void deleteById_levellogWrongId_exception() throws Exception {
             // given
             final String message = "입력한 levellogId와 사전 질문의 levellogId가 다릅니다. 입력한 levellogId : 1";
             willThrow(new InvalidFieldException(message))
@@ -297,12 +303,12 @@ class PreQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("pre-question/delete/exception/wrong-levellog"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "wrong-levellog"));
         }
 
         @Test
         @DisplayName("저장되어있지 않은 사전 질문을 삭제하는 경우 예외를 던진다.")
-        void deleteById_PreQuestionNotFound_Exception() throws Exception {
+        void deleteById_preQuestionNotFound_exception() throws Exception {
             // given
             final String message = "사전 질문이 존재하지 않습니다.";
             willThrow(new PreQuestionNotFoundException(message))
@@ -319,12 +325,12 @@ class PreQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("pre-question/delete/exception/notfound"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-found"));
         }
 
         @Test
         @DisplayName("타인의 사전 질문을 삭제하는 경우 예외를 던진다.")
-        void deleteById_FromNotMyPreQuestion_Exception() throws Exception {
+        void deleteById_fromNotMyPreQuestion_exception() throws Exception {
             // given
             final String message = "권한이 없습니다.";
             willThrow(new UnauthorizedException(message))
@@ -341,7 +347,7 @@ class PreQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document("pre-question/delete/exception/not-my-pre-question"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-pre-question"));
         }
 
         private ResultActions requestDeletePreQuestion(final Long levellogId, final Long preQuestionId)

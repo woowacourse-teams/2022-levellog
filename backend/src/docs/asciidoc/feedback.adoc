@@ -95,7 +95,7 @@ operation::feedback/update[]
 
 ==== 다른 사용자가 작성한 피드백을 수정하려는 경우
 
-include::{snippets}/feedback/update/exception/author/http-response.adoc[]
+include::{snippets}/feedback/update/exception/not-author/http-response.adoc[]
 
 ==== 존재하지 않는 피드백 정보로 피드백을 수정하려는 경우
 

@@ -1,14 +1,9 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
 import useTeams from 'hooks/useTeams';
-import useUser from 'hooks/useUser';
 
-import { ROUTES_PATH } from 'constants/constants';
-
-import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FilterButton from 'components/@commons/FilterButton';
 import InterviewTeam from 'components/teams/InterviewTeam';

@@ -13,6 +13,7 @@ import {
   requestGetInterviewQuestion,
   requestPostInterviewQuestion,
 } from 'apis/interviewQuestion';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
 
 const useInterviewQuestion = () => {
@@ -30,9 +31,11 @@ const useInterviewQuestion = () => {
         setInterviewQuestions(res.data.interviewQuestions);
       }
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -45,9 +48,11 @@ const useInterviewQuestion = () => {
         await requestPostInterviewQuestion({ accessToken, levellogId, interviewQuestion });
       }
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -60,9 +65,11 @@ const useInterviewQuestion = () => {
         await requestDeleteInterviewQuestion({ accessToken, levellogId, interviewQuestionId });
       }
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -82,9 +89,11 @@ const useInterviewQuestion = () => {
         getInterviewQuestion();
       }
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };

@@ -361,7 +361,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, invalidInterviewQuestionId, authorId))
                     .isInstanceOf(InterviewQuestionNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 인터뷰 질문", String.valueOf(invalidInterviewQuestionId));
+                    .hasMessageContainingAll("인터뷰 질문이 존재하지 않습니다.", String.valueOf(invalidInterviewQuestionId));
         }
 
         @Test
@@ -458,7 +458,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(invalidInterviewQuestionId, authorId))
                     .isInstanceOf(InterviewQuestionNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 인터뷰 질문", String.valueOf(invalidInterviewQuestionId));
+                    .hasMessageContainingAll("인터뷰 질문이 존재하지 않습니다", String.valueOf(invalidInterviewQuestionId));
         }
 
         @Test

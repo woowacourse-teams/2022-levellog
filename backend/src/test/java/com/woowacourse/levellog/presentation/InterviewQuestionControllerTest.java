@@ -279,7 +279,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
 
             final String message = "인터뷰 질문이 존재하지 않습니다.";
-            willThrow(new InterviewQuestionNotFoundException(message))
+            willThrow(new InterviewQuestionNotFoundException(DebugMessage.init()
+                    .append("interviewQuestionId", invalidInterviewQuestionId)))
                     .given(interviewQuestionService)
                     .update(request, invalidInterviewQuestionId, 1L);
 
@@ -360,7 +361,9 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final Long invalidInterviewQuestionId = 1000L;
             final String message = "인터뷰 질문이 존재하지 않습니다.";
-            willThrow(new InterviewQuestionNotFoundException(message))
+
+            willThrow(new InterviewQuestionNotFoundException(DebugMessage.init()
+                    .append("interviewQuestionId", invalidInterviewQuestionId)))
                     .given(interviewQuestionService)
                     .deleteById(invalidInterviewQuestionId, 1L);
 

@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.admin.dto;
 
-import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class PasswordDto {
+public class AdminAccessTokenDto {
 
-    @NotBlank
-    private String value;
+    private String accessToken;
 }

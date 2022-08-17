@@ -40,8 +40,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문을 저장한다.")
         void success() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
@@ -62,8 +62,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 내용이 공백이나 null일 경우 예외를 던진다.")
         void save_contentBlank_exception(final String invalidContent) {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(invalidContent);
@@ -81,8 +81,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문 작성자가 존재하지 않는 경우 예외를 던진다.")
         void save_memberNotFound_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
 
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
@@ -99,8 +99,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("레벨로그가 존재하지 않는 경우 예외를 던진다.")
         void save_levellogNotFound_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             saveTeam(pepper, eve);
             final Long memberId = pepper.getId();
             final Long invalidLevellogId = 1000L;
@@ -116,9 +116,9 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("팀에 속하지 않은 멤버가 인터뷰 질문을 작성할 경우 예외를 던진다.")
         void save_otherTeamMember_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
-            final Long otherTeamMemberId = saveMember("알린").getId();
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Long otherTeamMemberId = saveMember("알린", "깃허브_알린").getId();
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
@@ -134,8 +134,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰가 종료된 후면 예외를 던진다.")
         void save_isClosed_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
@@ -153,8 +153,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰가 시작 전이면 예외를 던진다.")
         void save_isReady_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
@@ -169,8 +169,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("자신에게 인터뷰 질문을 작성하는 경우 예외를 던진다.")
         void save_selfInterviewQuestion_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
 
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
@@ -199,10 +199,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("레벨로그에 작성된 모든 인터뷰 질문을 조회한다.")
         void success() {
             // given
-            final Member harry = saveMember("해리");
-            final Member roma = saveMember("로마");
-            final Member pepper = saveMember("페퍼");
-            final Member rick = saveMember("릭");
+            final Member harry = saveMember("해리", "깃허브_해리");
+            final Member roma = saveMember("로마", "깃허브_로마");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member rick = saveMember("릭", "깃허브_릭");
 
             final Team team = saveTeam(harry, roma, pepper, rick);
 
@@ -263,8 +263,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("레벨로그에 대해 특정 멤버가 작성한 인터뷰 질문 목록을 조회한다.")
         void success() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
@@ -291,8 +291,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("레벨로그가 존재하지 않는 경우 예외를 던진다.")
         void findAllByLevellogAndAuthor_levellogNotFound_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             saveTeam(pepper, eve);
             final Long memberId = eve.getId();
             final Long invalidLevellogId = 1000L;
@@ -307,7 +307,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문 작성자가 존재하지 않는 경우 예외를 던진다.")
         void findAllByLevellogAndAuthor_memberNotFound_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
             final Team team = saveTeam(pepper);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
             final Long invalidMemberId = 1000L;
@@ -328,8 +328,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문을 수정한다.")
         void success() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
@@ -353,7 +353,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문이 존재하지 않는 경우 예외를 던진다.")
         void update_interviewQuestionNotFound_exception() {
             // given
-            final Member eve = saveMember("이브");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("업데이트된 질문 내용");
             final Long invalidInterviewQuestionId = 1000L;
             final Long authorId = eve.getId();
@@ -368,9 +368,9 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void update_unauthorized_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
-            final Long otherMemberId = saveMember("릭").getId();
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Long otherMemberId = saveMember("릭", "깃허브_릭").getId();
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
@@ -389,8 +389,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰가 종료된 후면 예외를 던진다.")
         void update_isClosed_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
@@ -409,8 +409,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰가 시작 전이면 예외를 던진다.")
         void update_isReady_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
@@ -431,8 +431,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문을 삭제한다.")
         void success() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
@@ -451,7 +451,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문이 존재하지 않는 경우 예외를 던진다.")
         void deleteById_interviewQuestionNotFound_exception() {
             // given
-            final Member eve = saveMember("이브");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Long invalidInterviewQuestionId = 1000L;
             final Long authorId = eve.getId();
 
@@ -465,9 +465,9 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void deleteById_unauthorized_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
-            final Long otherMemberId = saveMember("릭").getId();
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Long otherMemberId = saveMember("릭", "깃허브_릭").getId();
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
@@ -483,8 +483,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰가 종료된 후면 예외를 던진다.")
         void deleteById_isClosed_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
@@ -502,8 +502,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
         @DisplayName("인터뷰가 시작 전이면 예외를 던진다.")
         void deleteById_isReady_exception() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();

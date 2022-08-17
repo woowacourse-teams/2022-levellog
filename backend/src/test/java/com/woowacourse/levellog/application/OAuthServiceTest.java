@@ -43,7 +43,7 @@ class OAuthServiceTest extends ServiceTest {
         @DisplayName("첫 로그인이 아닌 경우 회원가입 하지 않고 토큰과 이미지 URL를 반환한다.")
         void login_ifNotFirst_success() throws Exception {
             // given
-            final Member member = saveMember("로마");
+            final Member member = saveMember("로마", "깃허브_로마");
 
             final GithubProfileDto request = new GithubProfileDto(member.getGithubId().toString(), member.getNickname(),
                     member.getProfileUrl());

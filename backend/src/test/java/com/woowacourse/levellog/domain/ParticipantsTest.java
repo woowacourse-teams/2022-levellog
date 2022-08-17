@@ -27,7 +27,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 class ParticipantsTest {
 
     Member getMember(final String nickname, final Long memberId) {
-        final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".com");
+        final Member member = new Member(nickname, "깃허브_" + nickname, ((int) System.nanoTime()), nickname + ".com");
 
         return MockEntityFactory.setId(memberId, member);
     }

@@ -46,9 +46,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("전체 팀 목록을 조회한다.")
         void findAll_allTeam_success() {
             //given
-            final Member rick = saveMember("릭");
-            final Member pepper = saveMember("페퍼");
-            final Member roma = saveMember("로마");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member roma = saveMember("로마", "깃허브_로마");
 
             final Team team1 = saveTeam(pepper, roma);
             final Team team2 = saveTeam(rick, pepper);
@@ -98,9 +98,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("삭제된 팀을 제외한 팀 목록을 조회한다.")
         void findAll_exceptDeletedTeam_success() {
             //given
-            final Member rick = saveMember("릭");
-            final Member pepper = saveMember("페퍼");
-            final Member roma = saveMember("로마");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member roma = saveMember("로마", "깃허브_로마");
 
             saveTeam(pepper, roma);
             final Team team = saveTeam(rick, pepper);
@@ -123,9 +123,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("팀을 생성한다.")
         void success() {
             //given
-            final Long alien = saveMember("알린").getId();
-            final Long pepper = saveMember("페퍼").getId();
-            final Long roma = saveMember("로마").getId();
+            final Long alien = saveMember("알린", "깃허브_알린").getId();
+            final Long pepper = saveMember("페퍼", "깃허브_페퍼").getId();
+            final Long roma = saveMember("로마", "깃허브_로마").getId();
 
             final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 2, TEAM_START_TIME,
                     new ParticipantIdsDto(List.of(pepper, roma)));
@@ -142,9 +142,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("참가자가 중복되면 예외가 발생한다.")
         void save_duplicate_exception() {
             //given
-            final Long alien = saveMember("알린").getId();
-            final Long pepper = saveMember("페퍼").getId();
-            final Long roma = saveMember("로마").getId();
+            final Long alien = saveMember("알린", "깃허브_알린").getId();
+            final Long pepper = saveMember("페퍼", "깃허브_페퍼").getId();
+            final Long roma = saveMember("로마", "깃허브_로마").getId();
 
             final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     new ParticipantIdsDto(List.of(alien, pepper, roma)));
@@ -159,7 +159,7 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
         void save_noParticipant_exception() {
             //given
-            final Long alienId = saveMember("알린").getId();
+            final Long alienId = saveMember("알린", "깃허브_알린").getId();
             final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     new ParticipantIdsDto(Collections.emptyList()));
 
@@ -178,9 +178,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - interviewer")
         void findMyRole_interviewer_success() {
             // given
-            final Member rick = saveMember("릭");
-            final Member harry = saveMember("해리");
-            final Member alien = saveMember("알린");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member harry = saveMember("해리", "깃허브_해리");
+            final Member alien = saveMember("알린", "깃허브_알린");
 
             final Team team = saveTeam(rick, harry, alien);
 
@@ -199,9 +199,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("팀의 참가자에 대한 나의 역할을 조회한다. - observer")
         void findMyRole_observer_success() {
             // given
-            final Member rick = saveMember("릭");
-            final Member harry = saveMember("해리");
-            final Member alien = saveMember("알린");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member harry = saveMember("해리", "깃허브_해리");
+            final Member alien = saveMember("알린", "깃허브_알린");
 
             final Team team = saveTeam(rick, harry, alien);
 
@@ -220,9 +220,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("팀의 참가자가 아닌 member가 요청하면 예외를 던진다.")
         void findMyRole_iAmNotParticipant_exception() {
             // given
-            final Member rick = saveMember("릭");
-            final Member harry = saveMember("해리");
-            final Member alien = saveMember("알린");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member harry = saveMember("해리", "깃허브_해리");
+            final Member alien = saveMember("알린", "깃허브_알린");
 
             final Team team = saveTeam(rick, harry);
 
@@ -239,9 +239,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("targetMember가 팀의 참가자가 아니면 예외를 던진다.")
         void findMyRole_targetNotParticipant_exception() {
             // given
-            final Member rick = saveMember("릭");
-            final Member harry = saveMember("해리");
-            final Member alien = saveMember("알린");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member harry = saveMember("해리", "깃허브_해리");
+            final Member alien = saveMember("알린", "깃허브_알린");
 
             final Team team = saveTeam(rick, harry);
 
@@ -263,8 +263,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 팀을 조회한다.")
         void success() {
             //given
-            final Member rick = saveMember("릭");
-            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
             final Team team = saveTeam(rick, pepper);
 
             //when
@@ -296,11 +296,11 @@ class TeamServiceTest extends ServiceTest {
             @DisplayName("인터뷰어와 인터뷰이, isParticipant를 true로 응답한다.")
             void findByTeamIdAndMemberId_intervieweeAndInterviewer_success() {
                 //given
-                final Member rick = saveMember("릭");
-                final Member pepper = saveMember("페퍼");
-                final Member roma = saveMember("로마");
-                final Member alien = saveMember("알린");
-                final Member eve = saveMember("이브");
+                final Member rick = saveMember("릭", "깃허브_릭");
+                final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+                final Member roma = saveMember("로마", "깃허브_로마");
+                final Member alien = saveMember("알린", "깃허브_알린");
+                final Member eve = saveMember("이브", "깃허브_이브");
 
                 final Team team = saveTeam(2, rick, pepper, roma, alien, eve);
 
@@ -332,9 +332,9 @@ class TeamServiceTest extends ServiceTest {
             @DisplayName("참가자가 3명이고, 인터뷰어 수는 2명이면 인터뷰어와 인터뷰이가 동일하다.")
             void findByTeamIdAndMemberId_manyInterviewerNumber_success() {
                 //given
-                final Member rick = saveMember("릭");
-                final Member pepper = saveMember("페퍼");
-                final Member roma = saveMember("로마");
+                final Member rick = saveMember("릭", "깃허브_릭");
+                final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+                final Member roma = saveMember("로마", "깃허브_로마");
 
                 final Team team = saveTeam(2, rick, pepper, roma);
 
@@ -362,10 +362,10 @@ class TeamServiceTest extends ServiceTest {
             @DisplayName("인터뷰어와 인터뷰이가 빈 상태이고 isParticipant를 false로 응답한다.")
             void success() {
                 //given
-                final Member rick = saveMember("릭");
-                final Member pepper = saveMember("페퍼");
-                final Member roma = saveMember("로마");
-                final Member alien = saveMember("알린");
+                final Member rick = saveMember("릭", "깃허브_릭");
+                final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+                final Member roma = saveMember("로마", "깃허브_로마");
+                final Member alien = saveMember("알린", "깃허브_알린");
 
                 final Team team = saveTeam(rick, pepper, roma);
 
@@ -393,8 +393,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("인터뷰 시작 전인 팀의 상태를 조회하면 READY를 반환한다.")
         void findStatus_ready_success() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member rick = saveMember("릭", "깃허브_릭");
 
             final Team team = saveTeam(pepper, rick);
 
@@ -409,8 +409,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("인터뷰 진행 중인 팀의 상태를 조회하면 IN_PROGRESS를 반환한다.")
         void findStatus_inProgress_success() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member rick = saveMember("릭", "깃허브_릭");
 
             final Team team = saveTeam(pepper, rick);
 
@@ -427,8 +427,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("인터뷰 종료 후인 팀의 상태를 조회하면 CLOSED를 반환한다.")
         void findStatus_closed_success() {
             // given
-            final Member pepper = saveMember("페퍼");
-            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member rick = saveMember("릭", "깃허브_릭");
 
             final Team team = saveTeam(pepper, rick);
 
@@ -458,11 +458,11 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 팀 정보를 변경한다.")
         void success() {
             // given
-            final Member rick = saveMember("릭");
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
-            final Member alien = saveMember("알린");
-            final Member roma = saveMember("로마");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member alien = saveMember("알린", "깃허브_알린");
+            final Member roma = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(rick, pepper, eve);
 
             final List<Long> participantsIds = List.of(eve.getId(), alien.getId(), roma.getId());
@@ -494,8 +494,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트가 아닌 멤버가 팀을 수정하는 경우 예외를 던진다.")
         void update_hostUnauthorized_exception() {
             // given
-            final Member rick = saveMember("릭");
-            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
 
             final Team team = saveTeam(rick, pepper);
 
@@ -514,7 +514,7 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
         void update_teamNotFound_exception() {
             //given
-            final Long memberId = saveMember("릭").getId();
+            final Long memberId = saveMember("릭", "깃허브_릭").getId();
             final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
                     new ParticipantIdsDto(Collections.emptyList()));
 
@@ -528,7 +528,7 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("인터뷰 시작 이후에 팀을 수정하려고 하면 예외를 던진다.")
         void update_afterStartAt_exception() {
             //given
-            final Member member = saveMember("릭");
+            final Member member = saveMember("릭", "깃허브_릭");
             final Team team = saveTeam(member);
             final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
                     new ParticipantIdsDto(List.of(member.getId())));
@@ -547,9 +547,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("참가자가 중복되면 예외가 발생한다.")
         void update_duplicate_exception() {
             //given
-            final Member alien = saveMember("알린");
-            final Member pepper = saveMember("페퍼");
-            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린", "깃허브_알린");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member roma = saveMember("로마", "깃허브_로마");
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
@@ -566,9 +566,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
         void update_noParticipant_exception() {
             //given
-            final Member alien = saveMember("알린");
-            final Member pepper = saveMember("페퍼");
-            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린", "깃허브_알린");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+            final Member roma = saveMember("로마", "깃허브_로마");
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
@@ -590,7 +590,7 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("입력 받은 팀의 인터뷰를 종료한다.")
         void success() {
             // given
-            final Member rick = saveMember("릭");
+            final Member rick = saveMember("릭", "깃허브_릭");
             final Team team = saveTeam(rick);
 
             timeStandard.setInProgress();
@@ -607,8 +607,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트가 아닌 사용자가 인터뷰를 종료하면 예외가 발생한다.")
         void close_notHost_exception() {
             // given
-            final Member rick = saveMember("릭");
-            final Member alien = saveMember("알린");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member alien = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(rick, alien);
 
             // when & then
@@ -626,8 +626,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 팀을 deleted 상태로 만든다.")
         void success() {
             // given
-            final Member rick = saveMember("릭");
-            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
             final Team team = saveTeam(rick, pepper);
 
             // when
@@ -646,8 +646,8 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("호스트가 아닌 멤버가 팀을 삭제하는 경우 예외를 던진다.")
         void delete_hostUnauthorized_exception() {
             // given
-            final Member rick = saveMember("릭");
-            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭", "깃허브_릭");
+            final Member pepper = saveMember("페퍼", "깃허브_페퍼");
             final Team team = saveTeam(rick, pepper);
 
             // when, then
@@ -662,7 +662,7 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
         void delete_teamNotFound_exception() {
             //given
-            final Member member = saveMember("릭");
+            final Member member = saveMember("릭", "깃허브_릭");
 
             //when & then
             assertThatThrownBy(() -> teamService.deleteById(1000L, member.getId()))
@@ -674,7 +674,7 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("이미 삭제된 팀을 삭제하는 경우 팀이 존재하지 않는다는 예외를 던진다.")
         void delete_alreadyDeleted_exception() {
             //given
-            final Member member = saveMember("릭");
+            final Member member = saveMember("릭", "깃허브_릭");
             final Team team = saveTeam(member);
             final Long teamId = team.getId();
             final Long memberId = member.getId();
@@ -697,9 +697,9 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("주어진 memberId의 멤버가 참가한 모든 팀을 조회한다.")
         void success() {
             // given
-            final Member roma = saveMember("로마");
-            final Member harry = saveMember("해리");
-            final Member alien = saveMember("알린");
+            final Member roma = saveMember("로마", "깃허브_로마");
+            final Member harry = saveMember("해리", "깃허브_해리");
+            final Member alien = saveMember("알린", "깃허브_알린");
 
             saveTeam(roma, harry);
             saveTeam(roma, harry, alien);

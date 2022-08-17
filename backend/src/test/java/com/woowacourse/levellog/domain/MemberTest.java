@@ -26,7 +26,7 @@ class MemberTest {
             final String invalidNickname = "a".repeat(51);
 
             // when & then
-            assertThatThrownBy(() -> new Member(invalidNickname, 123456, "validProfileUrl"))
+            assertThatThrownBy(() -> new Member(invalidNickname, invalidNickname, 123456, "validProfileUrl"))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContainingAll("닉네임은 50자 이하여야합니다.", String.valueOf(invalidNickname.length()));
         }
@@ -37,16 +37,27 @@ class MemberTest {
         @DisplayName("닉네임이 공백이나 null일 경우 예외를 던진다.")
         void constructor_nicknameBlank_exception(final String invalidNickname) {
             // when & then
-            assertThatThrownBy(() -> new Member(invalidNickname, 123456, "validProfileUrl"))
+            assertThatThrownBy(() -> new Member(invalidNickname, "깃허브닉네임", 123456, "validProfileUrl"))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessage("닉네임은 공백이나 null일 수 없습니다.");
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {" "})
+        @NullAndEmptySource
+        @DisplayName("깃허브 닉네임이 공백이나 null일 경우 예외를 던진다.")
+        void constructor_githubNicknameBlank_exception(final String invalidNickname) {
+            // when & then
+            assertThatThrownBy(() -> new Member("닉네임", invalidNickname, 123456, "validProfileUrl"))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessage("깃허브 닉네임은 공백이나 null일 수 없습니다.");
         }
 
         @Test
         @DisplayName("githubId가 null일 경우 예외를 던진다.")
         void constructor_githubIdNull_exception() {
             // when & then
-            assertThatThrownBy(() -> new Member("test", null, "validProfileUrl"))
+            assertThatThrownBy(() -> new Member("알린", "깃허브_알린", null, "validProfileUrl"))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessage("깃허브 ID는 null일 수 없습니다.");
         }
@@ -58,7 +69,7 @@ class MemberTest {
             final String invalidProfileUrl = "a".repeat(2049);
 
             // when & then
-            assertThatThrownBy(() -> new Member("test", 123456, invalidProfileUrl))
+            assertThatThrownBy(() -> new Member("알린", "깃허브_알린", 123456, invalidProfileUrl))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContainingAll("프로필 url은 2048자 이하여야합니다.", String.valueOf(invalidProfileUrl.length()));
         }
@@ -69,7 +80,7 @@ class MemberTest {
         @DisplayName("프로필 url이 공백이나 null일 경우 예외를 던진다.")
         void constructor_profileUrlBlank_exception(final String invalidProfileUrl) {
             // when & then
-            assertThatThrownBy(() -> new Member("test", 123456, invalidProfileUrl))
+            assertThatThrownBy(() -> new Member("알린", "깃허브_알린", 123456, invalidProfileUrl))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessage("프로필 url은 공백이나 null일 수 없습니다.");
         }
@@ -83,7 +94,7 @@ class MemberTest {
         @DisplayName("닉네임을 변경한다.")
         void success() {
             // given
-            final Member member = new Member("로마", 123456, "image.png");
+            final Member member = new Member("로마", "깃허브_로마", 123456, "image.png");
 
             // when
             member.updateNickname("알린");
@@ -96,7 +107,7 @@ class MemberTest {
         @DisplayName("닉네임이 50자를 초과할 경우 예외를 던진다.")
         void updateNickname_nicknameInvalidLength_exception() {
             // given
-            final Member member = new Member("로마", 123456, "image.png");
+            final Member member = new Member("로마", "깃허브_로마", 123456, "image.png");
             final String invalidNickname = "a".repeat(51);
 
             // when & then
@@ -111,7 +122,7 @@ class MemberTest {
         @DisplayName("닉네임이 공백이나 null일 경우 예외를 던진다.")
         void updateNickname_nicknameBlank_exception(final String invalidNickname) {
             // given
-            final Member member = new Member("로마", 123456, "image.png");
+            final Member member = new Member("로마", "깃허브_로마", 123456, "image.png");
 
             // when & then
             assertThatThrownBy(() -> member.updateNickname(invalidNickname))

@@ -19,8 +19,8 @@ class ParticipantRepositoryTest extends RepositoryTest {
     @DisplayName("findByTeam은 team이 일치하는 모든 participant를 반환한다.")
     void findByTeam() {
         // given
-        final Member alien = saveMember("알린");
-        final Member roma = saveMember("로마");
+        final Member alien = saveMember("알린", "깃허브_알린");
+        final Member roma = saveMember("로마", "깃허브_로마");
 
         final Team team = saveTeam(alien, roma);
 
@@ -39,8 +39,8 @@ class ParticipantRepositoryTest extends RepositoryTest {
     @DisplayName("deleteByTeam는 team이 일치하는 모든 participant를 제거한다.")
     void deleteByTeam() {
         // given
-        final Member alien = saveMember("알린");
-        final Member roma = saveMember("로마");
+        final Member alien = saveMember("알린", "깃허브_알린");
+        final Member roma = saveMember("로마", "깃허브_로마");
 
         final Team team = saveTeam(alien, roma);
 
@@ -55,8 +55,8 @@ class ParticipantRepositoryTest extends RepositoryTest {
     @DisplayName("existsByMemberAndTeam는 멤버와 팀이 일치 여부를 반환한다.")
     void existsByMemberAndTeam() {
         // given
-        final Member alien = saveMember("알린");
-        final Member roma = saveMember("로마");
+        final Member alien = saveMember("알린", "깃허브_알린");
+        final Member roma = saveMember("로마", "깃허브_로마");
 
         final Team team = saveTeam(alien);
 
@@ -75,8 +75,8 @@ class ParticipantRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByMember 메서드는 해당 멤버가 포함된 모든 participant 반환한다.")
     void findAllByMember() {
         // given
-        final Member alien = saveMember("알린");
-        final Member roma = saveMember("로마");
+        final Member alien = saveMember("알린", "깃허브_알린");
+        final Member roma = saveMember("로마", "깃허브_로마");
 
         final Team team1 = saveTeam(alien, roma);
         final Team team2 = saveTeam(roma);

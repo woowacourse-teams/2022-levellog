@@ -37,7 +37,7 @@ class LevellogServiceTest extends ServiceTest {
         void success() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
 
@@ -54,7 +54,7 @@ class LevellogServiceTest extends ServiceTest {
         void save_teamNotFound_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("스프링에 대해 학습하였습니다.");
-            final Long authorId = saveMember("알린")
+            final Long authorId = saveMember("알린", "깃허브_알린")
                     .getId();
             final Long teamId = 1000L;
 
@@ -69,7 +69,7 @@ class LevellogServiceTest extends ServiceTest {
         void save_memberNotFound_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("스프링에 대해 학습하였습니다.");
-            final Member member = saveMember("알린");
+            final Member member = saveMember("알린", "깃허브_알린");
             final Long teamId = saveTeam(member).getId();
             final Long authorId = 1000L;
 
@@ -84,7 +84,7 @@ class LevellogServiceTest extends ServiceTest {
         void save_alreadyExist_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("굳굳");
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
 
@@ -103,7 +103,7 @@ class LevellogServiceTest extends ServiceTest {
         void save_contentBlank_exception(final String invalidContent) {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from(invalidContent);
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
 
@@ -118,7 +118,7 @@ class LevellogServiceTest extends ServiceTest {
         void save_afterStart_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
 
@@ -139,7 +139,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 레벨로그를 조회한다.")
         void success() {
             // given
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(author);
             final String content = "content";
             final Levellog levellog = saveLevellog(author, team, content);
@@ -172,7 +172,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 레벨로그를 변경한다.")
         void success() {
             // given
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(author);
 
             final Levellog levellog = saveLevellog(author, team);
@@ -191,7 +191,7 @@ class LevellogServiceTest extends ServiceTest {
         void update_notFound_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
-            final Long authorId = saveMember("알린").getId();
+            final Long authorId = saveMember("알린", "깃허브_알린").getId();
             final Long levellogId = 1000L;
 
             // when & then
@@ -204,7 +204,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("memberId에 해당하는 멤버가 존재하지 않는 경우 예외를 던진다.")
         void update_memberNotFound_exception() {
             // given
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(author);
             final Long levellogId = saveLevellog(author, team).getId();
 
@@ -221,12 +221,12 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("작성자의 id와 로그인한 id가 다를 경우 권한 없음 예외를 던진다.")
         void update_unauthorized_exception() {
             // given
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(author);
             final Long levellogId = saveLevellog(author, team).getId();
 
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
-            final Long otherMemberId = saveMember("페퍼").getId();
+            final Long otherMemberId = saveMember("페퍼", "깃허브_페퍼").getId();
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, otherMemberId))
@@ -240,7 +240,7 @@ class LevellogServiceTest extends ServiceTest {
         void update_contentBlank_exception(final String invalidContent) {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from(invalidContent);
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(author);
             final Long levellogId = saveLevellog(author, team).getId();
             final Long authorId = author.getId();
@@ -256,7 +256,7 @@ class LevellogServiceTest extends ServiceTest {
         void update_afterStart_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
-            final Member author = saveMember("알린");
+            final Member author = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(author);
             final Long levellogId = saveLevellog(author, team).getId();
 
@@ -277,7 +277,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("주어진 authorId에 해당하는 레벨로그를 모두 조회한다.")
         void success() {
             // given
-            final Member author = saveMember("페퍼");
+            final Member author = saveMember("페퍼", "깃허브_페퍼");
 
             final Team team = saveTeam(author);
             final Team team2 = saveTeam(author);

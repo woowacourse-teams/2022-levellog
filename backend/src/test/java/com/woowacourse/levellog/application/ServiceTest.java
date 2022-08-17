@@ -108,8 +108,8 @@ abstract class ServiceTest {
         timeStandard.setBeforeStarted();
     }
 
-    protected Member saveMember(final String nickname) {
-        final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".org");
+    protected Member saveMember(final String nickname, final String githubNickname) {
+        final Member member = new Member(nickname, githubNickname, ((int) System.nanoTime()), nickname + ".org");
         return memberRepository.save(member);
     }
 

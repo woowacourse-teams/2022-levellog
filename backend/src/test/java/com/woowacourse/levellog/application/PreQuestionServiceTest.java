@@ -34,8 +34,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -58,8 +58,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -78,8 +78,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "알린이 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -96,8 +96,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "알린이 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -122,8 +122,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             //given
             final String content = "로마가 쓴 사전 질문";
 
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -140,8 +140,8 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("레벨로그가 존재하지 않으면 예외를 던진다.")
         void findMy_levellogWrongId_exception() {
             //given
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -157,8 +157,8 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("사전 질문이 존재하지 않으면 예외를 던진다.")
         void findMy_preQuestionNotFound_exception() {
             // given
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -177,8 +177,8 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("사전 질문을 수정한다.")
         void success() {
             //given
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -199,8 +199,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -217,9 +217,9 @@ public class PreQuestionServiceTest extends ServiceTest {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("로마가 쓴 사전 질문");
 
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
-            final Member eve = saveMember("이브");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(author, questioner, eve);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -241,12 +241,12 @@ public class PreQuestionServiceTest extends ServiceTest {
             final String preQuestion = "로마가 쓴 사전 질문";
             final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
 
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
-            final Member author2 = saveMember("페퍼");
+            final Member author2 = saveMember("페퍼", "깃허브_페퍼");
             final Team team2 = saveTeam(author2);
             final Levellog levellog2 = saveLevellog(author2, team2);
 
@@ -268,8 +268,8 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("사전 질문을 삭제한다.")
         void success() {
             //given
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -286,9 +286,9 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("타인의 사전 질문을 삭제하는 경우 예외를 던진다.")
         void deleteById_fromNotMyPreQuestion_exception() {
             // given
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
-            final Member eve = saveMember("이브");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(author, questioner, eve);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -305,8 +305,8 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("저장되어있지 않은 사전 질문을 삭제하는 경우 예외를 던진다.")
         void deleteById_preQuestionNotFound_exception() {
             // given
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
@@ -320,12 +320,12 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("잘못된 레벨로그의 사전 질문을 삭제하면 예외를 던진다.")
         void deleteById_levellogWrongId_exception() {
             //given
-            final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member author = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(author, questioner);
             final Levellog levellog = saveLevellog(author, team);
 
-            final Member author2 = saveMember("페퍼");
+            final Member author2 = saveMember("페퍼", "깃허브_페퍼");
             final Team team2 = saveTeam(author2);
             final Levellog levellog2 = saveLevellog(author2, team2);
 

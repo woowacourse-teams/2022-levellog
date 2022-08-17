@@ -28,7 +28,7 @@ class LevellogTest {
         @DisplayName("레벨로그를 생성한다.")
         void success() {
             // given
-            final Member author = new Member("페퍼", 1111, "pepper.png");
+            final Member author = new Member("페퍼", "깃허브_페퍼", 1111, "pepper.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
             final String content = "Spring을 학습하였습니다";
 
@@ -42,7 +42,7 @@ class LevellogTest {
         @DisplayName("레벨로그 내용이 공백이나 null일 경우 예외를 던진다.")
         void newLevellog_contentBlank_exception(final String invalidContent) {
             // given
-            final Member author = new Member("페퍼", 1111, "pepper.png");
+            final Member author = new Member("페퍼", "깃허브_페퍼", 1111, "pepper.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
 
             //  when & then
@@ -60,7 +60,7 @@ class LevellogTest {
         @DisplayName("레벨로그 내용을 업데이트한다.")
         void success() {
             // given
-            final Member author = new Member("페퍼", 1111, "pepper.png");
+            final Member author = new Member("페퍼", "깃허브_페퍼", 1111, "pepper.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
             final String updatedContent = "updated content";
@@ -76,8 +76,8 @@ class LevellogTest {
         @DisplayName("작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void updateContent_unauthorized_exception() {
             // given
-            final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Member member = new Member("알린", 2222, "alien.png");
+            final Member author = new Member("페퍼", "깃허브_페퍼", 1111, "pepper.png");
+            final Member member = new Member("알린", "깃허브_알린", 2222, "alien.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
 
@@ -95,7 +95,7 @@ class LevellogTest {
         @DisplayName("레벨로그 내용이 공백이나 null일 경우 예외를 던진다.")
         void updateContent_contentBlank_exception(final String invalidContent) {
             // given
-            final Member author = new Member("페퍼", 1111, "pepper.png");
+            final Member author = new Member("페퍼", "깃허브_페퍼", 1111, "pepper.png");
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
 

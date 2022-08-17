@@ -30,11 +30,11 @@ public class PreQuestionTest {
         @DisplayName("사전 질문이 null 또는 공백이 들어오면 예외를 던진다.")
         void constructor_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
-            final Member author = new Member("알린", 12345678, "알린.img");
+            final Member author = new Member("알린", "깃허브_알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
-            final Member from = new Member("로마", 56781234, "로마.img");
+            final Member from = new Member("로마", "깃허브_로마", 56781234, "로마.img");
 
             // when & then
             assertThatThrownBy(() -> new PreQuestion(levellog, from, preQuestion))
@@ -46,7 +46,7 @@ public class PreQuestionTest {
         @DisplayName("내가 쓴 레벨로그의 사전 질문을 작성하면 예외를 던진다.")
         void constructor_preQuestionMyLevellog_exception() {
             // given
-            final Member author = new Member("알린", 12345678, "알린.img");
+            final Member author = new Member("알린", "깃허브_알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
@@ -67,11 +67,11 @@ public class PreQuestionTest {
         @DisplayName("사전 질문을 수정한다.")
         void success() {
             // given
-            final Member author = new Member("알린", 12345678, "알린.img");
+            final Member author = new Member("알린", "깃허브_알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
-            final Member from = new Member("로마", 56781234, "로마.img");
+            final Member from = new Member("로마", "깃허브_로마", 56781234, "로마.img");
 
             final PreQuestion preQuestion = new PreQuestion(levellog, from, "로마가 쓴 사전 질문");
 
@@ -88,11 +88,11 @@ public class PreQuestionTest {
         @DisplayName("사전 질문이 null 또는 공백이 들어오면 예외를 던진다.")
         void update_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
-            final Member author = new Member("알린", 12345678, "알린.img");
+            final Member author = new Member("알린", "깃허브_알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
-            final Member from = new Member("로마", 56781234, "로마.img");
+            final Member from = new Member("로마", "깃허브_로마", 56781234, "로마.img");
 
             // when & then
             assertThatThrownBy(() -> new PreQuestion(levellog, from, preQuestion))

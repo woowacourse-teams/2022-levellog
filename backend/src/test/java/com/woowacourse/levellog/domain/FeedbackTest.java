@@ -28,8 +28,8 @@ class FeedbackTest {
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     feedback, "Speak 피드백", "Etc 피드백");
 
-            final Member roma = new Member("로마", 123456, "image.png");
-            final Member eve = new Member("이브", 123123, "image.png");
+            final Member roma = new Member("로마", "깃허브_로마", 123456, "image.png");
+            final Member eve = new Member("이브", "깃허브_이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
@@ -47,8 +47,8 @@ class FeedbackTest {
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Study 피드백", feedback, "Etc 피드백");
 
-            final Member roma = new Member("로마", 123456, "image.png");
-            final Member eve = new Member("이브", 123123, "image.png");
+            final Member roma = new Member("로마", "깃허브_로마", 123456, "image.png");
+            final Member eve = new Member("이브", "깃허브_이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
@@ -66,8 +66,8 @@ class FeedbackTest {
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Study 피드백", "Speak 피드백", feedback);
 
-            final Member roma = new Member("로마", 123456, "image.png");
-            final Member eve = new Member("이브", 123123, "image.png");
+            final Member roma = new Member("로마", "깃허브_로마", 123456, "image.png");
+            final Member eve = new Member("이브", "깃허브_이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
@@ -88,8 +88,8 @@ class FeedbackTest {
             // given
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
-            final Member roma = new Member("로마", 123456, "image.png");
-            final Member eve = new Member("이브", 123123, "image.png");
+            final Member roma = new Member("로마", "깃허브_로마", 123456, "image.png");
+            final Member eve = new Member("이브", "깃허브_이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
@@ -109,8 +109,8 @@ class FeedbackTest {
             // given
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
-            final Member roma = new Member("로마", 123456, "image.png");
-            final Member eve = new Member("이브", 123123, "image.png");
+            final Member roma = new Member("로마", "깃허브_로마", 123456, "image.png");
+            final Member eve = new Member("이브", "깃허브_이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 
@@ -130,8 +130,8 @@ class FeedbackTest {
             // given
             final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
-            final Member roma = new Member("로마", 123456, "image.png");
-            final Member eve = new Member("이브", 123123, "image.png");
+            final Member roma = new Member("로마", "깃허브_로마", 123456, "image.png");
+            final Member eve = new Member("이브", "깃허브_이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
             final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
 

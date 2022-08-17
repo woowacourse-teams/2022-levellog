@@ -20,8 +20,8 @@ class PreQuestionRepositoryTest extends RepositoryTest {
     @DisplayName("findByIdAndAuthor 메서드는 preQuestionId와 From 멤버가 같은 사전 질문을 반환한다.")
     void findByIdAndAuthor() {
         // given
-        final Member author = saveMember("알린");
-        final Member questioner = saveMember("로마");
+        final Member author = saveMember("알린", "깃허브_알린");
+        final Member questioner = saveMember("로마", "깃허브_로마");
         final Team team = saveTeam(author, questioner);
         final Levellog levellog = saveLevellog(author, team);
 
@@ -38,8 +38,8 @@ class PreQuestionRepositoryTest extends RepositoryTest {
     @DisplayName("findByLevellogAndAuthor 메서드는 Levellog와 Author가 같은 사전 질문을 반환한다.")
     void findByLevellogAndAuthor() {
         // given
-        final Member levellogAuthor = saveMember("알린");
-        final Member questioner = saveMember("로마");
+        final Member levellogAuthor = saveMember("알린", "깃허브_알린");
+        final Member questioner = saveMember("로마", "깃허브_로마");
         final Team team = saveTeam(levellogAuthor, questioner);
         final Levellog levellog = saveLevellog(levellogAuthor, team);
 
@@ -56,15 +56,16 @@ class PreQuestionRepositoryTest extends RepositoryTest {
     @DisplayName("findByLevellogAndAuthorId 메서드는 Levellog와 AuthorId가 같은 사전 질문을 반환한다.")
     void findByLevellogAndAuthorId() {
         // given
-        final Member levellogAuthor = saveMember("알린");
-        final Member questioner = saveMember("로마");
+        final Member levellogAuthor = saveMember("알린", "깃허브_알린");
+        final Member questioner = saveMember("로마", "깃허브_로마");
         final Team team = saveTeam(levellogAuthor, questioner);
         final Levellog levellog = saveLevellog(levellogAuthor, team);
 
         final PreQuestion preQuestion = savePreQuestion(levellog, questioner);
 
         // when
-        final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthorId(levellog, questioner.getId());
+        final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthorId(levellog,
+                questioner.getId());
 
         // then
         assertThat(actual).hasValue(preQuestion);
@@ -78,8 +79,8 @@ class PreQuestionRepositoryTest extends RepositoryTest {
         @DisplayName("levellog와 사전 질문의 author가 모두 일치하는 사전 질문이 존재하는 경우 true를 반환한다.")
         void existsByLevellogAndAuthor_exists_success() {
             // given
-            final Member levellogAuthor = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member levellogAuthor = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(levellogAuthor, questioner);
             final Levellog levellog = saveLevellog(levellogAuthor, team);
 
@@ -96,8 +97,8 @@ class PreQuestionRepositoryTest extends RepositoryTest {
         @DisplayName("levellog와 사전 질문의 author가 모두 일치하는 사전 질문이 존재하지 않는 경우 false를 반환한다.")
         void existsByLevellogAndAuthor_notExists_success() {
             // given
-            final Member levellogAuthor = saveMember("알린");
-            final Member questioner = saveMember("로마");
+            final Member levellogAuthor = saveMember("알린", "깃허브_알린");
+            final Member questioner = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(levellogAuthor, questioner);
             final Levellog levellog = saveLevellog(levellogAuthor, team);
 

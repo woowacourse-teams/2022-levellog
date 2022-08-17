@@ -17,8 +17,8 @@ class InterviewQuestionRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByLevellogAndAuthor 메서드는 levellog와 author 멤버가 모두 일치하는 인터뷰 질문 목록를 반환한다.")
     void findAllByLevellogAndAuthor() {
         // given
-        final Member eve = saveMember("eve");
-        final Member toMember = saveMember("toMember");
+        final Member eve = saveMember("이브", "깃허브_이브");
+        final Member toMember = saveMember("알린", "깃허브_알린");
 
         final Team team = saveTeam(eve, toMember);
         final Levellog levellog = saveLevellog(toMember, team);
@@ -39,9 +39,9 @@ class InterviewQuestionRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByLevellog 메서드는 levellog가 일치하는 인터뷰 질문 목록을 반환한다.")
     void findAllByLevellog() {
         // given
-        final Member pepper = saveMember("페퍼");
-        final Member rick = saveMember("릭");
-        final Member roma = saveMember("로마");
+        final Member pepper = saveMember("페퍼", "깃허브_페퍼");
+        final Member rick = saveMember("릭", "깃허브_릭");
+        final Member roma = saveMember("로마", "깃허브_로마");
 
         final Team team = saveTeam(pepper, rick, roma);
         final Levellog levellog = saveLevellog(pepper, team);

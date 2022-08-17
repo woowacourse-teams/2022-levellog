@@ -21,7 +21,7 @@ class LevellogRepositoryTest extends RepositoryTest {
     @DisplayName("findByAuthorIdAndTeamId 메서드는 memberId와 teamId이 모두 일치하는 레벨로그를 반환한다.")
     void findByAuthorIdAndTeamId() {
         // given
-        final Member author = saveMember("pepper");
+        final Member author = saveMember("페퍼", "깃허브_페퍼");
         final Team team = saveTeam(author);
         final Levellog levellog = saveLevellog(author, team);
 
@@ -39,8 +39,8 @@ class LevellogRepositoryTest extends RepositoryTest {
     @DisplayName("findAllByAuthor 메서드는 주어진 author가 작성한 레벨로그를 모두 반환한다.")
     void findAllByAuthor() {
         // given
-        final Member author = saveMember("pepper");
-        final Member anotherAuthor = saveMember("roma");
+        final Member author = saveMember("페퍼", "깃허브_페퍼");
+        final Member anotherAuthor = saveMember("로마", "깃허브_로마");
 
         final Team team = saveTeam(author);
         final Team team2 = saveTeam(anotherAuthor, author);
@@ -67,7 +67,7 @@ class LevellogRepositoryTest extends RepositoryTest {
         @DisplayName("memberId와 teamId이 모두 일치하는 레벨로그가 존재하는 경우 true를 반환한다.")
         void existsByAuthorIdAndTeamId_exists_success() {
             // given
-            final Member author = saveMember("pepper");
+            final Member author = saveMember("페퍼", "깃허브_페퍼");
             final Team team = saveTeam(author);
             saveLevellog(author, team);
 
@@ -85,7 +85,7 @@ class LevellogRepositoryTest extends RepositoryTest {
         @DisplayName("memberId와 teamId이 모두 일치하는 레벨로그가 존재하지 않는 경우 false를 반환한다.")
         void existsByAuthorIdAndTeamId_notExists_success() {
             // given
-            final Member author = saveMember("pepper");
+            final Member author = saveMember("페퍼", "깃허브_페퍼");
             final Team team = saveTeam(author);
             saveLevellog(author, team);
 

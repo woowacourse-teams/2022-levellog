@@ -32,9 +32,9 @@ class FeedbackServiceTest extends ServiceTest {
     @DisplayName("findAllByTo 메서드는 요청된 member가 to인 모든 피드백을 조회한다.")
     void findAllByTo() {
         // given
-        final Member eve = saveMember("이브");
-        final Member roma = saveMember("로마");
-        final Member alien = saveMember("알린");
+        final Member eve = saveMember("이브", "깃허브_이브");
+        final Member roma = saveMember("로마", "깃허브_로마");
+        final Member alien = saveMember("알린", "깃허브_알린");
         final Team team = saveTeam(eve, roma, alien);
         final Levellog levellog = saveLevellog(eve, team);
 
@@ -65,9 +65,9 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("모든 피드백을 조회한다.")
         void success() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
-            final Member alien = saveMember("알린");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
+            final Member alien = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(eve, roma, alien);
 
             final Levellog levellog = saveLevellog(eve, team);
@@ -85,9 +85,9 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
         void findAll_notMyTeam_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
-            final Member alien = saveMember("알린");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
+            final Member alien = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
             saveFeedback(roma, eve, levellog);
@@ -111,9 +111,9 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("특정 id의 피드백을 조회한다.")
         void success() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
-            final Member alien = saveMember("알린");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
+            final Member alien = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(eve, roma, alien);
 
             final Levellog levellog = saveLevellog(eve, team);
@@ -136,9 +136,9 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
         void findById_notMyTeam_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
-            final Member alien = saveMember("알린");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
+            final Member alien = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
             final Feedback feedback = saveFeedback(roma, eve, levellog);
@@ -157,8 +157,8 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.")
         void findById_levellogWrongId_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(eve, roma);
 
             final Levellog levellog1 = saveLevellog(eve, team);
@@ -182,8 +182,8 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("피드백을 수정한다.")
         void success() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
@@ -206,9 +206,9 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("작성자가 아닌 사용자가 피드백을 수정하려는 경우 예외를 발생시킨다.")
         void update_noAuthor_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
-            final Member alien = saveMember("알린");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
+            final Member alien = saveMember("알린", "깃허브_알린");
             final Team team = saveTeam(eve, roma, alien);
             final Levellog levellog = saveLevellog(eve, team);
 
@@ -226,8 +226,8 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("인터뷰 시작 시간 이전에 피드백을 수정하려는 경우 예외가 발생한다.")
         void update_beforeStartAt_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
@@ -245,8 +245,8 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("인터뷰 종료 이후에 피드백을 수정하려는 경우 예외가 발생한다.")
         void update_alreadyClosed_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
 
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
@@ -273,8 +273,8 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("피드백을 저장한다.")
         void success() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
@@ -295,8 +295,8 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
         void save_alreadyExist_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
 
             final Team team = saveTeam(eve, roma);
 
@@ -316,7 +316,7 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
         void save_selfFeedback_exception() {
             // given
-            final Member eve = saveMember("이브");
+            final Member eve = saveMember("이브", "깃허브_이브");
             final Team team = saveTeam(eve);
             final Levellog levellog = saveLevellog(eve, team);
 
@@ -333,9 +333,9 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
         void save_otherMember_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
-            final Member alien = saveMember("알린");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
+            final Member alien = saveMember("알린", "깃허브_알린");
 
             final Team team = saveTeam(eve, alien);
             final Levellog levellog = saveLevellog(eve, team);
@@ -351,8 +351,8 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("인터뷰 시작 전 피드백을 작성하면 예외를 던진다.")
         void save_beforeStartAt_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
 
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
@@ -370,8 +370,8 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("인터뷰 종료 후 피드백을 작성하면 예외를 던진다.")
         void save_alreadyClosed_exception() {
             // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브", "깃허브_이브");
+            final Member roma = saveMember("로마", "깃허브_로마");
 
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);

@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
@@ -302,7 +303,7 @@ class TeamControllerTest extends ControllerTest {
                     participants);
 
             final String message = "중복되는 참가자가 존재합니다.";
-            willThrow(new DuplicateParticipantsException(message))
+            willThrow(new DuplicateParticipantsException(DebugMessage.init()))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -328,7 +329,7 @@ class TeamControllerTest extends ControllerTest {
                     participants);
 
             final String message = "중복되는 참가자가 존재합니다.";
-            willThrow(new DuplicateParticipantsException(message))
+            willThrow(new DuplicateParticipantsException(DebugMessage.init()))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -624,7 +625,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participants);
             final String message = "중복되는 참가자가 존재합니다.";
-            willThrow(new DuplicateParticipantsException(message))
+            willThrow(new DuplicateParticipantsException(DebugMessage.init()))
                     .given(teamService)
                     .update(request, 1L, 1L);
 
@@ -649,7 +650,7 @@ class TeamControllerTest extends ControllerTest {
                     new ParticipantIdsDto(List.of(1L, 2L, 1L)));
 
             final String message = "중복되는 참가자가 존재합니다.";
-            willThrow(new DuplicateParticipantsException(message))
+            willThrow(new DuplicateParticipantsException(DebugMessage.init()))
                     .given(teamService)
                     .update(request, 1L, 1L);
 

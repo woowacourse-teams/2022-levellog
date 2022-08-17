@@ -272,7 +272,7 @@ class TeamServiceTest extends ServiceTest {
             //when & then
             assertThatThrownBy(() -> teamService.save(teamDto, alien))
                     .isInstanceOf(DuplicateParticipantsException.class)
-                    .hasMessageContaining("참가자 중복");
+                    .hasMessageContaining("중복되는 참가자가 존재합니다.");
         }
 
         @Test
@@ -679,7 +679,7 @@ class TeamServiceTest extends ServiceTest {
             final Long memberId = alien.getId();
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
                     .isInstanceOf(DuplicateParticipantsException.class)
-                    .hasMessageContaining("참가자 중복");
+                    .hasMessageContaining("중복되는 참가자가 존재합니다.");
         }
 
         @Test

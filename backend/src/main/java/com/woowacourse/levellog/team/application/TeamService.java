@@ -216,9 +216,11 @@ public class TeamService {
 
         final Set<Long> distinct = new HashSet<>(participantIds);
         if (distinct.size() != participantIds.size()) {
-            throw new DuplicateParticipantsException(
-                    "참가자 중복 [participants : " + participantIds + " hostId : " + hostId + "]");
+            throw new DuplicateParticipantsException(DebugMessage.init()
+                    .append("participants", participantIds)
+                    .append("hostId", hostId));
         }
+
     }
 
     private List<Participant> toParticipants(final Team team, final List<Long> memberIds) {

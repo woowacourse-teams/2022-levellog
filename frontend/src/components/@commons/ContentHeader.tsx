@@ -12,7 +12,7 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
       <ContentHeaderStyle>
         <LeftBox>
           <FlexBox>
-            {imageUrl && <Image src={imageUrl} sizes={'MEDIUM'} margin={'0 0.625rem 0 0'} />}
+            <div>{imageUrl && <Image src={imageUrl} sizes={'MEDIUM'} />}</div>
             <TitleBox>
               <Title>{title}</Title>
               {subTitle && <SubTitle>{subTitle}</SubTitle>}
@@ -47,7 +47,7 @@ const ContentHeaderStyle = styled.div`
   width: 100%;
   height: fit-content;
   padding: 0.625rem 0;
-  @media (max-width: 750px) {
+  @media (max-width: 800px) {
     justify-content: start;
     font-size: 0.75rem;
   }
@@ -55,16 +55,20 @@ const ContentHeaderStyle = styled.div`
 
 const LeftBox = styled.div`
   display: flex;
-  @media (max-width: 750px) {
+  @media (max-width: 800px) {
     flex-direction: column;
     margin-bottom: 0.3125rem;
   }
 `;
 
+const ImageBox = styled.div`
+  margin-right: 0.625rem;
+`;
+
 const FlexBox = styled.div`
   display: flex;
   align-items: center;
-  @media (max-width: 750px) {
+  @media (max-width: 800px) {
     margin-bottom: 0.3125rem;
   }
 `;
@@ -97,7 +101,7 @@ const FilterButtonBox = styled.div`
 const ButtonBox = styled.div`
   position: absolute;
   right: 0;
-  @media (max-width: 750px) {
+  @media (max-width: 800px) {
     top: 0.625rem;
   }
 `;
@@ -107,7 +111,7 @@ const Line = styled.div`
   left: 0;
   width: 100%;
   border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
-  @media (max-width: 750px) {
+  @media (max-width: 800px) {
     border: none;
   }
 `;

@@ -22,26 +22,31 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = NICKNAME_MAX_LENGTH)
     private String nickname;
 
+    @Column(nullable = false, length = NICKNAME_MAX_LENGTH)
+    private String githubNickname;
+
     @Column(nullable = false)
     private Integer githubId;
 
     @Column(nullable = false, length = PROFILE_URL_MAX_LENGTH)
     private String profileUrl;
 
-    public Member(final String nickname, final Integer githubId, final String profileUrl) {
-        validateNickname(nickname);
+    public Member(final String nickname, final String githubNickname, final Integer githubId, final String profileUrl) {
+        validateNickname(nickname, "닉네임");
+        validateNickname(githubNickname, "깃허브 닉네임");
         validateGithubId(githubId);
         validateProfileUrl(profileUrl);
 
         this.nickname = nickname;
+        this.githubNickname = githubNickname;
         this.githubId = githubId;
         this.profileUrl = profileUrl;
     }
 
-    private void validateNickname(final String nickname) {
-        checkBlank(nickname, "닉네임은 공백이나 null일 수 없습니다.");
+    private void validateNickname(final String nickname, final String type) {
+        checkBlank(nickname, type + "은 공백이나 null일 수 없습니다.");
         checkLength(nickname, NICKNAME_MAX_LENGTH,
-                "닉네임은 " + NICKNAME_MAX_LENGTH + "자 이하여야합니다. [현재 길이:" + nickname.length() + "]");
+                type + "은 " + NICKNAME_MAX_LENGTH + "자 이하여야합니다. [현재 길이:" + nickname.length() + "]");
     }
 
     private void validateGithubId(final Integer githubId) {
@@ -73,7 +78,7 @@ public class Member extends BaseEntity {
     }
 
     public void updateNickname(final String nickname) {
-        validateNickname(nickname);
+        validateNickname(nickname, "닉네임");
         this.nickname = nickname;
     }
 }

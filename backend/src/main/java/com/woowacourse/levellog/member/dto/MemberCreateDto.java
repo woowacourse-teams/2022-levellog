@@ -18,6 +18,6 @@ public class MemberCreateDto {
     private String profileUrl;
 
     public Member toEntity() {
-        return new Member(nickname, githubId, profileUrl);
+        return new Member(nickname, nickname, githubId, profileUrl);
     }
 }

@@ -21,10 +21,8 @@ import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
-import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
@@ -71,7 +69,7 @@ public class TeamService {
                 .orElseGet(this::findAllOrderByIsClosedAndCreatedAt);
 
         final List<TeamAndRoleDto> teamAndRoles = teams.stream()
-                .map(it -> findByTeamIdAndMemberId(it.getId(), memberId))
+                .map(it -> createTeamAndRoleDto(it, memberId))
                 .collect(Collectors.toList());
 
         return new TeamAndRolesDto(teamAndRoles);
@@ -103,20 +101,18 @@ public class TeamService {
 
     public TeamAndRoleDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
-        final Participants participants = new Participants(participantRepository.findByTeam(team));
 
-        final TeamStatus status = team.status(timeStandard.now());
-        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
-        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
-
-        return TeamAndRoleDto.from(team, participants.toHostId(), status, interviewers, interviewees,
-                getParticipantResponses(participants, memberId), participants.isContains(memberId));
+        return createTeamAndRoleDto(team, memberId);
     }
 
-    public TeamsDto findAllByMemberId(final Long memberId) {
+    public TeamAndRolesDto findAllByMemberId(final Long memberId) {
         final List<Team> teams = getTeamsByMemberId(memberId);
 
-        return new TeamsDto(getTeamResponses(teams, memberId));
+        final List<TeamAndRoleDto> teamAndRoles = teams.stream()
+                .map(it -> createTeamAndRoleDto(it, memberId))
+                .collect(Collectors.toList());
+
+        return new TeamAndRolesDto(teamAndRoles);
     }
 
     public TeamStatusDto findStatus(final Long teamId) {
@@ -162,6 +158,17 @@ public class TeamService {
 
         participantRepository.deleteByTeam(team);
         team.delete(timeStandard.now());
+    }
+
+    private TeamAndRoleDto createTeamAndRoleDto(final Team team, final Long memberId) {
+        final TeamStatus status = team.status(timeStandard.now());
+
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
+        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
+        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
+
+        return TeamAndRoleDto.from(team, participants.toHostId(), status, interviewers, interviewees,
+                getParticipantResponses(participants, memberId), participants.isContains(memberId));
     }
 
     private Member getMember(final Long memberId) {
@@ -216,19 +223,6 @@ public class TeamService {
         return memberIds.stream()
                 .map(it -> new Participant(team, getMember(it), false))
                 .collect(Collectors.toList());
-    }
-
-    private List<TeamDto> getTeamResponses(final List<Team> teams, final Long memberId) {
-        return teams.stream()
-                .map(it -> getTeamResponse(it, memberId))
-                .collect(Collectors.toList());
-    }
-
-    private TeamDto getTeamResponse(final Team team, final Long memberId) {
-        final Participants participants = new Participants(participantRepository.findByTeam(team));
-
-        return TeamDto.from(team, participants.toHostId(), team.status(timeStandard.now()),
-                participants.isContains(memberId), getParticipantResponses(participants, memberId));
     }
 
     private List<ParticipantDto> getParticipantResponses(final Participants participants, final Long memberId) {

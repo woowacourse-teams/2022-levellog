@@ -19,7 +19,6 @@ import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
 import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
-import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
@@ -827,7 +826,7 @@ class TeamServiceTest extends ServiceTest {
             saveTeam(harry, alien);
 
             // when
-            final List<TeamDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
+            final List<TeamAndRoleDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
 
             // then
             assertThat(teams).hasSize(2);

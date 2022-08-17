@@ -1,10 +1,11 @@
 package com.woowacourse.levellog.member.application;
 
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.member.domain.NicknameMapping;
-import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
+import com.woowacourse.levellog.member.domain.NicknameMapping;
+import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.MembersDto;
@@ -71,13 +72,15 @@ public class MemberService {
     private void checkSameGithubId(final MemberCreateDto request) {
         final boolean isExistSameGithubId = memberRepository.existsByGithubId(request.getGithubId());
         if (isExistSameGithubId) {
-            throw new MemberAlreadyExistException("멤버 중복 [githubId : " + request.getGithubId() + "]");
+            throw new MemberAlreadyExistException(DebugMessage.init()
+                    .append("githubId", request.getGithubId()));
         }
     }
 
     private Member createMember(final MemberCreateDto request) {
         final Member member = request.toEntity();
-        final Optional<NicknameMapping> nickname = nicknameMappingRepository.findByGithubNickname(request.getNickname());
+        final Optional<NicknameMapping> nickname = nicknameMappingRepository.findByGithubNickname(
+                request.getNickname());
         if (nickname.isPresent()) {
             member.updateNickname(nickname.get().getCrewNickname());
         }

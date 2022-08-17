@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.member.domain.NicknameMapping;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.domain.NicknameMapping;
 import com.woowacourse.levellog.member.dto.MemberCreateDto;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.MembersDto;
@@ -108,7 +108,7 @@ class MemberServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> memberService.save(newSaveDto))
                     .isInstanceOf(MemberAlreadyExistException.class)
-                    .hasMessageContainingAll("멤버 중복", String.valueOf(newSaveDto.getGithubId()));
+                    .hasMessageContainingAll("멤버가 이미 존재합니다.", String.valueOf(newSaveDto.getGithubId()));
         }
     }
 
@@ -170,7 +170,8 @@ class MemberServiceTest extends ServiceTest {
             final Member savedMember = saveMember("로마");
             final int githubId = savedMember.getGithubId() + 999;
 
-            final GithubProfileDto githubProfileDto = new GithubProfileDto(Integer.toString(githubId), "test", "test.image");
+            final GithubProfileDto githubProfileDto = new GithubProfileDto(Integer.toString(githubId), "test",
+                    "test.image");
 
             // when
             final Long id = memberService.saveIfNotExist(githubProfileDto, githubId);

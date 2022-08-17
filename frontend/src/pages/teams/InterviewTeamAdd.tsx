@@ -36,8 +36,8 @@ const InterviewTeamAdd = () => {
 
   return (
     <S.GridContainer>
-      <Header />
-      {/* <TeamForm
+      <TeamForm
+        purpose={'생성하기'}
         handleSubmitTeamForm={handleSubmitTeamAddForm}
         teamInfoRef={teamInfoRef}
         participants={participants}
@@ -47,7 +47,7 @@ const InterviewTeamAdd = () => {
         handleChangeInput={handleChangeInput}
         addToParticipants={addToParticipants}
         removeToParticipants={removeToParticipants}
-      /> */}
+      />
     </S.GridContainer>
   );
 };

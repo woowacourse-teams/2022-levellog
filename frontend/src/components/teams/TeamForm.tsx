@@ -9,6 +9,7 @@ import Button from 'components/@commons/Button';
 import { MemberType } from 'types/member';
 
 const TeamForm = ({
+  purpose,
   handleSubmitTeamForm,
   teamInfoRef,
   participants,
@@ -27,7 +28,7 @@ const TeamForm = ({
 
   return (
     <S.FormContainer onSubmit={handleSubmitTeamForm}>
-      <S.Title>인터뷰 팀 생성하기</S.Title>
+      <S.Title>인터뷰 팀 {purpose}</S.Title>
       <TeamFormInput
         label={'제목'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[0] = el)}
@@ -83,12 +84,13 @@ const TeamForm = ({
           />
         ))}
       </S.MembersBox>
-      <S.SubmitButton>생성하기</S.SubmitButton>
+      <S.SubmitButton>{purpose}</S.SubmitButton>
     </S.FormContainer>
   );
 };
 
 interface TeamFormProps {
+  purpose: '생성하기' | '수정하기';
   handleSubmitTeamForm: (e: React.FormEvent<HTMLFormElement>) => void;
   teamInfoRef: React.MutableRefObject<HTMLInputElement[]>;
   participants: Array<MemberType>;

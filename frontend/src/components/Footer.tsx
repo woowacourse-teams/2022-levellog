@@ -10,12 +10,10 @@ const Footer = () => {
 
 const S = {
   Container: styled.footer`
-    position: fixed;
     bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 7.125rem;
     width: 100%;
     height: 70px;
     border-top: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};

@@ -13,12 +13,15 @@ const App = () => {
   return (
     <>
       <GlobalStyles />
+      <Header />
       <PageContainer>{content}</PageContainer>
       <Footer />
     </>
   );
 };
 
-const PageContainer = styled.div``;
+const PageContainer = styled.div`
+  min-height: calc(100vh - 140px);
+`;
 
 export default App;

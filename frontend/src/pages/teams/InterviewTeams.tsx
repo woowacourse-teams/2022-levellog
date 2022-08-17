@@ -25,7 +25,6 @@ const InterviewTeams = () => {
 
   return (
     <S.GridContainer>
-      <Header />
       <ContentHeader title={'인터뷰 팀'}>
         <div>
           <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>

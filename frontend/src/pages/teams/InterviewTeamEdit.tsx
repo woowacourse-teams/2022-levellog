@@ -30,6 +30,7 @@ const InterviewTeamEdit = () => {
 
   return (
     <TeamForm
+      purpose={'수정하기'}
       handleSubmitTeamForm={handleSubmitTeamEditForm}
       teamInfoRef={teamInfoRef}
       participants={participants}

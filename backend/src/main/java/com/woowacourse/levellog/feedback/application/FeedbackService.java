@@ -131,6 +131,7 @@ public class FeedbackService {
 
     private Feedback getFeedback(final Long feedbackId) {
         return feedbackRepository.findById(feedbackId)
-                .orElseThrow(() -> new FeedbackNotFoundException("존재하지 않는 피드백. feedbackId : " + feedbackId));
+                .orElseThrow(() -> new FeedbackNotFoundException(DebugMessage.init()
+                        .append("feedbackId", feedbackId)));
     }
 }

@@ -238,8 +238,9 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "존재하지 않는 피드백입니다.";
-            willThrow(new FeedbackNotFoundException(message))
+            final String message = "피드백이 존재하지 않습니다.";
+            willThrow(new FeedbackNotFoundException(DebugMessage.init()
+                    .append("feedbackId", feedbackId)))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);
 

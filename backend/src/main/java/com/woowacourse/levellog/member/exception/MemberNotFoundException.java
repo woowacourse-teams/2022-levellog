@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
  */
 public class MemberNotFoundException extends LevellogException {
 
-    private static final String ERROR_MESSAGE = "멤버가 존재하지 않습니다.";
+    private static final String CLIENT_MESSAGE = "멤버가 존재하지 않습니다.";
 
     public MemberNotFoundException(final String message) {
-        super(message, ERROR_MESSAGE, HttpStatus.NOT_FOUND);
+        super(message, CLIENT_MESSAGE, HttpStatus.NOT_FOUND);
     }
 }

@@ -72,7 +72,8 @@ public class Levellog extends BaseEntity {
 
     public void validateSelfFeedback(final Member member) {
         if (isAuthor(member)) {
-            throw new InvalidFeedbackException(" [levellogId : " + getId() + "]", "자기 자신에게 피드백을 할 수 없습니다.");
+            throw new InvalidFeedbackException(DebugMessage.init()
+                    .append("levellogId", getId()));
         }
     }
 

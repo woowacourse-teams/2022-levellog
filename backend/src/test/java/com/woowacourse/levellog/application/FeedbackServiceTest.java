@@ -219,7 +219,7 @@ class FeedbackServiceTest extends ServiceTest {
                     feedbackService.update(FeedbackWriteDto.from("수정된 스터디", "수정된 말하기", "수정된 기타"),
                             feedbackId, alien.getId()))
                     .isInstanceOf(InvalidFeedbackException.class)
-                    .hasMessageContaining("자신이 남긴 피드백만 수정할 수 있습니다.");
+                    .hasMessageContaining("잘못된 피드백 요청입니다.");
         }
 
         @Test
@@ -326,7 +326,7 @@ class FeedbackServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), eve.getId()))
                     .isInstanceOf(InvalidFeedbackException.class)
-                    .hasMessageContaining("자기 자신에게 피드백을 할 수 없습니다.");
+                    .hasMessageContaining("잘못된 피드백 요청입니다.");
         }
 
         @Test

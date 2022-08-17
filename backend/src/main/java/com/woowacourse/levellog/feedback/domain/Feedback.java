@@ -81,8 +81,9 @@ public class Feedback extends BaseEntity {
 
     public void validateAuthor(final Member member) {
         if (!from.equals(member)) {
-            throw new InvalidFeedbackException("자신이 남긴 피드백만 수정할 수 있습니다.",
-                    " [feedbackId : " + getId() + ", memberId : " + member.getId() + "]");
+            throw new InvalidFeedbackException(DebugMessage.init()
+                    .append("feedbackId", getId())
+                    .append("memberId", member.getId()));
         }
     }
 

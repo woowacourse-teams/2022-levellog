@@ -65,9 +65,10 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "자기 자신에게 피드백을 할 수 없습니다.";
+            final String message = "잘못된 피드백 요청입니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(message, " [levellogId : " + levellogId + "]"));
+                    .willThrow(new InvalidFeedbackException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -91,9 +92,10 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.";
+            final String message = "잘못된 피드백 요청입니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(message, " [memberId :" + memberId + "]"));
+                    .willThrow(new InvalidFeedbackException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -209,9 +211,10 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "자신이 남긴 피드백만 수정할 수 있습니다.";
-            willThrow(new InvalidFeedbackException(
-                    message, " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]"))
+            final String message = "잘못된 피드백 요청입니다.";
+            willThrow(new InvalidFeedbackException(DebugMessage.init()
+                    .append("feedbackId", feedbackId)
+                    .append("memberId", memberId)))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);
 

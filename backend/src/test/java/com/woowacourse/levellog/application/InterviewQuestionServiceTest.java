@@ -179,7 +179,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, pepper.getId()))
                     .isInstanceOf(InvalidInterviewQuestionException.class)
-                    .hasMessageContainingAll("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.", String.valueOf(pepperLevellogId),
+                    .hasMessageContainingAll("잘못된 인터뷰 질문 요청입니다.", String.valueOf(pepperLevellogId),
                             String.valueOf(pepper.getId()));
         }
     }

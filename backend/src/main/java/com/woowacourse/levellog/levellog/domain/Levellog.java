@@ -85,10 +85,9 @@ public class Levellog extends BaseEntity {
 
     public void validateSelfInterviewQuestion(final Member member) {
         if (isAuthor(member)) {
-            throw new InvalidInterviewQuestionException("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.",
-                    DebugMessage.init()
-                            .append("levellogId", getId())
-                            .append("memberId", member.getId()));
+            throw new InvalidInterviewQuestionException(DebugMessage.init()
+                    .append("levellogId", getId())
+                    .append("memberId", member.getId()));
         }
     }
 }

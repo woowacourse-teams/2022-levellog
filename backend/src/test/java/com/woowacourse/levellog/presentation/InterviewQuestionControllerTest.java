@@ -130,7 +130,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final long levellogId = 1L;
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
-            willThrow(new InvalidInterviewQuestionException("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.", DebugMessage.init()))
+            willThrow(new InvalidInterviewQuestionException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .save(request, levellogId, 1L);
 
@@ -140,7 +140,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.")
+                    jsonPath("message").value("잘못된 인터뷰 질문 요청입니다.")
             );
 
             // docs

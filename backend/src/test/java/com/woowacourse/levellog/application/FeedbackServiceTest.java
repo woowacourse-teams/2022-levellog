@@ -169,7 +169,7 @@ class FeedbackServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> feedbackService.findById(levellog2.getId(), feedback.getId(), roma.getId()))
                     .isInstanceOf(InvalidLevellogException.class)
-                    .hasMessageContainingAll("입력한 levellogId와 피드백의 levellogId가 다릅니다.",
+                    .hasMessageContainingAll("잘못된 레벨로그 요청입니다.",
                             String.valueOf(levellog2.getId()));
         }
     }

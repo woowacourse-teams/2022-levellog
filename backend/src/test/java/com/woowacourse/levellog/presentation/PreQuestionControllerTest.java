@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
@@ -155,8 +156,9 @@ class PreQuestionControllerTest extends ControllerTest {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            final String message = "입력한 levellogId와 사전 질문의 levellogId가 다릅니다.";
-            willThrow(new InvalidLevellogException(message, "[ 입력한 levellogId : 1 ]"))
+            final String message = "잘못된 레벨로그 요청입니다.";
+            willThrow(new InvalidLevellogException(DebugMessage.init()
+                    .append("levellogId", 1L)))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 1L);
 
@@ -288,8 +290,9 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("잘못된 레벨로그의 사전 질문을 삭제하면 예외를 던진다.")
         void deleteById_levellogWrongId_exception() throws Exception {
             // given
-            final String message = "입력한 levellogId와 사전 질문의 levellogId가 다릅니다.";
-            willThrow(new InvalidLevellogException(message, "[ 입력한 levellogId : 1 ]"))
+            final String message = "잘못된 레벨로그 요청입니다.";
+            willThrow(new InvalidLevellogException(DebugMessage.init()
+                    .append("levellogId", 1L)))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 1L);
 

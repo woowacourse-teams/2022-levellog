@@ -256,7 +256,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             assertThatThrownBy(
                     () -> preQuestionService.update(preQuestionDto, id, levellog2.getId(), questioner.getId()))
                     .isInstanceOf(InvalidLevellogException.class)
-                    .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
+                    .hasMessageContaining("잘못된 레벨로그 요청입니다.");
         }
     }
 
@@ -334,7 +334,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> preQuestionService.deleteById(id, levellog2.getId(), questioner.getId()))
                     .isInstanceOf(InvalidLevellogException.class)
-                    .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
+                    .hasMessageContaining("잘못된 레벨로그 요청입니다.");
         }
     }
 }

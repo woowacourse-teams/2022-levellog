@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
@@ -438,9 +439,10 @@ class FeedbackControllerTest extends ControllerTest {
             final Long feedbackId = 1L;
             final Long levellogId = 1L;
 
-            final String message = "입력한 levellogId와 피드백의 levellogId가 다릅니다.";
+            final String message = "잘못된 레벨로그 요청입니다.";
             given(feedbackService.findById(levellogId, feedbackId, memberId))
-                    .willThrow(new InvalidLevellogException(message, "[ 입력한 levellogId : 1 ]"));
+                    .willThrow(new InvalidLevellogException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);

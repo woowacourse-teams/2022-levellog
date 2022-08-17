@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
+import levellogIcon from 'assets/images/question.webp';
+
 import Button from 'components/@commons/Button';
+import FlexBox from 'components/@commons/FlexBox';
+import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/UiViewer';
 import { PreQuestionCustomHookType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
@@ -25,15 +29,18 @@ const PreQuestionViewModal = ({
       getTeam();
     }
   };
-
+  // 사전질문 조화에 작성한 사람 정보 추가되면 변경
   return (
     <ModalPortal>
       <S.Dimmer id="dimmer" onClick={handleClickClosePreQuestionModal} />
       <S.Container>
         <S.Header>
-          <S.Title>{nickname}의 사전질문</S.Title>
+          <FlexBox alignItems={'center'} gap={0.375}>
+            {/* <Image src={author.profileUrl} sizes={'MEDIUM'} />
+            <S.AuthorText>{author.nickname}의 사전질문</S.AuthorText> */}
+          </FlexBox>
           <S.CloseButton id="closeButton" onClick={handleClickClosePreQuestionModal}>
-            X
+            <Image src={levellogIcon} sizes={'SMALL'} />
           </S.CloseButton>
         </S.Header>
         <S.PreQuestion>
@@ -70,41 +77,41 @@ const S = {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: ${(props) => props.theme.default.OPACITY_BLACK};
+    background-color: ${(props) => props.theme.new_default.DIMMER_BLACK};
   `,
 
   Container: styled.div`
     position: fixed;
     top: 50%;
     left: 50%;
-    padding: 0.875rem 1.875rem 1.875rem 1.875rem;
-    border-radius: 0.5rem;
-    background-color: ${(props) => props.theme.default.GRAY};
+    border-radius: 0.875rem;
+    background-color: ${(props) => props.theme.new_default.WHITE};
     transform: translate(-50%, -50%);
   `,
 
   Header: styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.875rem;
     width: 100%;
-    height: 3.625rem;
+    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
   `,
 
-  Title: styled.h1`
-    font-size: 1.875rem;
-    @media (max-width: 35rem) {
-      font-size: 1.25rem;
-    }
-    @media (max-height: 35rem) {
-      font-size: 1.25rem;
-    }
+  AuthorText: styled.p`
+    font-size: 2rem;
+    font-weight: 300;
   `,
 
   CloseButton: styled.button`
+    display: flex;
+    align-items: center;
     width: 1.125rem;
     height: 1.125rem;
+    margin-right: 0.875rem;
     border-style: none;
-    background-color: ${(props) => props.theme.default.GRAY};
+    background-color: ${(props) => props.theme.new_default.WHITE};
     font-size: 1.375rem;
     font-weight: 800;
     cursor: pointer;
@@ -137,8 +144,10 @@ const S = {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap: 1rem;
     width: 100%;
-    margin-top: 1.25rem;
+    border-top: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
+    padding: 1rem 0.875rem 1.5rem 0;
   `,
 };
 

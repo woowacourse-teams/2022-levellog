@@ -60,7 +60,7 @@ const InterviewDetail = () => {
   if (team && Object.keys(team).length === 0) return <div></div>;
 
   return (
-    <>
+    <S.Container>
       {isLevellogModalOpen && (
         <LevellogViewModal
           levellogInfo={levellogInfo}
@@ -78,69 +78,84 @@ const InterviewDetail = () => {
           handleClickClosePreQuestionModal={handleClickClosePreQuestionModal}
         />
       )}
-      <FlexBox gap={4.375}>
-        <S.Header>
-          <FlexBox gap={1}>
-            <S.OwnerImage>
-              <Image src={(team as InterviewTeamType).teamImage} sizes={'LARGE'} />
-            </S.OwnerImage>
-            <FlexBox flexFlow="column" gap={1.125}>
-              <S.Title>{(team as InterviewTeamType).title}</S.Title>
-              <FlexBox gap={1}>
-                <S.TitleContent>{(team as InterviewTeamType).place}</S.TitleContent>
-                <S.TitleContent>{(team as InterviewTeamType).startAt}</S.TitleContent>
-              </FlexBox>
+      <S.Header>
+        <FlexBox gap={1}>
+          <S.OwnerImage>
+            <Image src={(team as InterviewTeamType).teamImage} sizes={'LARGE'} />
+          </S.OwnerImage>
+          <FlexBox flexFlow="column" gap={1.125}>
+            <S.Title>{(team as InterviewTeamType).title}</S.Title>
+            <FlexBox gap={1}>
+              <S.TitleContent>{(team as InterviewTeamType).place}</S.TitleContent>
+              <S.TitleContent>{(team as InterviewTeamType).startAt}</S.TitleContent>
             </FlexBox>
           </FlexBox>
-          {(team as InterviewTeamType).hostId === loginUserId && (
-            <S.ButtonBox>
-              {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
-                <>
-                  <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
-                    <Button>팀 수정하기</Button>
-                  </Link>
-                  <Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</Button>
-                </>
-              )}
-              {(team as InterviewTeamType).status === TEAM_STATUS.IN_PROGRESS && (
-                <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
-              )}
-            </S.ButtonBox>
-          )}
-        </S.Header>
-        <S.Container>
-          {(team as InterviewTeamType).participants.map((participant: ParticipantType) => {
-            const role = {
-              interviewee: false,
-              interviewer: false,
-            };
-            if (loginUserId) {
-              role.interviewee = (team as InterviewTeamType).interviewees.includes(
-                Number(participant.memberId),
-              );
-              role.interviewer = (team as InterviewTeamType).interviewers.includes(
-                Number(participant.memberId),
-              );
-            }
-            return (
-              <Interviewer
-                key={participant.memberId}
-                teamStatus={team.status}
-                participant={participant}
-                role={role}
-                userInTeam={(team as InterviewTeamType).isParticipant}
-                onClickOpenLevellogModal={onClickOpenLevellogModal}
-                onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}
-              />
+        </FlexBox>
+        {(team as InterviewTeamType).hostId === loginUserId && (
+          <S.ButtonBox>
+            {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
+              <>
+                <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
+                  <Button>팀 수정하기</Button>
+                </Link>
+                <Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</Button>
+              </>
+            )}
+            {(team as InterviewTeamType).status === TEAM_STATUS.IN_PROGRESS && (
+              <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
+            )}
+          </S.ButtonBox>
+        )}
+      </S.Header>
+      <S.Content>
+        {(team as InterviewTeamType).participants.map((participant: ParticipantType) => {
+          const role = {
+            interviewee: false,
+            interviewer: false,
+          };
+          if (loginUserId) {
+            role.interviewee = (team as InterviewTeamType).interviewees.includes(
+              Number(participant.memberId),
             );
-          })}
-        </S.Container>
-      </FlexBox>
-    </>
+            role.interviewer = (team as InterviewTeamType).interviewers.includes(
+              Number(participant.memberId),
+            );
+          }
+          return (
+            <Interviewer
+              key={participant.memberId}
+              teamStatus={team.status}
+              participant={participant}
+              role={role}
+              userInTeam={(team as InterviewTeamType).isParticipant}
+              onClickOpenLevellogModal={onClickOpenLevellogModal}
+              onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}
+            />
+          );
+        })}
+      </S.Content>
+    </S.Container>
   );
 };
 
 const S = {
+  Container: styled.div`
+    max-width: 1600px;
+    margin: auto;
+    @media (max-width: 1700px) {
+      width: 1270px;
+    }
+    @media (max-width: 1480px) {
+      width: 940px;
+    }
+    @media (max-width: 1024px) {
+      width: 610px;
+    }
+    @media (max-width: 720px) {
+      width: 280px;
+    }
+  `,
+
   Header: styled.div<CSSProperties>`
     display: flex;
     justify-content: space-between;
@@ -150,13 +165,10 @@ const S = {
     margin-top: 3.125rem;
   `,
 
-  Container: styled.div`
+  Content: styled.div`
     display: flex;
-    flex-flow: row wrap;
-    gap: 2.5rem;
-    @media (max-width: 560px) {
-      justify-content: center;
-    }
+    flex-wrap: wrap;
+    gap: 3.125rem;
   `,
 
   Title: styled.h3`

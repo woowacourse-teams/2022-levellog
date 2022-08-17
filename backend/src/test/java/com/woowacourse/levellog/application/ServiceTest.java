@@ -3,6 +3,7 @@ package com.woowacourse.levellog.application;
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.config.FakeTimeStandard;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -81,6 +83,8 @@ abstract class ServiceTest {
     @Autowired
     protected PreQuestionService preQuestionService;
 
+    protected AdminService adminService;
+
     @Autowired
     protected MemberRepository memberRepository;
 
@@ -108,6 +112,10 @@ abstract class ServiceTest {
     @BeforeEach
     void setUp() {
         timeStandard.setBeforeStarted();
+
+        final String salt = BCrypt.gensalt();
+        final String hash = BCrypt.hashpw("levellog1!", salt);
+        adminService = new AdminService(hash, jwtTokenProvider);
     }
 
     protected Member saveMember(final String nickname) {

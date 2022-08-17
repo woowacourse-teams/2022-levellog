@@ -35,11 +35,12 @@ const S = {
   Input: styled(Input)`
     width: 40.625rem;
     height: 1.125rem;
-    @media (max-width: 1024px) {
-      width: 31.25rem;
+    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    @media (min-width: 560px) and (max-width: 800px) {
+      //
     }
     @media (max-width: 560px) {
-      width: 18.75rem;
+      width: 264px;
     }
   `,
 };

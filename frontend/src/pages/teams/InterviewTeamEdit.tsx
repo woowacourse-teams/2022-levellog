@@ -29,22 +29,18 @@ const InterviewTeamEdit = () => {
   }, [nicknameValue, participants]);
 
   return (
-    <form onSubmit={handleSubmitTeamEditForm}>
-      <ContentHeader title={'인터뷰 팀 수정하기'}>
-        <Button type={'submit'}>수정하기</Button>
-      </ContentHeader>
-      <TeamForm
-        teamInfoRef={teamInfoRef}
-        participants={participants}
-        members={members}
-        getTeamOnRef={getTeamOnRef}
-        nicknameValue={nicknameValue}
-        setNicknameValue={setNicknameValue}
-        handleChangeInput={handleChangeInput}
-        addToParticipants={addToParticipants}
-        removeToParticipants={removeToParticipants}
-      />
-    </form>
+    <TeamForm
+      handleSubmitTeamForm={handleSubmitTeamEditForm}
+      teamInfoRef={teamInfoRef}
+      participants={participants}
+      members={members}
+      getTeamOnRef={getTeamOnRef}
+      nicknameValue={nicknameValue}
+      setNicknameValue={setNicknameValue}
+      handleChangeInput={handleChangeInput}
+      addToParticipants={addToParticipants}
+      removeToParticipants={removeToParticipants}
+    />
   );
 };
 

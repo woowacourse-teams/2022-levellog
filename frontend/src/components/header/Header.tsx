@@ -51,7 +51,7 @@ const S = {
     justify-content: space-between;
     align-items: center;
     height: 4.375rem;
-    @media (min-width: 1600px) {
+    @media (min-width: 1620px) {
       margin: 0 calc((100vw - 1600px) / 2);
     }
     @media (min-width: 1187.5px) and (max-width: 1620px) {

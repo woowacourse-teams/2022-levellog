@@ -23,7 +23,7 @@ const InterviewTeams = () => {
   }, []);
 
   return (
-    <>
+    <S.GridContainer>
       <ContentHeader title={'인터뷰 팀'}>
         <div>
           <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>
@@ -43,11 +43,37 @@ const InterviewTeams = () => {
           <Image src={plus} sizes={'TINY'} margin={'0 0 1px 5px'} />
         </S.TeamAddButton>
       </Link>
-    </>
+    </S.GridContainer>
   );
 };
 
 const S = {
+  GridContainer: styled.main`
+    overflow: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    @media (min-width: 1620px) {
+      padding: 0 calc((100vw - 1600px) / 2);
+      padding-bottom: 200px;
+    }
+    @media (min-width: 1187.5px) and (max-width: 1620px) {
+      padding: 0 calc((100vw - 1187.5px) / 2);
+      padding-bottom: 200px;
+    }
+    @media (min-width: 775px) and (max-width: 1207.5px) {
+      padding: 0 calc((100vw - 775px) / 2);
+      padding-bottom: 200px;
+    }
+    @media (min-width: 560px) and (max-width: 800px) {
+      padding: 0 calc((100vw - 362.5px) / 2);
+      padding-bottom: 200px;
+    }
+    @media (max-width: 560px) {
+      padding: 0 1.25rem;
+      padding-bottom: 200px;
+    }
+  `,
+
   Container: styled.div`
     display: flex;
     flex-wrap: wrap;

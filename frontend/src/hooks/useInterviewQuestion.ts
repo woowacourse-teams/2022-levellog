@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
@@ -11,14 +11,24 @@ import {
   requestDeleteInterviewQuestion,
   requestEditInterviewQuestion,
   requestGetInterviewQuestion,
+  requestGetInterviewQuestionsInLevellog,
   requestPostInterviewQuestion,
 } from 'apis/interviewQuestion';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
-import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
+import {
+  InterviewQuestionApiType,
+  InterviewQuestionsInLevellogType,
+  InterviewQuestionInfoType,
+} from 'types/interviewQuestion';
 
 const useInterviewQuestion = () => {
   const { scrollRef: interviewQuestionContentRef, afterRequestScrollDown } = useScrollDown();
-  const [interviewQuestionInfos, setInterviewQuestions] = useState<InterviewQuestionType[]>([]);
+  const [interviewQuestionInfos, setInterviewQuestionInfos] = useState<InterviewQuestionInfoType[]>(
+    [],
+  );
+  const [interviewQuestionInfosInLevellog, setInterviewQuestionInfosInLevellog] = useState<
+    InterviewQuestionsInLevellogType[]
+  >([]);
   const interviewQuestionRef = useRef<HTMLInputElement>(null);
   const { levellogId } = useParams();
 
@@ -28,7 +38,23 @@ const useInterviewQuestion = () => {
     try {
       if (typeof levellogId === 'string') {
         const res = await requestGetInterviewQuestion({ accessToken, levellogId });
-        setInterviewQuestions(res.data.interviewQuestions);
+        setInterviewQuestionInfos(res.data.interviewQuestions);
+      }
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
+        const responseBody: AxiosResponse = err.response!;
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
+      }
+    }
+  };
+
+  const getInterviewQuestionsInLevellog = async () => {
+    try {
+      if (typeof levellogId === 'string') {
+        const res = await requestGetInterviewQuestionsInLevellog({ accessToken, levellogId });
+        setInterviewQuestionInfosInLevellog(res.data.interviewQuestions);
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
@@ -133,11 +159,17 @@ const useInterviewQuestion = () => {
     }
   };
 
+  useEffect(() => {
+    getInterviewQuestionsInLevellog();
+  }, []);
+
   return {
     interviewQuestionInfos,
+    interviewQuestionInfosInLevellog,
     interviewQuestionRef,
     interviewQuestionContentRef,
     getInterviewQuestion,
+    getInterviewQuestionsInLevellog,
     onClickDeleteInterviewQuestionButton,
     onSubmitEditInterviewQuestion,
     handleSubmitInterviewQuestion,

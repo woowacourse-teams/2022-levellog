@@ -181,7 +181,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
             final String message = "사전 질문이 존재하지 않습니다.";
-            willThrow(new PreQuestionNotFoundException(message))
+            willThrow(new PreQuestionNotFoundException(DebugMessage.init()))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 1L);
 
@@ -259,7 +259,7 @@ class PreQuestionControllerTest extends ControllerTest {
         void findMy_preQuestionNotFound_exception() throws Exception {
             // given
             final String message = "사전 질문이 존재하지 않습니다.";
-            willThrow(new PreQuestionNotFoundException(message))
+            willThrow(new PreQuestionNotFoundException(DebugMessage.init()))
                     .given(preQuestionService)
                     .findMy(1L, 1L);
 
@@ -315,7 +315,7 @@ class PreQuestionControllerTest extends ControllerTest {
         void deleteById_preQuestionNotFound_exception() throws Exception {
             // given
             final String message = "사전 질문이 존재하지 않습니다.";
-            willThrow(new PreQuestionNotFoundException(message))
+            willThrow(new PreQuestionNotFoundException(DebugMessage.init()))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 1L);
 

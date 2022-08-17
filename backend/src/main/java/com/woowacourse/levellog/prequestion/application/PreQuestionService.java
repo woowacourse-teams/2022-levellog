@@ -45,8 +45,9 @@ public class PreQuestionService {
         final Levellog levellog = getLevellog(levellogId);
         final Member questioner = getMember(questionerId);
         final PreQuestion preQuestion = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner)
-                .orElseThrow(() -> new PreQuestionNotFoundException("사전 질문이 존재하지 않습니다. "
-                        + "[ levellogId : " + levellogId + " memberId : " + questionerId + " ]"));
+                .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
+                        .append("levellogId", levellogId)
+                        .append("memberId", questionerId)));
 
         return PreQuestionDto.from(preQuestion.getContent());
     }
@@ -78,8 +79,8 @@ public class PreQuestionService {
 
     private PreQuestion getPreQuestion(final Long preQuestionId) {
         return preQuestionRepository.findById(preQuestionId)
-                .orElseThrow(() -> new PreQuestionNotFoundException(
-                        "사전 질문이 존재하지 않습니다. preQuestionId : " + preQuestionId));
+                .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
+                        .append("preQuestionId", preQuestionId)));
     }
 
     private Levellog getLevellog(final Long levellogId) {

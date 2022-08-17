@@ -86,7 +86,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> preQuestionService.save(preQuestionDto, levellog.getId(), author.getId()))
                     .isInstanceOf(InvalidPreQuestionException.class)
-                    .hasMessageContaining("자기 자신에게 사전 질문을 등록할 수 없습니다.");
+                    .hasMessageContaining("잘못된 사전 질문 요청입니다.");
         }
 
         @Test

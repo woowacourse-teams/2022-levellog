@@ -78,8 +78,8 @@ class PreQuestionControllerTest extends ControllerTest {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            final String message = "자기 자신에게 사전 질문을 등록할 수 없습니다.";
-            willThrow(new InvalidPreQuestionException("[levellogId : 1]", message))
+            final String message = "잘못된 사전 질문 요청입니다.";
+            willThrow(new InvalidPreQuestionException(DebugMessage.init()))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 1L);
 

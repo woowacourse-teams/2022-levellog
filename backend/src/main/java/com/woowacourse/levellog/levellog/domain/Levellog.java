@@ -79,7 +79,9 @@ public class Levellog extends BaseEntity {
 
     public void validateSelfPreQuestion(final Member member) {
         if (isAuthor(member)) {
-            throw new InvalidPreQuestionException(" [levellogId : " + getId() + "]", "자기 자신에게 사전 질문을 등록할 수 없습니다.");
+            throw new InvalidPreQuestionException(DebugMessage.init()
+                    .append("levellogAuthorId", getAuthor().getId())
+                    .append("preQuestionAuthorId", member.getId()));
         }
     }
 

@@ -54,7 +54,7 @@ public class MemberService {
     }
 
     public MembersDto searchByNickname(final String nickname) {
-        final List<MemberDto> responses = memberRepository.findAllByNicknameContains(nickname)
+        final List<MemberDto> responses = memberRepository.findAllByNicknameOrGithubNicknameContains(nickname)
                 .stream()
                 .map(MemberDto::from)
                 .collect(Collectors.toList());

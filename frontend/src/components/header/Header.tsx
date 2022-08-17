@@ -6,6 +6,7 @@ import useUser from 'hooks/useUser';
 
 import defaultProfile from 'assets/images/defaultProfile.png';
 import levellogLogo from 'assets/images/levellogNewLogo.png';
+import { ROUTES_PATH } from 'constants/constants';
 
 import { LogoStyle } from 'components/@commons/Style';
 import Profile from 'components/header/Profile';
@@ -24,7 +25,7 @@ const Header = () => {
   return (
     <>
       <S.Container>
-        <Link to={'/'}>
+        <Link to={ROUTES_PATH.HOME}>
           <LogoStyle src={levellogLogo} alt={'레벨로그 로고'} />
         </Link>
         <Profile

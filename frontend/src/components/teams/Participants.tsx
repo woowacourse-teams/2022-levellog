@@ -33,12 +33,11 @@ const S = {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    margin-bottom: 0.625rem;
     padding: 0.5rem;
-    box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.default.GRAY};
-    border-style: none;
+    box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.new_default.GRAY};
+    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     border-radius: 1.5625rem;
-    background-color: ${(props) => props.theme.default.WHITE};
+    background-color: ${(props) => props.theme.new_default.WHITE};
     font-size: 1rem;
   `,
 
@@ -48,10 +47,10 @@ const S = {
   `,
 
   DeleteButton: styled(Button)`
-    background-color: ${(props) => props.theme.default.WHITE};
+    background-color: ${(props) => props.theme.new_default.WHITE};
     border: none;
     padding: 0 0.125rem 0 0.125rem;
-    color: ${(props) => props.theme.default.RED};
+    color: ${(props) => props.theme.new_default.RED};
   `,
 };
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useInterviewQuestionEdit from 'hooks/useInterviewQuestionEdit';
 
 import Button from 'components/@commons/Button';
-import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
+import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const InterviewQuestionContent = ({
   interviewQuestionInfo,
@@ -29,9 +29,7 @@ const InterviewQuestionContent = ({
           <S.Input ref={interviewQuestionEditRef} />
         </form>
       ) : (
-        <p onClick={handleClickEditInterviewQuestionButton}>
-          {interviewQuestionInfo.interviewQuestion}
-        </p>
+        <p onClick={handleClickEditInterviewQuestionButton}>{interviewQuestionInfo.content}</p>
       )}
       <S.DeleteButton onClick={handleClickDeleteInterviewQuestionButton}>
         <p>X</p>
@@ -41,7 +39,7 @@ const InterviewQuestionContent = ({
 };
 
 interface InterviewQuestionContentProps {
-  interviewQuestionInfo: InterviewQuestionType;
+  interviewQuestionInfo: InterviewQuestionInfoType;
   onClickDeleteInterviewQuestionButton: ({
     interviewQuestionId,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => Promise<void>;

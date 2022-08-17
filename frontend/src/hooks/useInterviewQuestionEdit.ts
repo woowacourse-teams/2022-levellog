@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
+import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const useInterviewQuestionEdit = ({
   interviewQuestionInfo,
@@ -30,7 +30,7 @@ const useInterviewQuestionEdit = ({
 
   useEffect(() => {
     if (isEditInterviewQuestion && interviewQuestionEditRef.current) {
-      interviewQuestionEditRef.current.value = interviewQuestionInfo.interviewQuestion;
+      interviewQuestionEditRef.current.value = interviewQuestionInfo.content;
       interviewQuestionEditRef.current.focus();
     }
   }, [isEditInterviewQuestion]);
@@ -45,7 +45,7 @@ const useInterviewQuestionEdit = ({
 };
 
 interface useInterviewQuestionEditProps {
-  interviewQuestionInfo: InterviewQuestionType;
+  interviewQuestionInfo: InterviewQuestionInfoType;
   onClickDeleteInterviewQuestionButton: ({
     interviewQuestionId,
   }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => Promise<void>;

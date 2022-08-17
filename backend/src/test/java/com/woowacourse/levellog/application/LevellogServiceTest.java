@@ -93,7 +93,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
                     .isInstanceOf(LevellogAlreadyExistException.class)
-                    .hasMessageContainingAll("레벨로그를 이미 작성하였습니다.", String.valueOf(authorId), String.valueOf(teamId));
+                    .hasMessageContainingAll("레벨로그가 이미 존재합니다.", String.valueOf(authorId), String.valueOf(teamId));
         }
 
         @ParameterizedTest

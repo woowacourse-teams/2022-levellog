@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -32,8 +33,11 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            final String message = "팀에 레벨로그를 이미 작성했습니다.";
-            willThrow(new LevellogAlreadyExistException(message)).given(levellogService)
+            final String message = "레벨로그가 이미 존재합니다.";
+            willThrow(new LevellogAlreadyExistException(DebugMessage.init()
+                    .append("authorId", authorId)
+                    .append("teamId", teamId)))
+                    .given(levellogService)
                     .save(request, authorId, teamId);
 
             // when

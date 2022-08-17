@@ -89,7 +89,10 @@ public class LevellogService {
     private void validateLevellogExistence(final Long authorId, final Long teamId) {
         final boolean isExists = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
         if (isExists) {
-            throw new LevellogAlreadyExistException("레벨로그를 이미 작성하였습니다. authorId : " + authorId + " teamId : " + teamId);
+            throw new LevellogAlreadyExistException(DebugMessage.init()
+                    .append("authorId", authorId)
+                    .append("teamId", teamId));
         }
+
     }
 }

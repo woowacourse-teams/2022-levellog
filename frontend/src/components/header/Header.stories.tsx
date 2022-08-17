@@ -1,5 +1,4 @@
 import Header from './Header';
-
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {

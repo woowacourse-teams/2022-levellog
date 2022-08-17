@@ -802,9 +802,9 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 2L;
             final Long memberId = 5L;
 
-            final String message = "참가자를 찾을 수 없습니다.";
+            final String message = "참가자가 존재하지 않습니다.";
             given(teamService.findMyRole(teamId, memberId, 1L))
-                    .willThrow(new ParticipantNotFoundException(message));
+                    .willThrow(new ParticipantNotFoundException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestFindMyRole(teamId, memberId);

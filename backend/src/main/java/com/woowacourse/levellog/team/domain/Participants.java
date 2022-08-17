@@ -2,6 +2,7 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import java.util.ArrayList;
@@ -96,8 +97,9 @@ public class Participants {
             throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
         }
         if (!isContains(targetMemberId)) {
-            throw new ParticipantNotFoundException("memberId : " + targetMemberId + "에 해당하는 member는 "
-                    + "teamId : " + teamId + "의 참가자가 아닙니다.");
+            throw new ParticipantNotFoundException(DebugMessage.init()
+                    .append("memberId", targetMemberId)
+                    .append("teamId", teamId));
         }
     }
 

@@ -108,6 +108,7 @@ const S = {
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 20;
     background-color: ${(props) => props.theme.new_default.DIMMER_BLACK};
   `,
 
@@ -115,6 +116,8 @@ const S = {
     position: fixed;
     top: 50%;
     left: 50%;
+    width: calc(100% - 40px);
+    z-index: 30;
     border-radius: 0.875rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
     transform: translate(-50%, -50%);
@@ -133,6 +136,9 @@ const S = {
   AuthorText: styled.p`
     font-size: 2rem;
     font-weight: 300;
+    @media (max-width: 520px) {
+      font-size: 16px;
+    }
   `,
 
   CloseButton: styled.button`
@@ -157,16 +163,17 @@ const S = {
     background-color: ${(props) => props.theme.new_default.WHITE};
     line-height: 1.875rem;
     word-spacing: 0.0625rem;
-    @media (max-width: 51.875rem) {
+    @media (max-width: 830px) {
       width: 31.25rem;
     }
-    @media (max-height: 51.875rem) {
+    @media (max-height: 830px) {
       height: 31.875rem;
     }
-    @media (max-width: 35rem) {
+    @media (max-width: 560px) {
       width: 16.25rem;
+      height: 300px;
     }
-    @media (max-height: 40rem) {
+    @media (max-height: 640px) {
       height: 18.75rem;
     }
   `,

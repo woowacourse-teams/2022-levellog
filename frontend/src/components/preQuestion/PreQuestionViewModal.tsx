@@ -77,6 +77,7 @@ const S = {
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 20;
     background-color: ${(props) => props.theme.new_default.DIMMER_BLACK};
   `,
 
@@ -84,6 +85,7 @@ const S = {
     position: fixed;
     top: 50%;
     left: 50%;
+    z-index: 30;
     border-radius: 0.875rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
     transform: translate(-50%, -50%);

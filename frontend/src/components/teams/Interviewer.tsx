@@ -52,9 +52,9 @@ const Interviewer = ({
       <S.Container>
         <S.Profile>
           <Image src={participant.profileUrl} sizes={'HUGE'} />
-          <S.Nickname>
-            <p>{participant.nickname}</p>
-          </S.Nickname>
+          <S.NicknameBox>
+            <S.Nickname>{participant.nickname}</S.Nickname>
+          </S.NicknameBox>
         </S.Profile>
         <S.Content>
           <S.ButtonBox>
@@ -102,14 +102,14 @@ const Interviewer = ({
 
   return (
     <S.Container>
+      {role.interviewee && role.interviewer === false && <Role role={'인터뷰이'} />}
+      {role.interviewer && role.interviewee === false && <Role role={'인터뷰어'} />}
+      {role.interviewee && role.interviewer && <Role role={'상호 인터뷰'} />}
       <S.Profile>
-        {role.interviewee && role.interviewer === false && <Role role={'인터뷰이'} />}
-        {role.interviewer && role.interviewee === false && <Role role={'인터뷰어'} />}
-        {role.interviewee && role.interviewer && <Role role={'상호 인터뷰'} />}
         <Image src={participant.profileUrl} sizes={'HUGE'} />
-        <S.Nickname>
-          <p>{participant.nickname}</p>
-        </S.Nickname>
+        <S.NicknameBox>
+          <S.Nickname>{participant.nickname}</S.Nickname>
+        </S.NicknameBox>
       </S.Profile>
       <S.Content>
         <S.ButtonBox>
@@ -162,6 +162,7 @@ interface InterviewerProps {
 
 const S = {
   Container: styled.div`
+    position: relative;
     width: 17.5rem;
     height: 24rem;
     padding: 1.25rem 2.125rem 0 2.125rem;
@@ -177,17 +178,21 @@ const S = {
     margin: 0 auto;
   `,
 
-  Nickname: styled.div`
+  NicknameBox: styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     top: 6.875rem;
-    left: -3.125rem;
+    left: -2.875rem;
     width: 13.25rem;
     height: 2.5rem;
     border: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
     background-color: ${(props) => props.theme.new_default.WHITE};
+  `,
+
+  Nickname: styled.p`
+    font-weight: 600;
   `,
 
   Content: styled.div`
@@ -199,7 +204,7 @@ const S = {
   ButtonBox: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.5rem;
     margin-top: 2.375rem;
   `,
 
@@ -207,11 +212,11 @@ const S = {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 6px 4px;
-    border-radius: 1rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: 2rem;
     background-color: ${(props) => props.theme.default.INVISIBLE};
     font-size: 1.125rem;
-    font-weight: 400;
+    font-weight: 600;
     color: ${(props) =>
       props.disabled ? props.theme.new_default.GRAY : props.theme.new_default.BLACK};
     :hover {

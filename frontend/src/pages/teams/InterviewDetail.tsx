@@ -151,7 +151,7 @@ const S = {
     @media (max-width: 1024px) {
       width: 610px;
     }
-    @media (max-width: 720px) {
+    @media (max-width: 620px) {
       width: 280px;
     }
   `,

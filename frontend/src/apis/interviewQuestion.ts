@@ -1,12 +1,29 @@
 import axios, { AxiosPromise } from 'axios';
 
-import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
+import {
+  InterviewQuestionApiType,
+  InterviewQuestionsInLevellogType,
+  InterviewQuestionInfoType,
+} from 'types/interviewQuestion';
 
 export const requestGetInterviewQuestion = ({
   accessToken,
   levellogId,
 }: Pick<InterviewQuestionApiType, 'accessToken' | 'levellogId'>): AxiosPromise<
-  Record<'interviewQuestions', InterviewQuestionType[]>
+  Record<'interviewQuestions', InterviewQuestionInfoType[]>
+> => {
+  return axios({
+    method: 'get',
+    url: `${process.env.API_URI}/levellogs/${levellogId}/interview-questions/my`,
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+};
+
+export const requestGetInterviewQuestionsInLevellog = ({
+  accessToken,
+  levellogId,
+}: Pick<InterviewQuestionApiType, 'accessToken' | 'levellogId'>): AxiosPromise<
+  Record<'interviewQuestions', InterviewQuestionsInLevellogType[]>
 > => {
   return axios({
     method: 'get',

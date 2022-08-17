@@ -15,6 +15,7 @@ export const COLORS = {
 };
 
 export const NEW_COLORS = {
+  DIMMER_BLACK: 'rgba(0, 0, 0, 0.7)',
   BLACK: '#000000',
   DARK_BLACK: '#222222',
   DARK_GRAY: '#3E3E3E',

@@ -5,7 +5,16 @@ export interface InterviewQuestionApiType {
   interviewQuestion: string;
 }
 
-export interface InterviewQuestionType {
+export interface InterviewQuestionInfoType {
   id: string;
-  interviewQuestion: string;
+  content: string;
+}
+
+export interface InterviewQuestionsInLevellogType {
+  author: {
+    id: string;
+    nickname: string;
+    profileUrl: string;
+  };
+  contents: InterviewQuestionInfoType[];
 }

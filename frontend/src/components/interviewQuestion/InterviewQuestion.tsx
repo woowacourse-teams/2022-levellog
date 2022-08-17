@@ -7,7 +7,7 @@ import FlexBox from 'components/@commons/FlexBox';
 import Input from 'components/@commons/Input';
 import ToolTip from 'components/@commons/ToolTip';
 import InterviewQuestionContent from 'components/interviewQuestion/InterviewQuestionContent';
-import { InterviewQuestionApiType, InterviewQuestionType } from 'types/interviewQuestion';
+import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const InterviewQuestion = ({
   interviewQuestionInfos,
@@ -45,7 +45,7 @@ const InterviewQuestion = ({
 };
 
 interface InterviewQuestionProps {
-  interviewQuestionInfos: InterviewQuestionType[];
+  interviewQuestionInfos: InterviewQuestionInfoType[];
   interviewQuestionRef: React.Ref<HTMLInputElement>;
   interviewQuestionContentRef: React.Ref<any>;
   onClickDeleteInterviewQuestionButton: ({

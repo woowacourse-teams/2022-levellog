@@ -4,6 +4,7 @@ import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,9 +20,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Feedback extends BaseEntity {
 
-    public static final String CONTENT_TYPE_SPEAK = "Speak";
-    public static final String CONTENT_TYPE_ETC = "Etc";
     private static final int FEEDBACK_CONTENT_MAX_LENGTH = 1000;
+    private static final String CONTENT_TYPE_SPEAK = "Speak";
+    private static final String CONTENT_TYPE_ETC = "Etc";
     private static final String CONTENT_TYPE_STUDY = "Study";
 
     @ManyToOne
@@ -82,5 +83,16 @@ public class Feedback extends BaseEntity {
             throw new InvalidFeedbackException("자신이 남긴 피드백만 수정할 수 있습니다.",
                     " [feedbackId : " + getId() + ", memberId : " + member.getId() + "]");
         }
+    }
+
+    public void validateLevellog(final Levellog levellog) {
+        if (!isSameLevellog(levellog)) {
+            throw new InvalidLevellogException(
+                    "입력한 levellogId와 피드백의 levellogId가 다릅니다.", "[ 입력한 levellogId : " + levellog.getId() + " ] ");
+        }
+    }
+
+    private boolean isSameLevellog(final Levellog levellog) {
+        return this.levellog.equals(levellog);
     }
 }

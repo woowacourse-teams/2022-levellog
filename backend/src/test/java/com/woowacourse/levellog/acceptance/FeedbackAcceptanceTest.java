@@ -1,8 +1,10 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
 import static com.woowacourse.levellog.fixture.MemberFixture.RICK;
 import static com.woowacourse.levellog.fixture.MemberFixture.ROMA;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
@@ -61,7 +63,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
      *   then: 200 OK 상태 코드와 모든 피드백을 응답 받는다.
      */
     @Test
-    @DisplayName("피드백 조회")
+    @DisplayName("피드백 전체 조회")
     void findAllFeedbacks() {
         // given
         RICK.save();
@@ -89,6 +91,47 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
                         "feedbacks.feedback.study", contains("study test"),
                         "feedbacks.feedback.speak", contains("speak test"),
                         "feedbacks.feedback.etc", contains("etc test")
+                );
+    }
+
+    /*
+     * Scenario: 피드백 상세 조회
+     *   given: 피드백이 등록되어있다.
+     *   when: 등록된 모든 피드백을 조회한다.
+     *   then: 200 OK 상태 코드와 모든 피드백을 응답 받는다.
+     */
+    @Test
+    @DisplayName("피드백 상세 조회")
+    void findByIdFeedbacks() {
+        // given
+        RICK.save();
+        ROMA.save();
+        PEPPER.save();
+
+        final String teamId = saveTeam("릭 and 로마 and 페퍼", RICK, 1, ROMA, PEPPER).getTeamId();
+        final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
+
+        timeStandard.setInProgress();
+
+        final String feedbackId = saveFeedback("로마가 쓴 피드백", levellogId, ROMA).getFeedbackId();
+        saveFeedback("페퍼가 쓴 피드백", levellogId, PEPPER);
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .filter(document("feedback/find-by-id"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
+                .when()
+                .get("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("id", is(Integer.parseInt(feedbackId)),
+                        "from.nickname", is("로마"),
+                        "to.nickname", is("릭"),
+                        "feedback.study", is("study 로마가 쓴 피드백"),
+                        "feedback.speak", is("speak 로마가 쓴 피드백"),
+                        "feedback.etc", is("etc 로마가 쓴 피드백")
                 );
     }
 

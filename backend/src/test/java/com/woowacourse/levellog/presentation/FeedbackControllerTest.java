@@ -40,7 +40,8 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "피드백이 이미 존재합니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new FeedbackAlreadyExistException(message));
+                    .willThrow(new FeedbackAlreadyExistException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);

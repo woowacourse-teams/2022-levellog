@@ -98,7 +98,8 @@ public class FeedbackService {
 
     private void validateExistence(final Long levellogId, final Long fromMemberId) {
         if (feedbackRepository.existsByLevellogIdAndFromId(levellogId, fromMemberId)) {
-            throw new FeedbackAlreadyExistException("피드백이 이미 존재합니다. levellogId : " + levellogId);
+            throw new FeedbackAlreadyExistException(DebugMessage.init()
+                    .append("levellogId", levellogId));
         }
     }
 

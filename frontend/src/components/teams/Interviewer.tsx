@@ -150,8 +150,8 @@ const S = {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    width: 15rem;
-    height: 18.75rem;
+    width: 280px;
+    height: 385px;
     padding: 1.25rem 1.5rem 1.875rem 1.5rem;
     border: 0.0625rem solid ${(props) => props.theme.default.BLACK};
   `,

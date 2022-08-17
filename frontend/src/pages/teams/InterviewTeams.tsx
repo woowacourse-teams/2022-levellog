@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -39,9 +40,12 @@ const S = {
   Container: styled.div`
     display: flex;
     flex-wrap: wrap;
-    gap: 2.5rem;
+    gap: 50px;
+    margin-top: 50px;
     @media (max-width: 560px) {
       justify-content: center;
+      margin-top: 20px;
+      gap: 40px;
     }
   `,
 };

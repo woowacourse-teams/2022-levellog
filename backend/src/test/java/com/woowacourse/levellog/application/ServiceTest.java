@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.application;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
@@ -8,7 +10,6 @@ import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
-import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
@@ -28,6 +29,7 @@ import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -114,12 +116,21 @@ abstract class ServiceTest {
     }
 
     protected Team saveTeam(final Member host, final Member... members) {
-        return saveTeam(1, host, members);
+        return saveTeam(TEAM_START_TIME, host, members);
+    }
+
+    protected Team saveTeam(final LocalDateTime startAt, final Member host, final Member... members) {
+        return saveTeam(startAt, 1, host, members);
     }
 
     protected Team saveTeam(final int interviewerNumber, final Member host, final Member... members) {
+        return saveTeam(TEAM_START_TIME, interviewerNumber, host, members);
+    }
+
+    protected Team saveTeam(final LocalDateTime startAt, final int interviewerNumber, final Member host,
+                            final Member... members) {
         final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", interviewerNumber));
+                new Team("잠실 네오조", "트랙룸", startAt, "jamsil.img", interviewerNumber));
 
         participantRepository.save(new Participant(team, host, true));
 

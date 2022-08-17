@@ -9,6 +9,7 @@ import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import java.net.URI;
+import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,8 +39,9 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamAndRolesDto> findAll(@Authentic final Long memberId) {
-        final TeamAndRolesDto response = teamService.findAll(memberId);
+    public ResponseEntity<TeamAndRolesDto> findAll(@RequestParam final Optional<String> status,
+                                                   @Authentic final Long memberId) {
+        final TeamAndRolesDto response = teamService.findAll(status, memberId);
         return ResponseEntity.ok(response);
     }
 

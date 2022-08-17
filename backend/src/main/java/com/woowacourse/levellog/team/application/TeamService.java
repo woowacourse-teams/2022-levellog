@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.team.application;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -30,9 +32,11 @@ import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,13 +65,40 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    public TeamAndRolesDto findAll(final Long memberId) {
-        final List<Team> teams = teamRepository.findAll();
+    public TeamAndRolesDto findAll(final Optional<String> status, final Long memberId) {
+        final List<Team> teams;
+        teams = status.map(this::findAllByIsClosedAndOrderByCreatedAt)
+                .orElseGet(this::findAllOrderByIsClosedAndCreatedAt);
+
         final List<TeamAndRoleDto> teamAndRoles = teams.stream()
                 .map(it -> findByTeamIdAndMemberId(it.getId(), memberId))
                 .collect(Collectors.toList());
 
         return new TeamAndRolesDto(teamAndRoles);
+    }
+
+    private List<Team> findAllByIsClosedAndOrderByCreatedAt(final String status) {
+        final List<Team> teams = teamRepository.findAllByIsClosed(
+                TeamStatus.isClosed(status),
+                Sort.by(DESC, "createdAt")
+        );
+
+        return filteringTeamByStatus(status, teams);
+    }
+
+    private List<Team> filteringTeamByStatus(final String status, final List<Team> teams) {
+        return teams.stream()
+                .filter(it -> it.isSameStatus(status, timeStandard.now()))
+                .collect(Collectors.toList());
+    }
+
+    private List<Team> findAllOrderByIsClosedAndCreatedAt() {
+        final Sort sort = Sort.by(
+                Sort.Order.asc("isClosed"),
+                Sort.Order.desc("createdAt")
+        );
+
+        return teamRepository.findAll(sort);
     }
 
     public TeamAndRoleDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
@@ -109,7 +140,7 @@ public class TeamService {
         final Team team = getTeam(teamId);
         validateHost(memberId, team);
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
-        
+
         final Participants participants = createParticipants(team, memberId, request.getParticipants().getIds());
         team.validParticipantNumber(participants.size());
         participantRepository.deleteByTeam(team);

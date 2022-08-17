@@ -61,14 +61,55 @@ class TeamAcceptanceTest extends AcceptanceTest {
     }
 
     /*
-     * Scenario: 레벨 인터뷰 팀 목록 조회하기
+     * Scenario: 레벨 인터뷰 팀 전체 목록 조회하기
      *   given: 팀이 등록되어 있다.
      *   when: 팀을 목록 조회를 요청한다.
-     *   then: 200 Ok 상태 코드와 모든 팀 목록을 응답받는다.
+     *   then: 200 Ok 상태 코드와 인터뷰 종료 여부, 최근 생성일 순으로 정렬된 모든 팀 목록을 응답받는다.
      */
     @Test
-    @DisplayName("레벨 인터뷰 팀 목록 조회하기")
-    void findAllTeam() {
+    @DisplayName("레벨 인터뷰 팀 전체 목록 조회하기")
+    void findAllTeam_success() {
+        // given
+        PEPPER.save();
+        EVE.save();
+        RICK.save();
+
+        saveTeam("잠실 제이슨조", PEPPER, 1, EVE);
+        saveTeam("잠실 브리조", EVE, 1, RICK);
+        final String teamId = saveTeam("잠실 네오조", RICK, 1, PEPPER).getTeamId();
+
+        timeStandard.setInProgress();
+        closeTeamInterview(teamId, RICK.getToken());
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find-all"))
+                .when()
+                .get("/api/teams")
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("teams.title", contains("잠실 브리조", "잠실 제이슨조", "잠실 네오조"),
+                        "teams.hostId",
+                        contains(EVE.getId().intValue(), PEPPER.getId().intValue(), RICK.getId().intValue()),
+                        "teams.status", contains("IN_PROGRESS", "IN_PROGRESS", "CLOSED"),
+                        "teams.isParticipant", contains(false, true, true),
+                        "teams.participants.nickname",
+                        contains(List.of("이브", "릭"), List.of("페퍼", "이브"), List.of("릭", "페퍼")));
+    }
+
+    /*
+     * Scenario: 진행 상태로 필터링된 레벨 인터뷰 팀 목록 조회하기
+     *   given: 팀이 등록되어 있다.
+     *   when: 진행 중인 팀을 목록 조회를 요청한다.
+     *   then: 200 Ok 상태 코드와 최근 생성일 순으로 정렬된 모든 진행 중인 팀 목록을 응답받는다.
+     */
+    @Test
+    @DisplayName("필터링된 레벨 인터뷰 팀 전체 목록 조회하기")
+    void findAllTeam_filteringByTeamStatus_success() {
         // given
         PEPPER.save();
         EVE.save();
@@ -83,18 +124,18 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/find-all"))
+                .filter(document("team/find-all/filtering-by-status"))
                 .when()
-                .get("/api/teams")
+                .get("/api/teams?status=in-progress")
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"),
-                        "teams.hostId", contains(PEPPER.getId().intValue(), EVE.getId().intValue()),
+                .body("teams.title", contains("잠실 브리조", "잠실 제이슨조"),
+                        "teams.hostId", contains(EVE.getId().intValue(), PEPPER.getId().intValue()),
                         "teams.status", contains("IN_PROGRESS", "IN_PROGRESS"),
-                        "teams.isParticipant", contains(true, false),
-                        "teams.participants.nickname", contains(List.of("페퍼", "이브"), List.of("이브", "릭")));
+                        "teams.isParticipant", contains(false, true),
+                        "teams.participants.nickname", contains(List.of("이브", "릭"), List.of("페퍼", "이브")));
     }
 
     /*
@@ -135,13 +176,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
                         "interviewers", contains(EVE.getId().intValue(), RICK.getId().intValue()),
                         "interviewees", contains(RICK.getId().intValue(), ROMA.getId().intValue()));
     }
-
     /*
      * Scenario: 내가 속하지 않은 레벨 인터뷰 팀 상세 조회하기
      *   given: 팀이 등록되어 있다.
      *   when: 로그인하지 않고 팀 상세 조회를 요청한다.
      *   then: 200 Ok 상태 코드와 팀을 응답받는다.
      */
+
     @Test
     @DisplayName("로그인하지 않고 팀 상세 조회하기")
     void findTeam_notLogin() {
@@ -169,13 +210,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
                         "interviewers", empty(),
                         "interviewees", empty());
     }
-
     /*
      * Scenario: 팀 상태 조회하기
      *   given: 팀이 등록되어 있다.
      *   when: 로그인하지 않고 팀 상태 조회를 요청한다.
      *   then: 200 Ok 상태 코드와 팀 상태를 응답받는다.
      */
+
     @Test
     @DisplayName("팀 상태 조회하기")
     void findStatus() {
@@ -199,7 +240,6 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("status", equalTo(TeamStatus.IN_PROGRESS.name()));
     }
-
     /*
      * Scenario: 팀 참가자에 대한 나(페퍼)의 역할 조회하기
      *   given: 팀이 등록되어 있다.
@@ -207,6 +247,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
      *   when: 나(페퍼)는 같은 팀의 참가자안 릭에 대한 나의 역할을 조회한다.
      *   then: 200 Ok 상태 코드와 interviewer를 응답 받는다.
      */
+
     @Test
     @DisplayName("같은 팀 참가자에 대한 나의 역할 조회하기 - interviewer")
     void findMyRole_interviewer() {
@@ -231,7 +272,6 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("myRole", equalTo("INTERVIEWER"));
     }
-
     /*
      * Scenario: 팀 참가자에 대한 나의 역할 조회하기
      *   given: 팀이 등록되어 있다.
@@ -239,6 +279,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
      *   when: 나(페퍼)는 같은 팀의 참가자안 이브에 대한 나의 역할을 조회한다.
      *   then: 200 Ok 상태 코드와 observer를 응답 받는다.
      */
+
     @Test
     @DisplayName("같은 팀 참가자에 대한 나의 역할 조회하기 - observer")
     void findMyRole_observer() {
@@ -263,13 +304,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("myRole", equalTo("OBSERVER"));
     }
-
     /*
      * Scenario: 레벨 인터뷰 종료하기
      *   given: 팀이 등록되어 있다.
      *   when: 등록된 팀에 대한 인터뷰 종료를 요청한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
+
     @Test
     @DisplayName("레벨 인터뷰 종료하기")
     void closeInterview() {
@@ -296,13 +337,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
         get("/api/teams/" + teamId).getResponse()
                 .body("status", equalTo("CLOSED"));
     }
-
     /*
      * Scenario: 레벨 인터뷰 팀 정보 수정하기
      *   given: 팀이 등록되어 있다.
      *   when: 팀 정보 수정을 요청한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
+
     @Test
     @DisplayName("레벨 인터뷰 팀 정보 수정하기")
     void update() {
@@ -329,13 +370,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
     }
-
     /*
      * Scenario: 레벨 인터뷰 팀 삭제하기
      *   given: 팀이 등록되어 있다.
      *   when: 등록된 팀을 삭제한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
+
     @Test
     @DisplayName("레벨 인터뷰 팀 삭제하기")
     void delete() {
@@ -356,5 +397,14 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void closeTeamInterview(final String teamId, final String token) {
+        RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/teams/{id}/close", teamId)
+                .then().log().all();
     }
 }

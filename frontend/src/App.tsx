@@ -20,12 +20,8 @@ const App = () => {
   );
 };
 
-const PageContainer = styled.main`
-  overflow: auto;
-  overflow-x: hidden;
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 65vh;
+const PageContainer = styled.div`
+  min-height: calc(100vh - 8.75rem);
 `;
 
 export default App;

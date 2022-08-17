@@ -100,6 +100,7 @@ const useTeam = () => {
   const deleteTeam = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     try {
       await requestDeleteTeam({ teamId, accessToken });
+      navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -145,7 +146,9 @@ const useTeam = () => {
       startAt: `${date.value}T${time.value}`,
       interviewerNumber: interviewerNumber.value,
       participants: {
-        ids: Object.values(participants).map((participants) => participants.id),
+        ids: Object.values(participants)
+          .filter((participants) => participants.id !== loginUserId)
+          .map((participants) => participants.id),
       },
     };
     editTeam({ teamInfo });

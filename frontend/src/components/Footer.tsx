@@ -10,13 +10,15 @@ const Footer = () => {
 
 const S = {
   Container: styled.footer`
+    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 70px;
-    margin-top: 7.125rem;
-    border-top: 0.125rem solid ${(props) => props.theme.default.LIGHT_GRAY};
+    height: 4.375rem;
+    margin-top: 6.25rem;
+    border-top: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    background-color: ${(props) => props.theme.new_default.WHITE};
   `,
 
   Title: styled.p`

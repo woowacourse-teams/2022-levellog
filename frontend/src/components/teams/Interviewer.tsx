@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import useUser from 'hooks/useUser';
 
-import levellogIcon from 'assets/images/question.webp';
 import { ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -52,49 +51,38 @@ const Interviewer = ({
       <S.Container>
         <S.Profile>
           <Image src={participant.profileUrl} sizes={'HUGE'} />
-          <S.NicknameBox>
-            <S.Nickname>{participant.nickname}</S.Nickname>
-          </S.NicknameBox>
+          <S.Nickname>
+            <p>{participant.nickname}</p>
+          </S.Nickname>
         </S.Profile>
         <S.Content>
-          <S.ButtonBox>
-            {participant.levellogId ? (
-              <>
-                <S.Button onClick={handleClickOpenLevellogModal}>
-                  <Image src={levellogIcon} sizes={'SMALL'} />
-                  <S.ButtonText>레벨로그 보기</S.ButtonText>
-                </S.Button>
-                <Link to={`/interview-questions/levellogs/${participant.levellogId}`}>
-                  <S.Button disabled={!participant.levellogId || !userInTeam}>
-                    <Image src={levellogIcon} sizes={'SMALL'} />
-                    <S.ButtonText>인터뷰질문 보기</S.ButtonText>
-                  </S.Button>
+          {participant.levellogId ? (
+            <>
+              <S.InterviewerButton onClick={handleClickOpenLevellogModal}>
+                레벨로그 보기
+              </S.InterviewerButton>
+              <Link to={`/interview-questions/levellogs/${participant.levellogId}`}>
+                <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
+                  인터뷰 질문 보기
+                </S.InterviewerButton>
+              </Link>
+              <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
+                <S.InterviewerButton disabled={!participant.levellogId || !userInTeam}>
+                  피드백
+                </S.InterviewerButton>
+              </Link>
+            </>
+          ) : (
+            <>
+              {teamStatus === TEAM_STATUS.READY ? (
+                <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
+                  <S.InterviewerButton>레벨로그 작성</S.InterviewerButton>
                 </Link>
-                <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
-                  <S.Button disabled={!participant.levellogId || !userInTeam}>
-                    <Image src={levellogIcon} sizes={'SMALL'} />
-                    <S.ButtonText>피드백 보기</S.ButtonText>
-                  </S.Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                {teamStatus === TEAM_STATUS.READY ? (
-                  <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
-                    <S.Button>
-                      <Image src={levellogIcon} sizes={'SMALL'} />
-                      <S.ButtonText>레벨로그 작성</S.ButtonText>
-                    </S.Button>
-                  </Link>
-                ) : (
-                  <S.Button disabled>
-                    <Image src={levellogIcon} sizes={'SMALL'} />
-                    <S.ButtonText>레벨로그 작성</S.ButtonText>
-                  </S.Button>
-                )}
-              </>
-            )}
-          </S.ButtonBox>
+              ) : (
+                <S.InterviewerButton disabled>레벨로그 작성</S.InterviewerButton>
+              )}
+            </>
+          )}
         </S.Content>
       </S.Container>
     );
@@ -102,50 +90,47 @@ const Interviewer = ({
 
   return (
     <S.Container>
-      {role.interviewee && role.interviewer === false && <Role role={'인터뷰이'} />}
-      {role.interviewer && role.interviewee === false && <Role role={'인터뷰어'} />}
-      {role.interviewee && role.interviewer && <Role role={'상호 인터뷰'} />}
       <S.Profile>
+        {role.interviewee && role.interviewer === false && <Role role={'인터뷰이'} />}
+        {role.interviewer && role.interviewee === false && <Role role={'인터뷰어'} />}
+        {role.interviewee && role.interviewer && <Role role={'상호 인터뷰'} />}
         <Image src={participant.profileUrl} sizes={'HUGE'} />
-        <S.NicknameBox>
-          <S.Nickname>{participant.nickname}</S.Nickname>
-        </S.NicknameBox>
+        <S.Nickname>
+          <p>{participant.nickname}</p>
+        </S.Nickname>
       </S.Profile>
       <S.Content>
-        <S.ButtonBox>
-          <S.Button disabled={!participant.levellogId} onClick={handleClickOpenLevellogModal}>
-            <Image src={levellogIcon} sizes={'SMALL'} />
-            <S.ButtonText>레벨로그 보기</S.ButtonText>
-          </S.Button>
-          {loginUserId && (
-            <>
-              {participant.preQuestionId ? (
-                <S.Button
-                  disabled={!participant.levellogId || !userInTeam}
-                  onClick={handleClickOpenPreQuestionModal}
-                >
-                  <Image src={levellogIcon} sizes={'SMALL'} />
-                  <S.ButtonText>사전질문 보기</S.ButtonText>
-                </S.Button>
-              ) : (
-                <S.Button
-                  disabled={!participant.levellogId || !userInTeam}
-                  onClick={handleClickPreQuestionButton}
-                >
-                  <Image src={levellogIcon} sizes={'SMALL'} />
-                  <S.ButtonText>사전질문 작성</S.ButtonText>
-                </S.Button>
-              )}
-              <S.Button
+        <S.InterviewerButton
+          disabled={!participant.levellogId}
+          onClick={handleClickOpenLevellogModal}
+        >
+          레벨로그 보기
+        </S.InterviewerButton>
+        {loginUserId && (
+          <>
+            {participant.preQuestionId ? (
+              <S.InterviewerButton
                 disabled={!participant.levellogId || !userInTeam}
-                onClick={handleClickFeedbackButton}
+                onClick={handleClickOpenPreQuestionModal}
               >
-                <Image src={levellogIcon} sizes={'SMALL'} />
-                <S.ButtonText>피드백 보기</S.ButtonText>
-              </S.Button>
-            </>
-          )}
-        </S.ButtonBox>
+                사전 질문 보기
+              </S.InterviewerButton>
+            ) : (
+              <S.InterviewerButton
+                disabled={!participant.levellogId || !userInTeam}
+                onClick={handleClickPreQuestionButton}
+              >
+                사전 질문 작성
+              </S.InterviewerButton>
+            )}
+            <S.InterviewerButton
+              disabled={!participant.levellogId || !userInTeam}
+              onClick={handleClickFeedbackButton}
+            >
+              피드백
+            </S.InterviewerButton>
+          </>
+        )}
       </S.Content>
     </S.Container>
   );
@@ -162,13 +147,13 @@ interface InterviewerProps {
 
 const S = {
   Container: styled.div`
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
     width: 17.5rem;
-    height: 24rem;
-    padding: 1.25rem 2.125rem 0 2.125rem;
-    border-radius: 0.625rem;
-    background-color: ${(props) => props.theme.new_default.WHITE};
-    box-shadow: 0.375rem 0.375rem 0.5rem ${(props) => props.theme.new_default.GRAY};
+    height: 24.0625rem;
+    padding: 1.25rem 1.5rem 1.875rem 1.5rem;
+    border: 0.0625rem solid ${(props) => props.theme.default.BLACK};
   `,
 
   Profile: styled.div`
@@ -178,21 +163,17 @@ const S = {
     margin: 0 auto;
   `,
 
-  NicknameBox: styled.div`
+  Nickname: styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 6.875rem;
-    left: -2.875rem;
-    width: 13.25rem;
-    height: 2.5rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
-    background-color: ${(props) => props.theme.new_default.WHITE};
-  `,
-
-  Nickname: styled.p`
-    font-weight: 600;
+    top: 6.25rem;
+    left: 0.625rem;
+    width: 6.25rem;
+    height: 1.875rem;
+    border: 0.0625rem solid ${(props) => props.theme.default.BLACK};
+    background-color: ${(props) => props.theme.default.WHITE};
   `,
 
   Content: styled.div`
@@ -201,31 +182,11 @@ const S = {
     gap: 1.125rem;
   `,
 
-  ButtonBox: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 2.375rem;
-  `,
-
-  Button: styled(Button)`
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.625rem 0.75rem;
-    border-radius: 2rem;
+  InterviewerButton: styled(Button)`
+    padding: 0;
     background-color: ${(props) => props.theme.default.INVISIBLE};
     font-size: 1.125rem;
-    font-weight: 600;
-    color: ${(props) =>
-      props.disabled ? props.theme.new_default.GRAY : props.theme.new_default.BLACK};
-    :hover {
-      box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.new_default.GRAY};
-    }
-  `,
-
-  ButtonText: styled.p`
-    font-size: 1.25rem;
+    font-weight: 400;
   `,
 };
 

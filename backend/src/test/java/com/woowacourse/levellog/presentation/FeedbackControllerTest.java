@@ -11,6 +11,7 @@ import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
+import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
@@ -370,6 +371,92 @@ class FeedbackControllerTest extends ControllerTest {
 
         private ResultActions requestFindAllFeedback(final Long levellogId) throws Exception {
             return requestGet("/api/levellogs/" + levellogId + "/feedbacks");
+        }
+    }
+
+    @Nested
+    @DisplayName("findById 메서드는")
+    class FindById {
+
+        private static final String BASE_SNIPPET_PATH = "feedback/find-by-id/exception/";
+
+        @Test
+        @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
+        void findById_notFoundLevellog_exception() throws Exception {
+            // given
+            final Long memberId = 1L;
+            final Long feedbackId = 1L;
+            final Long levellogId = 200000L;
+
+            final String message = "레벨로그가 존재하지 않습니다.";
+            given(feedbackService.findById(levellogId, feedbackId, memberId))
+                    .willThrow(new LevellogNotFoundException(message));
+
+            // when
+            final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);
+
+            // then
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-not-found"));
+        }
+
+        @Test
+        @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findById_notMyTeam_exception() throws Exception {
+            // given
+            final Long memberId = 1L;
+            final Long feedbackId = 1L;
+            final Long levellogId = 1L;
+
+            final String message = "권한이 없습니다.";
+            given(feedbackService.findById(levellogId, feedbackId, memberId))
+                    .willThrow(new UnauthorizedException(message));
+
+            // when
+            final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);
+
+            // then
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-team"));
+        }
+
+        @Test
+        @DisplayName("잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findById_levellogWrongId_exception() throws Exception {
+            // given
+            final Long memberId = 1L;
+            final Long feedbackId = 1L;
+            final Long levellogId = 1L;
+
+            final String message = "입력한 levellogId와 피드백의 levellogId가 다릅니다.";
+            given(feedbackService.findById(levellogId, feedbackId, memberId))
+                    .willThrow(new InvalidLevellogException(message, "[ 입력한 levellogId : 1 ]"));
+
+            // when
+            final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-wrong-id"));
+        }
+
+        private ResultActions requestFindByIdFeedback(final Long levellogId, final Long feedbackId) throws Exception {
+            return requestGet("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId);
         }
     }
 }

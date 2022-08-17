@@ -1,3 +1,7 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
 security:
   github:
     client-id: "github_client_Id"

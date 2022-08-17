@@ -6,6 +6,7 @@ import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         final String token = AuthorizationExtractor.extract(request);
         if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException("토큰 인증 실패 - token:" + token);
+            throw new InvalidTokenException(DebugMessage.init()
+                    .append("token", token));
         }
 
         return true;

@@ -118,7 +118,8 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "레벨로그가 존재하지 않습니다.";
             given(feedbackService.save(request, levellogId, memberId)).willThrow(
-                    new LevellogNotFoundException(message));
+                    new LevellogNotFoundException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -331,7 +332,8 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "레벨로그가 존재하지 않습니다.";
             given(feedbackService.findAll(levellogId, memberId))
-                    .willThrow(new LevellogNotFoundException(message));
+                    .willThrow(new LevellogNotFoundException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestFindAllFeedback(levellogId);
@@ -391,7 +393,8 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "레벨로그가 존재하지 않습니다.";
             given(feedbackService.findById(levellogId, feedbackId, memberId))
-                    .willThrow(new LevellogNotFoundException(message));
+                    .willThrow(new LevellogNotFoundException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);

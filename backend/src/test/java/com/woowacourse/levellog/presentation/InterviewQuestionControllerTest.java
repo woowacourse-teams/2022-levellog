@@ -80,7 +80,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
             final String message = "레벨로그가 존재하지 않습니다.";
-            willThrow(new LevellogNotFoundException(message))
+            willThrow(new LevellogNotFoundException(DebugMessage.init()
+                    .append("levellogId", invalidLevellogId)))
                     .given(interviewQuestionService)
                     .save(request, invalidLevellogId, 1L);
 
@@ -164,7 +165,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final long invalidLevellogId = 20000000L;
             final String message = "레벨로그가 존재하지 않습니다.";
-            willThrow(new LevellogNotFoundException(message))
+            willThrow(new LevellogNotFoundException(DebugMessage.init()
+                    .append("levellogId", invalidLevellogId)))
                     .given(interviewQuestionService)
                     .findAllByLevellog(invalidLevellogId);
 
@@ -198,7 +200,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final long invalidLevellogId = 20000000L;
             final String message = "레벨로그가 존재하지 않습니다.";
-            willThrow(new LevellogNotFoundException(message))
+            willThrow(new LevellogNotFoundException(DebugMessage.init()
+                    .append("levellogId", invalidLevellogId)))
                     .given(interviewQuestionService)
                     .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
 

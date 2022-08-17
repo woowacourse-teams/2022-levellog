@@ -99,7 +99,8 @@ public class InterviewQuestionService {
 
     private Levellog getLevellog(final Long levellogId) {
         return levellogRepository.findById(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException("존재하지 않는 레벨로그 [levellogId : " + levellogId + "]"));
+                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
+                        .append("levellogId", levellogId)));
     }
 
     private Member getMember(final Long memberId) {

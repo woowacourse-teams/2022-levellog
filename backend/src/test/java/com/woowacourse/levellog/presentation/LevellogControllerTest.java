@@ -119,7 +119,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long levellogId = 1000L;
 
             final String message = "레벨로그가 존재하지 않습니다.";
-            willThrow(new LevellogNotFoundException(message))
+            willThrow(new LevellogNotFoundException(DebugMessage.init()
+                    .append("levellogId", levellogId)))
                     .given(levellogService)
                     .findById(levellogId);
 

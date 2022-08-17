@@ -236,7 +236,8 @@ class PreQuestionControllerTest extends ControllerTest {
         void findMy_levellogWrongId_exception() throws Exception {
             // given
             final String message = "레벨로그가 존재하지 않습니다.";
-            willThrow(new LevellogNotFoundException(message))
+            willThrow(new LevellogNotFoundException(DebugMessage.init()
+                    .append("levellogId", 999L)))
                     .given(preQuestionService)
                     .findMy(999L, 1L);
 

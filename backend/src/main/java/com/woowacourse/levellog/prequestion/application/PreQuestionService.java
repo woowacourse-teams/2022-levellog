@@ -84,7 +84,8 @@ public class PreQuestionService {
 
     private Levellog getLevellog(final Long levellogId) {
         return levellogRepository.findById(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException("레벨로그가 존재하지 않습니다. levellogId : " + levellogId));
+                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
+                        .append("levellogId", levellogId)));
     }
 
     private Member getMember(final Long memberId) {

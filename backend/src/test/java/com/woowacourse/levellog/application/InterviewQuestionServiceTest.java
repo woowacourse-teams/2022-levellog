@@ -109,7 +109,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, invalidLevellogId, memberId))
                     .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 레벨로그", String.valueOf(invalidLevellogId));
+                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
         }
 
         @Test
@@ -251,7 +251,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.findAllByLevellog(invalidLevellogId))
                     .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 레벨로그", String.valueOf(invalidLevellogId));
+                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
         }
     }
 
@@ -300,7 +300,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.findAllByLevellogAndAuthor(invalidLevellogId, memberId))
                     .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 레벨로그", String.valueOf(invalidLevellogId));
+                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
         }
 
         @Test

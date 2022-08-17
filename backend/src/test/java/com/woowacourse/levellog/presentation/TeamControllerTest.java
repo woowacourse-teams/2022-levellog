@@ -517,7 +517,7 @@ class TeamControllerTest extends ControllerTest {
                     participantIds);
 
             final String message = "팀이 존재하지 않습니다.";
-            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", message))
+            willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
                     .update(request, 10000000L, 1L);
 
@@ -709,7 +709,7 @@ class TeamControllerTest extends ControllerTest {
         void findByTeamIdAndMemberId_teamNotFound_exception() throws Exception {
             // given
             final String message = "팀이 존재하지 않습니다.";
-            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", message))
+            willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
                     .findByTeamIdAndMemberId(10000000L, 1L);
 
@@ -743,7 +743,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             final String message = "팀이 존재하지 않습니다.";
             final long teamId = 10000000L;
-            willThrow(new TeamNotFoundException(message + " 입력한 팀 id : [10000000]", message))
+            willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
                     .findStatus(teamId);
 
@@ -837,7 +837,7 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 200_000L;
 
             final String message = "팀이 존재하지 않습니다.";
-            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. [teamId : " + teamId + "]", message))
+            willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
                     .close(teamId, 1L);
 
@@ -941,7 +941,7 @@ class TeamControllerTest extends ControllerTest {
         void deleteById_teamNotFound_exception() throws Exception {
             // given
             final String message = "팀이 존재하지 않습니다.";
-            willThrow(new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [10000000]", message))
+            willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
                     .deleteById(10000000L, 1L);
 

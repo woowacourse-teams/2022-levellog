@@ -181,7 +181,8 @@ public class TeamService {
     private Team getTeam(final Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(
-                        () -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
+                        () -> new TeamNotFoundException(DebugMessage.init()
+                                .append("teamId", teamId)));
     }
 
     private List<Team> getTeamsByMemberId(final Long memberId) {

@@ -13,7 +13,6 @@ const App = () => {
   return (
     <>
       <GlobalStyles />
-      <Header />
       <PageContainer>{content}</PageContainer>
       <Footer />
     </>

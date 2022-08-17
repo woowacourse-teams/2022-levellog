@@ -51,21 +51,6 @@ const S = {
     justify-content: space-between;
     align-items: center;
     height: 4.375rem;
-    @media (min-width: 1620px) {
-      margin: 0 calc((100vw - 1600px) / 2);
-    }
-    @media (min-width: 1187.5px) and (max-width: 1620px) {
-      margin: 0 calc((100vw - 1187.5px) / 2);
-    }
-    @media (min-width: 775px) and (max-width: 1220px) {
-      margin: 0 calc((100vw - 775px) / 2);
-    }
-    @media (min-width: 560px) and (max-width: 800px) {
-      margin: 0 calc((100vw - 362.5px) / 2);
-    }
-    @media (max-width: 560px) {
-      margin: 0 1.25rem;
-    }
   `,
 
   ProfileImage: styled.img`
@@ -76,6 +61,9 @@ const S = {
   `,
 
   Line: styled.div`
+    position: absolute;
+    left: 0;
+    width: 100%;
     border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,
 };

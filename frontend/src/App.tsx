@@ -3,7 +3,7 @@ import { useRoutes } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Footer from 'components/Footer';
-import Header from 'components/Header';
+import Header from 'components/header/Header';
 import { routes } from 'routes/Routes';
 import GlobalStyles from 'styles/GlobalStyle';
 
@@ -31,8 +31,8 @@ const PageContainer = styled.main`
     padding: 0 5rem;
   }
   @media (max-width: 560px) {
-    padding: 0 2.5rem;
-  } */
+    padding: 0 1.25rem;
+  }
 `;
 
 export default App;

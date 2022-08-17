@@ -63,7 +63,7 @@ const S = {
 
   Box: styled.div`
     margin-bottom: 3.125rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.BLACK};
+    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     border-radius: 0.5rem;
     box-shadow: 0 0 1rem ${(props) => props.theme.new_default.GRAY};
   `,
@@ -74,7 +74,7 @@ const S = {
     gap: 0.375rem;
     padding: 0.875rem;
     width: 100%;
-    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.BLACK};
+    border-bottom: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,
 
   AuthorText: styled.p`

@@ -26,12 +26,13 @@ const RoleStyle = styled.div`
   justify-content: start;
   align-items: center;
   position: absolute;
-  top: -0.625rem;
-  left: -3.125rem;
+  top: 14px;
+  left: 10px;
+  z-index: 10;
   width: fit-content;
   height: 2.1875rem;
   padding: 0.1875rem;
-  box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.default.GRAY};
+  box-shadow: 2px 2px 0.25rem ${(props) => props.theme.new_default.DARK_GRAY};
   border-style: none;
   border-radius: 1.5625rem;
   background-color: ${(props) => props.theme.default.DARK_GRAY};

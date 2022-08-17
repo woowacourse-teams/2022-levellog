@@ -146,7 +146,9 @@ const useTeam = () => {
       startAt: `${date.value}T${time.value}`,
       interviewerNumber: interviewerNumber.value,
       participants: {
-        ids: Object.values(participants).map((participants) => participants.id),
+        ids: Object.values(participants)
+          .filter((participants) => participants.id !== loginUserId)
+          .map((participants) => participants.id),
       },
     };
     editTeam({ teamInfo });

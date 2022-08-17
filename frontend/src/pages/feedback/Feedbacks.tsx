@@ -31,8 +31,6 @@ const Feedbacks = () => {
     getFeedbacksInTeam({ levellogId });
   }, []);
 
-  console.log('Feedbacks', feedbacks);
-
   return (
     <>
       <ContentHeader title={'레벨 인터뷰 피드백'}>

@@ -11,7 +11,6 @@ import UiViewer from 'components/@commons/UiViewer';
 import { FeedbackType } from 'types/feedback';
 
 const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
-  console.log('Feedback', feedbackInfo.from.id, loginUserId);
   return (
     <S.Container>
       <S.Header>
@@ -78,7 +77,7 @@ const S = {
     gap: 0.375rem;
     padding: 0.875rem;
     width: 100%;
-    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
+    border-bottom: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,
 
   AuthorText: styled.p`

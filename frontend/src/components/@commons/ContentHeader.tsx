@@ -12,7 +12,7 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
       <ContentHeaderStyle>
         <LeftBox>
           <FlexBox>
-            {imageUrl && <Image src={imageUrl} sizes={'MEDIUM'} margin={'0 0.625rem 0 0'} />}
+            <div>{imageUrl && <Image src={imageUrl} sizes={'MEDIUM'} />}</div>
             <TitleBox>
               <Title>{title}</Title>
               {subTitle && <SubTitle>{subTitle}</SubTitle>}
@@ -59,6 +59,10 @@ const LeftBox = styled.div`
     flex-direction: column;
     margin-bottom: 0.3125rem;
   }
+`;
+
+const ImageBox = styled.div`
+  margin-right: 0.625rem;
 `;
 
 const FlexBox = styled.div`

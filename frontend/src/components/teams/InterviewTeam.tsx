@@ -28,13 +28,17 @@ const InterviewTeam = ({
       <FlexBox flexFlow="column">
         <S.Info>
           <S.Notice>
-            <Image src={placeHolder} sizes={'TINY'} margin={'0 12px 0 0'} />
+            <S.ImageBox>
+              <Image src={placeHolder} sizes={'TINY'} />
+            </S.ImageBox>
             {place}
           </S.Notice>
         </S.Info>
         <S.Info>
           <S.Notice>
-            <Image src={check} sizes={'TINY'} margin={'0 12px 0 0'} />
+            <S.ImageBox>
+              <Image src={check} sizes={'TINY'} />
+            </S.ImageBox>
             {`${startAt.slice(0, 4)}년 ${startAt.slice(5, 7)}월 ${startAt.slice(
               8,
               10,
@@ -87,6 +91,10 @@ const S = {
     display: flex;
     align-items: center;
     color: ${(props) => props.theme.default.DARK_GRAY};
+  `,
+
+  ImageBox: styled.div`
+    margin-right: 0.75rem;
   `,
 
   ParticipantsBox: styled.div`

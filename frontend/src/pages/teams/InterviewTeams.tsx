@@ -41,7 +41,9 @@ const InterviewTeams = () => {
       <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
         <S.TeamAddButton>
           {'팀 추가하기'}
-          <Image src={plus} sizes={'TINY'} margin={'0 0 1px 5px'} />
+          <S.ImageBox>
+            <Image src={plus} sizes={'TINY'} />
+          </S.ImageBox>
         </S.TeamAddButton>
       </Link>
     </S.GridContainer>
@@ -54,19 +56,19 @@ const S = {
     overflow-x: hidden;
     box-sizing: border-box;
     @media (min-width: 1620px) {
-      padding: 0 calc((100vw - 1600px) / 2);
+      padding: 0 calc((100vw - 100rem) / 2);
       padding-bottom: 6.25rem;
     }
     @media (min-width: 1187.5px) and (max-width: 1620px) {
-      padding: 0 calc((100vw - 1187.5px) / 2);
+      padding: 0 calc((100vw - 74.2188rem) / 2);
       padding-bottom: 6.25rem;
     }
     @media (min-width: 775px) and (max-width: 1207.5px) {
-      padding: 0 calc((100vw - 775px) / 2);
+      padding: 0 calc((100vw - 48.4375rem) / 2);
       padding-bottom: 6.25rem;
     }
     @media (min-width: 560px) and (max-width: 800px) {
-      padding: 0 calc((100vw - 362.5px) / 2);
+      padding: 0 calc((100vw - 22.6563rem) / 2);
       padding-bottom: 6.25rem;
     }
     @media (max-width: 560px) {
@@ -78,12 +80,12 @@ const S = {
   Container: styled.div`
     display: flex;
     flex-wrap: wrap;
-    gap: 50px;
-    margin-top: 50px;
+    gap: 3.125rem;
+    margin-top: 3.125rem;
     @media (max-width: 560px) {
       justify-content: center;
-      margin-top: 20px;
-      gap: 40px;
+      margin-top: 1.25rem;
+      gap: 2.5rem;
     }
   `,
 
@@ -92,16 +94,20 @@ const S = {
     justify-content: center;
     align-items: center;
     position: fixed;
-    bottom: 110px;
     left: 0;
     right: 0;
+    bottom: 6.875rem;
     z-index: 10;
-    width: 130px;
-    height: 50px;
+    width: 8.125rem;
+    height: 3.125rem;
     margin: 0 auto;
+    border-radius: 2rem;
     background-color: ${(props) => props.theme.new_default.DARK_BLACK};
-    border-radius: 32px;
-    font-size: 16px;
+    font-size: 1rem;
+  `,
+
+  ImageBox: styled.div`
+    margin: 0 0 1px 5px;
   `,
 };
 

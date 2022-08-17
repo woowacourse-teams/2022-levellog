@@ -9,10 +9,11 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
+import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -81,7 +82,9 @@ class InterviewQuestionServiceTest extends ServiceTest {
         void save_memberNotFound_exception() {
             // given
             final Member pepper = saveMember("페퍼");
-            final Team team = saveTeam(pepper);
+            final Member eve = saveMember("이브");
+
+            final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
             final Long invalidMemberId = 1000L;
@@ -159,7 +162,25 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 사전 질문을 작성 할 수 없습니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 작성 할 수 없습니다.", String.valueOf(team.getId()));
+        }
+
+        @Test
+        @DisplayName("자신에게 인터뷰 질문을 작성하는 경우 예외를 던진다.")
+        void save_selfInterviewQuestion_exception() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member eve = saveMember("이브");
+
+            final Team team = saveTeam(pepper, eve);
+            final Long pepperLevellogId = saveLevellog(pepper, team).getId();
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, pepper.getId()))
+                    .isInstanceOf(InvalidInterviewQuestionException.class)
+                    .hasMessageContainingAll("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.", String.valueOf(pepperLevellogId),
+                            String.valueOf(pepper.getId()));
         }
     }
 
@@ -398,7 +419,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 사전 질문을 수정 할 수 없습니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.", String.valueOf(team.getId()));
         }
     }
 
@@ -490,7 +511,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 사전 질문을 삭제 할 수 없습니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 삭제 할 수 없습니다.", String.valueOf(team.getId()));
         }
     }
 }

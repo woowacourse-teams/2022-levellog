@@ -26,7 +26,7 @@ const PageContainer = styled.main`
   box-sizing: border-box;
   width: 100%;
   min-height: 65vh;
-  padding: 0 10rem;
+  /* padding: 0 10rem;
   @media (max-width: 1024px) {
     padding: 0 5rem;
   }

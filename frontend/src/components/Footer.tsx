@@ -15,10 +15,9 @@ const S = {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10;
+    margin-top: 7.125rem;
     width: 100%;
     height: 70px;
-    // margin-top: 7.125rem;
     border-top: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.new_default.WHITE};
   `,

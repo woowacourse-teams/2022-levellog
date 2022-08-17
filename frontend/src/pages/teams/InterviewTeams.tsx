@@ -12,7 +12,6 @@ import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FilterButton from 'components/@commons/FilterButton';
 import Image from 'components/@commons/Image';
-import Header from 'components/header/Header';
 import InterviewTeam from 'components/teams/InterviewTeam';
 import { InterviewTeamType } from 'types/team';
 

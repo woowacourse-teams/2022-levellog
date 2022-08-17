@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.member.exception;
 
 import com.woowacourse.levellog.common.exception.LevellogException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -10,7 +11,7 @@ public class MemberNotFoundException extends LevellogException {
 
     private static final String CLIENT_MESSAGE = "멤버가 존재하지 않습니다.";
 
-    public MemberNotFoundException(final String message) {
-        super(message, CLIENT_MESSAGE, HttpStatus.NOT_FOUND);
+    public MemberNotFoundException(final DebugMessage debugMessage) {
+        super(CLIENT_MESSAGE, debugMessage, HttpStatus.BAD_REQUEST);
     }
 }

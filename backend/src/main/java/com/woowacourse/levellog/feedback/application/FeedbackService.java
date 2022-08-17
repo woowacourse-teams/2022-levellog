@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.feedback.application;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
@@ -117,7 +118,8 @@ public class FeedbackService {
     private Member getMember(final Long memberId) {
         return memberRepository
                 .findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
+                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
+                        .append("memberId", memberId)));
     }
 
     private Levellog getLevellog(final Long levellogId) {

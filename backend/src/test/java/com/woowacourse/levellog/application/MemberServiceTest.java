@@ -138,7 +138,7 @@ class MemberServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> memberService.findMemberById(1000L))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않음", "1000");
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", "1000");
         }
 
     }

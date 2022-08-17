@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.prequestion.application;
 
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -88,7 +89,8 @@ public class PreQuestionService {
 
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
+                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
+                        .append("memberId", memberId)));
     }
 
     private void validateSameTeamMember(final Team team, final Member member) {

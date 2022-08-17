@@ -92,7 +92,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, invalidMemberId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 멤버", String.valueOf(invalidMemberId));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(invalidMemberId));
         }
 
         @Test
@@ -316,7 +316,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             assertThatThrownBy(
                     () -> interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellogId, invalidMemberId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 멤버", String.valueOf(invalidMemberId));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(invalidMemberId));
         }
     }
 

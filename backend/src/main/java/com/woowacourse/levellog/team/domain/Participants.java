@@ -3,7 +3,6 @@ package com.woowacourse.levellog.team.domain;
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +44,7 @@ public class Participants {
                 .stream()
                 .filter(Participant::isHost)
                 .findAny()
-                .orElseThrow(() -> new MemberNotFoundException("모든 참가자 중 호스트가 존재하지 않습니다."))
+                .orElseThrow()
                 .getMember()
                 .getId();
     }

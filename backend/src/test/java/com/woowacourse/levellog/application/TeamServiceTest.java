@@ -838,7 +838,7 @@ class TeamServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> teamService.findAllByMemberId(100_000L))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(100_000L));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(100_000L));
         }
     }
 }

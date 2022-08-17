@@ -76,7 +76,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(authorId));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(authorId));
         }
 
         @Test
@@ -214,7 +214,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, memberId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(memberId));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(memberId));
         }
 
         @Test
@@ -298,7 +298,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.findAllByAuthorId(1_000_000L))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(1_000_000L));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(1_000_000L));
         }
     }
 }

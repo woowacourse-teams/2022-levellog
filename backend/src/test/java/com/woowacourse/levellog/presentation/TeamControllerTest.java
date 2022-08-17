@@ -908,7 +908,7 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 1L;
 
             final String message = "호스트 권한이 없습니다.";
-            willThrow(new HostUnauthorizedException(message))
+            willThrow(new HostUnauthorizedException(DebugMessage.init()))
                     .given(teamService)
                     .close(teamId, 1L);
 
@@ -988,7 +988,7 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 1L;
 
             final String message = "호스트 권한이 없습니다.";
-            willThrow(new HostUnauthorizedException(message))
+            willThrow(new HostUnauthorizedException(DebugMessage.init()))
                     .given(teamService)
                     .deleteById(teamId, 1L);
 

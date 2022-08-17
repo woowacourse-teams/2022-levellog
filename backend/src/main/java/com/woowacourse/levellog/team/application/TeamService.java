@@ -262,7 +262,9 @@ public class TeamService {
         final Long hostId = participants.toHostId();
 
         if (!memberId.equals(participants.toHostId())) {
-            throw new HostUnauthorizedException("호스트 권한이 없습니다. [hostId : " + hostId + ", memberId : " + memberId + "]");
+            throw new HostUnauthorizedException(DebugMessage.init()
+                    .append("hostId", hostId)
+                    .append("memberId", memberId));
         }
     }
 }

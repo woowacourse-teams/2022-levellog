@@ -12,11 +12,12 @@ const useUser = () => {
   const userInfoDispatch = useContext(UserDispatchContext);
   const navigate = useNavigate();
 
-  const handleClickProfileImage = () => {
-    setIsShowProfileDropdown((prev) => !prev);
+  const handleClickProfile = () => {
+    if (id) return setIsShowProfileDropdown((prev) => !prev);
+    window.location.href = GITHUB_LOGIN_URL;
   };
 
-  const handleErrorProfileImage = (e: React.SyntheticEvent<EventTarget>) => {
+  const handleErrorProfile = (e: React.SyntheticEvent<EventTarget>) => {
     const target = e.target as HTMLImageElement;
     target.src = `${profileDefaultImage}`;
   };
@@ -28,19 +29,14 @@ const useUser = () => {
     navigate(ROUTES_PATH.HOME);
   };
 
-  const handleClickLoginButton = () => {
-    window.location.href = GITHUB_LOGIN_URL;
-  };
-
   return {
     loginUserId: id,
     loginUserNickname: nickname,
     loginUserProfileUrl: profileUrl,
     isShowProfileDropdown,
-    handleClickProfileImage,
+    handleClickProfile,
     handleClickLogoutButton,
-    handleClickLoginButton,
-    handleErrorProfileImage,
+    handleErrorProfile,
     setIsShowProfileDropdown,
     userInfoDispatch,
   };

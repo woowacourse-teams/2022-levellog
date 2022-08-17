@@ -52,10 +52,10 @@ const S = {
     align-items: center;
     height: 4.375rem;
     @media (min-width: 1620px) {
-      padding: 0 calc((100vw - 1600px) / 2);
+      padding: 0 calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 0 20px;
+      padding: 0 1.25rem;
     }
   `,
 

@@ -109,18 +109,19 @@ const S = {
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
-    width: 722px;
+    width: 45.125rem;
     height: max-content;
-    margin: 20px auto 0 auto;
-    padding-bottom: 30px;
-    border-radius: 20px;
+    margin: 1.25rem auto 1.25rem auto;
+    padding-bottom: 1.875rem;
+    border-radius: 1.25rem;
     box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
-    @media (min-width: 560px) and (max-width: 800px) {
+    @media (min-width: 560px) and (max-width: 760px) {
+      width: 520px;
     }
     @media (max-width: 560px) {
       justify-content: center;
-      width: 362.5px;
-      margin: 20px 0 0 0;
+      width: calc(100vw - 2.5rem);
+      box-shadow: none;
     }
   `,
 
@@ -128,7 +129,7 @@ const S = {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px;
+    height: 6.25rem;
     font-weight: 600;
   `,
 
@@ -139,11 +140,11 @@ const S = {
     gap: 0.5rem;
     width: 42.625rem;
     padding-bottom: 16px;
-    @media (max-width: 1024px) {
-      width: 31.25rem;
+    @media (min-width: 560px) and (max-width: 760px) {
+      width: 27.5rem;
     }
     @media (max-width: 560px) {
-      width: 18.75rem;
+      width: calc(100vw - 5rem);
     }
   `,
 
@@ -163,22 +164,22 @@ const S = {
     border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
     border-radius: 0.3125rem;
     background-color: ${(props) => props.theme.default.WHITE};
-    @media (max-width: 1024px) {
-      width: 31.25rem;
+    @media (min-width: 560px) and (max-width: 760px) {
+      width: 27.5rem;
     }
     @media (max-width: 560px) {
-      width: 18.75rem;
+      width: calc(100vw - 5rem);
     }
   `,
 
   SubmitButton: styled(Button)`
     width: 42.625rem;
     height: 3.125rem;
-    @media (max-width: 1024px) {
-      width: 31.25rem;
+    @media (min-width: 560px) and (max-width: 760px) {
+      width: 27.5rem;
     }
     @media (max-width: 560px) {
-      width: 18.75rem;
+      width: calc(100vw - 5rem);
     }
   `,
 };

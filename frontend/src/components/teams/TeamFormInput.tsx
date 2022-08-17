@@ -36,11 +36,11 @@ const S = {
     width: 40.625rem;
     height: 1.125rem;
     border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
-    @media (min-width: 560px) and (max-width: 800px) {
-      //
+    @media (min-width: 560px) and (max-width: 760px) {
+      width: 27.5rem;
     }
     @media (max-width: 560px) {
-      width: 264px;
+      width: calc(100vw - 5rem);
     }
   `,
 };

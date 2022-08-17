@@ -55,23 +55,23 @@ const S = {
     box-sizing: border-box;
     @media (min-width: 1620px) {
       padding: 0 calc((100vw - 1600px) / 2);
-      padding-bottom: 200px;
+      padding-bottom: 6.25rem;
     }
     @media (min-width: 1187.5px) and (max-width: 1620px) {
       padding: 0 calc((100vw - 1187.5px) / 2);
-      padding-bottom: 200px;
+      padding-bottom: 6.25rem;
     }
     @media (min-width: 775px) and (max-width: 1207.5px) {
       padding: 0 calc((100vw - 775px) / 2);
-      padding-bottom: 200px;
+      padding-bottom: 6.25rem;
     }
     @media (min-width: 560px) and (max-width: 800px) {
       padding: 0 calc((100vw - 362.5px) / 2);
-      padding-bottom: 200px;
+      padding-bottom: 6.25rem;
     }
     @media (max-width: 560px) {
       padding: 0 1.25rem;
-      padding-bottom: 200px;
+      padding-bottom: 6.25rem;
     }
   `,
 
@@ -99,6 +99,7 @@ const S = {
     width: 130px;
     height: 50px;
     margin: 0 auto;
+    background-color: ${(props) => props.theme.new_default.DARK_BLACK};
     border-radius: 32px;
     font-size: 16px;
   `,

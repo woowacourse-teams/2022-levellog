@@ -15,7 +15,8 @@ const S = {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 70px;
+    height: 4.375rem;
+    margin-top: 6.25rem;
     border-top: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.new_default.WHITE};
   `,

@@ -51,6 +51,10 @@ const S = {
     justify-content: space-between;
     align-items: center;
     height: 4.375rem;
+    /* @media (min-width: 1620px) {
+      padding: 0 calc((100vw - 1600px) / 2);
+      padding-bottom: 200px;
+    } */
   `,
 
   ProfileImage: styled.img`

@@ -22,12 +22,12 @@ class AdminAcceptanceTest extends AcceptanceTest {
      */
     @Test
     @DisplayName("관리자 로그인")
-    void login() throws Exception {
+    void login() {
         // given
-        final PasswordDto request = new PasswordDto("1q2w3e4r");
+        final PasswordDto request = new PasswordDto("levellog1!");
 
         // when
-        final ValidatableResponse response = RestAssured.given().log().all()
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("admin/login"))

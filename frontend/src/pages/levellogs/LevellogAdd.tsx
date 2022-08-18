@@ -6,9 +6,7 @@ import useLevellog from 'hooks/useLevellog';
 
 import { MESSAGE } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
-import ContentHeader from 'components/@commons/ContentHeader';
-import SubTitleLabel from 'components/@commons/Label';
+import BottomBar from 'components/@commons/BottomBar';
 import UiEditor from 'components/@commons/UiEditor';
 
 const LevellogAdd = () => {
@@ -21,33 +19,34 @@ const LevellogAdd = () => {
 
       return;
     }
-
     alert(MESSAGE.WRONG_ACCESS);
   };
 
   return (
-    <>
-      <ContentHeader title={'레벨로그 작성'}>
-        <Button onClick={handleClickLevellogAddButton}>{'제출하기'}</Button>
-      </ContentHeader>
-      <S.Content>
-        <SubTitleLabel>Level Log</SubTitleLabel>
-        <UiEditor
-          needToolbar={true}
-          autoFocus={true}
-          height={'50rem'}
-          contentRef={levellogRef}
-          initialEditType={'markdown'}
-        />
-      </S.Content>
-    </>
+    <S.Container>
+      <UiEditor
+        needToolbar={true}
+        autoFocus={true}
+        height={'50rem'}
+        contentRef={levellogRef}
+        initialEditType={'markdown'}
+      />
+      <BottomBar
+        buttonText={'작성하기'}
+        handleClickRightButton={handleClickLevellogAddButton}
+      ></BottomBar>
+    </S.Container>
   );
 };
 
 const S = {
-  Content: styled.main`
-    display: flex;
-    flex-direction: column;
+  Container: styled.main`
+    @media (min-width: 1620px) {
+      padding: 1.25rem calc((100vw - 100rem) / 2);
+    }
+    @media (max-width: 1620px) {
+      padding: 1.25rem 1.25rem;
+    }
   `,
 };
 

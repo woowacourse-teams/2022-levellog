@@ -34,6 +34,9 @@ export const ButtonStyle = styled.button`
   font-weight: 500;
   color: ${(props) => props.theme.new_default.WHITE};
   white-space: pre;
+  :hover {
+    opacity: 70%;
+  }
 `;
 
 export default Button;

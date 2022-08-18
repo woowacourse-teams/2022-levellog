@@ -30,6 +30,11 @@ jobs:
           runTests: false
           build: yarn build-dev
 
+
+      - name: Install chrome
+        uses: browser-actions/setup-chrome@latest
+        run: chrome --version
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v4
         with:

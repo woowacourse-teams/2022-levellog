@@ -12,13 +12,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          browser: chrome
 
       - name: Check Node v
         run: node -v
-
-      - name: Install yarn 3
-        working-directory: ./frontend
-        run: yarn set version stable
 
       - name: Install Dependencies
         working-directory: ./frontend

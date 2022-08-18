@@ -2,9 +2,6 @@ name: backend CI
 
 # 하기 내용에 해당하는 이벤트 발생 시 github action 동작
 on:
-  push: # 모든 브랜치에서 push가 일어났을 때 github action 동작
-    branches:
-      - '*'
   pull_request: # 모든 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
       - '*'
@@ -66,7 +63,7 @@ jobs:
           done
 
       - name: Comment Sonarqube URL
-        uses: actions/github-script@v2
+        uses: actions/github-script@v4
         with:
           # 이슈에 코멘트를 달아주는 스크립트 실행
           script: |

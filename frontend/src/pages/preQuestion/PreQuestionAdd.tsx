@@ -8,6 +8,7 @@ import usePreQuestion from 'hooks/usePreQuestion';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
+import BottomBar from 'components/@commons/BottomBar';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
@@ -37,50 +38,48 @@ const PreQuestionAdd = () => {
   }, []);
 
   return (
-    <FlexBox gap={1.875}>
-      <S.Container>
-        <ContentHeader title={'사전질문 작성'}>
-          <Button onClick={handleClickPreQuestionAddButton}>작성하기</Button>
-        </ContentHeader>
-        <S.Content>
-          <S.LeftContent>
-            <FlexBox alignItems={'center'} gap={1}>
-              <S.LevellogTitle>레벨로그</S.LevellogTitle>
-              <LevellogReport levellogInfo={levellogInfo} />
-            </FlexBox>
-          </S.LeftContent>
-          <S.RightContent>
-            <S.Title>사전 질문</S.Title>
-            <UiEditor
-              needToolbar={true}
-              autoFocus={true}
-              height={'60rem'}
-              contentRef={preQuestionRef}
-              initialEditType={'markdown'}
-            />
-          </S.RightContent>
-        </S.Content>
-      </S.Container>
-    </FlexBox>
+    <S.GridContainer>
+      <S.Content>
+        <S.LeftContent>
+          <LevellogReport levellogInfo={levellogInfo} />
+        </S.LeftContent>
+        <S.RightContent>
+          <UiEditor
+            needToolbar={true}
+            autoFocus={true}
+            height={'60rem'}
+            contentRef={preQuestionRef}
+            initialEditType={'markdown'}
+          />
+        </S.RightContent>
+      </S.Content>
+      <BottomBar
+        buttonText={'작성하기'}
+        handleClickRightButton={handleClickPreQuestionAddButton}
+      ></BottomBar>
+    </S.GridContainer>
   );
 };
 
 const S = {
-  Container: styled.div`
-    overflow: auto;
-    width: 100%;
-  `,
-
-  Content: styled.div`
+  GridContainer: styled.div`
     display: flex;
     overflow: auto;
-    gap: 2.5rem;
-    @media (max-width: 1024px) {
-      gap: 1.25rem;
+    flex-direction: column;
+    @media (min-width: 1620px) {
+      padding: 20px calc((100vw - 100rem) / 2);
+    }
+    @media (max-width: 1620px) {
+      padding: 20px 1.25rem;
     }
     @media (max-width: 520px) {
       flex-direction: column;
     }
+  `,
+
+  Content: styled.div`
+    display: flex;
+    gap: 16px;
   `,
 
   LeftContent: styled.div`

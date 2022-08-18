@@ -16,13 +16,17 @@ jobs:
       - name: Check Node v
         run: node -v
 
-      - name: Install Dependencies
-        working-directory: ./frontend
-        run: yarn add cypress
+#      - name: Install Dependencies cypress
+#        working-directory: ./frontend
+#        run: yarn add cypress
+#
+#      - name: Install Dependencies cypress-react-selector
+#        working-directory: ./frontend
+#        run: yarn add cypress-react-selector
 
       - name: Install Dependencies
         working-directory: ./frontend
-        run: yarn add cypress-react-selector
+        run: yarn install
 
 #      - name: Cypress install
 #        uses: cypress-io/github-action@v4
@@ -31,13 +35,14 @@ jobs:
 #          runTests: false
 #          build: yarn build-dev
 
-#      - name: Install unzip
-#        run: apt install unzip
+#      - name: Install yarn 3
+#        working-directory: ./frontend
+#        run: yarn set version stable
 
       - name: Setup Chromedriver
         uses: nanasess/setup-chromedriver@v1.0.1
 
-      - name: Install Dependencies
+      - name: Run local
         working-directory: ./frontend
         run: yarn local
 

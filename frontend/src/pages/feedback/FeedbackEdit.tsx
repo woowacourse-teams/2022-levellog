@@ -3,13 +3,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
+import useContentTag from 'hooks/useContentTag';
 import useFeedback from 'hooks/useFeedback';
 import useInterviewQuestion from 'hooks/useInterviewQuestion';
 import useLevellog from 'hooks/useLevellog';
 import usePreQuestion from 'hooks/usePreQuestion';
 import useRole from 'hooks/useRole';
 
-import { MESSAGE } from 'constants/constants';
+import Loading from 'pages/status/Loading';
+
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import BottomBar from 'components/@commons/BottomBar';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -19,28 +22,22 @@ import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
 
 const FeedbackEdit = () => {
-  // const { levellogInfo, getLevellog } = useLevellog();
-  // const { feedbackWriterRole, getWriterInfo } = useRole();
-  // const { preQuestion, getPreQuestion } = usePreQuestion();
-  // const {
-  //   interviewQuestionInfos,
-  //   interviewQuestionRef,
-  //   interviewQuestionContentRef,
-  //   getInterviewQuestion,
-  //   onClickDeleteInterviewQuestionButton,
-  //   onSubmitEditInterviewQuestion,
-  //   handleSubmitInterviewQuestion,
-  // } = useInterviewQuestion();
-  // const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
+  const { preQuestion, getPreQuestion } = usePreQuestion();
+  const { levellogInfo, getLevellog } = useLevellog();
+  const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
   const { getFeedbackOnRef, feedbackRef, onClickFeedbackEditButton } = useFeedback();
+  const { feedbackWriterRole, getWriterInfo } = useRole();
   const { teamId, levellogId, feedbackId } = useParams();
   const navigate = useNavigate();
-
-  // if (Object.keys(levellogInfo).length === 0) return <></>;
-  // if (!feedbackWriterRole) return <></>;
-  // const { author } = levellogInfo;
-
-  if (!levellogId || !feedbackId) return <></>;
+  const {
+    interviewQuestionInfos,
+    interviewQuestionRef,
+    interviewQuestionContentRef,
+    getInterviewQuestion,
+    onClickDeleteInterviewQuestionButton,
+    onSubmitEditInterviewQuestion,
+    handleSubmitInterviewQuestion,
+  } = useInterviewQuestion();
 
   const handleClickFeedbackEditButton = () => {
     if (
@@ -55,20 +52,42 @@ const FeedbackEdit = () => {
     alert(MESSAGE.WRONG_ACCESS);
   };
 
+  const init = async () => {
+    if (
+      typeof teamId === 'string' &&
+      typeof feedbackId === 'string' &&
+      typeof levellogId === 'string'
+    ) {
+      const res = await getLevellog({ teamId, levellogId });
+      getFeedbackOnRef({ levellogId, feedbackId });
+      getWriterInfo({ teamId, participantId: res!.author.id });
+      getInterviewQuestion();
+      getPreQuestion({ levellogId });
+
+      return;
+    }
+
+    alert(MESSAGE.WRONG_ACCESS);
+    navigate(ROUTES_PATH.ERROR);
+  };
+
   useEffect(() => {
-    getFeedbackOnRef({ levellogId, feedbackId });
+    init();
   }, []);
 
-  console.log(feedbackRef.current);
+  if (Object.keys(levellogInfo).length === 0) return <Loading />;
+  if (!feedbackWriterRole) return <Loading />;
+  if (!levellogId || !feedbackId) return <Loading />;
+
   return (
     <>
-      {/* <ContentHeader
-        imageUrl={author.profileUrl}
-        title={`${author.nickname}의 인터뷰 피드백`}
-      ></ContentHeader> */}
+      <ContentHeader
+        imageUrl={levellogInfo.author.profileUrl}
+        title={`${levellogInfo.author.nickname}의 인터뷰 피드백`}
+      ></ContentHeader>
       <S.Container>
         <S.Content>
-          {/* <S.LeftContent>
+          <S.LeftContent>
             <FlexBox alignItems={'center'} gap={1}>
               {whichContentShow.levellog && <S.LevellogTitle>레벨로그</S.LevellogTitle>}
               {whichContentShow.preQuestion && <S.LevellogTitle>사전질문</S.LevellogTitle>}
@@ -83,9 +102,9 @@ const FeedbackEdit = () => {
               handleClickLevellogTag={handleClickLevellogTag}
               handleClickPreQuestionTag={handleClickPreQuestionTag}
             />
-          </S.LeftContent> */}
+          </S.LeftContent>
           <S.RightContent>
-            {/* <S.QuestionContent>
+            <S.QuestionContent>
               <S.QuestionTitle>인터뷰에서 받은 질문</S.QuestionTitle>
               <InterviewQuestion
                 interviewQuestionInfos={interviewQuestionInfos}
@@ -95,7 +114,7 @@ const FeedbackEdit = () => {
                 onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
                 handleSubmitInterviewQuestion={handleSubmitInterviewQuestion}
               />
-            </S.QuestionContent> */}
+            </S.QuestionContent>
             <S.FeedbackContent>
               <FeedbackFormat feedbackRef={feedbackRef} />
             </S.FeedbackContent>

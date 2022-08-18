@@ -74,7 +74,7 @@ public class TeamService {
 
     private List<Team> findAllByIsClosedAndOrderByCreatedAt(final String status) {
         final List<Team> teams = teamRepository.findAllByIsClosed(
-                TeamStatus.isClosed(status),
+                TeamStatus.checkClosed(status),
                 Sort.by(DESC, "createdAt")
         );
 

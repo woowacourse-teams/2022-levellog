@@ -15,7 +15,7 @@ class TeamStatusTest {
     @DisplayName("isClosed 메서드는 입력 받은 status 값에 따라 종료 여부를 반환한다.")
     void isClosed(final String status, final boolean expected) {
         // when
-        final boolean actual = TeamStatus.isClosed(status);
+        final boolean actual = TeamStatus.checkClosed(status);
 
         // then
         assertThat(actual).isEqualTo(expected);

@@ -16,7 +16,7 @@ public enum TeamStatus {
     private final String status;
     private final boolean isClosed;
 
-    public static boolean isClosed(final String status) {
+    public static boolean checkClosed(final String status) {
         return Arrays.stream(values())
                 .filter(it -> it.getStatus().equals(status))
                 .findFirst()

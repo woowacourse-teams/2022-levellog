@@ -34,7 +34,7 @@ jobs:
         with:
           working-directory: ./frontend
           install: false
-          start: yarn test
+          build: yarn test
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
           browser: chrome

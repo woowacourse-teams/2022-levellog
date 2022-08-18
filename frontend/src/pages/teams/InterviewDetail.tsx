@@ -13,8 +13,7 @@ import Error from 'pages/status/Error';
 import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
-import FlexBox from 'components/@commons/FlexBox';
-import Image from 'components/@commons/Image';
+import ContentHeader from 'components/@commons/ContentHeader';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
@@ -62,81 +61,77 @@ const InterviewDetail = () => {
   if (team && Object.keys(team).length === 0) return <Error />;
 
   return (
-    <S.Container>
-      {isLevellogModalOpen && (
-        <LevellogViewModal
-          levellogInfo={levellogInfo}
-          participant={levellogParticipant}
-          userInTeam={(team as InterviewTeamType).isParticipant}
-          handleClickCloseLevellogModal={handleClickCloseLevellogModal}
-        />
-      )}
-      {isPreQuestionModalOpen && (
-        <PreQuestionViewModal
-          preQuestion={preQuestion}
-          participant={preQuestionParticipant}
-          getTeam={getTeam}
-          onClickDeletePreQuestion={onClickDeletePreQuestion}
-          handleClickClosePreQuestionModal={handleClickClosePreQuestionModal}
-        />
-      )}
-      <S.Header>
-        <FlexBox gap={1}>
-          <S.OwnerImage>
-            <Image src={(team as InterviewTeamType).teamImage} sizes={'LARGE'} />
-          </S.OwnerImage>
-          <FlexBox flexFlow="column" gap={1.125}>
-            <S.Title>{(team as InterviewTeamType).title}</S.Title>
-            <FlexBox gap={1}>
-              <S.TitleContent>{(team as InterviewTeamType).place}</S.TitleContent>
-              <S.TitleContent>{(team as InterviewTeamType).startAt}</S.TitleContent>
-            </FlexBox>
-          </FlexBox>
-        </FlexBox>
-        {(team as InterviewTeamType).hostId === loginUserId && (
-          <S.ButtonBox>
-            {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
-              <>
-                <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
-                  <Button>팀 수정하기</Button>
-                </Link>
-                <Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</Button>
-              </>
-            )}
-            {(team as InterviewTeamType).status === TEAM_STATUS.IN_PROGRESS && (
-              <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
-            )}
-          </S.ButtonBox>
+    <>
+      <ContentHeader
+        imageUrl={(team as InterviewTeamType).teamImage}
+        title={(team as InterviewTeamType).title}
+        subTitle={`${(team as InterviewTeamType).place} ${(team as InterviewTeamType).startAt} `}
+      >
+        <>
+          {(team as InterviewTeamType).hostId === loginUserId && (
+            <S.ButtonBox>
+              {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
+                <>
+                  <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
+                    <S.Button>팀 수정하기</S.Button>
+                  </Link>
+                  <S.Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</S.Button>
+                </>
+              )}
+              {(team as InterviewTeamType).status === TEAM_STATUS.IN_PROGRESS && (
+                <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
+              )}
+            </S.ButtonBox>
+          )}
+        </>
+      </ContentHeader>
+      <S.Container>
+        {isLevellogModalOpen && (
+          <LevellogViewModal
+            levellogInfo={levellogInfo}
+            participant={levellogParticipant}
+            userInTeam={(team as InterviewTeamType).isParticipant}
+            handleClickCloseLevellogModal={handleClickCloseLevellogModal}
+          />
         )}
-      </S.Header>
-      <S.Content>
-        {(team as InterviewTeamType).participants.map((participant: ParticipantType) => {
-          const role = {
-            interviewee: false,
-            interviewer: false,
-          };
-          if (loginUserId) {
-            role.interviewee = (team as InterviewTeamType).interviewees.includes(
-              Number(participant.memberId),
+        {isPreQuestionModalOpen && (
+          <PreQuestionViewModal
+            preQuestion={preQuestion}
+            participant={preQuestionParticipant}
+            getTeam={getTeam}
+            onClickDeletePreQuestion={onClickDeletePreQuestion}
+            handleClickClosePreQuestionModal={handleClickClosePreQuestionModal}
+          />
+        )}
+        <S.Content>
+          {(team as InterviewTeamType).participants.map((participant: ParticipantType) => {
+            const role = {
+              interviewee: false,
+              interviewer: false,
+            };
+            if (loginUserId) {
+              role.interviewee = (team as InterviewTeamType).interviewees.includes(
+                Number(participant.memberId),
+              );
+              role.interviewer = (team as InterviewTeamType).interviewers.includes(
+                Number(participant.memberId),
+              );
+            }
+            return (
+              <Interviewer
+                key={participant.memberId}
+                teamStatus={team.status}
+                participant={participant}
+                role={role}
+                userInTeam={(team as InterviewTeamType).isParticipant}
+                onClickOpenLevellogModal={onClickOpenLevellogModal}
+                onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}
+              />
             );
-            role.interviewer = (team as InterviewTeamType).interviewers.includes(
-              Number(participant.memberId),
-            );
-          }
-          return (
-            <Interviewer
-              key={participant.memberId}
-              teamStatus={team.status}
-              participant={participant}
-              role={role}
-              userInTeam={(team as InterviewTeamType).isParticipant}
-              onClickOpenLevellogModal={onClickOpenLevellogModal}
-              onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}
-            />
-          );
-        })}
-      </S.Content>
-    </S.Container>
+          })}
+        </S.Content>
+      </S.Container>
+    </>
   );
 };
 
@@ -193,6 +188,17 @@ const S = {
     gap: 1rem;
     @media (max-width: 560px) {
       flex-direction: column;
+    }
+  `,
+
+  Button: styled(Button)`
+    border-radius: 1.25rem;
+    background-color: ${(props) => props.theme.new_default.WHITE};
+    font-weight: 700;
+    color: ${(props) => props.theme.new_default.BLACK};
+    :hover {
+      background-color: ${(props) => props.theme.new_default.LIGHT_GRAY};
+      box-shadow: 0.25rem 0.25rem 0.375rem ${(props) => props.theme.new_default.DARK_GRAY};
     }
   `,
 };

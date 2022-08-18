@@ -17,9 +17,17 @@ jobs:
       - name: Check Node v
         run: node -v
 
+#      - name: Install Dependencies
+#        working-directory: ./frontend
+#        run: yarn install
+
       - name: Install Dependencies
         working-directory: ./frontend
-        run: yarn install
+        run: yarn add cypress
+
+      - name: Install Dependencies
+        working-directory: ./frontend
+        run: yarn add cypress-react-selector
 
       - name: Cypress install
         uses: cypress-io/github-action@v4

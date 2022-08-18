@@ -1,7 +1,7 @@
 import useAuth from 'hooks/useAuth';
 
-import Error from 'pages/exception/Error';
-import Loading from 'pages/exception/Loading';
+import Error from 'pages/status/Error';
+import Loading from 'pages/status/Loading';
 
 const Auth = ({ children, requireAuth }: AuthProps) => {
   const { isLoad, isError } = useAuth({ requireAuth });

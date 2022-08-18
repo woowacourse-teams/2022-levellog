@@ -5,8 +5,6 @@ import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
 
-import Error from 'pages/exception/Error';
-
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';

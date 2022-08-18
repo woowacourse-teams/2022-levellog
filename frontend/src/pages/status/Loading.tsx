@@ -1,4 +1,4 @@
-import { Exception } from 'pages/exception';
+import { Exception } from 'pages/status';
 
 const Loading = () => {
   return (

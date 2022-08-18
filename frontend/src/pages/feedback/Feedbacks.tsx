@@ -5,8 +5,8 @@ import useFeedback from 'hooks/useFeedback';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
-import EmptyFeedback from 'pages/exception/EmptyFeedback';
-import Loading from 'pages/exception/Loading';
+import EmptyFeedback from 'pages/status/EmptyFeedback';
+import Loading from 'pages/status/Loading';
 
 import { MESSAGE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 

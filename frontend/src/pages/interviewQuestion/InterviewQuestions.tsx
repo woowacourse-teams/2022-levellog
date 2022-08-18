@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import useInterviewQuestion from 'hooks/useInterviewQuestion';
 import useTeam from 'hooks/useTeam';
 
-import EmptyInterviewQuestion from 'pages/exception/EmptyInterviewQuestion';
+import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';
 
 import { TEAM_STATUS } from 'constants/constants';
 import { checkFirstWordFinalConsonant } from 'constants/util';

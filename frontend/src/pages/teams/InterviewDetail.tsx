@@ -8,7 +8,7 @@ import usePreQuestionModal from 'hooks/usePreQuestionModal';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
-import Error from 'pages/exception/Error';
+import Error from 'pages/status/Error';
 
 import { TEAM_STATUS } from 'constants/constants';
 

@@ -1,6 +1,4 @@
 import Login from 'pages/Login';
-import Error from 'pages/exception/Error';
-import NotFound from 'pages/exception/NotFound';
 import FeedbackAdd from 'pages/feedback/FeedbackAdd';
 import FeedbackEdit from 'pages/feedback/FeedbackEdit';
 import Feedbacks from 'pages/feedback/Feedbacks';
@@ -9,6 +7,8 @@ import LevellogAdd from 'pages/levellogs/LevellogAdd';
 import LevellogEdit from 'pages/levellogs/LevellogEdit';
 import PreQuestionAdd from 'pages/preQuestion/PreQuestionAdd';
 import PreQuestionEdit from 'pages/preQuestion/PreQuestionEdit';
+import Error from 'pages/status/Error';
+import NotFound from 'pages/status/NotFound';
 import InterviewDetail from 'pages/teams/InterviewDetail';
 import InterviewTeamAdd from 'pages/teams/InterviewTeamAdd';
 import InterviewTeamEdit from 'pages/teams/InterviewTeamEdit';

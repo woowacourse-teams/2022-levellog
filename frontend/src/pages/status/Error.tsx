@@ -1,4 +1,4 @@
-import { Exception } from 'pages/exception';
+import { Exception } from 'pages/status';
 
 import NotFoundImage from 'assets/images/free-icon-cone-7564055.webp';
 

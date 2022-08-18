@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 
-import { Exception } from 'pages/exception';
+import { Exception } from 'pages/status';
 
 import NotFoundImage from 'assets/images/free-icon-cone-7564055.webp';
 
-const EmptyInterviewQuestion = ({ isShow, path }: EmptyInterviewQuestionProps) => {
+const EmptyFeedback = ({ isShow, path }: EmptyFeedbackProps) => {
   return (
     <Exception>
       <Exception.Image>{NotFoundImage}</Exception.Image>
-      <Exception.Title>작성된 인터뷰 질문이 없습니다.</Exception.Title>
+      <Exception.Title>작성된 피드백이 없습니다.</Exception.Title>
       {isShow && (
         <Link to={path}>
           <Exception.Button>작성하기</Exception.Button>
@@ -18,9 +18,9 @@ const EmptyInterviewQuestion = ({ isShow, path }: EmptyInterviewQuestionProps) =
   );
 };
 
-export default EmptyInterviewQuestion;
+export default EmptyFeedback;
 
-interface EmptyInterviewQuestionProps {
+interface EmptyFeedbackProps {
   isShow: Boolean;
   path: string;
 }

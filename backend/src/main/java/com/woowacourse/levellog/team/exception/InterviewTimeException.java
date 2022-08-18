@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.team.exception;
 
 import com.woowacourse.levellog.common.exception.LevellogException;
+import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -8,13 +9,13 @@ import org.springframework.http.HttpStatus;
  */
 public class InterviewTimeException extends LevellogException {
 
-    private static final String CLIENT_MESSAGE = "잘못된 인터뷰 시작 시간입니다.";
-
-    public InterviewTimeException(final String clientMessage, final String exceptionInfoForDev) {
-        super(clientMessage + exceptionInfoForDev, clientMessage, HttpStatus.BAD_REQUEST);
-    }
-
     public InterviewTimeException(final String message) {
         super(message, message, HttpStatus.BAD_REQUEST);
+    }
+
+    public InterviewTimeException(final String message, final Long teamId, final LocalDateTime startAt,
+                                  final LocalDateTime presentTime) {
+        super(message + " [teamId : " + teamId + ", startAt : " + startAt + ", presentTime : " + presentTime + "]",
+                message, HttpStatus.BAD_REQUEST);
     }
 }

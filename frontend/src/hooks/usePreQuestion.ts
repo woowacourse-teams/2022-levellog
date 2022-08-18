@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
 import {
@@ -12,12 +12,13 @@ import {
   requestGetPreQuestion,
   requestPostPreQuestion,
 } from 'apis/preQuestion';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { PreQuestionCustomHookType } from 'types/preQuestion';
 
 const usePreQuestion = () => {
   const [preQuestion, setPreQuestion] = useState('');
-  const navigate = useNavigate();
   const preQuestionRef = useRef<Editor>(null);
+  const navigate = useNavigate();
 
   const accessToken = localStorage.getItem('accessToken');
 
@@ -28,10 +29,11 @@ const usePreQuestion = () => {
 
       return res.data.preQuestion;
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          // alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -49,10 +51,11 @@ const usePreQuestion = () => {
       });
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -64,10 +67,11 @@ const usePreQuestion = () => {
     try {
       await requestDeletePreQuestion({ accessToken, levellogId, preQuestionId });
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -82,10 +86,11 @@ const usePreQuestion = () => {
       await requestEditPreQuestion({ accessToken, levellogId, preQuestionId, preQuestion });
       navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -112,7 +117,7 @@ const usePreQuestion = () => {
         levellogId,
         preQuestion: preQuestionRef.current.getInstance().getEditorElements().mdEditor.innerText,
       });
-      alert('사전질문 등록이 완료되었습니다.');
+      alert(MESSAGE.PREQUESTION_ADD_CONFIRM);
     }
   };
 
@@ -128,7 +133,7 @@ const usePreQuestion = () => {
         preQuestionId,
         preQuestion: preQuestionRef.current.getInstance().getEditorElements().mdEditor.innerText,
       });
-      alert('사전질문 수정이 완료되었습니다.');
+      alert(MESSAGE.PREQUESTION_EDIT_CONFIRM);
     }
     navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
   };

@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.domain;
 
 
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -13,7 +14,6 @@ import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,14 +40,14 @@ class ParticipantsTest {
 
     @Nested
     @DisplayName("toInterviewerIds 메서드는")
-    class toInterviewerIds {
+    class ToInterviewerIds {
 
         @ParameterizedTest(name = "인터뷰어 수가 {0}명이고 참가자 아이디가 [1, 2, 3, 4, 5]인 팀에서 아이디가 {1}인 참가자의 인터뷰어 아이디는 [{2}]이다.")
         @CsvSource(value = {"2:1:2, 3", "2:4:5, 1", "4:3:4, 5, 1, 2"}, delimiter = ':')
         void success(final int interviewerNumber, final Long targetMemberId, final String expectedIds) {
             // given
             final List<Long> expected = toIdList(expectedIds);
-            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
 
             final List<Participant> values = List.of(
@@ -70,10 +70,10 @@ class ParticipantsTest {
 
         @Test
         @DisplayName("타겟 멤버가 참가자가 아니면 빈 리스트를 반환한다.")
-        void emptyList() {
+        void toInterviewerIds_emptyList_success() {
             // given
             final int interviewerNumber = 1;
-            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
 
             final List<Participant> values = List.of(
@@ -94,7 +94,7 @@ class ParticipantsTest {
 
     @Nested
     @DisplayName("toIntervieweeIds 메서드는")
-    class toIntervieweeIds {
+    class ToIntervieweeIds {
 
         @ParameterizedTest(name = "인터뷰어 수가 {0}명이고 참가자 아이디가 [1, 2, 3, 4, 5]인 팀에서 아이디가 {1}인 참가자의 인터뷰이 아이디는 [{2}]이다.")
         @CsvSource(value = {"2:1:4, 5", "2:4:2, 3", "4:3:4, 5, 1, 2"}, delimiter = ':')
@@ -102,7 +102,7 @@ class ParticipantsTest {
             // given
             final List<Long> expected = toIdList(expectedIds);
 
-            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
 
             final List<Participant> values = List.of(
@@ -125,10 +125,10 @@ class ParticipantsTest {
 
         @Test
         @DisplayName("타겟 멤버가 참가자가 아니면 빈 리스트를 반환한다.")
-        void emptyList() {
+        void toIntervieweeIds_emptyList_success() {
             // given
             final int interviewerNumber = 1;
-            final Team team = new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com",
+            final Team team = new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
 
             final List<Participant> values = List.of(
@@ -149,7 +149,7 @@ class ParticipantsTest {
 
     @Nested
     @DisplayName("toInterviewRole 메서드는")
-    class toInterviewRole {
+    class ToInterviewRole {
 
         @ParameterizedTest(name = "참가자 아이디가 [1, 2, 3, 4, 5]이고 인터뷰어 수가 2명인 팀에서 아이디가 {0}인 타겟 멤버에 대해 아이디가 {1}인 참가자의 인터뷰 역할은 {2}이다.")
         @CsvSource(value = {"1,2,INTERVIEWER", "1,3,INTERVIEWER", "1,4,OBSERVER", "1,5,OBSERVER"})
@@ -157,7 +157,7 @@ class ParticipantsTest {
             // given
             final int interviewerNumber = 2;
             final Team team = MockEntityFactory.setId(1L,
-                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                    new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
@@ -177,11 +177,11 @@ class ParticipantsTest {
 
         @Test
         @DisplayName("타겟 멤버가 요청한 멤버와 같으면 ME를 반환한다.")
-        void me() {
+        void toInterviewRole_me_success() {
             // given
             final int interviewerNumber = 2;
             final Team team = MockEntityFactory.setId(1L,
-                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                    new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
                     new Participant(team, getMember("로마", 2L), false),
@@ -199,11 +199,11 @@ class ParticipantsTest {
 
         @Test
         @DisplayName("요청한 멤버가 참가자가 아니라면 예외를 던진다.")
-        void requestMemberIdNotContains_exceptionThrown() {
+        void toInterviewRole_requestMemberIdNotContains_exception() {
             // given
             final int interviewerNumber = 2;
             final Team team = MockEntityFactory.setId(1L,
-                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                    new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
@@ -220,11 +220,11 @@ class ParticipantsTest {
 
         @Test
         @DisplayName("타겟 멤버가 참가자가 아니라면 예외를 던진다.")
-        void targetMemberIdNotContains_exceptionThrown() {
+        void toInterviewRole_targetMemberIdNotContains_exception() {
             // given
             final int interviewerNumber = 2;
             final Team team = MockEntityFactory.setId(1L,
-                    new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                    new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
                     new Participant(team, getMember("릭", 1L), true),
@@ -246,7 +246,7 @@ class ParticipantsTest {
         // given
         final int interviewerNumber = 2;
         final Team team = MockEntityFactory.setId(1L,
-                new Team("레벨로그팀", "선릉 트랙룸", LocalDateTime.now().plusDays(3), "레벨로그팀.com", interviewerNumber));
+                new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
         final Member rick = getMember("릭", 1L);
         final List<Participant> values = List.of(

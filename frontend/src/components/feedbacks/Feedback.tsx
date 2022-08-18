@@ -1,86 +1,117 @@
+import { Link } from 'react-router-dom';
+
 import styled from 'styled-components';
+
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
+import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/UiViewer';
-import { FeedbackCustomHookType, FeedbackType } from 'types/feedback';
+import { FeedbackType } from 'types/feedback';
 
-const Feedback = ({ feedbackInfo, levellogId, onClickDeleteButton }: FeedbackProps) => {
-  const handleClickDeleteButton = () => {
-    onClickDeleteButton({ feedbackInfo, levellogId });
-  };
-
+const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
   return (
     <S.Container>
       <S.Header>
-        <h3>{feedbackInfo.from.nickname}의 피드백</h3>
-        <Button onClick={handleClickDeleteButton}>삭제하기</Button>
+        <FlexBox alignItems={'center'} gap={0.375}>
+          <Image src={feedbackInfo.from.profileUrl} sizes={'MEDIUM'} />
+          <S.AuthorText>{feedbackInfo.from.nickname}의 피드백</S.AuthorText>
+        </FlexBox>
+        {teamStatus === TEAM_STATUS.IN_PROGRESS && feedbackInfo.from.id === loginUserId && (
+          <Link
+            to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackInfo.id}/author/${feedbackInfo.from.id}/edit`}
+          >
+            <Button>수정하기</Button>
+          </Link>
+        )}
       </S.Header>
-      <FlexBox gap={1.5}>
-        <FlexBox flexFlow={'column'} gap={1.25}>
-          <h3>학습 측면에서 좋은 점과 부족한 점은?</h3>
+      <S.Box>
+        <S.FeedbackBox>
+          <S.Question>학습 측면에서 좋은 점과 부족한 점은?</S.Question>
           <S.Content>
             <UiViewer content={feedbackInfo.feedback.study} />
           </S.Content>
-        </FlexBox>
-        <FlexBox flexFlow={'column'} gap={1.25}>
-          <h3>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</h3>
+        </S.FeedbackBox>
+        <S.FeedbackBox>
+          <S.Question>인터뷰, 말하기 측면에서 좋은 점과 개선할 부분은?</S.Question>
           <S.Content>
             <UiViewer content={feedbackInfo.feedback.speak} />
           </S.Content>
-        </FlexBox>
-        <FlexBox flexFlow={'column'} gap={1.25}>
-          <h3>기타 피드백 (위 2 질문 외에 다른 피드백을 주세요.)</h3>
+        </S.FeedbackBox>
+        <S.FeedbackBox>
+          <S.Question>기타 피드백 (위 2 질문 외에 다른 피드백을 주세요.)</S.Question>
           <S.Content>
             <UiViewer content={feedbackInfo.feedback.etc} />
           </S.Content>
-        </FlexBox>
-      </FlexBox>
+        </S.FeedbackBox>
+      </S.Box>
     </S.Container>
   );
 };
 
 interface FeedbackProps {
+  loginUserId: string;
   feedbackInfo: FeedbackType;
+  teamId: string;
   levellogId: string;
-  onClickDeleteButton: ({
-    feedbackInfo,
-    levellogId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackInfo'>) => Promise<void>;
+  teamStatus: string;
 }
 
 const S = {
   Container: styled.div`
-    overflow: hidden;
-    width: 46.75rem;
-    min-width: 46.75rem;
-    min-height: 35.25rem;
-    padding: 1.25rem 1.5625rem 1.25rem 1.5rem;
-    background-color: ${(props) => props.theme.default.WHITE};
+    margin: auto;
+    width: 100%;
+    max-width: 71rem;
+    min-width: 18.75rem;
+    margin-bottom: 3.125rem;
+    border: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
     border-radius: 0.5rem;
-    @media (max-width: 560px) {
-      min-width: 15rem;
-    }
+    box-shadow: 0 0 1rem ${(props) => props.theme.new_default.GRAY};
   `,
 
-  Header: styled.header`
+  Header: styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.875rem;
+    gap: 0.375rem;
+    padding: 0.875rem;
+    width: 100%;
+    border-bottom: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+  `,
+
+  AuthorText: styled.p`
+    font-size: 2rem;
+    font-weight: 300;
+  `,
+
+  Box: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 0.875rem;
+  `,
+
+  FeedbackBox: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    width: 100%;
+  `,
+
+  Question: styled.h2`
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: ${(props) => props.theme.new_default.DARK_BLACK};
   `,
 
   Content: styled.div`
-    width: 43.75rem;
+    width: 100%;
     min-height: 6.25rem;
     padding: 0 1rem;
-    border-radius: 0.5rem;
-    background-color: ${(props) => props.theme.default.LIGHT_GRAY};
+    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     word-spacing: 0.0625rem;
     line-height: 1.875rem;
-    @media (max-width: 560px) {
-      width: 100%;
-    }
   `,
 };
 

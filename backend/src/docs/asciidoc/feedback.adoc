@@ -6,6 +6,7 @@
 
 [[home]]
 == home
+
 * link:index.html[목록으로 가기]
 
 [[save]]
@@ -20,16 +21,28 @@ operation::feedback/save[]
 === 피드백 작성 예외
 
 ==== 요청을 보낸 사용자가 해당 레벨로그에 작성한 피드백이 이미 존재하는 경우
+
 include::{snippets}/feedback/save/exception/exist/http-response.adoc[]
 
 ==== 자신의 레벨로그에 피드백을 남기려는 경우
+
 include::{snippets}/feedback/save/exception/self/http-response.adoc[]
 
 ==== 팀에 속하지 않은 멤버가 피드백을 작성하려는 경우
+
 include::{snippets}/feedback/save/exception/team/http-response.adoc[]
 
 ==== 존재하지 않는 레벨로그에 대해 피드백을 작성하려는 경우
-operation::feedback/save/exception/levellog[]
+
+include::{snippets}/feedback/save/exception/levellog/http-response.adoc[]
+
+==== 인터뷰 시작 전에 피드백을 작성하려는 경우
+
+include::{snippets}/feedback/save/exception/before-interview/http-response.adoc[]
+
+==== 인터뷰 종료 후에 피드백을 작성하려는 경우
+
+include::{snippets}/feedback/save/exception/after-interview/http-response.adoc[]
 
 [[find-all]]
 == 피드백 목록 조회
@@ -42,11 +55,32 @@ operation::feedback/find-all[]
 [[find-all-exception]]
 === 피드백 목록 조회 예외
 
-==== 존재하지 않는 멤버에 대한 피드백 목록 조회를 요청하는 경우
-include::{snippets}/feedback/find-all/exception/member/http-response.adoc[]
-
 ==== 존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하는 경우
-operation::feedback/find-all/exception/levellog[]
+
+include::{snippets}/feedback/find-all/exception/levellog/http-response.adoc[]
+
+[[find-by-id]]
+== 피드백 상세 조회
+
+[[find-by-id-success]]
+=== 피드백 상세 조회 성공
+
+operation::feedback/find-by-id[]
+
+[[find-by-id-exception]]
+=== 피드백 상세 조회 예외
+
+==== 존재하지 않는 레벨로그 정보로 피드백 상세 조회를 요청하면 예외가 발생한다.
+
+include::{snippets}/feedback/find-by-id/exception/levellog-not-found/http-response.adoc[]
+
+==== 속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.
+
+include::{snippets}/feedback/find-by-id/exception/not-my-team/http-response.adoc[]
+
+==== 잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.
+
+include::{snippets}/feedback/find-by-id/exception/levellog-wrong-id/http-response.adoc[]
 
 [[update]]
 == 피드백 수정
@@ -60,24 +94,17 @@ operation::feedback/update[]
 === 피드백 수정 예외
 
 ==== 다른 사용자가 작성한 피드백을 수정하려는 경우
-include::{snippets}/feedback/update/exception/author/http-response.adoc[]
+
+include::{snippets}/feedback/update/exception/not-author/http-response.adoc[]
 
 ==== 존재하지 않는 피드백 정보로 피드백을 수정하려는 경우
-operation::feedback/update/exception/feedback[]
 
-[[delete]]
-== 피드백 삭제
+include::{snippets}/feedback/update/exception/feedback/http-response.adoc[]
 
-[[delete-success]]
-=== 피드백 삭제 성공
+==== 인터뷰 시작 전에 피드백을 수정하려는 경우
 
-operation::feedback/delete[]
+include::{snippets}/feedback/update/exception/before-interview/http-response.adoc[]
 
-[[delete-exception]]
-=== 피드백 삭제 예외
+==== 인터뷰 종료 후에 피드백을 수정하려는 경우
 
-==== 다른 사용자가 작성한 피드백을 삭제하려는 경우
-include::{snippets}/feedback/delete/exception/author/http-response.adoc[]
-
-==== 존재하지 않는 피드백 정보로 피드백을 삭제하려는 경우
-operation::feedback/delete/exception/feedback[]
+include::{snippets}/feedback/update/exception/after-interview/http-response.adoc[]

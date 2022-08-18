@@ -3,7 +3,9 @@ package com.woowacourse.levellog.levellog.domain;
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
+import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.team.domain.Team;
@@ -77,6 +79,15 @@ public class Levellog extends BaseEntity {
     public void validateSelfPreQuestion(final Member member) {
         if (isAuthor(member)) {
             throw new InvalidPreQuestionException(" [levellogId : " + getId() + "]", "자기 자신에게 사전 질문을 등록할 수 없습니다.");
+        }
+    }
+
+    public void validateSelfInterviewQuestion(final Member member) {
+        if (isAuthor(member)) {
+            throw new InvalidInterviewQuestionException("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.",
+                    DebugMessage.init()
+                            .append("levellogId", getId())
+                            .append("memberId", member.getId()));
         }
     }
 }

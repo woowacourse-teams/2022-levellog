@@ -24,15 +24,19 @@ interface ButtonProps {
   [props: string]: any;
 }
 
-const ButtonStyle = styled.button`
-  white-space: pre;
+export const ButtonStyle = styled.button`
   width: fit-content;
-  padding: 0.625rem 1.125rem;
+  padding: 0.75rem 1.4375rem;
   border: none;
-  border-radius: 0.375rem;
-  background-color: ${(props) => props.theme.default.GRAY};
-  font-size: 1rem;
+  border-radius: 0.625rem;
+  background-color: ${(props) => props.theme.new_default.BLUE};
+  font-size: 1.25rem;
   font-weight: 500;
+  color: ${(props) => props.theme.new_default.WHITE};
+  white-space: pre;
+  :hover {
+    opacity: 70%;
+  }
 `;
 
 export default Button;

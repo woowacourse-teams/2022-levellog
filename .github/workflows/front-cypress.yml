@@ -31,5 +31,14 @@ jobs:
           build: yarn build-dev
 
       - name: Run Cypress tests
-        working-directory: ./frontend
-        run: yarn build-dev test
+        with:
+          working-directory: ./frontend
+          install: false
+          start: yarn test
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+          browser: chrome
+          record: true
+          parallel: true
+          group: 'UI - Chrome'
+          spec: cypress/tests/ui/*

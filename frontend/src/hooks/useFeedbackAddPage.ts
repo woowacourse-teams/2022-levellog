@@ -35,7 +35,6 @@ const useFeedbackAddPage = () => {
       return;
     }
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
   };
 
   const init = async () => {
@@ -49,7 +48,7 @@ const useFeedbackAddPage = () => {
     }
 
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
+    navigate(ROUTES_PATH.ERROR);
   };
 
   useEffect(() => {

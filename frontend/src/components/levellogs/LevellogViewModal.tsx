@@ -116,11 +116,14 @@ const S = {
     position: fixed;
     top: 50%;
     left: 50%;
-    width: calc(100% - 40px);
+    max-width: 71rem;
     z-index: 30;
     border-radius: 0.875rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
     transform: translate(-50%, -50%);
+    @media (max-width: 520px) {
+      width: calc(100% - 2.5rem);
+    }
   `,
 
   Header: styled.div`
@@ -137,7 +140,7 @@ const S = {
     font-size: 2rem;
     font-weight: 300;
     @media (max-width: 520px) {
-      font-size: 16px;
+      font-size: 1rem;
     }
   `,
 
@@ -171,7 +174,7 @@ const S = {
     }
     @media (max-width: 560px) {
       width: 16.25rem;
-      height: 300px;
+      height: 18.75rem;
     }
     @media (max-height: 640px) {
       height: 18.75rem;

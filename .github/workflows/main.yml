@@ -66,7 +66,7 @@ jobs:
           done
 
       - name: Comment Sonarqube URL
-        uses: actions/github-script@v2
+        uses: actions/github-script@v4
         with:
           # 이슈에 코멘트를 달아주는 스크립트 실행
           script: |

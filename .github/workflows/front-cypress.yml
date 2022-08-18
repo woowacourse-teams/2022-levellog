@@ -7,17 +7,12 @@ on:
 
 jobs:
   cypress-build:
-    runs-on: ubuntu-22.04
-    container: cypress/browsers:node16.14.2-slim-chrome103-ff102
+    runs-on: ubuntu-22.04 # 실행 환경 지정
     steps:
-      - name: Checkout
+      - name: Checkout source code. # Repo checkout
         uses: actions/checkout@v2
 
-      - name: Install yarn 3
-        working-directory: ./frontend
-        run: yarn set version berry
-
-      - name: Install Dependencies # 의존 파일 설치
+      - name: Install Dependencies
         working-directory: ./frontend
         run: yarn install
 

@@ -8,9 +8,7 @@ import usePreQuestion from 'hooks/usePreQuestion';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
-import ContentHeader from 'components/@commons/ContentHeader';
-import FlexBox from 'components/@commons/FlexBox';
+import BottomBar from 'components/@commons/BottomBar';
 import UiEditor from 'components/@commons/UiEditor';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
@@ -45,33 +43,67 @@ const PreQuestionEdit = () => {
   }, []);
 
   return (
-    <FlexBox gap={1.875}>
-      <S.Container>
-        <ContentHeader title={'사전질문 수정'}>
-          <Button onClick={handleClickPreQuestionEditButton}>수정하기</Button>
-        </ContentHeader>
-        <S.Content>
+    <S.Container>
+      <S.Content>
+        <S.LeftContent>
           <LevellogReport levellogInfo={levellogInfo} />
-          <S.UiEditorContainer>
-            <S.Title>사전 질문</S.Title>
-            <UiEditor
-              needToolbar={true}
-              autoFocus={true}
-              height={'60rem'}
-              contentRef={preQuestionRef}
-              initialEditType={'markdown'}
-            />
-          </S.UiEditorContainer>
-        </S.Content>
-      </S.Container>
-    </FlexBox>
+        </S.LeftContent>
+        <S.RightContent>
+          <UiEditor
+            needToolbar={true}
+            autoFocus={true}
+            height={'60rem'}
+            contentRef={preQuestionRef}
+            initialEditType={'markdown'}
+          />
+        </S.RightContent>
+      </S.Content>
+      <BottomBar
+        buttonText={'작성하기'}
+        handleClickRightButton={handleClickPreQuestionEditButton}
+      ></BottomBar>
+    </S.Container>
   );
 };
 
 const S = {
   Container: styled.div`
+    display: flex;
     overflow: auto;
-    width: 100%;
+    flex-direction: column;
+    @media (min-width: 1620px) {
+      padding: 1.25rem calc((100vw - 100rem) / 2);
+    }
+    @media (max-width: 1620px) {
+      padding: 1.25rem 1.25rem;
+    }
+    @media (max-width: 520px) {
+      flex-direction: column;
+    }
+  `,
+
+  Content: styled.div`
+    display: flex;
+    gap: 1rem;
+  `,
+
+  LeftContent: styled.div`
+    width: 50%;
+    @media (max-width: 520px) {
+      width: 100%;
+    }
+  `,
+
+  LevellogTitle: styled.h2`
+    margin-bottom: 1.875rem;
+    font-size: 1.875rem;
+  `,
+
+  RightContent: styled.div`
+    width: 50%;
+    @media (max-width: 520px) {
+      width: 100%;
+    }
   `,
 
   UiEditorContainer: styled.div`
@@ -79,23 +111,6 @@ const S = {
     width: 48rem;
     @media (max-width: 520px) {
       max-width: 22.875rem;
-    }
-  `,
-
-  Title: styled.h2`
-    margin-bottom: 1.875rem;
-    font-size: 1.875rem;
-  `,
-
-  Content: styled.div`
-    display: flex;
-    overflow: auto;
-    gap: 2.5rem;
-    @media (max-width: 1024px) {
-      gap: 1.25rem;
-    }
-    @media (max-width: 520px) {
-      flex-direction: column;
     }
   `,
 };

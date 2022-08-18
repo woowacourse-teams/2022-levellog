@@ -46,9 +46,11 @@ const S = {
   Container: styled.div`
     overflow: auto;
     width: 100%;
-    @media (max-width: 520px) {
-      max-width: 22.875rem;
-    }
+  `,
+
+  FeedbackTitle: styled.h2`
+    margin-bottom: 1.25rem;
+    font-size: 1.875rem;
   `,
 
   Content: styled.div`
@@ -57,6 +59,11 @@ const S = {
     align-content: space-between;
     gap: 1.5rem;
     width: 100%;
+  `,
+
+  FeedbackLabel: styled.p`
+    font-size: 1rem;
+    font-weight: 600;
   `,
 };
 export default FeedbackFormat;

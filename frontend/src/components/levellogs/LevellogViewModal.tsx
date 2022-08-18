@@ -122,7 +122,7 @@ const S = {
     background-color: ${(props) => props.theme.new_default.WHITE};
     transform: translate(-50%, -50%);
     @media (max-width: 520px) {
-      width: calc(100% - 40px);
+      width: calc(100% - 2.5rem);
     }
   `,
 
@@ -140,7 +140,7 @@ const S = {
     font-size: 2rem;
     font-weight: 300;
     @media (max-width: 520px) {
-      font-size: 16px;
+      font-size: 1rem;
     }
   `,
 

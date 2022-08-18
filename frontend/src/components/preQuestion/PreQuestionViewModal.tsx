@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
-import levellogIcon from 'assets/images/question.webp';
+import closeIcon from 'assets/images/close.svg';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -40,7 +40,7 @@ const PreQuestionViewModal = ({
             <S.AuthorText>{author.nickname}의 사전질문</S.AuthorText> */}
           </FlexBox>
           <S.CloseButton id="closeButton" onClick={handleClickClosePreQuestionModal}>
-            <Image src={levellogIcon} sizes={'SMALL'} />
+            <Image src={closeIcon} sizes={'SMALL'} />
           </S.CloseButton>
         </S.Header>
         <S.PreQuestion>
@@ -132,20 +132,17 @@ const S = {
     height: 40.5rem;
     padding: 1rem;
     border-radius: 0.25rem;
-    background-color: ${(props) => props.theme.default.WHITE};
+    background-color: ${(props) => props.theme.new_default.WHITE};
     line-height: 1.875rem;
     word-spacing: 0.0625rem;
-    @media (max-width: 51.875rem) {
+    @media (max-width: 830px) {
       width: 31.25rem;
     }
-    @media (max-height: 51.875rem) {
+    @media (max-height: 830px) {
       height: 31.875rem;
     }
-    @media (max-width: 35rem) {
-      width: 16.25rem;
-      height: 18.75rem;
-    }
-    @media (max-height: 40rem) {
+    @media (max-width: 560px) {
+      width: 100%;
       height: 18.75rem;
     }
   `,

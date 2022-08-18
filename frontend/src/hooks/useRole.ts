@@ -16,22 +16,6 @@ const useRole = () => {
     participantId,
   }: Omit<RoleCustomHookType, 'levellogId'>) => {
     try {
-      getFeedbackWriterRole({ teamId, participantId });
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err) && err instanceof Error) {
-        const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
-        }
-      }
-    }
-  };
-
-  const getFeedbackWriterRole = async ({
-    teamId,
-    participantId,
-  }: Omit<RoleCustomHookType, 'levellogId'>) => {
-    try {
       const res = await requestGetLoginUserRole({ teamId, participantId, accessToken });
       setFeedbackWriterRole(res.data.myRole);
     } catch (err: unknown) {

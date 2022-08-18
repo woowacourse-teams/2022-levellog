@@ -27,7 +27,6 @@ const useFeedbackAddPage = () => {
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
-
   const handleClickFeedbackAddButton = () => {
     if (typeof teamId === 'string' && typeof levellogId === 'string') {
       onClickFeedbackAddButton({ teamId, levellogId });

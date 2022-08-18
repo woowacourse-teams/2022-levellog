@@ -20,6 +20,7 @@ import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,30 @@ import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("TeamController의")
 class TeamControllerTest extends ControllerTest {
+
+    @Test
+    @DisplayName("findAll 메서드는 status로 잘못된 값을 입력 받으면 예외가 발생한다.")
+    void findAll_invalidStatus_exception() throws Exception {
+        // given
+        final String invalidStatus = "invalid";
+        final String message = "입력 받은 status가 올바르지 않습니다.";
+
+        willThrow(new InvalidFieldException(message))
+                .given(teamService)
+                .findAll(Optional.of(invalidStatus), 1L);
+
+        // when
+        final ResultActions perform = requestGet("/api/teams?status=" + invalidStatus);
+
+        // then
+        perform.andExpectAll(
+                status().isBadRequest(),
+                jsonPath("message").value(message)
+        );
+
+        // docs
+        perform.andDo(document("team/find-all/exception/invalid-status"));
+    }
 
     @Nested
     @DisplayName("save 메서드는")

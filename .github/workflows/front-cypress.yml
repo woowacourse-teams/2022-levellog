@@ -28,7 +28,7 @@ jobs:
         with:
           working-directory: ./frontend
           install: true
-          build: yarn cypress run --browser chrome --record --key ${{ secrets.CYPRESS_RECORD_KEY }}
+          build: yarn cypress run --browser chrome --record --key ${{ secrets.CYPRESS_RECORD_KEY }} --spec 'cypress/e2e/PageRoute.cy.ts'
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
           browser: chrome

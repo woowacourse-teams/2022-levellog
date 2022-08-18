@@ -50,9 +50,6 @@ const S = {
     height: calc(100% - 60px);
     border-radius: 3px 0.5rem 3px 3px;
     border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
-    @media (max-width: 520px) {
-      max-width: 22.875rem;
-    }
   `,
 
   ButtonBox: styled.div`

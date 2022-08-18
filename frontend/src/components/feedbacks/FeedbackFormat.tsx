@@ -46,9 +46,6 @@ const S = {
   Container: styled.div`
     overflow: auto;
     width: 100%;
-    @media (max-width: 520px) {
-      max-width: 22.875rem;
-    }
   `,
 
   FeedbackTitle: styled.h2`

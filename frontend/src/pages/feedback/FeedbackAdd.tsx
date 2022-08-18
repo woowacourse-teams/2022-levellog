@@ -94,9 +94,6 @@ const S = {
     @media (max-width: 1620px) {
       padding: 20px 1.25rem;
     }
-    @media (max-width: 520px) {
-      flex-direction: column;
-    }
   `,
 
   Content: styled.div`

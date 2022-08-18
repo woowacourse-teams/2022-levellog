@@ -55,9 +55,6 @@ interface InterviewQuestionProps {
 const S = {
   Container: styled.div`
     width: 100%;
-    @media (max-width: 520px) {
-      max-width: 22.875rem;
-    }
   `,
 
   Title: styled.h2`

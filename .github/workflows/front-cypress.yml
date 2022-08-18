@@ -31,8 +31,8 @@ jobs:
 #          runTests: false
 #          build: yarn build-dev
 
-      - name: Extract some files
-        run: 7z x archive.zip
+      - name: Install unzip
+        run: apt install unzip
 
       - name: Setup Chromedriver
         uses: nanasess/setup-chromedriver@v1.0.1

@@ -8,7 +8,6 @@ on:
 jobs:
   cypress-build:
     runs-on: ubuntu-22.04
-#    container: cypress/browsers:node16.14.2-slim-chrome103-ff102
     steps:
       - name: Checkout source code.
         uses: actions/checkout@v2
@@ -16,31 +15,9 @@ jobs:
       - name: Check Node v
         run: node -v
 
-#      - name: Install Dependencies cypress
-#        working-directory: ./frontend
-#        run: yarn add cypress
-#
-#      - name: Install Dependencies cypress-react-selector
-#        working-directory: ./frontend
-#        run: yarn add cypress-react-selector
-
       - name: Install Dependencies
         working-directory: ./frontend
         run: yarn install
-
-#      - name: Cypress install
-#        uses: cypress-io/github-action@v4
-#        with:
-#          working-directory: ./frontend
-#          runTests: false
-#          build: yarn build-dev
-
-#      - name: Install yarn 3
-#        working-directory: ./frontend
-#        run: yarn set version stable
-
-      - name: Setup Chromedriver
-        uses: nanasess/setup-chromedriver@v1.0.1
 
       - name: Run local
         working-directory: ./frontend

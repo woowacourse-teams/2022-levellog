@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import useTeams from 'hooks/useTeams';
 
-import plus from 'assets/images/add.png';
+import plusIcon from 'assets/images/plus.svg';
 import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -42,7 +42,7 @@ const InterviewTeams = () => {
           <S.TeamAddButton>
             {'팀 추가하기'}
             <S.ImageBox>
-              <Image src={plus} sizes={'TINY'} />
+              <Image src={plusIcon} sizes={'TINY'} />
             </S.ImageBox>
           </S.TeamAddButton>
         </Link>

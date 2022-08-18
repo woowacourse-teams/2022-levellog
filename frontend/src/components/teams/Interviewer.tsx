@@ -4,7 +4,10 @@ import styled from 'styled-components';
 
 import useUser from 'hooks/useUser';
 
-import levellogIcon from 'assets/images/question.webp';
+import feedbackIcon from 'assets/images/feedbackIcon.svg';
+import interviewQuestionIcon from 'assets/images/interviewQuestionIcon.svg';
+import levellogIcon from 'assets/images/levellogIcon.svg';
+import preQuestionIcon from 'assets/images/preQuestionIcon.svg';
 import { ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -72,7 +75,7 @@ const Interviewer = ({
                   disabled={!participant.levellogId || !userInTeam}
                   onClick={handleClickInterviewQuestionButton}
                 >
-                  <Image src={levellogIcon} sizes={'SMALL'} />
+                  <Image src={interviewQuestionIcon} sizes={'SMALL'} />
                   <S.ButtonText>인터뷰질문 보기</S.ButtonText>
                 </S.Button>
 
@@ -80,7 +83,7 @@ const Interviewer = ({
                   disabled={!participant.levellogId || !userInTeam}
                   onClick={handleClickFeedbackButton}
                 >
-                  <Image src={levellogIcon} sizes={'SMALL'} />
+                  <Image src={feedbackIcon} sizes={'SMALL'} />
                   <S.ButtonText>피드백 보기</S.ButtonText>
                 </S.Button>
               </>
@@ -131,7 +134,7 @@ const Interviewer = ({
                   disabled={!participant.levellogId || !userInTeam}
                   onClick={handleClickOpenPreQuestionModal}
                 >
-                  <Image src={levellogIcon} sizes={'SMALL'} />
+                  <Image src={preQuestionIcon} sizes={'SMALL'} />
                   <S.ButtonText>사전질문 보기</S.ButtonText>
                 </S.Button>
               ) : (
@@ -139,7 +142,7 @@ const Interviewer = ({
                   disabled={!participant.levellogId || !userInTeam}
                   onClick={handleClickPreQuestionButton}
                 >
-                  <Image src={levellogIcon} sizes={'SMALL'} />
+                  <Image src={preQuestionIcon} sizes={'SMALL'} />
                   <S.ButtonText>사전질문 작성</S.ButtonText>
                 </S.Button>
               )}
@@ -147,7 +150,7 @@ const Interviewer = ({
                 disabled={!participant.levellogId || !userInTeam}
                 onClick={handleClickFeedbackButton}
               >
-                <Image src={levellogIcon} sizes={'SMALL'} />
+                <Image src={feedbackIcon} sizes={'SMALL'} />
                 <S.ButtonText>피드백 보기</S.ButtonText>
               </S.Button>
             </>

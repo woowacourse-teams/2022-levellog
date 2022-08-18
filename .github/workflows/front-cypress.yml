@@ -9,17 +9,11 @@ jobs:
   cypress-build:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
+      - name: Checkout source code.
         uses: actions/checkout@v2
-        with:
-          browser: chrome
 
       - name: Check Node v
         run: node -v
-
-#      - name: Install Dependencies
-#        working-directory: ./frontend
-#        run: yarn install
 
       - name: Install Dependencies
         working-directory: ./frontend
@@ -32,6 +26,7 @@ jobs:
       - name: Cypress install
         uses: cypress-io/github-action@v4
         with:
+          working-directory: ./frontend
           runTests: false
           build: yarn build-dev
 

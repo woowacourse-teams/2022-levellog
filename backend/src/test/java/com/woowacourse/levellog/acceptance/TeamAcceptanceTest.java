@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
+import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
@@ -79,7 +80,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final String teamId = saveTeam("잠실 네오조", RICK, 1, PEPPER).getTeamId();
 
         timeStandard.setInProgress();
-        closeTeamInterview(teamId, RICK.getToken());
+        RestAssuredTemplate.post("/api/teams/" + teamId + "/close", RICK.getToken());
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -397,14 +398,5 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    private void closeTeamInterview(final String teamId, final String token) {
-        RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .post("/api/teams/{id}/close", teamId)
-                .then().log().all();
     }
 }

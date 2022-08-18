@@ -17,9 +17,8 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
-import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
@@ -43,55 +42,141 @@ class TeamServiceTest extends ServiceTest {
     class FindAll {
 
         @Test
-        @DisplayName("전체 팀 목록을 조회한다.")
+        @DisplayName("전체 팀 목록을 인터뷰 진행 상태(시작 전 or 진행 중 -> 종료)와 최근 생성일 순으로 정렬하여 조회한다.")
         void findAll_allTeam_success() {
             //given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
             final Member roma = saveMember("로마");
 
-            final Team team1 = saveTeam(pepper, roma);
-            final Team team2 = saveTeam(rick, pepper);
+            final Team pepperTeam = saveTeam(pepper, roma);
+            final Team rickTeam = saveTeam(rick, pepper);
+            final Team romaTeam = saveTeam(roma, rick);
 
-            team2.close(AFTER_START_TIME);
+            rickTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamAndRolesDto response = teamService.findAll(rick.getId());
+            final TeamsDto response = teamService.findAll(Optional.empty(), rick.getId());
 
             //then
-            final List<String> actualTitles = response.getTeams()
-                    .stream()
-                    .map(TeamAndRoleDto::getTitle)
-                    .collect(Collectors.toList());
-
-            final List<Long> actualHostIds = response.getTeams()
-                    .stream()
-                    .map(TeamAndRoleDto::getHostId)
-                    .collect(Collectors.toList());
-
-            final List<Integer> actualParticipantSizes = response.getTeams()
-                    .stream()
-                    .map(TeamAndRoleDto::getParticipants)
-                    .map(List::size)
-                    .collect(Collectors.toList());
-
-            final List<TeamStatus> actualCloseStatuses = response.getTeams()
-                    .stream()
-                    .map(TeamAndRoleDto::getStatus)
-                    .collect(Collectors.toList());
-
-            final List<Boolean> actualIsParticipants = response.getTeams()
-                    .stream().map(TeamAndRoleDto::getIsParticipant)
-                    .collect(Collectors.toList());
-
             assertAll(
-                    () -> assertThat(actualTitles).contains(team1.getTitle(), team2.getTitle()),
-                    () -> assertThat(actualHostIds).contains(rick.getId(), pepper.getId()),
-                    () -> assertThat(actualParticipantSizes).contains(2, 2),
-                    () -> assertThat(actualCloseStatuses).containsExactly(TeamStatus.READY, TeamStatus.CLOSED),
-                    () -> assertThat(actualIsParticipants).containsExactly(false, true),
+                    () -> assertThat(toTitles(response))
+                            .containsExactly(romaTeam.getTitle(), pepperTeam.getTitle(), rickTeam.getTitle()),
+                    () -> assertThat(toHostIds(response)).containsExactly(roma.getId(), pepper.getId(), rick.getId()),
+                    () -> assertThat(toParticipantsSizes(response)).containsExactly(2, 2, 2),
+                    () -> assertThat(toCloseStatuses(response))
+                            .containsExactly(TeamStatus.READY, TeamStatus.READY, TeamStatus.CLOSED),
+                    () -> assertThat(toIsParticipants(response)).containsExactly(true, false, true),
+                    () -> assertThat(response.getTeams()).hasSize(3)
+            );
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 전인 팀의 목록을 최근 생성일 순으로 조회한다.")
+        void findAll_ReadyTeam_success() {
+            //given
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브");
+            final Member alien = saveMember("알린");
+
+            final Team pepperTeam = saveTeam(TEAM_START_TIME, pepper, roma);
+            final Team rickTeam = saveTeam(TEAM_START_TIME.plusDays(3), rick, pepper);
+            final Team eveTeam = saveTeam(TEAM_START_TIME.plusDays(3), eve, alien);
+            final Team romaTeam = saveTeam(roma, rick);
+
+            timeStandard.setInProgress();
+            romaTeam.close(AFTER_START_TIME);
+
+            //when
+            final TeamsDto response = teamService.findAll(Optional.of("ready"), rick.getId());
+
+            //then
+            assertAll(
+                    () -> assertThat(toTitles(response)).containsExactly(eveTeam.getTitle(), rickTeam.getTitle()),
+                    () -> assertThat(toHostIds(response)).containsExactly(eve.getId(), rick.getId()),
+                    () -> assertThat(toParticipantsSizes(response)).containsExactly(2, 2),
+                    () -> assertThat(toCloseStatuses(response)).containsExactly(TeamStatus.READY, TeamStatus.READY),
+                    () -> assertThat(toIsParticipants(response)).containsExactly(false, true),
                     () -> assertThat(response.getTeams()).hasSize(2)
             );
+        }
+
+        @Test
+        @DisplayName("인터뷰 진행 중인 팀의 목록을 최근 생성일 순으로 조회한다.")
+        void findAll_InProgressTeam_success() {
+            //given
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브");
+            final Member alien = saveMember("알린");
+
+            final Team pepperTeam = saveTeam(TEAM_START_TIME, pepper, roma);
+            final Team rickTeam = saveTeam(TEAM_START_TIME, rick, pepper);
+            final Team eveTeam = saveTeam(TEAM_START_TIME.plusDays(3), eve, alien);
+            final Team romaTeam = saveTeam(roma, rick);
+
+            timeStandard.setInProgress();
+            romaTeam.close(AFTER_START_TIME);
+
+            //when
+            final TeamsDto response = teamService.findAll(Optional.of("in-progress"), rick.getId());
+
+            //then
+            assertAll(
+                    () -> assertThat(toTitles(response)).containsExactly(rickTeam.getTitle(), pepperTeam.getTitle()),
+                    () -> assertThat(toHostIds(response)).containsExactly(rick.getId(), pepper.getId()),
+                    () -> assertThat(toParticipantsSizes(response)).containsExactly(2, 2),
+                    () -> assertThat(toCloseStatuses(response))
+                            .containsExactly(TeamStatus.IN_PROGRESS, TeamStatus.IN_PROGRESS),
+                    () -> assertThat(toIsParticipants(response)).containsExactly(true, false),
+                    () -> assertThat(response.getTeams()).hasSize(2)
+            );
+        }
+
+        @Test
+        @DisplayName("인터뷰가 종료된 팀의 목록을 최근 생성일 순으로 조회한다.")
+        void findAll_closedTeam_success() {
+            //given
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+            final Member eve = saveMember("이브");
+            final Member alien = saveMember("알린");
+
+            final Team pepperTeam = saveTeam(pepper, roma);
+            final Team rickTeam = saveTeam(rick, pepper);
+            final Team eveTeam = saveTeam(eve, alien);
+
+            rickTeam.close(AFTER_START_TIME);
+            eveTeam.close(AFTER_START_TIME);
+
+            //when
+            final TeamsDto response = teamService.findAll(Optional.of("closed"), rick.getId());
+
+            //then
+            assertAll(
+                    () -> assertThat(toTitles(response)).containsExactly(eveTeam.getTitle(), rickTeam.getTitle()),
+                    () -> assertThat(toHostIds(response)).containsExactly(eve.getId(), rick.getId()),
+                    () -> assertThat(toParticipantsSizes(response)).containsExactly(2, 2),
+                    () -> assertThat(toCloseStatuses(response)).containsExactly(TeamStatus.CLOSED, TeamStatus.CLOSED),
+                    () -> assertThat(toIsParticipants(response)).containsExactly(false, true),
+                    () -> assertThat(response.getTeams()).hasSize(2)
+            );
+        }
+
+        @Test
+        @DisplayName("잘못된 팀 Status를 받으면 예외가 발생한다.")
+        void findAll_invalidStatus_exception() {
+            // given
+            final Member rick = saveMember("릭");
+
+            // when & then
+            assertThatThrownBy(() -> teamService.findAll(Optional.of("invalid"), rick.getId()))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("입력 받은 status가 올바르지 않습니다.");
         }
 
         @Test
@@ -108,10 +193,45 @@ class TeamServiceTest extends ServiceTest {
             team.delete(BEFORE_START_TIME);
 
             //when
-            final TeamAndRolesDto response = teamService.findAll(rick.getId());
+            final TeamsDto response = teamService.findAll(Optional.empty(), rick.getId());
 
             //then
             assertThat(response.getTeams()).hasSize(1);
+        }
+
+        private List<String> toTitles(final TeamsDto response) {
+            return response.getTeams()
+                    .stream()
+                    .map(TeamDto::getTitle)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Long> toHostIds(final TeamsDto response) {
+            return response.getTeams()
+                    .stream()
+                    .map(TeamDto::getHostId)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Integer> toParticipantsSizes(final TeamsDto response) {
+            return response.getTeams()
+                    .stream()
+                    .map(TeamDto::getParticipants)
+                    .map(List::size)
+                    .collect(Collectors.toList());
+        }
+
+        private List<TeamStatus> toCloseStatuses(final TeamsDto response) {
+            return response.getTeams()
+                    .stream()
+                    .map(TeamDto::getStatus)
+                    .collect(Collectors.toList());
+        }
+
+        private List<Boolean> toIsParticipants(final TeamsDto response) {
+            return response.getTeams()
+                    .stream().map(TeamDto::getIsParticipant)
+                    .collect(Collectors.toList());
         }
     }
 
@@ -268,7 +388,7 @@ class TeamServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             //when
-            final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), rick.getId());
+            final TeamDto response = teamService.findByTeamIdAndMemberId(team.getId(), rick.getId());
 
             //then
             assertAll(
@@ -305,9 +425,9 @@ class TeamServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma, alien, eve);
 
                 //when
-                final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndMemberId(team.getId(),
+                final TeamDto responseOfPepper = teamService.findByTeamIdAndMemberId(team.getId(),
                         pepper.getId());
-                final TeamAndRoleDto responseOfEve = teamService.findByTeamIdAndMemberId(team.getId(),
+                final TeamDto responseOfEve = teamService.findByTeamIdAndMemberId(team.getId(),
                         eve.getId());
 
                 //then
@@ -339,7 +459,7 @@ class TeamServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma);
 
                 //when
-                final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), pepper.getId());
+                final TeamDto response = teamService.findByTeamIdAndMemberId(team.getId(), pepper.getId());
 
                 //then
                 assertAll(
@@ -370,7 +490,7 @@ class TeamServiceTest extends ServiceTest {
                 final Team team = saveTeam(rick, pepper, roma);
 
                 //when
-                final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), alien.getId());
+                final TeamDto response = teamService.findByTeamIdAndMemberId(team.getId(), alien.getId());
 
                 //then
                 assertAll(

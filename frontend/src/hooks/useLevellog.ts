@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
@@ -14,7 +14,6 @@ const useLevellog = () => {
   const [levellogInfo, setLevellogInfo] = useState<LevellogInfoType>(
     {} as unknown as LevellogInfoType,
   );
-
   const levellogRef = useRef<Editor>(null);
   const navigate = useNavigate();
 
@@ -98,7 +97,7 @@ const useLevellog = () => {
         teamId,
         inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
       });
-      alert('레벨로그 작성이 완료되었습니다.');
+      alert(MESSAGE.LEVELLOG_ADD_CONFIRM);
     }
   };
 

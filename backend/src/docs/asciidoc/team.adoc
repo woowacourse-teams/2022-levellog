@@ -75,13 +75,13 @@ include::{snippets}/team/create/exception/participants-null/http-response.adoc[]
 
 include::{snippets}/team/create/exception/interviewer-number-not-positive/http-response.adoc[]
 
-[[create-exception-interviewer-number-not-positive]]
+[[create-exception-interviewer-number-more-than-participant]]
 ==== 저장 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
 
 include::{snippets}/team/create/exception/interviewer-number-more-than-participant/http-response.adoc[]
 
-[[findAll]]
-== 팀 목록 조회
+[[find-all]]
+== 팀 전체 목록 조회
 
 *STATUS 응답 종류*
 
@@ -101,9 +101,43 @@ include::{snippets}/team/create/exception/interviewer-number-more-than-participa
 |===
 
 [[find-all-success]]
-=== 팀 목록 조회 성공
+=== 팀 전체 목록 조회 성공
+팀 전체 목록 조회 응답은 인터뷰 진행 상태와 최근 생성일 순으로 정렬되어 있다.
 
 operation::team/find-all[]
+
+[[find-all-by-status]]
+== Status로 필터링 된 팀 목록 조회
+
+*status 쿼리 파라미터 종류*
+
+[cols="1,1"]
+|===
+|*Parameter*
+|*설명*
+
+|ready
+|인터뷰 시작 전인 팀 목록을 조회한다.
+
+|in-progress
+|인터뷰가 진행 중인 팀 목록을 조회한다.
+
+|closed
+|인터뷰가 종료된 팀 목록을 조회한다.
+|===
+
+[[find-all-by-status-success]]
+=== Status로 필터링 된 팀 목록 조회 성공
+Status로 필터링 된 팀 목록 조회 응답은 최근 생성일 순으로 정렬되어 있다.
+
+operation::team/find-all/filtering-by-status[]
+
+[[find-all-by-status-exception]]
+=== Status로 필터링 된 팀 목록 조회 예외
+
+==== 쿼리 파라미터로 잘못된 status를 입력한 경우
+
+include::{snippets}/team/find-all/exception/invalid-status/http-response.adoc[]
 
 [[find]]
 == 팀 상세 조회

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
 import {
@@ -117,7 +117,7 @@ const usePreQuestion = () => {
         levellogId,
         preQuestion: preQuestionRef.current.getInstance().getEditorElements().mdEditor.innerText,
       });
-      alert('사전질문 등록이 완료되었습니다.');
+      alert(MESSAGE.PREQUESTION_ADD_CONFIRM);
     }
   };
 
@@ -133,7 +133,7 @@ const usePreQuestion = () => {
         preQuestionId,
         preQuestion: preQuestionRef.current.getInstance().getEditorElements().mdEditor.innerText,
       });
-      alert('사전질문 수정이 완료되었습니다.');
+      alert(MESSAGE.PREQUESTION_EDIT_CONFIRM);
     }
     navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
   };

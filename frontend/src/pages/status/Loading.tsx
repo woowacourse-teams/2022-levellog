@@ -1,5 +1,11 @@
+import { Exception } from 'pages/status';
+
 const Loading = () => {
-  return <h1>Loading</h1>;
+  return (
+    <Exception>
+      <Exception.Loading />
+    </Exception>
+  );
 };
 
 export default Loading;

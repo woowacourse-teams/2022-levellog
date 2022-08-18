@@ -1,16 +1,14 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Exception } from 'pages/status';
 
-import { ROUTES_PATH } from 'constants/constants';
+import NotFoundImage from 'assets/images/free-icon-cone-7564055.webp';
 
 const Error = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigate(ROUTES_PATH.HOME);
-  }, []);
-
-  return <h1>에러!</h1>;
+  return (
+    <Exception>
+      <Exception.Image>{NotFoundImage}</Exception.Image>
+      <Exception.Title>예상치 못한 에러가 발생했습니다!</Exception.Title>
+    </Exception>
+  );
 };
 
 export default Error;

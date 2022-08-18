@@ -7,6 +7,7 @@ import LevellogAdd from 'pages/levellogs/LevellogAdd';
 import LevellogEdit from 'pages/levellogs/LevellogEdit';
 import PreQuestionAdd from 'pages/preQuestion/PreQuestionAdd';
 import PreQuestionEdit from 'pages/preQuestion/PreQuestionEdit';
+import Error from 'pages/status/Error';
 import NotFound from 'pages/status/NotFound';
 import InterviewDetail from 'pages/teams/InterviewDetail';
 import InterviewTeamAdd from 'pages/teams/InterviewTeamAdd';
@@ -130,6 +131,10 @@ export const routes = [
       {
         path: ROUTES_PATH.INTERVIEW_TEAMS_DETAIL,
         element: <InterviewDetail />,
+      },
+      {
+        path: ROUTES_PATH.ERROR,
+        element: <Error />,
       },
       {
         path: '*',

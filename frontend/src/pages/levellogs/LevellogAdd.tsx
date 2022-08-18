@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import { MESSAGE } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -14,7 +14,6 @@ import UiEditor from 'components/@commons/UiEditor';
 const LevellogAdd = () => {
   const { levellogRef, onClickLevellogAddButton } = useLevellog();
   const { teamId } = useParams();
-  const navigate = useNavigate();
 
   const handleClickLevellogAddButton = () => {
     if (typeof teamId === 'string') {
@@ -24,7 +23,6 @@ const LevellogAdd = () => {
     }
 
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
   };
 
   return (

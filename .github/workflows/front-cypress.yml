@@ -31,8 +31,8 @@ jobs:
 #          runTests: false
 #          build: yarn build-dev
 
-      - name: Install unzip
-        run: apt install unzip
+#      - name: Install unzip
+#        run: apt install unzip
 
       - name: Setup Chromedriver
         uses: nanasess/setup-chromedriver@v1.0.1

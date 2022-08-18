@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import useInterviewQuestion from 'hooks/useInterviewQuestion';
 import useTeam from 'hooks/useTeam';
+import useUser from 'hooks/useUser';
 
 import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';
 
@@ -19,6 +20,7 @@ import {
 
 const InterviewQuestions = () => {
   const { interviewQuestionInfosInLevellog } = useInterviewQuestion();
+  const { loginUserNickname, loginUserProfileUrl } = useUser();
   const { team } = useTeam();
   const { teamId, levellogId } = useParams();
   {
@@ -35,7 +37,17 @@ const InterviewQuestions = () => {
 
   return (
     <>
-      <ContentHeader title={'내가 받은 인터뷰 질문'}></ContentHeader>
+      <ContentHeader
+        imageUrl={loginUserProfileUrl}
+        title={`${
+          checkFirstWordFinalConsonant({
+            word: loginUserNickname,
+          })
+            ? `${loginUserNickname}이 `
+            : `${loginUserNickname}가 `
+        }
+        받은 인터뷰 질문들`}
+      ></ContentHeader>
       <S.Container>
         {interviewQuestionInfosInLevellog.map(
           (interviewQuestionInfoInLevellog: InterviewQuestionsInLevellogType) => (
@@ -77,6 +89,9 @@ const S = {
     width: 100%;
     max-width: 71rem;
     min-width: 18.75rem;
+    @media (max-width: 1160px) {
+      width: calc(100% - 2.5rem);
+    }
   `,
 
   Box: styled.div`

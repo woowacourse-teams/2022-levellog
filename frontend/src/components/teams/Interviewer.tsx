@@ -68,14 +68,14 @@ const Interviewer = ({
             {participant.levellogId ? (
               <>
                 <S.Button onClick={handleClickOpenLevellogModal}>
-                  <Image src={levellogIcon} sizes={'SMALL'} />
+                  <Image src={levellogIcon} sizes={'SMALL'} borderRadius={false} />
                   <S.ButtonText>레벨로그 보기</S.ButtonText>
                 </S.Button>
                 <S.Button
                   disabled={!participant.levellogId || !userInTeam}
                   onClick={handleClickInterviewQuestionButton}
                 >
-                  <Image src={interviewQuestionIcon} sizes={'SMALL'} />
+                  <Image src={interviewQuestionIcon} sizes={'SMALL'} borderRadius={false} />
                   <S.ButtonText>인터뷰질문 보기</S.ButtonText>
                 </S.Button>
 
@@ -83,7 +83,7 @@ const Interviewer = ({
                   disabled={!participant.levellogId || !userInTeam}
                   onClick={handleClickFeedbackButton}
                 >
-                  <Image src={feedbackIcon} sizes={'SMALL'} />
+                  <Image src={feedbackIcon} sizes={'SMALL'} borderRadius={false} />
                   <S.ButtonText>피드백 보기</S.ButtonText>
                 </S.Button>
               </>
@@ -92,13 +92,13 @@ const Interviewer = ({
                 {teamStatus === TEAM_STATUS.READY ? (
                   <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
                     <S.Button>
-                      <Image src={levellogIcon} sizes={'SMALL'} />
+                      <Image src={levellogIcon} sizes={'SMALL'} borderRadius={false} />
                       <S.ButtonText>레벨로그 작성</S.ButtonText>
                     </S.Button>
                   </Link>
                 ) : (
                   <S.Button disabled>
-                    <Image src={levellogIcon} sizes={'SMALL'} />
+                    <Image src={levellogIcon} sizes={'SMALL'} borderRadius={false} />
                     <S.ButtonText>레벨로그 작성</S.ButtonText>
                   </S.Button>
                 )}
@@ -124,7 +124,7 @@ const Interviewer = ({
       <S.Content>
         <S.ButtonBox>
           <S.Button disabled={!participant.levellogId} onClick={handleClickOpenLevellogModal}>
-            <Image src={levellogIcon} sizes={'SMALL'} />
+            <Image src={levellogIcon} sizes={'SMALL'} borderRadius={false} />
             <S.ButtonText>레벨로그 보기</S.ButtonText>
           </S.Button>
           {loginUserId && (
@@ -134,7 +134,7 @@ const Interviewer = ({
                   disabled={!participant.levellogId || !userInTeam}
                   onClick={handleClickOpenPreQuestionModal}
                 >
-                  <Image src={preQuestionIcon} sizes={'SMALL'} />
+                  <Image src={preQuestionIcon} sizes={'SMALL'} borderRadius={false} />
                   <S.ButtonText>사전질문 보기</S.ButtonText>
                 </S.Button>
               ) : (
@@ -142,7 +142,7 @@ const Interviewer = ({
                   disabled={!participant.levellogId || !userInTeam}
                   onClick={handleClickPreQuestionButton}
                 >
-                  <Image src={preQuestionIcon} sizes={'SMALL'} />
+                  <Image src={preQuestionIcon} sizes={'SMALL'} borderRadius={false} />
                   <S.ButtonText>사전질문 작성</S.ButtonText>
                 </S.Button>
               )}
@@ -150,7 +150,7 @@ const Interviewer = ({
                 disabled={!participant.levellogId || !userInTeam}
                 onClick={handleClickFeedbackButton}
               >
-                <Image src={feedbackIcon} sizes={'SMALL'} />
+                <Image src={feedbackIcon} sizes={'SMALL'} borderRadius={false} />
                 <S.ButtonText>피드백 보기</S.ButtonText>
               </S.Button>
             </>
@@ -199,6 +199,10 @@ const S = {
     height: 2.5rem;
     border: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
     background-color: ${(props) => props.theme.new_default.WHITE};
+  `,
+
+  IconImage: styled(Image)`
+    border-radius: 0;
   `,
 
   Nickname: styled.p`

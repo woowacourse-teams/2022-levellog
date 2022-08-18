@@ -99,7 +99,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         }
 
         @ParameterizedTest
-        @CsvSource(value = {"이미 종료된 인터뷰입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
+        @CsvSource(value = {"이미 인터뷰가 종료된 팀입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
         @DisplayName("인터뷰 생성 정책에 위반되면 예외를 던진다.")
         void save_interviewTime_exception(final String message, final String snippet) throws Exception {
             // given
@@ -321,7 +321,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         }
 
         @ParameterizedTest
-        @CsvSource(value = {"이미 종료된 인터뷰입니다.,is-closed", "인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.,is-ready"})
+        @CsvSource(value = {"이미 인터뷰가 종료된 팀입니다.,is-closed", "인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.,is-ready"})
         @DisplayName("인터뷰 수정 정책에 위반되면 예외를 던진다.")
         void update_interviewTime_exception(final String message, final String snippet) throws Exception {
             // given
@@ -403,7 +403,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         }
 
         @ParameterizedTest
-        @CsvSource(value = {"이미 종료된 인터뷰입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
+        @CsvSource(value = {"이미 인터뷰가 종료된 팀입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
         @DisplayName("인터뷰 삭제 정책에 위반되면 예외를 던진다.")
         void deleteById_interviewTime_exception(final String message, final String snippet) throws Exception {
             // given

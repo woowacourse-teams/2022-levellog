@@ -20,6 +20,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -145,8 +146,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
 
         @Test
@@ -401,8 +402,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
 
         @Test
@@ -494,8 +495,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
 
         @Test

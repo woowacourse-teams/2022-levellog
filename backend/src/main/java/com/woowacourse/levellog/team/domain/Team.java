@@ -2,7 +2,9 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -86,12 +88,12 @@ public class Team extends BaseEntity {
 
     private void validateStartAt(final LocalDateTime startAt) {
         if (startAt == null) {
-            throw new InterviewTimeException("시작 시간이 없습니다.");
+            throw new InvalidFieldException("시작 시간이 없습니다.");
         }
 
         final LocalDateTime now = LocalDateTime.now();
         if (now.isAfter(startAt)) {
-            throw new InterviewTimeException("인터뷰 시작 시간은 현재 시간 이후여야 합니다.", getId(), startAt, now);
+            throw new InvalidFieldException("인터뷰 시작 시간은 현재 시간 이후여야 합니다.");
         }
     }
 
@@ -144,7 +146,8 @@ public class Team extends BaseEntity {
             throw new InterviewTimeException(message, getId(), startAt, presentTime);
         }
         if (isClosed) {
-            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", getId(), startAt, presentTime);
+            throw new TeamAlreadyClosedException(DebugMessage.init()
+                    .append("teamId", getId()));
         }
     }
 

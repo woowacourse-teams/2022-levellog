@@ -172,7 +172,7 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "이미 종료된 인터뷰입니다.";
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
             given(feedbackService.save(request, levellogId, memberId))
                     .willThrow(new InterviewTimeException(message));
 
@@ -298,7 +298,7 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "이미 종료된 인터뷰입니다.";
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
             willThrow(new InterviewTimeException(message))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);

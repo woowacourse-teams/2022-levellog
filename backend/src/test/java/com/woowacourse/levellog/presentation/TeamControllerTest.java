@@ -17,6 +17,7 @@ import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -859,8 +860,8 @@ class TeamControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
 
-            final String message = "이미 종료된 인터뷰입니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
+            willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(teamService)
                     .close(teamId, 1L);
 

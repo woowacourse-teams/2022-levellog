@@ -12,6 +12,7 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -106,7 +107,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("시작 시간이 없습니다.");
         }
 
@@ -121,7 +122,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("인터뷰 시작 시간은 현재 시간 이후여야 합니다.");
         }
 
@@ -262,8 +263,8 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.close(AFTER_START_TIME))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("이미 종료된 인터뷰");
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
 
         @Test
@@ -338,8 +339,8 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.validateInProgress(AFTER_START_TIME.plusDays(1), message))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("이미 종료된 인터뷰입니다.");
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
     }
 
@@ -355,9 +356,9 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(
-                    () -> team.validateReady(AFTER_START_TIME, "피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다."))
+                    () -> team.validateReady(AFTER_START_TIME, "인터뷰 시작 전에만 레벨로그 수정이 가능합니다."))
                     .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다.");
+                    .hasMessageContaining("인터뷰 시작 전에만 레벨로그 수정이 가능합니다.");
         }
     }
 

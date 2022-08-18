@@ -18,6 +18,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -260,8 +261,8 @@ class FeedbackServiceTest extends ServiceTest {
             assertThatThrownBy(() -> feedbackService.update(
                     FeedbackWriteDto.from("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
                     feedbackId, roma.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("이미 종료된 인터뷰입니다.");
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
     }
 
@@ -384,8 +385,8 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("이미 종료된 인터뷰입니다.");
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
     }
 }

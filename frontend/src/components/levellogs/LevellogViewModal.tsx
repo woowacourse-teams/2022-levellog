@@ -136,7 +136,7 @@ const S = {
     border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
   `,
 
-  AuthorText: styled.p`
+  AuthorText: styled.h2`
     font-size: 2rem;
     font-weight: 300;
     @media (max-width: 520px) {

@@ -176,13 +176,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
                         "interviewers", contains(EVE.getId().intValue(), RICK.getId().intValue()),
                         "interviewees", contains(RICK.getId().intValue(), ROMA.getId().intValue()));
     }
+
     /*
      * Scenario: 내가 속하지 않은 레벨 인터뷰 팀 상세 조회하기
      *   given: 팀이 등록되어 있다.
      *   when: 로그인하지 않고 팀 상세 조회를 요청한다.
      *   then: 200 Ok 상태 코드와 팀을 응답받는다.
      */
-
     @Test
     @DisplayName("로그인하지 않고 팀 상세 조회하기")
     void findTeam_notLogin() {
@@ -210,13 +210,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
                         "interviewers", empty(),
                         "interviewees", empty());
     }
+
     /*
      * Scenario: 팀 상태 조회하기
      *   given: 팀이 등록되어 있다.
      *   when: 로그인하지 않고 팀 상태 조회를 요청한다.
      *   then: 200 Ok 상태 코드와 팀 상태를 응답받는다.
      */
-
     @Test
     @DisplayName("팀 상태 조회하기")
     void findStatus() {
@@ -240,6 +240,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("status", equalTo(TeamStatus.IN_PROGRESS.name()));
     }
+
     /*
      * Scenario: 팀 참가자에 대한 나(페퍼)의 역할 조회하기
      *   given: 팀이 등록되어 있다.
@@ -247,7 +248,6 @@ class TeamAcceptanceTest extends AcceptanceTest {
      *   when: 나(페퍼)는 같은 팀의 참가자안 릭에 대한 나의 역할을 조회한다.
      *   then: 200 Ok 상태 코드와 interviewer를 응답 받는다.
      */
-
     @Test
     @DisplayName("같은 팀 참가자에 대한 나의 역할 조회하기 - interviewer")
     void findMyRole_interviewer() {
@@ -272,6 +272,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("myRole", equalTo("INTERVIEWER"));
     }
+
     /*
      * Scenario: 팀 참가자에 대한 나의 역할 조회하기
      *   given: 팀이 등록되어 있다.
@@ -279,7 +280,6 @@ class TeamAcceptanceTest extends AcceptanceTest {
      *   when: 나(페퍼)는 같은 팀의 참가자안 이브에 대한 나의 역할을 조회한다.
      *   then: 200 Ok 상태 코드와 observer를 응답 받는다.
      */
-
     @Test
     @DisplayName("같은 팀 참가자에 대한 나의 역할 조회하기 - observer")
     void findMyRole_observer() {
@@ -304,13 +304,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("myRole", equalTo("OBSERVER"));
     }
+
     /*
      * Scenario: 레벨 인터뷰 종료하기
      *   given: 팀이 등록되어 있다.
      *   when: 등록된 팀에 대한 인터뷰 종료를 요청한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
-
     @Test
     @DisplayName("레벨 인터뷰 종료하기")
     void closeInterview() {
@@ -337,13 +337,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
         get("/api/teams/" + teamId).getResponse()
                 .body("status", equalTo("CLOSED"));
     }
+
     /*
      * Scenario: 레벨 인터뷰 팀 정보 수정하기
      *   given: 팀이 등록되어 있다.
      *   when: 팀 정보 수정을 요청한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
-
     @Test
     @DisplayName("레벨 인터뷰 팀 정보 수정하기")
     void update() {
@@ -370,13 +370,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
     }
+
     /*
      * Scenario: 레벨 인터뷰 팀 삭제하기
      *   given: 팀이 등록되어 있다.
      *   when: 등록된 팀을 삭제한다.
      *   then: 204 No Content 상태 코드를 응답받는다.
      */
-
     @Test
     @DisplayName("레벨 인터뷰 팀 삭제하기")
     void delete() {

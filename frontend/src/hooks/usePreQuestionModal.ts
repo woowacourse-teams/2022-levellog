@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import usePreQuestion from 'hooks/usePreQuestion';
 
+import { MESSAGE } from 'constants/constants';
+
 import { PreQuestionCustomHookType, PreQuestionParticipantType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
 
@@ -25,7 +27,7 @@ const usePreQuestionModal = () => {
       preQuestionId,
     });
     setIsPreQuestionModalOpen(false);
-    alert('사전질문 삭제가 완료되었습니다.');
+    alert(MESSAGE.PREQUESTION_DELETE_CONFIRM);
   };
 
   const handleClickClosePreQuestionModal = (e: React.MouseEvent<HTMLElement>) => {

@@ -25,7 +25,6 @@ const LevellogEdit = () => {
     }
 
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
   };
 
   useEffect(() => {
@@ -34,9 +33,8 @@ const LevellogEdit = () => {
 
       return;
     }
-
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
+    navigate(ROUTES_PATH.ERROR);
   }, []);
 
   return (

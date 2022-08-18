@@ -30,7 +30,7 @@ export const 토큰이올바르지못한경우홈페이지로 = ({
   }
 
   if (message === MESSAGE.WRONG_TOKEN) {
-    alert(MESSAGE.NEED_RELOGIN);
+    alert(MESSAGE.NEED_RE_LOGIN);
     localStorage.removeItem('accessToken');
     window.location.href = '/';
 

@@ -17,8 +17,8 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
-import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
+import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
@@ -56,7 +56,7 @@ class TeamServiceTest extends ServiceTest {
             rickTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamAndRolesDto response = teamService.findAll(Optional.empty(), rick.getId());
+            final TeamsDto response = teamService.findAll(Optional.empty(), rick.getId());
 
             //then
             assertAll(
@@ -90,7 +90,7 @@ class TeamServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamAndRolesDto response = teamService.findAll(Optional.of("ready"), rick.getId());
+            final TeamsDto response = teamService.findAll(Optional.of("ready"), rick.getId());
 
             //then
             assertAll(
@@ -122,7 +122,7 @@ class TeamServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamAndRolesDto response = teamService.findAll(Optional.of("in-progress"), rick.getId());
+            final TeamsDto response = teamService.findAll(Optional.of("in-progress"), rick.getId());
 
             //then
             assertAll(
@@ -154,7 +154,7 @@ class TeamServiceTest extends ServiceTest {
             eveTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamAndRolesDto response = teamService.findAll(Optional.of("closed"), rick.getId());
+            final TeamsDto response = teamService.findAll(Optional.of("closed"), rick.getId());
 
             //then
             assertAll(
@@ -193,44 +193,44 @@ class TeamServiceTest extends ServiceTest {
             team.delete(BEFORE_START_TIME);
 
             //when
-            final TeamAndRolesDto response = teamService.findAll(Optional.empty(), rick.getId());
+            final TeamsDto response = teamService.findAll(Optional.empty(), rick.getId());
 
             //then
             assertThat(response.getTeams()).hasSize(1);
         }
 
-        private List<String> toTitles(final TeamAndRolesDto response) {
+        private List<String> toTitles(final TeamsDto response) {
             return response.getTeams()
                     .stream()
-                    .map(TeamAndRoleDto::getTitle)
+                    .map(TeamDto::getTitle)
                     .collect(Collectors.toList());
         }
 
-        private List<Long> toHostIds(final TeamAndRolesDto response) {
+        private List<Long> toHostIds(final TeamsDto response) {
             return response.getTeams()
                     .stream()
-                    .map(TeamAndRoleDto::getHostId)
+                    .map(TeamDto::getHostId)
                     .collect(Collectors.toList());
         }
 
-        private List<Integer> toParticipantsSizes(final TeamAndRolesDto response) {
+        private List<Integer> toParticipantsSizes(final TeamsDto response) {
             return response.getTeams()
                     .stream()
-                    .map(TeamAndRoleDto::getParticipants)
+                    .map(TeamDto::getParticipants)
                     .map(List::size)
                     .collect(Collectors.toList());
         }
 
-        private List<TeamStatus> toCloseStatuses(final TeamAndRolesDto response) {
+        private List<TeamStatus> toCloseStatuses(final TeamsDto response) {
             return response.getTeams()
                     .stream()
-                    .map(TeamAndRoleDto::getStatus)
+                    .map(TeamDto::getStatus)
                     .collect(Collectors.toList());
         }
 
-        private List<Boolean> toIsParticipants(final TeamAndRolesDto response) {
+        private List<Boolean> toIsParticipants(final TeamsDto response) {
             return response.getTeams()
-                    .stream().map(TeamAndRoleDto::getIsParticipant)
+                    .stream().map(TeamDto::getIsParticipant)
                     .collect(Collectors.toList());
         }
     }
@@ -388,7 +388,7 @@ class TeamServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             //when
-            final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), rick.getId());
+            final TeamDto response = teamService.findByTeamIdAndMemberId(team.getId(), rick.getId());
 
             //then
             assertAll(
@@ -425,9 +425,9 @@ class TeamServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma, alien, eve);
 
                 //when
-                final TeamAndRoleDto responseOfPepper = teamService.findByTeamIdAndMemberId(team.getId(),
+                final TeamDto responseOfPepper = teamService.findByTeamIdAndMemberId(team.getId(),
                         pepper.getId());
-                final TeamAndRoleDto responseOfEve = teamService.findByTeamIdAndMemberId(team.getId(),
+                final TeamDto responseOfEve = teamService.findByTeamIdAndMemberId(team.getId(),
                         eve.getId());
 
                 //then
@@ -459,7 +459,7 @@ class TeamServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma);
 
                 //when
-                final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), pepper.getId());
+                final TeamDto response = teamService.findByTeamIdAndMemberId(team.getId(), pepper.getId());
 
                 //then
                 assertAll(
@@ -490,7 +490,7 @@ class TeamServiceTest extends ServiceTest {
                 final Team team = saveTeam(rick, pepper, roma);
 
                 //when
-                final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(team.getId(), alien.getId());
+                final TeamDto response = teamService.findByTeamIdAndMemberId(team.getId(), alien.getId());
 
                 //then
                 assertAll(
@@ -826,7 +826,7 @@ class TeamServiceTest extends ServiceTest {
             saveTeam(harry, alien);
 
             // when
-            final List<TeamAndRoleDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
+            final List<TeamDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
 
             // then
             assertThat(teams).hasSize(2);

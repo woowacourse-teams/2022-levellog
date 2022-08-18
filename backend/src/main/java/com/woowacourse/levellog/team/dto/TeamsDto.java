@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class TeamAndRolesDto {
+public class TeamsDto {
 
-    private List<TeamAndRoleDto> teams;
+    private List<TeamDto> teams;
 }

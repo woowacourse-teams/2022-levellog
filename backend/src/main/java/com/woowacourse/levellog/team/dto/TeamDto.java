@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TeamAndRoleDto {
+public class TeamDto {
 
     private Long id;
     private String title;
@@ -28,10 +28,10 @@ public class TeamAndRoleDto {
     private List<Long> interviewees;
     private List<ParticipantDto> participants;
 
-    public static TeamAndRoleDto from(final Team team, final Long hostId, final TeamStatus status,
-                                      final List<Long> interviewers, final List<Long> interviewees,
-                                      final List<ParticipantDto> participantResponses, final Boolean isParticipant) {
-        return new TeamAndRoleDto(
+    public static TeamDto from(final Team team, final Long hostId, final TeamStatus status,
+                               final List<Long> interviewers, final List<Long> interviewees,
+                               final List<ParticipantDto> participantResponses, final Boolean isParticipant) {
+        return new TeamDto(
                 team.getId(),
                 team.getTitle(),
                 team.getPlace(),

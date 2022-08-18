@@ -19,10 +19,10 @@ import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
-import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
-import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
+import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
@@ -63,13 +63,13 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    public TeamAndRolesDto findAll(final Optional<String> status, final Long memberId) {
+    public TeamsDto findAll(final Optional<String> status, final Long memberId) {
         final List<Team> teams = status.map(this::findAllByIsClosedAndOrderByCreatedAt)
                 .orElseGet(this::findAllOrderByIsClosedAndCreatedAt);
 
-        final List<TeamAndRoleDto> teamAndRoles = toTeamAndRoleDtos(memberId, teams);
+        final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
 
-        return new TeamAndRolesDto(teamAndRoles);
+        return new TeamsDto(teamDtos);
     }
 
     private List<Team> findAllByIsClosedAndOrderByCreatedAt(final String status) {
@@ -96,17 +96,17 @@ public class TeamService {
         return teamRepository.findAll(sort);
     }
 
-    public TeamAndRoleDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
+    public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
 
         return createTeamAndRoleDto(team, memberId);
     }
 
-    public TeamAndRolesDto findAllByMemberId(final Long memberId) {
+    public TeamsDto findAllByMemberId(final Long memberId) {
         final List<Team> teams = getTeamsByMemberId(memberId);
-        final List<TeamAndRoleDto> teamAndRoles = toTeamAndRoleDtos(memberId, teams);
+        final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
 
-        return new TeamAndRolesDto(teamAndRoles);
+        return new TeamsDto(teamDtos);
     }
 
     public TeamStatusDto findStatus(final Long teamId) {
@@ -154,20 +154,20 @@ public class TeamService {
         team.delete(timeStandard.now());
     }
 
-    private List<TeamAndRoleDto> toTeamAndRoleDtos(final Long memberId, final List<Team> teams) {
+    private List<TeamDto> toTeamDtos(final Long memberId, final List<Team> teams) {
         return teams.stream()
                 .map(it -> createTeamAndRoleDto(it, memberId))
                 .collect(Collectors.toList());
     }
 
-    private TeamAndRoleDto createTeamAndRoleDto(final Team team, final Long memberId) {
+    private TeamDto createTeamAndRoleDto(final Team team, final Long memberId) {
         final TeamStatus status = team.status(timeStandard.now());
 
         final Participants participants = new Participants(participantRepository.findByTeam(team));
         final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
-        return TeamAndRoleDto.from(team, participants.toHostId(), status, interviewers, interviewees,
+        return TeamDto.from(team, participants.toHostId(), status, interviewers, interviewees,
                 getParticipantResponses(participants, memberId), participants.isContains(memberId));
     }
 

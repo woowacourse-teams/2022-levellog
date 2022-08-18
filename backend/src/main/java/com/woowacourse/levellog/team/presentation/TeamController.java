@@ -4,8 +4,8 @@ import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
-import com.woowacourse.levellog.team.dto.TeamAndRoleDto;
-import com.woowacourse.levellog.team.dto.TeamAndRolesDto;
+import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import java.net.URI;
@@ -39,17 +39,17 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamAndRolesDto> findAll(@RequestParam final Optional<String> status,
-                                                   @Authentic final Long memberId) {
-        final TeamAndRolesDto response = teamService.findAll(status, memberId);
+    public ResponseEntity<TeamsDto> findAll(@RequestParam final Optional<String> status,
+                                            @Authentic final Long memberId) {
+        final TeamsDto response = teamService.findAll(status, memberId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{teamId}")
     @PublicAPI
-    public ResponseEntity<TeamAndRoleDto> findById(@PathVariable final Long teamId,
-                                                   @Authentic final Long memberId) {
-        final TeamAndRoleDto response = teamService.findByTeamIdAndMemberId(teamId, memberId);
+    public ResponseEntity<TeamDto> findById(@PathVariable final Long teamId,
+                                            @Authentic final Long memberId) {
+        final TeamDto response = teamService.findByTeamIdAndMemberId(teamId, memberId);
         return ResponseEntity.ok(response);
     }
 

@@ -175,7 +175,7 @@ const S = {
     padding: 1.25rem 2.125rem 0 2.125rem;
     border-radius: 0.625rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
-    box-shadow: 0.375rem 0.375rem 0.5rem ${(props) => props.theme.new_default.GRAY};
+    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
   `,
 
   Profile: styled.div`

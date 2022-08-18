@@ -13,12 +13,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install Dependencies # 의존 파일 설치
+        working-directory: ./frontend
+        run: yarn install
+
       - name: Cypress install
         uses: cypress-io/github-action@v4
         with:
-          # Disable running of tests within install job
+          working-directory: ./frontend
           runTests: false
           build: yarn build
 
       - name: Run Cypress tests
+        working-directory: ./frontend
         run: yarn test

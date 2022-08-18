@@ -11,6 +11,7 @@ const useRole = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
+  // 얜 뭐임? 밑에랑 나눠져있는 이유가 뭐지?
   const getWriterInfo = async ({
     teamId,
     participantId,

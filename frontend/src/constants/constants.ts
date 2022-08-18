@@ -39,7 +39,7 @@ export const SERVER_PATH = Object.freeze({
 export const MESSAGE = Object.freeze({
   WRONG_ACCESS: '잘못된 접근입니다.',
 
-  NEED_RELOGIN: '재로그인이 필요합니다.',
+  NEED_RE_LOGIN: '재로그인이 필요합니다.',
   NEED_LOGIN: '로그인이 필요한 페이지입니다.',
   NEED_IN_TEAM: '해당 팀에 소속된 유저만 접근할 수 있습니다!',
   NEED_HOST: '호스트만 접근할 수 있습니다!',

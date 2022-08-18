@@ -34,9 +34,7 @@ const Feedbacks = () => {
     getFeedbacksInTeam({ levellogId });
   }, []);
 
-  {
-    /* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */
-  }
+  /* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */
   if (feedbacks.length === 0) {
     return (
       <EmptyFeedback

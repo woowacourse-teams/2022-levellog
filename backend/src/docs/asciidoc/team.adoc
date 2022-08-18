@@ -106,7 +106,7 @@ include::{snippets}/team/create/exception/interviewer-number-more-than-participa
 
 operation::team/find-all[]
 
-[[findAllByStatus]]
+[[find-all-by-status]]
 == Status로 필터링 된 팀 목록 조회
 
 *status 쿼리 파라미터 종류*

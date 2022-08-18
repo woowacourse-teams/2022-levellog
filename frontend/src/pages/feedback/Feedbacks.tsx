@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import styled from 'styled-components';
+
 import useFeedback from 'hooks/useFeedback';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
@@ -58,7 +60,7 @@ const Feedbacks = () => {
           )}
         </>
       </ContentHeader>
-      <FlexBox gap={2.5}>
+      <S.Container>
         {feedbacks.map((feedbackInfo: FeedbackType) => (
           <Feedback
             key={feedbackInfo.id}
@@ -69,9 +71,21 @@ const Feedbacks = () => {
             teamStatus={team.status}
           />
         ))}
-      </FlexBox>
+      </S.Container>
     </>
   );
+};
+
+const S = {
+  Container: styled.div`
+    margin: auto;
+    width: 100%;
+    max-width: 71rem;
+    min-width: 18.75rem;
+    @media (max-width: 1160px) {
+      width: calc(100% - 2.5rem);
+    }
+  `,
 };
 
 export default Feedbacks;

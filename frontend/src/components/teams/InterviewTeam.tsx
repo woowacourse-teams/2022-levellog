@@ -87,7 +87,7 @@ const S = {
     font-weight: 600;
   `,
 
-  Notice: styled.p`
+  Notice: styled.div`
     display: flex;
     align-items: center;
     color: ${(props) => props.theme.default.DARK_GRAY};

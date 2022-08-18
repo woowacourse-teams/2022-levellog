@@ -122,7 +122,7 @@ const FeedbackEdit = () => {
           </S.RightContent>
         </S.Content>
         <BottomBar
-          buttonText={'작성하기'}
+          buttonText={'수정하기'}
           handleClickRightButton={handleClickFeedbackEditButton}
         ></BottomBar>
       </S.Container>
@@ -164,7 +164,10 @@ const S = {
   `,
 
   RoleContent: styled.div`
-    padding: 0.625rem 30px;
+    display: flex;
+    align-items: center;
+    height: 1.875rem;
+    padding: 0.625rem 0.9375rem;
     border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     border-radius: 1.25rem;
     margin-bottom: 1.25rem;

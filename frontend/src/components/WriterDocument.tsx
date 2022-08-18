@@ -47,8 +47,8 @@ const S = {
   Container: styled.div`
     position: relative;
     width: 100%;
-    height: calc(100% - 60px);
-    border-radius: 3px 0.5rem 3px 3px;
+    height: calc(100% - 3.75rem);
+    border-radius: 0.1875rem 0.5rem 0.1875rem 0.1875rem;
     border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,
 

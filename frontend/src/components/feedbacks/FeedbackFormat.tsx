@@ -49,7 +49,7 @@ const S = {
   `,
 
   FeedbackTitle: styled.h2`
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
     font-size: 1.875rem;
   `,
 
@@ -62,7 +62,7 @@ const S = {
   `,
 
   FeedbackLabel: styled.p`
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
   `,
 };

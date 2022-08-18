@@ -62,7 +62,6 @@ const ContentHeaderStyle = styled.div`
     margin-top: 0.625rem;
     margin-bottom: 1.25rem;
     border: none;
-    //justify-content: start;
     font-size: 0.75rem;
   }
 `;
@@ -97,7 +96,7 @@ const TitleBox = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 600;
 `;
 

@@ -89,16 +89,16 @@ const S = {
     overflow: auto;
     flex-direction: column;
     @media (min-width: 1620px) {
-      padding: 20px calc((100vw - 100rem) / 2);
+      padding: 1.25rem calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 20px 1.25rem;
+      padding: 1.25rem 1.25rem;
     }
   `,
 
   Content: styled.div`
     display: flex;
-    gap: 16px;
+    gap: 1rem;
     width: 100%;
     @media (max-width: 1024px) {
       gap: 1.875rem;
@@ -120,14 +120,14 @@ const S = {
     padding: 0.625rem 30px;
     border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     border-radius: 1.25rem;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
     background-color: ${(props) => props.theme.new_default.DARK_BLACK};
     color: ${(props) => props.theme.new_default.WHITE};
     font-weight: 700;
   `,
 
   LevellogTitle: styled.h2`
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
     font-size: 1.875rem;
   `,
 
@@ -144,7 +144,7 @@ const S = {
   QuestionContent: styled.div``,
 
   QuestionTitle: styled.h2`
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
     font-size: 1.875rem;
   `,
 

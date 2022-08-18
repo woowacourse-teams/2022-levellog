@@ -78,10 +78,10 @@ const S = {
     overflow: auto;
     flex-direction: column;
     @media (min-width: 1620px) {
-      padding: 20px calc((100vw - 100rem) / 2);
+      padding: 1.25rem calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 20px 1.25rem;
+      padding: 1.25rem 1.25rem;
     }
     @media (max-width: 520px) {
       flex-direction: column;
@@ -90,7 +90,7 @@ const S = {
 
   Content: styled.div`
     display: flex;
-    gap: 16px;
+    gap: 1rem;
   `,
 
   LeftContent: styled.div`

@@ -120,7 +120,7 @@ const S = {
     display: flex;
     align-items: center;
     height: 1.875rem;
-    padding: 0.625rem 15px;
+    padding: 0.625rem 0.9375rem;
     border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     border-radius: 1.25rem;
     margin-bottom: 1.25rem;

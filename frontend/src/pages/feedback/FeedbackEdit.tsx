@@ -50,6 +50,7 @@ const FeedbackEdit = () => {
       return;
     }
     alert(MESSAGE.WRONG_ACCESS);
+    navigate(ROUTES_PATH.ERROR);
   };
 
   const init = async () => {

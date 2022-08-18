@@ -11,24 +11,7 @@ const useRole = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
-  // 얜 뭐임? 밑에랑 나눠져있는 이유가 뭐지?
   const getWriterInfo = async ({
-    teamId,
-    participantId,
-  }: Omit<RoleCustomHookType, 'levellogId'>) => {
-    try {
-      getFeedbackWriterRole({ teamId, participantId });
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err) && err instanceof Error) {
-        const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
-        }
-      }
-    }
-  };
-
-  const getFeedbackWriterRole = async ({
     teamId,
     participantId,
   }: Omit<RoleCustomHookType, 'levellogId'>) => {

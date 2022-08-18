@@ -12,6 +12,13 @@ jobs:
       - name: Checkout source code. # Repo checkout
         uses: actions/checkout@v2
 
+      - name: Check Node v
+        run: node -v
+
+      - name: Install yarn 3
+        working-directory: ./frontend
+        run: yarn set version stable
+
       - name: Install Dependencies
         working-directory: ./frontend
         run: yarn install

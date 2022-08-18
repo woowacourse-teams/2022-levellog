@@ -45,6 +45,10 @@ const Interviewer = ({
     navigate(`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`);
   };
 
+  const handleClickInterviewQuestionButton = () => {
+    navigate(`/interview-questions/teams/${teamId}/levellogs/${participant.levellogId}`);
+  };
+
   if (!teamId) return <div></div>;
 
   if (participant.memberId === loginUserId) {
@@ -64,18 +68,21 @@ const Interviewer = ({
                   <Image src={levellogIcon} sizes={'SMALL'} />
                   <S.ButtonText>레벨로그 보기</S.ButtonText>
                 </S.Button>
-                <Link to={`/interview-questions/levellogs/${participant.levellogId}`}>
-                  <S.Button disabled={!participant.levellogId || !userInTeam}>
-                    <Image src={levellogIcon} sizes={'SMALL'} />
-                    <S.ButtonText>인터뷰질문 보기</S.ButtonText>
-                  </S.Button>
-                </Link>
-                <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
-                  <S.Button disabled={!participant.levellogId || !userInTeam}>
-                    <Image src={levellogIcon} sizes={'SMALL'} />
-                    <S.ButtonText>피드백 보기</S.ButtonText>
-                  </S.Button>
-                </Link>
+                <S.Button
+                  disabled={!participant.levellogId || !userInTeam}
+                  onClick={handleClickInterviewQuestionButton}
+                >
+                  <Image src={levellogIcon} sizes={'SMALL'} />
+                  <S.ButtonText>인터뷰질문 보기</S.ButtonText>
+                </S.Button>
+
+                <S.Button
+                  disabled={!participant.levellogId || !userInTeam}
+                  onClick={handleClickFeedbackButton}
+                >
+                  <Image src={levellogIcon} sizes={'SMALL'} />
+                  <S.ButtonText>피드백 보기</S.ButtonText>
+                </S.Button>
               </>
             ) : (
               <>
@@ -168,7 +175,7 @@ const S = {
     padding: 1.25rem 2.125rem 0 2.125rem;
     border-radius: 0.625rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
-    box-shadow: 0.375rem 0.375rem 0.5rem ${(props) => props.theme.new_default.GRAY};
+    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
   `,
 
   Profile: styled.div`

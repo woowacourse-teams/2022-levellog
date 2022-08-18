@@ -2,8 +2,9 @@ plugins {
 	id 'org.springframework.boot' version '2.7.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
-	id 'java'
+	id "org.sonarqube" version "3.0"
 	id 'jacoco'
+	id 'java'
 }
 
 group = 'com.woowacourse'
@@ -132,4 +133,19 @@ task testCoverage {
 
 	tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
 	tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
+}
+
+sonarqube {
+	properties {
+		property "sonar.test.inclusions", "**/*Test.java"
+		property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
+		property 'sonar.exclusions',
+				 '**/support/**, **/dto/**, **/*Application*, **/*BaseEntity*, **/*Github*, **/aspect/**, **/*Config*'
+
+		property 'sonar.issue.ignore.multicriteria', 'e1, e2'
+		property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'java:S6212'
+		property 'sonar.issue.ignore.multicriteria.e1.resourceKey', '**/*.java'
+		property 'sonar.issue.ignore.multicriteria.e2.ruleKey', 'java:S2699'
+		property 'sonar.issue.ignore.multicriteria.e2.resourceKey', '**/*ControllerTest.java'
+	}
 }

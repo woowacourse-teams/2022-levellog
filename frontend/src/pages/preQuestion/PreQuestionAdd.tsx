@@ -28,13 +28,16 @@ const PreQuestionAdd = () => {
       return;
     }
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
   };
 
   useEffect(() => {
     if (typeof teamId === 'string' && typeof levellogId === 'string') {
       getLevellog({ teamId, levellogId });
+
+      return;
     }
+    alert(MESSAGE.WRONG_ACCESS);
+    navigate(ROUTES_PATH.ERROR);
   }, []);
 
   return (

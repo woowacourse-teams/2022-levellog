@@ -2,9 +2,6 @@ name: backend CI
 
 # 하기 내용에 해당하는 이벤트 발생 시 github action 동작
 on:
-  push: # 모든 브랜치에서 push가 일어났을 때 github action 동작
-    branches:
-      - '*'
   pull_request: # 모든 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
       - '*'
@@ -13,6 +10,79 @@ on:
 # push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.
 
 jobs:
+  sonarqube-build:
+    runs-on: ubuntu-22.04
+
+    env:
+      # KEY - VALUE
+      SONARQUBE_ID: ${{ secrets.SONARQUBE_KEY }}
+      SONARQUBE_URL: ${{ secrets.SONARQUBE_HOST_URL }}
+      SONARQUBE_AUTH_URL: ${{ secrets.SONARQUBE_AUTH_URL }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: gradlew 권한 변경
+        working-directory: ./backend
+        run: chmod +x gradlew
+
+      - name: 소나큐브 빌드 진행
+        working-directory: ./backend
+        run: ./gradlew testCoverage sonarqube
+          -Dsonar.projectKey=${{ env.SONARQUBE_ID }}
+          -Dsonar.host.url=${{ env.SONARQUBE_URL }}
+          -Dsonar.projectName=${{ env.SONARQUBE_ID }}-${{ env.PR_NUMBER }}
+          -Dsonar.login=${{ secrets.SONARQUBE_ACCESS_TOKEN }}
+
+      - name: Get Sonarqube Results
+        id: sonarqube_results
+        run: |
+          RESPONSE=$(curl -X GET -G '${{ env.SONARQUBE_AUTH_URL }}/api/measures/search' \
+          -d projectKeys=${{ env.SONARQUBE_ID }} \
+          -d metricKeys=bugs,vulnerabilities,code_smells,coverage \
+          | jq '.measures')
+          echo "$RESPONSE" | jq -c '.[] | .' | while read -r data;
+          do
+            METRIC=$(echo $data | jq -r '.metric')
+            VALUE=$(echo $data | jq -r '.value')
+            BEST_VALUE=$(echo $data | jq -r '.bestValue')
+            echo "::set-output name=${METRIC}_value::${VALUE}"
+            if [ ${METRIC} == "coverage" ] && [ "$(echo "${VALUE} >= 80.0" | bc)" -eq 1 ]; then
+              echo "::set-output name=${METRIC}_best_value::✅"
+            elif [ $BEST_VALUE == true ] || [ $BEST_VALUE == null ]; then
+              echo "::set-output name=${METRIC}_best_value::✅"
+            else
+              echo "::set-output name=${METRIC}_best_value::❌"
+            fi
+          done
+
+      - name: Comment Sonarqube URL
+        uses: actions/github-script@v4
+        with:
+          # 이슈에 코멘트를 달아주는 스크립트 실행
+          script: |
+            const { SONARQUBE_ID, SONARQUBE_URL, PR_NUMBER } = process.env
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🏃‍♀️💨 Code Analysis Results By SonarQube
+            ### ${ SONARQUBE_ID }-${ PR_NUMBER }
+            
+            Bugs :    ${{ steps.sonarqube_results.outputs.bugs_value }}    ${{ steps.sonarqube_results.outputs.bugs_best_value }}
+            Vulnerabilities :    ${{ steps.sonarqube_results.outputs.vulnerabilities_value }}    ${{ steps.sonarqube_results.outputs.vulnerabilities_best_value }}
+            Code Smells :    ${{ steps.sonarqube_results.outputs.code_smells_value }}    ${{ steps.sonarqube_results.outputs.code_smells_best_value }} 
+            Coverage :    ${{ steps.sonarqube_results.outputs.coverage_value }}    ${{ steps.sonarqube_results.outputs.coverage_best_value }} 
+            
+            [리포트 확인하기](${SONARQUBE_URL})`
+            })
+
   test:
     runs-on: ubuntu-22.04 # 실행 환경 지정
 

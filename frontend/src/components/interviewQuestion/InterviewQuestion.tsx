@@ -19,12 +19,6 @@ const InterviewQuestion = ({
 }: InterviewQuestionProps) => {
   return (
     <S.Container>
-      <FlexBox gap={1}>
-        <S.Title>인터뷰 질문</S.Title>
-        <S.ToolTipBox>
-          <ToolTip toolTipText={MESSAGE.CAN_EDIT} />
-        </S.ToolTipBox>
-      </FlexBox>
       <S.Content ref={interviewQuestionContentRef}>
         {interviewQuestionInfos.length > 0 &&
           interviewQuestionInfos.map((interviewQuestionInfo) => (
@@ -84,6 +78,8 @@ const S = {
     height: 19.5rem;
     padding: 1rem;
     margin-bottom: 0.625rem;
+    border-radius: 0.5rem;
+    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.default.WHITE};
   `,
 
@@ -93,6 +89,8 @@ const S = {
     align-items: center;
     height: '3.125rem';
     padding-right: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.default.WHITE};
   `,
 

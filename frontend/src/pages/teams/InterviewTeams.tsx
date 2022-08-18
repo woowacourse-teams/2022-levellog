@@ -82,10 +82,8 @@ const S = {
     display: flex;
     flex-wrap: wrap;
     gap: 3.125rem;
-    margin-top: 3.125rem;
     @media (max-width: 560px) {
       justify-content: center;
-      margin-top: 1.25rem;
       gap: 2.5rem;
     }
   `,

@@ -12,7 +12,11 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
       <ContentHeaderStyle>
         <LeftBox>
           <FlexBox>
-            <ImageBox>{imageUrl && <Image src={imageUrl} sizes={'MEDIUM'} />}</ImageBox>
+            {imageUrl && (
+              <ImageBox>
+                <Image src={imageUrl} sizes={'MEDIUM'} />
+              </ImageBox>
+            )}
             <TitleBox>
               <Title>{title}</Title>
               {subTitle && <SubTitle>{subTitle}</SubTitle>}
@@ -28,7 +32,6 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
           {childrenArray && (childrenArray.length === 2 ? childrenArray[1] : childrenArray[0])}
         </ButtonBox>
       </ContentHeaderStyle>
-      <Line />
     </>
   );
 };
@@ -42,10 +45,13 @@ interface ContentHeaderProps {
 
 const ContentHeaderStyle = styled.div`
   display: flex;
+  justify-content: space-between;
   position: relative;
   align-items: center;
   width: 100%;
-  height: fit-content;
+  height: 4.375rem;
+  margin-bottom: 3.125rem;
+  border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   @media (min-width: 1620px) {
     padding: 0.625rem calc((100vw - 100rem) / 2);
   }
@@ -53,7 +59,10 @@ const ContentHeaderStyle = styled.div`
     padding: 0.625rem 1.25rem;
   }
   @media (max-width: 800px) {
-    justify-content: start;
+    margin-top: 0.625rem;
+    margin-bottom: 1.25rem;
+    border: none;
+    //justify-content: start;
     font-size: 0.75rem;
   }
 `;
@@ -88,8 +97,8 @@ const TitleBox = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 1.25rem;
-  font-weight: 400;
+  font-size: 20px;
+  font-weight: 600;
 `;
 
 const SubTitle = styled.p`
@@ -104,20 +113,8 @@ const FilterButtonBox = styled.div`
 `;
 
 const ButtonBox = styled.div`
-  position: absolute;
-  right: 0;
   @media (max-width: 800px) {
     top: 0.625rem;
-  }
-`;
-
-const Line = styled.div`
-  position: absolute;
-  left: 0;
-  width: 100%;
-  border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
-  @media (max-width: 800px) {
-    border: none;
   }
 `;
 

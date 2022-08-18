@@ -51,12 +51,22 @@ const S = {
     }
   `,
 
+  FeedbackTitle: styled.h2`
+    margin-bottom: 20px;
+    font-size: 1.875rem;
+  `,
+
   Content: styled.div`
     display: flex;
     flex-direction: column;
     align-content: space-between;
     gap: 1.5rem;
     width: 100%;
+  `,
+
+  FeedbackLabel: styled.p`
+    font-size: 16px;
+    font-weight: 600;
   `,
 };
 export default FeedbackFormat;

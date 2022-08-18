@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import useFeedbackAddPage from 'hooks/useFeedbackAddPage';
 
-import Button from 'components/@commons/Button';
+import BottomBar from 'components/@commons/BottomBar';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
 import WriterDocument from 'components/WriterDocument';
@@ -29,53 +29,79 @@ const FeedbackAdd = () => {
     },
   } = useFeedbackAddPage();
 
+  if (Object.keys(levellogInfo).length === 0) return <></>;
+  if (!feedbackWriterRole) return <></>;
+  const { author } = levellogInfo;
+
   return (
-    <S.Container>
+    <>
       <ContentHeader
-        title={`${levellogInfo.author && levellogInfo.author.nickname}의 레벨 인터뷰 피드백`}
-      >
-        <Button onClick={handleClickFeedbackAddButton}>등록하기</Button>
-      </ContentHeader>
-      <S.Content>
-        <S.LeftContent>
-          <FlexBox alignItems={'center'} gap={1}>
-            {whichContentShow.levellog && <S.LevellogTitle>레벨로그</S.LevellogTitle>}
-            {whichContentShow.preQuestion && <S.LevellogTitle>사전질문</S.LevellogTitle>}
-            <S.RoleContent>나의 역할: {feedbackWriterRole}</S.RoleContent>
-          </FlexBox>
-          <WriterDocument
-            levellogInfo={levellogInfo}
-            preQuestion={preQuestion}
-            whichContentShow={whichContentShow}
-            handleClickLevellogTag={handleClickLevellogTag}
-            handleClickPreQuestionTag={handleClickPreQuestionTag}
-          />
-        </S.LeftContent>
-        <S.RightContent>
-          <InterviewQuestion
-            interviewQuestionInfos={interviewQuestionInfos}
-            interviewQuestionRef={interviewQuestionRef}
-            interviewQuestionContentRef={interviewQuestionContentRef}
-            onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}
-            onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
-            handleSubmitInterviewQuestion={handleSubmitInterviewQuestion}
-          />
-          <FeedbackFormat feedbackRef={feedbackRef} />
-        </S.RightContent>
-      </S.Content>
-    </S.Container>
+        imageUrl={author.profileUrl}
+        title={`${author.nickname}의 인터뷰 피드백`}
+      ></ContentHeader>
+      <S.GridContainer>
+        <S.Content>
+          <S.LeftContent>
+            <FlexBox alignItems={'center'} gap={1}>
+              {whichContentShow.levellog && <S.LevellogTitle>레벨로그</S.LevellogTitle>}
+              {whichContentShow.preQuestion && <S.LevellogTitle>사전질문</S.LevellogTitle>}
+              {feedbackWriterRole === 'OBSERVER' && <S.RoleContent>{'옵저버'}</S.RoleContent>}
+              {feedbackWriterRole === 'INTERVIEWER' && <S.RoleContent>{'인터뷰어'}</S.RoleContent>}
+              {feedbackWriterRole === 'INTERVIEWEE' && <S.RoleContent>{'인터뷰이'}</S.RoleContent>}
+            </FlexBox>
+            <WriterDocument
+              levellogInfo={levellogInfo}
+              preQuestion={preQuestion}
+              whichContentShow={whichContentShow}
+              handleClickLevellogTag={handleClickLevellogTag}
+              handleClickPreQuestionTag={handleClickPreQuestionTag}
+            />
+          </S.LeftContent>
+          <S.RightContent>
+            <S.QuestionContent>
+              <S.QuestionTitle>인터뷰에서 받은 질문</S.QuestionTitle>
+              <InterviewQuestion
+                interviewQuestionInfos={interviewQuestionInfos}
+                interviewQuestionRef={interviewQuestionRef}
+                interviewQuestionContentRef={interviewQuestionContentRef}
+                onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}
+                onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
+                handleSubmitInterviewQuestion={handleSubmitInterviewQuestion}
+              />
+            </S.QuestionContent>
+            <S.FeedbackContent>
+              <FeedbackFormat feedbackRef={feedbackRef} />
+            </S.FeedbackContent>
+          </S.RightContent>
+        </S.Content>
+        <BottomBar
+          buttonText={'작성하기'}
+          handleClickRightButton={handleClickFeedbackAddButton}
+        ></BottomBar>
+      </S.GridContainer>
+    </>
   );
 };
 
 const S = {
-  Container: styled.div`
-    position: relative;
-    width: 100%;
+  GridContainer: styled.div`
+    display: flex;
+    overflow: auto;
+    flex-direction: column;
+    @media (min-width: 1620px) {
+      padding: 20px calc((100vw - 100rem) / 2);
+    }
+    @media (max-width: 1620px) {
+      padding: 20px 1.25rem;
+    }
+    @media (max-width: 520px) {
+      flex-direction: column;
+    }
   `,
 
   Content: styled.div`
     display: flex;
-    gap: 4.875rem;
+    gap: 16px;
     width: 100%;
     @media (max-width: 1024px) {
       gap: 1.875rem;
@@ -86,20 +112,26 @@ const S = {
   `,
 
   LeftContent: styled.div`
+    position: relative;
     width: 50%;
     @media (max-width: 520px) {
       width: 100%;
     }
   `,
 
-  LevellogTitle: styled.h2`
-    margin-bottom: 1.875rem;
-    font-size: 1.875rem;
+  RoleContent: styled.div`
+    padding: 0.625rem 30px;
+    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-radius: 1.25rem;
+    margin-bottom: 20px;
+    background-color: ${(props) => props.theme.new_default.DARK_BLACK};
+    color: ${(props) => props.theme.new_default.WHITE};
+    font-weight: 700;
   `,
 
-  RoleContent: styled.p`
-    margin-bottom: 1.875rem;
-    font-weight: 700;
+  LevellogTitle: styled.h2`
+    margin-bottom: 20px;
+    font-size: 1.875rem;
   `,
 
   RightContent: styled.div`
@@ -111,6 +143,15 @@ const S = {
       width: 100%;
     }
   `,
+
+  QuestionContent: styled.div``,
+
+  QuestionTitle: styled.h2`
+    margin-bottom: 20px;
+    font-size: 1.875rem;
+  `,
+
+  FeedbackContent: styled.div``,
 };
 
 export default FeedbackAdd;

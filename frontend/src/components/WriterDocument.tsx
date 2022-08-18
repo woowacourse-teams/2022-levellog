@@ -47,9 +47,9 @@ const S = {
   Container: styled.div`
     position: relative;
     width: 100%;
-    @media (max-width: 520px) {
-      max-width: 22.875rem;
-    }
+    height: calc(100% - 3.75rem);
+    border-radius: 0.1875rem 0.5rem 0.1875rem 0.1875rem;
+    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,
 
   ButtonBox: styled.div`

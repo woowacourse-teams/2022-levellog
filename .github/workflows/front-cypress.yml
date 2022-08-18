@@ -31,6 +31,7 @@ jobs:
           build: yarn build-dev
 
       - name: Run Cypress tests
+        uses: cypress-io/github-action@v4
         with:
           working-directory: ./frontend
           install: false

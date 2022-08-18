@@ -8,7 +8,6 @@ on:
 jobs:
   cypress-build:
     runs-on: ubuntu-22.04
-    container: cypress/browsers:node16.14.2-slim-chrome103-ff102
     steps:
       - name: Checkout
         uses: actions/checkout@v2

@@ -5,12 +5,12 @@ import Image from 'components/@commons/Image';
 
 const S = {
   Container: styled.div`
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 0.875rem;
+    height: calc(100vh - 8.75rem);
   `,
 
   Title: styled.h1`

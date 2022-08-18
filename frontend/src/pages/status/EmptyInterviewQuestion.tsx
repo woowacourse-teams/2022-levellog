@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 
 import { Exception } from 'pages/status';
 
-import NotFoundImage from 'assets/images/free-icon-cone-7564055.webp';
+import interviewQuestionImage from 'assets/images/interviewQuestion.webp';
 
 const EmptyInterviewQuestion = ({ isShow, path }: EmptyInterviewQuestionProps) => {
   return (
     <Exception>
-      <Exception.Image>{NotFoundImage}</Exception.Image>
+      <Exception.Image>{interviewQuestionImage}</Exception.Image>
       <Exception.Title>작성된 인터뷰 질문이 없습니다.</Exception.Title>
       {isShow && (
         <Link to={path}>

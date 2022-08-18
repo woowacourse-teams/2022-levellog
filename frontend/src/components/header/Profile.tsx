@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import hamburgerMenu from 'assets/images/hamburgerMenu.png';
+import hamburgerMenu from 'assets/images/hamburger.svg';
 
 import Image from 'components/@commons/Image';
 

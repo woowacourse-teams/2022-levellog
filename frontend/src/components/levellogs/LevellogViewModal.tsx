@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
-import levellogIcon from 'assets/images/question.webp';
+import closeIcon from 'assets/images/close.svg';
 import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -40,7 +40,7 @@ const LevellogViewModal = ({
               <S.AuthorText>{author.nickname}의 레벨로그</S.AuthorText>
             </FlexBox>
             <S.CloseButton onClick={handleClickCloseLevellogModal}>
-              <Image src={levellogIcon} sizes={'SMALL'} />
+              <Image src={closeIcon} sizes={'SMALL'} />
             </S.CloseButton>
           </S.Header>
           <S.Levellog>
@@ -68,7 +68,7 @@ const LevellogViewModal = ({
             <S.AuthorText>{author.nickname}의 레벨로그</S.AuthorText>
           </FlexBox>
           <S.CloseButton onClick={handleClickCloseLevellogModal}>
-            <Image src={levellogIcon} sizes={'SMALL'} />
+            <Image src={closeIcon} sizes={'SMALL'} />
           </S.CloseButton>
         </S.Header>
         <S.Levellog>
@@ -121,7 +121,7 @@ const S = {
     border-radius: 0.875rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
     transform: translate(-50%, -50%);
-    @media (max-width: 520px) {
+    @media (max-width: 560px) {
       width: calc(100% - 2.5rem);
     }
   `,
@@ -139,7 +139,7 @@ const S = {
   AuthorText: styled.h2`
     font-size: 2rem;
     font-weight: 300;
-    @media (max-width: 520px) {
+    @media (max-width: 560px) {
       font-size: 1rem;
     }
   `,
@@ -173,10 +173,7 @@ const S = {
       height: 31.875rem;
     }
     @media (max-width: 560px) {
-      width: 16.25rem;
-      height: 18.75rem;
-    }
-    @media (max-height: 640px) {
+      width: 100%;
       height: 18.75rem;
     }
   `,

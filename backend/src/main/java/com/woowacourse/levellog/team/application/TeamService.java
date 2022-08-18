@@ -64,13 +64,10 @@ public class TeamService {
     }
 
     public TeamAndRolesDto findAll(final Optional<String> status, final Long memberId) {
-        final List<Team> teams;
-        teams = status.map(this::findAllByIsClosedAndOrderByCreatedAt)
+        final List<Team> teams = status.map(this::findAllByIsClosedAndOrderByCreatedAt)
                 .orElseGet(this::findAllOrderByIsClosedAndCreatedAt);
 
-        final List<TeamAndRoleDto> teamAndRoles = teams.stream()
-                .map(it -> createTeamAndRoleDto(it, memberId))
-                .collect(Collectors.toList());
+        final List<TeamAndRoleDto> teamAndRoles = toTeamAndRoleDtos(memberId, teams);
 
         return new TeamAndRolesDto(teamAndRoles);
     }
@@ -107,10 +104,7 @@ public class TeamService {
 
     public TeamAndRolesDto findAllByMemberId(final Long memberId) {
         final List<Team> teams = getTeamsByMemberId(memberId);
-
-        final List<TeamAndRoleDto> teamAndRoles = teams.stream()
-                .map(it -> createTeamAndRoleDto(it, memberId))
-                .collect(Collectors.toList());
+        final List<TeamAndRoleDto> teamAndRoles = toTeamAndRoleDtos(memberId, teams);
 
         return new TeamAndRolesDto(teamAndRoles);
     }
@@ -158,6 +152,12 @@ public class TeamService {
 
         participantRepository.deleteByTeam(team);
         team.delete(timeStandard.now());
+    }
+
+    private List<TeamAndRoleDto> toTeamAndRoleDtos(final Long memberId, final List<Team> teams) {
+        return teams.stream()
+                .map(it -> createTeamAndRoleDto(it, memberId))
+                .collect(Collectors.toList());
     }
 
     private TeamAndRoleDto createTeamAndRoleDto(final Team team, final Long memberId) {

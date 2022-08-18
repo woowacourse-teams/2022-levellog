@@ -52,8 +52,8 @@ const ExceptionErrorText = ({ children }: ExceptionTextProps) => {
   return <S.Text>{children}</S.Text>;
 };
 
-const ExceptionImage = ({ children }: ExceptionImage) => {
-  return <Image src={children} sizes={'EXTRA_HUGE'} />;
+const ExceptionImage = ({ borderRadius = false, children }: ExceptionImage) => {
+  return <Image src={children} sizes={'EXTRA_HUGE'} borderRadius={borderRadius} />;
 };
 
 const ExceptionButton = ({ children }: ExceptionButtonProps) => {
@@ -85,6 +85,7 @@ interface ExceptionTextProps {
 }
 
 interface ExceptionImage {
+  borderRadius?: boolean;
   children: string;
 }
 

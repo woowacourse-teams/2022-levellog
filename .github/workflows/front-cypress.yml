@@ -37,6 +37,10 @@ jobs:
       - name: Setup Chromedriver
         uses: nanasess/setup-chromedriver@v1.0.1
 
+      - name: Install Dependencies
+        working-directory: ./frontend
+        run: yarn local
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v4
         with:

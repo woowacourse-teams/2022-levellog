@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import useUser from 'hooks/useUser';
 
-import defaultProfile from 'assets/images/defaultProfile.png';
+import defaultProfile from 'assets/images/defaultProfile.webp';
 import levellogLogo from 'assets/images/levellogNewLogo.png';
 import { ROUTES_PATH } from 'constants/constants';
 

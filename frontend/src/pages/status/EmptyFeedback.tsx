@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 
 import { Exception } from 'pages/status';
 
-import NotFoundImage from 'assets/images/free-icon-cone-7564055.webp';
+import feedbackImage from 'assets/images/feedback.webp';
 
 const EmptyFeedback = ({ isShow, path }: EmptyFeedbackProps) => {
   return (
     <Exception>
-      <Exception.Image>{NotFoundImage}</Exception.Image>
+      <Exception.Image>{feedbackImage}</Exception.Image>
       <Exception.Title>작성된 피드백이 없습니다.</Exception.Title>
       {isShow && (
         <Link to={path}>

@@ -3,7 +3,7 @@ import { useRoutes } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Footer from 'components/Footer';
-import Header from 'components/Header';
+import Header from 'components/header/Header';
 import { routes } from 'routes/Routes';
 import GlobalStyles from 'styles/GlobalStyle';
 
@@ -20,8 +20,8 @@ const App = () => {
   );
 };
 
-const PageContainer = styled.main`
-  height: 65vh;
+const PageContainer = styled.div`
+  height: calc(100vh - 8.75rem);
 `;
 
 export default App;

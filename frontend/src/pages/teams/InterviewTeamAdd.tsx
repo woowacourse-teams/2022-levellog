@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 
+import styled from 'styled-components';
+
 import useTeam from 'hooks/useTeam';
 
-import Button from 'components/@commons/Button';
-import ContentHeader from 'components/@commons/ContentHeader';
+import Header from 'components/header/Header';
 import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamAdd = () => {
@@ -33,11 +34,10 @@ const InterviewTeamAdd = () => {
   }, [nicknameValue, participants]);
 
   return (
-    <form onSubmit={handleSubmitTeamAddForm}>
-      <ContentHeader title={'인터뷰 팀 생성하기'}>
-        <Button type={'submit'}>만들기</Button>
-      </ContentHeader>
+    <S.GridContainer>
       <TeamForm
+        purpose={'생성하기'}
+        handleSubmitTeamForm={handleSubmitTeamAddForm}
         teamInfoRef={teamInfoRef}
         participants={participants}
         members={members}
@@ -47,8 +47,36 @@ const InterviewTeamAdd = () => {
         addToParticipants={addToParticipants}
         removeToParticipants={removeToParticipants}
       />
-    </form>
+    </S.GridContainer>
   );
+};
+
+const S = {
+  GridContainer: styled.main`
+    overflow: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    @media (min-width: 1620px) {
+      padding: 0 calc((100vw - 1600px) / 2);
+      padding-bottom: 200px;
+    }
+    @media (min-width: 1187.5px) and (max-width: 1620px) {
+      padding: 0 calc((100vw - 1187.5px) / 2);
+      padding-bottom: 200px;
+    }
+    /* @media (min-width: 775px) and (max-width: 1207.5px) {
+      padding: 0 calc((100vw - 775px) / 2);
+      padding-bottom: 200px;
+    }
+    @media (min-width: 560px) and (max-width: 800px) {
+      padding: 0 calc((100vw - 362.5px) / 2);
+      padding-bottom: 200px;
+    } */
+    @media (max-width: 560px) {
+      padding: 0 1.25rem;
+      padding-bottom: 200px;
+    }
+  `,
 };
 
 export default InterviewTeamAdd;

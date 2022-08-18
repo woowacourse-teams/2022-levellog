@@ -9,9 +9,6 @@ import usePreQuestion from 'hooks/usePreQuestion';
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import BottomBar from 'components/@commons/BottomBar';
-import Button from 'components/@commons/Button';
-import ContentHeader from 'components/@commons/ContentHeader';
-import FlexBox from 'components/@commons/FlexBox';
 import UiEditor from 'components/@commons/UiEditor';
 import LevellogReport from 'components/levellogs/LevellogReport';
 

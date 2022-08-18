@@ -25,9 +25,10 @@ export const ROUTES_PATH = Object.freeze({
   PREQUESTION_EDIT: '/pre-questions/teams/:teamId/levellog/:levellogId/pre-question/:preQuestionId',
   // PREQUESTION_EDIT: 'teams/:teamId/levellog/:levellogId/pre-question/:preQuestionId/author/:authorId/edit',
 
-  INTERVIEW_QUESTION: '/interview-questions/levellogs/:levellogId',
+  INTERVIEW_QUESTION: '/interview-questions/teams/:teamId/levellogs/:levellogId',
 
   NOT_FOUND: '*',
+  ERROR: 'error',
 });
 
 export const SERVER_PATH = Object.freeze({
@@ -37,7 +38,7 @@ export const SERVER_PATH = Object.freeze({
 
 export const MESSAGE = Object.freeze({
   WRONG_ACCESS: '잘못된 접근입니다.',
-  
+
   NEED_RELOGIN: '재로그인이 필요합니다.',
   NEED_LOGIN: '로그인이 필요한 페이지입니다.',
   NEED_IN_TEAM: '해당 팀에 소속된 유저만 접근할 수 있습니다!',
@@ -52,7 +53,13 @@ export const MESSAGE = Object.freeze({
   WRITE_MORE: '3글자 이상 작성해주세요.',
   CAN_EDIT: '수정하고 싶은 질문을 클릭해서 수정할 수 있어요!',
   FEEDBACK_CREATE: '피드백 작성을 완료하였습니다.',
-  
+
+  LEVELLOG_ADD_CONFIRM: '레벨로그 작성이 완료되었습니다.',
+
+  PREQUESTION_ADD_CONFIRM: '사전질문 등록이 완료되었습니다.',
+  PREQUESTION_DELETE_CONFIRM: '사전질문 삭제가 완료되었습니다.',
+  PREQUESTION_EDIT_CONFIRM: '사전질문 수정이 완료되었습니다.',
+
   INTERVIEW_CLOSE_CONFIRM: '정말로 인터뷰를 종료하시겠습니까?',
   INTERVIEW_STATUS_NOT_READY: '인터뷰가 시작 전이 아닙니다!',
   INTERVIEW_STATUS_NOT_IN_PROGRESS: '인터뷰가 진행 중이 아닙니다!',

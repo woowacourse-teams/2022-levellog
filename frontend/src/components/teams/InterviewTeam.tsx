@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import check from 'assets/images/check.png';
-import placeHolder from 'assets/images/placeholder.png';
+import checkIcon from 'assets/images/check.svg';
+import locationIcon from 'assets/images/location.svg';
 
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
@@ -29,7 +29,7 @@ const InterviewTeam = ({
         <S.Info>
           <S.Notice>
             <S.ImageBox>
-              <Image src={placeHolder} sizes={'TINY'} />
+              <Image src={locationIcon} sizes={'TINY'} />
             </S.ImageBox>
             {place}
           </S.Notice>
@@ -37,7 +37,7 @@ const InterviewTeam = ({
         <S.Info>
           <S.Notice>
             <S.ImageBox>
-              <Image src={check} sizes={'TINY'} />
+              <Image src={checkIcon} sizes={'TINY'} />
             </S.ImageBox>
             {`${startAt.slice(0, 4)}년 ${startAt.slice(5, 7)}월 ${startAt.slice(
               8,

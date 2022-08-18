@@ -21,7 +21,7 @@ jobs:
         with:
           working-directory: ./frontend
           runTests: false
-          build: yarn build
+          build: yarn build-dev
 
       - name: Run Cypress tests
         working-directory: ./frontend

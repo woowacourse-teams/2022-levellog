@@ -31,6 +31,9 @@ jobs:
 #          runTests: false
 #          build: yarn build-dev
 
+      - name: Setup Chromedriver
+        uses: nanasess/setup-chromedriver@v1.0.1
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v4
         with:

@@ -24,10 +24,13 @@ public class TeamDto {
     private Long hostId;
     private TeamStatus status;
     private Boolean isParticipant;
+    private List<Long> interviewers;
+    private List<Long> interviewees;
     private List<ParticipantDto> participants;
 
     public static TeamDto from(final Team team, final Long hostId, final TeamStatus status,
-                               final Boolean isParticipant, final List<ParticipantDto> participantResponses) {
+                               final List<Long> interviewers, final List<Long> interviewees,
+                               final List<ParticipantDto> participantResponses, final Boolean isParticipant) {
         return new TeamDto(
                 team.getId(),
                 team.getTitle(),
@@ -37,6 +40,8 @@ public class TeamDto {
                 hostId,
                 status,
                 isParticipant,
+                interviewers,
+                interviewees,
                 participantResponses
         );
     }

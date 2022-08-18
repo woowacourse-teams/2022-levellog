@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-import InterviewerImage from 'assets/images/group.png';
-import HandShake from 'assets/images/handshake.png';
-import MicImage from 'assets/images/mic.png';
+import interviewboth from 'assets/images/interviewboth.webp';
+import intervieweeImage from 'assets/images/interviewee.webp';
+import InterviewerImage from 'assets/images/interviewer.webp';
 
 import Image from 'components/@commons/Image';
 
@@ -10,8 +10,8 @@ const Role = ({ role }: RoleProp) => {
   return (
     <RoleStyle role={role}>
       {role === '인터뷰어' && <Image src={InterviewerImage} sizes={'SMALL'} />}
-      {role === '인터뷰이' && <Image src={MicImage} sizes={'SMALL'} />}
-      {role === '상호 인터뷰' && <Image src={HandShake} sizes={'SMALL'} />}
+      {role === '인터뷰이' && <Image src={intervieweeImage} sizes={'SMALL'} />}
+      {role === '상호 인터뷰' && <Image src={interviewboth} sizes={'SMALL'} />}
       {role === '상호 인터뷰' ? <RoleText>{role}</RoleText> : <RoleText>{`나의 ${role}`}</RoleText>}
     </RoleStyle>
   );

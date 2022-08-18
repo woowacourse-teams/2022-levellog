@@ -20,7 +20,7 @@ const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }:
         </FlexBox>
         {teamStatus === TEAM_STATUS.IN_PROGRESS && feedbackInfo.from.id === loginUserId && (
           <Link
-            to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackInfo.id}/writer/${feedbackInfo.from.id}/edit`}
+            to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackInfo.id}/author/${feedbackInfo.from.id}/edit`}
           >
             <Button>수정하기</Button>
           </Link>

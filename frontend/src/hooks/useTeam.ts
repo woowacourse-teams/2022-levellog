@@ -24,7 +24,6 @@ import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } f
 const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { isDebounce } = useUtil();
-  // participants는 인터뷰 생성 폼, 인터뷰 수정 폼에서만 사용해야함!
   const [participants, setParticipants] = useState<MemberType[]>([
     { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
   ]);
@@ -174,12 +173,9 @@ const useTeam = () => {
 
   const getTeamOnRef = async () => {
     const team = await getTeam();
-    if (team && Object.keys(team).length === 0) {
-      return;
-    }
-    if (teamInfoRef.current[0] === null) {
-      return;
-    }
+
+    if (team && Object.keys(team).length === 0) return;
+    if (teamInfoRef.current[0] === null) return;
 
     teamInfoRef.current[0].value = (team as unknown as InterviewTeamType).title;
     teamInfoRef.current[1].value = (team as unknown as InterviewTeamType).place;
@@ -208,7 +204,6 @@ const useTeam = () => {
   };
 
   const addToParticipants = ({ id, nickname, profileUrl }: MemberType) => {
-    // 비동기로 불러오는 동안 두 번 클릭하면 두 번 들어가는 버그 때문에 일단 분기로 체크해야함
     if (participants.every((participant) => id !== participant.id)) {
       setParticipants((prev) => prev.concat({ id, nickname, profileUrl }));
     }

@@ -75,6 +75,7 @@ const S = {
     height: 19.5rem;
     padding: 1rem;
     margin-bottom: 0.625rem;
+    box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.new_default.GRAY};
     border-radius: 0.5rem;
     border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.default.WHITE};
@@ -97,7 +98,6 @@ const S = {
     padding: 0;
     border: none;
     border-radius: 0.375rem;
-    background-color: ${(props) => props.theme.default.GRAY};
   `,
 };
 

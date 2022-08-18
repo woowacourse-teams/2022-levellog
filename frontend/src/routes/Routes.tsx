@@ -21,7 +21,7 @@ import AuthLogin from 'routes/AuthLogin';
 import TeamStatus from 'routes/TeamStatus';
 
 // 인증&인가가 잘못되었음
-// AUTHOR 인증&인가가 추가되어야 하며 , ~edit페이지 URI에 writerId가 추가되어야함
+// AUTHOR 인증&인가가 추가되어야 하며 , ~edit페이지 URI에 authorId가 추가되어야함
 
 export const routes = [
   {

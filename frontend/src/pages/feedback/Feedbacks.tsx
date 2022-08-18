@@ -5,6 +5,9 @@ import useFeedback from 'hooks/useFeedback';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
+import EmptyFeedback from 'pages/exception/EmptyFeedback';
+import Loading from 'pages/exception/Loading';
+
 import { MESSAGE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -15,21 +18,33 @@ import { FeedbackType } from 'types/feedback';
 
 const Feedbacks = () => {
   const { feedbacks, getFeedbacksInTeam } = useFeedback();
-  const { teamId, levellogId } = useParams();
   const { team } = useTeam();
   const { loginUserId } = useUser();
+  const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
 
   if (typeof levellogId !== 'string' || typeof teamId !== 'string') {
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
+    navigate(ROUTES_PATH.ERROR);
 
-    return <div></div>;
+    return <Loading />;
   }
 
   useEffect(() => {
     getFeedbacksInTeam({ levellogId });
   }, []);
+
+  {
+    /* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */
+  }
+  if (feedbacks.length === 0) {
+    return (
+      <EmptyFeedback
+        isShow={team.status !== TEAM_STATUS.CLOSED}
+        path={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}
+      />
+    );
+  }
 
   return (
     <>
@@ -44,17 +59,16 @@ const Feedbacks = () => {
         </>
       </ContentHeader>
       <FlexBox gap={2.5}>
-        {feedbacks.length !== 0 &&
-          feedbacks.map((feedbackInfo: FeedbackType) => (
-            <Feedback
-              key={feedbackInfo.id}
-              loginUserId={loginUserId}
-              feedbackInfo={feedbackInfo}
-              teamId={teamId}
-              levellogId={levellogId}
-              teamStatus={team.status}
-            />
-          ))}
+        {feedbacks.map((feedbackInfo: FeedbackType) => (
+          <Feedback
+            key={feedbackInfo.id}
+            loginUserId={loginUserId}
+            feedbackInfo={feedbackInfo}
+            teamId={teamId}
+            levellogId={levellogId}
+            teamStatus={team.status}
+          />
+        ))}
       </FlexBox>
     </>
   );

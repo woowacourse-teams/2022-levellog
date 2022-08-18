@@ -1,7 +1,13 @@
+import { useParams } from 'react-router-dom';
+
 import styled from 'styled-components';
 
 import useInterviewQuestion from 'hooks/useInterviewQuestion';
+import useTeam from 'hooks/useTeam';
 
+import EmptyInterviewQuestion from 'pages/exception/EmptyInterviewQuestion';
+
+import { TEAM_STATUS } from 'constants/constants';
 import { checkFirstWordFinalConsonant } from 'constants/util';
 
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -13,41 +19,53 @@ import {
 
 const InterviewQuestions = () => {
   const { interviewQuestionInfosInLevellog } = useInterviewQuestion();
+  const { team } = useTeam();
+  const { teamId, levellogId } = useParams();
+  {
+    /* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */
+  }
+  if (interviewQuestionInfosInLevellog.length === 0) {
+    return (
+      <EmptyInterviewQuestion
+        isShow={team.status !== TEAM_STATUS.CLOSED}
+        path={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}
+      />
+    );
+  }
 
   return (
     <>
       <ContentHeader title={'내가 받은 인터뷰 질문'}></ContentHeader>
       <S.Container>
-        {interviewQuestionInfosInLevellog.length !== 0 &&
-          interviewQuestionInfosInLevellog.map(
-            (interviewQuestionInfoInLevellog: InterviewQuestionsInLevellogType) => (
-              <S.Box key={interviewQuestionInfoInLevellog.author.id}>
-                <S.AuthorBox>
-                  <Image src={interviewQuestionInfoInLevellog.author.profileUrl} sizes={'MEDIUM'} />
-                  <S.AuthorText>
-                    {checkFirstWordFinalConsonant({
-                      word: interviewQuestionInfoInLevellog.author.nickname,
-                    })
-                      ? `${interviewQuestionInfoInLevellog.author.nickname}이 `
-                      : `${interviewQuestionInfoInLevellog.author.nickname}가 `}
-                    기록해준 질문들
-                  </S.AuthorText>
-                </S.AuthorBox>
-                <S.Content>
-                  <ul>
-                    {interviewQuestionInfoInLevellog.contents.length !== 0 &&
-                      interviewQuestionInfoInLevellog.contents.map(
-                        (interviewQuestionContent: InterviewQuestionInfoType) => (
-                          <S.Text key={interviewQuestionContent.id}>
-                            <p>{interviewQuestionContent.content}</p>
-                          </S.Text>
-                        ),
-                      )}
-                  </ul>
-                </S.Content>
-              </S.Box>
-            ),
-          )}
+        {interviewQuestionInfosInLevellog.map(
+          (interviewQuestionInfoInLevellog: InterviewQuestionsInLevellogType) => (
+            <S.Box key={interviewQuestionInfoInLevellog.author.id}>
+              <S.AuthorBox>
+                <Image src={interviewQuestionInfoInLevellog.author.profileUrl} sizes={'MEDIUM'} />
+                <S.AuthorText>
+                  {checkFirstWordFinalConsonant({
+                    word: interviewQuestionInfoInLevellog.author.nickname,
+                  })
+                    ? `${interviewQuestionInfoInLevellog.author.nickname}이 `
+                    : `${interviewQuestionInfoInLevellog.author.nickname}가 `}
+                  기록해준 질문들
+                </S.AuthorText>
+              </S.AuthorBox>
+              <S.Content>
+                <ul>
+                  {interviewQuestionInfoInLevellog.contents.length !== 0 &&
+                    interviewQuestionInfoInLevellog.contents.map(
+                      (interviewQuestionContent: InterviewQuestionInfoType) => (
+                        <S.Text key={interviewQuestionContent.id}>
+                          <p>{interviewQuestionContent.content}</p>
+                        </S.Text>
+                      ),
+                    )}
+                </ul>
+              </S.Content>
+            </S.Box>
+          ),
+        )}
       </S.Container>
     </>
   );

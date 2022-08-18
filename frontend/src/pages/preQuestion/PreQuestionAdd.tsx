@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import useLevellog from 'hooks/useLevellog';
 import usePreQuestion from 'hooks/usePreQuestion';
 
+import Error from 'pages/exception/Error';
+
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -27,13 +29,16 @@ const PreQuestionAdd = () => {
       return;
     }
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
   };
 
   useEffect(() => {
     if (typeof teamId === 'string' && typeof levellogId === 'string') {
       getLevellog({ teamId, levellogId });
+
+      return;
     }
+    alert(MESSAGE.WRONG_ACCESS);
+    navigate(ROUTES_PATH.ERROR);
   }, []);
 
   return (

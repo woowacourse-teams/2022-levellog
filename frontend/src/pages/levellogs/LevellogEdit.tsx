@@ -5,6 +5,8 @@ import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
 
+import Error from 'pages/exception/Error';
+
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -25,7 +27,6 @@ const LevellogEdit = () => {
     }
 
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
   };
 
   useEffect(() => {
@@ -34,9 +35,8 @@ const LevellogEdit = () => {
 
       return;
     }
-
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
+    navigate(ROUTES_PATH.ERROR);
   }, []);
 
   return (

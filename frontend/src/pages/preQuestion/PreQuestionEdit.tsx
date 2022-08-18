@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import useLevellog from 'hooks/useLevellog';
 import usePreQuestion from 'hooks/usePreQuestion';
 
+import Error from 'pages/exception/Error';
+
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -17,9 +19,8 @@ import LevellogReport from 'components/levellogs/LevellogReport';
 const PreQuestionEdit = () => {
   const { levellogInfo, getLevellog } = useLevellog();
   const { preQuestionRef, getPreQuestionOnRef, onClickPreQuestionEditButton } = usePreQuestion();
-
-  const navigate = useNavigate();
   const { teamId, levellogId, preQuestionId } = useParams();
+  const navigate = useNavigate();
 
   const handleClickPreQuestionEditButton = () => {
     if (
@@ -32,7 +33,6 @@ const PreQuestionEdit = () => {
       return;
     }
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
   };
 
   useEffect(() => {
@@ -42,9 +42,8 @@ const PreQuestionEdit = () => {
 
       return;
     }
-
     alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
+    navigate(ROUTES_PATH.ERROR);
   }, []);
 
   return (

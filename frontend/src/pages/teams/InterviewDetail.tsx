@@ -8,6 +8,8 @@ import usePreQuestionModal from 'hooks/usePreQuestionModal';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
+import Error from 'pages/exception/Error';
+
 import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -57,7 +59,7 @@ const InterviewDetail = () => {
     }
   }, []);
 
-  if (team && Object.keys(team).length === 0) return <div></div>;
+  if (team && Object.keys(team).length === 0) return <Error />;
 
   return (
     <S.Container>

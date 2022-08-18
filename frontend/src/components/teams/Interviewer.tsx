@@ -45,6 +45,10 @@ const Interviewer = ({
     navigate(`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`);
   };
 
+  const handleClickInterviewQuestionButton = () => {
+    navigate(`/interview-questions/teams/${teamId}/levellogs/${participant.levellogId}`);
+  };
+
   if (!teamId) return <div></div>;
 
   if (participant.memberId === loginUserId) {
@@ -64,18 +68,21 @@ const Interviewer = ({
                   <Image src={levellogIcon} sizes={'SMALL'} />
                   <S.ButtonText>레벨로그 보기</S.ButtonText>
                 </S.Button>
-                <Link to={`/interview-questions/levellogs/${participant.levellogId}`}>
-                  <S.Button disabled={!participant.levellogId || !userInTeam}>
-                    <Image src={levellogIcon} sizes={'SMALL'} />
-                    <S.ButtonText>인터뷰질문 보기</S.ButtonText>
-                  </S.Button>
-                </Link>
-                <Link to={`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`}>
-                  <S.Button disabled={!participant.levellogId || !userInTeam}>
-                    <Image src={levellogIcon} sizes={'SMALL'} />
-                    <S.ButtonText>피드백 보기</S.ButtonText>
-                  </S.Button>
-                </Link>
+                <S.Button
+                  disabled={!participant.levellogId || !userInTeam}
+                  onClick={handleClickInterviewQuestionButton}
+                >
+                  <Image src={levellogIcon} sizes={'SMALL'} />
+                  <S.ButtonText>인터뷰질문 보기</S.ButtonText>
+                </S.Button>
+
+                <S.Button
+                  disabled={!participant.levellogId || !userInTeam}
+                  onClick={handleClickFeedbackButton}
+                >
+                  <Image src={levellogIcon} sizes={'SMALL'} />
+                  <S.ButtonText>피드백 보기</S.ButtonText>
+                </S.Button>
               </>
             ) : (
               <>

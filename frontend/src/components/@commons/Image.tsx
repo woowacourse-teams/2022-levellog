@@ -14,7 +14,6 @@ const ImageStyle = styled.img`
   width: ${(props) => props.theme.imageSize[props.sizes!]};
   height: ${(props) => props.theme.imageSize[props.sizes!]};
   border-radius: ${(props) => props.theme.imageSize[props.sizes!]};
-  width: 12.5rem;
 `;
 
 export default Image;

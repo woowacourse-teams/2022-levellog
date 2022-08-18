@@ -4,7 +4,7 @@ export interface UserInfoType {
   profileUrl: string;
 }
 
-export type ImageSizeType = 'HUGE' | 'LARGE' | 'MEDIUM' | 'SMALL';
+export type ImageSizeType = 'EXTRA_HUGE' | 'HUGE' | 'LARGE' | 'MEDIUM' | 'SMALL';
 
 export interface RequestType {
   accessToken: string | null;

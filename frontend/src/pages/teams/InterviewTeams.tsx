@@ -23,7 +23,7 @@ const InterviewTeams = () => {
   }, []);
 
   return (
-    <S.GridContainer>
+    <>
       <ContentHeader title={'인터뷰 팀'}>
         <div>
           <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>
@@ -32,25 +32,27 @@ const InterviewTeams = () => {
         </div>
         <span />
       </ContentHeader>
-      <S.Container onClick={handleClickInterviewGroup}>
-        {teams.map((team: InterviewTeamType) => (
-          <InterviewTeam key={team.id} {...team} />
-        ))}
+      <S.Container>
+        <S.Content onClick={handleClickInterviewGroup}>
+          {teams.map((team: InterviewTeamType) => (
+            <InterviewTeam key={team.id} {...team} />
+          ))}
+        </S.Content>
+        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
+          <S.TeamAddButton>
+            {'팀 추가하기'}
+            <S.ImageBox>
+              <Image src={plus} sizes={'TINY'} />
+            </S.ImageBox>
+          </S.TeamAddButton>
+        </Link>
       </S.Container>
-      <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
-        <S.TeamAddButton>
-          {'팀 추가하기'}
-          <S.ImageBox>
-            <Image src={plus} sizes={'TINY'} />
-          </S.ImageBox>
-        </S.TeamAddButton>
-      </Link>
-    </S.GridContainer>
+    </>
   );
 };
 
 const S = {
-  GridContainer: styled.main`
+  Container: styled.main`
     overflow: auto;
     overflow-x: hidden;
     box-sizing: border-box;
@@ -76,14 +78,12 @@ const S = {
     }
   `,
 
-  Container: styled.div`
+  Content: styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 3.125rem;
-    margin-top: 3.125rem;
     @media (max-width: 560px) {
       justify-content: center;
-      margin-top: 1.25rem;
       gap: 2.5rem;
     }
   `,

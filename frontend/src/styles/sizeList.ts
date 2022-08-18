@@ -5,8 +5,3 @@ export const IMAGE_SIZE_LIST = {
   SMALL: '1.875rem',
   TINY: '0.9375rem',
 };
-
-export const BUTTON_SIZE_LIST = {
-  CONTENT_HEADER_RIGHT: '',
-  CONTENT_HEADER_RIGHT_MOBILE: '',
-};

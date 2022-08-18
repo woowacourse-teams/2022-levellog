@@ -46,7 +46,7 @@ const PreQuestionEdit = () => {
   }, []);
 
   return (
-    <S.GridContainer>
+    <S.Container>
       <S.Content>
         <S.LeftContent>
           <LevellogReport levellogInfo={levellogInfo} />
@@ -65,12 +65,12 @@ const PreQuestionEdit = () => {
         buttonText={'작성하기'}
         handleClickRightButton={handleClickPreQuestionEditButton}
       ></BottomBar>
-    </S.GridContainer>
+    </S.Container>
   );
 };
 
 const S = {
-  GridContainer: styled.div`
+  Container: styled.div`
     display: flex;
     overflow: auto;
     flex-direction: column;

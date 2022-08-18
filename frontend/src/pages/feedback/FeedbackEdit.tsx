@@ -35,7 +35,7 @@ const FeedbackEdit = () => {
   //       imageUrl={author.profileUrl}
   //       title={`${author.nickname}의 인터뷰 피드백`}
   //     ></ContentHeader>
-  //     <S.GridContainer>
+  //     <S.Container>
   //       <S.Content>
   //         <S.LeftContent>
   //           <FlexBox alignItems={'center'} gap={1}>
@@ -74,7 +74,7 @@ const FeedbackEdit = () => {
   //         buttonText={'작성하기'}
   //         handleClickRightButton={handleClickFeedbackAddButton}
   //       ></BottomBar>
-  //     </S.GridContainer>
+  //     </S.Container>
   //   </>
   // );
 

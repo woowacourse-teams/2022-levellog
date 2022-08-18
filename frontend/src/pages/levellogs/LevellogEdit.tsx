@@ -36,7 +36,7 @@ const LevellogEdit = () => {
   }, []);
 
   return (
-    <S.GridContainer>
+    <S.Container>
       <UiEditor
         needToolbar={true}
         autoFocus={true}
@@ -48,12 +48,12 @@ const LevellogEdit = () => {
         buttonText={'작성하기'}
         handleClickRightButton={handleClickLevellogEditButton}
       ></BottomBar>
-    </S.GridContainer>
+    </S.Container>
   );
 };
 
 const S = {
-  GridContainer: styled.main`
+  Container: styled.main`
     @media (min-width: 1620px) {
       padding: 1.25rem calc((100vw - 100rem) / 2);
     }

@@ -32,12 +32,12 @@ const InterviewTeams = () => {
         </div>
         <span />
       </ContentHeader>
-      <S.GridContainer>
-        <S.Container onClick={handleClickInterviewGroup}>
+      <S.Container>
+        <S.Content onClick={handleClickInterviewGroup}>
           {teams.map((team: InterviewTeamType) => (
             <InterviewTeam key={team.id} {...team} />
           ))}
-        </S.Container>
+        </S.Content>
         <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
           <S.TeamAddButton>
             {'팀 추가하기'}
@@ -46,13 +46,13 @@ const InterviewTeams = () => {
             </S.ImageBox>
           </S.TeamAddButton>
         </Link>
-      </S.GridContainer>
+      </S.Container>
     </>
   );
 };
 
 const S = {
-  GridContainer: styled.main`
+  Container: styled.main`
     overflow: auto;
     overflow-x: hidden;
     box-sizing: border-box;
@@ -78,7 +78,7 @@ const S = {
     }
   `,
 
-  Container: styled.div`
+  Content: styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 3.125rem;

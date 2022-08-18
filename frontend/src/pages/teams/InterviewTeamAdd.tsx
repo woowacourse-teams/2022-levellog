@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import useTeam from 'hooks/useTeam';
 
-import Header from 'components/header/Header';
 import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamAdd = () => {
@@ -35,7 +34,7 @@ const InterviewTeamAdd = () => {
   }, [nicknameValue, participants]);
 
   return (
-    <S.GridContainer>
+    <S.Container>
       <TeamForm
         purpose={'생성하기'}
         handleSubmitTeamForm={handleSubmitTeamAddForm}
@@ -48,12 +47,12 @@ const InterviewTeamAdd = () => {
         addToParticipants={addToParticipants}
         removeToParticipants={removeToParticipants}
       />
-    </S.GridContainer>
+    </S.Container>
   );
 };
 
 const S = {
-  GridContainer: styled.main`
+  Container: styled.main`
     overflow: auto;
     overflow-x: hidden;
     box-sizing: border-box;

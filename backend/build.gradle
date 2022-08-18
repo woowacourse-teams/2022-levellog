@@ -137,6 +137,7 @@ task testCoverage {
 
 sonarqube {
 	properties {
+		property "sonar.test.inclusions", "**/*Test.java"
 		property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
 		property 'sonar.exclusions',
 				 '**/support/**, **/dto/**, **/*Application*, **/*BaseEntity*, **/*Github*, **/aspect/**, **/*Config*'

@@ -36,6 +36,3 @@ jobs:
           parallel: true
           group: 'UI - Chrome'
           spec: cypress/tests/ui/*
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}

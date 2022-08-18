@@ -23,7 +23,7 @@ const InterviewTeams = () => {
   }, []);
 
   return (
-    <S.GridContainer>
+    <>
       <ContentHeader title={'인터뷰 팀'}>
         <div>
           <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>
@@ -32,20 +32,22 @@ const InterviewTeams = () => {
         </div>
         <span />
       </ContentHeader>
-      <S.Container onClick={handleClickInterviewGroup}>
-        {teams.map((team: InterviewTeamType) => (
-          <InterviewTeam key={team.id} {...team} />
-        ))}
-      </S.Container>
-      <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
-        <S.TeamAddButton>
-          {'팀 추가하기'}
-          <S.ImageBox>
-            <Image src={plus} sizes={'TINY'} />
-          </S.ImageBox>
-        </S.TeamAddButton>
-      </Link>
-    </S.GridContainer>
+      <S.GridContainer>
+        <S.Container onClick={handleClickInterviewGroup}>
+          {teams.map((team: InterviewTeamType) => (
+            <InterviewTeam key={team.id} {...team} />
+          ))}
+        </S.Container>
+        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
+          <S.TeamAddButton>
+            {'팀 추가하기'}
+            <S.ImageBox>
+              <Image src={plus} sizes={'TINY'} />
+            </S.ImageBox>
+          </S.TeamAddButton>
+        </Link>
+      </S.GridContainer>
+    </>
   );
 };
 

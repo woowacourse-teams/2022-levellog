@@ -12,7 +12,7 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
       <ContentHeaderStyle>
         <LeftBox>
           <FlexBox>
-            <div>{imageUrl && <Image src={imageUrl} sizes={'MEDIUM'} />}</div>
+            <ImageBox>{imageUrl && <Image src={imageUrl} sizes={'MEDIUM'} />}</ImageBox>
             <TitleBox>
               <Title>{title}</Title>
               {subTitle && <SubTitle>{subTitle}</SubTitle>}
@@ -46,7 +46,12 @@ const ContentHeaderStyle = styled.div`
   align-items: center;
   width: 100%;
   height: fit-content;
-  padding: 0.625rem 0;
+  @media (min-width: 1620px) {
+    padding: 0.625rem calc((100vw - 100rem) / 2);
+  }
+  @media (max-width: 1620px) {
+    padding: 0.625rem 1.25rem;
+  }
   @media (max-width: 800px) {
     justify-content: start;
     font-size: 0.75rem;

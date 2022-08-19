@@ -25,7 +25,7 @@ export const requestPostPreQuestion = ({
     method: 'post',
     url: `${process.env.API_URI}/levellogs/${levellogId}/pre-questions`,
     headers: { Authorization: `Bearer ${accessToken}` },
-    data: { preQuestionContent },
+    data: preQuestionContent,
   });
 };
 
@@ -51,6 +51,6 @@ export const requestEditPreQuestion = ({
     method: 'put',
     url: `${process.env.API_URI}/levellogs/${levellogId}/pre-questions/${preQuestionId}`,
     headers: { Authorization: `Bearer ${accessToken}` },
-    data: { preQuestionContent },
+    data: preQuestionContent,
   });
 };

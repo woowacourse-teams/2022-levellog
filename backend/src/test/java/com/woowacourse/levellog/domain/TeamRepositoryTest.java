@@ -27,7 +27,7 @@ class TeamRepositoryTest extends RepositoryTest {
     class FindAll {
 
         @Test
-        @DisplayName("입력 받은 Sort 조건에 따라 정렬된 Page를 반환한다.")
+        @DisplayName("입력 받은 Sort 조건에 따라 정렬된 팀 List를 반환한다.")
         void findAll_sorting_success() {
             // given
             final Team team1 = saveTeam("잠실 네오조");
@@ -53,7 +53,7 @@ class TeamRepositoryTest extends RepositoryTest {
         }
 
         @Test
-        @DisplayName("입력 받은 페이징 조건에 따라 페이징 된 Page를 반환한다.")
+        @DisplayName("입력 받은 페이징 조건에 따라 페이징 된 팀 List를 반환한다.")
         void findAll_paging_success() {
             // given
             saveTeam("잠실 네오조");

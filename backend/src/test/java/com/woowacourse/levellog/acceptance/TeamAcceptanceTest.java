@@ -89,7 +89,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/find-all"))
                 .when()
-                .get("/api/teams")
+                .get("/api/teams?page=0&size=3")
                 .then().log().all();
 
         // then

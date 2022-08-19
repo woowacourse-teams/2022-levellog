@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/admin")
+@PublicAPI
 @RequiredArgsConstructor
 public class AdminController {
 
@@ -30,7 +31,6 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    @PublicAPI
     @ResponseBody
     public ResponseEntity<AdminAccessTokenDto> login(@RequestBody @Valid final PasswordDto request) {
         final AdminAccessTokenDto response = adminService.login(request);

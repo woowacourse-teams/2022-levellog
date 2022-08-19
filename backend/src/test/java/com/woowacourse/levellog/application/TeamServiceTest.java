@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @DisplayName("TeamService의")
 class TeamServiceTest extends ServiceTest {
@@ -54,7 +56,7 @@ class TeamServiceTest extends ServiceTest {
             rickTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(Optional.empty(), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.empty(), rick.getId());
 
             //then
             assertAll(
@@ -88,7 +90,7 @@ class TeamServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(Optional.of("ready"), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.of("ready"), rick.getId());
 
             //then
             assertAll(
@@ -120,7 +122,7 @@ class TeamServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(Optional.of("in-progress"), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.of("in-progress"), rick.getId());
 
             //then
             assertAll(
@@ -152,7 +154,7 @@ class TeamServiceTest extends ServiceTest {
             eveTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(Optional.of("closed"), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.of("closed"), rick.getId());
 
             //then
             assertAll(
@@ -169,11 +171,10 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("잘못된 팀 Status를 받으면 예외가 발생한다.")
         void findAll_invalidStatus_exception() {
             // given
-            final Long rickId = saveMember("릭").getId();
+            final Member rick = saveMember("릭");
 
             // when & then
-            final Optional<String> invalidStatus = Optional.of("invalid");
-            assertThatThrownBy(() -> teamService.findAll(invalidStatus, rickId))
+            assertThatThrownBy(() -> teamService.findAll(getPageRequest(), Optional.of("invalid"), rick.getId()))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("입력 받은 status가 올바르지 않습니다.");
         }
@@ -192,10 +193,19 @@ class TeamServiceTest extends ServiceTest {
             team.delete(BEFORE_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(Optional.empty(), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.empty(), rick.getId());
 
             //then
             assertThat(response.getTeams()).hasSize(1);
+        }
+
+        private PageRequest getPageRequest() {
+            final Sort sort = Sort.by(
+                    Sort.Order.asc("isClosed"),
+                    Sort.Order.desc("createdAt")
+            );
+
+            return PageRequest.of(0, 20, sort);
         }
 
         private List<String> toTitles(final TeamsDto response) {

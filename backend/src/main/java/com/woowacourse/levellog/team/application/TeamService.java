@@ -35,6 +35,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,9 +66,9 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    public TeamsDto findAll(final Optional<String> status, final Long memberId) {
+    public TeamsDto findAll(final Pageable pageable, final Optional<String> status, final Long memberId) {
         final List<Team> teams = status.map(this::findAllByIsClosedAndOrderByCreatedAt)
-                .orElseGet(this::findAllOrderByIsClosedAndCreatedAt);
+                .orElseGet(() -> findAllOrderByIsClosedAndCreatedAt(pageable));
 
         final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
 
@@ -89,13 +90,8 @@ public class TeamService {
                 .collect(Collectors.toList());
     }
 
-    private List<Team> findAllOrderByIsClosedAndCreatedAt() {
-        final Sort sort = Sort.by(
-                Sort.Order.asc("isClosed"),
-                Sort.Order.desc("createdAt")
-        );
-
-        return teamRepository.findAll(sort);
+    private List<Team> findAllOrderByIsClosedAndCreatedAt(final Pageable pageable) {
+        return teamRepository.findAll(pageable).getContent();
     }
 
     public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {

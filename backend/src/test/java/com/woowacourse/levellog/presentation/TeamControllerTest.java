@@ -28,6 +28,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("TeamController의")
@@ -40,9 +42,14 @@ class TeamControllerTest extends ControllerTest {
         final String invalidStatus = "invalid";
         final String message = "입력 받은 status가 올바르지 않습니다.";
 
+        final Sort sort = Sort.by(
+                Sort.Order.asc("isClosed"),
+                Sort.Order.desc("createdAt")
+        );
+
         willThrow(new InvalidFieldException(message, DebugMessage.init()))
                 .given(teamService)
-                .findAll(Optional.of(invalidStatus), 1L);
+                .findAll(PageRequest.of(0, 20, sort), Optional.of(invalidStatus), 1L);
 
         // when
         final ResultActions perform = requestGet("/api/teams?status=" + invalidStatus);

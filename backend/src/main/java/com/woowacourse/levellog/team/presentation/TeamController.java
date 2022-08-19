@@ -12,6 +12,10 @@ import java.net.URI;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,9 +43,14 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamsDto> findAll(@RequestParam final Optional<String> status,
+    public ResponseEntity<TeamsDto> findAll(@PageableDefault(size = 20)
+                                            @SortDefault.SortDefaults({
+                                                    @SortDefault(sort = "isClosed", direction = Direction.ASC),
+                                                    @SortDefault(sort = "createdAt", direction = Direction.DESC)
+                                            }) final Pageable pageable,
+                                            @RequestParam final Optional<String> status,
                                             @Authentic final Long memberId) {
-        final TeamsDto response = teamService.findAll(status, memberId);
+        final TeamsDto response = teamService.findAll(pageable, status, memberId);
         return ResponseEntity.ok(response);
     }
 

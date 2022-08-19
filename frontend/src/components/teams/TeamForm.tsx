@@ -23,6 +23,7 @@ const TeamForm = ({
 }: TeamFormProps) => {
   useEffect(() => {
     if (!getTeamOnRef) return;
+
     getTeamOnRef();
   }, []);
 

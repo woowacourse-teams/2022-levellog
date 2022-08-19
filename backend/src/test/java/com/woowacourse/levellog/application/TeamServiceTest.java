@@ -500,6 +500,36 @@ class TeamServiceTest extends ServiceTest {
         }
 
         @Nested
+        @DisplayName("요청한 유저가 팀의 참관자일 때")
+        class WatcherRequest {
+
+            @Test
+            @DisplayName("인터뷰어와 인터뷰이가 없고, isParticipant를 true로 응답한다.")
+            void success() {
+                //given
+                final Member rick = saveMember("릭");
+                final Member pepper = saveMember("페퍼");
+                final Member pobi = saveMember("포비");
+
+                final Team team = saveTeam(1, rick, List.of(pobi), pepper);
+
+                //when
+                final TeamDto response = teamService.findByTeamIdAndMemberId(team.getId(), pobi.getId());
+
+                //then
+                assertAll(
+                        () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
+                        () -> assertThat(response.getParticipants()).hasSize(2),
+                        () -> assertThat(response.getWatchers()).hasSize(1),
+                        () -> assertThat(response.getIsParticipant()).isTrue(),
+                        () -> assertThat(response.getInterviewers()).isEmpty(),
+                        () -> assertThat(response.getInterviewees()).isEmpty()
+                );
+            }
+        }
+
+        @Nested
         @DisplayName("요청한 유저가 팀에 참가자가 아닐 때")
         class NotParticipantRequest {
 

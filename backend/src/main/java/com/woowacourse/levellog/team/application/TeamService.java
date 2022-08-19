@@ -23,6 +23,7 @@ import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
+import com.woowacourse.levellog.team.dto.WatcherDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.DuplicateWatchersException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
@@ -170,8 +171,8 @@ public class TeamService {
         final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
-        return TeamDto.from(team, participants.toHostId(), status, interviewers, interviewees,
-                getParticipantResponses(participants, memberId), participants.isContains(memberId));
+        return TeamDto.from(team, participants.toHostId(), status, participants.isContains(memberId), interviewers,
+                interviewees, getParticipantResponses(participants, memberId), getWatcherResponses(participants));
     }
 
     private Member getMember(final Long memberId) {
@@ -232,7 +233,8 @@ public class TeamService {
         }
     }
 
-    private void validateHostExistence(final Long hostId, final List<Long> participantIds, final List<Long> watcherIds) {
+    private void validateHostExistence(final Long hostId, final List<Long> participantIds,
+                                       final List<Long> watcherIds) {
         if (!participantIds.contains(hostId) && !watcherIds.contains(hostId)) {
             throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
         }
@@ -261,7 +263,15 @@ public class TeamService {
 
     private List<ParticipantDto> getParticipantResponses(final Participants participants, final Long memberId) {
         return participants.getValues().stream()
+                .filter(Participant::isParticipant)
                 .map(it -> createParticipantDto(it, memberId))
+                .collect(Collectors.toList());
+    }
+
+    private List<WatcherDto> getWatcherResponses(final Participants participants) {
+        return participants.getValues().stream()
+                .filter(Participant::isWatcher)
+                .map(WatcherDto::from)
                 .collect(Collectors.toList());
     }
 

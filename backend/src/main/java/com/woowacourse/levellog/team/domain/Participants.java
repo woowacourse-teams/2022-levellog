@@ -19,7 +19,7 @@ public class Participants {
     private final List<Participant> values;
 
     public List<Long> toInterviewerIds(final Long memberId, final int interviewerNumber) {
-        if (!isContains(memberId)) {
+        if (!isContains(memberId) || isWatcher(memberId)) {
             return Collections.emptyList();
         }
 
@@ -30,7 +30,7 @@ public class Participants {
     }
 
     public List<Long> toIntervieweeIds(final Long memberId, final int interviewerNumber) {
-        if (!isContains(memberId)) {
+        if (!isContains(memberId) || isWatcher(memberId)) {
             return Collections.emptyList();
         }
 
@@ -76,6 +76,12 @@ public class Participants {
                 .map(Participant::getMember)
                 .map(BaseEntity::getId)
                 .anyMatch(it -> it.equals(memberId));
+    }
+
+    private boolean isWatcher(final Long memberId) {
+        return values.stream()
+                .filter(it -> it.getMember().getId().equals(memberId))
+                .anyMatch(Participant::isWatcher);
     }
 
     private List<Long> concatSameTwice(final List<Long> participantIds) {

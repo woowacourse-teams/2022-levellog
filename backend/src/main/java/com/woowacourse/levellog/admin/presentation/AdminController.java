@@ -40,8 +40,8 @@ public class AdminController {
     }
 
     @GetMapping("/teams")
-    public String findAllTeams(final Model model) {
-        final List<AdminTeamDto> response = adminService.findAll();
+    public String findAllTeam(final Model model) {
+        final List<AdminTeamDto> response = adminService.findAllTeam();
         model.addAttribute("teams", response);
         return "admin-teams";
     }

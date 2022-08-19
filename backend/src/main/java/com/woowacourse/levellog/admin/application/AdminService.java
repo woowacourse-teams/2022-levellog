@@ -50,7 +50,7 @@ public class AdminService {
         return new AdminAccessTokenDto(token);
     }
 
-    public List<AdminTeamDto> findAll() {
+    public List<AdminTeamDto> findAllTeam() {
         return teamRepository.findAll()
                 .stream()
                 .map(it -> AdminTeamDto.toDto(it, it.status(timeStandard.now())))

@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
+import com.woowacourse.levellog.admin.dto.AdminTeamDto;
 import com.woowacourse.levellog.admin.dto.PasswordDto;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -51,6 +53,29 @@ public class AdminServiceTest extends ServiceTest {
     }
 
     @Nested
+    @DisplayName("findAllTeam 메서드는")
+    class FindAllTeam {
+
+        @Test
+        @DisplayName("팀 목록을 조회한다.")
+        void success() {
+            // given
+            final Member rick = saveMember("릭");
+            final Member eve = saveMember("이브");
+            final Member alien = saveMember("알린");
+
+            saveTeam(rick, eve);
+            saveTeam(eve, alien);
+
+            // when
+            final List<AdminTeamDto> actual = adminService.findAllTeam();
+
+            // then
+            assertThat(actual).hasSize(2);
+        }
+    }
+
+        @Nested
     @DisplayName("deleteTeamById 메서드는")
     class DeleteTeamById {
 

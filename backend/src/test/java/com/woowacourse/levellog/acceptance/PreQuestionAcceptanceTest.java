@@ -33,7 +33,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         final PreQuestionDto request = PreQuestionDto.from("이브가 쓴 사전 질문");
@@ -67,7 +67,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, EVE).getPreQuestionId();
@@ -104,7 +104,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         savePreQuestion("이브가 쓴 사전 질문", levellogId, EVE);
@@ -137,7 +137,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
         final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, EVE).getPreQuestionId();
 

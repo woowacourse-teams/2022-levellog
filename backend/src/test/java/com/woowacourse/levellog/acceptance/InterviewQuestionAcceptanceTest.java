@@ -36,7 +36,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         ROMA.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, ROMA).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         timeStandard.setInProgress();
@@ -71,7 +71,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         ROMA.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, ROMA).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         timeStandard.setInProgress(); // 인터뷰 시작
@@ -164,7 +164,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         ROMA.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, ROMA).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         timeStandard.setInProgress(); // 인터뷰 시작
@@ -205,7 +205,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         ROMA.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, ROMA).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         timeStandard.setInProgress();

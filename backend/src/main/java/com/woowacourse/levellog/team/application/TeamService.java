@@ -24,6 +24,7 @@ import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
+import com.woowacourse.levellog.team.exception.DuplicateWatchersException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
@@ -54,7 +55,8 @@ public class TeamService {
     public Long save(final TeamWriteDto request, final Long hostId) {
         final Member host = getMember(hostId);
         final Team team = request.toEntity(host.getProfileUrl());
-        final Participants participants = createParticipants(team, hostId, request.getParticipants().getIds());
+        final Participants participants = createUnit(team, hostId, request.getParticipants().getIds(),
+                request.getWatchers().getIds());
         team.validParticipantNumber(participants.size());
 
         final Team savedTeam = teamRepository.save(team);
@@ -131,7 +133,8 @@ public class TeamService {
         validateHost(memberId, team);
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
 
-        final Participants participants = createParticipants(team, memberId, request.getParticipants().getIds());
+        final Participants participants = createUnit(team, memberId, request.getParticipants().getIds(),
+                request.getWatchers().getIds());
         team.validParticipantNumber(participants.size());
         participantRepository.deleteByTeam(team);
         participantRepository.saveAll(participants.getValues());
@@ -191,37 +194,50 @@ public class TeamService {
                 .collect(Collectors.toList());
     }
 
-    private Participants createParticipants(final Team team, final Long hostId, final List<Long> memberIds) {
-        validateOtherParticipantExistence(memberIds);
-        validateParticipantDuplication(memberIds, hostId);
+    private Participants createUnit(final Team team, final Long hostId, final List<Long> participantIds,
+                                    final List<Long> watcherIds) {
+        validateOtherParticipantExistence(participantIds);
+        validateParticipantDuplication(participantIds);
+        validateWatcherDuplication(watcherIds);
 
         final List<Participant> participants = new ArrayList<>();
-        participants.add(new Participant(team, getMember(hostId), true, false));
-        participants.addAll(toParticipants(team, memberIds));
+        participants.addAll(toParticipants(team, hostId, participantIds));
+        participants.addAll(toWatchers(team, hostId, watcherIds));
 
         return new Participants(participants);
     }
 
-    private void validateOtherParticipantExistence(final List<Long> memberIds) {
-        if (memberIds.isEmpty()) {
-            throw new InvalidFieldException("호스트 이외의 참가자가 존재하지 않습니다.");
+    private void validateOtherParticipantExistence(final List<Long> participantIds) {
+        if (participantIds.isEmpty()) {
+            throw new InvalidFieldException("참가자가 존재하지 않습니다.");
         }
     }
 
-    private void validateParticipantDuplication(final List<Long> memberIds, final Long hostId) {
-        final List<Long> participantIds = new ArrayList<>(memberIds);
-        participantIds.add(hostId);
-
+    private void validateParticipantDuplication(final List<Long> participantIds) {
         final Set<Long> distinct = new HashSet<>(participantIds);
         if (distinct.size() != participantIds.size()) {
             throw new DuplicateParticipantsException(
-                    "참가자 중복 [participants : " + participantIds + " hostId : " + hostId + "]");
+                    "참가자 중복 [participants : " + participantIds + "]");
         }
     }
 
-    private List<Participant> toParticipants(final Team team, final List<Long> memberIds) {
-        return memberIds.stream()
-                .map(it -> new Participant(team, getMember(it), false, false))
+    private void validateWatcherDuplication(final List<Long> watcherIds) {
+        final Set<Long> distinct = new HashSet<>(watcherIds);
+        if (distinct.size() != watcherIds.size()) {
+            throw new DuplicateWatchersException(
+                    "관전자 중복 [participants : " + watcherIds + "]");
+        }
+    }
+
+    private List<Participant> toParticipants(final Team team, final Long hostId, final List<Long> participantIds) {
+        return participantIds.stream()
+                .map(it -> new Participant(team, getMember(it), it.equals(hostId), false))
+                .collect(Collectors.toList());
+    }
+
+    private List<Participant> toWatchers(final Team team, final Long hostId, final List<Long> watcherIds) {
+        return watcherIds.stream()
+                .map(it -> new Participant(team, getMember(it), it.equals(hostId), true))
                 .collect(Collectors.toList());
     }
 

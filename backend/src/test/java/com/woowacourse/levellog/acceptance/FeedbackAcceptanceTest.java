@@ -33,7 +33,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final String teamId = saveTeam("릭 and 로마", RICK, 1, ROMA).getTeamId();
+        final String teamId = saveTeam("릭 and 로마", RICK, 1, RICK, ROMA).getTeamId();
         final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
 
         timeStandard.setInProgress();
@@ -69,7 +69,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final String teamId = saveTeam("릭 and 로마", RICK, 1, ROMA).getTeamId();
+        final String teamId = saveTeam("릭 and 로마", RICK, 1, RICK, ROMA).getTeamId();
         final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
 
         timeStandard.setInProgress();
@@ -149,7 +149,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final String teamId = saveTeam("릭 and 로마", RICK, 1, ROMA).getTeamId();
+        final String teamId = saveTeam("릭 and 로마", RICK, 1, RICK, ROMA).getTeamId();
         final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
 
         timeStandard.setInProgress();

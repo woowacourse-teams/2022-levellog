@@ -14,6 +14,7 @@ import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.WatcherIdsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
+import com.woowacourse.levellog.team.exception.DuplicateWatchersException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
@@ -324,15 +325,16 @@ class TeamControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("팀 구성원 목록으로 호스트 Id가 들어오면 예외를 던진다.")
-        void save_participantsWithHostId_exception() throws Exception {
+        @DisplayName("팀 참관자 목록으로 중복된 Id가 들어오면 예외를 던진다.")
+        void save_duplicateWatcher_exception() throws Exception {
             // given
-            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 2L));
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 2L, 3L));
+            final WatcherIdsDto watchers = new WatcherIdsDto(List.of(4L, 4L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                    participants, new WatcherIdsDto(Collections.emptyList()));
+                    participants, watchers);
 
-            final String message = "중복되는 참가자가 존재합니다.";
-            willThrow(new DuplicateParticipantsException(message))
+            final String message = "중복되는 참관자가 존재합니다.";
+            willThrow(new DuplicateWatchersException(message))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -346,7 +348,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document(BASE_SNIPPET_PATH + "participants-have-host"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "watchers-duplicate"));
         }
 
         private ResultActions requestCreateTeam(final TeamWriteDto request) throws Exception {
@@ -649,14 +651,15 @@ class TeamControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("팀 구성원 목록으로 호스트 Id가 들어오면 예외를 던진다.")
-        void update_participantsWithHostId_exception() throws Exception {
+        @DisplayName("팀 참관자 목록으로 중복된 Id가 들어오면 예외를 던진다.")
+        void update_duplicateWatcher_exception() throws Exception {
             // given
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 2L, 3L));
+            final WatcherIdsDto watchers = new WatcherIdsDto(List.of(4L, 4L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
-                    new ParticipantIdsDto(List.of(1L, 2L, 1L)), new WatcherIdsDto(Collections.emptyList()));
-
-            final String message = "중복되는 참가자가 존재합니다.";
-            willThrow(new DuplicateParticipantsException(message))
+                    participants, watchers);
+            final String message = "중복되는 참관자가 존재합니다.";
+            willThrow(new DuplicateWatchersException(message))
                     .given(teamService)
                     .update(request, 1L, 1L);
 
@@ -670,7 +673,7 @@ class TeamControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document(BASE_SNIPPET_PATH + "participants-have-host"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "watchers-duplicate"));
         }
 
         @Test

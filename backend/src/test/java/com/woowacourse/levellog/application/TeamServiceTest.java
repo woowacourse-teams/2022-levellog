@@ -18,9 +18,9 @@ import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.WatcherIdsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
@@ -249,7 +249,7 @@ class TeamServiceTest extends ServiceTest {
             final Long roma = saveMember("로마").getId();
 
             final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 2, TEAM_START_TIME,
-                    new ParticipantIdsDto(List.of(pepper, roma)), new WatcherIdsDto(Collections.emptyList()));
+                    new ParticipantIdsDto(List.of(alien, pepper, roma)), new WatcherIdsDto(Collections.emptyList()));
 
             //when
             final Long id = teamService.save(teamDto, alien);
@@ -268,26 +268,13 @@ class TeamServiceTest extends ServiceTest {
             final Long roma = saveMember("로마").getId();
 
             final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
-                    new ParticipantIdsDto(List.of(alien, pepper, roma)), new WatcherIdsDto(Collections.emptyList()));
+                    new ParticipantIdsDto(List.of(alien, pepper, roma, roma)),
+                    new WatcherIdsDto(Collections.emptyList()));
 
             //when & then
             assertThatThrownBy(() -> teamService.save(teamDto, alien))
                     .isInstanceOf(DuplicateParticipantsException.class)
                     .hasMessageContaining("참가자 중복");
-        }
-
-        @Test
-        @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
-        void save_noParticipant_exception() {
-            //given
-            final Long alienId = saveMember("알린").getId();
-            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
-                    new ParticipantIdsDto(Collections.emptyList()), new WatcherIdsDto(Collections.emptyList()));
-
-            //when & then
-            assertThatThrownBy(() -> teamService.save(teamDto, alienId))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("호스트 이외의 참가자가 존재하지 않습니다.");
         }
     }
 
@@ -586,7 +573,7 @@ class TeamServiceTest extends ServiceTest {
             final Member roma = saveMember("로마");
             final Team team = saveTeam(rick, pepper, eve);
 
-            final List<Long> participantsIds = List.of(eve.getId(), alien.getId(), roma.getId());
+            final List<Long> participantsIds = List.of(rick.getId(), eve.getId(), alien.getId(), roma.getId());
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 2, AFTER_START_TIME,
                     new ParticipantIdsDto(participantsIds), new WatcherIdsDto(Collections.emptyList()));
 
@@ -682,25 +669,6 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
                     .isInstanceOf(DuplicateParticipantsException.class)
                     .hasMessageContaining("참가자 중복");
-        }
-
-        @Test
-        @DisplayName("호스트 이외의 참가자가 없으면 예외가 발생한다.")
-        void update_noParticipant_exception() {
-            //given
-            final Member alien = saveMember("알린");
-            final Member pepper = saveMember("페퍼");
-            final Member roma = saveMember("로마");
-
-            final Long teamId = saveTeam(alien, pepper, roma).getId();
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
-                    new ParticipantIdsDto(Collections.emptyList()), new WatcherIdsDto(Collections.emptyList()));
-
-            //when & then
-            final Long memberId = alien.getId();
-            assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("호스트 이외의 참가자가 존재하지 않습니다.");
         }
     }
 

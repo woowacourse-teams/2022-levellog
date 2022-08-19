@@ -20,10 +20,10 @@ operation::auth/login[]
 [[login-exception]]
 === 깃허브 로그인 예외
 
-==== 유효하지 않은 authorizationCode
+==== authorizationCode에 공백이나 null이 들어올 경우
 
-operation::auth/login/null[]
+include::{snippets}/auth/login/exception/null/http-response.adoc[]
 
 ==== 깃허브에서 토큰 받아오기 실패
 
-operation::auth/login/github-fail[]
+include::{snippets}/auth/login/exception/github-fail/http-response.adoc[]

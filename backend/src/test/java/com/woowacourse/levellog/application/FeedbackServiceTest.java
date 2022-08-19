@@ -1,23 +1,23 @@
 package com.woowacourse.levellog.application;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberDto;
-import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
-import java.time.LocalDateTime;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,38 +28,22 @@ import org.junit.jupiter.api.Test;
 @DisplayName("FeedbackService의")
 class FeedbackServiceTest extends ServiceTest {
 
-    private Member saveAndGetMember(final String nickname) {
-        return memberRepository.save(new Member(nickname, (int) System.nanoTime(), "profile.png"));
-    }
-
-    private Team saveAndGetTeam(final String title, final int interviewerNumber) {
-        return teamRepository.save(
-                new Team(title, "피니시방", LocalDateTime.now().plusDays(3), "jason.png", interviewerNumber));
-    }
-
-    private void saveAllParticipant(final Team team, final Member host, final Member... participants) {
-        participantRepository.save(new Participant(team, host, true));
-        for (final Member participant : participants) {
-            participantRepository.save(new Participant(team, participant, false));
-        }
-    }
-
     @Test
     @DisplayName("findAllByTo 메서드는 요청된 member가 to인 모든 피드백을 조회한다.")
     void findAllByTo() {
         // given
-        final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-        final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
-        final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
-        final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
-        feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
-        feedbackRepository.save(new Feedback(eve, roma, levellog, "이브 스터디", "이브 말하기", "이브 기타"));
+        final Member eve = saveMember("이브");
+        final Member roma = saveMember("로마");
+        final Member alien = saveMember("알린");
+        final Team team = saveTeam(eve, roma, alien);
+        final Levellog levellog = saveLevellog(eve, team);
 
-        feedbackRepository.save(new Feedback(roma, eve, levellog, "로마가 이브에게 스터디", "로마가 이브에게 말하기", "로마가 이브에 기타"));
-        feedbackRepository.save(new Feedback(alien, eve, levellog, "알린이 이브에게 스터디", "알린이 이브에게 말하기", "알린이 이브에게 기타"));
-        feedbackRepository.save(new Feedback(eve, roma, levellog, "이브가 로마에게 스터디", "이브가 로마에게 말하기", "이브가 로마에게 기타"));
+        saveFeedback(alien, eve, levellog);
+        saveFeedback(eve, roma, levellog);
+
+        saveFeedback(roma, eve, levellog);
+        saveFeedback(alien, eve, levellog);
+        saveFeedback(eve, roma, levellog);
 
         // when
         final List<String> fromNicknames = feedbackService.findAllByTo(eve.getId())
@@ -81,15 +65,14 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("모든 피드백을 조회한다.")
         void success() {
             // given
-            final Member eve = saveAndGetMember("이브");
-            final Member roma = saveAndGetMember("로마");
-            final Member alien = saveAndGetMember("알린");
-            final Team team = saveAndGetTeam("잠실 네오조", 1);
-            saveAllParticipant(team, eve, roma);
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
-            saveAllParticipant(team, eve, roma, alien);
-            feedbackRepository.save(new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
-            feedbackRepository.save(new Feedback(alien, eve, levellog, "알린 스터디", "알린 말하기", "알린 기타"));
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린");
+            final Team team = saveTeam(eve, roma, alien);
+
+            final Levellog levellog = saveLevellog(eve, team);
+            saveFeedback(roma, eve, levellog);
+            saveFeedback(alien, eve, levellog);
 
             // when
             final FeedbacksDto feedbacksResponse = feedbackService.findAll(levellog.getId(), eve.getId());
@@ -102,48 +85,118 @@ class FeedbackServiceTest extends ServiceTest {
         @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
         void findAll_notMyTeam_exception() {
             // given
-            final Member eve = saveAndGetMember("이브");
-            final Member roma = saveAndGetMember("로마");
-            final Member alien = saveAndGetMember("알린");
-            final Team team = saveAndGetTeam("잠실 네오조", 1);
-            saveAllParticipant(team, eve, roma);
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
-            feedbackRepository.save(new Feedback(roma, eve, levellog, "로마 스터디", "로마 말하기", "로마 기타"));
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린");
+            final Team team = saveTeam(eve, roma);
+            final Levellog levellog = saveLevellog(eve, team);
+            saveFeedback(roma, eve, levellog);
 
-            // when & then
             final Long memberId = alien.getId();
             final Long levellogId = levellog.getId();
+
+            // when & then
             assertThatThrownBy(() -> feedbackService.findAll(levellogId, memberId))
                     .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.", String.valueOf(team.getId()),
-                            String.valueOf(memberId), String.valueOf(levellogId));
+                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.",
+                            String.valueOf(team.getId()), String.valueOf(memberId));
+        }
+    }
+
+    @Nested
+    @DisplayName("findById 메서드는")
+    class FindById {
+
+        @Test
+        @DisplayName("특정 id의 피드백을 조회한다.")
+        void success() {
+            // given
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린");
+            final Team team = saveTeam(eve, roma, alien);
+
+            final Levellog levellog = saveLevellog(eve, team);
+            final Feedback feedback = saveFeedback(roma, eve, levellog);
+            saveFeedback(alien, eve, levellog);
+
+            // when
+            final FeedbackDto feedbacksResponse = feedbackService.findById(
+                    levellog.getId(), feedback.getId(), eve.getId());
+
+            // then
+            assertAll(
+                    () -> assertThat(feedbacksResponse.getId()).isEqualTo(feedback.getId()),
+                    () -> assertThat(feedbacksResponse.getFrom().getId()).isEqualTo(roma.getId()),
+                    () -> assertThat(feedbacksResponse.getTo().getId()).isEqualTo(eve.getId())
+            );
+        }
+
+        @Test
+        @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findById_notMyTeam_exception() {
+            // given
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린");
+            final Team team = saveTeam(eve, roma);
+            final Levellog levellog = saveLevellog(eve, team);
+            final Feedback feedback = saveFeedback(roma, eve, levellog);
+
+            final Long memberId = alien.getId();
+            final Long levellogId = levellog.getId();
+
+            // when & then
+            assertThatThrownBy(() -> feedbackService.findById(levellog.getId(), feedback.getId(), alien.getId()))
+                    .isInstanceOf(UnauthorizedException.class)
+                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.",
+                            String.valueOf(team.getId()), String.valueOf(memberId));
+        }
+
+        @Test
+        @DisplayName("잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findById_levellogWrongId_exception() {
+            // given
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Team team = saveTeam(eve, roma);
+
+            final Levellog levellog1 = saveLevellog(eve, team);
+            final Levellog levellog2 = saveLevellog(roma, team);
+
+            final Feedback feedback = saveFeedback(roma, eve, levellog1);
+
+            // when & then
+            assertThatThrownBy(() -> feedbackService.findById(levellog2.getId(), feedback.getId(), roma.getId()))
+                    .isInstanceOf(InvalidLevellogException.class)
+                    .hasMessageContainingAll("입력한 levellogId와 피드백의 levellogId가 다릅니다.",
+                            String.valueOf(levellog2.getId()));
         }
     }
 
     @Nested
     @DisplayName("update 메서드는")
-    class update {
+    class Update {
 
         @Test
         @DisplayName("피드백을 수정한다.")
-        void update_feedback_success() {
+        void success() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "profile.img", 1));
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Team team = saveTeam(eve, roma);
+            final Levellog levellog = saveLevellog(eve, team);
 
-            final Feedback feedback1 = feedbackRepository.save(
-                    new Feedback(roma, eve, levellog, "로마가 이브에게 스터디", "로마가 이브에게 말하기", "로마가 이브에게 기타"));
+            final Long feedbackId = saveFeedback(roma, eve, levellog).getId();
+
+            timeStandard.setInProgress();
 
             // when
-            feedbackService.update(new FeedbackWriteDto(
-                            new FeedbackContentDto("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타")),
-                    feedback1.getId(), roma.getId());
+            feedbackService.update(FeedbackWriteDto.from("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
+                    feedbackId, roma.getId());
 
             // then
-            final Feedback feedback = feedbackRepository.findById(feedback1.getId()).get();
+            final Feedback feedback = feedbackRepository.findById(feedbackId).get();
             assertAll(() -> assertThat(feedback.getStudy()).contains("수정된"),
                     () -> assertThat(feedback.getSpeak()).contains("수정된"),
                     () -> assertThat(feedback.getEtc()).contains("수정된"));
@@ -151,95 +204,84 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("작성자가 아닌 사용자가 피드백을 수정하려는 경우 예외를 발생시킨다.")
-        void update_noAuthor_exceptionThrown() {
+        void update_noAuthor_exception() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
-            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린");
+            final Team team = saveTeam(eve, roma, alien);
+            final Levellog levellog = saveLevellog(eve, team);
 
-            final Feedback feedback1 = feedbackRepository.save(
-                    new Feedback(roma, eve, levellog, "로마가 이브에게 스터디", "로마가 이브에게 말하기", "로마가 이브에게 기타"));
+            final Long feedbackId = saveFeedback(roma, eve, levellog).getId();
 
             // when, then
             assertThatThrownBy(() ->
-                    feedbackService.update(new FeedbackWriteDto(
-                                    new FeedbackContentDto("수정된 스터디", "수정된 말하기", "수정된 기타")),
-                            feedback1.getId(), alien.getId()))
+                    feedbackService.update(FeedbackWriteDto.from("수정된 스터디", "수정된 말하기", "수정된 기타"),
+                            feedbackId, alien.getId()))
                     .isInstanceOf(InvalidFeedbackException.class)
                     .hasMessageContaining("자신이 남긴 피드백만 수정할 수 있습니다.");
         }
-    }
-
-    @Nested
-    @DisplayName("delete 메서드는")
-    class delete {
 
         @Test
-        @DisplayName("자신이 남긴 피드백을 삭제한다.")
-        void delete_fromEqualsMe_success() {
+        @DisplayName("인터뷰 시작 시간 이전에 피드백을 수정하려는 경우 예외가 발생한다.")
+        void update_beforeStartAt_exception() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Team team = saveTeam(eve, roma);
+            final Levellog levellog = saveLevellog(eve, team);
 
-            final Feedback alienFeedback = feedbackRepository.save(
-                    new Feedback(alien, eve, levellog, "알린이 이브에게 스터디", "알린이 이브에게 말하기", "알린이 이브에게 기타"));
-            final Long deleteId = alienFeedback.getId();
+            final Long feedbackId = saveFeedback(roma, eve, levellog).getId();
 
-            // when
-            feedbackService.deleteById(deleteId, alien.getId());
-
-            // then
-            final Optional<Feedback> deletedFeedback = feedbackRepository.findById(deleteId);
-            assertThat(deletedFeedback).isEmpty();
+            // when & then
+            assertThatThrownBy(() -> feedbackService.update(
+                    FeedbackWriteDto.from("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
+                    feedbackId, roma.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 수정할 수 없습니다.");
         }
 
         @Test
-        @DisplayName("피드백에 관련이 없는 멤버가 삭제하면 예외를 던진다.")
-        void delete_otherMember_exceptionThrown() {
+        @DisplayName("인터뷰 종료 이후에 피드백을 수정하려는 경우 예외가 발생한다.")
+        void update_alreadyClosed_exception() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
-            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
 
-            final Feedback alienFeedback = feedbackRepository.save(
-                    new Feedback(alien, eve, levellog, "알린이 이브에게 스터디", "알린이 이브에게 말하기", "알린이 이브에게 기타"));
-            final Long deleteId = alienFeedback.getId();
+            final Team team = saveTeam(eve, roma);
+            final Levellog levellog = saveLevellog(eve, team);
 
-            // when, then
-            assertThatThrownBy(() -> feedbackService.deleteById(deleteId, roma.getId()))
-                    .isInstanceOf(InvalidFeedbackException.class)
-                    .hasMessageContaining("자신이 남긴 피드백만 삭제할 수 있습니다.");
+            final Long feedbackId = saveFeedback(roma, eve, levellog).getId();
+
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
+
+            // when & then
+            assertThatThrownBy(() -> feedbackService.update(
+                    FeedbackWriteDto.from("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
+                    feedbackId, roma.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining("이미 종료된 인터뷰입니다.");
         }
     }
 
     @Nested
     @DisplayName("save 메서드는")
-    class save {
+    class Save {
 
         @Test
         @DisplayName("피드백을 저장한다.")
-        void save_feedback_success() {
+        void success() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
-            participantRepository.save(new Participant(team, eve, true));
-            participantRepository.save(new Participant(team, roma, false));
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Team team = saveTeam(eve, roma);
+            final Levellog levellog = saveLevellog(eve, team);
 
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+
+            timeStandard.setInProgress();
 
             // when
             final Long id = feedbackService.save(request, levellog.getId(), roma.getId());
@@ -251,20 +293,18 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
-        void save_alreadyExist_exceptionThrown() {
+        void save_alreadyExist_exception() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
 
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
+            final Team team = saveTeam(eve, roma);
 
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
-            feedbackRepository.save(new Feedback(roma, eve, levellog, "study", "speak", "etc"));
+            final Levellog levellog = saveLevellog(eve, team);
+            saveFeedback(roma, eve, levellog);
 
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
@@ -274,17 +314,14 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
-        void save_selfFeedback_exceptionThrown() {
+        void save_selfFeedback_exception() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
-            participantRepository.save(new Participant(team, eve, true));
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
+            final Member eve = saveMember("이브");
+            final Team team = saveTeam(eve);
+            final Levellog levellog = saveLevellog(eve, team);
 
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), eve.getId()))
@@ -294,25 +331,61 @@ class FeedbackServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_otherMember_exceptionThrown() {
+        void save_otherMember_exception() {
             // given
-            final Member eve = memberRepository.save(new Member("이브", 1111, "eve.img"));
-            final Member roma = memberRepository.save(new Member("로마", 2222, "roma.img"));
-            final Member alien = memberRepository.save(new Member("알린", 3333, "alien.img"));
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+            final Member alien = saveMember("알린");
 
-            final Team team = teamRepository.save(
-                    new Team("잠실 네오조", "트랙룸", LocalDateTime.now().plusDays(3), "progile.img", 1));
-            participantRepository.save(new Participant(team, eve, true));
-            participantRepository.save(new Participant(team, alien, false));
-
-            final Levellog levellog = levellogRepository.save(Levellog.of(eve, team, "이브의 레벨로그"));
+            final Team team = saveTeam(eve, alien);
+            final Levellog levellog = saveLevellog(eve, team);
 
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(new FeedbackWriteDto(
-                            new FeedbackContentDto("로마 스터디", "로마 말하기", "로마 기타")),
+            assertThatThrownBy(() -> feedbackService.save(FeedbackWriteDto.from("로마 스터디", "로마 말하기", "로마 기타"),
                     levellog.getId(), roma.getId()))
-                    .isInstanceOf(InvalidFeedbackException.class)
+                    .isInstanceOf(UnauthorizedException.class)
                     .hasMessageContaining("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
+        }
+
+        @Test
+        @DisplayName("인터뷰 시작 전 피드백을 작성하면 예외를 던진다.")
+        void save_beforeStartAt_exception() {
+            // given
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+
+            final Team team = saveTeam(eve, roma);
+            final Levellog levellog = saveLevellog(eve, team);
+
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
+                    "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+
+            // when, then
+            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("인터뷰 종료 후 피드백을 작성하면 예외를 던진다.")
+        void save_alreadyClosed_exception() {
+            // given
+            final Member eve = saveMember("이브");
+            final Member roma = saveMember("로마");
+
+            final Team team = saveTeam(eve, roma);
+            final Levellog levellog = saveLevellog(eve, team);
+
+            timeStandard.setInProgress();
+            team.close(AFTER_START_TIME);
+
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
+                    "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+
+            // when, then
+            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
+                    .isInstanceOf(InterviewTimeException.class)
+                    .hasMessageContaining("이미 종료된 인터뷰입니다.");
         }
     }
 }

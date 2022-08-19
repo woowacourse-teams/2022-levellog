@@ -1,34 +1,36 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ROUTES_PATH } from 'constants/constants';
-
 import { requestGetLoginUserRole } from 'apis/role';
-import { RoleApiType } from 'types/role';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
+import { RoleCustomHookType } from 'types/role';
 
 const useRole = () => {
-  const navigate = useNavigate();
-  const accessToken = localStorage.getItem('accessToken');
-  const [loginUserRole, setLoginUserRole] = useState('');
+  const [feedbackWriterRole, setFeedbackWriterRole] = useState('');
 
-  const getLoginUserRole = async ({ teamId, participantId }: Omit<RoleApiType, 'accessToken'>) => {
+  const accessToken = localStorage.getItem('accessToken');
+
+  const getWriterInfo = async ({
+    teamId,
+    participantId,
+  }: Omit<RoleCustomHookType, 'levellogId'>) => {
     try {
       const res = await requestGetLoginUserRole({ teamId, participantId, accessToken });
-      setLoginUserRole(res.data.myRole);
+      setFeedbackWriterRole(res.data.myRole);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
 
   return {
-    loginUserRole,
-    getLoginUserRole,
+    feedbackWriterRole,
+    getWriterInfo,
   };
 };
 

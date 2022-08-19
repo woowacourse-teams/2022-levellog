@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
+import closeIcon from 'assets/images/close.svg';
+
 import Button from 'components/@commons/Button';
+import FlexBox from 'components/@commons/FlexBox';
+import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/UiViewer';
 import { PreQuestionCustomHookType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
@@ -15,7 +19,7 @@ const PreQuestionViewModal = ({
   getTeam,
   onClickDeletePreQuestion,
   handleClickClosePreQuestionModal,
-}: LevellogViewModalProps) => {
+}: PreQuestionViewModalProps) => {
   const { levellogId, preQuestionId, nickname } = participant;
   const { teamId } = useParams();
 
@@ -25,20 +29,23 @@ const PreQuestionViewModal = ({
       getTeam();
     }
   };
-
+  // 사전질문 조화에 작성한 사람 정보 추가되면 변경
   return (
     <ModalPortal>
       <S.Dimmer id="dimmer" onClick={handleClickClosePreQuestionModal} />
       <S.Container>
         <S.Header>
-          <S.Title>{nickname}의 사전질문</S.Title>
+          <FlexBox alignItems={'center'} gap={0.375}>
+            {/* <Image src={author.profileUrl} sizes={'MEDIUM'} />
+            <S.AuthorText>{author.nickname}의 사전질문</S.AuthorText> */}
+          </FlexBox>
           <S.CloseButton id="closeButton" onClick={handleClickClosePreQuestionModal}>
-            X
+            <Image src={closeIcon} sizes={'SMALL'} />
           </S.CloseButton>
         </S.Header>
-        <S.Levellog>
+        <S.PreQuestion>
           <UiViewer content={preQuestion} />
-        </S.Levellog>
+        </S.PreQuestion>
         <S.Footer>
           <Link
             to={`/pre-questions/teams/${teamId}/levellog/${levellogId}/pre-question/${preQuestionId}`}
@@ -52,7 +59,7 @@ const PreQuestionViewModal = ({
   );
 };
 
-interface LevellogViewModalProps {
+interface PreQuestionViewModalProps {
   preQuestion: string;
   participant: ParticipantType;
   getTeam: () => void;
@@ -70,65 +77,72 @@ const S = {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: ${(props) => props.theme.default.OPACITY_BLACK};
+    z-index: 20;
+    background-color: ${(props) => props.theme.new_default.DIMMER_BLACK};
   `,
 
   Container: styled.div`
     position: fixed;
     top: 50%;
     left: 50%;
-    padding: 0.875rem 1.875rem 1.875rem 1.875rem;
-    border-radius: 0.5rem;
-    background-color: ${(props) => props.theme.default.GRAY};
+    max-width: 71rem;
+    z-index: 30;
+    border-radius: 0.875rem;
+    background-color: ${(props) => props.theme.new_default.WHITE};
     transform: translate(-50%, -50%);
+    @media (max-width: 520px) {
+      width: calc(100% - 40px);
+    }
   `,
 
   Header: styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.875rem;
     width: 100%;
-    height: 3.625rem;
+    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
   `,
 
-  Title: styled.h1`
-    font-size: 1.875rem;
-    @media (max-width: 35rem) {
-      font-size: 1.25rem;
-    }
-    @media (max-height: 35rem) {
-      font-size: 1.25rem;
+  AuthorText: styled.p`
+    font-size: 2rem;
+    font-weight: 300;
+    @media (max-width: 520px) {
+      font-size: 16px;
     }
   `,
 
   CloseButton: styled.button`
+    display: flex;
+    align-items: center;
     width: 1.125rem;
     height: 1.125rem;
+    margin-right: 0.875rem;
     border-style: none;
-    background-color: ${(props) => props.theme.default.GRAY};
+    background-color: ${(props) => props.theme.new_default.WHITE};
     font-size: 1.375rem;
     font-weight: 800;
     cursor: pointer;
   `,
 
-  Levellog: styled.div`
+  PreQuestion: styled.div`
     overflow: auto;
     width: 42.5rem;
     height: 40.5rem;
     padding: 1rem;
     border-radius: 0.25rem;
-    background-color: ${(props) => props.theme.default.WHITE};
+    background-color: ${(props) => props.theme.new_default.WHITE};
     line-height: 1.875rem;
     word-spacing: 0.0625rem;
-    @media (max-width: 51.875rem) {
+    @media (max-width: 830px) {
       width: 31.25rem;
     }
-    @media (max-height: 51.875rem) {
+    @media (max-height: 830px) {
       height: 31.875rem;
     }
-    @media (max-width: 35rem) {
-      width: 16.25rem;
-    }
-    @media (max-height: 40rem) {
+    @media (max-width: 560px) {
+      width: 100%;
       height: 18.75rem;
     }
   `,
@@ -137,8 +151,10 @@ const S = {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap: 1rem;
     width: 100%;
-    margin-top: 1.25rem;
+    border-top: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
+    padding: 1rem 0.875rem 1.5rem 0;
   `,
 };
 

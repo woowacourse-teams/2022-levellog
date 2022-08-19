@@ -1,33 +1,28 @@
-import { useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import useUser from 'hooks/useUser';
+import useAuth from 'hooks/useAuth';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import Loading from 'pages/status/Loading';
 
-const Auth = ({ needLogin }: AuthProps) => {
+import { ROUTES_PATH } from 'constants/constants';
+
+const Auth = ({ children, requireAuth }: AuthProps) => {
+  const { isLoad, isError } = useAuth({ requireAuth });
   const navigate = useNavigate();
-  const location = useLocation();
-  const { loginUserId } = useUser();
-  const accessToken = localStorage.getItem('accessToken');
 
-  useEffect(() => {
-    if (needLogin && !accessToken) {
-      navigate(ROUTES_PATH.HOME);
-    }
+  if (isLoad) return <Loading />;
+  // 동작 체크 필요
+  if (isError) {
+    navigate(ROUTES_PATH.HOME);
+    return <Loading />;
+  }
 
-    if (!loginUserId && accessToken) {
-      navigate(ROUTES_PATH.LOGIN, { state: location, replace: true });
-
-      return;
-    }
-  }, [navigate]);
-
-  return <Outlet />;
+  return children;
 };
 
 interface AuthProps {
-  needLogin: boolean;
+  requireAuth: string;
+  children: JSX.Element;
 }
 
 export default Auth;

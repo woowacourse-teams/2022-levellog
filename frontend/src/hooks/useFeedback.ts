@@ -1,24 +1,27 @@
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ROUTES_PATH } from 'constants/constants';
+import { MESSAGE } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
 import {
   requestPostFeedback,
   requestGetFeedbacksInTeam,
   requestEditFeedback,
-  requestDeleteFeedback,
+  requestGetFeedback,
 } from 'apis/feedback';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
 const useFeedback = () => {
+  const [feedback, setFeedback] = useState();
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const feedbackRef = useRef<Editor[]>([]);
-  const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
+
+  const accessToken = localStorage.getItem('accessToken');
 
   const postFeedback = async ({
     levellogId,
@@ -26,11 +29,13 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackResult'>) => {
     try {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
+      alert(MESSAGE.FEEDBACK_CREATE);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -42,10 +47,30 @@ const useFeedback = () => {
 
       setFeedbacks(feedbacks);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
+      }
+    }
+  };
+
+  const getFeedback = async ({
+    levellogId,
+    feedbackId,
+  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId'>) => {
+    try {
+      const res = await requestGetFeedback({ accessToken, levellogId, feedbackId });
+      setFeedback(res.data.feedback);
+
+      return res.data.feedback;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
+        const responseBody: AxiosResponse = err.response!;
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
   };
@@ -58,37 +83,13 @@ const useFeedback = () => {
     try {
       await requestEditFeedback({ accessToken, levellogId, feedbackId, feedbackResult });
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
+          alert(responseBody.data.message);
+        }
       }
     }
-  };
-
-  const deleteFeedback = async ({
-    levellogId,
-    feedbackId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId'>) => {
-    try {
-      await requestDeleteFeedback({ accessToken, levellogId, feedbackId });
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
-      }
-    }
-  };
-
-  const onClickDeleteButton = async ({
-    feedbackInfo,
-    levellogId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackInfo'>) => {
-    const feedbackId = String(feedbackInfo.id);
-
-    await deleteFeedback({ levellogId, feedbackId });
-    await getFeedbacksInTeam({ levellogId });
   };
 
   const onClickFeedbackAddButton = async ({
@@ -108,14 +109,47 @@ const useFeedback = () => {
     navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 
+  const onClickFeedbackEditButton = async ({
+    teamId,
+    levellogId,
+    feedbackId,
+  }: Pick<FeedbackCustomHookType, 'teamId' | 'levellogId' | 'feedbackId'>) => {
+    const [study, speak, etc] = feedbackRef.current;
+    const feedbackResult: FeedbackFormatType = {
+      feedback: {
+        study: study.getInstance().getEditorElements().mdEditor.innerText,
+        speak: speak.getInstance().getEditorElements().mdEditor.innerText,
+        etc: etc.getInstance().getEditorElements().mdEditor.innerText,
+      },
+    };
+
+    await editFeedback({ levellogId, feedbackId, feedbackResult });
+    navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
+  };
+
+  const getFeedbackOnRef = async ({
+    levellogId,
+    feedbackId,
+  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId'>) => {
+    const feedback = await getFeedback({ levellogId, feedbackId });
+
+    if (!feedback) return;
+    if (!feedbackRef.current[0]) return;
+
+    feedbackRef.current[0].getInstance().setMarkdown(feedback.study);
+    feedbackRef.current[1].getInstance().setMarkdown(feedback.speak);
+    feedbackRef.current[2].getInstance().setMarkdown(feedback.etc);
+  };
+
   return {
     feedbacks,
     feedbackRef,
     getFeedbacksInTeam,
     postFeedback,
     editFeedback,
-    onClickDeleteButton,
     onClickFeedbackAddButton,
+    onClickFeedbackEditButton,
+    getFeedbackOnRef,
   };
 };
 

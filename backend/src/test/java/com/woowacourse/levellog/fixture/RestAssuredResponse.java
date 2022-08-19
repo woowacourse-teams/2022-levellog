@@ -40,6 +40,13 @@ public class RestAssuredResponse {
                 .split("/interview-questions/")[1];
     }
 
+    public String getFeedbackId() {
+        return response
+                .extract()
+                .header(HttpHeaders.LOCATION)
+                .split("/feedbacks/")[1];
+    }
+
     public Long getMemberId() {
         return response
                 .extract()

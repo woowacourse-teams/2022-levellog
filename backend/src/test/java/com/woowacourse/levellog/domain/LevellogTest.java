@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.domain;
 
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -9,7 +10,6 @@ import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,14 +22,14 @@ class LevellogTest {
 
     @Nested
     @DisplayName("생성자는")
-    class ConstructorTest {
+    class Constructor {
 
         @Test
         @DisplayName("레벨로그를 생성한다.")
         void success() {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
             final String content = "Spring을 학습하였습니다";
 
             // when & then
@@ -43,7 +43,7 @@ class LevellogTest {
         void newLevellog_contentBlank_exception(final String invalidContent) {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
 
             //  when & then
             assertThatThrownBy(() -> Levellog.of(author, team, invalidContent))
@@ -54,14 +54,14 @@ class LevellogTest {
 
     @Nested
     @DisplayName("updateContent 메서드는")
-    class UpdateContentTest {
+    class UpdateContent {
 
         @Test
         @DisplayName("레벨로그 내용을 업데이트한다.")
         void success() {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
             final String updatedContent = "updated content";
 
@@ -78,7 +78,7 @@ class LevellogTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member member = new Member("알린", 2222, "alien.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
 
             //  when & then
@@ -96,7 +96,7 @@ class LevellogTest {
         void updateContent_contentBlank_exception(final String invalidContent) {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", LocalDateTime.now().plusDays(3), "jamsil_trackroom.png", 1);
+            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
 
             //  when & then

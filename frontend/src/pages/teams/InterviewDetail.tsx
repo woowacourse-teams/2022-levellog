@@ -5,26 +5,34 @@ import styled, { CSSProperties } from 'styled-components';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import usePreQuestionModal from 'hooks/usePreQuestionModal';
-import { useTeam } from 'hooks/useTeams';
+import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
+import Error from 'pages/status/Error';
+
+import { TEAM_STATUS } from 'constants/constants';
+
 import Button from 'components/@commons/Button';
-import FlexBox from 'components/@commons/FlexBox';
-import Image from 'components/@commons/Image';
+import ContentHeader from 'components/@commons/ContentHeader';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
 import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
-  const { teamLocationState, team, getTeam, onClickDeleteTeamButton } = useTeam();
   const { loginUserId } = useUser();
   const {
-    levellog,
+    teamLocationState,
+    team,
+    getTeam,
+    onClickDeleteTeamButton,
+    onClickCloseTeamInterviewButton,
+  } = useTeam();
+  const {
+    levellogInfo,
     levellogParticipant,
     isLevellogModalOpen,
     onClickOpenLevellogModal,
-    onClickDeleteLevellog,
     handleClickCloseLevellogModal,
   } = useLevellogModal();
   const {
@@ -36,8 +44,12 @@ const InterviewDetail = () => {
     handleClickClosePreQuestionModal,
   } = usePreQuestionModal();
 
-  const handleClickTeamButtons = () => {
+  const handleClickDeleteTeamButton = () => {
     onClickDeleteTeamButton({ teamId: (team as InterviewTeamType).id });
+  };
+
+  const handleClickCloseTeamInterviewButton = () => {
+    onClickCloseTeamInterviewButton({ teamId: (team as InterviewTeamType).id });
   };
 
   useEffect(() => {
@@ -46,53 +58,52 @@ const InterviewDetail = () => {
     }
   }, []);
 
-  if (team && Object.keys(team).length === 0) return <div></div>;
+  if (team && Object.keys(team).length === 0) return <Error />;
 
   return (
     <>
-      {isLevellogModalOpen && (
-        <LevellogViewModal
-          levellog={levellog}
-          participant={levellogParticipant}
-          userInTeam={(team as InterviewTeamType).isParticipant}
-          getTeam={getTeam}
-          onClickDeleteLevellog={onClickDeleteLevellog}
-          handleClickCloseLevellogModal={handleClickCloseLevellogModal}
-        />
-      )}
-      {isPreQuestionModalOpen && (
-        <PreQuestionViewModal
-          preQuestion={preQuestion}
-          participant={preQuestionParticipant}
-          getTeam={getTeam}
-          onClickDeletePreQuestion={onClickDeletePreQuestion}
-          handleClickClosePreQuestionModal={handleClickClosePreQuestionModal}
-        />
-      )}
-      <FlexBox gap={4.375}>
-        <S.Header>
-          <FlexBox gap={1}>
-            <S.OwnerImage>
-              <Image src={(team as InterviewTeamType).teamImage} sizes={'LARGE'} />
-            </S.OwnerImage>
-            <FlexBox flexFlow="column" gap={1.125}>
-              <S.Title>{(team as InterviewTeamType).title}</S.Title>
-              <FlexBox gap={1}>
-                <S.TitleContent>{(team as InterviewTeamType).place}</S.TitleContent>
-                <S.TitleContent>{(team as InterviewTeamType).startAt}</S.TitleContent>
-              </FlexBox>
-            </FlexBox>
-          </FlexBox>
+      <ContentHeader
+        imageUrl={(team as InterviewTeamType).teamImage}
+        title={(team as InterviewTeamType).title}
+        subTitle={`${(team as InterviewTeamType).place} ${(team as InterviewTeamType).startAt} `}
+      >
+        <>
           {(team as InterviewTeamType).hostId === loginUserId && (
             <S.ButtonBox>
-              <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
-                <Button>팀 수정하기</Button>
-              </Link>
-              <Button onClick={handleClickTeamButtons}>팀 삭제하기</Button>
+              {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
+                <>
+                  <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
+                    <S.Button>팀 수정하기</S.Button>
+                  </Link>
+                  <S.Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</S.Button>
+                </>
+              )}
+              {(team as InterviewTeamType).status === TEAM_STATUS.IN_PROGRESS && (
+                <Button onClick={handleClickCloseTeamInterviewButton}>인터뷰 종료하기</Button>
+              )}
             </S.ButtonBox>
           )}
-        </S.Header>
-        <S.Container>
+        </>
+      </ContentHeader>
+      <S.Container>
+        {isLevellogModalOpen && (
+          <LevellogViewModal
+            levellogInfo={levellogInfo}
+            participant={levellogParticipant}
+            userInTeam={(team as InterviewTeamType).isParticipant}
+            handleClickCloseLevellogModal={handleClickCloseLevellogModal}
+          />
+        )}
+        {isPreQuestionModalOpen && (
+          <PreQuestionViewModal
+            preQuestion={preQuestion}
+            participant={preQuestionParticipant}
+            getTeam={getTeam}
+            onClickDeletePreQuestion={onClickDeletePreQuestion}
+            handleClickClosePreQuestionModal={handleClickClosePreQuestionModal}
+          />
+        )}
+        <S.Content>
           {(team as InterviewTeamType).participants.map((participant: ParticipantType) => {
             const role = {
               interviewee: false,
@@ -109,6 +120,7 @@ const InterviewDetail = () => {
             return (
               <Interviewer
                 key={participant.memberId}
+                teamStatus={team.status}
                 participant={participant}
                 role={role}
                 userInTeam={(team as InterviewTeamType).isParticipant}
@@ -117,13 +129,30 @@ const InterviewDetail = () => {
               />
             );
           })}
-        </S.Container>
-      </FlexBox>
+        </S.Content>
+      </S.Container>
     </>
   );
 };
 
 const S = {
+  Container: styled.div`
+    max-width: 1600px;
+    margin: auto;
+    @media (max-width: 1700px) {
+      width: 1270px;
+    }
+    @media (max-width: 1480px) {
+      width: 940px;
+    }
+    @media (max-width: 1024px) {
+      width: 610px;
+    }
+    @media (max-width: 620px) {
+      width: 280px;
+    }
+  `,
+
   Header: styled.div<CSSProperties>`
     display: flex;
     justify-content: space-between;
@@ -133,13 +162,10 @@ const S = {
     margin-top: 3.125rem;
   `,
 
-  Container: styled.div`
+  Content: styled.div`
     display: flex;
-    flex-flow: row wrap;
-    gap: 2.5rem;
-    @media (max-width: 560px) {
-      justify-content: center;
-    }
+    flex-wrap: wrap;
+    gap: 3.125rem;
   `,
 
   Title: styled.h3`
@@ -162,6 +188,17 @@ const S = {
     gap: 1rem;
     @media (max-width: 560px) {
       flex-direction: column;
+    }
+  `,
+
+  Button: styled(Button)`
+    border-radius: 1.25rem;
+    background-color: ${(props) => props.theme.new_default.WHITE};
+    font-weight: 700;
+    color: ${(props) => props.theme.new_default.BLACK};
+    :hover {
+      background-color: ${(props) => props.theme.new_default.LIGHT_GRAY};
+      box-shadow: 0.25rem 0.25rem 0.375rem ${(props) => props.theme.new_default.DARK_GRAY};
     }
   `,
 };

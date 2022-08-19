@@ -23,70 +23,121 @@ operation::team/create[]
 [[create-exception-participants-duplicate]]
 ==== 저장 시 중복된 참가자가 존재하는 경우
 
-operation::team/create/exception/participants/duplicate[]
+include::{snippets}/team/create/exception/participants-duplicate/http-response.adoc[]
 
 [[create-exception-participants-host]]
-==== 저장 시 참가자 목록에 Host가 포함된 경우 (hostId = 1)
+==== 저장 시 참가자 목록에 Host가 포함된 경우
 
-operation::team/create/exception/participants/host[]
+include::{snippets}/team/create/exception/participants-have-host/http-response.adoc[]
 
 [[create-exception-title-null]]
 ==== 저장 시 title이 null 또는 공백인 경우
 
-operation::team/create/exception/title/null-and-blank[]
+include::{snippets}/team/create/exception/title-blank/http-response.adoc[]
 
 [[create-exception-title-length]]
 ==== 저장 시 title의 길이가 255자 초과인 경우
 
-operation::team/create/exception/title/length[]
+include::{snippets}/team/create/exception/title-length/http-response.adoc[]
 
 [[create-exception-place-null]]
 ==== 저장 시 place이 null 또는 공백인 경우
 
-operation::team/create/exception/place/null-and-blank[]
+include::{snippets}/team/create/exception/place-blank/http-response.adoc[]
 
 [[create-exception-place-length]]
 ==== 저장 시 place의 길이가 255자 초과인 경우
 
-operation::team/create/exception/place/length[]
+include::{snippets}/team/create/exception/place-length/http-response.adoc[]
 
 [[create-exception-start-at-null]]
 ==== 저장 시 startAt가 null인 경우
 
-operation::team/create/exception/startat/null[]
+include::{snippets}/team/create/exception/start-at-null/http-response.adoc[]
 
 [[create-exception-start-at-past]]
 ==== 저장 시 startAt가 과거인 경우
 
-operation::team/create/exception/startat/past[]
+include::{snippets}/team/create/exception/start-at-past/http-response.adoc[]
 
 [[create-exception-participants-empty]]
 ==== 저장 시 호스트 이외의 참가자가 없는 경우
 
-operation::team/create/exception/participants/empty[]
+include::{snippets}/team/create/exception/participants-empty/http-response.adoc[]
 
 [[create-exception-participants-null]]
 ==== 저장 시 participants가 null인 경우
 
-operation::team/create/exception/participants/null[]
+include::{snippets}/team/create/exception/participants-null/http-response.adoc[]
 
-[[create-exception-interviwer-number-not-positive]]
+[[create-exception-interviewer-number-not-positive]]
 ==== 저장 시 인터뷰어 수가 1미만인 경우
 
-operation::team/create/exception/interviewer-number/not-positive[]
+include::{snippets}/team/create/exception/interviewer-number-not-positive/http-response.adoc[]
 
-[[create-exception-interviwer-number-not-positive]]
+[[create-exception-interviewer-number-more-than-participant]]
 ==== 저장 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
 
-operation::team/create/exception/interviewer-number/more-than-participant[]
+include::{snippets}/team/create/exception/interviewer-number-more-than-participant/http-response.adoc[]
 
-[[findAll]]
-== 팀 목록 조회
+[[find-all]]
+== 팀 전체 목록 조회
 
-[[findAll-success]]
-=== 팀 목록 조회 성공
+*STATUS 응답 종류*
 
-operation::team/findAll[]
+[cols="1,1"]
+|===
+|*응답*
+|*설명*
+
+|READY
+|인터뷰 시작 전 상태이다.
+
+|IN_PROGRESS
+|인터뷰 진행 중인 상태이다.
+
+|CLOSED
+|인터뷰가 종료된 상태이다.
+|===
+
+[[find-all-success]]
+=== 팀 전체 목록 조회 성공
+팀 전체 목록 조회 응답은 인터뷰 진행 상태와 최근 생성일 순으로 정렬되어 있다.
+
+operation::team/find-all[]
+
+[[find-all-by-status]]
+== Status로 필터링 된 팀 목록 조회
+
+*status 쿼리 파라미터 종류*
+
+[cols="1,1"]
+|===
+|*Parameter*
+|*설명*
+
+|ready
+|인터뷰 시작 전인 팀 목록을 조회한다.
+
+|in-progress
+|인터뷰가 진행 중인 팀 목록을 조회한다.
+
+|closed
+|인터뷰가 종료된 팀 목록을 조회한다.
+|===
+
+[[find-all-by-status-success]]
+=== Status로 필터링 된 팀 목록 조회 성공
+Status로 필터링 된 팀 목록 조회 응답은 최근 생성일 순으로 정렬되어 있다.
+
+operation::team/find-all/filtering-by-status[]
+
+[[find-all-by-status-exception]]
+=== Status로 필터링 된 팀 목록 조회 예외
+
+==== 쿼리 파라미터로 잘못된 status를 입력한 경우
+
+include::{snippets}/team/find-all/exception/invalid-status/http-response.adoc[]
 
 [[find]]
 == 팀 상세 조회
@@ -100,7 +151,7 @@ operation::team/find/my-team[]
 
 ==== 참가자가 아닌 팀 상세 조회 (또는 비로그인으로 조회)
 
-operation::team/find/not-my-team[]
+include::{snippets}/team/find/not-my-team/http-response.adoc[]
 
 [[find-exception]]
 === 팀 상세 조회 예외
@@ -108,13 +159,44 @@ operation::team/find/not-my-team[]
 [[find-exception-notFound]]
 ==== 없는 팀을 상세 조회하는 경우
 
-operation::team/find-by-id/exception/notfound[]
+include::{snippets}/team/find-by-id/exception/notfound/http-response.adoc[]
+
+[[find-status]]
+== 팀 상태 조회
+
+*STATUS 응답 종류*
+
+[cols="1,1"]
+|===
+|*응답*
+|*설명*
+
+|READY
+|인터뷰 시작 전 상태이다.
+
+|IN_PROGRESS
+|인터뷰 진행 중인 상태이다.
+
+|CLOSED
+|인터뷰가 종료된 상태이다.
+|===
+
+[[find-status-success]]
+=== 팀 상태 조회 성공
+
+operation::team/find-status[]
+
+[[find-status-exception]]
+=== 팀 상태 조회 예외
+
+==== id에 해당하는 팀이 존재하지 않는 경우
+
+include::{snippets}/team/find-status/exception/team-not-found/http-response.adoc[]
 
 [[find-my-role]]
 == 인터뷰 역할 조회
 
 *응답 종류*
-
 
 [cols="1,1"]
 |===
@@ -151,11 +233,11 @@ include::{snippets}/team/find-my-role/observer/http-response.adoc[]
 
 ==== 요청한 사용자가 팀의 참가자가 아닌 경우
 
-operation::team/find-my-role/exception/not-my-team[]
+include::{snippets}/team/find-my-role/exception/not-my-team/http-response.adoc[]
 
 ==== 타겟 멤버가 팀의 참가자가 아닌 경우
 
-operation::team/find-my-role/exception/target-not-participant[]
+include::{snippets}/team/find-my-role/exception/target-not-participant/http-response.adoc[]
 
 [[update]]
 == 팀 수정
@@ -171,37 +253,72 @@ operation::team/update[]
 [[update-exception-title-null]]
 ==== 수정 시 title이 null 또는 공백인 경우
 
-operation::team/update/exception/title/null-and-blank[]
+include::{snippets}/team/update/exception/title-blank/http-response.adoc[]
 
 [[update-exception-title-length]]
 ==== 수정 시 title의 길이가 255자 초과인 경우
 
-operation::team/update/exception/title/length[]
+include::{snippets}/team/update/exception/title-length/http-response.adoc[]
 
 [[update-exception-place-null]]
 ==== 수정 시 place이 null 또는 공백인 경우
 
-operation::team/update/exception/place/null-and-blank[]
+include::{snippets}/team/update/exception/place-blank/http-response.adoc[]
 
 [[update-exception-place-length]]
 ==== 수정 시 place의 길이가 255자 초과인 경우
 
-operation::team/update/exception/place/length[]
+include::{snippets}/team/update/exception/place-length/http-response.adoc[]
 
 [[update-exception-start-at-null]]
 ==== 수정 시 startAt가 null인 경우
 
-operation::team/update/exception/startat/null[]
+include::{snippets}/team/update/exception/start-at-null/http-response.adoc[]
 
 [[update-exception-start-at-past]]
 ==== 수정 시 startAt가 과거인 경우
 
-operation::team/update/exception/startat/past[]
+include::{snippets}/team/update/exception/start-at-past/http-response.adoc[]
 
 [[update-exception-notFound]]
 ==== 없는 팀을 수정하는 경우
 
-operation::team/update/exception/notfound[]
+include::{snippets}/team/update/exception/not-found/http-response.adoc[]
+
+[[update-exception-participants-duplicate]]
+==== 수정 시 중복된 참가자가 존재하는 경우
+
+include::{snippets}/team/update/exception/participants-duplicate/http-response.adoc[]
+
+[[update-exception-participants-host]]
+==== 수정 시 참가자 목록에 Host가 포함된 경우 (hostId = 1)
+
+include::{snippets}/team/update/exception/participants-have-host/http-response.adoc[]
+
+[[update-exception-participants-empty]]
+==== 수정 시 호스트 이외의 참가자가 없는 경우
+
+include::{snippets}/team/update/exception/participants-empty/http-response.adoc[]
+
+[[update-exception-participants-null]]
+==== 수정 시 participants가 null인 경우
+
+include::{snippets}/team/update/exception/participants-null/http-response.adoc[]
+
+[[update-exception-interviewer-number-not-positive]]
+==== 수정 시 인터뷰어 수가 1미만인 경우
+
+include::{snippets}/team/update/exception/interviewer-number-not-positive/http-response.adoc[]
+
+[[update-exception-interviewer-number-more-than-participant]]
+==== 수정 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
+
+include::{snippets}/team/update/exception/interviewer-number-more-than-participant/http-response.adoc[]
+
+[[update-exception-after-start-at]]
+==== 수정 시 인터뷰 시작 이후인 경우
+
+include::{snippets}/team/update/exception/after-start-at/http-response.adoc[]
 
 [[close]]
 == 팀 인터뷰 종료
@@ -217,7 +334,7 @@ operation::team/close[]
 [[close-exception-notfound]]
 ==== 없는 팀의 인터뷰를 종료하려는 경우
 
-operation::team/close/exception/notfound[]
+include::{snippets}/team/close/exception/not-found/http-response.adoc[]
 
 [[close-exception-unauthorized]]
 ==== 호스트가 아닌 사용자가 인터뷰를 종료하려는 경우
@@ -234,7 +351,6 @@ include::{snippets}/team/close/exception/already-close/http-response.adoc[]
 
 include::{snippets}/team/close/exception/before-start/http-response.adoc[]
 
-
 [[delete]]
 == 팀 삭제
 
@@ -249,4 +365,14 @@ operation::team/delete[]
 [[delete-exception-notfound]]
 ==== 없는 팀을 삭제하는 경우
 
-operation::team/delete/exception/notfound[]
+include::{snippets}/team/delete/exception/notfound/http-response.adoc[]
+
+[[delete-exception-unauthorized]]
+==== 호스트가 아닌 사용자가 팀을 삭제하려는 경우
+
+include::{snippets}/team/delete/exception/unauthorized/http-response.adoc[]
+
+[[delete-exception-beforeStart]]
+==== 인터뷰 시작 시간 이후에 삭제하려는 경우
+
+include::{snippets}/team/delete/exception/after-start/http-response.adoc[]

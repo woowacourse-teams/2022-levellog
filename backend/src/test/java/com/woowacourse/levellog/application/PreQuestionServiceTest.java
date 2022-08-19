@@ -16,6 +16,7 @@ import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionExceptio
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -67,8 +68,8 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> preQuestionService.save(preQuestionDto, levellog.getId(), questioner.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContaining("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다.");
+                    .isInstanceOf(ParticipantNotSameTeamException.class)
+                    .hasMessageContaining("같은 팀에 속해있지 않습니다.");
         }
 
         @Test

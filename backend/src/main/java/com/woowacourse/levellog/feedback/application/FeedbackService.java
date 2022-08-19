@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.feedback.application;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
@@ -17,6 +16,7 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +44,7 @@ public class FeedbackService {
         final Team team = levellog.getTeam();
 
         levellog.validateSelfFeedback(member);
-        validateTeamMember(team, member, "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
+        validateTeamMember(team, member);
         team.validateInProgress(timeStandard.now());
 
         final Feedback feedback = request.getFeedback()
@@ -58,7 +58,7 @@ public class FeedbackService {
         final Levellog levellog = getLevellog(levellogId);
         final List<FeedbackDto> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
 
-        validateTeamMember(levellog.getTeam(), getMember(memberId), "자신이 속한 팀의 피드백만 조회할 수 있습니다.");
+        validateTeamMember(levellog.getTeam(), getMember(memberId));
 
         return new FeedbacksDto(responses);
     }
@@ -68,7 +68,7 @@ public class FeedbackService {
         final Levellog levellog = getLevellog(levellogId);
         final Member member = getMember(memberId);
 
-        validateTeamMember(levellog.getTeam(), member, "자신이 속한 팀의 피드백만 조회할 수 있습니다.");
+        validateTeamMember(levellog.getTeam(), member);
         feedback.validateLevellog(levellog);
 
         return FeedbackDto.from(feedback);
@@ -103,10 +103,11 @@ public class FeedbackService {
         }
     }
 
-    private void validateTeamMember(final Team team, final Member member, final String message) {
+    private void validateTeamMember(final Team team, final Member member) {
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
-            throw new UnauthorizedException(
-                    message + " [ teamId : " + team.getId() + " memberId : " + member.getId() + " ]");
+            throw new ParticipantNotSameTeamException(DebugMessage.init()
+                    .append("teamId", team.getId())
+                    .append("memberId", member.getId()));
         }
     }
 

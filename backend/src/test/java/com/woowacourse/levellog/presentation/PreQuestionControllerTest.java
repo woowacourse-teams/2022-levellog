@@ -13,6 +13,7 @@ import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -55,8 +56,8 @@ class PreQuestionControllerTest extends ControllerTest {
         void save_fromNotParticipant_exception() throws Exception {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
-            final String message = "권한이 없습니다.";
-            willThrow(new UnauthorizedException(message))
+            final String message = "같은 팀에 속해있지 않습니다.";
+            willThrow(new ParticipantNotSameTeamException(DebugMessage.init()))
                     .given(preQuestionService)
                     .save(preQuestionDto, 1L, 1L);
 

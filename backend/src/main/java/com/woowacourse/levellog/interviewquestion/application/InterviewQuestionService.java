@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.interviewquestion.application;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
@@ -16,6 +15,7 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -113,9 +113,10 @@ public class InterviewQuestionService {
         final Team team = levellog.getTeam();
 
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
-            throw new UnauthorizedException(
-                    "같은 팀에 속한 멤버만 인터뷰 질문을 작성할 수 있습니다. [memberId :" + member.getId() + " teamId : " + team.getId()
-                            + " levellogId : " + levellog.getId() + "]");
+            throw new ParticipantNotSameTeamException(DebugMessage.init()
+                    .append("teamId", team.getId())
+                    .append("memberId", member.getId())
+                    .append("levellogId", levellog.getId()));
         }
     }
 }

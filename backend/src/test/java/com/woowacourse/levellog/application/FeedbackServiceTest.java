@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
@@ -17,6 +16,7 @@ import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
@@ -98,8 +98,8 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> feedbackService.findAll(levellogId, memberId))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.",
+                    .isInstanceOf(ParticipantNotSameTeamException.class)
+                    .hasMessageContainingAll("같은 팀에 속해있지 않습니다.",
                             String.valueOf(team.getId()), String.valueOf(memberId));
         }
     }
@@ -149,8 +149,8 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> feedbackService.findById(levellog.getId(), feedback.getId(), alien.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("자신이 속한 팀의 피드백만 조회할 수 있습니다.",
+                    .isInstanceOf(ParticipantNotSameTeamException.class)
+                    .hasMessageContainingAll("같은 팀에 속해있지 않습니다.",
                             String.valueOf(team.getId()), String.valueOf(memberId));
         }
 
@@ -344,8 +344,8 @@ class FeedbackServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> feedbackService.save(FeedbackWriteDto.from("로마 스터디", "로마 말하기", "로마 기타"),
                     levellog.getId(), roma.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContaining("같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
+                    .isInstanceOf(ParticipantNotSameTeamException.class)
+                    .hasMessageContaining("같은 팀에 속해있지 않습니다.");
         }
 
         @Test

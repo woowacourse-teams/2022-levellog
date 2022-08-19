@@ -12,6 +12,7 @@ import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import org.junit.jupiter.api.DisplayName;
@@ -145,6 +146,31 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document(BASE_SNIPPET_PATH + "is-closed"));
+        }
+
+        @Test
+        @DisplayName("같은 팀에 속해있지 않을 때 예외가 발생한다.")
+        void save_notMyTeam_exception() throws Exception {
+            // given
+            final long levellogId = 1L;
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
+
+            final String message = "같은 팀에 속해있지 않습니다.";
+            willThrow(new ParticipantNotSameTeamException(DebugMessage.init()))
+                    .given(interviewQuestionService)
+                    .save(request, levellogId, 1L);
+
+            // when
+            final ResultActions perform = requestCreateInterviewQuestion(levellogId, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-team"));
         }
 
         @Test

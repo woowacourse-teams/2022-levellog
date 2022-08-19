@@ -6,7 +6,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
@@ -14,6 +13,7 @@ import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import org.junit.jupiter.api.DisplayName;
@@ -93,17 +93,16 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "잘못된 피드백 요청입니다.";
+            final String message = "같은 팀에 속해있지 않습니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(DebugMessage.init()
-                            .append("levellogId", levellogId)));
+                    .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
             perform.andExpectAll(
-                    status().isBadRequest(),
+                    status().isUnauthorized(),
                     jsonPath("message").value(message)
             );
 
@@ -361,9 +360,9 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
 
-            final String message = "권한이 없습니다.";
+            final String message = "같은 팀에 속해있지 않습니다.";
             given(feedbackService.findAll(levellogId, memberId))
-                    .willThrow(new UnauthorizedException(message));
+                    .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestFindAllFeedback(levellogId);
@@ -423,9 +422,9 @@ class FeedbackControllerTest extends ControllerTest {
             final Long feedbackId = 1L;
             final Long levellogId = 1L;
 
-            final String message = "권한이 없습니다.";
+            final String message = "같은 팀에 속해있지 않습니다.";
             given(feedbackService.findById(levellogId, feedbackId, memberId))
-                    .willThrow(new UnauthorizedException(message));
+                    .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);

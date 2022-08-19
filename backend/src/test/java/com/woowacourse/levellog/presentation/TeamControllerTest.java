@@ -9,13 +9,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
@@ -780,9 +780,9 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 2L;
             final Long memberId = 5L;
 
-            final String message = "권한이 없습니다.";
+            final String message = "같은 팀에 속해있지 않습니다.";
             given(teamService.findMyRole(teamId, memberId, 1L))
-                    .willThrow(new UnauthorizedException(message));
+                    .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestFindMyRole(teamId, memberId);

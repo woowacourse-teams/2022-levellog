@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.InterviewRole;
@@ -23,9 +22,10 @@ import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -352,7 +352,7 @@ class TeamServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, requestMemberId))
-                    .isInstanceOf(UnauthorizedException.class);
+                    .isInstanceOf(ParticipantNotSameTeamException.class);
         }
 
         @Test

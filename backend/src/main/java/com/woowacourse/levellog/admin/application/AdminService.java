@@ -6,7 +6,10 @@ import com.woowacourse.levellog.admin.dto.PasswordDto;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.common.support.DebugMessage;
+import com.woowacourse.levellog.team.domain.ParticipantRepository;
+import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
+import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,13 +26,15 @@ public class AdminService {
     private final JwtTokenProvider jwtTokenProvider;
     private final TimeStandard timeStandard;
     private final TeamRepository teamRepository;
+    private final ParticipantRepository participantRepository;
 
     public AdminService(@Value("${security.admin.hash}") final String hash, final JwtTokenProvider jwtTokenProvider,
-                        final TimeStandard timeStandard, final TeamRepository teamRepository) {
+                        final TimeStandard timeStandard, final TeamRepository teamRepository, final ParticipantRepository participantRepository) {
         this.hash = hash;
         this.jwtTokenProvider = jwtTokenProvider;
         this.timeStandard = timeStandard;
         this.teamRepository = teamRepository;
+        this.participantRepository = participantRepository;
     }
 
     public AdminAccessTokenDto login(final PasswordDto request) {
@@ -50,5 +55,17 @@ public class AdminService {
                 .stream()
                 .map(it -> AdminTeamDto.toDto(it, it.status(timeStandard.now())))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteTeamById(final Long teamId) {
+        final Team team = getTeam(teamId);
+        participantRepository.deleteByTeam(team);
+        team.delete(timeStandard.now());
+    }
+
+    private Team getTeam(final Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(
+                        () -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
     }
 }

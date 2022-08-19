@@ -12,12 +12,11 @@ import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("InterviewQuestionController 의")
@@ -98,15 +97,15 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "levellog-not-found"));
         }
 
-        @ParameterizedTest
-        @CsvSource(value = {"이미 인터뷰가 종료된 팀입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
-        @DisplayName("인터뷰 생성 정책에 위반되면 예외를 던진다.")
-        void save_interviewTime_exception(final String message, final String snippet) throws Exception {
+        @Test
+        @DisplayName("진행 중 상태가 아닐 때 예외가 발생한다.")
+        void save_notInProgress_exception() throws Exception {
             // given
             final long levellogId = 1L;
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
-            willThrow(new InterviewTimeException(message))
+            final String message = "팀이 InProgress 상태가 아닙니다.";
+            willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .save(request, levellogId, 1L);
 
@@ -120,7 +119,32 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document(BASE_SNIPPET_PATH + snippet));
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-ready"));
+        }
+
+        @Test
+        @DisplayName("이미 종료된 상태일 때 예외가 발생한다.")
+        void save_alreadyClosed_exception() throws Exception {
+            // given
+            final long levellogId = 1L;
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
+
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
+            willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
+                    .given(interviewQuestionService)
+                    .save(request, levellogId, 1L);
+
+            // when
+            final ResultActions perform = requestCreateInterviewQuestion(levellogId, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-closed"));
         }
 
         @Test
@@ -320,13 +344,13 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
-        @ParameterizedTest
-        @CsvSource(value = {"이미 인터뷰가 종료된 팀입니다.,is-closed", "인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.,is-ready"})
-        @DisplayName("인터뷰 수정 정책에 위반되면 예외를 던진다.")
-        void update_interviewTime_exception(final String message, final String snippet) throws Exception {
+        @Test
+        @DisplayName("진행 중 상태가 아닐 때 예외가 발생한다.")
+        void update_notInProgress_exception() throws Exception {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
-            willThrow(new InterviewTimeException(message))
+            final String message = "팀이 InProgress 상태가 아닙니다.";
+            willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
@@ -340,7 +364,30 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document(BASE_SNIPPET_PATH + snippet));
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-ready"));
+        }
+
+        @Test
+        @DisplayName("이미 종료된 상태일 때 예외가 발생한다.")
+        void update_alreadyClosed_exception() throws Exception {
+            // given
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
+            willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
+                    .given(interviewQuestionService)
+                    .update(request, 1L, 1L);
+
+            // when
+            final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-closed"));
         }
 
         private ResultActions requestUpdateInterviewQuestion(final Long levellogId, final Long interviewQuestionId,
@@ -402,12 +449,12 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
-        @ParameterizedTest
-        @CsvSource(value = {"이미 인터뷰가 종료된 팀입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
-        @DisplayName("인터뷰 삭제 정책에 위반되면 예외를 던진다.")
-        void deleteById_interviewTime_exception(final String message, final String snippet) throws Exception {
+        @Test
+        @DisplayName("이미 종료된 상태일 때 예외가 발생한다.")
+        void deleteById_alreadyClosed_exception() throws Exception {
             // given
-            willThrow(new InterviewTimeException(message))
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
+            willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .deleteById(1L, 1L);
 
@@ -421,7 +468,29 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document(BASE_SNIPPET_PATH + "" + snippet));
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-closed"));
+        }
+
+        @Test
+        @DisplayName("진행 중 상태가 아닐 때 예외가 발생한다.")
+        void deleteById_notInProgress_exception() throws Exception {
+            // given
+            final String message = "팀이 InProgress 상태가 아닙니다.";
+            willThrow(new TeamNotInProgressException(DebugMessage.init()))
+                    .given(interviewQuestionService)
+                    .deleteById(1L, 1L);
+
+            // when
+            final ResultActions perform = requestDeleteInterviewQuestion(1L, 1L);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-ready"));
         }
 
         private ResultActions requestDeleteInterviewQuestion(final Long levellogId,

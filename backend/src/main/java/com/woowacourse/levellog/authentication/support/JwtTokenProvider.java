@@ -66,4 +66,24 @@ public class JwtTokenProvider {
             return false;
         }
     }
+
+    public boolean validateAdminToken(final String token) {
+        try {
+            final Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+
+            final String subject = claims.getBody().getSubject();
+            if (!subject.equals("This is admin token.")) {
+                throw new InvalidTokenException("관리자 토큰이 아닙니다.");
+            }
+
+            return !claims.getBody()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (final JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
 }

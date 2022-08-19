@@ -880,8 +880,8 @@ class TeamControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 시간 전에 종료하려고 하면 예외가 발생한다.")
-        void close_beforeStart_exception() throws Exception {
+        @DisplayName("팀이 진행 중이 아닐 때 종료하려고 하면 예외가 발생한다.")
+        void close_notInProgress_exception() throws Exception {
             // given
             final Long teamId = 1L;
 
@@ -961,8 +961,8 @@ class TeamControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 시간 후에 삭제하려고 하면 예외가 발생한다.")
-        void deleteById_afterStart_exception() throws Exception {
+        @DisplayName("Ready 상태가 아닐 때 삭제하려고 하면 예외가 발생한다.")
+        void deleteById_notReady_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final String message = "팀이 Ready 상태가 아닙니다.";

@@ -645,8 +645,8 @@ class TeamServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 이후에 팀을 수정하려고 하면 예외를 던진다.")
-        void update_afterStartAt_exception() {
+        @DisplayName("Ready 상태가 아닐 때 팀을 수정하려고 하면 예외를 던진다.")
+        void update_notReady_exception() {
             //given
             final Member member = saveMember("릭");
             final Team team = saveTeam(member);

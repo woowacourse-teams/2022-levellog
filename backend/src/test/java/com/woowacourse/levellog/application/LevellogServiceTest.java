@@ -114,8 +114,8 @@ class LevellogServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 후에 요청한 경우 예외를 반환한다.")
-        void save_afterStart_exception() {
+        @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 반환한다.")
+        void save_notReady_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
             final Member author = saveMember("알린");
@@ -252,8 +252,8 @@ class LevellogServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 후에 요청한 경우 예외를 반환한다.")
-        void update_afterStart_exception() {
+        @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 반환한다.")
+        void update_notReady_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
             final Member author = saveMember("알린");

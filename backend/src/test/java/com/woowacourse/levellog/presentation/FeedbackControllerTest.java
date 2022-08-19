@@ -140,7 +140,7 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 인터뷰 시작 전에 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_beforeStartAt_exception() throws Exception {
+        void save_notInProgress_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -262,8 +262,8 @@ class FeedbackControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 전에 피드백을 수정하면 예외가 발생한다.")
-        void update_beforeStartAt_exception() throws Exception {
+        @DisplayName("팀 진행 상태가 아닐 때 피드백을 수정하면 예외가 발생한다.")
+        void update_notInProgress_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;

@@ -224,8 +224,8 @@ class FeedbackServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 시간 이전에 피드백을 수정하려는 경우 예외가 발생한다.")
-        void update_beforeStartAt_exception() {
+        @DisplayName("진행 상태가 아닐 때 피드백을 수정하려는 경우 예외가 발생한다.")
+        void update_notInProgress_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
@@ -349,8 +349,8 @@ class FeedbackServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 전 피드백을 작성하면 예외를 던진다.")
-        void save_beforeStartAt_exception() {
+        @DisplayName("팀 진행 상태가 아닐 때 피드백을 작성하면 예외를 던진다.")
+        void save_notInProgress_exception() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");

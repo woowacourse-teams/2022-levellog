@@ -74,8 +74,8 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 저장하는 경우 예외를 던진다.")
-        void save_afterStart_exception() throws Exception {
+        @DisplayName("Ready 상태가 아닐 때 레벨로그를 저장하는 경우 예외를 던진다.")
+        void save_notReady_exception() throws Exception {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("content");
             final Long authorId = 1L;
@@ -198,8 +198,8 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 수정하는 경우 예외를 던진다.")
-        void update_afterStart_exception() throws Exception {
+        @DisplayName("Ready 상태가 아닐 때 레벨로그를 수정하는 경우 예외를 던진다.")
+        void update_notReady_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;

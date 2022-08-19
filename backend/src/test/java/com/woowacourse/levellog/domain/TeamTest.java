@@ -270,7 +270,7 @@ class TeamTest {
 
         @Test
         @DisplayName("인터뷰 시작 시간 전 종료를 요청할 경우 예외가 발생한다.")
-        void close_beforeStart_exception() {
+        void close_notInProgress_exception() {
             // given
             final Team team = saveTeam();
 
@@ -299,8 +299,8 @@ class TeamTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 이후 삭제를 요청할 경우 예외가 발생한다.")
-        void delete_afterStart_exception() {
+        @DisplayName("Ready 상태가 아닐 때 삭제를 요청할 경우 예외가 발생한다.")
+        void delete_notReady_exception() {
             // given
             final Team team = saveTeam();
 
@@ -317,8 +317,8 @@ class TeamTest {
     class ValidateInProgress {
 
         @Test
-        @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이전이면 예외가 발생한다.")
-        void validate_afterStartAt_exception() {
+        @DisplayName("InProgress 상태가 아닐 때 예외가 발생한다.")
+        void validate_notInProgress_exception() {
             // given
             final Team team = saveTeam();
 
@@ -349,7 +349,7 @@ class TeamTest {
 
         @Test
         @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이후면 예외가 발생한다.")
-        void validateReady_beforeStartAt_exception() {
+        void validateReady_notReady_exception() {
             // given
             final Team team = saveTeam();
 

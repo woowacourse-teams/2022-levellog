@@ -14,6 +14,6 @@ public class AdminAuthenticationConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(adminAuthInterceptor)
-                .addPathPatterns("/admin/teams");   
+                .addPathPatterns("/admin/teams/**");
     }
 }

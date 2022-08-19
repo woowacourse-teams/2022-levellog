@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
 import com.woowacourse.levellog.admin.dto.PasswordDto;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
+import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
@@ -54,14 +55,60 @@ public class AdminServiceTest extends ServiceTest {
     class DeleteTeamById {
 
         @Test
-        @DisplayName("팀 id가 주어지면 해당하는 팀을 삭제한다.")
-        void success() {
+        @DisplayName("팀 id가 주어지면 해당하는 팀을 삭제한다. - status: ready")
+        void success_ready() {
             // given
             final Member rick = saveMember("릭");
             final Member alien = saveMember("알린");
 
             final Team team = saveTeam(rick, alien);
             final Long teamId = team.getId();
+
+            // when
+            adminService.deleteTeamById(teamId);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            final Optional<Team> actual = teamRepository.findById(teamId);
+            assertThat(actual).isEmpty();
+        }
+
+        @Test
+        @DisplayName("팀 id가 주어지면 해당하는 팀을 삭제한다. - status: inProgress")
+        void success_inProgress() {
+            // given
+            final Member rick = saveMember("릭");
+            final Member alien = saveMember("알린");
+
+            final Team team = saveTeam(rick, alien);
+            final Long teamId = team.getId();
+
+            timeStandard.setInProgress();
+
+            // when
+            adminService.deleteTeamById(teamId);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            // then
+            final Optional<Team> actual = teamRepository.findById(teamId);
+            assertThat(actual).isEmpty();
+        }
+
+        @Test
+        @DisplayName("팀 id가 주어지면 해당하는 팀을 삭제한다. - status: closed")
+        void success_closed() {
+            // given
+            final Member rick = saveMember("릭");
+            final Member alien = saveMember("알린");
+
+            final Team team = saveTeam(rick, alien);
+            final Long teamId = team.getId();
+
+            team.close(TimeFixture.AFTER_START_TIME);
 
             // when
             adminService.deleteTeamById(teamId);

@@ -1,7 +1,5 @@
 export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}`;
 
-// 통일성 없는 ROUTES_PATH 리팩터링 -> 종속관계 순으로
-// interview/teams -> teams
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',
   LOGIN: '/login',
@@ -12,8 +10,7 @@ export const ROUTES_PATH = Object.freeze({
   FEEDBACK_ADD: `/teams/:teamId/levellogs/:levellogId/feedbacks/add`,
   FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedbacks/:feedbackId/author/:authorId/edit`,
 
-  LEVELLOG_ADD: '/teams/:teamId/levellog/add',
-  LEVELLOG_ADD_ROUTE: '/teams/:teamId/levellog/add',
+  LEVELLOG_ADD: '/teams/:teamId/levellogs/add',
   LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId/author/:authorId/edit',
 
   INTERVIEW_TEAMS: '/teams',

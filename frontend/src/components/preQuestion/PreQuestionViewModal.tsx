@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
-import useRouteUri from 'hooks/useRouteUri';
+import useUriBuilder from 'hooks/useUriBuilder';
 
 import closeIcon from 'assets/images/close.svg';
 import { PATH_TYPE } from 'constants/constants';
@@ -17,6 +17,7 @@ import { PreQuestionCustomHookType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
 
 const PreQuestionViewModal = ({
+  teamId,
   preQuestion,
   participant,
   getTeam,
@@ -24,7 +25,7 @@ const PreQuestionViewModal = ({
   handleClickClosePreQuestionModal,
 }: PreQuestionViewModalProps) => {
   const { levellogId, preQuestionId, nickname } = participant;
-  const { preQuestionUri } = useRouteUri();
+  const { preQuestionEditUriBuilder } = useUriBuilder();
 
   const handleClickDeleteLevellog = async () => {
     if (levellogId && preQuestionId) {
@@ -50,9 +51,9 @@ const PreQuestionViewModal = ({
           <UiViewer content={preQuestion} />
         </S.PreQuestion>
         <S.Footer>
-          <Link to={preQuestionUri({ pathType: PATH_TYPE.EDIT })}>
+          {/* <Link to={preQuestionEditUriBuilder({ teamId, levellogId, preQuestionId, authorId:preQuestion. })}>
             <Button>수정하기</Button>
-          </Link>
+          </Link> */}
           <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>
         </S.Footer>
       </S.Container>
@@ -61,6 +62,7 @@ const PreQuestionViewModal = ({
 };
 
 interface PreQuestionViewModalProps {
+  teamId: string;
   preQuestion: string;
   participant: ParticipantType;
   getTeam: () => void;

@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
-import useRouteUri from 'hooks/useRouteUri';
 import useTeam from 'hooks/useTeam';
+import useUriBuilder from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import closeIcon from 'assets/images/close.svg';
-import { PATH_TYPE, TEAM_STATUS } from 'constants/constants';
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -22,12 +22,15 @@ const LevellogViewModal = ({
   levellogInfo,
   participant,
   userInTeam,
+  teamId,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
+  const { levellogId, preQuestionId } = participant;
   const { author, content } = levellogInfo;
   const { loginUserId } = useUser();
   const { team } = useTeam();
-  const { levellogUri, preQuestionUri } = useRouteUri();
+  const { levellogEditUriBuilder, preQuestionAddUriBuilder, preQuestionEditUriBuilder } =
+    useUriBuilder();
 
   if (author.id === loginUserId) {
     return (
@@ -48,7 +51,7 @@ const LevellogViewModal = ({
           </S.Levellog>
           <S.Footer>
             {team.status === TEAM_STATUS.READY && (
-              <Link to={levellogUri({ pathType: PATH_TYPE.EDIT })}>
+              <Link to={levellogEditUriBuilder({ teamId, levellogId, authorId: author.id })}>
                 <Button>수정하기</Button>
               </Link>
             )}
@@ -78,11 +81,18 @@ const LevellogViewModal = ({
           {loginUserId &&
             userInTeam &&
             (participant.preQuestionId ? (
-              <Link to={preQuestionUri({ pathType: PATH_TYPE.EDIT })}>
+              <Link
+                to={preQuestionEditUriBuilder({
+                  teamId,
+                  levellogId,
+                  preQuestionId,
+                  authorId: author.id,
+                })}
+              >
                 <Button>사전질문 수정</Button>
               </Link>
             ) : (
-              <Link to={preQuestionUri({ pathType: PATH_TYPE.ADD })}>
+              <Link to={preQuestionAddUriBuilder({ teamId, levellogId })}>
                 <Button>사전질문 작성</Button>
               </Link>
             ))}
@@ -93,6 +103,7 @@ const LevellogViewModal = ({
 };
 
 interface LevellogViewModalProps {
+  teamId: string;
   levellogInfo: LevellogInfoType;
   participant: ParticipantType;
   userInTeam: Boolean;

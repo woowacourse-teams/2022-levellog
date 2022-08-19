@@ -5,7 +5,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import { MESSAGE, PATH_TYPE } from 'constants/constants';
 
-import useRouteUri from './useRouteUri';
+import useUriBuilder from './useUriBuilder';
 import { Editor } from '@toast-ui/react-editor';
 import {
   requestPostFeedback,
@@ -17,11 +17,10 @@ import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
 const useFeedback = () => {
-  const [feedback, setFeedback] = useState();
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const feedbackRef = useRef<Editor[]>([]);
   const navigate = useNavigate();
-  const { feedbackUri } = useRouteUri();
+  const { feedbacksGetUriBuilder } = useUriBuilder();
 
   const accessToken = localStorage.getItem('accessToken');
 
@@ -64,7 +63,6 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId'>) => {
     try {
       const res = await requestGetFeedback({ accessToken, levellogId, feedbackId });
-      setFeedback(res.data.feedback);
 
       return res.data.feedback;
     } catch (err: unknown) {
@@ -108,7 +106,7 @@ const useFeedback = () => {
     };
 
     await postFeedback({ levellogId, feedbackResult });
-    navigate(feedbackUri({ pathType: PATH_TYPE.GETS }));
+    navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
   };
 
   const onClickFeedbackEditButton = async ({
@@ -126,7 +124,7 @@ const useFeedback = () => {
     };
 
     await editFeedback({ levellogId, feedbackId, feedbackResult });
-    navigate(feedbackUri({ pathType: PATH_TYPE.GETS }));
+    navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
   };
 
   const getFeedbackOnRef = async ({

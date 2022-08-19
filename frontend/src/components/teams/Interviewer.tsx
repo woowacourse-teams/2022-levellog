@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useRouteUri from 'hooks/useRouteUri';
+import useUriBuilder from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import feedbackIcon from 'assets/images/feedbackIcon.svg';
@@ -30,7 +30,14 @@ const Interviewer = ({
   const navigate = useNavigate();
   const { teamId } = useParams();
   const { loginUserId } = useUser();
-  const { preQuestionUri, feedbackUri, interviewQuestionUri, levellogUri } = useRouteUri();
+  const {
+    preQuestionAddUriBuilder,
+    feedbacksGetUriBuilder,
+    interviewQuestionsGetUriBuilder,
+    levellogAddUriBuilder,
+  } = useUriBuilder();
+
+  if (!teamId) return <div></div>;
 
   const handleClickOpenLevellogModal = () => {
     if (typeof teamId === 'string') {
@@ -43,18 +50,16 @@ const Interviewer = ({
   };
 
   const handleClickAddPreQuestionButton = () => {
-    navigate(preQuestionUri({ pathType: PATH_TYPE.ADD }));
+    navigate(preQuestionAddUriBuilder({ teamId, levellogId: participant.levellogId }));
   };
 
   const handleClickViewFeedbackButton = () => {
-    navigate(feedbackUri({ pathType: PATH_TYPE.GETS }));
+    navigate(feedbacksGetUriBuilder({ teamId, levellogId: participant.levellogId }));
   };
 
   const handleClickViewInterviewQuestionButton = () => {
-    navigate(interviewQuestionUri({ pathType: PATH_TYPE.GETS }));
+    navigate(interviewQuestionsGetUriBuilder({ teamId, levellogId: participant.levellogId }));
   };
-
-  if (!teamId) return <div></div>;
 
   if (participant.memberId === loginUserId) {
     return (
@@ -92,7 +97,7 @@ const Interviewer = ({
             ) : (
               <>
                 {teamStatus === TEAM_STATUS.READY ? (
-                  <Link to={levellogUri({ pathType: PATH_TYPE.ADD })}>
+                  <Link to={levellogAddUriBuilder({ teamId })}>
                     <S.Button>
                       <Image src={levellogIcon} sizes={'SMALL'} borderRadius={false} />
                       <S.ButtonText>레벨로그 작성</S.ButtonText>

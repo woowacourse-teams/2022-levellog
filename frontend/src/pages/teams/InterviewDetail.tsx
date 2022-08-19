@@ -1,15 +1,16 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import styled, { CSSProperties } from 'styled-components';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import usePreQuestionModal from 'hooks/usePreQuestionModal';
-import useRouteUri from 'hooks/useRouteUri';
 import useTeam from 'hooks/useTeam';
+import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import Error from 'pages/status/Error';
+import Loading from 'pages/status/Loading';
 
 import { PATH_TYPE, TEAM_STATUS } from 'constants/constants';
 
@@ -22,7 +23,8 @@ import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
   const { loginUserId } = useUser();
-  const { teamUri } = useRouteUri();
+  const { teamId } = useParams();
+  const { teamEditUriBuilder } = useUriBuilders();
   const {
     teamLocationState,
     team,
@@ -61,6 +63,7 @@ const InterviewDetail = () => {
   }, []);
 
   if (team && Object.keys(team).length === 0) return <Error />;
+  if (!teamId) return <Loading />;
 
   return (
     <>
@@ -74,7 +77,7 @@ const InterviewDetail = () => {
             <S.ButtonBox>
               {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
                 <>
-                  <Link to={teamUri({ pathType: PATH_TYPE.EDIT })}>
+                  <Link to={teamEditUriBuilder({ teamId })}>
                     <S.Button>팀 수정하기</S.Button>
                   </Link>
                   <S.Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</S.Button>
@@ -90,6 +93,7 @@ const InterviewDetail = () => {
       <S.Container>
         {isLevellogModalOpen && (
           <LevellogViewModal
+            teamId={teamId}
             levellogInfo={levellogInfo}
             participant={levellogParticipant}
             userInTeam={(team as InterviewTeamType).isParticipant}
@@ -98,6 +102,7 @@ const InterviewDetail = () => {
         )}
         {isPreQuestionModalOpen && (
           <PreQuestionViewModal
+            teamId={teamId}
             preQuestion={preQuestion}
             participant={preQuestionParticipant}
             getTeam={getTeam}

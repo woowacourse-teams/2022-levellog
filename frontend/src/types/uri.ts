@@ -1,3 +1,7 @@
-export interface UriPathType {
-  pathType: string;
+export interface UriCustomHookType {
+  teamId: string;
+  levellogId: string;
+  feedbackId: string;
+  preQuestionId: string;
+  authorId: string;
 }

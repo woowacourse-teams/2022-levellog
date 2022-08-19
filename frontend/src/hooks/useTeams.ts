@@ -5,14 +5,14 @@ import axios, { AxiosResponse } from 'axios';
 
 import { PATH_TYPE } from 'constants/constants';
 
-import useRouteUri from './useRouteUri';
+import useUriBuilders from './useUriBuilder';
 import { requestGetTeams } from 'apis/teams';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { InterviewTeamType } from 'types/team';
 
 const useTeams = () => {
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);
-  const { teamUri } = useRouteUri();
+  const { teamGetUriBuilder } = useUriBuilders();
   const navigate = useNavigate();
 
   const accessToken = localStorage.getItem('accessToken');
@@ -35,7 +35,7 @@ const useTeams = () => {
     const target = e.target as HTMLElement;
     const team = teams.find((team) => +team.id === +target.id);
 
-    navigate(teamUri({ pathType: PATH_TYPE.GET }), {
+    navigate(teamGetUriBuilder({ teamId: team!.id }), {
       state: team,
     });
   };

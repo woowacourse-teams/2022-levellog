@@ -4,8 +4,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useFeedback from 'hooks/useFeedback';
-import useRouteUri from 'hooks/useRouteUri';
 import useTeam from 'hooks/useTeam';
+import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import EmptyFeedback from 'pages/status/EmptyFeedback';
@@ -21,7 +21,7 @@ import { FeedbackType } from 'types/feedback';
 
 const Feedbacks = () => {
   const { feedbacks, getFeedbacksInTeam } = useFeedback();
-  const { feedbackUri } = useRouteUri();
+  const { feedbackAddUriBuilder } = useUriBuilders();
   const { team } = useTeam();
   const { loginUserId } = useUser();
   const { teamId, levellogId } = useParams();
@@ -43,7 +43,7 @@ const Feedbacks = () => {
     return (
       <EmptyFeedback
         isShow={team.status !== TEAM_STATUS.CLOSED}
-        path={feedbackUri({ pathType: PATH_TYPE.ADD })}
+        path={feedbackAddUriBuilder({ teamId, levellogId })}
       />
     );
   }
@@ -54,7 +54,7 @@ const Feedbacks = () => {
         <>
           {/* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */}
           {team.status !== TEAM_STATUS.CLOSED && (
-            <Link to={feedbackUri({ pathType: PATH_TYPE.ADD })}>
+            <Link to={feedbackAddUriBuilder({ teamId, levellogId })}>
               <Button>추가하기</Button>
             </Link>
           )}
@@ -67,6 +67,8 @@ const Feedbacks = () => {
             loginUserId={loginUserId}
             feedbackInfo={feedbackInfo}
             teamStatus={team.status}
+            teamId={teamId}
+            levellogId={levellogId}
           />
         ))}
       </S.Container>

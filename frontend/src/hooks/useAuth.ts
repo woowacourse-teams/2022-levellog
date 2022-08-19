@@ -81,7 +81,7 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     }
 
     if (requireAuth === REQUIRE_AUTH.AUTHOR) {
-      if (loginUserId !== authorId) {
+      if (String(loginUserId) !== authorId) {
         setIsLoad(false);
         setIsError(true);
         alert(MESSAGE.NEED_AUTHOR);

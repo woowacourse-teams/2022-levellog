@@ -63,7 +63,7 @@ export const routes = [
         ),
       },
       {
-        path: ROUTES_PATH.LEVELLOG_ADD_ROUTE,
+        path: ROUTES_PATH.LEVELLOG_ADD,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
             <TeamStatus allowedStatuses={[TEAM_STATUS.READY]}>

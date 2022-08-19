@@ -2,7 +2,7 @@ package com.woowacourse.levellog.prequestion.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
@@ -76,8 +76,10 @@ public class PreQuestion extends BaseEntity {
 
     public void validateMyQuestion(final Member member) {
         if (!isSameAuthor(member)) {
-            throw new UnauthorizedException(
-                    "자신의 사전 질문이 아닙니다. 사전 질문 id = " + this.getId() + ", 멤버 id = " + member.getId());
+            throw new MemberNotAuthorException(DebugMessage.init()
+                    .append("loginMemberId", member.getId())
+                    .append("authorMemberId", author.getId())
+                    .append("preQuestionId", getId()));
         }
     }
 }

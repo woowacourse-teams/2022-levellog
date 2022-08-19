@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
@@ -106,8 +106,8 @@ class InterviewQuestionTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestion.updateContent("스프링 빈이란?", otherMember))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("인터뷰 질문을 수정할 수 있는 권한이 없습니다.", String.valueOf(otherMember.getId()),
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContainingAll("작성자가 아닙니다.", String.valueOf(otherMember.getId()),
                             String.valueOf(author.getId()), String.valueOf(levellog.getId()));
         }
     }

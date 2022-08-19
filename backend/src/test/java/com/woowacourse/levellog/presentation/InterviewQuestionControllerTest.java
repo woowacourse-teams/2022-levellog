@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
@@ -352,8 +352,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void update_unauthorized_exception() throws Exception {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
-            final String message = "권한이 없습니다.";
-            willThrow(new UnauthorizedException(message))
+            final String message = "작성자가 아닙니다.";
+            willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
@@ -457,8 +457,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void deleteById_unauthorized_exception() throws Exception {
             // given
-            final String message = "권한이 없습니다.";
-            willThrow(new UnauthorizedException(message))
+            final String message = "작성자가 아닙니다.";
+            willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .deleteById(1L, 1L);
 

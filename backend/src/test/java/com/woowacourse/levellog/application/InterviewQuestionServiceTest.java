@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
@@ -17,6 +16,7 @@ import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQues
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
@@ -382,9 +382,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, otherMemberId))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("인터뷰 질문을 수정할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
-                            String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContaining("작성자가 아닙니다.");
         }
 
         @Test
@@ -476,9 +475,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, otherMemberId))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("인터뷰 질문을 삭제할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
-                            String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContaining("작성자가 아닙니다.");
         }
 
         @Test

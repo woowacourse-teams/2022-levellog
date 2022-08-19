@@ -5,7 +5,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -204,8 +204,8 @@ class PreQuestionControllerTest extends ControllerTest {
             // given
             final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
 
-            final String message = "권한이 없습니다.";
-            willThrow(new UnauthorizedException(message))
+            final String message = "작성자가 아닙니다.";
+            willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(preQuestionService)
                     .update(preQuestionDto, 1L, 1L, 1L);
 
@@ -337,8 +337,8 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("타인의 사전 질문을 삭제하는 경우 예외를 던진다.")
         void deleteById_fromNotMyPreQuestion_exception() throws Exception {
             // given
-            final String message = "권한이 없습니다.";
-            willThrow(new UnauthorizedException(message))
+            final String message = "작성자가 아닙니다.";
+            willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(preQuestionService)
                     .deleteById(1L, 1L, 1L);
 

@@ -2,7 +2,8 @@ package com.woowacourse.levellog.interviewquestion.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Column;
@@ -54,12 +55,13 @@ public class InterviewQuestion extends BaseEntity {
         }
     }
 
-    public void validateMemberIsAuthor(final Member member, final String errorMessage) {
+    public void validateMemberIsAuthor(final Member member) {
         final boolean isNotAuthor = !author.equals(member);
         if (isNotAuthor) {
-            throw new UnauthorizedException(
-                    errorMessage + " 로그인 memberId : " + member.getId() + " 인터뷰 질문 작성자 memberId  : " + author.getId()
-                            + " 인터뷰 질문 id : " + getId() + " levellogId : " + levellog.getId());
+            throw new MemberNotAuthorException(DebugMessage.init()
+                    .append("loginMemberId", member.getId())
+                    .append("authorMemberId", author.getId())
+                    .append("interviewQuestionId", getId()));
         }
     }
 
@@ -69,7 +71,7 @@ public class InterviewQuestion extends BaseEntity {
 
     public void updateContent(final String content, final Member member) {
         validateContent(content);
-        validateMemberIsAuthor(member, "인터뷰 질문을 수정할 수 있는 권한이 없습니다.");
+        validateMemberIsAuthor(member);
 
         this.content = content;
     }

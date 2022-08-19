@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -231,8 +231,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             assertThatThrownBy(
                     () -> preQuestionService.update(preQuestionDto, preQuestionId, levellog.getId(),
                             questioner.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContaining("자신의 사전 질문이 아닙니다.");
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContaining("작성자가 아닙니다.");
         }
 
         @Test
@@ -298,8 +298,8 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> preQuestionService.deleteById(preQuestionId, levellog.getId(), questioner.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContaining("자신의 사전 질문이 아닙니다.");
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContaining("작성자가 아닙니다.");
         }
 
         @Test

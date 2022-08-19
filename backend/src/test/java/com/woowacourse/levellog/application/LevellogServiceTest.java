@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
@@ -230,7 +230,7 @@ class LevellogServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, otherMemberId))
-                    .isInstanceOf(UnauthorizedException.class);
+                    .isInstanceOf(MemberNotAuthorException.class);
         }
 
         @ParameterizedTest

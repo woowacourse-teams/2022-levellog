@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
@@ -83,8 +83,8 @@ class LevellogTest {
 
             //  when & then
             assertThatThrownBy(() -> levellog.updateContent(member, "update content"))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("레벨로그를 수정할 권한이 없습니다.", String.valueOf(member.getId()),
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContainingAll("작성자가 아닙니다.", String.valueOf(member.getId()),
                             String.valueOf(levellog.getId()));
 
         }

@@ -83,7 +83,7 @@ public class InterviewQuestionService {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member author = getMember(fromMemberId);
 
-        interviewQuestion.validateMemberIsAuthor(author, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
+        interviewQuestion.validateMemberIsAuthor(author);
         interviewQuestion.getLevellog()
                 .getTeam()
                 .validateInProgress(timeStandard.now());

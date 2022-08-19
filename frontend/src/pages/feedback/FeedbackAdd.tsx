@@ -51,7 +51,7 @@ const FeedbackAdd = () => {
             </FlexBox>
             <WriterDocument
               levellogInfo={levellogInfo}
-              preQuestion={preQuestion}
+              preQuestionContent={preQuestion.content}
               whichContentShow={whichContentShow}
               handleClickLevellogTag={handleClickLevellogTag}
               handleClickPreQuestionTag={handleClickPreQuestionTag}

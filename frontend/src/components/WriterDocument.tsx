@@ -6,7 +6,7 @@ import { LevellogInfoType } from 'types/levellog';
 
 const WriterDocument = ({
   levellogInfo,
-  preQuestion,
+  preQuestionContent,
   whichContentShow,
   handleClickLevellogTag,
   handleClickPreQuestionTag,
@@ -26,7 +26,7 @@ const WriterDocument = ({
       </S.ButtonBox>
       <S.Content>
         {whichContentShow.levellog && <UiViewer content={levellogInfo.content} />}
-        {whichContentShow.preQuestion && <UiViewer content={preQuestion} />}
+        {whichContentShow.preQuestion && <UiViewer content={preQuestionContent} />}
       </S.Content>
     </S.Container>
   );
@@ -34,7 +34,7 @@ const WriterDocument = ({
 
 interface LevellogReportProps {
   levellogInfo: LevellogInfoType;
-  preQuestion: string;
+  preQuestionContent: string;
   whichContentShow: {
     levellog: boolean;
     preQuestion: boolean;

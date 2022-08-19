@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { MESSAGE, PATH_TYPE } from 'constants/constants';
+import { MESSAGE } from 'constants/constants';
 
 import useUriBuilder from './useUriBuilder';
 import { Editor } from '@toast-ui/react-editor';

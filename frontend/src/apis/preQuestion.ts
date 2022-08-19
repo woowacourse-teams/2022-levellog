@@ -16,13 +16,16 @@ export const requestGetPreQuestion = ({
 export const requestPostPreQuestion = ({
   accessToken,
   levellogId,
-  preQuestion,
-}: Omit<PreQuestionApiType, 'preQuestionId'>): AxiosPromise<void> => {
+  preQuestionContent,
+}: Pick<
+  PreQuestionApiType,
+  'accessToken' | 'levellogId' | 'preQuestionContent'
+>): AxiosPromise<void> => {
   return axios({
     method: 'post',
     url: `${process.env.API_URI}/levellogs/${levellogId}/pre-questions`,
     headers: { Authorization: `Bearer ${accessToken}` },
-    data: { preQuestion },
+    data: { preQuestionContent },
   });
 };
 
@@ -30,7 +33,7 @@ export const requestDeletePreQuestion = ({
   accessToken,
   levellogId,
   preQuestionId,
-}: Omit<PreQuestionApiType, 'preQuestion'>) => {
+}: Pick<PreQuestionApiType, 'accessToken' | 'levellogId' | 'preQuestionId'>) => {
   return axios({
     method: 'delete',
     url: `${process.env.API_URI}/levellogs/${levellogId}/pre-questions/${preQuestionId}`,
@@ -42,12 +45,12 @@ export const requestEditPreQuestion = ({
   accessToken,
   levellogId,
   preQuestionId,
-  preQuestion,
-}: PreQuestionApiType) => {
+  preQuestionContent,
+}: Omit<PreQuestionApiType, 'preQuestion'>) => {
   return axios({
     method: 'put',
     url: `${process.env.API_URI}/levellogs/${levellogId}/pre-questions/${preQuestionId}`,
     headers: { Authorization: `Bearer ${accessToken}` },
-    data: { preQuestion },
+    data: { preQuestionContent },
   });
 };

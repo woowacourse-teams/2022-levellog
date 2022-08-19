@@ -35,7 +35,7 @@ const useTeams = () => {
     const target = e.target as HTMLElement;
     const team = teams.find((team) => +team.id === +target.id);
 
-    navigate(teamGetUriBuilder({ teamId: team!.id }), {
+    navigate(teamGetUriBuilder({ teamId: target.id }), {
       state: team,
     });
   };

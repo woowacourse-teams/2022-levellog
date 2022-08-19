@@ -12,7 +12,7 @@ import useUser from 'hooks/useUser';
 import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
 
-import { PATH_TYPE, TEAM_STATUS } from 'constants/constants';
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';

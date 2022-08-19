@@ -3,12 +3,13 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useInterviewQuestion from 'hooks/useInterviewQuestion';
+import useRouteUri from 'hooks/useRouteUri';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
 import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';
 
-import { TEAM_STATUS } from 'constants/constants';
+import { PATH_TYPE, TEAM_STATUS } from 'constants/constants';
 import { checkFirstWordFinalConsonant } from 'constants/util';
 
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -23,14 +24,14 @@ const InterviewQuestions = () => {
   const { loginUserNickname, loginUserProfileUrl } = useUser();
   const { team } = useTeam();
   const { teamId, levellogId } = useParams();
-  {
-    /* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */
-  }
+  const { feedbackUri } = useRouteUri();
+
+  /* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */
   if (interviewQuestionInfosInLevellog.length === 0) {
     return (
       <EmptyInterviewQuestion
         isShow={team.status !== TEAM_STATUS.CLOSED}
-        path={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}
+        path={feedbackUri({ pathType: PATH_TYPE.ADD })}
       />
     );
   }

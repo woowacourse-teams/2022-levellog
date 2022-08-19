@@ -5,12 +5,13 @@ import styled, { CSSProperties } from 'styled-components';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import usePreQuestionModal from 'hooks/usePreQuestionModal';
+import useRouteUri from 'hooks/useRouteUri';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
 import Error from 'pages/status/Error';
 
-import { TEAM_STATUS } from 'constants/constants';
+import { PATH_TYPE, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -21,6 +22,7 @@ import { InterviewTeamType, ParticipantType } from 'types/team';
 
 const InterviewDetail = () => {
   const { loginUserId } = useUser();
+  const { teamUri } = useRouteUri();
   const {
     teamLocationState,
     team,
@@ -72,7 +74,7 @@ const InterviewDetail = () => {
             <S.ButtonBox>
               {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
                 <>
-                  <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
+                  <Link to={teamUri({ pathType: PATH_TYPE.EDIT })}>
                     <S.Button>팀 수정하기</S.Button>
                   </Link>
                   <S.Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</S.Button>

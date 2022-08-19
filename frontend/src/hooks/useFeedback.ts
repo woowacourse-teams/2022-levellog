@@ -3,8 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { MESSAGE } from 'constants/constants';
+import { MESSAGE, PATH_TYPE } from 'constants/constants';
 
+import useRouteUri from './useRouteUri';
 import { Editor } from '@toast-ui/react-editor';
 import {
   requestPostFeedback,
@@ -20,6 +21,7 @@ const useFeedback = () => {
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const feedbackRef = useRef<Editor[]>([]);
   const navigate = useNavigate();
+  const { feedbackUri } = useRouteUri();
 
   const accessToken = localStorage.getItem('accessToken');
 
@@ -106,7 +108,7 @@ const useFeedback = () => {
     };
 
     await postFeedback({ levellogId, feedbackResult });
-    navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
+    navigate(feedbackUri({ pathType: PATH_TYPE.GETS }));
   };
 
   const onClickFeedbackEditButton = async ({
@@ -124,7 +126,7 @@ const useFeedback = () => {
     };
 
     await editFeedback({ levellogId, feedbackId, feedbackResult });
-    navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
+    navigate(feedbackUri({ pathType: PATH_TYPE.GETS }));
   };
 
   const getFeedbackOnRef = async ({

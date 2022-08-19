@@ -4,13 +4,14 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useFeedback from 'hooks/useFeedback';
+import useRouteUri from 'hooks/useRouteUri';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
 import EmptyFeedback from 'pages/status/EmptyFeedback';
 import Loading from 'pages/status/Loading';
 
-import { MESSAGE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
+import { MESSAGE, PATH_TYPE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -20,6 +21,7 @@ import { FeedbackType } from 'types/feedback';
 
 const Feedbacks = () => {
   const { feedbacks, getFeedbacksInTeam } = useFeedback();
+  const { feedbackUri } = useRouteUri();
   const { team } = useTeam();
   const { loginUserId } = useUser();
   const { teamId, levellogId } = useParams();
@@ -41,7 +43,7 @@ const Feedbacks = () => {
     return (
       <EmptyFeedback
         isShow={team.status !== TEAM_STATUS.CLOSED}
-        path={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}
+        path={feedbackUri({ pathType: PATH_TYPE.ADD })}
       />
     );
   }
@@ -52,7 +54,7 @@ const Feedbacks = () => {
         <>
           {/* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */}
           {team.status !== TEAM_STATUS.CLOSED && (
-            <Link to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}>
+            <Link to={feedbackUri({ pathType: PATH_TYPE.ADD })}>
               <Button>추가하기</Button>
             </Link>
           )}
@@ -64,8 +66,6 @@ const Feedbacks = () => {
             key={feedbackInfo.id}
             loginUserId={loginUserId}
             feedbackInfo={feedbackInfo}
-            teamId={teamId}
-            levellogId={levellogId}
             teamStatus={team.status}
           />
         ))}

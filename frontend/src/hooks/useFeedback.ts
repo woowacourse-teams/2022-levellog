@@ -109,7 +109,6 @@ const useFeedback = () => {
     navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
   };
 
-  //레벨로그id, 피드백id, FeedbackFormatType의 값 필요함
   const onClickFeedbackEditButton = async ({
     teamId,
     levellogId,
@@ -135,7 +134,7 @@ const useFeedback = () => {
     const feedback = await getFeedback({ levellogId, feedbackId });
 
     if (!feedback) return;
-    if (feedbackRef.current[0] === null) return;
+    if (!feedbackRef.current[0]) return;
 
     feedbackRef.current[0].getInstance().setMarkdown(feedback.study);
     feedbackRef.current[1].getInstance().setMarkdown(feedback.speak);

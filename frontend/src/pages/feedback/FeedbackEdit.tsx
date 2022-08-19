@@ -60,7 +60,6 @@ const FeedbackEdit = () => {
       typeof levellogId === 'string'
     ) {
       const res = await getLevellog({ teamId, levellogId });
-      getFeedbackOnRef({ levellogId, feedbackId });
       getWriterInfo({ teamId, participantId: res!.author.id });
       getInterviewQuestion();
       getPreQuestion({ levellogId });
@@ -117,7 +116,12 @@ const FeedbackEdit = () => {
               />
             </S.QuestionContent>
             <S.FeedbackContent>
-              <FeedbackFormat feedbackRef={feedbackRef} />
+              <FeedbackFormat
+                levellogId={levellogId}
+                feedbackId={feedbackId}
+                feedbackRef={feedbackRef}
+                getFeedbackOnRef={getFeedbackOnRef}
+              />
             </S.FeedbackContent>
           </S.RightContent>
         </S.Content>

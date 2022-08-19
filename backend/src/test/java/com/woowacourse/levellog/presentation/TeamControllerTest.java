@@ -21,7 +21,6 @@ import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,7 +48,7 @@ class TeamControllerTest extends ControllerTest {
 
         willThrow(new InvalidFieldException(message, DebugMessage.init()))
                 .given(teamService)
-                .findAll(PageRequest.of(0, 20, sort), Optional.of(invalidStatus), 1L);
+                .findAll(PageRequest.of(0, 20, sort), invalidStatus, 1L);
 
         // when
         final ResultActions perform = requestGet("/api/teams?status=" + invalidStatus);

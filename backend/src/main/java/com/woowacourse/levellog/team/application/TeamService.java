@@ -1,7 +1,5 @@
 package com.woowacourse.levellog.team.application;
 
-import static org.springframework.data.domain.Sort.Direction.DESC;
-
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -31,12 +29,10 @@ import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TeamService {
+
+    private static final String ALL_STATUS = "all";
 
     private final TeamRepository teamRepository;
     private final ParticipantRepository participantRepository;
@@ -66,30 +64,11 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    public TeamsDto findAll(final Pageable pageable, final Optional<String> status, final Long memberId) {
-        final List<Team> teams = status.map(it -> findAllByIsClosedAndOrderByCreatedAt(pageable, it))
-                .orElseGet(() -> findAllOrderByIsClosedAndCreatedAt(pageable));
-
-        final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
+    public TeamsDto findAll(final Pageable pageable, final String status, final Long memberId) {
+        final List<Team> teams = getTeams(pageable, status);
+        final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
 
         return new TeamsDto(teamDtos);
-    }
-
-    private List<Team> findAllByIsClosedAndOrderByCreatedAt(final Pageable pageable, final String status) {
-        final List<Team> teams = teamRepository.findAllByIsClosed(TeamStatus.checkClosed(status), pageable)
-                .getContent();
-
-        return filteringTeamByStatus(status, teams);
-    }
-
-    private List<Team> filteringTeamByStatus(final String status, final List<Team> teams) {
-        return teams.stream()
-                .filter(it -> it.isSameStatus(status, timeStandard.now()))
-                .collect(Collectors.toList());
-    }
-
-    private List<Team> findAllOrderByIsClosedAndCreatedAt(final Pageable pageable) {
-        return teamRepository.findAll(pageable).getContent();
     }
 
     public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
@@ -100,7 +79,7 @@ public class TeamService {
 
     public TeamsDto findAllByMemberId(final Long memberId) {
         final List<Team> teams = getTeamsByMemberId(memberId);
-        final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
+        final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
 
         return new TeamsDto(teamDtos);
     }
@@ -151,7 +130,32 @@ public class TeamService {
         team.delete(timeStandard.now());
     }
 
-    private List<TeamDto> toTeamDtos(final Long memberId, final List<Team> teams) {
+    private List<Team> getTeams(final Pageable pageable, final String status) {
+        if (status.equals(ALL_STATUS)) {
+            return findAllOrderByIsClosedAndCreatedAt(pageable);
+        }
+        return findAllByIsClosedAndOrderByCreatedAt(pageable, status);
+    }
+
+    private List<Team> findAllOrderByIsClosedAndCreatedAt(final Pageable pageable) {
+        return teamRepository.findAll(pageable)
+                .getContent();
+    }
+
+    private List<Team> findAllByIsClosedAndOrderByCreatedAt(final Pageable pageable, final String status) {
+        final List<Team> teams = teamRepository.findAllByIsClosed(TeamStatus.checkClosed(status), pageable)
+                .getContent();
+
+        return filteringTeamByStatus(status, teams);
+    }
+
+    private List<Team> filteringTeamByStatus(final String status, final List<Team> teams) {
+        return teams.stream()
+                .filter(it -> it.isSameStatus(status, timeStandard.now()))
+                .collect(Collectors.toList());
+    }
+
+    private List<TeamDto> toTeamDtos(final List<Team> teams, final Long memberId) {
         return teams.stream()
                 .map(it -> createTeamAndRoleDto(it, memberId))
                 .collect(Collectors.toList());

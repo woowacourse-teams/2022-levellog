@@ -130,8 +130,6 @@ include::{snippets}/team/create/exception/host-existence/http-response.adoc[]
 [[find-all-success]]
 === 팀 전체 목록 조회 성공
 
-팀 전체 목록 조회 응답은 인터뷰 진행 상태와 최근 생성일 순으로 정렬되어 있다.
-
 operation::team/find-all[]
 
 [[find-all-by-status]]
@@ -152,6 +150,9 @@ operation::team/find-all[]
 
 |closed
 |인터뷰가 종료된 팀 목록을 조회한다.
+
+|all (Default)
+|<<find-all>>
 |===
 
 *Pagination*
@@ -173,8 +174,6 @@ operation::team/find-all[]
 
 [[find-all-by-status-success]]
 === Status로 필터링 된 팀 목록 조회 성공
-
-Status로 필터링 된 팀 목록 조회 응답은 최근 생성일 순으로 정렬되어 있다.
 
 operation::team/find-all/filtering-by-status[]
 

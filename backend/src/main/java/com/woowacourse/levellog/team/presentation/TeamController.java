@@ -48,7 +48,7 @@ public class TeamController {
                                                     @SortDefault(sort = "isClosed", direction = Direction.ASC),
                                                     @SortDefault(sort = "createdAt", direction = Direction.DESC)
                                             }) final Pageable pageable,
-                                            @RequestParam final Optional<String> status,
+                                            @RequestParam(defaultValue = "all") final String status,
                                             @Authentic final Long memberId) {
         final TeamsDto response = teamService.findAll(pageable, status, memberId);
         return ResponseEntity.ok(response);

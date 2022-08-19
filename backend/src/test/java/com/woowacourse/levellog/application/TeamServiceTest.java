@@ -56,7 +56,7 @@ class TeamServiceTest extends ServiceTest {
             rickTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.empty(), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), "all", rick.getId());
 
             //then
             assertAll(
@@ -90,7 +90,7 @@ class TeamServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.of("ready"), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), "ready", rick.getId());
 
             //then
             assertAll(
@@ -122,7 +122,7 @@ class TeamServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.of("in-progress"), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), "in-progress", rick.getId());
 
             //then
             assertAll(
@@ -154,7 +154,7 @@ class TeamServiceTest extends ServiceTest {
             eveTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.of("closed"), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), "closed", rick.getId());
 
             //then
             assertAll(
@@ -174,7 +174,7 @@ class TeamServiceTest extends ServiceTest {
             final Member rick = saveMember("릭");
 
             // when & then
-            assertThatThrownBy(() -> teamService.findAll(getPageRequest(), Optional.of("invalid"), rick.getId()))
+            assertThatThrownBy(() -> teamService.findAll(getPageRequest(), "invalid", rick.getId()))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("입력 받은 status가 올바르지 않습니다.");
         }
@@ -193,7 +193,7 @@ class TeamServiceTest extends ServiceTest {
             team.delete(BEFORE_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getPageRequest(), Optional.empty(), rick.getId());
+            final TeamsDto response = teamService.findAll(getPageRequest(), "all", rick.getId());
 
             //then
             assertThat(response.getTeams()).hasSize(1);

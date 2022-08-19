@@ -15,8 +15,8 @@ import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -126,8 +126,8 @@ class LevellogServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.", String.valueOf(teamId));
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContainingAll("팀이 Ready 상태가 아닙니다.", String.valueOf(teamId));
         }
     }
 
@@ -264,8 +264,8 @@ class LevellogServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, author.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 수정이 가능합니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContainingAll("팀이 Ready 상태가 아닙니다.", String.valueOf(team.getId()));
         }
     }
 

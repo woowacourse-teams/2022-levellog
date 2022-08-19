@@ -18,12 +18,12 @@ import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.Collections;
@@ -659,8 +659,8 @@ class TeamServiceTest extends ServiceTest {
             final Long teamId = team.getId();
             final Long memberId = member.getId();
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작된 이후에는 수정할 수 없습니다.", teamId, team.getStartAt());
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContaining("팀이 Ready 상태가 아닙니다.", teamId, team.getStartAt());
         }
 
         @Test

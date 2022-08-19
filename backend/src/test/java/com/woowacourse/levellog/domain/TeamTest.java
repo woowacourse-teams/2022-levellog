@@ -13,6 +13,7 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -202,8 +203,8 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.update(updatedTeam, AFTER_START_TIME))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작된 이후에는 수정할 수 없습니다.");
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContaining("팀이 Ready 상태가 아닙니다.");
         }
     }
 
@@ -305,8 +306,8 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.delete(AFTER_START_TIME))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContaining("팀이 Ready 상태가 아닙니다.");
         }
 
     }
@@ -345,20 +346,20 @@ class TeamTest {
     }
 
     @Nested
-    @DisplayName("validateBeforeStartAt 메서드는")
-    class ValidateBeforeStartAt {
+    @DisplayName("validateReady 메서드는")
+    class ValidateReady {
 
         @Test
         @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이후면 예외가 발생한다.")
-        void validate_beforeStartAt_thrownException() {
+        void validateReady_beforeStartAt_exception() {
             // given
             final Team team = saveTeam();
 
             // when & then
             assertThatThrownBy(
-                    () -> team.validateReady(AFTER_START_TIME, "인터뷰 시작 전에만 레벨로그 수정이 가능합니다."))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰 시작 전에만 레벨로그 수정이 가능합니다.");
+                    () -> team.validateReady(AFTER_START_TIME))
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContaining("팀이 Ready 상태가 아닙니다.");
         }
     }
 

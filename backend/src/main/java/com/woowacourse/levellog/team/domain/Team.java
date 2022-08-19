@@ -5,6 +5,7 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -114,7 +115,7 @@ public class Team extends BaseEntity {
     }
 
     public void update(final Team team, final LocalDateTime presentTime) {
-        validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 수정할 수 없습니다.");
+        validateReady(presentTime);
 
         this.title = team.title;
         this.place = team.place;
@@ -126,12 +127,6 @@ public class Team extends BaseEntity {
     public void validParticipantNumber(final int participantNumber) {
         if (participantNumber <= interviewerNumber) {
             throw new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
-        }
-    }
-
-    private void validateTeamBeforeStartAt(final LocalDateTime presentTime, final String errorMessage) {
-        if (presentTime.isAfter(this.startAt)) {
-            throw new InterviewTimeException(errorMessage, getId(), startAt, presentTime);
         }
     }
 
@@ -151,14 +146,17 @@ public class Team extends BaseEntity {
         }
     }
 
-    public void validateReady(final LocalDateTime presentTime, final String message) {
-        if (presentTime.isAfter(startAt)) {
-            throw new InterviewTimeException(message, getId(), startAt, presentTime);
+    public void validateReady(final LocalDateTime presentTime) {
+        if (presentTime.isAfter(this.startAt)) {
+            throw new TeamNotReadyException(DebugMessage.init()
+                    .append("teamId", getId())
+                    .append("startAt", startAt)
+                    .append("presentTime", presentTime));
         }
     }
 
     public void delete(final LocalDateTime presentTime) {
-        validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
+        validateReady(presentTime);
 
         this.deleted = true;
     }

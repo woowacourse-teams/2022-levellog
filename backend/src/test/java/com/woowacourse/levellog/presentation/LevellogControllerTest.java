@@ -10,7 +10,7 @@ import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -81,8 +81,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            final String message = "인터뷰 시작 전에만 레벨로그 작성이 가능합니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "팀이 Ready 상태가 아닙니다.";
+            willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(levellogService)
                     .save(request, authorId, teamId);
 
@@ -206,8 +206,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("new content");
 
-            final String message = "인터뷰 시작 전에만 레벨로그 수정이 가능합니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "팀이 Ready 상태가 아닙니다.";
+            willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
 

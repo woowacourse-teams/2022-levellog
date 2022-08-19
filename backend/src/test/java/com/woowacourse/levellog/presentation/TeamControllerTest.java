@@ -15,6 +15,7 @@ import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
@@ -676,8 +677,8 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participants);
 
-            final String message = "인터뷰가 시작된 이후에는 수정할 수 없습니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "팀이 Ready 상태가 아닙니다.";
+            willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
                     .update(request, 1L, 1L);
 
@@ -964,8 +965,8 @@ class TeamControllerTest extends ControllerTest {
         void deleteById_afterStart_exception() throws Exception {
             // given
             final Long teamId = 1L;
-            final String message = "인터뷰가 시작된 이후에는 삭제할 수 없습니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "팀이 Ready 상태가 아닙니다.";
+            willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
                     .deleteById(teamId, 1L);
 

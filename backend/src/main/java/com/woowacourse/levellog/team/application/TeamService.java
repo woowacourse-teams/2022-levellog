@@ -55,7 +55,7 @@ public class TeamService {
     public Long save(final TeamWriteDto request, final Long hostId) {
         final Member host = getMember(hostId);
         final Team team = request.toEntity(host.getProfileUrl());
-        final Participants participants = createUnit(team, hostId, request.getParticipants().getIds(),
+        final Participants participants = createParticipants(team, hostId, request.getParticipants().getIds(),
                 request.getWatchers().getIds());
         team.validParticipantNumber(participants.size());
 
@@ -133,7 +133,7 @@ public class TeamService {
         validateHostAuthorization(memberId, team);
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
 
-        final Participants participants = createUnit(team, memberId, request.getParticipants().getIds(),
+        final Participants participants = createParticipants(team, memberId, request.getParticipants().getIds(),
                 request.getWatchers().getIds());
         team.validParticipantNumber(participants.size());
         participantRepository.deleteByTeam(team);
@@ -194,8 +194,8 @@ public class TeamService {
                 .collect(Collectors.toList());
     }
 
-    private Participants createUnit(final Team team, final Long hostId, final List<Long> participantIds,
-                                    final List<Long> watcherIds) {
+    private Participants createParticipants(final Team team, final Long hostId, final List<Long> participantIds,
+                                            final List<Long> watcherIds) {
         validateOtherParticipantExistence(participantIds);
         validateDistinctParticipant(participantIds);
         validateDistinctWatcher(watcherIds);

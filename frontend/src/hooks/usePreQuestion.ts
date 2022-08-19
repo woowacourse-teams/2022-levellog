@@ -100,11 +100,14 @@ const usePreQuestion = () => {
     levellogId,
   }: Pick<PreQuestionCustomHookType, 'levellogId'>) => {
     const preQuestion = await getPreQuestion({ levellogId });
-    if (typeof preQuestion === 'string') {
+
+    if (!preQuestion) return;
+
+    if (typeof preQuestion.content === 'string') {
       setPreQuestion(preQuestion);
     }
-    if (typeof preQuestion === 'string' && preQuestionRef.current) {
-      preQuestionRef.current.getInstance().setMarkdown(preQuestion);
+    if (typeof preQuestion.content === 'string' && preQuestionRef.current) {
+      preQuestionRef.current.getInstance().setMarkdown(preQuestion.content);
     }
   };
 

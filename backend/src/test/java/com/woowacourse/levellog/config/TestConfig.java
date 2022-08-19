@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.authentication.domain.OAuthClient;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,11 @@ public class TestConfig {
     }
 
     @Bean
-    public AdminService adminService(final JwtTokenProvider jwtTokenProvider) {
+    public AdminService adminService(final JwtTokenProvider jwtTokenProvider, final TimeStandard timeStandard,
+                                     final TeamRepository teamRepository) {
         final String salt = BCrypt.gensalt();
         final String hash = BCrypt.hashpw("levellog1!", salt);
 
-        return new AdminService(hash, jwtTokenProvider);
+        return new AdminService(hash, jwtTokenProvider, timeStandard, teamRepository);
     }
 }

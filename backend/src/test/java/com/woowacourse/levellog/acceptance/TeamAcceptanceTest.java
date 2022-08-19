@@ -15,8 +15,10 @@ import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.WatcherIdsDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +46,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         final List<Long> participantIds = List.of(EVE.getId(), RICK.getId());
         final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(participantIds));
+                new ParticipantIdsDto(participantIds), new WatcherIdsDto(Collections.emptyList()));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -356,7 +358,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
 
         final TeamWriteDto request = new TeamWriteDto("선릉 브리조", "수성방", 2, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(EVE.getId(), RICK.getId())));
+                new ParticipantIdsDto(List.of(EVE.getId(), RICK.getId())), new WatcherIdsDto(Collections.emptyList()));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

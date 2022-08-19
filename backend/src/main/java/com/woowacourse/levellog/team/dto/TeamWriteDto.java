@@ -34,6 +34,9 @@ public class TeamWriteDto {
     @NotNull
     private ParticipantIdsDto participants;
 
+    @Valid
+    private WatcherIdsDto watchers;
+
     public Team toEntity(final String profileUrl) {
         return new Team(title, place, startAt, profileUrl, interviewerNumber);
     }

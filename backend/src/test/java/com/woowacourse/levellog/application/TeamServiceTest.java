@@ -21,6 +21,7 @@ import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.WatcherIdsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
@@ -248,7 +249,7 @@ class TeamServiceTest extends ServiceTest {
             final Long roma = saveMember("로마").getId();
 
             final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 2, TEAM_START_TIME,
-                    new ParticipantIdsDto(List.of(pepper, roma)));
+                    new ParticipantIdsDto(List.of(pepper, roma)), new WatcherIdsDto(Collections.emptyList()));
 
             //when
             final Long id = teamService.save(teamDto, alien);
@@ -267,7 +268,7 @@ class TeamServiceTest extends ServiceTest {
             final Long roma = saveMember("로마").getId();
 
             final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
-                    new ParticipantIdsDto(List.of(alien, pepper, roma)));
+                    new ParticipantIdsDto(List.of(alien, pepper, roma)), new WatcherIdsDto(Collections.emptyList()));
 
             //when & then
             assertThatThrownBy(() -> teamService.save(teamDto, alien))
@@ -281,7 +282,7 @@ class TeamServiceTest extends ServiceTest {
             //given
             final Long alienId = saveMember("알린").getId();
             final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
-                    new ParticipantIdsDto(Collections.emptyList()));
+                    new ParticipantIdsDto(Collections.emptyList()), new WatcherIdsDto(Collections.emptyList()));
 
             //when & then
             assertThatThrownBy(() -> teamService.save(teamDto, alienId))
@@ -587,7 +588,7 @@ class TeamServiceTest extends ServiceTest {
 
             final List<Long> participantsIds = List.of(eve.getId(), alien.getId(), roma.getId());
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 2, AFTER_START_TIME,
-                    new ParticipantIdsDto(participantsIds));
+                    new ParticipantIdsDto(participantsIds), new WatcherIdsDto(Collections.emptyList()));
 
             // when
             teamService.update(request, team.getId(), rick.getId());
@@ -620,7 +621,7 @@ class TeamServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, AFTER_START_TIME,
-                    new ParticipantIdsDto(List.of(rick.getId())));
+                    new ParticipantIdsDto(List.of(rick.getId())), new WatcherIdsDto(Collections.emptyList()));
 
             // when, then
             final Long memberId = pepper.getId();
@@ -636,7 +637,7 @@ class TeamServiceTest extends ServiceTest {
             //given
             final Long memberId = saveMember("릭").getId();
             final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
-                    new ParticipantIdsDto(Collections.emptyList()));
+                    new ParticipantIdsDto(Collections.emptyList()), new WatcherIdsDto(Collections.emptyList()));
 
             //when & then
             assertThatThrownBy(() -> teamService.update(request, 1000L, memberId))
@@ -651,7 +652,7 @@ class TeamServiceTest extends ServiceTest {
             final Member member = saveMember("릭");
             final Team team = saveTeam(member);
             final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
-                    new ParticipantIdsDto(List.of(member.getId())));
+                    new ParticipantIdsDto(List.of(member.getId())), new WatcherIdsDto(Collections.emptyList()));
 
             timeStandard.setInProgress();
 
@@ -673,7 +674,8 @@ class TeamServiceTest extends ServiceTest {
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
-                    new ParticipantIdsDto(List.of(pepper.getId(), pepper.getId())));
+                    new ParticipantIdsDto(List.of(pepper.getId(), pepper.getId())),
+                    new WatcherIdsDto(Collections.emptyList()));
 
             //when & then
             final Long memberId = alien.getId();
@@ -692,7 +694,7 @@ class TeamServiceTest extends ServiceTest {
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
-                    new ParticipantIdsDto(Collections.emptyList()));
+                    new ParticipantIdsDto(Collections.emptyList()), new WatcherIdsDto(Collections.emptyList()));
 
             //when & then
             final Long memberId = alien.getId();

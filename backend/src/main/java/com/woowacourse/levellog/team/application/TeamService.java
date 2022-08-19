@@ -130,7 +130,7 @@ public class TeamService {
     @Transactional
     public void update(final TeamWriteDto request, final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
-        validateHost(memberId, team);
+        validateHostAuthorization(memberId, team);
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
 
         final Participants participants = createUnit(team, memberId, request.getParticipants().getIds(),
@@ -143,7 +143,7 @@ public class TeamService {
     @Transactional
     public void close(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
-        validateHost(memberId, team);
+        validateHostAuthorization(memberId, team);
 
         team.close(timeStandard.now());
     }
@@ -151,7 +151,7 @@ public class TeamService {
     @Transactional
     public void deleteById(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
-        validateHost(memberId, team);
+        validateHostAuthorization(memberId, team);
 
         participantRepository.deleteByTeam(team);
         team.delete(timeStandard.now());
@@ -199,6 +199,7 @@ public class TeamService {
         validateOtherParticipantExistence(participantIds);
         validateParticipantDuplication(participantIds);
         validateWatcherDuplication(watcherIds);
+        validateHostExistence(hostId, participantIds, watcherIds);
 
         final List<Participant> participants = new ArrayList<>();
         participants.addAll(toParticipants(team, hostId, participantIds));
@@ -226,6 +227,12 @@ public class TeamService {
         if (distinct.size() != watcherIds.size()) {
             throw new DuplicateWatchersException(
                     "관전자 중복 [participants : " + watcherIds + "]");
+        }
+    }
+
+    private void validateHostExistence(final Long hostId, final List<Long> participantIds, final List<Long> watcherIds) {
+        if (!participantIds.contains(hostId) && !watcherIds.contains(hostId)) {
+            throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
         }
     }
 
@@ -269,7 +276,7 @@ public class TeamService {
                 .orElse(null);
     }
 
-    private void validateHost(final Long memberId, final Team team) {
+    private void validateHostAuthorization(final Long memberId, final Team team) {
         final Participants participants = new Participants(participantRepository.findByTeam(team));
         final Long hostId = participants.toHostId();
 

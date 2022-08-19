@@ -108,7 +108,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         ROMA.save();
         PEPPER.save();
 
-        final String teamId = saveTeam("릭 and 로마 and 페퍼", RICK, 1, ROMA, PEPPER).getTeamId();
+        final String teamId = saveTeam("릭 and 로마 and 페퍼", RICK, 1, RICK, ROMA, PEPPER).getTeamId();
         final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
 
         timeStandard.setInProgress();

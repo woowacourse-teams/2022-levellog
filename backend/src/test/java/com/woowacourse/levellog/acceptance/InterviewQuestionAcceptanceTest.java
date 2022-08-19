@@ -110,7 +110,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         ROMA.save();
         RICK.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA, RICK).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, ROMA, RICK).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
         timeStandard.setInProgress(); // 인터뷰 시작

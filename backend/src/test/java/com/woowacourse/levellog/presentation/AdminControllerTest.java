@@ -47,7 +47,7 @@ class AdminControllerTest extends ControllerTest {
         }
 
         private ResultActions requestLogin(final PasswordDto request) throws Exception {
-            return requestPost("/api/admin/login", request);
+            return requestPost("/admin/login", request);
         }
     }
 }

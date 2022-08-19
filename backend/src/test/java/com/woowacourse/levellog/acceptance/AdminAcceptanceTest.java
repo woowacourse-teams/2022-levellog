@@ -32,7 +32,7 @@ class AdminAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("admin/login"))
                 .when()
-                .post("/api/admin/login")
+                .post("/admin/login")
                 .then().log().all();
 
         // then

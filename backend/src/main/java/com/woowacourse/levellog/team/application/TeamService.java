@@ -67,7 +67,7 @@ public class TeamService {
     }
 
     public TeamsDto findAll(final Pageable pageable, final Optional<String> status, final Long memberId) {
-        final List<Team> teams = status.map(this::findAllByIsClosedAndOrderByCreatedAt)
+        final List<Team> teams = status.map(it -> findAllByIsClosedAndOrderByCreatedAt(pageable, it))
                 .orElseGet(() -> findAllOrderByIsClosedAndCreatedAt(pageable));
 
         final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
@@ -75,11 +75,9 @@ public class TeamService {
         return new TeamsDto(teamDtos);
     }
 
-    private List<Team> findAllByIsClosedAndOrderByCreatedAt(final String status) {
-        final List<Team> teams = teamRepository.findAllByIsClosed(
-                TeamStatus.checkClosed(status),
-                Sort.by(DESC, "createdAt")
-        );
+    private List<Team> findAllByIsClosedAndOrderByCreatedAt(final Pageable pageable, final String status) {
+        final List<Team> teams = teamRepository.findAllByIsClosed(TeamStatus.checkClosed(status), pageable)
+                .getContent();
 
         return filteringTeamByStatus(status, teams);
     }

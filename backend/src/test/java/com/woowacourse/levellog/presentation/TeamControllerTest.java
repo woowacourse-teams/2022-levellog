@@ -299,7 +299,7 @@ class TeamControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("팀 구성원 목록으로 중복된 Id가 들어오면 예외를 던진다.")
+        @DisplayName("팀 참가자 목록으로 중복된 Id가 들어오면 예외를 던진다.")
         void save_duplicateParticipant_exception() throws Exception {
             // given
             final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(2L, 2L, 3L));
@@ -349,6 +349,33 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document(BASE_SNIPPET_PATH + "watchers-duplicate"));
+        }
+
+        @Test
+        @DisplayName("팀 참가자와 참관자 목록에 겹치는 Id가 들어오면 예외를 던진다.")
+        void save_notIndependent_exception() throws Exception {
+            // given
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 2L, 3L, 4L));
+            final WatcherIdsDto watchers = new WatcherIdsDto(List.of(4L, 5L));
+            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    participants, watchers);
+
+            final String message = "참관자와 관전자 모두 참여할 수 없습니다.";
+            willThrow(new InvalidFieldException(message))
+                    .given(teamService)
+                    .save(request, 1L);
+
+            // when
+            final ResultActions perform = requestCreateTeam(request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-independent"));
         }
 
         private ResultActions requestCreateTeam(final TeamWriteDto request) throws Exception {
@@ -674,6 +701,32 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document(BASE_SNIPPET_PATH + "watchers-duplicate"));
+        }
+
+        @Test
+        @DisplayName("팀 참가자와 참관자 목록에 겹치는 Id가 들어오면 예외를 던진다.")
+        void update_notIndependent_exception() throws Exception {
+            // given
+            final ParticipantIdsDto participants = new ParticipantIdsDto(List.of(1L, 2L, 3L, 4L));
+            final WatcherIdsDto watchers = new WatcherIdsDto(List.of(4L, 5L));
+            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    participants, watchers);
+            final String message = "참관자와 관전자 모두 참여할 수 없습니다.";
+            willThrow(new InvalidFieldException(message))
+                    .given(teamService)
+                    .update(request, 1L, 1L);
+
+            // when
+            final ResultActions perform = requestUpdateTeam(1L, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-independent"));
         }
 
         @Test

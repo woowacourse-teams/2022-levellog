@@ -23,6 +23,7 @@ import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.WatcherIdsDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
+import com.woowacourse.levellog.team.exception.DuplicateWatchersException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
@@ -261,7 +262,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("참가자가 중복되면 예외가 발생한다.")
-        void save_duplicate_exception() {
+        void save_duplicateParticipants_exception() {
             //given
             final Long alien = saveMember("알린").getId();
             final Long pepper = saveMember("페퍼").getId();
@@ -275,6 +276,42 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.save(teamDto, alien))
                     .isInstanceOf(DuplicateParticipantsException.class)
                     .hasMessageContaining("참가자 중복");
+        }
+
+        @Test
+        @DisplayName("관전자가 중복되면 예외가 발생한다.")
+        void save_duplicateWatchers_exception() {
+            //given
+            final Long alien = saveMember("알린").getId();
+            final Long pepper = saveMember("페퍼").getId();
+            final Long roma = saveMember("로마").getId();
+
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+                    new ParticipantIdsDto(List.of(alien, pepper)),
+                    new WatcherIdsDto(List.of(roma, roma)));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.save(teamDto, alien))
+                    .isInstanceOf(DuplicateWatchersException.class)
+                    .hasMessageContaining("관전자 중복");
+        }
+
+        @Test
+        @DisplayName("참가자와 관전자에 중복되는 멤버가 있으면 예외가 발생한다.")
+        void save_concurrentParticipantAndWatcher_exception() {
+            //given
+            final Long alien = saveMember("알린").getId();
+            final Long pepper = saveMember("페퍼").getId();
+            final Long roma = saveMember("로마").getId();
+
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+                    new ParticipantIdsDto(List.of(alien, pepper, roma)),
+                    new WatcherIdsDto(List.of(roma)));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.save(teamDto, alien))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("참관자와 관전자 모두 참여할 수 없습니다.");
         }
     }
 
@@ -669,6 +706,46 @@ class TeamServiceTest extends ServiceTest {
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
                     .isInstanceOf(DuplicateParticipantsException.class)
                     .hasMessageContaining("참가자 중복");
+        }
+
+        @Test
+        @DisplayName("관전자가 중복되면 예외가 발생한다.")
+        void update_duplicateWatchers_exception() {
+            //given
+            final Member alien = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+
+            final Long teamId = saveTeam(alien, pepper, roma).getId();
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+                    new ParticipantIdsDto(List.of(alien.getId(), pepper.getId())),
+                    new WatcherIdsDto(List.of(roma.getId(), roma.getId())));
+
+            //when & then
+            final Long memberId = alien.getId();
+            assertThatThrownBy(() -> teamService.update(teamDto, teamId, memberId))
+                    .isInstanceOf(DuplicateWatchersException.class)
+                    .hasMessageContaining("관전자 중복");
+        }
+
+        @Test
+        @DisplayName("참가자와 관전자에 중복되는 멤버가 있으면 예외가 발생한다.")
+        void update_concurrentParticipantAndWatcher_exception() {
+            //given
+            final Member alien = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+
+            final Long teamId = saveTeam(alien, pepper, roma).getId();
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+                    new ParticipantIdsDto(List.of(alien.getId(), pepper.getId(), roma.getId())),
+                    new WatcherIdsDto(List.of(roma.getId())));
+
+            //when & then
+            final Long memberId = alien.getId();
+            assertThatThrownBy(() -> teamService.update(teamDto, teamId, memberId))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("참관자와 관전자 모두 참여할 수 없습니다.");
         }
     }
 

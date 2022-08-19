@@ -197,13 +197,15 @@ public class TeamService {
     private Participants createUnit(final Team team, final Long hostId, final List<Long> participantIds,
                                     final List<Long> watcherIds) {
         validateOtherParticipantExistence(participantIds);
-        validateParticipantDuplication(participantIds);
-        validateWatcherDuplication(watcherIds);
+        validateDistinctParticipant(participantIds);
+        validateDistinctWatcher(watcherIds);
         validateHostExistence(hostId, participantIds, watcherIds);
 
         final List<Participant> participants = new ArrayList<>();
         participants.addAll(toParticipants(team, hostId, participantIds));
         participants.addAll(toWatchers(team, hostId, watcherIds));
+
+        validateIndependent(participantIds, watcherIds); // validateDuplicationInParticipantAndWatcher
 
         return new Participants(participants);
     }
@@ -214,7 +216,7 @@ public class TeamService {
         }
     }
 
-    private void validateParticipantDuplication(final List<Long> participantIds) {
+    private void validateDistinctParticipant(final List<Long> participantIds) {
         final Set<Long> distinct = new HashSet<>(participantIds);
         if (distinct.size() != participantIds.size()) {
             throw new DuplicateParticipantsException(
@@ -222,7 +224,7 @@ public class TeamService {
         }
     }
 
-    private void validateWatcherDuplication(final List<Long> watcherIds) {
+    private void validateDistinctWatcher(final List<Long> watcherIds) {
         final Set<Long> distinct = new HashSet<>(watcherIds);
         if (distinct.size() != watcherIds.size()) {
             throw new DuplicateWatchersException(
@@ -233,6 +235,15 @@ public class TeamService {
     private void validateHostExistence(final Long hostId, final List<Long> participantIds, final List<Long> watcherIds) {
         if (!participantIds.contains(hostId) && !watcherIds.contains(hostId)) {
             throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
+        }
+    }
+
+    private void validateIndependent(final List<Long> participantIds, final List<Long> watcherIds) {
+        final boolean notIndependent = participantIds.stream()
+                .anyMatch(watcherIds::contains);
+
+        if (notIndependent) {
+            throw new InvalidFieldException("참관자와 관전자 모두 참여할 수 없습니다.");
         }
     }
 

@@ -11,6 +11,7 @@ import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Participants;
@@ -30,7 +31,7 @@ public class PreQuestionService {
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public Long save(final PreQuestionDto request, final Long levellogId, final Long memberId) {
+    public Long save(final PreQuestionWriteDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getLevellog(levellogId);
         final Member questioner = getMember(memberId);
 
@@ -49,11 +50,11 @@ public class PreQuestionService {
                         .append("levellogId", levellogId)
                         .append("memberId", questionerId)));
 
-        return PreQuestionDto.from(preQuestion.getContent());
+        return PreQuestionDto.from(questioner, preQuestion.getContent());
     }
 
     @Transactional
-    public void update(final PreQuestionDto request, final Long preQuestionId, final Long levellogId,
+    public void update(final PreQuestionWriteDto request, final Long preQuestionId, final Long levellogId,
                        final Long memberId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
         final Levellog levellog = getLevellog(levellogId);
@@ -62,7 +63,7 @@ public class PreQuestionService {
         validateLevellog(preQuestion, levellog);
         validateMyQuestion(preQuestion, questioner);
 
-        preQuestion.update(request.getPreQuestion());
+        preQuestion.update(request.getContent());
     }
 
     @Transactional

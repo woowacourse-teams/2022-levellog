@@ -75,7 +75,7 @@ public class InterviewQuestionService {
                 .getTeam()
                 .validateInProgress(timeStandard.now());
 
-        interviewQuestion.updateContent(request.getInterviewQuestion(), author);
+        interviewQuestion.updateContent(request.getContent(), author);
     }
 
     @Transactional

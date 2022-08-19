@@ -2,6 +2,8 @@ plugins {
 	id 'org.springframework.boot' version '2.7.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+	id "org.sonarqube" version "3.0"
+	id 'jacoco'
 	id 'java'
 }
 
@@ -75,5 +77,75 @@ bootJar {
 	dependsOn createDocument
 	from("${asciidoctor.outputDir}") {
 		into 'static/docs'
+	}
+}
+
+jacoco {
+	toolVersion('0.8.7')
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+		csv.enabled false
+		xml.enabled true
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(
+				files(classDirectories.files.collect {
+					fileTree(dir: it,
+							excludes: ['**/support/**', '**/dto/**', '**/*Application*', '**/*BaseEntity*',
+									   '**/*Github*', '**/aspect/**', '**/*Config*'])
+				})
+		)
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = true
+			element = 'CLASS'
+
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.80
+			}
+
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.80
+			}
+
+			excludes = ['*support*', '*dto*', '*Application*', '*BaseEntity*', '*Github*', '*aspect*', '*Config*']
+		}
+	}
+}
+
+task testCoverage {
+	group 'verification'
+	description 'Run tests with coverage'
+
+	dependsOn('test', 'jacocoTestReport', 'jacocoTestCoverageVerification')
+
+	tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+	tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
+}
+
+sonarqube {
+	properties {
+		property "sonar.test.inclusions", "**/*Test.java"
+		property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
+		property 'sonar.exclusions',
+				 '**/support/**, **/dto/**, **/*Application*, **/*BaseEntity*, **/*Github*, **/aspect/**, **/*Config*'
+
+		property 'sonar.issue.ignore.multicriteria', 'e1, e2'
+		property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'java:S6212'
+		property 'sonar.issue.ignore.multicriteria.e1.resourceKey', '**/*.java'
+		property 'sonar.issue.ignore.multicriteria.e2.ruleKey', 'java:S2699'
+		property 'sonar.issue.ignore.multicriteria.e2.resourceKey', '**/*ControllerTest.java'
 	}
 }

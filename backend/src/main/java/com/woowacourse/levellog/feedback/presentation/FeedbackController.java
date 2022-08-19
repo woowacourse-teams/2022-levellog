@@ -2,13 +2,13 @@ package com.woowacourse.levellog.feedback.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
+import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,20 +39,20 @@ public class FeedbackController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{feedbackId}")
+    public ResponseEntity<FeedbackDto> findById(@PathVariable final Long levellogId,
+                                               @PathVariable final Long feedbackId,
+                                               @Authentic final Long memberId) {
+        final FeedbackDto response = feedbackService.findById(levellogId, feedbackId, memberId);
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{feedbackId}")
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
                                        @RequestBody @Valid final FeedbackWriteDto request,
                                        @PathVariable final Long feedbackId,
                                        @Authentic final Long memberId) {
         feedbackService.update(request, feedbackId, memberId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{feedbackId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long levellogId,
-                                       @PathVariable final Long feedbackId,
-                                       @Authentic final Long memberId) {
-        feedbackService.deleteById(feedbackId, memberId);
         return ResponseEntity.noContent().build();
     }
 }

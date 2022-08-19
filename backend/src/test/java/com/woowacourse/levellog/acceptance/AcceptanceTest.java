@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
+import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
 import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
@@ -12,15 +13,24 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
+import com.woowacourse.levellog.config.DatabaseCleaner;
+import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
+import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
+import com.woowacourse.levellog.fixture.MemberFixture;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
+import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
-import com.woowacourse.levellog.team.dto.TeamCreateDto;
+import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
-import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +39,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Import(TestConfig.class)
 @ExtendWith(RestDocumentationExtension.class)
 @ActiveProfiles("test")
@@ -45,17 +52,38 @@ abstract class AcceptanceTest {
     @Autowired
     protected ObjectMapper objectMapper;
 
+    @Autowired
+    protected DatabaseCleaner databaseCleaner;
+
+    @Autowired
+    protected FakeTimeStandard timeStandard;
+
     @LocalServerPort
     private int port;
+
+    @BeforeEach
+    public void setUp(final RestDocumentationContextProvider contextProvider) {
+        setRestAssuredPort();
+        setRestDocsSpec(contextProvider);
+
+        timeStandard.setBeforeStarted();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        databaseCleaner.clean();
+    }
+
+    private void setRestAssuredPort() {
+        RestAssured.port = port;
+    }
 
     /*
      * 기본 생성 snippet은 http-request.adoc, http-response.adoc입니다.
      * Request host는 https://api.levellog.app입니다.
      * 응답 헤더 중 Transfer-Encoding, Date, Keep-Alive, Connection은 제외됩니다.
      */
-    @BeforeEach
-    public void setUp(final RestDocumentationContextProvider contextProvider) {
-        RestAssured.port = port;
+    private void setRestDocsSpec(final RestDocumentationContextProvider contextProvider) {
         specification = new RequestSpecBuilder()
                 .addFilter(
                         documentationConfiguration(contextProvider)
@@ -80,27 +108,57 @@ abstract class AcceptanceTest {
                 ).build();
     }
 
-    @Deprecated
-    protected RestAssuredResponse requestCreateTeam(final String title, final String token,
-                                                    final Long... participantIds) {
-        final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(List.of(participantIds));
-        final TeamCreateDto request = new TeamCreateDto(title, title + "place", 1, LocalDateTime.now().plusDays(3),
-                participantIdsDto);
-
-        return post("/api/teams", token, request);
-    }
-
-    @Deprecated
     protected RestAssuredResponse login(final String nickname) {
         try {
-            final GithubProfileDto response = new GithubProfileDto(String.valueOf(
-                    ((int) System.currentTimeMillis())), nickname,
-                    nickname + ".com");
+            final GithubProfileDto response = new GithubProfileDto(
+                    String.valueOf((int) System.nanoTime()), nickname, nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);
+
             return post("/api/auth/login", new GithubCodeDto(code));
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
+
         return null;
+    }
+
+    protected RestAssuredResponse saveTeam(final String title, final MemberFixture host, final int interviewerNumber,
+                                           final MemberFixture... participants) {
+        final List<Long> participantIds = Arrays.stream(participants)
+                .map(MemberFixture::getId)
+                .collect(Collectors.toList());
+        final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
+
+        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, TEAM_START_TIME,
+                participantIdsDto);
+
+        return post("/api/teams", host.getToken(), request);
+    }
+
+    protected RestAssuredResponse saveLevellog(final String content, final String teamId, final MemberFixture author) {
+        final LevellogWriteDto request = LevellogWriteDto.from(content);
+
+        return post("/api/teams/" + teamId + "/levellogs", author.getToken(), request);
+    }
+
+    protected RestAssuredResponse saveFeedback(final String content, final String levellogId,
+                                               final MemberFixture author) {
+        final FeedbackWriteDto request = FeedbackWriteDto.from(
+                "study " + content, "speak " + content, "etc " + content);
+
+        return post("/api/levellogs/" + levellogId + "/feedbacks", author.getToken(), request);
+    }
+
+    protected RestAssuredResponse savePreQuestion(final String content, final String levellogId,
+                                                  final MemberFixture author) {
+        final PreQuestionDto request = PreQuestionDto.from(content);
+
+        return post("/api/levellogs/" + levellogId + "/pre-questions/", author.getToken(), request);
+    }
+
+    protected RestAssuredResponse saveInterviewQuestion(final String content, final String levellogId,
+                                                        final MemberFixture author) {
+        return post("/api/levellogs/" + levellogId + "/interview-questions", author.getToken(),
+                InterviewQuestionWriteDto.from(content));
     }
 }

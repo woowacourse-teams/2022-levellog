@@ -1,42 +1,31 @@
 import styled from 'styled-components';
 
-import { FeedbackTitle } from 'components/@commons/Style';
 import UiViewer from 'components/@commons/UiViewer';
+import { LevellogInfoType } from 'types/levellog';
 
-const LevellogReport = ({ levellog }: LevellogReportProps) => {
+const LevellogReport = ({ levellogInfo }: LevellogReportProps) => {
   return (
     <S.Container>
-      <FeedbackTitle>레벨로그</FeedbackTitle>
-      <S.Content>
-        <UiViewer content={levellog} />
-      </S.Content>
+      <UiViewer content={levellogInfo.content} />
     </S.Container>
   );
 };
 
 interface LevellogReportProps {
-  levellog: string;
+  levellogInfo: LevellogInfoType;
 }
 
 const S = {
   Container: styled.div`
     overflow: auto;
-    width: 48rem;
-    @media (max-width: 520px) {
-      max-width: 22.875rem;
-    }
-  `,
-
-  Content: styled.div`
-    overflow: auto;
     width: 100%;
     height: 60rem;
     padding: 1rem;
     border-radius: 0.5rem;
+    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.default.WHITE};
     @media (max-width: 520px) {
       flex-direction: column;
-      max-width: 22.875rem;
       min-height: 0;
     }
   `,

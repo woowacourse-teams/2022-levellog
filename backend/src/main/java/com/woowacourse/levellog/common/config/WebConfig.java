@@ -20,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new LogInterceptor());
+        registry.addInterceptor(new LogInterceptor())
+                .order(-1);
     }
 }

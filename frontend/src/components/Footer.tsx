@@ -1,44 +1,29 @@
-import { Link } from 'react-router-dom';
-
 import styled from 'styled-components';
-
-import levellogLogo from 'assets/images/levellogLogo.png';
-
-import { LogoStyle } from 'components/@commons/Style';
 
 const Footer = () => {
   return (
     <S.Container>
-      <S.Content>
-        <S.Title>@2022 Level Log</S.Title>
-        <Link to={'/'}>
-          <LogoStyle src={levellogLogo} alt={'레벨로그 로고'} />
-        </Link>
-      </S.Content>
+      <S.Title>@2022 Level Log</S.Title>
     </S.Container>
   );
 };
 
 const S = {
   Container: styled.footer`
-    width: 100%;
-    height: 9rem;
-    margin-top: 7.125rem;
-    border-top: 0.0625rem solid ${(props) => props.theme.default.BLACK};
-  `,
-
-  Content: styled.div`
+    bottom: 0;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 1rem;
+    width: 100%;
+    height: 4.375rem;
+    margin-top: 6.25rem;
+    border-top: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    background-color: ${(props) => props.theme.new_default.WHITE};
   `,
 
   Title: styled.p`
-    margin-bottom: 0.3125rem;
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 300;
   `,
 };
 

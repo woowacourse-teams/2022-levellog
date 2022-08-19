@@ -9,8 +9,7 @@ export const FeedbackContainer = styled.div`
 `;
 
 export const LogoStyle = styled.img`
-  width: 2.5rem;
-  height: 2.625rem;
+  height: 2rem;
 `;
 
 export const FeedbackTitle = styled.h2`

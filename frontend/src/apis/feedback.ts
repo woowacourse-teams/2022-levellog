@@ -1,5 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 
+import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import { FeedbackApiType, FeedbackType } from 'types/feedback';
 
 export const requestPostFeedback = ({
@@ -28,6 +29,18 @@ export const requestGetFeedbacksInTeam = ({
   });
 };
 
+export const requestGetFeedback = ({
+  accessToken,
+  levellogId,
+  feedbackId,
+}: Omit<FeedbackApiType, 'feedbackResult'>) => {
+  return axios({
+    method: 'get',
+    url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks/${feedbackId}`,
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+};
+
 export const requestEditFeedback = ({
   accessToken,
   levellogId,
@@ -39,17 +52,5 @@ export const requestEditFeedback = ({
     url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks/${feedbackId}`,
     headers: { Authorization: `Bearer ${accessToken}` },
     data: { ...feedbackResult },
-  });
-};
-
-export const requestDeleteFeedback = ({
-  accessToken,
-  levellogId,
-  feedbackId,
-}: Omit<FeedbackApiType, 'feedbackResult'>): AxiosPromise<void> => {
-  return axios({
-    method: 'delete',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks/${feedbackId}`,
-    headers: { Authorization: `Bearer ${accessToken}` },
   });
 };

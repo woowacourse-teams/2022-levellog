@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 
-import NanumFont from 'assets/fonts/NanumSquare_ac.woff';
+import NotoSans from 'assets/fonts/noto-sans-kr-v27-latin-regular.woff';
 
 const GlobalStyles = createGlobalStyle` 
   #root {
@@ -11,7 +11,7 @@ const GlobalStyles = createGlobalStyle`
 
   @font-face {
     font-family: "Font_Regular";
-    src: local("Font_test"), url(${NanumFont}) format('woff'); 
+    src: local("Font_test"), url(${NotoSans}) format('otf'); 
   }
 
   html, body, div, span, applet, object, iframe,
@@ -42,12 +42,17 @@ const GlobalStyles = createGlobalStyle`
   body {
     height: 100%;
     width: 100%;
-    background-color: #F1F1F1;
+    background-color: #FFFFFF;
     font-family: 'Font_Regular';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     outline: 0;
     font-style: normal;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   p {

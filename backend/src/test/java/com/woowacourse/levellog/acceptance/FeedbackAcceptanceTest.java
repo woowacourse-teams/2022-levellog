@@ -1,15 +1,15 @@
 package com.woowacourse.levellog.acceptance;
 
+import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
+import static com.woowacourse.levellog.fixture.MemberFixture.RICK;
+import static com.woowacourse.levellog.fixture.MemberFixture.ROMA;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
-import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -30,29 +30,20 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 작성")
     void createFeedback() {
         // given
-        final RestAssuredResponse hostLoginResponse = login("릭");
-        final String rickToken = hostLoginResponse.getToken();
+        RICK.save();
+        ROMA.save();
 
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long roma_id = romaLoginResponse.getMemberId();
-        final String romaToken = romaLoginResponse.getToken();
+        final String teamId = saveTeam("릭 and 로마", RICK, 1, ROMA).getTeamId();
+        final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
-                .getTeamId();
-
-        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
-        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
-                        levellogRequest)
-                .getLevellogId();
-
-        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
-                "아이 컨텍이 좋습니다.",
-                "윙크하지 마세요.");
-        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+        timeStandard.setInProgress();
 
         // when
+        final FeedbackWriteDto request = FeedbackWriteDto.from("Spring에 대한 학습을 충분히 하였습니다.",
+                "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("feedback/save"))
@@ -72,35 +63,23 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
      *   then: 200 OK 상태 코드와 모든 피드백을 응답 받는다.
      */
     @Test
-    @DisplayName("피드백 조회")
+    @DisplayName("피드백 전체 조회")
     void findAllFeedbacks() {
         // given
-        final RestAssuredResponse hostLoginResponse = login("릭");
-        final String rickToken = hostLoginResponse.getToken();
+        RICK.save();
+        ROMA.save();
 
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long roma_id = romaLoginResponse.getMemberId();
-        final String romaToken = romaLoginResponse.getToken();
+        final String teamId = saveTeam("릭 and 로마", RICK, 1, ROMA).getTeamId();
+        final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
-                .getTeamId();
+        timeStandard.setInProgress();
 
-        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
-        final String levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
-                        levellogRequest)
-                .getLevellogId();
-
-        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
-                "아이 컨텍이 좋습니다.",
-                "윙크하지 마세요.");
-        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
-
-        RestAssuredTemplate.post("/api/levellogs/" + levellogId + "/feedbacks", romaToken, request);
+        saveFeedback("test", levellogId, ROMA);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .filter(document("feedback/find-all"))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
                 .when()
                 .get("/api/levellogs/{levellogId}/feedbacks", levellogId)
                 .then().log().all();
@@ -109,9 +88,50 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("feedbacks.from.nickname", contains("로마"),
                         "feedbacks.to.nickname", contains("릭"),
-                        "feedbacks.feedback.study", contains("Spring에 대한 학습을 충분히 하였습니다."),
-                        "feedbacks.feedback.speak", contains("아이 컨텍이 좋습니다."),
-                        "feedbacks.feedback.etc", contains("윙크하지 마세요.")
+                        "feedbacks.feedback.study", contains("study test"),
+                        "feedbacks.feedback.speak", contains("speak test"),
+                        "feedbacks.feedback.etc", contains("etc test")
+                );
+    }
+
+    /*
+     * Scenario: 피드백 상세 조회
+     *   given: 피드백이 등록되어있다.
+     *   when: 등록된 모든 피드백을 조회한다.
+     *   then: 200 OK 상태 코드와 모든 피드백을 응답 받는다.
+     */
+    @Test
+    @DisplayName("피드백 상세 조회")
+    void findByIdFeedbacks() {
+        // given
+        RICK.save();
+        ROMA.save();
+        PEPPER.save();
+
+        final String teamId = saveTeam("릭 and 로마 and 페퍼", RICK, 1, ROMA, PEPPER).getTeamId();
+        final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
+
+        timeStandard.setInProgress();
+
+        final String feedbackId = saveFeedback("로마가 쓴 피드백", levellogId, ROMA).getFeedbackId();
+        saveFeedback("페퍼가 쓴 피드백", levellogId, PEPPER);
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .filter(document("feedback/find-by-id"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
+                .when()
+                .get("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("id", is(Integer.parseInt(feedbackId)),
+                        "from.nickname", is("로마"),
+                        "to.nickname", is("릭"),
+                        "feedback.study", is("study 로마가 쓴 피드백"),
+                        "feedback.speak", is("speak 로마가 쓴 피드백"),
+                        "feedback.etc", is("etc 로마가 쓴 피드백")
                 );
     }
 
@@ -126,110 +146,35 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
     @DisplayName("피드백 수정")
     void updateFeedback() {
         // given
-        final RestAssuredResponse hostLoginResponse = login("릭");
-        final String rickToken = hostLoginResponse.getToken();
+        RICK.save();
+        ROMA.save();
 
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long roma_id = romaLoginResponse.getMemberId();
-        final String romaToken = romaLoginResponse.getToken();
+        final String teamId = saveTeam("릭 and 로마", RICK, 1, ROMA).getTeamId();
+        final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
 
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id).getTeamId();
+        timeStandard.setInProgress();
 
-        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
-        final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
-                        levellogRequest)
-                .getLevellogId();
-
-        final FeedbackContentDto givenFeedbackContentDto = new FeedbackContentDto(
-                "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-        final FeedbackWriteDto givenRequest = new FeedbackWriteDto(givenFeedbackContentDto);
-
-        final RestAssuredResponse saveResponse = RestAssuredTemplate.post(
-                "/api/levellogs/" + rick_levellogId + "/feedbacks",
-                romaToken, givenRequest);
-
-        final Long updateId = Long.parseLong(saveResponse.getResponse()
-                .extract()
-                .header(HttpHeaders.LOCATION)
-                .split("/")[5]);
+        final String feedbackId = saveFeedback("test", levellogId, ROMA).getFeedbackId();
 
         // when
-        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
-                "수정된 Study 피드백", "수정된 Speak 피드백", "수정된 Etc 피드백");
-        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
+        final FeedbackWriteDto request = FeedbackWriteDto.from("수정된 Study 피드백", "수정된 Speak 피드백", "수정된 Etc 피드백");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
                 .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("feedback/update"))
                 .when()
-                .put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", rick_levellogId, updateId)
+                .put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        RestAssuredTemplate.get("/api/levellogs/" + rick_levellogId + "/feedbacks", romaToken)
+        RestAssuredTemplate.get("/api/levellogs/" + levellogId + "/feedbacks", ROMA.getToken())
                 .getResponse()
                 .body("feedbacks.feedback.study", contains("수정된 Study 피드백"),
                         "feedbacks.feedback.speak", contains("수정된 Speak 피드백"),
                         "feedbacks.feedback.etc", contains("수정된 Etc 피드백")
                 );
-    }
-
-    /*
-     * Scenario: 피드백 삭제
-     *   given: 피드백이 등록되어 있다.
-     *   given: 등록된 피드백을 조회한다.
-     *   when: 조회한 피드백을 삭제한다.
-     *   then: 204 No Content 상태 코드를 응답받는다.
-     */
-
-    @Test
-    @DisplayName("피드백 삭제")
-    void deleteFeedback() {
-        // given
-        final RestAssuredResponse hostLoginResponse = login("릭");
-        hostLoginResponse.getMemberId();
-        final String rickToken = hostLoginResponse.getToken();
-
-        final RestAssuredResponse romaLoginResponse = login("로마");
-        final Long roma_id = romaLoginResponse.getMemberId();
-        final String romaToken = romaLoginResponse.getToken();
-
-        final String teamId = requestCreateTeam("릭 and 로마", rickToken, roma_id)
-                .getTeamId();
-
-        final LevellogDto levellogRequest = LevellogDto.from("레벨로그");
-        final String rick_levellogId = RestAssuredTemplate.post("/api/teams/" + teamId + "/levellogs", rickToken,
-                        levellogRequest)
-                .getLevellogId();
-
-        final FeedbackContentDto feedbackContentDto = new FeedbackContentDto("Spring에 대한 학습을 충분히 하였습니다.",
-                "아이 컨텍이 좋습니다.",
-                "윙크하지 마세요.");
-        final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
-
-        final RestAssuredResponse saveResponse = RestAssuredTemplate
-                .post("/api/levellogs/" + rick_levellogId + "/feedbacks", romaToken, request);
-
-        final Long deleteId = Long.parseLong(saveResponse.getResponse()
-                .extract()
-                .header(HttpHeaders.LOCATION)
-                .split("/")[5]);
-
-        // when
-        final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + romaToken)
-                .filter(document("feedback/delete"))
-                .when()
-                .delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", rick_levellogId, deleteId)
-                .then().log().all();
-
-        // then
-        response.statusCode(HttpStatus.NO_CONTENT.value());
-        RestAssuredTemplate.get("/api/levellogs/" + rick_levellogId + "/feedbacks", romaToken)
-                .getResponse()
-                .body("feedbacks.id", not(contains(deleteId)));
     }
 }

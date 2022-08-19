@@ -1,382 +1,462 @@
 package com.woowacourse.levellog.presentation;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.UnauthorizedException;
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
+import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
-import org.apache.http.HttpHeaders;
+import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("FeedbackController의")
 class FeedbackControllerTest extends ControllerTest {
 
-    private final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-    private final Long memberId = 1L;
-
     @Nested
     @DisplayName("save 메서드는")
-    class save {
+    class Save {
+
+        private static final String BASE_SNIPPET_PATH = "feedback/save/exception/";
 
         @Test
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
-        void save_alreadyExist_exceptionThrown() throws Exception {
+        void save_alreadyExist_exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
+            final Long memberId = 1L;
             final Long levellogId = 1L;
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
+            final String message = "피드백이 이미 존재합니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new FeedbackAlreadyExistException("피드백이 이미 존재합니다."));
-
-            final String requestContent = objectMapper.writeValueAsString(request);
+                    .willThrow(new FeedbackAlreadyExistException(message));
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("feedback/save/exception/exist"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "exist"));
         }
 
         @Test
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
-        void save_selfFeedback_exceptionThrown() throws Exception {
+        void save_selfFeedback_exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
+            final Long memberId = 1L;
             final Long levellogId = 1L;
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
+            final String message = "자기 자신에게 피드백을 할 수 없습니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(" [levellogId : " + levellogId + "]",
-                            "자기 자신에게 피드백을 할 수 없습니다."));
-
-            final String requestContent = objectMapper.writeValueAsString(request);
+                    .willThrow(new InvalidFeedbackException(message, " [levellogId : " + levellogId + "]"));
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("feedback/save/exception/self"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "self"));
         }
 
         @Test
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_otherMember_exceptionThrown() throws Exception {
+        void save_otherMember_exception() throws Exception {
             // given
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
+            final Long memberId = 1L;
             final Long levellogId = 1L;
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
 
+            final String message = "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(
-                            " [memberId :" + memberId + "]", "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다."));
-
-            final String requestContent = objectMapper.writeValueAsString(request);
+                    .willThrow(new InvalidFeedbackException(message, " [memberId :" + memberId + "]"));
 
             // when
-            final ResultActions perform = mockMvc.perform(post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("feedback/save/exception/team"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "team"));
         }
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 작성을 요청하면 예외가 발생한다.")
-        void save_notFoundLevellog_exceptionThrown() throws Exception {
+        void save_notFoundLevellog_exception() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
+            final Long memberId = 1L;
             final Long levellogId = 20000000L;
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
-            final String requestContent = objectMapper.writeValueAsString(request);
 
-            given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
+            final String message = "레벨로그가 존재하지 않습니다.";
+            given(feedbackService.save(request, levellogId, memberId)).willThrow(
+                    new LevellogNotFoundException(message));
 
             // when
-            final ResultActions performCreate = mockMvc.perform(
-                            post("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
-            performCreate.andExpect(status().isNotFound());
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            performCreate.andDo(document("feedback/save/exception/levellog"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog"));
+        }
+
+        @Test
+        @DisplayName("팀 인터뷰 시작 전에 피드백을 작성할 경우 예외를 발생시킨다.")
+        void save_beforeStartAt_exception() throws Exception {
+            // given
+            final Long memberId = 1L;
+            final Long levellogId = 1L;
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
+                    "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+
+            final String message = "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.";
+            given(feedbackService.save(request, levellogId, memberId))
+                    .willThrow(new InterviewTimeException(message));
+
+            // when
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "before-interview"));
+        }
+
+        @Test
+        @DisplayName("팀 인터뷰 종료 후에 피드백을 작성할 경우 예외를 발생시킨다.")
+        void save_alreadyClosed_exception() throws Exception {
+            // given
+            final Long memberId = 1L;
+            final Long levellogId = 1L;
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
+                    "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+
+            final String message = "이미 종료된 인터뷰입니다.";
+            given(feedbackService.save(request, levellogId, memberId))
+                    .willThrow(new InterviewTimeException(message));
+
+            // when
+            final ResultActions perform = requestCreateFeedback(levellogId, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-interview"));
+        }
+
+        private ResultActions requestCreateFeedback(final Long levellogId, final FeedbackWriteDto request)
+                throws Exception {
+            return requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
         }
     }
 
     @Nested
     @DisplayName("update 메서드는")
-    class update {
+    class Update {
+
+        private static final String BASE_SNIPPET_PATH = "feedback/update/exception/";
 
         @Test
         @DisplayName("피드백에 관련이 없는 멤버가 피드백을 수정하면 예외가 발생한다.")
-        void update_otherMember_exceptionThrown() throws Exception {
+        void update_otherMember_exception() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
+            final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
-            final String requestContent = objectMapper.writeValueAsString(request);
 
-            doThrow(new InvalidFeedbackException(
-                    " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]", "자신이 남긴 피드백만 수정할 수 있습니다."))
-                    .when(feedbackService)
+            final String message = "자신이 남긴 피드백만 수정할 수 있습니다.";
+            willThrow(new InvalidFeedbackException(
+                    message, " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]"))
+                    .given(feedbackService)
                     .update(request, feedbackId, memberId);
 
             // when
-            final ResultActions perform = mockMvc.perform(
-                            put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("feedback/update/exception/author"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-author"));
         }
 
         @Test
         @DisplayName("존재하지 않는 피드백 정보로 피드백 수정을 요청하면 예외가 발생한다.")
-        void update_notFoundFeedback_exceptionThrown() throws Exception {
+        void update_notFoundFeedback_exception() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
+            final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 1000000L;
-
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
-            final FeedbackWriteDto request = new FeedbackWriteDto(feedbackContentDto);
-            final String requestContent = objectMapper.writeValueAsString(request);
 
-            doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
-                    .when(feedbackService)
+            final String message = "존재하지 않는 피드백입니다.";
+            willThrow(new FeedbackNotFoundException(message))
+                    .given(feedbackService)
                     .update(request, feedbackId, memberId);
 
             // when
-            final ResultActions perform = mockMvc.perform(
-                            put("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(requestContent))
-                    .andDo(print());
+            final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("feedback/update/exception/feedback"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "feedback"));
         }
-    }
-
-    @Nested
-    @DisplayName("delete 메서드는")
-    class delete {
 
         @Test
-        @DisplayName("피드백에 관련이 없는 멤버가 삭제를 요청하면 예외가 발생한다.")
-        void delete_otherMember_exceptionThrown() throws Exception {
+        @DisplayName("인터뷰 시작 전에 피드백을 수정하면 예외가 발생한다.")
+        void update_beforeStartAt_exception() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
+            final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-            doThrow(new InvalidFeedbackException(
-                    " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]", "자신이 남긴 피드백만 삭제할 수 있습니다."))
-                    .when(feedbackService)
-                    .deleteById(feedbackId, memberId);
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
+                    "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+
+            final String message = "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.";
+            willThrow(new InterviewTimeException(message))
+                    .given(feedbackService)
+                    .update(request, feedbackId, memberId);
 
             // when
-            final ResultActions perform = mockMvc.perform(
-                            delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                    .andDo(print());
+            final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
 
             // then
-            perform.andExpect(status().isBadRequest());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("feedback/delete/exception/author"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "before-interview"));
         }
 
         @Test
-        @DisplayName("존재하지 않는 피드백 정보로 피드백 삭제를 요청하면 예외가 발생한다.")
-        void delete_notFoundFeedback_exceptionThrown() throws Exception {
+        @DisplayName("인터뷰 종료 후에 피드백을 수정하면 예외가 발생한다.")
+        void update_alreadyClosed_exception() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
+            final Long memberId = 1L;
             final Long levellogId = 1L;
-            final Long feedbackId = 2000000L;
-            doThrow(new FeedbackNotFoundException("존재하지 않는 피드백"))
-                    .when(feedbackService)
-                    .deleteById(feedbackId, memberId);
+            final Long feedbackId = 2L;
+            final FeedbackWriteDto request = FeedbackWriteDto.from(
+                    "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
+
+            final String message = "이미 종료된 인터뷰입니다.";
+            willThrow(new InterviewTimeException(message))
+                    .given(feedbackService)
+                    .update(request, feedbackId, memberId);
 
             // when
-            final ResultActions perform = mockMvc.perform(
-                            delete("/api/levellogs/{levellogId}/feedbacks/{feedbackId}", levellogId, feedbackId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                    .andDo(print());
+            final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
 
             // then
-            perform.andExpect(status().isNotFound());
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("feedback/delete/exception/feedback"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "after-interview"));
+        }
+
+        private ResultActions requestUpdateFeedback(final Long levellogId, final Long feedbackId,
+                                                    final FeedbackWriteDto request) throws Exception {
+            return requestPut("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId, request);
         }
     }
 
     @Nested
     @DisplayName("findAll 메서드는")
-    class findAll {
+    class FindAll {
 
-        @Test
-        @DisplayName("존재하지 않는 멤버에 대한 피드백 목록 조회를 요청하면 예외가 발생한다.")
-        void findAll_notFoundMember_exceptionThrown() throws Exception {
-            // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
-            final Long levellogId = 1L;
-
-            given(feedbackService.findAll(1L, 1L))
-                    .willThrow(new MemberNotFoundException("존재하지 않는 멤버"));
-
-            // when
-            final ResultActions perform = mockMvc.perform(
-                            get("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                    .andDo(print());
-
-            // then
-            perform.andExpect(status().isNotFound());
-
-            // docs
-            perform.andDo(document("feedback/find-all/exception/member"));
-        }
+        private static final String BASE_SNIPPET_PATH = "feedback/find-all/exception/";
 
         @Test
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
-        void findAll_notFoundLevellog_exceptionThrown() throws Exception {
+        void findAll_notFoundLevellog_exception() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-
+            final Long memberId = 1L;
             final Long levellogId = 200000L;
 
-            given(feedbackService.findAll(levellogId, 1L))
-                    .willThrow(new LevellogNotFoundException("존재하지 않는 레벨로그"));
+            final String message = "레벨로그가 존재하지 않습니다.";
+            given(feedbackService.findAll(levellogId, memberId))
+                    .willThrow(new LevellogNotFoundException(message));
 
             // when
-            final ResultActions performFindAll = mockMvc.perform(
-                            get("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                    .andDo(print());
+            final ResultActions perform = requestFindAllFeedback(levellogId);
 
             // then
-            performFindAll.andExpect(status().isNotFound());
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            performFindAll.andDo(document("feedback/find-all/exception/levellog"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog"));
         }
 
         @Test
         @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
         void findAll_notMyTeam_exception() throws Exception {
             // given
-            final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjU4ODkyNDI4LCJleHAiOjE2NTg5Mjg0Mjh9.G3l0GRTBXZjqYSBRggI4h56DLrBhO1cgsI0idgmeyMQ";
+            final Long memberId = 1L;
             final Long levellogId = 1L;
 
-            given(jwtTokenProvider.getPayload(token)).willReturn("1");
-            given(jwtTokenProvider.validateToken(token)).willReturn(true);
-            given(feedbackService.findAll(levellogId, 1L))
-                    .willThrow(new UnauthorizedException("권한이 없습니다."));
+            final String message = "권한이 없습니다.";
+            given(feedbackService.findAll(levellogId, memberId))
+                    .willThrow(new UnauthorizedException(message));
 
             // when
-            final ResultActions perform = mockMvc.perform(get("/api/levellogs/{levellogId}/feedbacks", levellogId)
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
-                    .andDo(print());
+            final ResultActions perform = requestFindAllFeedback(levellogId);
 
             // then
-            perform.andExpect(status().isUnauthorized());
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value(message)
+            );
 
             // docs
-            perform.andDo(document("feedback/find-all/exception/not-my-team"));
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-team"));
+        }
+
+        private ResultActions requestFindAllFeedback(final Long levellogId) throws Exception {
+            return requestGet("/api/levellogs/" + levellogId + "/feedbacks");
+        }
+    }
+
+    @Nested
+    @DisplayName("findById 메서드는")
+    class FindById {
+
+        private static final String BASE_SNIPPET_PATH = "feedback/find-by-id/exception/";
+
+        @Test
+        @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
+        void findById_notFoundLevellog_exception() throws Exception {
+            // given
+            final Long memberId = 1L;
+            final Long feedbackId = 1L;
+            final Long levellogId = 200000L;
+
+            final String message = "레벨로그가 존재하지 않습니다.";
+            given(feedbackService.findById(levellogId, feedbackId, memberId))
+                    .willThrow(new LevellogNotFoundException(message));
+
+            // when
+            final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);
+
+            // then
+            perform.andExpectAll(
+                    status().isNotFound(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-not-found"));
+        }
+
+        @Test
+        @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findById_notMyTeam_exception() throws Exception {
+            // given
+            final Long memberId = 1L;
+            final Long feedbackId = 1L;
+            final Long levellogId = 1L;
+
+            final String message = "권한이 없습니다.";
+            given(feedbackService.findById(levellogId, feedbackId, memberId))
+                    .willThrow(new UnauthorizedException(message));
+
+            // when
+            final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);
+
+            // then
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-team"));
+        }
+
+        @Test
+        @DisplayName("잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.")
+        void findById_levellogWrongId_exception() throws Exception {
+            // given
+            final Long memberId = 1L;
+            final Long feedbackId = 1L;
+            final Long levellogId = 1L;
+
+            final String message = "입력한 levellogId와 피드백의 levellogId가 다릅니다.";
+            given(feedbackService.findById(levellogId, feedbackId, memberId))
+                    .willThrow(new InvalidLevellogException(message, "[ 입력한 levellogId : 1 ]"));
+
+            // when
+            final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "levellog-wrong-id"));
+        }
+
+        private ResultActions requestFindByIdFeedback(final Long levellogId, final Long feedbackId) throws Exception {
+            return requestGet("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId);
         }
     }
 }

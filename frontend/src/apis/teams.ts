@@ -61,3 +61,14 @@ export const requestDeleteTeam = ({
     url: `${process.env.API_URI}/teams/${teamId}`,
   });
 };
+
+export const requestCloseTeamInterview = ({
+  teamId,
+  accessToken,
+}: Omit<TeamApiType, 'teamInfo'>): AxiosPromise<void> => {
+  return axios({
+    method: 'post',
+    headers: { Authorization: `Bearer ${accessToken}` },
+    url: `${process.env.API_URI}/teams/${teamId}/close`,
+  });
+};

@@ -1,98 +1,105 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
 import styled from 'styled-components';
 
-import useFeedback from 'hooks/useFeedback';
-import useLevellog from 'hooks/useLevellog';
-import useRole from 'hooks/useRole';
-import { useTeam } from 'hooks/useTeams';
+import useFeedbackAddPage from 'hooks/useFeedbackAddPage';
 
-import { ROUTES_PATH } from 'constants/constants';
-import { MESSAGE } from 'constants/constants';
-
-import Button from 'components/@commons/Button';
+import BottomBar from 'components/@commons/BottomBar';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
+import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
-import LevellogReport from 'components/levellogs/LevellogReport';
-import { InterviewTeamType } from 'types/team';
+import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
 
 const FeedbackAdd = () => {
-  const { feedbackRef, onClickFeedbackAddButton } = useFeedback();
-  const { levellog, getLevellog } = useLevellog();
-  const { teamId, levellogId } = useParams();
-  const { getTeam } = useTeam();
-  const { loginUserRole, getLoginUserRole } = useRole();
-  const navigate = useNavigate();
-  const [writer, setWriter] = useState('');
+  const {
+    state: {
+      levellogInfo,
+      feedbackWriterRole,
+      interviewQuestionInfos,
+      preQuestion,
+      whichContentShow,
+    },
+    ref: { feedbackRef, interviewQuestionRef, interviewQuestionContentRef },
+    handler: {
+      onClickDeleteInterviewQuestionButton,
+      onSubmitEditInterviewQuestion,
+      handleClickFeedbackAddButton,
+      handleSubmitInterviewQuestion,
+      handleClickLevellogTag,
+      handleClickPreQuestionTag,
+    },
+  } = useFeedbackAddPage();
 
-  const handleClickFeedbackAddButton = () => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      onClickFeedbackAddButton({ teamId, levellogId });
-
-      return;
-    }
-    alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
-  };
-
-  //임시용
-  const init = async () => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      getLevellog({ teamId, levellogId });
-      const localTeam = await getTeam();
-      const levellogWriter = (localTeam as InterviewTeamType).participants.filter(
-        (participant) => String(participant.levellogId) === levellogId,
-      )[0];
-      setWriter(levellogWriter.nickname);
-      getLoginUserRole({ teamId, participantId: levellogWriter.memberId });
-
-      return;
-    }
-    alert(MESSAGE.WRONG_ACCESS);
-    navigate(ROUTES_PATH.HOME);
-  };
-
-  useEffect(() => {
-    init();
-  }, []);
-
-  if (!loginUserRole || !writer) return <div></div>;
+  if (Object.keys(levellogInfo).length === 0) return <></>;
+  if (!feedbackWriterRole) return <></>;
+  const { author } = levellogInfo;
 
   return (
-    <FlexBox gap={1.875}>
+    <>
+      <ContentHeader
+        imageUrl={author.profileUrl}
+        title={`${author.nickname}의 인터뷰 피드백`}
+      ></ContentHeader>
       <S.Container>
-        <ContentHeader title={`${writer}의 레벨 인터뷰 피드백`}>
-          <Button onClick={handleClickFeedbackAddButton}>등록하기</Button>
-        </ContentHeader>
         <S.Content>
-          <S.RoleContent>나의 역할: {loginUserRole}</S.RoleContent>
-          <LevellogReport levellog={levellog} />
-          <FeedbackFormat feedbackRef={feedbackRef} />
+          <S.LeftContent>
+            <FlexBox alignItems={'center'} gap={1}>
+              {whichContentShow.levellog && <S.LevellogTitle>레벨로그</S.LevellogTitle>}
+              {whichContentShow.preQuestion && <S.LevellogTitle>사전질문</S.LevellogTitle>}
+              {feedbackWriterRole === 'OBSERVER' && <S.RoleContent>{'옵저버'}</S.RoleContent>}
+              {feedbackWriterRole === 'INTERVIEWER' && <S.RoleContent>{'인터뷰어'}</S.RoleContent>}
+              {feedbackWriterRole === 'INTERVIEWEE' && <S.RoleContent>{'인터뷰이'}</S.RoleContent>}
+            </FlexBox>
+            <WriterDocument
+              levellogInfo={levellogInfo}
+              preQuestion={preQuestion}
+              whichContentShow={whichContentShow}
+              handleClickLevellogTag={handleClickLevellogTag}
+              handleClickPreQuestionTag={handleClickPreQuestionTag}
+            />
+          </S.LeftContent>
+          <S.RightContent>
+            <S.QuestionContent>
+              <S.QuestionTitle>인터뷰에서 받은 질문</S.QuestionTitle>
+              <InterviewQuestion
+                interviewQuestionInfos={interviewQuestionInfos}
+                interviewQuestionRef={interviewQuestionRef}
+                interviewQuestionContentRef={interviewQuestionContentRef}
+                onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}
+                onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
+                handleSubmitInterviewQuestion={handleSubmitInterviewQuestion}
+              />
+            </S.QuestionContent>
+            <S.FeedbackContent>
+              <FeedbackFormat feedbackRef={feedbackRef} />
+            </S.FeedbackContent>
+          </S.RightContent>
         </S.Content>
+        <BottomBar
+          buttonText={'작성하기'}
+          handleClickRightButton={handleClickFeedbackAddButton}
+        ></BottomBar>
       </S.Container>
-    </FlexBox>
+    </>
   );
 };
 
 const S = {
   Container: styled.div`
+    display: flex;
     overflow: auto;
-    width: 100%;
-  `,
-
-  RoleContent: styled.div`
-    position: absolute;
-    top: 12.5rem;
-    left: 17.5rem;
-    font-weight: 700;
+    flex-direction: column;
+    @media (min-width: 1620px) {
+      padding: 1.25rem calc((100vw - 100rem) / 2);
+    }
+    @media (max-width: 1620px) {
+      padding: 1.25rem 1.25rem;
+    }
   `,
 
   Content: styled.div`
     display: flex;
-    overflow: auto;
-    gap: 4.875rem;
+    gap: 1rem;
+    width: 100%;
     @media (max-width: 1024px) {
       gap: 1.875rem;
     }
@@ -100,6 +107,51 @@ const S = {
       flex-direction: column;
     }
   `,
+
+  LeftContent: styled.div`
+    position: relative;
+    width: 50%;
+    @media (max-width: 520px) {
+      width: 100%;
+    }
+  `,
+
+  RoleContent: styled.div`
+    display: flex;
+    align-items: center;
+    height: 1.875rem;
+    padding: 0.625rem 0.9375rem;
+    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-radius: 1.25rem;
+    margin-bottom: 1.25rem;
+    background-color: ${(props) => props.theme.new_default.DARK_BLACK};
+    color: ${(props) => props.theme.new_default.WHITE};
+    font-weight: 700;
+  `,
+
+  LevellogTitle: styled.h2`
+    margin-bottom: 1.25rem;
+    font-size: 1.875rem;
+  `,
+
+  RightContent: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 3.125rem;
+    width: 50%;
+    @media (max-width: 520px) {
+      width: 100%;
+    }
+  `,
+
+  QuestionContent: styled.div``,
+
+  QuestionTitle: styled.h2`
+    margin-bottom: 1.25rem;
+    font-size: 1.875rem;
+  `,
+
+  FeedbackContent: styled.div``,
 };
 
 export default FeedbackAdd;

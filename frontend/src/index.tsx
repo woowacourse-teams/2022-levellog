@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from 'App';
 import { ThemeProvider } from 'styled-components';
 
+import { TeamProvider } from 'contexts/teamContext';
 import { UserProvider } from 'contexts/userContext';
 import { theme } from 'styles/theme';
 
@@ -11,11 +12,13 @@ const main = () => {
   const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
   root.render(
     <BrowserRouter>
-      <UserProvider>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
-      </UserProvider>
+      <TeamProvider>
+        <UserProvider>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </UserProvider>
+      </TeamProvider>
     </BrowserRouter>,
   );
 };

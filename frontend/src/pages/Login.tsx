@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
@@ -8,6 +8,7 @@ import useUser from 'hooks/useUser';
 import { ROUTES_PATH } from 'constants/constants';
 
 import { requestGetUserAuthority, requestGetUserLogin } from 'apis/login';
+import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 
 const Login = () => {
   const { userInfoDispatch } = useUser();
@@ -34,7 +35,6 @@ const Login = () => {
 
         if (code) {
           const res = await requestGetUserLogin({ code });
-          //로그인만 해도 닉네임 주도록 API 수정가능?
           localStorage.setItem('accessToken', res.data.accessToken);
           const accessToken = localStorage.getItem('accessToken')!;
           const resLogin = await requestGetUserAuthority({ accessToken });
@@ -57,12 +57,10 @@ const Login = () => {
         }
         navigate(ROUTES_PATH.HOME);
       } catch (err: unknown) {
-        if (axios.isAxiosError(err)) {
+        if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (err instanceof Error) {
-            localStorage.removeItem('accessToken');
+          if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
             alert(responseBody.data.message);
-            navigate(ROUTES_PATH.HOME);
           }
         }
       }
@@ -71,7 +69,7 @@ const Login = () => {
     loginGithub();
   }, []);
 
-  return <h1>로그인 중</h1>;
+  return <Outlet />;
 };
 
 export default Login;

@@ -17,7 +17,7 @@ export interface FeedbackType {
   id: number;
   updatedAt: string;
   from: {
-    id: number;
+    id: string;
     nickname: string;
     profileUrl: string;
   };

@@ -1,13 +1,27 @@
+import { useEffect } from 'react';
+
 import styled from 'styled-components';
 
 import { Editor } from '@toast-ui/react-editor';
 import { FeedbackTitle } from 'components/@commons/Style';
 import UiEditor from 'components/@commons/UiEditor';
+import { FeedbackCustomHookType } from 'types/feedback';
 
-const FeedbackFormat = ({ feedbackRef }: FeedbackFormProps) => {
+const FeedbackFormat = ({
+  levellogId,
+  feedbackId,
+  feedbackRef,
+  getFeedbackOnRef,
+}: FeedbackFormProps) => {
+  useEffect(() => {
+    if (!getFeedbackOnRef || !levellogId || !feedbackId) return;
+
+    getFeedbackOnRef({ levellogId, feedbackId });
+  }, []);
+
   return (
     <S.Container>
-      <FeedbackTitle>Feedback</FeedbackTitle>
+      <FeedbackTitle>피드백</FeedbackTitle>
       <S.Content>
         <p>학습 측면에서 좋은 점과 부족한 점은?</p>
         <UiEditor
@@ -39,16 +53,24 @@ const FeedbackFormat = ({ feedbackRef }: FeedbackFormProps) => {
 };
 
 interface FeedbackFormProps {
+  levellogId?: string;
+  feedbackId?: string;
   feedbackRef: React.MutableRefObject<Editor[]>;
+  getFeedbackOnRef?: ({
+    levellogId,
+    feedbackId,
+  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId'>) => Promise<void>;
 }
 
 const S = {
   Container: styled.div`
     overflow: auto;
-    width: 48rem;
-    @media (max-width: 520px) {
-      max-width: 22.875rem;
-    }
+    width: 100%;
+  `,
+
+  FeedbackTitle: styled.h2`
+    margin-bottom: 1.25rem;
+    font-size: 1.875rem;
   `,
 
   Content: styled.div`
@@ -57,6 +79,11 @@ const S = {
     align-content: space-between;
     gap: 1.5rem;
     width: 100%;
+  `,
+
+  FeedbackLabel: styled.p`
+    font-size: 1rem;
+    font-weight: 600;
   `,
 };
 export default FeedbackFormat;

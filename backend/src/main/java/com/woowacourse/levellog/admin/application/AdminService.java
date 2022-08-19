@@ -57,10 +57,11 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteTeamById(final Long teamId) {
         final Team team = getTeam(teamId);
         participantRepository.deleteByTeam(team);
-        team.delete(timeStandard.now());
+        teamRepository.deleteById(teamId);
     }
 
     private Team getTeam(final Long teamId) {

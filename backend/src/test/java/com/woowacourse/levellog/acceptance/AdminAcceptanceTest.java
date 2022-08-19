@@ -51,7 +51,7 @@ class AdminAcceptanceTest extends AcceptanceTest {
      *   then: 204 상태 코드를 담아 응답받는다.
      */
     @Test
-    @DisplayName("팀 삭제")
+    @DisplayName("진행 중 인 팀 삭제")
     void delete() {
         // given
         PEPPER.save();
@@ -66,6 +66,8 @@ class AdminAcceptanceTest extends AcceptanceTest {
                 .extract()
                 .as(AdminAccessTokenDto.class)
                 .getAccessToken();
+
+        timeStandard.setInProgress();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

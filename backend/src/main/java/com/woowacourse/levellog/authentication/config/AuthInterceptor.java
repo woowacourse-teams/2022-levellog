@@ -33,8 +33,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         final String token = AuthorizationExtractor.extract(request);
         if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException(DebugMessage.init()
-                    .append("token", token));
+            throw new InvalidTokenException(DebugMessage.init().append("token", token));
         }
 
         return true;

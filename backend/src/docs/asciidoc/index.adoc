@@ -14,4 +14,3 @@
 * link:member.html[Member]
 * link:prequestion.html[PreQuestion]
 * link:interviewquestion.html[InterviewQuestion]
-* link:admin.html[Admin]

@@ -14,7 +14,8 @@ import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -146,9 +147,9 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.";
+            final String message = "팀이 InProgress 상태가 아닙니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InterviewTimeException(message));
+                    .willThrow(new TeamNotInProgressException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -174,7 +175,7 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "이미 인터뷰가 종료된 팀입니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InterviewTimeException(message));
+                    .willThrow(new TeamAlreadyClosedException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -270,8 +271,8 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "팀이 InProgress 상태가 아닙니다.";
+            willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);
 
@@ -299,7 +300,7 @@ class FeedbackControllerTest extends ControllerTest {
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "이미 인터뷰가 종료된 팀입니다.";
-            willThrow(new InterviewTimeException(message))
+            willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);
 

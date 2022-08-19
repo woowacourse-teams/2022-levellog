@@ -3,8 +3,8 @@ package com.woowacourse.levellog.team.domain;
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -131,14 +131,18 @@ public class Team extends BaseEntity {
     }
 
     public void close(final LocalDateTime presentTime) {
-        validateInProgress(presentTime, "인터뷰가 시작되기 전에 종료할 수 없습니다.");
+        validateInProgress(presentTime);
 
         isClosed = true;
     }
 
-    public void validateInProgress(final LocalDateTime presentTime, final String message) {
+    public void validateInProgress(final LocalDateTime presentTime) {
         if (presentTime.isBefore(startAt)) {
-            throw new InterviewTimeException(message, getId(), startAt, presentTime);
+            throw new TeamNotInProgressException(DebugMessage.init()
+                    .append("teamId", getId())
+                    .append("isClosed", isClosed)
+                    .append("startAt", startAt)
+                    .append("presentTime", presentTime));
         }
         if (isClosed) {
             throw new TeamAlreadyClosedException(DebugMessage.init()

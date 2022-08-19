@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
@@ -276,8 +276,8 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.close(BEFORE_START_TIME))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작되기 전에 종료할 수 없습니다.");
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContaining("팀이 InProgress 상태가 아닙니다.");
         }
     }
 
@@ -316,8 +316,6 @@ class TeamTest {
     @DisplayName("validateInProgress 메서드는")
     class ValidateInProgress {
 
-        final String message = "피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다.";
-
         @Test
         @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이전이면 예외가 발생한다.")
         void validate_afterStartAt_exception() {
@@ -325,9 +323,9 @@ class TeamTest {
             final Team team = saveTeam();
 
             // when & then
-            assertThatThrownBy(() -> team.validateInProgress(BEFORE_START_TIME, message))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining(message);
+            assertThatThrownBy(() -> team.validateInProgress(BEFORE_START_TIME))
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContaining("팀이 InProgress 상태가 아닙니다.");
         }
 
         @Test
@@ -339,7 +337,7 @@ class TeamTest {
             team.close(AFTER_START_TIME);
 
             // when & then
-            assertThatThrownBy(() -> team.validateInProgress(AFTER_START_TIME.plusDays(1), message))
+            assertThatThrownBy(() -> team.validateInProgress(AFTER_START_TIME.plusDays(1)))
                     .isInstanceOf(TeamAlreadyClosedException.class)
                     .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }

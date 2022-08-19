@@ -45,7 +45,7 @@ public class FeedbackService {
 
         levellog.validateSelfFeedback(member);
         validateTeamMember(team, member, "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
-        team.validateInProgress(timeStandard.now(), "인터뷰가 시작되기 전에 피드백을 작성할 수 없습니다.");
+        team.validateInProgress(timeStandard.now());
 
         final Feedback feedback = request.getFeedback()
                 .toFeedback(member, levellog);
@@ -88,7 +88,7 @@ public class FeedbackService {
         final Team team = feedback.getLevellog().getTeam();
 
         feedback.validateAuthor(member);
-        team.validateInProgress(timeStandard.now(), "인터뷰가 시작되기 전에 피드백을 수정할 수 없습니다.");
+        team.validateInProgress(timeStandard.now());
 
         feedback.updateFeedback(
                 request.getFeedback().getStudy(),

@@ -15,11 +15,11 @@ import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.TeamNotReadyException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -885,8 +885,8 @@ class TeamControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
 
-            final String message = "인터뷰가 시작되기 전에 종료할 수 없습니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "팀이 InProgress 상태가 아닙니다.";
+            willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(teamService)
                     .close(teamId, 1L);
 

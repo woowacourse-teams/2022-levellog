@@ -19,8 +19,8 @@ import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -162,8 +162,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 작성 할 수 없습니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContainingAll("팀이 InProgress 상태가 아닙니다.", String.valueOf(team.getId()));
         }
 
         @Test
@@ -419,8 +419,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContainingAll("팀이 InProgress 상태가 아닙니다.", String.valueOf(team.getId()));
         }
     }
 
@@ -511,8 +511,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 삭제 할 수 없습니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContainingAll("팀이 InProgress 상태가 아닙니다.", String.valueOf(team.getId()));
         }
     }
 }

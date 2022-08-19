@@ -17,8 +17,8 @@ import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -238,8 +238,8 @@ class FeedbackServiceTest extends ServiceTest {
             assertThatThrownBy(() -> feedbackService.update(
                     FeedbackWriteDto.from("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
                     feedbackId, roma.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 수정할 수 없습니다.");
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContaining("팀이 InProgress 상태가 아닙니다.");
         }
 
         @Test
@@ -363,8 +363,8 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작되기 전에 피드백을 작성할 수 없습니다.");
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContaining("팀이 InProgress 상태가 아닙니다.");
         }
 
         @Test

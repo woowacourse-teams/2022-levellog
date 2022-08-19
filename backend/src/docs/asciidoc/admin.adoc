@@ -22,3 +22,11 @@ operation::admin/login[]
 
 ==== 잘못된 비밀번호를 입력한 경우
 include::{snippets}/admin/login/exception/wrong-password/http-response.adoc[]
+
+[[delete-team]]
+== 팀 삭제
+
+[[delete-team-success]]
+=== 관리자 팀 삭제 성공
+
+operation::admin/delete-team[]

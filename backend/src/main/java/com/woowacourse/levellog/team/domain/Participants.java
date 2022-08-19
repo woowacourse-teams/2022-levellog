@@ -35,7 +35,7 @@ public class Participants {
         }
 
         final List<Long> participantIds = toParticipantIds();
-        final int to = participantIds.indexOf(memberId) + values.size();
+        final int to = participantIds.indexOf(memberId) + participantIds.size();
 
         return concatSameTwice(participantIds).subList(to - interviewerNumber, to);
     }
@@ -87,6 +87,7 @@ public class Participants {
 
     private List<Long> toParticipantIds() {
         return values.stream()
+                .filter(Participant::isParticipant)
                 .map(Participant::getMember)
                 .map(BaseEntity::getId)
                 .collect(Collectors.toList());

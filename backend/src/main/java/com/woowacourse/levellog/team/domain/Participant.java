@@ -28,4 +28,8 @@ public class Participant extends BaseEntity {
     private boolean isHost;
 
     private boolean isWatcher;
+
+    public boolean isParticipant() {
+        return !isWatcher;
+    }
 }

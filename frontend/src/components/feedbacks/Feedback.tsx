@@ -2,7 +2,9 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import { TEAM_STATUS } from 'constants/constants';
+import useRouteUri from 'hooks/useRouteUri';
+
+import { PATH_TYPE, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -10,7 +12,9 @@ import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/UiViewer';
 import { FeedbackType } from 'types/feedback';
 
-const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
+const Feedback = ({ loginUserId, feedbackInfo, teamStatus }: FeedbackProps) => {
+  const { feedbackUri } = useRouteUri();
+
   return (
     <S.Container>
       <S.Header>
@@ -19,9 +23,7 @@ const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }:
           <S.AuthorText>{feedbackInfo.from.nickname}의 피드백</S.AuthorText>
         </FlexBox>
         {teamStatus === TEAM_STATUS.IN_PROGRESS && feedbackInfo.from.id === loginUserId && (
-          <Link
-            to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackInfo.id}/author/${feedbackInfo.from.id}/edit`}
-          >
+          <Link to={feedbackUri({ pathType: PATH_TYPE.EDIT })}>
             <Button>수정하기</Button>
           </Link>
         )}
@@ -53,8 +55,7 @@ const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }:
 interface FeedbackProps {
   loginUserId: string;
   feedbackInfo: FeedbackType;
-  teamId: string;
-  levellogId: string;
+
   teamStatus: string;
 }
 

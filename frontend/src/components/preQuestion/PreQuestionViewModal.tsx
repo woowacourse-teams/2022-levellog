@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
+import useRouteUri from 'hooks/useRouteUri';
+
 import closeIcon from 'assets/images/close.svg';
+import { PATH_TYPE } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -21,7 +24,7 @@ const PreQuestionViewModal = ({
   handleClickClosePreQuestionModal,
 }: PreQuestionViewModalProps) => {
   const { levellogId, preQuestionId, nickname } = participant;
-  const { teamId } = useParams();
+  const { preQuestionUri } = useRouteUri();
 
   const handleClickDeleteLevellog = async () => {
     if (levellogId && preQuestionId) {
@@ -47,9 +50,7 @@ const PreQuestionViewModal = ({
           <UiViewer content={preQuestion} />
         </S.PreQuestion>
         <S.Footer>
-          <Link
-            to={`/pre-questions/teams/${teamId}/levellog/${levellogId}/pre-question/${preQuestionId}`}
-          >
+          <Link to={preQuestionUri({ pathType: PATH_TYPE.EDIT })}>
             <Button>수정하기</Button>
           </Link>
           <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>

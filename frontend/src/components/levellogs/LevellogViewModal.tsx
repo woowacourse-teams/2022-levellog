@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
+import useRouteUri from 'hooks/useRouteUri';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
 import closeIcon from 'assets/images/close.svg';
-import { TEAM_STATUS } from 'constants/constants';
+import { PATH_TYPE, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
@@ -23,11 +24,10 @@ const LevellogViewModal = ({
   userInTeam,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
-  const { levellogId, preQuestionId } = participant;
   const { author, content } = levellogInfo;
-  const { teamId } = useParams();
   const { loginUserId } = useUser();
   const { team } = useTeam();
+  const { levellogUri, preQuestionUri } = useRouteUri();
 
   if (author.id === loginUserId) {
     return (
@@ -48,7 +48,7 @@ const LevellogViewModal = ({
           </S.Levellog>
           <S.Footer>
             {team.status === TEAM_STATUS.READY && (
-              <Link to={`/teams/${teamId}/levellogs/${levellogId}`}>
+              <Link to={levellogUri({ pathType: PATH_TYPE.EDIT })}>
                 <Button>수정하기</Button>
               </Link>
             )}
@@ -78,13 +78,11 @@ const LevellogViewModal = ({
           {loginUserId &&
             userInTeam &&
             (participant.preQuestionId ? (
-              <Link
-                to={`/pre-questions/teams/${teamId}/levellog/${levellogId}/pre-question/${preQuestionId}`}
-              >
+              <Link to={preQuestionUri({ pathType: PATH_TYPE.EDIT })}>
                 <Button>사전질문 수정</Button>
               </Link>
             ) : (
-              <Link to={`/pre-questions/teams/${teamId}/levellogs/${levellogId}`}>
+              <Link to={preQuestionUri({ pathType: PATH_TYPE.ADD })}>
                 <Button>사전질문 작성</Button>
               </Link>
             ))}

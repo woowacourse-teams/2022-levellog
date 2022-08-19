@@ -28,7 +28,7 @@ export const routes = [
     element: <AuthLogin needLogin={true} />,
     children: [
       {
-        path: ROUTES_PATH.FEEDBACK_ROUTE,
+        path: ROUTES_PATH.FEEDBACK,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
             <Feedbacks />
@@ -51,7 +51,7 @@ export const routes = [
         path: ROUTES_PATH.PREQUESTION_EDIT,
         element: (
           //author로 변경
-          <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
+          <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
             <PreQuestionEdit />
           </Auth>
         ),
@@ -80,7 +80,7 @@ export const routes = [
         path: ROUTES_PATH.LEVELLOG_EDIT,
         element: (
           //author로 변경
-          <Auth requireAuth={REQUIRE_AUTH.ME}>
+          <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
             <TeamStatus allowedStatuses={[TEAM_STATUS.READY]}>
               <LevellogEdit />
             </TeamStatus>

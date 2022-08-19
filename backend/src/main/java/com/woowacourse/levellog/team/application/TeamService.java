@@ -196,7 +196,7 @@ public class TeamService {
         validateParticipantDuplication(memberIds, hostId);
 
         final List<Participant> participants = new ArrayList<>();
-        participants.add(new Participant(team, getMember(hostId), true));
+        participants.add(new Participant(team, getMember(hostId), true, false));
         participants.addAll(toParticipants(team, memberIds));
 
         return new Participants(participants);
@@ -221,7 +221,7 @@ public class TeamService {
 
     private List<Participant> toParticipants(final Team team, final List<Long> memberIds) {
         return memberIds.stream()
-                .map(it -> new Participant(team, getMember(it), false))
+                .map(it -> new Participant(team, getMember(it), false, false))
                 .collect(Collectors.toList());
     }
 

@@ -132,10 +132,10 @@ abstract class ServiceTest {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "트랙룸", startAt, "jamsil.img", interviewerNumber));
 
-        participantRepository.save(new Participant(team, host, true));
+        participantRepository.save(new Participant(team, host, true, false));
 
         final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it, false))
+                .map(it -> new Participant(team, it, false, false))
                 .collect(Collectors.toList());
         participantRepository.saveAll(participants);
 

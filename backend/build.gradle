@@ -52,6 +52,9 @@ dependencies {
 
 	// BCrypt
 	implementation 'org.mindrot:jbcrypt:0.4'
+
+	// handlebars
+	implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.4'
 }
 
 ext {

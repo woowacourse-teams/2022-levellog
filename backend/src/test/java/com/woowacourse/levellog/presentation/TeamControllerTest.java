@@ -343,7 +343,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = TeamWriteDto.from("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(1L, 2L, 3L, 4L), List.of(4L, 5L));
 
-            final String message = "참관자와 관전자 모두 참여할 수 없습니다.";
+            final String message = "참가자와 참관자에 모두 포함된 멤버가 존재합니다.";
             willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .save(request, 1L);
@@ -680,7 +680,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             final TeamWriteDto request = TeamWriteDto.from("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(1L, 2L, 3L, 4L), List.of(4L, 5L));
-            final String message = "참관자와 관전자 모두 참여할 수 없습니다.";
+            final String message = "참가자와 참관자에 모두 포함된 멤버가 존재합니다.";
             willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .update(request, 1L, 1L);

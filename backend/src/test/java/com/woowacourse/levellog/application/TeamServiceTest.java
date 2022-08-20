@@ -79,7 +79,7 @@ class TeamServiceTest extends ServiceTest {
             final Member eve = saveMember("이브");
             final Member alien = saveMember("알린");
 
-            final Team pepperTeam = saveTeam(TEAM_START_TIME, pepper, roma);
+            saveTeam(TEAM_START_TIME, pepper, roma);
             final Team rickTeam = saveTeam(TEAM_START_TIME.plusDays(3), rick, pepper);
             final Team eveTeam = saveTeam(TEAM_START_TIME.plusDays(3), eve, alien);
             final Team romaTeam = saveTeam(roma, rick);
@@ -113,7 +113,7 @@ class TeamServiceTest extends ServiceTest {
 
             final Team pepperTeam = saveTeam(TEAM_START_TIME, pepper, roma);
             final Team rickTeam = saveTeam(TEAM_START_TIME, rick, pepper);
-            final Team eveTeam = saveTeam(TEAM_START_TIME.plusDays(3), eve, alien);
+            saveTeam(TEAM_START_TIME.plusDays(3), eve, alien);
             final Team romaTeam = saveTeam(roma, rick);
 
             timeStandard.setInProgress();
@@ -144,7 +144,7 @@ class TeamServiceTest extends ServiceTest {
             final Member eve = saveMember("이브");
             final Member alien = saveMember("알린");
 
-            final Team pepperTeam = saveTeam(pepper, roma);
+            saveTeam(pepper, roma);
             final Team rickTeam = saveTeam(rick, pepper);
             final Team eveTeam = saveTeam(eve, alien);
 
@@ -303,7 +303,7 @@ class TeamServiceTest extends ServiceTest {
             //when & then
             assertThatThrownBy(() -> teamService.save(teamDto, alien))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("참관자와 참관자 모두 참여할 수 없습니다.");
+                    .hasMessageContaining("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
         }
     }
 
@@ -761,7 +761,7 @@ class TeamServiceTest extends ServiceTest {
             final Long memberId = alien.getId();
             assertThatThrownBy(() -> teamService.update(teamDto, teamId, memberId))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("참관자와 참관자 모두 참여할 수 없습니다.");
+                    .hasMessageContaining("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
         }
     }
 

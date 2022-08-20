@@ -198,13 +198,12 @@ public class TeamService {
         validateParticipantExistence(participantIds);
         validateDistinctParticipant(participantIds);
         validateDistinctWatcher(watcherIds);
+        validateIndependent(participantIds, watcherIds);
         validateHostExistence(hostId, participantIds, watcherIds);
 
         final List<Participant> participants = new ArrayList<>();
         participants.addAll(toParticipants(team, hostId, participantIds));
         participants.addAll(toWatchers(team, hostId, watcherIds));
-
-        validateIndependent(participantIds, watcherIds);
 
         return new Participants(participants);
     }
@@ -241,7 +240,7 @@ public class TeamService {
                 .anyMatch(watcherIds::contains);
 
         if (notIndependent) {
-            throw new InvalidFieldException("참관자와 참관자 모두 참여할 수 없습니다.");
+            throw new InvalidFieldException("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
         }
     }
 

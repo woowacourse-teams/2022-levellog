@@ -246,7 +246,7 @@ class TeamServiceTest extends ServiceTest {
             final Long pepper = saveMember("페퍼").getId();
             final Long roma = saveMember("로마").getId();
 
-            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 2, TEAM_START_TIME,
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 2, TEAM_START_TIME,
                     List.of(alien, pepper, roma), Collections.emptyList());
             //when
             final Long id = teamService.save(teamDto, alien);
@@ -264,7 +264,7 @@ class TeamServiceTest extends ServiceTest {
             final Long pepper = saveMember("페퍼").getId();
             final Long roma = saveMember("로마").getId();
 
-            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     List.of(alien, pepper, roma, roma), Collections.emptyList());
 
             //when & then
@@ -281,7 +281,7 @@ class TeamServiceTest extends ServiceTest {
             final Long pepper = saveMember("페퍼").getId();
             final Long roma = saveMember("로마").getId();
 
-            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     List.of(alien, pepper), List.of(roma, roma));
 
             //when & then
@@ -298,7 +298,7 @@ class TeamServiceTest extends ServiceTest {
             final Long pepper = saveMember("페퍼").getId();
             final Long roma = saveMember("로마").getId();
 
-            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     List.of(alien, pepper, roma), List.of(roma));
 
             //when & then
@@ -316,7 +316,7 @@ class TeamServiceTest extends ServiceTest {
             final Long roma = saveMember("로마").getId();
             final Long rick = saveMember("릭").getId();
 
-            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     List.of(pepper, roma), List.of(rick));
 
             //when & then
@@ -652,7 +652,7 @@ class TeamServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper, eve);
 
             final List<Long> participantsIds = List.of(rick.getId(), eve.getId(), alien.getId(), roma.getId());
-            final TeamWriteDto request = TeamWriteDto.from("잠실 준조", "트랙룸", 2, AFTER_START_TIME,
+            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 2, AFTER_START_TIME,
                     participantsIds, Collections.emptyList());
             // when
             teamService.update(request, team.getId(), rick.getId());
@@ -684,7 +684,7 @@ class TeamServiceTest extends ServiceTest {
 
             final Team team = saveTeam(rick, pepper);
 
-            final TeamWriteDto request = TeamWriteDto.from("잠실 네오조", "트랙룸", 1, AFTER_START_TIME,
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, AFTER_START_TIME,
                     List.of(rick.getId()), Collections.emptyList());
             // when, then
             final Long memberId = pepper.getId();
@@ -699,7 +699,7 @@ class TeamServiceTest extends ServiceTest {
         void update_teamNotFound_exception() {
             //given
             final Long memberId = saveMember("릭").getId();
-            final TeamWriteDto request = TeamWriteDto.from("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
                     Collections.emptyList(), Collections.emptyList());
             //when & then
             assertThatThrownBy(() -> teamService.update(request, 1000L, memberId))
@@ -713,7 +713,7 @@ class TeamServiceTest extends ServiceTest {
             //given
             final Member member = saveMember("릭");
             final Team team = saveTeam(member);
-            final TeamWriteDto request = TeamWriteDto.from("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
                     List.of(member.getId()), Collections.emptyList());
             timeStandard.setInProgress();
 
@@ -734,7 +734,7 @@ class TeamServiceTest extends ServiceTest {
             final Member roma = saveMember("로마");
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
-            final TeamWriteDto request = TeamWriteDto.from("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
                     List.of(pepper.getId(), pepper.getId()), Collections.emptyList());
 
             //when & then
@@ -753,7 +753,7 @@ class TeamServiceTest extends ServiceTest {
             final Member roma = saveMember("로마");
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
-            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     List.of(alien.getId(), pepper.getId()), List.of(roma.getId(), roma.getId()));
 
             //when & then
@@ -772,7 +772,7 @@ class TeamServiceTest extends ServiceTest {
             final Member roma = saveMember("로마");
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
-            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     List.of(alien.getId(), pepper.getId(), roma.getId()), List.of(roma.getId()));
 
             //when & then
@@ -792,7 +792,7 @@ class TeamServiceTest extends ServiceTest {
             final Member rick = saveMember("릭");
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
-            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+            final TeamWriteDto teamDto = new TeamWriteDto("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
                     List.of(pepper.getId(), roma.getId()), List.of(rick.getId()));
 
             //when & then

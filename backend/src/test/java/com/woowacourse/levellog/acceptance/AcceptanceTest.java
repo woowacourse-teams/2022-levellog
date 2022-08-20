@@ -128,7 +128,7 @@ abstract class AcceptanceTest {
                 .map(MemberFixture::getId)
                 .collect(Collectors.toList());
 
-        final TeamWriteDto request = TeamWriteDto.from(title, title + "place", interviewerNumber, TEAM_START_TIME,
+        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, TEAM_START_TIME,
                 participantIds, Collections.emptyList());
 
         return post("/api/teams", host.getToken(), request);
@@ -143,7 +143,7 @@ abstract class AcceptanceTest {
                 .map(MemberFixture::getId)
                 .collect(Collectors.toList());
 
-        final TeamWriteDto request = TeamWriteDto.from(title, title + "place", interviewerNumber, TEAM_START_TIME,
+        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, TEAM_START_TIME,
                 participantIds, watcherIds);
 
         return post("/api/teams", host.getToken(), request);

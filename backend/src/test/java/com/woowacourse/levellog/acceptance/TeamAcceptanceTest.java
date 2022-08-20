@@ -43,7 +43,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final TeamWriteDto request = TeamWriteDto.from("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(ROMA.getId()));
 
         // when
@@ -358,7 +358,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
 
-        final TeamWriteDto request = TeamWriteDto.from("선릉 브리조", "수성방", 2, TEAM_START_TIME,
+        final TeamWriteDto request = new TeamWriteDto("선릉 브리조", "수성방", 2, TEAM_START_TIME,
                 List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(POBI.getId()));
 
         // when

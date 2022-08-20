@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TeamWriteDto {
 
@@ -37,12 +37,6 @@ public class TeamWriteDto {
     private List<Long> participantIds;
 
     private List<Long> watcherIds;
-
-    public static TeamWriteDto from(final String title, final String place, final int interviewerNumber,
-                                    final LocalDateTime startAt, final List<Long> participantIds,
-                                    final List<Long> watcherIds) {
-        return new TeamWriteDto(title, place, interviewerNumber, startAt, participantIds, watcherIds);
-    }
 
     public Team toEntity(final String profileUrl) {
         return new Team(title, place, startAt, profileUrl, interviewerNumber);

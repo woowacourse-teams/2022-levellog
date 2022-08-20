@@ -102,7 +102,7 @@ class TeamRepositoryTest extends RepositoryTest {
         final List<Team> closedTeams = teamResult.getContent();
         Assertions.assertAll(() -> {
             assertThat(closedTeams).containsExactly(team4, team3);
-            assertThat(teamResult.getNumber()).isEqualTo(0);
+            assertThat(teamResult.getNumber()).isZero();
             assertThat(teamResult.getTotalElements()).isEqualTo(2);
         });
     }

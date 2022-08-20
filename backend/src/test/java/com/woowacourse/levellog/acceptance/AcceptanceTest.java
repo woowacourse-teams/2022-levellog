@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.acceptance;
 
-import static com.woowacourse.levellog.fixture.MemberFixture.POBI;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
@@ -30,6 +29,7 @@ import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
@@ -130,11 +130,27 @@ abstract class AcceptanceTest {
                 .map(MemberFixture::getId)
                 .collect(Collectors.toList());
         final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
-        POBI.save();
-        final List<Long> watcherIds = List.of(POBI.getId());
 
         final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, TEAM_START_TIME,
-                participantIdsDto, new WatcherIdsDto(watcherIds));
+                participantIdsDto, new WatcherIdsDto(Collections.emptyList()));
+
+        return post("/api/teams", host.getToken(), request);
+    }
+
+    protected RestAssuredResponse saveTeam(final String title, final MemberFixture host, final int interviewerNumber,
+                                           final List<MemberFixture> watchers, final MemberFixture... participants) {
+        final List<Long> participantIds = Arrays.stream(participants)
+                .map(MemberFixture::getId)
+                .collect(Collectors.toList());
+        final ParticipantIdsDto participantIdsDto = new ParticipantIdsDto(participantIds);
+
+        final List<Long> watcherIds = watchers.stream()
+                .map(MemberFixture::getId)
+                .collect(Collectors.toList());
+        final WatcherIdsDto watcherIdsDto = new WatcherIdsDto(watcherIds);
+
+        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, TEAM_START_TIME,
+                participantIdsDto, watcherIdsDto);
 
         return post("/api/teams", host.getToken(), request);
     }

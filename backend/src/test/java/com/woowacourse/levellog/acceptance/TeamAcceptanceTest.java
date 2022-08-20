@@ -2,6 +2,7 @@ package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.MemberFixture.EVE;
 import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
+import static com.woowacourse.levellog.fixture.MemberFixture.POBI;
 import static com.woowacourse.levellog.fixture.MemberFixture.RICK;
 import static com.woowacourse.levellog.fixture.MemberFixture.ROMA;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
@@ -18,7 +19,6 @@ import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.WatcherIdsDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,8 +78,9 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
         RICK.save();
+        POBI.save();
 
-        saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE);
+        saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
         saveTeam("잠실 브리조", EVE, 1, EVE, RICK);
         final String teamId = saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER).getTeamId();
 
@@ -119,8 +120,9 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
         RICK.save();
+        POBI.save();
 
-        saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE);
+        saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
         saveTeam("잠실 브리조", EVE, 1, EVE, RICK);
 
         timeStandard.setInProgress();
@@ -356,12 +358,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
         RICK.save();
+        POBI.save();
 
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
 
         final TeamWriteDto request = new TeamWriteDto("선릉 브리조", "수성방", 2, TEAM_START_TIME,
                 new ParticipantIdsDto(List.of(PEPPER.getId(), EVE.getId(), RICK.getId())),
-                new WatcherIdsDto(Collections.emptyList()));
+                new WatcherIdsDto(List.of(POBI.getId())));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

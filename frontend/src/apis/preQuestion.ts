@@ -16,16 +16,16 @@ export const requestGetPreQuestion = ({
 export const requestPostPreQuestion = ({
   accessToken,
   levellogId,
-  preQuestionContent,
+  preQuestionResult,
 }: Pick<
   PreQuestionApiType,
-  'accessToken' | 'levellogId' | 'preQuestionContent'
+  'accessToken' | 'levellogId' | 'preQuestionResult'
 >): AxiosPromise<void> => {
   return axios({
     method: 'post',
     url: `${process.env.API_URI}/levellogs/${levellogId}/pre-questions`,
     headers: { Authorization: `Bearer ${accessToken}` },
-    data: { content: preQuestionContent },
+    data: preQuestionResult,
   });
 };
 
@@ -45,12 +45,12 @@ export const requestEditPreQuestion = ({
   accessToken,
   levellogId,
   preQuestionId,
-  preQuestionContent,
+  preQuestionResult,
 }: Omit<PreQuestionApiType, 'preQuestion'>) => {
   return axios({
     method: 'put',
     url: `${process.env.API_URI}/levellogs/${levellogId}/pre-questions/${preQuestionId}`,
     headers: { Authorization: `Bearer ${accessToken}` },
-    data: { content: preQuestionContent },
+    data: preQuestionResult,
   });
 };

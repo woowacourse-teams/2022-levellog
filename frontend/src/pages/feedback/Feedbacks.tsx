@@ -15,7 +15,6 @@ import { MESSAGE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
-import FlexBox from 'components/@commons/FlexBox';
 import Feedback from 'components/feedbacks/Feedback';
 import { FeedbackType } from 'types/feedback';
 

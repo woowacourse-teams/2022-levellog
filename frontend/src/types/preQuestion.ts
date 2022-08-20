@@ -13,7 +13,11 @@ export interface PreQuestionApiType {
   levellogId: string;
   preQuestionId: string;
   preQuestion: PreQuestionFormatType;
-  preQuestionContent: string;
+  preQuestionResult: PreQuestionResultType;
+}
+
+export interface PreQuestionResultType {
+  content: string;
 }
 
 export interface PreQuestionFormatType {

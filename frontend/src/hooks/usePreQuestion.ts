@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import { MESSAGE } from 'constants/constants';
 
+import useUriBuilder from './useUriBuilder';
 import { Editor } from '@toast-ui/react-editor';
 import {
   requestDeletePreQuestion,
@@ -18,6 +19,8 @@ import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuest
 const usePreQuestion = () => {
   const preQuestionRef = useRef<Editor>(null);
   const navigate = useNavigate();
+
+  const { teamGetUriBuilder } = useUriBuilder();
   const accessToken = localStorage.getItem('accessToken');
   const [preQuestion, setPreQuestion] = useState<PreQuestionFormatType>(
     {} as unknown as PreQuestionFormatType,
@@ -48,9 +51,9 @@ const usePreQuestion = () => {
       await requestPostPreQuestion({
         accessToken,
         levellogId,
-        preQuestionContent,
+        preQuestionResult: { content: preQuestionContent },
       });
-      navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
+      navigate(teamGetUriBuilder({ teamId }));
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -84,8 +87,13 @@ const usePreQuestion = () => {
     preQuestionContent,
   }: Omit<PreQuestionCustomHookType, 'preQuestion'>) => {
     try {
-      await requestEditPreQuestion({ accessToken, levellogId, preQuestionId, preQuestionContent });
-      navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
+      await requestEditPreQuestion({
+        accessToken,
+        levellogId,
+        preQuestionId,
+        preQuestionResult: { content: preQuestionContent },
+      });
+      navigate(teamGetUriBuilder({ teamId }));
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -141,7 +149,7 @@ const usePreQuestion = () => {
       });
       alert(MESSAGE.PREQUESTION_EDIT_CONFIRM);
     }
-    navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
+    navigate(teamGetUriBuilder({ teamId }));
   };
 
   return {

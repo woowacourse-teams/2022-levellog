@@ -306,6 +306,24 @@ class TeamServiceTest extends ServiceTest {
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
         }
+
+        @Test
+        @DisplayName("호스트가 참가자 또는 참관자에 포함되지 않으면 예외가 발생한다.")
+        void save_hostExistence_exception() {
+            //given
+            final Long alien = saveMember("알린").getId();
+            final Long pepper = saveMember("페퍼").getId();
+            final Long roma = saveMember("로마").getId();
+            final Long rick = saveMember("릭").getId();
+
+            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+                    List.of(pepper, roma), List.of(rick));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.save(teamDto, alien))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
+        }
     }
 
     @Nested
@@ -755,14 +773,33 @@ class TeamServiceTest extends ServiceTest {
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
-                    List.of(alien.getId(), pepper.getId(), roma.getId()),
-                    List.of(roma.getId()));
+                    List.of(alien.getId(), pepper.getId(), roma.getId()), List.of(roma.getId()));
 
             //when & then
             final Long memberId = alien.getId();
             assertThatThrownBy(() -> teamService.update(teamDto, teamId, memberId))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
+        }
+
+        @Test
+        @DisplayName("호스트가 참가자 또는 참관자에 포함되지 않으면 예외가 발생한다.")
+        void update_hostExistence_exception() {
+            //given
+            final Member alien = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+            final Member rick = saveMember("릭");
+
+            final Long teamId = saveTeam(alien, pepper, roma).getId();
+            final TeamWriteDto teamDto = TeamWriteDto.from("잠실 준조", "트랙룸", 1, TEAM_START_TIME,
+                    List.of(pepper.getId(), roma.getId()), List.of(rick.getId()));
+
+            //when & then
+            final Long memberId = alien.getId();
+            assertThatThrownBy(() -> teamService.update(teamDto, teamId, memberId))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
         }
     }
 

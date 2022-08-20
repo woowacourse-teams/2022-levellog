@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
+import useUriBuilder from 'hooks/useUriBuilder';
+
 import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
@@ -11,6 +13,8 @@ import UiViewer from 'components/@commons/UiViewer';
 import { FeedbackType } from 'types/feedback';
 
 const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
+  const { feedbackEditUriBuilder } = useUriBuilder();
+
   return (
     <S.Container>
       <S.Header>
@@ -20,7 +24,12 @@ const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }:
         </FlexBox>
         {teamStatus === TEAM_STATUS.IN_PROGRESS && feedbackInfo.from.id === loginUserId && (
           <Link
-            to={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackInfo.id}/author/${feedbackInfo.from.id}/edit`}
+            to={feedbackEditUriBuilder({
+              teamId,
+              levellogId,
+              feedbackId: String(feedbackInfo.id),
+              authorId: feedbackInfo.from.id,
+            })}
           >
             <Button>수정하기</Button>
           </Link>
@@ -52,9 +61,9 @@ const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }:
 
 interface FeedbackProps {
   loginUserId: string;
-  feedbackInfo: FeedbackType;
   teamId: string;
   levellogId: string;
+  feedbackInfo: FeedbackType;
   teamStatus: string;
 }
 

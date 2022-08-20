@@ -5,7 +5,7 @@ function getAdminToken() {
 function adminLogin() {
     const password = document.getElementById('admin-password').value;
 
-    fetch('/admin/login', {
+    fetch(`/admin/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -18,8 +18,8 @@ function adminLogin() {
         throw new Error(value["errorMessage"]);
     }).then(value => {
         localStorage.setItem("admin-token", value['accessToken']);
-        const token = localStorage.getItem("admin-token");
-        location.replace("teams?token=" + token);
+        let token = localStorage.getItem("admin-token");
+        location.replace(`teams?token=${token}`);
     }).catch(() => alert("비밀번호를 틀렸습니다."));
 }
 
@@ -35,16 +35,16 @@ function deleteTeams(teamId) {
 }
 
 function deleteTeam(teamId) {
-    fetch('/admin/teams/' + teamId + "?token=" + getAdminToken(), {
+    fetch(`/admin/teams/${teamId}?token=${getAdminToken()}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
         },
     }).then(() => {
-        alert(teamId + " 팀이 삭제되었습니다.");
+        alert(`${teamId} 팀이 삭제되었습니다.`);
         location.reload();
     }).catch(() => {
-        alert(teamId + " 팀 삭제에 실패했습니다.");
+        alert(`${teamId} 팀 삭제에 실패했습니다.`);
         location.reload();
     });
 }

@@ -22,8 +22,6 @@ import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.WatcherIdsDto;
-import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
-import com.woowacourse.levellog.team.exception.DuplicateWatchersException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
@@ -274,8 +272,8 @@ class TeamServiceTest extends ServiceTest {
 
             //when & then
             assertThatThrownBy(() -> teamService.save(teamDto, alien))
-                    .isInstanceOf(DuplicateParticipantsException.class)
-                    .hasMessageContaining("참가자 중복");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("중복된 참가자가 존재합니다.");
         }
 
         @Test
@@ -292,8 +290,8 @@ class TeamServiceTest extends ServiceTest {
 
             //when & then
             assertThatThrownBy(() -> teamService.save(teamDto, alien))
-                    .isInstanceOf(DuplicateWatchersException.class)
-                    .hasMessageContaining("참관자 중복");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("중복된 참관자가 존재합니다.");
         }
 
         @Test
@@ -734,8 +732,8 @@ class TeamServiceTest extends ServiceTest {
             //when & then
             final Long memberId = alien.getId();
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
-                    .isInstanceOf(DuplicateParticipantsException.class)
-                    .hasMessageContaining("참가자 중복");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("중복된 참가자가 존재합니다.");
         }
 
         @Test
@@ -754,8 +752,8 @@ class TeamServiceTest extends ServiceTest {
             //when & then
             final Long memberId = alien.getId();
             assertThatThrownBy(() -> teamService.update(teamDto, teamId, memberId))
-                    .isInstanceOf(DuplicateWatchersException.class)
-                    .hasMessageContaining("참관자 중복");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("중복된 참관자가 존재합니다.");
         }
 
         @Test

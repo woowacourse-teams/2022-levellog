@@ -13,8 +13,6 @@ import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.WatcherIdsDto;
-import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
-import com.woowacourse.levellog.team.exception.DuplicateWatchersException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
@@ -307,7 +305,7 @@ class TeamControllerTest extends ControllerTest {
                     participants, new WatcherIdsDto(Collections.emptyList()));
 
             final String message = "중복되는 참가자가 존재합니다.";
-            willThrow(new DuplicateParticipantsException(message))
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -334,7 +332,7 @@ class TeamControllerTest extends ControllerTest {
                     participants, watchers);
 
             final String message = "중복되는 참관자가 존재합니다.";
-            willThrow(new DuplicateWatchersException(message))
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .save(request, 1L);
 
@@ -660,7 +658,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participants, new WatcherIdsDto(Collections.emptyList()));
             final String message = "중복되는 참가자가 존재합니다.";
-            willThrow(new DuplicateParticipantsException(message))
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .update(request, 1L, 1L);
 
@@ -685,8 +683,8 @@ class TeamControllerTest extends ControllerTest {
             final WatcherIdsDto watchers = new WatcherIdsDto(List.of(4L, 4L, 5L));
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     participants, watchers);
-            final String message = "중복되는 참관자가 존재합니다.";
-            willThrow(new DuplicateWatchersException(message))
+            final String message = "중복된 참관자가 존재합니다.";
+            willThrow(new InvalidFieldException(message))
                     .given(teamService)
                     .update(request, 1L, 1L);
 

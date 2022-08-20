@@ -24,8 +24,6 @@ import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.team.dto.WatcherDto;
-import com.woowacourse.levellog.team.exception.DuplicateParticipantsException;
-import com.woowacourse.levellog.team.exception.DuplicateWatchersException;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
@@ -197,7 +195,7 @@ public class TeamService {
 
     private Participants createParticipants(final Team team, final Long hostId, final List<Long> participantIds,
                                             final List<Long> watcherIds) {
-        validateOtherParticipantExistence(participantIds);
+        validateParticipantExistence(participantIds);
         validateDistinctParticipant(participantIds);
         validateDistinctWatcher(watcherIds);
         validateHostExistence(hostId, participantIds, watcherIds);
@@ -206,12 +204,12 @@ public class TeamService {
         participants.addAll(toParticipants(team, hostId, participantIds));
         participants.addAll(toWatchers(team, hostId, watcherIds));
 
-        validateIndependent(participantIds, watcherIds); // validateDuplicationInParticipantAndWatcher
+        validateIndependent(participantIds, watcherIds);
 
         return new Participants(participants);
     }
 
-    private void validateOtherParticipantExistence(final List<Long> participantIds) {
+    private void validateParticipantExistence(final List<Long> participantIds) {
         if (participantIds.isEmpty()) {
             throw new InvalidFieldException("참가자가 존재하지 않습니다.");
         }
@@ -220,16 +218,14 @@ public class TeamService {
     private void validateDistinctParticipant(final List<Long> participantIds) {
         final Set<Long> distinct = new HashSet<>(participantIds);
         if (distinct.size() != participantIds.size()) {
-            throw new DuplicateParticipantsException(
-                    "참가자 중복 [participants : " + participantIds + "]");
+            throw new InvalidFieldException("중복된 참가자가 존재합니다.");
         }
     }
 
     private void validateDistinctWatcher(final List<Long> watcherIds) {
         final Set<Long> distinct = new HashSet<>(watcherIds);
         if (distinct.size() != watcherIds.size()) {
-            throw new DuplicateWatchersException(
-                    "참관자 중복 [participants : " + watcherIds + "]");
+            throw new InvalidFieldException("중복된 참관자가 존재합니다.");
         }
     }
 

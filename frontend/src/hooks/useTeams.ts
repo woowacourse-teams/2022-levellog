@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { PATH_TYPE } from 'constants/constants';
-
 import useUriBuilders from './useUriBuilder';
 import { requestGetTeams } from 'apis/teams';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';

@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 
-// useUtil로 옮기는건?
 const useScrollDown = () => {
   const scrollRef = useRef<HTMLElement>(null);
 

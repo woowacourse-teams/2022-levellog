@@ -25,18 +25,6 @@ export const ROUTES_PATH = Object.freeze({
   INTERVIEW_QUESTION: '/teams/:teamId/levellogs/:levellogId/interviewQuestions',
 });
 
-export const SERVER_PATH = Object.freeze({
-  FEEDBACKS: `${process.env.API_URI}/feedbacks`,
-  LEVELLOGS: `${process.env.API_URI}/levellogs`,
-});
-
-export const PATH_TYPE = Object.freeze({
-  ADD: '추가',
-  EDIT: '수정',
-  GETS: '전체조회',
-  GET: '단일조회',
-});
-
 export const MESSAGE = Object.freeze({
   WRONG_ACCESS: '잘못된 접근입니다.',
   NEED_RE_LOGIN: '재로그인이 필요합니다.',

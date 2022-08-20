@@ -85,6 +85,11 @@ include::{snippets}/team/create/exception/interviewer-number-more-than-participa
 
 include::{snippets}/team/create/exception/not-independent/http-response.adoc[]
 
+[[create-exception-host-existence]]
+==== 저장 시 참가자 또는 참관자에 호스트가 존재하지 않는 경우
+
+include::{snippets}/team/create/exception/host-existence/http-response.adoc[]
+
 [[find-all]]
 == 팀 전체 목록 조회
 
@@ -326,6 +331,11 @@ include::{snippets}/team/update/exception/interviewer-number-more-than-participa
 ==== 수정 시 참가자와 참관자가 겹치는 경우
 
 include::{snippets}/team/update/exception/not-independent/http-response.adoc[]
+
+[[update-exception-host-existence]]
+==== 수정 시 참가자 또는 참관자에 호스트가 존재하지 않는 경우
+
+include::{snippets}/team/create/exception/host-existence/http-response.adoc[]
 
 [[update-exception-after-start-at]]
 ==== 수정 시 인터뷰 시작 이후인 경우

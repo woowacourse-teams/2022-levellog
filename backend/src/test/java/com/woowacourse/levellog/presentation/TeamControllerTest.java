@@ -361,6 +361,30 @@ class TeamControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "not-independent"));
         }
 
+        @Test
+        @DisplayName("호스트가 참가자 또는 참관자에 포함되지 않으면 예외가 던진다.")
+        void save_hostExistence_exception() throws Exception {
+            // given
+            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    List.of(2L, 3L, 4L), List.of(5L));
+            final String message = "호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.";
+            willThrow(new InvalidFieldException(message))
+                    .given(teamService)
+                    .save(request, 1L);
+
+            // when
+            final ResultActions perform = requestCreateTeam(request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "host-existence"));
+        }
+
         private ResultActions requestCreateTeam(final TeamWriteDto request) throws Exception {
             return requestPost("/api/teams", request);
         }
@@ -696,6 +720,30 @@ class TeamControllerTest extends ControllerTest {
 
             // docs
             perform.andDo(document(BASE_SNIPPET_PATH + "not-independent"));
+        }
+
+        @Test
+        @DisplayName("호스트가 참가자 또는 참관자에 포함되지 않으면 예외가 던진다.")
+        void update_hostExistence_exception() throws Exception {
+            // given
+            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    List.of(2L, 3L, 4L), List.of(5L));
+            final String message = "호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.";
+            willThrow(new InvalidFieldException(message))
+                    .given(teamService)
+                    .update(request, 1L, 1L);
+
+            // when
+            final ResultActions perform = requestUpdateTeam(1L, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "host-existence"));
         }
 
         @Test

@@ -4,7 +4,7 @@ import static com.woowacourse.levellog.authentication.support.JwtTokenProvider.A
 
 import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
 import com.woowacourse.levellog.admin.dto.AdminTeamDto;
-import com.woowacourse.levellog.admin.dto.PasswordDto;
+import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.common.support.DebugMessage;
@@ -40,7 +40,7 @@ public class AdminService {
         this.participantRepository = participantRepository;
     }
 
-    public AdminAccessTokenDto login(final PasswordDto request) {
+    public AdminAccessTokenDto login(final AdminPasswordDto request) {
         final boolean isMatch = BCrypt.checkpw(request.getValue(), hash);
         if (!isMatch) {
             throw new WrongPasswordException(DebugMessage.init()
@@ -56,7 +56,7 @@ public class AdminService {
     public List<AdminTeamDto> findAllTeam() {
         return teamRepository.findAll()
                 .stream()
-                .map(it -> AdminTeamDto.toDto(it, it.status(timeStandard.now())))
+                .map(it -> AdminTeamDto.of(it, it.status(timeStandard.now())))
                 .collect(Collectors.toList());
     }
 

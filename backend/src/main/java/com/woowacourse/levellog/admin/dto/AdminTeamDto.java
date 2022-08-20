@@ -21,7 +21,7 @@ public class AdminTeamDto {
     private LocalDateTime startAt;
     private TeamStatus status;
 
-    public static AdminTeamDto toDto(final Team team, final TeamStatus status) {
+    public static AdminTeamDto of(final Team team, final TeamStatus status) {
         return new AdminTeamDto(team.getId(), team.getTitle(), team.getPlace(), team.getStartAt(), status);
     }
 }

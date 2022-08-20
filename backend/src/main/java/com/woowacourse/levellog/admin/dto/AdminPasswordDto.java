@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class PasswordDto {
+public class AdminPasswordDto {
 
     @NotBlank
     private String value;

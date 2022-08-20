@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
 import com.woowacourse.levellog.admin.dto.AdminTeamDto;
-import com.woowacourse.levellog.admin.dto.PasswordDto;
+import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.member.domain.Member;
@@ -29,7 +29,7 @@ public class AdminServiceTest extends ServiceTest {
         @DisplayName("암호화된 비밀번호와 일치하는 비밀번호를 입력하면 token을 발급한다.")
         void success() {
             // given
-            final PasswordDto request = new PasswordDto("levellog1!");
+            final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
 
             // when
             final AdminAccessTokenDto actual = adminService.login(request);
@@ -45,7 +45,7 @@ public class AdminServiceTest extends ServiceTest {
         @DisplayName("잘못된 비밀번호를 입력하면 예외를 던진다.")
         void login_wrongPassword_exception() {
             // given
-            final PasswordDto request = new PasswordDto("wrong-password");
+            final AdminPasswordDto request = new AdminPasswordDto("wrong-password");
 
             // when & then
             assertThatThrownBy(() -> adminService.login(request))

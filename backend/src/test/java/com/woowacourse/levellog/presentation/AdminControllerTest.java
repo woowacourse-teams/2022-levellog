@@ -4,7 +4,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.admin.dto.PasswordDto;
+import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ class AdminControllerTest extends ControllerTest {
         @DisplayName("비밀번호가 틀리면 예외를 던진다.")
         void login_wrongPassword_exception() throws Exception {
             // given
-            final PasswordDto request = new PasswordDto("levellog1!");
+            final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
             final String message = "비밀번호가 틀렸습니다.";
 
             BDDMockito.willThrow(new WrongPasswordException(DebugMessage.init()))
@@ -46,7 +46,7 @@ class AdminControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "wrong-password"));
         }
 
-        private ResultActions requestLogin(final PasswordDto request) throws Exception {
+        private ResultActions requestLogin(final AdminPasswordDto request) throws Exception {
             return requestPost("/admin/login", request);
         }
     }

@@ -6,7 +6,7 @@ import static com.woowacourse.levellog.fixture.RestAssuredTemplate.delete;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.notNullValue;
 
-import com.woowacourse.levellog.admin.dto.PasswordDto;
+import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class AdminAcceptanceTest extends AcceptanceTest {
     @DisplayName("관리자 로그인")
     void login() {
         // given
-        final PasswordDto request = new PasswordDto("levellog1!");
+        final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
 
         // when
         final ValidatableResponse response = post("/admin/login", request).getResponse();
@@ -51,7 +51,7 @@ class AdminAcceptanceTest extends AcceptanceTest {
 
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, RICK).getTeamId();
 
-        final PasswordDto request = new PasswordDto("levellog1!");
+        final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
         final String token = post("/admin/login", request).getAdminToken();
 
         timeStandard.setInProgress();

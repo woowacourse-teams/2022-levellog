@@ -3,7 +3,7 @@ package com.woowacourse.levellog.admin.presentation;
 import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
 import com.woowacourse.levellog.admin.dto.AdminTeamDto;
-import com.woowacourse.levellog.admin.dto.PasswordDto;
+import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import java.util.List;
 import javax.validation.Valid;
@@ -34,7 +34,7 @@ public class AdminController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<AdminAccessTokenDto> login(@RequestBody @Valid final PasswordDto request) {
+    public ResponseEntity<AdminAccessTokenDto> login(@RequestBody @Valid final AdminPasswordDto request) {
         final AdminAccessTokenDto response = adminService.login(request);
         return ResponseEntity.ok(response);
     }

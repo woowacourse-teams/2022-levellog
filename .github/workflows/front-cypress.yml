@@ -1,0 +1,38 @@
+name: Cypress Tests
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  cypress-build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout source code.
+        uses: actions/checkout@v2
+
+      - name: Check Node v
+        run: node -v
+
+      - name: Install Dependencies
+        working-directory: ./frontend
+        run: yarn install
+
+      - name: Run local
+        working-directory: ./frontend
+        run: nohup yarn local 1> /dev/null 2>&1 &
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: ./frontend
+          install: true
+          build: yarn cypress run --browser chrome --record --key ${{ secrets.CYPRESS_RECORD_KEY }} --spec 'cypress/e2e/PageRoute.cy.ts'
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+          browser: chrome
+          record: true
+          parallel: true
+          group: 'UI - Chrome'
+          spec: cypress/e2e/*

@@ -68,42 +68,42 @@ describe('Page Route Test', () => {
     });
   });
 
-  it('InterviewDetail Page Test', () => {
-    cy.intercept('GET', `${serverURL}/teams/111`, (req) => {
-      req.continue((res) => {
-        res.send(200, {
-          id: 111,
-          title: 'TEST 제목',
-          place: 'TEST 장소',
-          startAt: 'TEST 시간',
-          teamImage: '페퍼.com',
-          hostId: 1,
-          participants: [
-            {
-              memberId: 1,
-              levellogId: 12,
-              nickname: '페퍼',
-              profileUrl: '페퍼.com',
-            },
-            {
-              memberId: 2,
-              levellogId: null,
-              nickname: '해리',
-              profileUrl: '해리.com',
-            },
-          ],
-        });
-      });
-    }).as('getTeam');
-    cy.visit(`${baseURL}/interview/teams/111`);
-    cy.wait('@getTeam');
-    cy.get('h3:first').should((pageTitle) => {
-      expect(pageTitle).to.contain('TEST 제목');
-    });
-    cy.get('div p').should((participantName) => {
-      expect(participantName[2]).to.contain('페퍼');
-    });
-  });
+  // it('InterviewDetail Page Test', () => {
+  //   cy.intercept('GET', `${serverURL}/teams/111`, (req) => {
+  //     req.continue((res) => {
+  //       res.send(200, {
+  //         id: 111,
+  //         title: 'TEST 제목',
+  //         place: 'TEST 장소',
+  //         startAt: 'TEST 시간',
+  //         teamImage: '페퍼.com',
+  //         hostId: 1,
+  //         participants: [
+  //           {
+  //             memberId: 1,
+  //             levellogId: 12,
+  //             nickname: '페퍼',
+  //             profileUrl: '페퍼.com',
+  //           },
+  //           {
+  //             memberId: 2,
+  //             levellogId: null,
+  //             nickname: '해리',
+  //             profileUrl: '해리.com',
+  //           },
+  //         ],
+  //       });
+  //     });
+  //   }).as('getTeam');
+  //   cy.visit(`${baseURL}/interview/teams/111`);
+  //   cy.wait('@getTeam');
+  //   cy.get('h3:first').should((pageTitle) => {
+  //     expect(pageTitle).to.contain('TEST 제목');
+  //   });
+  //   cy.get('div p').should((participantName) => {
+  //     expect(participantName[2]).to.contain('페퍼');
+  //   });
+  // });
 
   // it('LevellogModal Test', () => {
   //   cy.intercept('GET', `${serverURL}/teams/111/levellogs/12`, (req) => {

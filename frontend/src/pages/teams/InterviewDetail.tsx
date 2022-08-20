@@ -8,6 +8,7 @@ import usePreQuestionModal from 'hooks/usePreQuestionModal';
 import useTeam from 'hooks/useTeam';
 import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
+import useUtil from 'hooks/useUtil';
 
 import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
@@ -25,6 +26,7 @@ const InterviewDetail = () => {
   const { loginUserId } = useUser();
   const { teamId } = useParams();
   const { teamEditUriBuilder } = useUriBuilders();
+  const { convertDateAndTime } = useUtil();
   const {
     teamLocationState,
     team,
@@ -70,7 +72,9 @@ const InterviewDetail = () => {
       <ContentHeader
         imageUrl={(team as InterviewTeamType).teamImage}
         title={(team as InterviewTeamType).title}
-        subTitle={`${(team as InterviewTeamType).place} ${(team as InterviewTeamType).startAt} `}
+        subTitle={`${(team as InterviewTeamType).place} ${convertDateAndTime({
+          startAt: (team as InterviewTeamType).startAt,
+        })}`}
       >
         <>
           {(team as InterviewTeamType).hostId === loginUserId && (

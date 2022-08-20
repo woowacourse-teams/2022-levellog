@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import useUtil from 'hooks/useUtil';
+
 import checkIcon from 'assets/images/check.svg';
 import locationIcon from 'assets/images/location.svg';
 
@@ -17,6 +19,8 @@ const InterviewTeam = ({
   status,
   participants,
 }: InterviewTeamType) => {
+  const { convertDateAndTime } = useUtil();
+
   return (
     <S.Container id={id} status={status}>
       <FlexBox gap={0.625}>
@@ -39,10 +43,7 @@ const InterviewTeam = ({
             <S.ImageBox>
               <Image src={checkIcon} sizes={'TINY'} />
             </S.ImageBox>
-            {`${startAt.slice(0, 4)}년 ${startAt.slice(5, 7)}월 ${startAt.slice(
-              8,
-              10,
-            )}일 ${startAt.slice(11, 13)}시 ${startAt.slice(14, 16)}분`}
+            {convertDateAndTime({ startAt })}
           </S.Notice>
         </S.Info>
       </FlexBox>

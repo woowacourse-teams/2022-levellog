@@ -101,8 +101,8 @@ const Title = styled.h1`
 `;
 
 const SubTitle = styled.p`
-  font-size: 1rem;
-  font-weight: 300;
+  font-size: 0.875rem;
+  font-weight: 500;
 `;
 
 const FilterButtonBox = styled.div`

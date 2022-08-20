@@ -37,12 +37,6 @@ const S = {
     border-radius: 0.5rem;
     background-color: ${(props) => props.theme.default.WHITE};
     transition: all 0.2s;
-    @media (max-width: 1024px) {
-      right: 2.5rem;
-    }
-    @media (max-width: 560px) {
-      right: 1.25rem;
-    }
   `,
 
   Greeting: styled.div`

@@ -50,7 +50,6 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity<Void> deleteTeam(@PathVariable final Long teamId) {
         adminService.deleteTeamById(teamId);
-        return ResponseEntity.noContent()
-                .build();
+        return ResponseEntity.noContent().build();
     }
 }

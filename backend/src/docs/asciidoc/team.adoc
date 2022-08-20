@@ -91,7 +91,38 @@ include::{snippets}/team/create/exception/not-independent/http-response.adoc[]
 include::{snippets}/team/create/exception/host-existence/http-response.adoc[]
 
 [[find-all]]
-== 팀 전체 목록 조회
+== 팀 목록 조회
+
+*Query Parameter*
+
+[cols="1,1,1,1"]
+|===
+|*Parameter*
+|*Description*
+|*Type*
+|*Default Value*
+
+|status
+|인터뷰 진행 상태에 따라 필터링 조건을 적용한다.
+|String(ready / in-progress / closed / all)
+|all
+
+|page
+|페이지 넘버를 지정한다.
+|정수형
+|0
+
+|size
+|가져올 데이터 개수를 지정한다.
+|정수형
+|100
+
+|sort
+|정렬 조건을 적용한다. 다중 조건인 경우 앞에 선언된 조건이 우선 적용된다.
+|String,String
+|isClosed,asc&createdAt,desc
+|<<find-all>>
+|===
 
 *STATUS 응답 종류*
 
@@ -110,75 +141,13 @@ include::{snippets}/team/create/exception/host-existence/http-response.adoc[]
 |인터뷰가 종료된 상태이다.
 |===
 
-*Pagination*
-
-[cols="1,1"]
-|===
-|*Parameter*
-|*Default Value*
-
-|page
-|0
-
-|size
-|20
-
-|sort
-|인터뷰 종료 여부 기준 오름차순 정렬(아직 종료되지 않은 팀 -> 종료 된 팀), 생성일 기준 내림차순 정렬
-|===
-
 [[find-all-success]]
-=== 팀 전체 목록 조회 성공
+=== 팀 목록 조회 성공
 
 operation::team/find-all[]
 
-[[find-all-by-status]]
-== Status로 필터링 된 팀 목록 조회
-
-*status 쿼리 파라미터 종류*
-
-[cols="1,1"]
-|===
-|*Parameter*
-|*설명*
-
-|ready
-|인터뷰 시작 전인 팀 목록을 조회한다.
-
-|in-progress
-|인터뷰가 진행 중인 팀 목록을 조회한다.
-
-|closed
-|인터뷰가 종료된 팀 목록을 조회한다.
-
-|all (Default)
-|<<find-all>>
-|===
-
-*Pagination*
-
-[cols="1,1"]
-|===
-|*Parameter*
-|*Default Value*
-
-|page
-|0
-
-|size
-|20
-
-|sort
-|생성일 기준 내림차순 정렬
-|===
-
-[[find-all-by-status-success]]
-=== Status로 필터링 된 팀 목록 조회 성공
-
-operation::team/find-all/filtering-by-status[]
-
-[[find-all-by-status-exception]]
-=== Status로 필터링 된 팀 목록 조회 예외
+[[find-all-exception]]
+=== 팀 목록 조회 예외
 
 ==== 쿼리 파라미터로 잘못된 status를 입력한 경우
 

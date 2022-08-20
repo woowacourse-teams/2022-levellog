@@ -104,44 +104,6 @@ class TeamAcceptanceTest extends AcceptanceTest {
     }
 
     /*
-     * Scenario: 진행 상태로 필터링된 레벨 인터뷰 팀 목록 조회하기
-     *   given: 팀이 등록되어 있다.
-     *   when: 진행 중인 팀을 목록 조회를 요청한다.
-     *   then: 200 Ok 상태 코드와 최근 생성일 순으로 정렬된 모든 진행 중인 팀 목록을 응답받는다.
-     */
-    @Test
-    @DisplayName("필터링된 레벨 인터뷰 팀 전체 목록 조회하기")
-    void findAllTeam_filteringByTeamStatus_success() {
-        // given
-        PEPPER.save();
-        EVE.save();
-        RICK.save();
-        POBI.save();
-
-        saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
-        saveTeam("잠실 브리조", EVE, 1, EVE, RICK);
-
-        timeStandard.setInProgress();
-
-        // when
-        final ValidatableResponse response = RestAssured.given(specification).log().all()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .filter(document("team/find-all/filtering-by-status"))
-                .when()
-                .get("/api/teams?status=in-progress")
-                .then().log().all();
-
-        // then
-        response.statusCode(HttpStatus.OK.value())
-                .body("teams.title", contains("잠실 브리조", "잠실 제이슨조"),
-                        "teams.hostId", contains(EVE.getId().intValue(), PEPPER.getId().intValue()),
-                        "teams.status", contains("IN_PROGRESS", "IN_PROGRESS"),
-                        "teams.isParticipant", contains(false, true),
-                        "teams.participants.nickname", contains(List.of("이브", "릭"), List.of("페퍼", "이브")));
-    }
-
-    /*
      * Scenario: 내가 속한 레벨 인터뷰 팀 상세 조회하기
      *   given: 팀이 등록되어 있다.
      *   given: 페퍼의 계정으로 로그인되어있다.

@@ -42,7 +42,7 @@ const InterviewTeam = ({
             {`${startAt.slice(0, 4)}년 ${startAt.slice(5, 7)}월 ${startAt.slice(
               8,
               10,
-            )}일 ${startAt.slice(11, 13)}시`}
+            )}일 ${startAt.slice(11, 13)}시 ${startAt.slice(14, 16)}분`}
           </S.Notice>
         </S.Info>
       </FlexBox>

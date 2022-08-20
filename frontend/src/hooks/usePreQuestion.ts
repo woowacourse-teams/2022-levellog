@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import { MESSAGE } from 'constants/constants';
 
+import useUriBuilder from './useUriBuilder';
 import { Editor } from '@toast-ui/react-editor';
 import {
   requestDeletePreQuestion,
@@ -13,21 +14,24 @@ import {
   requestPostPreQuestion,
 } from 'apis/preQuestion';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
-import { PreQuestionCustomHookType } from 'types/preQuestion';
+import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
 
 const usePreQuestion = () => {
-  const [preQuestion, setPreQuestion] = useState('');
   const preQuestionRef = useRef<Editor>(null);
   const navigate = useNavigate();
 
+  const { teamGetUriBuilder } = useUriBuilder();
   const accessToken = localStorage.getItem('accessToken');
+  const [preQuestion, setPreQuestion] = useState<PreQuestionFormatType>(
+    {} as unknown as PreQuestionFormatType,
+  );
 
   const getPreQuestion = async ({ levellogId }: Pick<PreQuestionCustomHookType, 'levellogId'>) => {
     try {
       const res = await requestGetPreQuestion({ levellogId, accessToken });
-      setPreQuestion(res.data.preQuestion);
+      setPreQuestion(res.data);
 
-      return res.data.preQuestion;
+      return res.data;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -41,15 +45,15 @@ const usePreQuestion = () => {
   const postPreQuestion = async ({
     teamId,
     levellogId,
-    preQuestion,
-  }: Omit<PreQuestionCustomHookType, 'preQuestionId'>) => {
+    preQuestionContent,
+  }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId' | 'preQuestionContent'>) => {
     try {
       await requestPostPreQuestion({
         accessToken,
         levellogId,
-        preQuestion,
+        preQuestionResult: { content: preQuestionContent },
       });
-      navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
+      navigate(teamGetUriBuilder({ teamId }));
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -80,11 +84,16 @@ const usePreQuestion = () => {
     teamId,
     levellogId,
     preQuestionId,
-    preQuestion,
-  }: PreQuestionCustomHookType) => {
+    preQuestionContent,
+  }: Omit<PreQuestionCustomHookType, 'preQuestion'>) => {
     try {
-      await requestEditPreQuestion({ accessToken, levellogId, preQuestionId, preQuestion });
-      navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
+      await requestEditPreQuestion({
+        accessToken,
+        levellogId,
+        preQuestionId,
+        preQuestionResult: { content: preQuestionContent },
+      });
+      navigate(teamGetUriBuilder({ teamId }));
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -99,11 +108,14 @@ const usePreQuestion = () => {
     levellogId,
   }: Pick<PreQuestionCustomHookType, 'levellogId'>) => {
     const preQuestion = await getPreQuestion({ levellogId });
-    if (typeof preQuestion === 'string') {
+
+    if (!preQuestion) return;
+
+    if (typeof preQuestion.content === 'string') {
       setPreQuestion(preQuestion);
     }
-    if (typeof preQuestion === 'string' && preQuestionRef.current) {
-      preQuestionRef.current.getInstance().setMarkdown(preQuestion);
+    if (typeof preQuestion.content === 'string' && preQuestionRef.current) {
+      preQuestionRef.current.getInstance().setMarkdown(preQuestion.content);
     }
   };
 
@@ -115,7 +127,8 @@ const usePreQuestion = () => {
       postPreQuestion({
         teamId,
         levellogId,
-        preQuestion: preQuestionRef.current.getInstance().getEditorElements().mdEditor.innerText,
+        preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
+          .innerText,
       });
       alert(MESSAGE.PREQUESTION_ADD_CONFIRM);
     }
@@ -125,17 +138,18 @@ const usePreQuestion = () => {
     teamId,
     levellogId,
     preQuestionId,
-  }: Omit<PreQuestionCustomHookType, 'preQuestion'>) => {
+  }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId' | 'preQuestionId'>) => {
     if (preQuestionRef.current) {
       editPreQuestion({
         teamId,
         levellogId,
         preQuestionId,
-        preQuestion: preQuestionRef.current.getInstance().getEditorElements().mdEditor.innerText,
+        preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
+          .innerText,
       });
       alert(MESSAGE.PREQUESTION_EDIT_CONFIRM);
     }
-    navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
+    navigate(teamGetUriBuilder({ teamId }));
   };
 
   return {

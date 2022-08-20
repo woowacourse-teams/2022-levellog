@@ -1,9 +1,7 @@
 package com.woowacourse.levellog.prequestion.dto;
 
-import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.prequestion.domain.PreQuestion;
-import javax.validation.constraints.NotBlank;
+import com.woowacourse.levellog.member.dto.MemberDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -16,14 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PreQuestionDto {
 
-    @NotBlank
-    private String preQuestion;
+    private MemberDto author;
+    private String content;
 
-    public static PreQuestionDto from(final String preQuestionContent) {
-        return new PreQuestionDto(preQuestionContent);
-    }
-
-    public PreQuestion toEntity(final Levellog levellog, final Member from) {
-        return new PreQuestion(levellog, from, preQuestion);
+    public static PreQuestionDto from(final Member author, final String content) {
+        return new PreQuestionDto(MemberDto.from(author), content);
     }
 }

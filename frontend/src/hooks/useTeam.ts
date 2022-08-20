@@ -24,9 +24,6 @@ import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } f
 const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { isDebounce } = useUtil();
-  const [participants, setParticipants] = useState<MemberType[]>([
-    { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
-  ]);
   const [members, setMembers] = useState<MemberType[]>([]);
   const [nicknameValue, setNicknameValue] = useState('');
   const team = useContext(TeamContext);
@@ -35,9 +32,11 @@ const useTeam = () => {
   const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const navigate = useNavigate();
   const { teamId } = useParams();
-
   const teamLocationState: InterviewTeamType | undefined = location.state;
   const accessToken = localStorage.getItem('accessToken');
+  const [participants, setParticipants] = useState<MemberType[]>([
+    { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
+  ]);
 
   const postTeam = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
     try {

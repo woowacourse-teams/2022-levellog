@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.MemberFixture;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +36,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
-        final PreQuestionDto request = PreQuestionDto.from("이브가 쓴 사전 질문");
+        final PreQuestionWriteDto request = PreQuestionWriteDto.from("이브가 쓴 사전 질문");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -72,9 +72,9 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
 
         final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, EVE).getPreQuestionId();
 
-        // when
-        final PreQuestionDto request = PreQuestionDto.from("이브가 수정한 사전 질문");
+        final PreQuestionWriteDto request = PreQuestionWriteDto.from("이브가 수정한 사전 질문");
 
+        // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + EVE.getToken())
                 .body(request)
@@ -87,7 +87,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
         requestFindMyPreQuestions(levellogId, EVE)
-                .body("preQuestion", equalTo("이브가 수정한 사전 질문"));
+                .body("content", equalTo("이브가 수정한 사전 질문"));
     }
 
     /*
@@ -120,7 +120,8 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("preQuestion", equalTo("이브가 쓴 사전 질문"));
+                .body("content", equalTo("이브가 쓴 사전 질문"),
+                        "author.id", equalTo(EVE.getId().intValue()));
     }
 
     /*
@@ -157,6 +158,6 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
     }
 
     private ValidatableResponse requestFindMyPreQuestions(final String levellogId, final MemberFixture member) {
-        return get("/api/levellogs/" + levellogId + "/pre-questions/" + "my", member.getToken()).getResponse();
+        return get("/api/levellogs/" + levellogId + "/pre-questions/my", member.getToken()).getResponse();
     }
 }

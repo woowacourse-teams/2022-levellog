@@ -42,7 +42,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("interviewQuestion must not be blank")
+                    jsonPath("message").value("content must not be blank")
             );
 
             // docs
@@ -238,7 +238,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("interviewQuestion must not be blank")
+                    jsonPath("message").value("content must not be blank")
             );
 
             // docs

@@ -21,7 +21,7 @@ import com.woowacourse.levellog.fixture.MemberFixture;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -165,7 +165,7 @@ abstract class AcceptanceTest {
 
     protected RestAssuredResponse savePreQuestion(final String content, final String levellogId,
                                                   final MemberFixture author) {
-        final PreQuestionDto request = PreQuestionDto.from(content);
+        final PreQuestionWriteDto request = PreQuestionWriteDto.from(content);
 
         return post("/api/levellogs/" + levellogId + "/pre-questions/", author.getToken(), request);
     }

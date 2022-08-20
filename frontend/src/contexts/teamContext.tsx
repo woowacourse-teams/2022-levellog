@@ -17,6 +17,7 @@ const teamInfo: InterviewTeamType = {
   interviewers: [],
   interviewees: [],
   participants: [],
+  watchers: [],
 };
 
 export const TeamContext = createContext<InterviewTeamType>(teamInfo);

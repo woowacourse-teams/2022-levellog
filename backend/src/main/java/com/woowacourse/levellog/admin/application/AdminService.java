@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.admin.application;
 
+import static com.woowacourse.levellog.authentication.support.JwtTokenProvider.ADMIN_TOKEN_PAYLOAD;
+
 import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
 import com.woowacourse.levellog.admin.dto.AdminTeamDto;
 import com.woowacourse.levellog.admin.dto.PasswordDto;
@@ -47,7 +49,7 @@ public class AdminService {
             );
         }
 
-        final String token = jwtTokenProvider.createToken("This is admin token.");
+        final String token = jwtTokenProvider.createToken(ADMIN_TOKEN_PAYLOAD);
         return new AdminAccessTokenDto(token);
     }
 

@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.application;
 
+import static com.woowacourse.levellog.authentication.support.JwtTokenProvider.ADMIN_TOKEN_PAYLOAD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -37,7 +38,7 @@ public class AdminServiceTest extends ServiceTest {
             final String token = actual.getAccessToken();
             final String payload = jwtTokenProvider.getPayload(token);
 
-            assertThat(payload).isEqualTo("This is admin token.");
+            assertThat(payload).isEqualTo(ADMIN_TOKEN_PAYLOAD);
         }
 
         @Test

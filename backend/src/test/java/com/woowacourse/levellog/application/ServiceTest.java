@@ -167,7 +167,6 @@ abstract class ServiceTest {
         return team;
     }
 
-
     protected Levellog saveLevellog(final Member author, final Team team) {
         return saveLevellog(author, team, "levellog content");
     }

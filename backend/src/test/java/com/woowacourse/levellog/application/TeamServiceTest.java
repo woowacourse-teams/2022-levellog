@@ -279,7 +279,7 @@ class TeamServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("관전자가 중복되면 예외가 발생한다.")
+        @DisplayName("참관자가 중복되면 예외가 발생한다.")
         void save_duplicateWatchers_exception() {
             //given
             final Long alien = saveMember("알린").getId();
@@ -293,11 +293,11 @@ class TeamServiceTest extends ServiceTest {
             //when & then
             assertThatThrownBy(() -> teamService.save(teamDto, alien))
                     .isInstanceOf(DuplicateWatchersException.class)
-                    .hasMessageContaining("관전자 중복");
+                    .hasMessageContaining("참관자 중복");
         }
 
         @Test
-        @DisplayName("참가자와 관전자에 중복되는 멤버가 있으면 예외가 발생한다.")
+        @DisplayName("참가자와 참관자에 중복되는 멤버가 있으면 예외가 발생한다.")
         void save_concurrentParticipantAndWatcher_exception() {
             //given
             final Long alien = saveMember("알린").getId();
@@ -311,7 +311,7 @@ class TeamServiceTest extends ServiceTest {
             //when & then
             assertThatThrownBy(() -> teamService.save(teamDto, alien))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("참관자와 관전자 모두 참여할 수 없습니다.");
+                    .hasMessageContaining("참관자와 참관자 모두 참여할 수 없습니다.");
         }
     }
 
@@ -739,7 +739,7 @@ class TeamServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("관전자가 중복되면 예외가 발생한다.")
+        @DisplayName("참관자가 중복되면 예외가 발생한다.")
         void update_duplicateWatchers_exception() {
             //given
             final Member alien = saveMember("알린");
@@ -755,11 +755,11 @@ class TeamServiceTest extends ServiceTest {
             final Long memberId = alien.getId();
             assertThatThrownBy(() -> teamService.update(teamDto, teamId, memberId))
                     .isInstanceOf(DuplicateWatchersException.class)
-                    .hasMessageContaining("관전자 중복");
+                    .hasMessageContaining("참관자 중복");
         }
 
         @Test
-        @DisplayName("참가자와 관전자에 중복되는 멤버가 있으면 예외가 발생한다.")
+        @DisplayName("참가자와 참관자에 중복되는 멤버가 있으면 예외가 발생한다.")
         void update_concurrentParticipantAndWatcher_exception() {
             //given
             final Member alien = saveMember("알린");
@@ -775,7 +775,7 @@ class TeamServiceTest extends ServiceTest {
             final Long memberId = alien.getId();
             assertThatThrownBy(() -> teamService.update(teamDto, teamId, memberId))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("참관자와 관전자 모두 참여할 수 없습니다.");
+                    .hasMessageContaining("참관자와 참관자 모두 참여할 수 없습니다.");
         }
     }
 

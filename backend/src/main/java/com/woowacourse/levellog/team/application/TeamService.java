@@ -229,7 +229,7 @@ public class TeamService {
         final Set<Long> distinct = new HashSet<>(watcherIds);
         if (distinct.size() != watcherIds.size()) {
             throw new DuplicateWatchersException(
-                    "관전자 중복 [participants : " + watcherIds + "]");
+                    "참관자 중복 [participants : " + watcherIds + "]");
         }
     }
 
@@ -245,7 +245,7 @@ public class TeamService {
                 .anyMatch(watcherIds::contains);
 
         if (notIndependent) {
-            throw new InvalidFieldException("참관자와 관전자 모두 참여할 수 없습니다.");
+            throw new InvalidFieldException("참관자와 참관자 모두 참여할 수 없습니다.");
         }
     }
 

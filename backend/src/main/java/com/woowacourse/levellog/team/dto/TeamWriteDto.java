@@ -34,7 +34,6 @@ public class TeamWriteDto {
     @NotNull
     private ParticipantIdsDto participants;
 
-    @Valid
     private WatcherIdsDto watchers;
 
     public Team toEntity(final String profileUrl) {

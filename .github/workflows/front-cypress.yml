@@ -35,4 +35,4 @@ jobs:
           record: true
           parallel: true
           group: 'UI - Chrome'
-          spec: cypress/tests/ui/*
+          spec: cypress/e2e/*

@@ -29,7 +29,8 @@ public class AdminService {
     private final ParticipantRepository participantRepository;
 
     public AdminService(@Value("${security.admin.hash}") final String hash, final JwtTokenProvider jwtTokenProvider,
-                        final TimeStandard timeStandard, final TeamRepository teamRepository, final ParticipantRepository participantRepository) {
+                        final TimeStandard timeStandard, final TeamRepository teamRepository,
+                        final ParticipantRepository participantRepository) {
         this.hash = hash;
         this.jwtTokenProvider = jwtTokenProvider;
         this.timeStandard = timeStandard;

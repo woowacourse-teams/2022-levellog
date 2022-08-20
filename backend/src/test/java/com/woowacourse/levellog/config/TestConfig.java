@@ -33,7 +33,8 @@ public class TestConfig {
 
     @Bean
     public AdminService adminService(final JwtTokenProvider jwtTokenProvider, final TimeStandard timeStandard,
-                                     final TeamRepository teamRepository, final ParticipantRepository participantRepository) {
+                                     final TeamRepository teamRepository,
+                                     final ParticipantRepository participantRepository) {
         final String salt = BCrypt.gensalt();
         final String hash = BCrypt.hashpw("levellog1!", salt);
 

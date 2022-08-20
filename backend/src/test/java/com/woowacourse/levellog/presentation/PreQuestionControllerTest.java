@@ -9,7 +9,7 @@ import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -35,15 +35,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
         void save_preQuestionNullAndBlank_exception(final String preQuestion) throws Exception {
             // given
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
+            final PreQuestionWriteDto request = PreQuestionWriteDto.from(preQuestion);
 
             // when
-            final ResultActions perform = requestCreatePreQuestion(1L, preQuestionDto);
+            final ResultActions perform = requestCreatePreQuestion(1L, request);
 
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("preQuestion must not be blank"));
+                    jsonPath("message").value("content must not be blank"));
 
             // docs
             perform.andDo(document(BASE_SNIPPET_PATH + "blank"));
@@ -53,14 +53,14 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("참가자가 아닌 멤버가 사전 질문을 등록하는 경우 예외를 던진다.")
         void save_fromNotParticipant_exception() throws Exception {
             // given
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
+            final PreQuestionWriteDto request = PreQuestionWriteDto.from("사전 질문");
             final String message = "권한이 없습니다.";
             willThrow(new UnauthorizedException(message))
                     .given(preQuestionService)
-                    .save(preQuestionDto, 1L, 1L);
+                    .save(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestCreatePreQuestion(1L, preQuestionDto);
+            final ResultActions perform = requestCreatePreQuestion(1L, request);
 
             // then
             perform.andExpectAll(
@@ -75,15 +75,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("내 레벨로그에 사전 질문을 등록하는 경우 예외를 던진다.")
         void save_levellogIsMine_exception() throws Exception {
             // given
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
+            final PreQuestionWriteDto request = PreQuestionWriteDto.from("사전 질문");
 
             final String message = "자기 자신에게 사전 질문을 등록할 수 없습니다.";
             willThrow(new InvalidPreQuestionException("[levellogId : 1]", message))
                     .given(preQuestionService)
-                    .save(preQuestionDto, 1L, 1L);
+                    .save(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestCreatePreQuestion(1L, preQuestionDto);
+            final ResultActions perform = requestCreatePreQuestion(1L, request);
 
             // then
             perform.andExpectAll(
@@ -98,15 +98,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("사전 질문이 이미 등록되었을 때 사전 질문을 등록하는 경우 예외를 던진다.")
         void save_preQuestionAlreadyExist_exception() throws Exception {
             // given
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
+            final PreQuestionWriteDto request = PreQuestionWriteDto.from("사전 질문");
 
             final String message = "레벨로그의 사전 질문을 이미 작성했습니다.";
             willThrow(new PreQuestionAlreadyExistException(message))
                     .given(preQuestionService)
-                    .save(preQuestionDto, 1L, 1L);
+                    .save(request, 1L, 1L);
 
             // when
-            final ResultActions perform = requestCreatePreQuestion(1L, preQuestionDto);
+            final ResultActions perform = requestCreatePreQuestion(1L, request);
 
             // then
             perform.andExpectAll(
@@ -118,8 +118,8 @@ class PreQuestionControllerTest extends ControllerTest {
         }
 
         private ResultActions requestCreatePreQuestion(final Long levellogId,
-                                                       final PreQuestionDto preQuestionDto) throws Exception {
-            return requestPost("/api/levellogs/" + levellogId + "/pre-questions", preQuestionDto);
+                                                       final PreQuestionWriteDto request) throws Exception {
+            return requestPost("/api/levellogs/" + levellogId + "/pre-questions", request);
         }
     }
 
@@ -135,15 +135,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("사전 질문으로 공백이나 null이 들어오면 예외를 던진다.")
         void update_preQuestionNullAndBlank_exception(final String preQuestion) throws Exception {
             // given
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from(preQuestion);
+            final PreQuestionWriteDto request = PreQuestionWriteDto.from(preQuestion);
 
             // when
-            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, preQuestionDto);
+            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, request);
 
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("preQuestion must not be blank"));
+                    jsonPath("message").value("content must not be blank"));
 
             // docs
             perform.andDo(document(BASE_SNIPPET_PATH + "blank"));
@@ -153,15 +153,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("잘못된 레벨로그의 사전 질문을 수정하면 예외를 던진다.")
         void update_levellogWrongId_exception() throws Exception {
             // given
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
+            final PreQuestionWriteDto request = PreQuestionWriteDto.from("사전 질문");
 
             final String message = "입력한 levellogId와 사전 질문의 levellogId가 다릅니다.";
             willThrow(new InvalidLevellogException(message, "[ 입력한 levellogId : 1 ]"))
                     .given(preQuestionService)
-                    .update(preQuestionDto, 1L, 1L, 1L);
+                    .update(request, 1L, 1L, 1L);
 
             // when
-            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, preQuestionDto);
+            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, request);
 
             // then
             perform.andExpectAll(
@@ -176,15 +176,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("저장되어있지 않은 사전 질문을 수정하는 경우 예외를 던진다.")
         void update_preQuestionNotFound_exception() throws Exception {
             // given
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
+            final PreQuestionWriteDto request = PreQuestionWriteDto.from("사전 질문");
 
             final String message = "사전 질문이 존재하지 않습니다.";
             willThrow(new PreQuestionNotFoundException(message))
                     .given(preQuestionService)
-                    .update(preQuestionDto, 1L, 1L, 1L);
+                    .update(request, 1L, 1L, 1L);
 
             // when
-            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, preQuestionDto);
+            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, request);
 
             // then
             perform.andExpectAll(
@@ -199,15 +199,15 @@ class PreQuestionControllerTest extends ControllerTest {
         @DisplayName("타인의 사전 질문을 수정하는 경우 예외를 던진다.")
         void update_fromNotMyPreQuestion_exception() throws Exception {
             // given
-            final PreQuestionDto preQuestionDto = PreQuestionDto.from("사전 질문");
+            final PreQuestionWriteDto request = PreQuestionWriteDto.from("사전 질문");
 
             final String message = "권한이 없습니다.";
             willThrow(new UnauthorizedException(message))
                     .given(preQuestionService)
-                    .update(preQuestionDto, 1L, 1L, 1L);
+                    .update(request, 1L, 1L, 1L);
 
             // when
-            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, preQuestionDto);
+            final ResultActions perform = requestUpdatePreQuestion(1L, 1L, request);
 
             // then
             perform.andExpectAll(
@@ -220,7 +220,7 @@ class PreQuestionControllerTest extends ControllerTest {
 
         private ResultActions requestUpdatePreQuestion(final Long levellogId,
                                                        final Long preQuestionId,
-                                                       final PreQuestionDto request) throws Exception {
+                                                       final PreQuestionWriteDto request) throws Exception {
             return requestPut("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId, request);
         }
     }

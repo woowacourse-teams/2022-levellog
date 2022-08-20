@@ -1,8 +1,8 @@
-package com.woowacourse.levellog.interviewquestion.dto;
+package com.woowacourse.levellog.prequestion.dto;
 
-import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,16 +14,16 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewQuestionWriteDto {
+public class PreQuestionWriteDto {
 
     @NotBlank
     private String content;
 
-    public static InterviewQuestionWriteDto from(final String interviewQuestion) {
-        return new InterviewQuestionWriteDto(interviewQuestion);
+    public static PreQuestionWriteDto from(final String content) {
+        return new PreQuestionWriteDto(content);
     }
 
-    public InterviewQuestion toInterviewQuestion(final Member fromMember, final Levellog levellog) {
-        return InterviewQuestion.of(fromMember, levellog, content);
+    public PreQuestion toEntity(final Levellog levellog, final Member from) {
+        return new PreQuestion(levellog, from, content);
     }
 }

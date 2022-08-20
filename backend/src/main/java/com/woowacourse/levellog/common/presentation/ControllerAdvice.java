@@ -17,7 +17,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(LevellogException.class)
     public ResponseEntity<ExceptionResponse> handleLevellogException(final LevellogException e) {
-        logInfo(e);
+        log.info("{} : {}", ((Exception) e).getClass().getSimpleName(), e.getMessage());
         return toResponseEntity(e.getClientMessage(), e.getHttpStatus());
     }
 
@@ -32,7 +32,6 @@ public class ControllerAdvice {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(
             final HttpMessageNotReadableException e) {
-        logInfo(e);
         return toResponseEntity("RequestBody가 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
     }
 
@@ -48,7 +47,4 @@ public class ControllerAdvice {
                 .body(response);
     }
 
-    private void logInfo(final Exception e) {
-        log.info("{} : {}", e.getClass().getSimpleName(), e.getMessage());
-    }
 }

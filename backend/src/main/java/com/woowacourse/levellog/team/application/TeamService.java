@@ -170,7 +170,7 @@ public class TeamService {
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
         return TeamDto.from(team, participants.toHostId(), status, participants.isContains(memberId), interviewers,
-                interviewees, getParticipantResponses(participants, memberId), getWatcherResponses(participants));
+                interviewees, toParticipantResponses(participants, memberId), toWatcherResponses(participants));
     }
 
     private Member getMember(final Long memberId) {
@@ -256,14 +256,14 @@ public class TeamService {
                 .collect(Collectors.toList());
     }
 
-    private List<ParticipantDto> getParticipantResponses(final Participants participants, final Long memberId) {
+    private List<ParticipantDto> toParticipantResponses(final Participants participants, final Long memberId) {
         return participants.getValues().stream()
                 .filter(Participant::isParticipant)
                 .map(it -> createParticipantDto(it, memberId))
                 .collect(Collectors.toList());
     }
 
-    private List<WatcherDto> getWatcherResponses(final Participants participants) {
+    private List<WatcherDto> toWatcherResponses(final Participants participants) {
         return participants.getValues().stream()
                 .filter(Participant::isWatcher)
                 .map(WatcherDto::from)

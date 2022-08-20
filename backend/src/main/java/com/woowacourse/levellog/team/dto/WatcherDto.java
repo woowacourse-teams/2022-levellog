@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.team.dto;
 
+import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Participant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,9 +19,11 @@ public class WatcherDto {
     private String profileUrl;
 
     public static WatcherDto from(final Participant participant) {
+        final Member member = participant.getMember();
+
         return new WatcherDto(
-                participant.getMember().getId(),
-                participant.getMember().getNickname(),
-                participant.getMember().getProfileUrl());
+                member.getId(),
+                member.getNickname(),
+                member.getProfileUrl());
     }
 }

@@ -169,10 +169,11 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("잘못된 팀 Status를 받으면 예외가 발생한다.")
         void findAll_invalidStatus_exception() {
             // given
-            final Member rick = saveMember("릭");
+            final Long rickId = saveMember("릭").getId();
 
             // when & then
-            assertThatThrownBy(() -> teamService.findAll(Optional.of("invalid"), rick.getId()))
+            final Optional<String> invalidStatus = Optional.of("invalid");
+            assertThatThrownBy(() -> teamService.findAll(invalidStatus, rickId))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("입력 받은 status가 올바르지 않습니다.");
         }
@@ -291,7 +292,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("참가자와 참관자에 중복되는 멤버가 있으면 예외가 발생한다.")
-        void save_concurrentParticipantAndWatcher_exception() {
+        void save_notIndependent_exception() {
             //given
             final Long alien = saveMember("알린").getId();
             final Long pepper = saveMember("페퍼").getId();
@@ -746,7 +747,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("참가자와 참관자에 중복되는 멤버가 있으면 예외가 발생한다.")
-        void update_concurrentParticipantAndWatcher_exception() {
+        void update_notIndependent_exception() {
             //given
             final Member alien = saveMember("알린");
             final Member pepper = saveMember("페퍼");
@@ -792,12 +793,13 @@ class TeamServiceTest extends ServiceTest {
             // given
             final Member rick = saveMember("릭");
             final Member alien = saveMember("알린");
-            final Team team = saveTeam(rick, alien);
+            final Long teamId = saveTeam(rick, alien).getId();
 
             // when & then
-            assertThatThrownBy(() -> teamService.close(team.getId(), alien.getId()))
+            final Long memberId = alien.getId();
+            assertThatThrownBy(() -> teamService.close(teamId, memberId))
                     .isInstanceOf(HostUnauthorizedException.class)
-                    .hasMessageContainingAll("호스트 권한이 없습니다.", alien.getId().toString());
+                    .hasMessageContainingAll("호스트 권한이 없습니다.", memberId.toString());
         }
     }
 
@@ -845,10 +847,10 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("없는 id에 해당하는 팀을 수정하면 예외를 던진다.")
         void delete_teamNotFound_exception() {
             //given
-            final Member member = saveMember("릭");
+            final Long memberId = saveMember("릭").getId();
 
             //when & then
-            assertThatThrownBy(() -> teamService.deleteById(1000L, member.getId()))
+            assertThatThrownBy(() -> teamService.deleteById(1000L, memberId))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다. 입력한 팀 id : [1000]");
         }

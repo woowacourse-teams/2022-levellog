@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
-import com.woowacourse.levellog.admin.dto.AdminTeamDto;
 import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
+import com.woowacourse.levellog.admin.dto.AdminTeamDto;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.member.domain.Member;
@@ -76,13 +76,13 @@ public class AdminServiceTest extends ServiceTest {
         }
     }
 
-        @Nested
+    @Nested
     @DisplayName("deleteTeamById 메서드는")
     class DeleteTeamById {
 
         @Test
         @DisplayName("팀 id가 주어지면 해당하는 팀을 삭제한다. - status: ready")
-        void success_ready() {
+        void deleteTeamById_ready_success() {
             // given
             final Member rick = saveMember("릭");
             final Member alien = saveMember("알린");
@@ -103,7 +103,7 @@ public class AdminServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("팀 id가 주어지면 해당하는 팀을 삭제한다. - status: inProgress")
-        void success_inProgress() {
+        void deleteTeamById_inProgress_success() {
             // given
             final Member rick = saveMember("릭");
             final Member alien = saveMember("알린");
@@ -126,7 +126,7 @@ public class AdminServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("팀 id가 주어지면 해당하는 팀을 삭제한다. - status: closed")
-        void success_closed() {
+        void deleteTeamById_closed_success() {
             // given
             final Member rick = saveMember("릭");
             final Member alien = saveMember("알린");

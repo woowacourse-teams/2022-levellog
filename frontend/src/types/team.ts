@@ -1,3 +1,5 @@
+import { MemberType } from 'types/member';
+
 export interface TeamApiType {
   teamId: string;
   teamInfo: TeamCustomHookType;
@@ -8,6 +10,11 @@ export interface TeamEditApiType {
   teamId: string;
   teamInfo: Pick<TeamCustomHookType, 'title' | 'place' | 'startAt'>;
   accessToken: string | null;
+}
+
+export interface TeamSubmitType {
+  watchers: MemberType[];
+  participants: MemberType[];
 }
 
 export interface TeamCustomHookType {
@@ -38,10 +45,19 @@ export interface InterviewTeamType {
   interviewerNumber: string;
   interviewers: Array<number | null>;
   interviewees: Array<number | null>;
+  watchers: WatcherType[];
   participants: ParticipantType[];
 }
 
 export interface ParticipantType {
+  memberId: string;
+  levellogId: string;
+  nickname: string;
+  profileUrl: string;
+  preQuestionId: string;
+}
+
+export interface WatcherType {
   memberId: string;
   levellogId: string;
   nickname: string;

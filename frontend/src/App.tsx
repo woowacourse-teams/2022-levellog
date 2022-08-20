@@ -28,7 +28,7 @@ const App = () => {
 };
 
 const PageContainer = styled.div`
-  min-height: calc(100vh - 15rem);
+  min-height: calc(100vh - 8.75rem);
 `;
 
 export default App;

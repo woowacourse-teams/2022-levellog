@@ -148,8 +148,8 @@ const InterviewDetail = () => {
 
 const S = {
   Container: styled.div`
-    max-width: 1600px;
-    margin: auto;
+    max-width: 100rem;
+    margin: 0 auto 6.25rem auto;
     @media (max-width: 1700px) {
       width: 1270px;
     }

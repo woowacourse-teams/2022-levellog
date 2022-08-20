@@ -11,7 +11,7 @@ import useUser from 'hooks/useUser';
 import EmptyFeedback from 'pages/status/EmptyFeedback';
 import Loading from 'pages/status/Loading';
 
-import { MESSAGE, PATH_TYPE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';

@@ -10,7 +10,7 @@ import useUser from 'hooks/useUser';
 import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';
 import Loading from 'pages/status/Loading';
 
-import { PATH_TYPE, TEAM_STATUS } from 'constants/constants';
+import { TEAM_STATUS } from 'constants/constants';
 import { checkFirstWordFinalConsonant } from 'constants/util';
 
 import ContentHeader from 'components/@commons/ContentHeader';

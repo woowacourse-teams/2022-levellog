@@ -199,7 +199,7 @@ const S = {
   `,
 
   Button: styled(Button)`
-    border-radius: 1.25rem;
+    border-radius: 2rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
     font-weight: 700;
     color: ${(props) => props.theme.new_default.BLACK};

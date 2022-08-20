@@ -9,7 +9,7 @@ import feedbackIcon from 'assets/images/feedbackIcon.svg';
 import interviewQuestionIcon from 'assets/images/interviewQuestionIcon.svg';
 import levellogIcon from 'assets/images/levellogIcon.svg';
 import preQuestionIcon from 'assets/images/preQuestionIcon.svg';
-import { PATH_TYPE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';

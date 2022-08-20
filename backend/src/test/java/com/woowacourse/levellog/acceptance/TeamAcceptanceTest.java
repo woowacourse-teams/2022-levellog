@@ -14,9 +14,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
-import com.woowacourse.levellog.team.dto.WatcherIdsDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.util.List;
@@ -45,10 +43,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final List<Long> participantIds = List.of(PEPPER.getId(), EVE.getId(), RICK.getId());
-        final List<Long> watcherIds = List.of(ROMA.getId());
-        final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(participantIds), new WatcherIdsDto(watcherIds));
+        final TeamWriteDto request = TeamWriteDto.from("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
+                List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(ROMA.getId()));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -362,9 +358,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
 
-        final TeamWriteDto request = new TeamWriteDto("선릉 브리조", "수성방", 2, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(PEPPER.getId(), EVE.getId(), RICK.getId())),
-                new WatcherIdsDto(List.of(POBI.getId())));
+        final TeamWriteDto request = TeamWriteDto.from("선릉 브리조", "수성방", 2, TEAM_START_TIME,
+                List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(POBI.getId()));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

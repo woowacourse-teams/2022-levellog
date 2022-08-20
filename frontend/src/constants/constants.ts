@@ -18,11 +18,11 @@ export const ROUTES_PATH = Object.freeze({
   INTERVIEW_TEAMS_ADD: `/teams/add`,
   INTERVIEW_TEAMS_EDIT: `/teams/:teamId/edit`,
 
-  PREQUESTION_ADD: '/teams/:teamId/levellogs/:levellogId/preQuestions/add',
+  PREQUESTION_ADD: '/teams/:teamId/levellogs/:levellogId/pre-questions/add',
   PREQUESTION_EDIT:
-    '/teams/:teamId/levellogs/:levellogId/preQuestions/:preQuestionId/author/:authorId/edit',
+    '/teams/:teamId/levellogs/:levellogId/pre-questions/:preQuestionId/author/:authorId/edit',
 
-  INTERVIEW_QUESTION: '/teams/:teamId/levellogs/:levellogId/interviewQuestions',
+  INTERVIEW_QUESTION: '/teams/:teamId/levellogs/:levellogId/interview-questions',
 });
 
 export const MESSAGE = Object.freeze({

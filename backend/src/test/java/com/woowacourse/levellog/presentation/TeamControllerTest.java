@@ -34,6 +34,9 @@ import org.springframework.test.web.servlet.ResultActions;
 @DisplayName("TeamController의")
 class TeamControllerTest extends ControllerTest {
 
+    public static final int DEFAULT_PAGE = 0;
+    public static final int DEFAULT_SIZE = 100;
+
     @Test
     @DisplayName("findAll 메서드는 status로 잘못된 값을 입력 받으면 예외가 발생한다.")
     void findAll_invalidStatus_exception() throws Exception {
@@ -48,7 +51,7 @@ class TeamControllerTest extends ControllerTest {
 
         willThrow(new InvalidFieldException(message, DebugMessage.init()))
                 .given(teamService)
-                .findAll(PageRequest.of(0, 20, sort), invalidStatus, 1L);
+                .findAll(PageRequest.of(DEFAULT_PAGE, DEFAULT_SIZE, sort), invalidStatus, 1L);
 
         // when
         final ResultActions perform = requestGet("/api/teams?status=" + invalidStatus);

@@ -42,7 +42,7 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamsDto> findAll(@PageableDefault(size = 20)
+    public ResponseEntity<TeamsDto> findAll(@PageableDefault(size = 100)
                                             @SortDefault.SortDefaults({
                                                     @SortDefault(sort = "isClosed", direction = Direction.ASC),
                                                     @SortDefault(sort = "createdAt", direction = Direction.DESC)

@@ -49,7 +49,7 @@ class AdminAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         RICK.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, RICK).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, RICK, PEPPER).getTeamId();
 
         final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
         final String token = post("/admin/login", request).getAdminToken();

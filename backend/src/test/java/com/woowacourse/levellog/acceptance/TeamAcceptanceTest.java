@@ -2,6 +2,7 @@ package com.woowacourse.levellog.acceptance;
 
 import static com.woowacourse.levellog.fixture.MemberFixture.EVE;
 import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
+import static com.woowacourse.levellog.fixture.MemberFixture.POBI;
 import static com.woowacourse.levellog.fixture.MemberFixture.RICK;
 import static com.woowacourse.levellog.fixture.MemberFixture.ROMA;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
@@ -13,7 +14,6 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.dto.ParticipantIdsDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
@@ -41,10 +41,10 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
         RICK.save();
+        ROMA.save();
 
-        final List<Long> participantIds = List.of(EVE.getId(), RICK.getId());
         final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
-                new ParticipantIdsDto(participantIds));
+                List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(ROMA.getId()));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -74,10 +74,11 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
         RICK.save();
+        POBI.save();
 
-        saveTeam("잠실 제이슨조", PEPPER, 1, EVE);
-        saveTeam("잠실 브리조", EVE, 1, RICK);
-        final String teamId = saveTeam("잠실 네오조", RICK, 1, PEPPER).getTeamId();
+        saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
+        saveTeam("잠실 브리조", EVE, 1, EVE, RICK);
+        final String teamId = saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER).getTeamId();
 
         timeStandard.setInProgress();
         RestAssuredTemplate.post("/api/teams/" + teamId + "/close", RICK.getToken());
@@ -115,9 +116,10 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
         RICK.save();
+        POBI.save();
 
-        saveTeam("잠실 제이슨조", PEPPER, 1, EVE);
-        saveTeam("잠실 브리조", EVE, 1, RICK);
+        saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
+        saveTeam("잠실 브리조", EVE, 1, EVE, RICK);
 
         timeStandard.setInProgress();
 
@@ -155,7 +157,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, EVE, RICK, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, PEPPER, EVE, RICK, ROMA).getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -193,7 +195,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, EVE, RICK, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, PEPPER, EVE, RICK, ROMA).getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -225,7 +227,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         RICK.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, RICK).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, RICK).getTeamId();
 
         timeStandard.setInProgress(); // 인터뷰 시작
 
@@ -258,7 +260,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, EVE, RICK, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, PEPPER, EVE, RICK, ROMA).getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -290,7 +292,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, EVE, RICK, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, PEPPER, EVE, RICK, ROMA).getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -319,7 +321,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
 
         timeStandard.setInProgress();
 
@@ -352,11 +354,12 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
         RICK.save();
+        POBI.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
 
         final TeamWriteDto request = new TeamWriteDto("선릉 브리조", "수성방", 2, TEAM_START_TIME,
-                new ParticipantIdsDto(List.of(EVE.getId(), RICK.getId())));
+                List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(POBI.getId()));
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -385,7 +388,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

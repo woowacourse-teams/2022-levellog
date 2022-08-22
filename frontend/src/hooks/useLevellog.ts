@@ -5,12 +5,14 @@ import axios, { AxiosResponse } from 'axios';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
+import useUriBuilder from './useUriBuilder';
 import { Editor } from '@toast-ui/react-editor';
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { LevellogCustomHookType, LevellogInfoType } from 'types/levellog';
 
 const useLevellog = () => {
+  const { teamGetUriBuilder } = useUriBuilder();
   const [levellogInfo, setLevellogInfo] = useState<LevellogInfoType>(
     {} as unknown as LevellogInfoType,
   );
@@ -29,7 +31,7 @@ const useLevellog = () => {
         teamId,
         levellogContent: { content: inputValue },
       });
-      navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
+      navigate(teamGetUriBuilder({ teamId }));
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -70,7 +72,7 @@ const useLevellog = () => {
         levellogContent: { content: inputValue },
       });
       alert('레벨로그 수정이 완료되었습니다.');
-      navigate(`${ROUTES_PATH.INTERVIEW_TEAMS}/${teamId}`);
+      navigate(teamGetUriBuilder({ teamId }));
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;

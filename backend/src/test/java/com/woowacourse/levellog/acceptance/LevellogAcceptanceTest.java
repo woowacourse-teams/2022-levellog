@@ -30,7 +30,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final LevellogWriteDto request = LevellogWriteDto.from("Spring과 React를 학습했습니다.");
 
         // when
@@ -61,7 +61,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, PEPPER).getLevellogId();
 
         // when
@@ -91,7 +91,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, EVE).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, PEPPER).getLevellogId();
 
         final String updateContent = "update content";

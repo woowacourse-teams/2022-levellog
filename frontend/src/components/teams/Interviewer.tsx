@@ -2,13 +2,14 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
+import useUriBuilder from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import feedbackIcon from 'assets/images/feedbackIcon.svg';
 import interviewQuestionIcon from 'assets/images/interviewQuestionIcon.svg';
 import levellogIcon from 'assets/images/levellogIcon.svg';
 import preQuestionIcon from 'assets/images/preQuestionIcon.svg';
-import { ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
@@ -29,6 +30,14 @@ const Interviewer = ({
   const navigate = useNavigate();
   const { teamId } = useParams();
   const { loginUserId } = useUser();
+  const {
+    preQuestionAddUriBuilder,
+    feedbacksGetUriBuilder,
+    interviewQuestionsGetUriBuilder,
+    levellogAddUriBuilder,
+  } = useUriBuilder();
+
+  if (!teamId) return <div></div>;
 
   const handleClickOpenLevellogModal = () => {
     if (typeof teamId === 'string') {
@@ -40,19 +49,17 @@ const Interviewer = ({
     onClickOpenPreQuestionModal({ participant });
   };
 
-  const handleClickPreQuestionButton = () => {
-    navigate(`/pre-questions/teams/${teamId}/levellogs/${participant.levellogId}`);
+  const handleClickAddPreQuestionButton = () => {
+    navigate(preQuestionAddUriBuilder({ teamId, levellogId: participant.levellogId }));
   };
 
-  const handleClickFeedbackButton = () => {
-    navigate(`/teams/${teamId}/levellogs/${participant.levellogId}/feedbacks`);
+  const handleClickViewFeedbackButton = () => {
+    navigate(feedbacksGetUriBuilder({ teamId, levellogId: participant.levellogId }));
   };
 
-  const handleClickInterviewQuestionButton = () => {
-    navigate(`/interview-questions/teams/${teamId}/levellogs/${participant.levellogId}`);
+  const handleClickViewInterviewQuestionButton = () => {
+    navigate(interviewQuestionsGetUriBuilder({ teamId, levellogId: participant.levellogId }));
   };
-
-  if (!teamId) return <div></div>;
 
   if (participant.memberId === loginUserId) {
     return (
@@ -73,7 +80,7 @@ const Interviewer = ({
                 </S.Button>
                 <S.Button
                   disabled={!participant.levellogId || !userInTeam}
-                  onClick={handleClickInterviewQuestionButton}
+                  onClick={handleClickViewInterviewQuestionButton}
                 >
                   <Image src={interviewQuestionIcon} sizes={'SMALL'} borderRadius={false} />
                   <S.ButtonText>인터뷰질문 보기</S.ButtonText>
@@ -81,7 +88,7 @@ const Interviewer = ({
 
                 <S.Button
                   disabled={!participant.levellogId || !userInTeam}
-                  onClick={handleClickFeedbackButton}
+                  onClick={handleClickViewFeedbackButton}
                 >
                   <Image src={feedbackIcon} sizes={'SMALL'} borderRadius={false} />
                   <S.ButtonText>피드백 보기</S.ButtonText>
@@ -90,7 +97,7 @@ const Interviewer = ({
             ) : (
               <>
                 {teamStatus === TEAM_STATUS.READY ? (
-                  <Link to={`${ROUTES_PATH.LEVELLOG_ADD}/${teamId}`}>
+                  <Link to={levellogAddUriBuilder({ teamId })}>
                     <S.Button>
                       <Image src={levellogIcon} sizes={'SMALL'} borderRadius={false} />
                       <S.ButtonText>레벨로그 작성</S.ButtonText>
@@ -140,7 +147,7 @@ const Interviewer = ({
               ) : (
                 <S.Button
                   disabled={!participant.levellogId || !userInTeam}
-                  onClick={handleClickPreQuestionButton}
+                  onClick={handleClickAddPreQuestionButton}
                 >
                   <Image src={preQuestionIcon} sizes={'SMALL'} borderRadius={false} />
                   <S.ButtonText>사전질문 작성</S.ButtonText>
@@ -148,7 +155,7 @@ const Interviewer = ({
               )}
               <S.Button
                 disabled={!participant.levellogId || !userInTeam}
-                onClick={handleClickFeedbackButton}
+                onClick={handleClickViewFeedbackButton}
               >
                 <Image src={feedbackIcon} sizes={'SMALL'} borderRadius={false} />
                 <S.ButtonText>피드백 보기</S.ButtonText>

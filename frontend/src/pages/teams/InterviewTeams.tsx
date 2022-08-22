@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
+import useSnackbar from 'hooks/useSnackbar';
 import useTeams from 'hooks/useTeams';
 
 import plusIcon from 'assets/images/plus.svg';
@@ -12,11 +13,19 @@ import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FilterButton from 'components/@commons/FilterButton';
 import Image from 'components/@commons/Image';
+import Snackbar from 'components/@commons/Snackbar';
+import SnackbarContainer from 'components/SnackbarContainer';
 import InterviewTeam from 'components/teams/InterviewTeam';
 import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
   const { teams, getTeams, handleClickInterviewGroup } = useTeams();
+  const { snackbars, showSnackbar } = useSnackbar();
+
+  const handleOnClick = () => {
+    console.log('handleOnClick');
+    showSnackbar({ message: '' });
+  };
 
   useEffect(() => {
     getTeams();
@@ -24,6 +33,13 @@ const InterviewTeams = () => {
 
   return (
     <>
+      <button onClick={handleOnClick}>추가</button>
+      <SnackbarContainer>
+        {snackbars.map((snackbar, index) => (
+          <Snackbar key={index}>{snackbar}</Snackbar>
+        ))}
+      </SnackbarContainer>
+
       <ContentHeader title={'인터뷰 팀'}>
         <div>
           <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>

@@ -11,7 +11,7 @@ const Auth = ({ children, requireAuth }: AuthProps) => {
   const navigate = useNavigate();
 
   if (isLoad) return <Loading />;
-  // 동작 체크 필요
+  // 에러시, react-router-dom 에러. navigate 쓰면 안 됌
   if (isError) {
     navigate(ROUTES_PATH.HOME);
     return <Loading />;

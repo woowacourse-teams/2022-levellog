@@ -5,6 +5,7 @@ import com.woowacourse.levellog.common.exception.LevellogException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +17,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(LevellogException.class)
     public ResponseEntity<ExceptionResponse> handleLevellogException(final LevellogException e) {
-        log.info("{} : {}", e.getClass().getSimpleName(), e.getMessage());
+        log.info("{} : {}", ((Exception) e).getClass().getSimpleName(), e.getMessage());
         return toResponseEntity(e.getClientMessage(), e.getHttpStatus());
     }
 
@@ -28,6 +29,12 @@ public class ControllerAdvice {
         return toResponseEntity(message, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(
+            final HttpMessageNotReadableException e) {
+        return toResponseEntity("RequestBody가 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleUnexpectedException(final Exception e) {
         log.warn("Internal server error", e);
@@ -36,8 +43,8 @@ public class ControllerAdvice {
 
     private ResponseEntity<ExceptionResponse> toResponseEntity(final String message, final HttpStatus httpStatus) {
         final ExceptionResponse response = new ExceptionResponse(message);
-        return ResponseEntity
-                .status(httpStatus)
+        return ResponseEntity.status(httpStatus)
                 .body(response);
     }
+
 }

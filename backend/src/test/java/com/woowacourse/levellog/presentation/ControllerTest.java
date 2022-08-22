@@ -14,6 +14,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woowacourse.levellog.admin.application.AdminService;
+import com.woowacourse.levellog.admin.presentation.AdminController;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.presentation.OAuthController;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
@@ -50,7 +52,8 @@ import org.springframework.web.context.WebApplicationContext;
         OAuthController.class,
         MyInfoController.class,
         PreQuestionController.class,
-        InterviewQuestionController.class
+        InterviewQuestionController.class,
+        AdminController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public abstract class ControllerTest {
@@ -83,6 +86,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected OAuthService oAuthService;
+
+    @MockBean
+    protected AdminService adminService;
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;

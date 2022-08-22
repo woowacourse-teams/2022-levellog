@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
 
+    public static final String ADMIN_TOKEN_PAYLOAD = "This is admin token.";
+
     private final SecretKey secretKey;
     private final long validityInMilliseconds;
 
@@ -65,5 +67,30 @@ public class JwtTokenProvider {
         } catch (final JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public boolean validateAdminToken(final String token) {
+        try {
+            final Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+
+            if (!isValid(claims)) {
+                throw new InvalidTokenException("관리자 토큰이 아닙니다.");
+            }
+
+            return !claims.getBody()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (final JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    private boolean isValid(final Jws<Claims> claims) {
+        return claims.getBody()
+                .getSubject()
+                .equals(ADMIN_TOKEN_PAYLOAD);
     }
 }

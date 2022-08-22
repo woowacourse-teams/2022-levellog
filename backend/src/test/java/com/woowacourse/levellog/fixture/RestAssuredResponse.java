@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.fixture;
 
+import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
 import com.woowacourse.levellog.authentication.dto.LoginDto;
 import io.restassured.response.ValidatableResponse;
 import org.springframework.http.HttpHeaders;
@@ -58,6 +59,13 @@ public class RestAssuredResponse {
         return response
                 .extract()
                 .as(LoginDto.class)
+                .getAccessToken();
+    }
+
+    public String getAdminToken() {
+        return response
+                .extract()
+                .as(AdminAccessTokenDto.class)
                 .getAccessToken();
     }
 

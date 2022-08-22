@@ -3,6 +3,7 @@ package com.woowacourse.levellog.application;
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.config.FakeTimeStandard;
@@ -80,6 +81,9 @@ abstract class ServiceTest {
 
     @Autowired
     protected PreQuestionService preQuestionService;
+
+    @Autowired
+    protected AdminService adminService;
 
     @Autowired
     protected MemberRepository memberRepository;

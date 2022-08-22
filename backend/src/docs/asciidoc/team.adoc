@@ -25,10 +25,10 @@ operation::team/create[]
 
 include::{snippets}/team/create/exception/participants-duplicate/http-response.adoc[]
 
-[[create-exception-participants-host]]
-==== 저장 시 참가자 목록에 Host가 포함된 경우
+[[create-exception-watchers-duplicate]]
+==== 저장 시 중복된 참관자가 존재하는 경우
 
-include::{snippets}/team/create/exception/participants-have-host/http-response.adoc[]
+include::{snippets}/team/create/exception/watchers-duplicate/http-response.adoc[]
 
 [[create-exception-title-null]]
 ==== 저장 시 title이 null 또는 공백인 경우
@@ -80,6 +80,16 @@ include::{snippets}/team/create/exception/interviewer-number-not-positive/http-r
 
 include::{snippets}/team/create/exception/interviewer-number-more-than-participant/http-response.adoc[]
 
+[[create-exception-not-independent]]
+==== 저장 시 참가자와 참관자가 겹치는 경우
+
+include::{snippets}/team/create/exception/not-independent/http-response.adoc[]
+
+[[create-exception-host-existence]]
+==== 저장 시 참가자 또는 참관자에 호스트가 존재하지 않는 경우
+
+include::{snippets}/team/create/exception/host-existence/http-response.adoc[]
+
 [[find-all]]
 == 팀 전체 목록 조회
 
@@ -102,6 +112,7 @@ include::{snippets}/team/create/exception/interviewer-number-more-than-participa
 
 [[find-all-success]]
 === 팀 전체 목록 조회 성공
+
 팀 전체 목록 조회 응답은 인터뷰 진행 상태와 최근 생성일 순으로 정렬되어 있다.
 
 operation::team/find-all[]
@@ -128,6 +139,7 @@ operation::team/find-all[]
 
 [[find-all-by-status-success]]
 === Status로 필터링 된 팀 목록 조회 성공
+
 Status로 필터링 된 팀 목록 조회 응답은 최근 생성일 순으로 정렬되어 있다.
 
 operation::team/find-all/filtering-by-status[]
@@ -290,10 +302,10 @@ include::{snippets}/team/update/exception/not-found/http-response.adoc[]
 
 include::{snippets}/team/update/exception/participants-duplicate/http-response.adoc[]
 
-[[update-exception-participants-host]]
-==== 수정 시 참가자 목록에 Host가 포함된 경우 (hostId = 1)
+[[update-exception-watchers-duplicate]]
+==== 수정 시 중복된 참관자가 존재하는 경우
 
-include::{snippets}/team/update/exception/participants-have-host/http-response.adoc[]
+include::{snippets}/team/update/exception/watchers-duplicate/http-response.adoc[]
 
 [[update-exception-participants-empty]]
 ==== 수정 시 호스트 이외의 참가자가 없는 경우
@@ -314,6 +326,16 @@ include::{snippets}/team/update/exception/interviewer-number-not-positive/http-r
 ==== 수정 시 인터뷰어 수가 참가자 수 보다 많거나 같은 경우
 
 include::{snippets}/team/update/exception/interviewer-number-more-than-participant/http-response.adoc[]
+
+[[update-exception-not-independent]]
+==== 수정 시 참가자와 참관자가 겹치는 경우
+
+include::{snippets}/team/update/exception/not-independent/http-response.adoc[]
+
+[[update-exception-host-existence]]
+==== 수정 시 참가자 또는 참관자에 호스트가 존재하지 않는 경우
+
+include::{snippets}/team/create/exception/host-existence/http-response.adoc[]
 
 [[update-exception-after-start-at]]
 ==== 수정 시 인터뷰 시작 이후인 경우

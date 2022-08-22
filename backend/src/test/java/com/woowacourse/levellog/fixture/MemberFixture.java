@@ -15,6 +15,7 @@ public enum MemberFixture {
     ALIEN("알린", "303030"),
     RICK("릭", "404040"),
     EVE("이브", "505050"),
+    POBI("포비", "606060"),
     ;
 
     private final String nickname;

@@ -131,15 +131,40 @@ abstract class ServiceTest {
         return saveTeam(TEAM_START_TIME, interviewerNumber, host, members);
     }
 
+    protected Team saveTeam(final int interviewerNumber, final Member host, final List<Member> watchers,
+                            final Member... members) {
+        return saveTeam(TEAM_START_TIME, interviewerNumber, host, watchers, members);
+    }
+
     protected Team saveTeam(final LocalDateTime startAt, final int interviewerNumber, final Member host,
                             final Member... members) {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "트랙룸", startAt, "jamsil.img", interviewerNumber));
 
-        participantRepository.save(new Participant(team, host, true));
+        participantRepository.save(new Participant(team, host, true, false));
 
         final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it, false))
+                .map(it -> new Participant(team, it, false, false))
+                .collect(Collectors.toList());
+        participantRepository.saveAll(participants);
+
+        return team;
+    }
+
+    protected Team saveTeam(final LocalDateTime startAt, final int interviewerNumber, final Member host,
+                            final List<Member> watchers, final Member... members) {
+        final Team team = teamRepository.save(
+                new Team("잠실 네오조", "트랙룸", startAt, "jamsil.img", interviewerNumber));
+
+        participantRepository.save(new Participant(team, host, true, false));
+
+        final List<Participant> watcherList = watchers.stream()
+                .map(it -> new Participant(team, it, false, true))
+                .collect(Collectors.toList());
+        participantRepository.saveAll(watcherList);
+
+        final List<Participant> participants = Arrays.stream(members)
+                .map(it -> new Participant(team, it, false, false))
                 .collect(Collectors.toList());
         participantRepository.saveAll(participants);
 

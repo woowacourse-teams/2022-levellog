@@ -92,8 +92,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         ROMA.save();
         PEPPER.save();
 
-        final String team1Id = saveTeam("릭,로마", RICK, 1, ROMA).getTeamId();
-        final String team2Id = saveTeam("릭,로마,페퍼", ROMA, 1, RICK, PEPPER).getTeamId();
+        final String team1Id = saveTeam("릭,로마", RICK, 1, RICK, ROMA).getTeamId();
+        final String team2Id = saveTeam("릭,로마,페퍼", ROMA, 1, ROMA, RICK, PEPPER).getTeamId();
 
         final String levellog1Id = saveLevellog("레벨로그1", team1Id, RICK).getLevellogId();
         final String levellog2Id = saveLevellog("레벨로그2", team2Id, RICK).getLevellogId();
@@ -132,8 +132,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         ROMA.save();
         PEPPER.save();
 
-        final String teamId1 = saveTeam("잠실 제이슨조", PEPPER, 1, ROMA).getTeamId();
-        final String teamId2 = saveTeam("잠실 브리조", PEPPER, 1, ROMA).getTeamId();
+        final String teamId1 = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, ROMA).getTeamId();
+        final String teamId2 = saveTeam("잠실 브리조", PEPPER, 1, PEPPER, ROMA).getTeamId();
 
         saveLevellog("레벨로그1", teamId1, ROMA);
         saveLevellog("레벨로그2", teamId2, ROMA);
@@ -166,8 +166,8 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         ALIEN.save();
 
-        saveTeam("잠실 제이슨조", RICK, 1, ROMA, PEPPER);
-        saveTeam("잠실 브리조", RICK, 1, ROMA, ALIEN);
+        saveTeam("잠실 제이슨조", RICK, 1, RICK, ROMA, PEPPER);
+        saveTeam("잠실 브리조", RICK, 1, RICK, ROMA, ALIEN);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

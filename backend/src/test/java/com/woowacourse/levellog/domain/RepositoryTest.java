@@ -66,10 +66,10 @@ abstract class RepositoryTest {
     protected Team saveTeam(final Member host, final Member... members) {
         final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", 1));
 
-        participantRepository.save(new Participant(team, host, true));
+        participantRepository.save(new Participant(team, host, true, false));
 
         final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it, false))
+                .map(it -> new Participant(team, it, false, false))
                 .collect(Collectors.toList());
         participantRepository.saveAll(participants);
 

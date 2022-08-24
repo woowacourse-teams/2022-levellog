@@ -1,12 +1,11 @@
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
 .main {
-display: flex;
-flex-direction: column;
-justify-content: center;
-width: 1120px;
-padding-left: calc((100vw - 1120px) / 2);
-padding-right: calc((100vw - 1120px) / 2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 1120px;
+    padding: 50px calc((100vw - 1120px) / 2)
 }
 
 
@@ -17,6 +16,8 @@ padding-right: calc((100vw - 1120px) / 2);
 
 .content_header {
     display: flex;
+    font-weight: bold;
+    padding-bottom: 10px;
 }
 
 .team {
@@ -59,3 +60,20 @@ padding-right: calc((100vw - 1120px) / 2);
     width: 60px;
     text-align: center;
 }
+
+.ui-button {
+    padding: 5px 10px;
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+    background-color: #222222;
+    line-height: 1em;
+    color: #FFFFFF;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.ui-button:hover {
+    box-shadow: #BEBEBE;
+    opacity: 70%;
+}
+

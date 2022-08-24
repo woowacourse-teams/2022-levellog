@@ -15,8 +15,8 @@
             <div class="place">장소</div>
             <div class="start_at">시작 시간</div>
             <div class="status">상태</div>
-            <div class="delete_button">삭제</div>
-            <div class="close_button">종료</div>
+            <div class="delete_button"></div>
+            <div class="close_button"></div>
         </div>
         {{#teams}}
             <div class="team">
@@ -26,12 +26,12 @@
                 <div class="start_at">{{startAt}}</div>
                 <div class="status">{{status}}</div>
                 <div class="delete_button">
-                    <button type="button" onclick="deleteTeam({{id}})">
+                    <button type="button" class="ui-button" onclick="deleteTeam({{id}})">
                         삭제
                     </button>
                 </div>
                 <div class="close_button">
-                    <button type="button" onclick="closeTeam({{id}})">
+                    <button type="button" class="ui-button" onclick="closeTeam({{id}})">
                         종료
                     </button>
                 </div>

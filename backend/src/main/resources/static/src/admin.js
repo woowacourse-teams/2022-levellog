@@ -89,4 +89,15 @@ function toStatus() {
     }
 }
 
+function toStartAt() {
+    const times = document.getElementsByClassName("start_at");
+    for (const time of times) {
+        if (time.innerText === "시작 시간") {
+            continue
+        }
+        time.innerText = time.innerText.slice(2, 10) + " ∙ " + time.innerText.slice(11);
+    }
+}
+
 toStatus();
+toStartAt()

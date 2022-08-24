@@ -23,54 +23,46 @@ function adminLogin() {
     }).catch(() => alert("비밀번호를 틀렸습니다."));
 }
 
-function deleteTeams(teamId) {
-    let checkDelete = prompt("정말 삭제하시겠습니까?(\"예\" 입력 시 삭제)");
+function deleteTeam(teamId) {
+    const checkDelete = prompt(`정말 삭제하시겠습니까? 삭제하려면 팀 ID(${teamId}) 입력`);
 
-    if (checkDelete === "예") {
-        deleteTeam(teamId);
+    if (checkDelete === teamId.toString()) {
+        requestDeleteTeam(teamId);
     } else {
-        alert("삭제하지 않았습니다");
-        location.reload();
+        alert("팀 ID를 다시 확인해주세요.");
     }
 }
 
-function deleteTeam(teamId) {
+function requestDeleteTeam(teamId) {
     fetch(`/admin/teams/${teamId}?token=${getAdminToken()}`, {
         method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-        },
     }).then(() => {
-        alert(`${teamId} 팀이 삭제되었습니다.`);
-        location.reload();
+        alert(`${teamId} 팀을 삭제했습니다.`);
     }).catch(() => {
         alert(`${teamId} 팀 삭제에 실패했습니다.`);
+    }).finally(() => {
         location.reload();
     });
 }
 
-function closeTeams(teamId) {
-    let checkClose = prompt("정말 종료하시겠습니까?(\"예\" 입력 시 닫기)");
+function closeTeam(teamId) {
+    const checkClose = prompt(`정말 종료하시겠습니까? 종료하려면 팀 ID(${teamId}) 입력`);
 
-    if (checkClose === "예") {
-        closeTeam(teamId);
+    if (checkClose === teamId.toString()) {
+        requestCloseTeam(teamId);
     } else {
-        alert("닫지 않았습니다");
-        location.reload();
+        alert("팀 ID를 다시 확인해주세요.");
     }
 }
 
-function closeTeam(teamId) {
+function requestCloseTeam(teamId) {
     fetch(`/admin/teams/${teamId}/close?token=${getAdminToken()}`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
     }).then(() => {
-        alert(`${teamId} 팀이 닫혔습니다.`);
-        location.reload();
+        alert(`${teamId} 팀을 종료했습니다.`);
     }).catch(() => {
-        alert(`${teamId} 팀 닫기에 실패했습니다.`);
+        alert(`${teamId} 팀 종료에 실패했습니다.`);
+    }).finally(() => {
         location.reload();
     });
 }

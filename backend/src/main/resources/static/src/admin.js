@@ -21,6 +21,8 @@ function adminLogin() {
         let token = localStorage.getItem("admin-token");
         location.replace(`teams?token=${token}`);
     }).catch(() => alert("비밀번호를 틀렸습니다."));
+
+    return false;
 }
 
 function deleteTeam(teamId) {

@@ -11,16 +11,19 @@ function adminLogin() {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({value: password}),
-    }).then(res => {
-        if (res.ok) {
-            return res.json();
+    }).then(
+        res => res.json()
+    ).then(value => {
+        if (value['message'] !== undefined) {
+            alert(value['message']);
+            document.getElementById('admin-password').value = "";
+            return;
         }
-        throw new Error(value["errorMessage"]);
-    }).then(value => {
+
         localStorage.setItem("admin-token", value['accessToken']);
-        let token = localStorage.getItem("admin-token");
+        const token = localStorage.getItem("admin-token");
         location.replace(`teams?token=${token}`);
-    }).catch(() => alert("비밀번호를 틀렸습니다."));
+    });
 
     return false;
 }

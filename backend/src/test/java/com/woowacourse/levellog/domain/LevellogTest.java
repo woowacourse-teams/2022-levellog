@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.team.domain.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

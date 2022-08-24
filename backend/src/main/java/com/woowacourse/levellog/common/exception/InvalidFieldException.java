@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
  */
 public class InvalidFieldException extends LevellogException {
 
-    public InvalidFieldException(final String clientMessage, DebugMessage debugMessage) {
+    public InvalidFieldException(final String clientMessage, final DebugMessage debugMessage) {
         super(clientMessage, debugMessage, HttpStatus.BAD_REQUEST);
     }
 }

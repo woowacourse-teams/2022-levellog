@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
@@ -13,6 +12,7 @@ import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;

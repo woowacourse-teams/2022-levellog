@@ -5,11 +5,11 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

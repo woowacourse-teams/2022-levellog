@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;

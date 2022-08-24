@@ -2,11 +2,11 @@ package com.woowacourse.levellog.prequestion.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;

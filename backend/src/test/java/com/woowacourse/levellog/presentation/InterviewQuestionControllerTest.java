@@ -6,12 +6,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
@@ -304,7 +304,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
-            willThrow(new InvalidFieldException(message,DebugMessage.init()))
+            willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 

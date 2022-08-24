@@ -539,7 +539,7 @@ class TeamControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value(containsString("잘못된 시작 시간을 입력했습니다."))
+                    jsonPath("message").value(containsString("인터뷰 시작 시간은 현재 시간 이후여야 합니다."))
             );
 
             // docs

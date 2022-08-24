@@ -1,0 +1,61 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+.main {
+display: flex;
+flex-direction: column;
+justify-content: center;
+width: 1120px;
+padding-left: calc((100vw - 1120px) / 2);
+padding-right: calc((100vw - 1120px) / 2);
+}
+
+
+.body {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1em;
+}
+
+.content_header {
+    display: flex;
+}
+
+.team {
+    border-top: solid 1px #ccc;
+    display: flex;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    align-items: center;
+}
+
+.team_id {
+    width: 50px;
+    text-align: center;
+}
+
+.title {
+    width: 480px;
+}
+
+.place {
+    width: 180px;
+}
+
+.start_at {
+    width: 170px;
+    text-align: center;
+}
+
+.status {
+    width: 120px;
+    text-align: center;
+}
+
+.delete_button {
+    width: 60px;
+    text-align: center;
+}
+
+.close_button {
+    width: 60px;
+    text-align: center;
+}

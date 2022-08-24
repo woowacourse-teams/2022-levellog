@@ -16,6 +16,7 @@
                 <td>시작일자</td>
                 <td>상태</td>
                 <td>삭제</td>
+                <td>종료</td>
             </tr>
             {{#teams}}
                 <tr>
@@ -27,6 +28,11 @@
                     <td>
                         <button type="button" onclick="deleteTeams({{id}})">
                             삭제
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" onclick="closeTeams({{id}})">
+                            종료
                         </button>
                     </td>
                 </tr>

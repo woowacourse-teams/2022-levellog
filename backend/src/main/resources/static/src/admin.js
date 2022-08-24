@@ -48,3 +48,29 @@ function deleteTeam(teamId) {
         location.reload();
     });
 }
+
+function closeTeams(teamId) {
+    let checkClose = prompt("정말 종료하시겠습니까?(\"예\" 입력 시 닫기)");
+
+    if (checkClose === "예") {
+        closeTeam(teamId);
+    } else {
+        alert("닫지 않았습니다");
+        location.reload();
+    }
+}
+
+function closeTeam(teamId) {
+    fetch(`/admin/teams/${teamId}/close?token=${getAdminToken()}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then(() => {
+        alert(`${teamId} 팀이 닫혔습니다.`);
+        location.reload();
+    }).catch(() => {
+        alert(`${teamId} 팀 닫기에 실패했습니다.`);
+        location.reload();
+    });
+}

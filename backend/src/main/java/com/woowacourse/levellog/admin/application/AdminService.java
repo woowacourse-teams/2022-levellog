@@ -55,9 +55,11 @@ public class AdminService {
     }
 
     public List<AdminTeamDto> findAllTeam() {
+        final LocalDateTime presentTime = timeStandard.now();
+        
         return teamRepository.findAll()
                 .stream()
-                .map(it -> AdminTeamDto.of(it, it.status(timeStandard.now())))
+                .map(it -> AdminTeamDto.of(it, it.status(presentTime)))
                 .collect(Collectors.toList());
     }
 

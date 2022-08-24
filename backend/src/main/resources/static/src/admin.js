@@ -41,10 +41,14 @@ function deleteTeam(teamId) {
 function requestDeleteTeam(teamId) {
     fetch(`/admin/teams/${teamId}?token=${getAdminToken()}`, {
         method: "DELETE",
-    }).then(() => {
+    }).then(
+        res => res.json()
+    ).then(value => {
+        if (value['message'] !== undefined) {
+            alert(value['message']);
+            return;
+        }
         alert(`${teamId} 팀을 삭제했습니다.`);
-    }).catch(() => {
-        alert(`${teamId} 팀 삭제에 실패했습니다.`);
     }).finally(() => {
         location.reload();
     });
@@ -63,10 +67,14 @@ function closeTeam(teamId) {
 function requestCloseTeam(teamId) {
     fetch(`/admin/teams/${teamId}/close?token=${getAdminToken()}`, {
         method: "POST",
-    }).then(() => {
+    }).then(
+        res => res.json()
+    ).then(value => {
+        if (value['message'] !== undefined) {
+            alert(value['message']);
+            return;
+        }
         alert(`${teamId} 팀을 종료했습니다.`);
-    }).catch(() => {
-        alert(`${teamId} 팀 종료에 실패했습니다.`);
     }).finally(() => {
         location.reload();
     });

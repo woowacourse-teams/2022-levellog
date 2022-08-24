@@ -110,7 +110,7 @@ class LevellogServiceTest extends ServiceTest {
             //  when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
 
         @Test
@@ -248,7 +248,7 @@ class LevellogServiceTest extends ServiceTest {
             //  when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, authorId))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
 
         @Test

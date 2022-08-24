@@ -76,7 +76,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, authorId))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("인터뷰 질문은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("인터뷰 질문은 공백이나 null일 수 없습니다.");
         }
 
         @Test

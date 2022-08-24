@@ -2,10 +2,10 @@ package com.woowacourse.levellog.interviewquestion.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -48,10 +48,12 @@ public class InterviewQuestion extends BaseEntity {
 
     private void validateContent(final String content) {
         if (content == null || content.isBlank()) {
-            throw new InvalidFieldException("인터뷰 질문은 공백이나 null일 수 없습니다.");
+            throw new InvalidFieldException("인터뷰 질문은 공백이나 null일 수 없습니다.", DebugMessage.init()
+                    .append("content", content));
         }
         if (content.length() > DEFAULT_STRING_SIZE) {
-            throw new InvalidFieldException("인터뷰 질문은 " + DEFAULT_STRING_SIZE + "자 이하여야합니다. 현재 길이:" + content.length());
+            throw new InvalidFieldException("인터뷰 질문은 " + DEFAULT_STRING_SIZE + "자 이하여야합니다.", DebugMessage.init()
+                    .append("content 길이", content.length()));
         }
     }
 

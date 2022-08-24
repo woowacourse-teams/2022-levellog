@@ -48,7 +48,7 @@ class LevellogTest {
             //  when & then
             assertThatThrownBy(() -> Levellog.of(author, team, invalidContent))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
     }
 
@@ -102,7 +102,7 @@ class LevellogTest {
             //  when & then
             assertThatThrownBy(() -> levellog.updateContent(author, invalidContent))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
     }
 }

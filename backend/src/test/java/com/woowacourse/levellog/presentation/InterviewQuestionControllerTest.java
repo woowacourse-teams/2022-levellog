@@ -55,7 +55,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
-            willThrow(new InvalidFieldException(message))
+            willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(interviewQuestionService)
                     .save(request, 1L, 1L);
 
@@ -304,7 +304,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
-            willThrow(new InvalidFieldException(message))
+            willThrow(new InvalidFieldException(message,DebugMessage.init()))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 

@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.common.exception;
 
+import com.woowacourse.levellog.common.support.DebugMessage;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -7,7 +8,7 @@ import org.springframework.http.HttpStatus;
  */
 public class InvalidFieldException extends LevellogException {
 
-    public InvalidFieldException(final String message) {
-        super(message, message, HttpStatus.BAD_REQUEST);
+    public InvalidFieldException(final String clientMessage, DebugMessage debugMessage) {
+        super(clientMessage, debugMessage, HttpStatus.BAD_REQUEST);
     }
 }

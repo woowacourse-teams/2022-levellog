@@ -211,30 +211,36 @@ public class TeamService {
         return new Participants(participants);
     }
 
-    private void validateParticipantExistence(final List<Long> participantIds) {
-        if (participantIds.isEmpty()) {
-            throw new InvalidFieldException("참가자가 존재하지 않습니다.");
+    private void validateParticipantExistence(final List<Long> participantsIds) {
+        if (participantsIds.isEmpty()) {
+            throw new InvalidFieldException("참가자가 존재하지 않습니다.", DebugMessage.init()
+                    .append("participants", participantsIds));
         }
     }
 
     private void validateDistinctParticipant(final List<Long> participantIds) {
         final Set<Long> distinct = new HashSet<>(participantIds);
         if (distinct.size() != participantIds.size()) {
-            throw new InvalidFieldException("중복된 참가자가 존재합니다.");
+            throw new InvalidFieldException("중복된 참가자가 존재합니다.", DebugMessage.init()
+                    .append("participants", participantIds));
         }
     }
 
     private void validateDistinctWatcher(final List<Long> watcherIds) {
         final Set<Long> distinct = new HashSet<>(watcherIds);
         if (distinct.size() != watcherIds.size()) {
-            throw new InvalidFieldException("중복된 참관자가 존재합니다.");
+            throw new InvalidFieldException("중복된 참관자가 존재합니다.", DebugMessage.init()
+                    .append("watchers", watcherIds));
         }
     }
 
     private void validateHostExistence(final Long hostId, final List<Long> participantIds,
                                        final List<Long> watcherIds) {
         if (!participantIds.contains(hostId) && !watcherIds.contains(hostId)) {
-            throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
+            throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.", DebugMessage.init()
+                    .append("hostId", hostId)
+                    .append("participants", participantIds)
+                    .append("watchers", watcherIds));
         }
     }
 
@@ -243,7 +249,9 @@ public class TeamService {
                 .anyMatch(watcherIds::contains);
 
         if (notIndependent) {
-            throw new InvalidFieldException("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
+            throw new InvalidFieldException("참가자와 참관자에 모두 포함된 멤버가 존재합니다.", DebugMessage.init()
+                    .append("particiapnts", participantIds)
+                    .append("watchers", watcherIds));
         }
     }
 

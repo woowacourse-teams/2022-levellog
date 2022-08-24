@@ -67,7 +67,9 @@ public class Feedback extends BaseEntity {
 
     private void validateFeedbackLength(final String feedbackContent, final String contentType) {
         if (feedbackContent.length() > FEEDBACK_CONTENT_MAX_LENGTH) {
-            throw new InvalidFieldException(contentType + " 피드백은 " + FEEDBACK_CONTENT_MAX_LENGTH + "자 이하여야 합니다.");
+            throw new InvalidFieldException(contentType + " 피드백은 " + FEEDBACK_CONTENT_MAX_LENGTH + "자 이하여야 합니다.",
+                    DebugMessage.init()
+                            .append("content 길이", feedbackContent.length()));
         }
     }
 

@@ -49,7 +49,8 @@ public class PreQuestion extends BaseEntity {
 
     private void validateContent(final String content) {
         if (content == null || content.isBlank()) {
-            throw new InvalidFieldException("사전 내용은 공백이나 null일 수 없습니다.");
+            throw new InvalidFieldException("사전 내용은 공백이나 null일 수 없습니다.", DebugMessage.init()
+                    .append("content", content));
         }
     }
 

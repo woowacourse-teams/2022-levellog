@@ -65,7 +65,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> new Team(title, place, TEAM_START_TIME, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("잘못된 팀 이름을 입력했습니다.");
+                    .hasMessageContaining("팀 이름은 255 이하여야 합니다.");
         }
 
         @ParameterizedTest
@@ -94,7 +94,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> new Team(title, place, TEAM_START_TIME, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("잘못된 장소를 입력했습니다.");
+                    .hasMessageContaining("장소 이름은 255 이하여야 합니다.");
         }
 
         @ParameterizedTest

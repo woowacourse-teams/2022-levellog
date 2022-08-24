@@ -66,3 +66,27 @@ function requestCloseTeam(teamId) {
         location.reload();
     });
 }
+
+function toStatus() {
+    const statuses = document.getElementsByClassName("status");
+    for (const status of statuses) {
+        switch (status.innerText) {
+            case "READY":
+                status.innerText = "준비 중";
+                status.style.color = "blue";
+                break
+            case "IN_PROGRESS":
+                status.innerText = "진행 중";
+                status.style.color = "green";
+                break
+            case "CLOSED":
+                status.innerText = "종료";
+                status.style.color = "red";
+                break
+            default:
+                break
+        }
+    }
+}
+
+toStatus();

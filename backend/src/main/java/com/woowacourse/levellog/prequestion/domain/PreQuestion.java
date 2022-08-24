@@ -71,7 +71,8 @@ public class PreQuestion extends BaseEntity {
     public void validateLevellog(final Levellog levellog) {
         if (!isSameLevellog(levellog)) {
             throw new InvalidLevellogException(DebugMessage.init()
-                    .append("levellogId", levellog.getId()));
+                    .append("Feedback's levellogId'", this.levellog.getId())
+                    .append("Input levellogId", levellog.getId()));
         }
     }
 

@@ -146,7 +146,7 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "팀이 InProgress 상태가 아닙니다.";
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
             given(feedbackService.save(request, levellogId, memberId))
                     .willThrow(new TeamNotInProgressException(DebugMessage.init()));
 
@@ -270,7 +270,7 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "팀이 InProgress 상태가 아닙니다.";
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);

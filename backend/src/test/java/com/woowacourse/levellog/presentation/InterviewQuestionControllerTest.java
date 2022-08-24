@@ -105,7 +105,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final long levellogId = 1L;
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
-            final String message = "팀이 InProgress 상태가 아닙니다.";
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .save(request, levellogId, 1L);
@@ -375,7 +375,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void update_notInProgress_exception() throws Exception {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
-            final String message = "팀이 InProgress 상태가 아닙니다.";
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
@@ -501,7 +501,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("진행 중 상태가 아닐 때 예외가 발생한다.")
         void deleteById_notInProgress_exception() throws Exception {
             // given
-            final String message = "팀이 InProgress 상태가 아닙니다.";
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .deleteById(1L, 1L);

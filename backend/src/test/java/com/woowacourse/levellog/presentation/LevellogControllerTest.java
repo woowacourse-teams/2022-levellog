@@ -81,7 +81,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            final String message = "팀이 Ready 상태가 아닙니다.";
+            final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(levellogService)
                     .save(request, authorId, teamId);
@@ -206,7 +206,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("new content");
 
-            final String message = "팀이 Ready 상태가 아닙니다.";
+            final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(levellogService)
                     .update(request, levellogId, authorId);

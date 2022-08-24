@@ -204,7 +204,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> team.update(updatedTeam, AFTER_START_TIME))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContaining("팀이 Ready 상태가 아닙니다.");
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
         }
     }
 
@@ -277,7 +277,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> team.close(BEFORE_START_TIME))
                     .isInstanceOf(TeamNotInProgressException.class)
-                    .hasMessageContaining("팀이 InProgress 상태가 아닙니다.");
+                    .hasMessageContaining("인터뷰 진행중인 상태가 아닙니다.");
         }
     }
 
@@ -307,7 +307,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> team.delete(AFTER_START_TIME))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContaining("팀이 Ready 상태가 아닙니다.");
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
         }
 
     }
@@ -325,7 +325,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> team.validateInProgress(BEFORE_START_TIME))
                     .isInstanceOf(TeamNotInProgressException.class)
-                    .hasMessageContaining("팀이 InProgress 상태가 아닙니다.");
+                    .hasMessageContaining("인터뷰 진행중인 상태가 아닙니다.");
         }
 
         @Test
@@ -357,7 +357,7 @@ class TeamTest {
             assertThatThrownBy(
                     () -> team.validateReady(AFTER_START_TIME))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContaining("팀이 Ready 상태가 아닙니다.");
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
         }
     }
 

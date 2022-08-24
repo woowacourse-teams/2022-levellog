@@ -239,7 +239,7 @@ class FeedbackServiceTest extends ServiceTest {
                     FeedbackWriteDto.from("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
                     feedbackId, roma.getId()))
                     .isInstanceOf(TeamNotInProgressException.class)
-                    .hasMessageContaining("팀이 InProgress 상태가 아닙니다.");
+                    .hasMessageContaining("인터뷰 진행중인 상태가 아닙니다.");
         }
 
         @Test
@@ -364,7 +364,7 @@ class FeedbackServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), roma.getId()))
                     .isInstanceOf(TeamNotInProgressException.class)
-                    .hasMessageContaining("팀이 InProgress 상태가 아닙니다.");
+                    .hasMessageContaining("인터뷰 진행중인 상태가 아닙니다.");
         }
 
         @Test

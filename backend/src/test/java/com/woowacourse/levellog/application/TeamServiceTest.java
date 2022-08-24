@@ -725,7 +725,7 @@ class TeamServiceTest extends ServiceTest {
             final Long memberId = member.getId();
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContaining("팀이 Ready 상태가 아닙니다.", teamId, team.getStartAt());
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.", teamId, team.getStartAt());
         }
 
         @Test

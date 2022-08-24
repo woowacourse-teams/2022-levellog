@@ -164,7 +164,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
                     .isInstanceOf(TeamNotInProgressException.class)
-                    .hasMessageContainingAll("팀이 InProgress 상태가 아닙니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 진행중인 상태가 아닙니다.", String.valueOf(team.getId()));
         }
 
         @Test
@@ -420,7 +420,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
                     .isInstanceOf(TeamNotInProgressException.class)
-                    .hasMessageContainingAll("팀이 InProgress 상태가 아닙니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 진행중인 상태가 아닙니다.", String.valueOf(team.getId()));
         }
     }
 
@@ -511,7 +511,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
                     .isInstanceOf(TeamNotInProgressException.class)
-                    .hasMessageContainingAll("팀이 InProgress 상태가 아닙니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 진행중인 상태가 아닙니다.", String.valueOf(team.getId()));
         }
     }
 }

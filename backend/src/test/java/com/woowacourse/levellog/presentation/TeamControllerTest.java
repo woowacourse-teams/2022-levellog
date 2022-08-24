@@ -756,7 +756,7 @@ class TeamControllerTest extends ControllerTest {
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
-            final String message = "팀이 Ready 상태가 아닙니다.";
+            final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
                     .update(request, 1L, 1L);
@@ -964,7 +964,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
 
-            final String message = "팀이 InProgress 상태가 아닙니다.";
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(teamService)
                     .close(teamId, 1L);
@@ -1044,7 +1044,7 @@ class TeamControllerTest extends ControllerTest {
         void deleteById_notReady_exception() throws Exception {
             // given
             final Long teamId = 1L;
-            final String message = "팀이 Ready 상태가 아닙니다.";
+            final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
                     .deleteById(teamId, 1L);

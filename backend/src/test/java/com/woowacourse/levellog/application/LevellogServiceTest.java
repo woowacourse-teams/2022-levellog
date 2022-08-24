@@ -127,7 +127,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContainingAll("팀이 Ready 상태가 아닙니다.", String.valueOf(teamId));
+                    .hasMessageContainingAll("인터뷰 준비 상태가 아닙니다.", String.valueOf(teamId));
         }
     }
 
@@ -265,7 +265,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, author.getId()))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContainingAll("팀이 Ready 상태가 아닙니다.", String.valueOf(team.getId()));
+                    .hasMessageContainingAll("인터뷰 준비 상태가 아닙니다.", String.valueOf(team.getId()));
         }
     }
 

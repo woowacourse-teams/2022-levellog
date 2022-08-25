@@ -1,10 +1,10 @@
 package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +45,7 @@ public class Participants {
                 .stream()
                 .filter(Participant::isHost)
                 .findAny()
-                .orElseThrow(() -> new MemberNotFoundException("모든 참가자 중 호스트가 존재하지 않습니다."))
+                .orElseThrow()
                 .getMember()
                 .getId();
     }
@@ -101,17 +101,23 @@ public class Participants {
 
     private void validateParticipant(final Long teamId, final Long targetMemberId, final Long memberId) {
         if (!isContains(memberId)) {
-            throw new UnauthorizedException("팀의 참가자만 역할을 조회할 수 있습니다. teamId : " + teamId + ", memberId : " + memberId);
+            throw new ParticipantNotSameTeamException(DebugMessage.init()
+                    .append("memberId", memberId)
+                    .append("teamId", teamId));
         }
+
         if (!isContains(targetMemberId)) {
-            throw new ParticipantNotFoundException("memberId : " + targetMemberId + "에 해당하는 member는 "
-                    + "teamId : " + teamId + "의 참가자가 아닙니다.");
+            throw new ParticipantNotFoundException(DebugMessage.init()
+                    .append("memberId", targetMemberId)
+                    .append("teamId", teamId));
         }
     }
 
     public void validateExistsMember(final Member member) {
         if (!existsParticipantByMember(member)) {
-            throw new UnauthorizedException("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다.");
+            throw new ParticipantNotSameTeamException(DebugMessage.init()
+                    .append("memberId", member.getId())
+            );
         }
     }
 

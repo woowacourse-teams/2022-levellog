@@ -2,8 +2,8 @@ package com.woowacourse.levellog.admin.presentation;
 
 import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
-import com.woowacourse.levellog.admin.dto.AdminTeamDto;
 import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
+import com.woowacourse.levellog.admin.dto.AdminTeamDto;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import java.util.List;
 import javax.validation.Valid;

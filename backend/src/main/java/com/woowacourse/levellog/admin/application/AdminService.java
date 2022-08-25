@@ -3,8 +3,8 @@ package com.woowacourse.levellog.admin.application;
 import static com.woowacourse.levellog.authentication.support.JwtTokenProvider.ADMIN_TOKEN_PAYLOAD;
 
 import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
-import com.woowacourse.levellog.admin.dto.AdminTeamDto;
 import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
+import com.woowacourse.levellog.admin.dto.AdminTeamDto;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.common.support.DebugMessage;
@@ -70,6 +70,7 @@ public class AdminService {
     private Team getTeam(final Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(
-                        () -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
+                        () -> new TeamNotFoundException(DebugMessage.init()
+                                .append("teamId", teamId)));
     }
 }

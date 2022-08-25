@@ -7,13 +7,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.domain.MockEntityFactory;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -242,7 +242,7 @@ class ParticipantsTest {
 
             // when & then
             assertThatThrownBy(() -> participants.toInterviewRole(team.getId(), 1L, 9L, interviewerNumber))
-                    .isInstanceOf(UnauthorizedException.class);
+                    .isInstanceOf(ParticipantNotSameTeamException.class);
         }
 
         @Test

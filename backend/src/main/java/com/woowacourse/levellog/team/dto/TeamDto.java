@@ -30,8 +30,10 @@ public class TeamDto {
     private List<WatcherDto> watchers;
 
     public static TeamDto from(final Team team, final Long hostId, final TeamStatus status,
-                               final Boolean isParticipant, final List<Long> interviewers, final List<Long> interviewees,
-                               final List<ParticipantDto> participantResponses, final List<WatcherDto> watcherResponses) {
+                               final Boolean isParticipant, final List<Long> interviewers,
+                               final List<Long> interviewees,
+                               final List<ParticipantDto> participantResponses,
+                               final List<WatcherDto> watcherResponses) {
         return new TeamDto(
                 team.getId(),
                 team.getTitle(),

@@ -3,6 +3,7 @@ package com.woowacourse.levellog.team.application;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
@@ -175,13 +176,15 @@ public class TeamService {
 
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
+                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
+                        .append("memberId", memberId)));
     }
 
     private Team getTeam(final Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(
-                        () -> new TeamNotFoundException("팀이 존재하지 않습니다. 입력한 팀 id : [" + teamId + "]", "팀이 존재하지 않습니다."));
+                        () -> new TeamNotFoundException(DebugMessage.init()
+                                .append("teamId", teamId)));
     }
 
     private List<Team> getTeamsByMemberId(final Long memberId) {
@@ -208,30 +211,36 @@ public class TeamService {
         return new Participants(participants);
     }
 
-    private void validateParticipantExistence(final List<Long> participantIds) {
-        if (participantIds.isEmpty()) {
-            throw new InvalidFieldException("참가자가 존재하지 않습니다.");
+    private void validateParticipantExistence(final List<Long> participantsIds) {
+        if (participantsIds.isEmpty()) {
+            throw new InvalidFieldException("참가자가 존재하지 않습니다.", DebugMessage.init()
+                    .append("participants", participantsIds));
         }
     }
 
     private void validateDistinctParticipant(final List<Long> participantIds) {
         final Set<Long> distinct = new HashSet<>(participantIds);
         if (distinct.size() != participantIds.size()) {
-            throw new InvalidFieldException("중복된 참가자가 존재합니다.");
+            throw new InvalidFieldException("중복된 참가자가 존재합니다.", DebugMessage.init()
+                    .append("participants", participantIds));
         }
     }
 
     private void validateDistinctWatcher(final List<Long> watcherIds) {
         final Set<Long> distinct = new HashSet<>(watcherIds);
         if (distinct.size() != watcherIds.size()) {
-            throw new InvalidFieldException("중복된 참관자가 존재합니다.");
+            throw new InvalidFieldException("중복된 참관자가 존재합니다.", DebugMessage.init()
+                    .append("watchers", watcherIds));
         }
     }
 
     private void validateHostExistence(final Long hostId, final List<Long> participantIds,
                                        final List<Long> watcherIds) {
         if (!participantIds.contains(hostId) && !watcherIds.contains(hostId)) {
-            throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
+            throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.", DebugMessage.init()
+                    .append("hostId", hostId)
+                    .append("participants", participantIds)
+                    .append("watchers", watcherIds));
         }
     }
 
@@ -240,7 +249,9 @@ public class TeamService {
                 .anyMatch(watcherIds::contains);
 
         if (notIndependent) {
-            throw new InvalidFieldException("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
+            throw new InvalidFieldException("참가자와 참관자에 모두 포함된 멤버가 존재합니다.", DebugMessage.init()
+                    .append("particiapnts", participantIds)
+                    .append("watchers", watcherIds));
         }
     }
 
@@ -297,7 +308,9 @@ public class TeamService {
         final Long hostId = participants.toHostId();
 
         if (!memberId.equals(participants.toHostId())) {
-            throw new HostUnauthorizedException("호스트 권한이 없습니다. [hostId : " + hostId + ", memberId : " + memberId + "]");
+            throw new HostUnauthorizedException(DebugMessage.init()
+                    .append("hostId", hostId)
+                    .append("memberId", memberId));
         }
     }
 }

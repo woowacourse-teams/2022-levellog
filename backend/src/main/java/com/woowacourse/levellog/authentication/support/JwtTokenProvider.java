@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.authentication.support;
 
 import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -48,7 +49,8 @@ public class JwtTokenProvider {
                     .getBody()
                     .getSubject();
         } catch (final JwtException e) {
-            throw new InvalidTokenException("token에서 payload 추출 실패 - token:" + token);
+            throw new InvalidTokenException(DebugMessage.init()
+                    .append("token", token));
         }
     }
 
@@ -77,7 +79,7 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
 
             if (!isValid(claims)) {
-                throw new InvalidTokenException("관리자 토큰이 아닙니다.");
+                throw new InvalidTokenException(DebugMessage.init());
             }
 
             return !claims.getBody()

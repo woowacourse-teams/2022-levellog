@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.levellog.application;
 
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
@@ -36,7 +37,7 @@ public class LevellogService {
         final Team team = getTeam(teamId);
         final Member author = getMember(authorId);
         validateLevellogExistence(authorId, teamId);
-        team.validateReady(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 작성이 가능합니다.");
+        team.validateReady(timeStandard.now());
 
         final Levellog savedLevellog = levellogRepository.save(request.toLevellog(author, team));
 
@@ -64,30 +65,36 @@ public class LevellogService {
     public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
         final Member member = getMember(memberId);
-        levellog.getTeam().validateReady(timeStandard.now(), "인터뷰 시작 전에만 레벨로그 수정이 가능합니다.");
+        levellog.getTeam().validateReady(timeStandard.now());
 
         levellog.updateContent(member, request.getContent());
     }
 
     private Levellog getById(final Long levellogId) {
         return levellogRepository.findById(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException("레벨로그가 존재하지 않습니다. levellogId : " + levellogId));
+                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
+                        .append("levellogId", levellogId)));
     }
 
     private Team getTeam(final Long teamId) {
         return teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException("팀이 존재하지 않습니다. teamId : " + teamId, "팀이 존재하지 않습니다."));
+                .orElseThrow(() -> new TeamNotFoundException(DebugMessage.init()
+                        .append("teamId", teamId)));
     }
 
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
+                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
+                        .append("memberId", memberId)));
     }
 
     private void validateLevellogExistence(final Long authorId, final Long teamId) {
         final boolean isExists = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
         if (isExists) {
-            throw new LevellogAlreadyExistException("레벨로그를 이미 작성하였습니다. authorId : " + authorId + " teamId : " + teamId);
+            throw new LevellogAlreadyExistException(DebugMessage.init()
+                    .append("authorId", authorId)
+                    .append("teamId", teamId));
         }
+
     }
 }

@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.interviewquestion.application;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
@@ -15,6 +15,7 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class InterviewQuestionService {
 
         levellog.validateSelfInterviewQuestion(author);
         validateMemberIsParticipant(author, levellog);
-        team.validateInProgress(timeStandard.now(), "인터뷰 시작 전에 인터뷰 질문을 작성 할 수 없습니다.");
+        team.validateInProgress(timeStandard.now());
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
 
@@ -72,7 +73,7 @@ public class InterviewQuestionService {
 
         interviewQuestion.getLevellog()
                 .getTeam()
-                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.");
+                .validateInProgress(timeStandard.now());
 
         interviewQuestion.updateContent(request.getContent(), author);
     }
@@ -82,37 +83,40 @@ public class InterviewQuestionService {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member author = getMember(fromMemberId);
 
-        interviewQuestion.validateMemberIsAuthor(author, "인터뷰 질문을 삭제할 수 있는 권한이 없습니다.");
+        interviewQuestion.validateMemberIsAuthor(author);
         interviewQuestion.getLevellog()
                 .getTeam()
-                .validateInProgress(timeStandard.now(), "인터뷰 시작 전에 인터뷰 질문을 삭제 할 수 없습니다.");
+                .validateInProgress(timeStandard.now());
 
         interviewQuestionRepository.delete(interviewQuestion);
     }
 
     private InterviewQuestion getInterviewQuestion(final Long interviewQuestionId) {
         return interviewQuestionRepository.findById(interviewQuestionId)
-                .orElseThrow(() -> new InterviewQuestionNotFoundException(
-                        "존재하지 않는 인터뷰 질문 [interviewQuestionId : " + interviewQuestionId + "]"));
+                .orElseThrow(() -> new InterviewQuestionNotFoundException(DebugMessage.init()
+                        .append("interviewQuestionId", interviewQuestionId)));
     }
 
     private Levellog getLevellog(final Long levellogId) {
         return levellogRepository.findById(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException("존재하지 않는 레벨로그 [levellogId : " + levellogId + "]"));
+                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
+                        .append("levellogId", levellogId)));
     }
 
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 멤버 [memberId : " + memberId + "]"));
+                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
+                        .append("memberId", memberId)));
     }
 
     private void validateMemberIsParticipant(final Member member, final Levellog levellog) {
         final Team team = levellog.getTeam();
 
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
-            throw new UnauthorizedException(
-                    "같은 팀에 속한 멤버만 인터뷰 질문을 작성할 수 있습니다. [memberId :" + member.getId() + " teamId : " + team.getId()
-                            + " levellogId : " + levellog.getId() + "]");
+            throw new ParticipantNotSameTeamException(DebugMessage.init()
+                    .append("teamId", team.getId())
+                    .append("memberId", member.getId())
+                    .append("levellogId", levellog.getId()));
         }
     }
 }

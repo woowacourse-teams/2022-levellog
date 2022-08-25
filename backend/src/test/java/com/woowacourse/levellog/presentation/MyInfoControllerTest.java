@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,7 +31,7 @@ class MyInfoControllerTest extends ControllerTest {
         void updateNickname_nicknameInvalidLength_exception() throws Exception {
             // given
             final String message = "닉네임은 50자 이하여야합니다.";
-            willThrow(new InvalidFieldException(message))
+            willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(memberService)
                     .updateNickname(any(), any());
             final String invalidNickname = "a".repeat(51);

@@ -4,19 +4,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
+import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -68,8 +69,8 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContaining("같은 팀에 속한 멤버만 사전 질문을 작성할 수 있습니다.");
+                    .isInstanceOf(ParticipantNotSameTeamException.class)
+                    .hasMessageContaining("같은 팀에 속해있지 않습니다.");
         }
 
         @Test
@@ -87,7 +88,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), author.getId()))
                     .isInstanceOf(InvalidPreQuestionException.class)
-                    .hasMessageContaining("자기 자신에게 사전 질문을 등록할 수 없습니다.");
+                    .hasMessageContaining("잘못된 사전 질문 요청입니다.");
         }
 
         @Test
@@ -107,7 +108,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))
                     .isInstanceOf(PreQuestionAlreadyExistException.class)
-                    .hasMessageContainingAll("사전 질문을 이미 작성하였습니다.",
+                    .hasMessageContainingAll("사전 질문이 이미 존재합니다.",
                             String.valueOf(levellog.getId()),
                             String.valueOf(questioner.getId()));
         }
@@ -234,8 +235,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             assertThatThrownBy(
                     () -> preQuestionService.update(preQuestionWriteDto, preQuestionId, levellog.getId(),
                             questioner.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContaining("자신의 사전 질문이 아닙니다.");
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContaining("작성자가 아닙니다.");
         }
 
         @Test
@@ -260,7 +261,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             assertThatThrownBy(
                     () -> preQuestionService.update(preQuestionWriteDto, id, levellog2.getId(), questioner.getId()))
                     .isInstanceOf(InvalidLevellogException.class)
-                    .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
+                    .hasMessageContaining("잘못된 레벨로그 요청입니다.");
         }
     }
 
@@ -301,8 +302,8 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> preQuestionService.deleteById(preQuestionId, levellog.getId(), questioner.getId()))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContaining("자신의 사전 질문이 아닙니다.");
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContaining("작성자가 아닙니다.");
         }
 
         @Test
@@ -338,7 +339,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> preQuestionService.deleteById(id, levellog2.getId(), questioner.getId()))
                     .isInstanceOf(InvalidLevellogException.class)
-                    .hasMessageContaining("입력한 levellogId와 사전 질문의 levellogId가 다릅니다.");
+                    .hasMessageContaining("잘못된 레벨로그 요청입니다.");
         }
     }
 }

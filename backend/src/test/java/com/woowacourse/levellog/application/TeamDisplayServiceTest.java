@@ -12,9 +12,9 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
+import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.teamdisplay.dto.TeamDto;
 import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
-import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,10 +25,6 @@ import org.junit.jupiter.api.Test;
 @DisplayName("TeamDisplayService의")
 class TeamDisplayServiceTest extends ServiceTest {
 
-    // TODO: 2022/08/25 FindAll, FindByTeamIdAndMemberId, FindAllByMemberId 메서드 옮기기 ✅
-    // TODO: 2022/08/25 TeamController, MyInfoController 가 TeamDisplayService 를 의존하도록 변경하기 ✅
-    // TODO: 2022/08/25 TeamService에 불필요한 메서드 삭제 & TeamService에 불필요한 의존성 제거 ✅
-    // TODO: 2022/08/25 team 패키지에 존재하는 전시 관련 dto를 teamdisplay 패키지로 옮기기 ✅
     @Nested
     @DisplayName("findAll 메서드는")
     class FindAll {

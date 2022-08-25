@@ -77,13 +77,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
         POBI.save();
 
         saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
-        final String eveTeamId = saveTeam("잠실 브리조", EVE, 1, EVE, RICK).getTeamId();
+        saveTeam("잠실 브리조", EVE, 1, EVE, RICK).getTeamId();
         final String teamId = saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER).getTeamId();
-
-        final String eveLevellogId = saveLevellog("이브의 레벨로그", eveTeamId, EVE).getLevellogId();
-        saveLevellog("릭의 레벨로그", eveTeamId, RICK);
-
-        savePreQuestion("이브에게 하려는 질문", eveLevellogId, RICK);
 
         timeStandard.setInProgress();
         RestAssuredTemplate.post("/api/teams/" + teamId + "/close", RICK.getToken());
@@ -161,8 +156,15 @@ class TeamAcceptanceTest extends AcceptanceTest {
         EVE.save();
         RICK.save();
         ROMA.save();
+        POBI.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, PEPPER, EVE, RICK, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, List.of(POBI), PEPPER, EVE, RICK, ROMA).getTeamId();
+
+        final String levellogId = saveLevellog("이브의 레벨로그", teamId, EVE).getLevellogId();
+        saveLevellog("릭의 레벨로그", teamId, RICK);
+        saveLevellog("페퍼의 레벨로그", teamId, PEPPER);
+
+        savePreQuestion("이브에게 하려는 질문", levellogId, PEPPER);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -199,8 +201,15 @@ class TeamAcceptanceTest extends AcceptanceTest {
         EVE.save();
         RICK.save();
         ROMA.save();
+        POBI.save();
 
-        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, PEPPER, EVE, RICK, ROMA).getTeamId();
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 2, List.of(POBI), PEPPER, EVE, RICK, ROMA).getTeamId();
+
+        final String levellogId = saveLevellog("이브의 레벨로그", teamId, EVE).getLevellogId();
+        saveLevellog("릭의 레벨로그", teamId, RICK);
+        saveLevellog("페퍼의 레벨로그", teamId, PEPPER);
+
+        savePreQuestion("이브에게 하려는 질문", levellogId, PEPPER);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

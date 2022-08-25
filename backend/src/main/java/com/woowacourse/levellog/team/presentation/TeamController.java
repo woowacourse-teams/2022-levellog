@@ -8,6 +8,7 @@ import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
+import com.woowacourse.levellog.teamdisplay.application.TeamDisplayService;
 import java.net.URI;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
 
     private final TeamService teamService;
+    private final TeamDisplayService teamDisplayService;
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid final TeamWriteDto teamDto,
@@ -41,7 +43,7 @@ public class TeamController {
     @PublicAPI
     public ResponseEntity<TeamsDto> findAll(@RequestParam final Optional<String> status,
                                             @Authentic final Long memberId) {
-        final TeamsDto response = teamService.findAll(status, memberId);
+        final TeamsDto response = teamDisplayService.findAll(status, memberId);
         return ResponseEntity.ok(response);
     }
 
@@ -49,7 +51,7 @@ public class TeamController {
     @PublicAPI
     public ResponseEntity<TeamDto> findById(@PathVariable final Long teamId,
                                             @Authentic final Long memberId) {
-        final TeamDto response = teamService.findByTeamIdAndMemberId(teamId, memberId);
+        final TeamDto response = teamDisplayService.findByTeamIdAndMemberId(teamId, memberId);
         return ResponseEntity.ok(response);
     }
 

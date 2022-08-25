@@ -31,6 +31,7 @@ import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.presentation.PreQuestionController;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.presentation.TeamController;
+import com.woowacourse.levellog.teamdisplay.application.TeamDisplayService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected TeamService teamService;
+
+    @MockBean
+    protected TeamDisplayService teamDisplayService;
 
     @MockBean
     protected PreQuestionService preQuestionService;

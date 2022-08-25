@@ -9,9 +9,9 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
+import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Participants;
@@ -105,8 +105,9 @@ public class PreQuestionService {
     private void validatePreQuestionExistence(final Levellog levellog, final Member questioner) {
         final boolean isExists = preQuestionRepository.existsByLevellogAndAuthor(levellog, questioner);
         if (isExists) {
-            throw new PreQuestionAlreadyExistException(
-                    "사전 질문을 이미 작성하였습니다. levellogId : " + levellog.getId() + " authorId : " + questioner.getId());
+            throw new PreQuestionAlreadyExistException(DebugMessage.init()
+                    .append("levellogId", levellog.getId())
+                    .append("authorId", questioner.getId()));
         }
     }
 

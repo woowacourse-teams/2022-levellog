@@ -9,7 +9,7 @@ import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionAlreadyExistException;
+import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
@@ -102,8 +102,8 @@ class PreQuestionControllerTest extends ControllerTest {
             // given
             final PreQuestionWriteDto request = PreQuestionWriteDto.from("사전 질문");
 
-            final String message = "레벨로그의 사전 질문을 이미 작성했습니다.";
-            willThrow(new PreQuestionAlreadyExistException(message))
+            final String message = "사전 질문이 이미 존재합니다.";
+            willThrow(new PreQuestionAlreadyExistException(DebugMessage.init()))
                     .given(preQuestionService)
                     .save(request, 1L, 1L);
 

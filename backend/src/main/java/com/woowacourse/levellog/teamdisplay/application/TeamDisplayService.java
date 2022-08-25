@@ -19,6 +19,7 @@ import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
+import com.woowacourse.levellog.teamdisplay.domain.TeamDisplay;
 import com.woowacourse.levellog.teamdisplay.dto.ParticipantDto;
 import com.woowacourse.levellog.teamdisplay.dto.TeamDto;
 import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
@@ -44,12 +45,13 @@ public class TeamDisplayService {
     private final TimeStandard timeStandard;
 
     public TeamListDto findAll(final Optional<String> status, final Long memberId) {
-        final List<Team> teams = status.map(this::findAllByIsClosedAndOrderByCreatedAt)
-                .orElseGet(this::findAllOrderByIsClosedAndCreatedAt);
+        final List<TeamDisplay> items = status.map(this::findAllByIsClosedAndOrderByCreatedAt)
+                .orElseGet(this::findAllOrderByIsClosedAndCreatedAt)
+                .stream()
+                .map(this::getTeamDisplay)
+                .collect(Collectors.toList());
 
-        final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
-
-        return new TeamListDto(teamDtos);
+        return TeamListDto.from(items, memberId);
     }
 
     private List<Team> findAllByIsClosedAndOrderByCreatedAt(final String status) {
@@ -83,16 +85,18 @@ public class TeamDisplayService {
     }
 
     public TeamListDto findAllByMemberId(final Long memberId) {
-        final List<Team> teams = getTeamsByMemberId(memberId);
-        final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
+        final List<TeamDisplay> items = getTeamsByMemberId(memberId)
+                .stream()
+                .map(this::getTeamDisplay)
+                .collect(Collectors.toList());
 
-        return new TeamListDto(teamDtos);
+        return TeamListDto.from(items, memberId);
     }
 
-    private List<TeamDto> toTeamDtos(final Long memberId, final List<Team> teams) {
-        return teams.stream()
-                .map(it -> createTeamAndRoleDto(it, memberId))
-                .collect(Collectors.toList());
+    private TeamDisplay getTeamDisplay(final Team team) {
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
+
+        return new TeamDisplay(team, team.status(timeStandard.now()), participants);
     }
 
     private TeamDto createTeamAndRoleDto(final Team team, final Long memberId) {

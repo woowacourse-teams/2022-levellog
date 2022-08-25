@@ -15,6 +15,7 @@ import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.teamdisplay.dto.TeamDto;
 import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
+import com.woowacourse.levellog.teamdisplay.dto.TeamListDto.TeamListItem;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -191,21 +192,21 @@ class TeamDisplayServiceTest extends ServiceTest {
         private List<String> toTitles(final TeamListDto response) {
             return response.getTeams()
                     .stream()
-                    .map(TeamDto::getTitle)
+                    .map(TeamListItem::getTitle)
                     .collect(Collectors.toList());
         }
 
         private List<Long> toHostIds(final TeamListDto response) {
             return response.getTeams()
                     .stream()
-                    .map(TeamDto::getHostId)
+                    .map(TeamListItem::getHostId)
                     .collect(Collectors.toList());
         }
 
         private List<Integer> toParticipantsSizes(final TeamListDto response) {
             return response.getTeams()
                     .stream()
-                    .map(TeamDto::getParticipants)
+                    .map(TeamListItem::getParticipants)
                     .map(List::size)
                     .collect(Collectors.toList());
         }
@@ -213,13 +214,14 @@ class TeamDisplayServiceTest extends ServiceTest {
         private List<TeamStatus> toCloseStatuses(final TeamListDto response) {
             return response.getTeams()
                     .stream()
-                    .map(TeamDto::getStatus)
+                    .map(TeamListItem::getStatus)
                     .collect(Collectors.toList());
         }
 
         private List<Boolean> toIsParticipants(final TeamListDto response) {
             return response.getTeams()
-                    .stream().map(TeamDto::getIsParticipant)
+                    .stream()
+                    .map(TeamListItem::getIsParticipant)
                     .collect(Collectors.toList());
         }
     }
@@ -401,7 +403,8 @@ class TeamDisplayServiceTest extends ServiceTest {
             saveTeam(harry, alien);
 
             // when
-            final List<TeamDto> teams = teamDisplayService.findAllByMemberId(roma.getId()).getTeams();
+            final List<TeamListItem> teams = teamDisplayService.findAllByMemberId(roma.getId())
+                    .getTeams();
 
             // then
             assertThat(teams).hasSize(2);

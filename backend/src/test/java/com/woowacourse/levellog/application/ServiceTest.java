@@ -30,6 +30,7 @@ import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
+import com.woowacourse.levellog.teamdisplay.application.TeamDisplayService;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -78,6 +79,9 @@ abstract class ServiceTest {
 
     @Autowired
     protected TeamService teamService;
+
+    @Autowired
+    protected TeamDisplayService teamDisplayService;
 
     @Autowired
     protected PreQuestionService preQuestionService;

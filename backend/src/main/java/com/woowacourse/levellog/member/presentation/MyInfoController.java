@@ -8,9 +8,8 @@ import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
-import com.woowacourse.levellog.team.application.TeamService;
-import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.teamdisplay.application.TeamDisplayService;
+import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,6 @@ public class MyInfoController {
 
     private final FeedbackService feedbackService;
     private final LevellogService levellogService;
-    private final TeamService teamService;
     private final TeamDisplayService teamDisplayService;
     private final MemberService memberService;
 
@@ -53,10 +51,10 @@ public class MyInfoController {
     }
 
     @GetMapping("/teams")
-    public ResponseEntity<TeamsDto> findAllMyTeams(@Authentic final Long memberId) {
-        final TeamsDto teamsDto = teamDisplayService.findAllByMemberId(memberId);
+    public ResponseEntity<TeamListDto> findAllMyTeams(@Authentic final Long memberId) {
+        final TeamListDto teamListDto = teamDisplayService.findAllByMemberId(memberId);
 
-        return ResponseEntity.ok(teamsDto);
+        return ResponseEntity.ok(teamListDto);
     }
 
     @PutMapping

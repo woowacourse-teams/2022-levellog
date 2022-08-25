@@ -17,12 +17,12 @@ import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.dto.ParticipantDto;
-import com.woowacourse.levellog.team.dto.TeamDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
-import com.woowacourse.levellog.team.dto.WatcherDto;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
+import com.woowacourse.levellog.teamdisplay.dto.ParticipantDto;
+import com.woowacourse.levellog.teamdisplay.dto.TeamDto;
+import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
+import com.woowacourse.levellog.teamdisplay.dto.WatcherDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,13 +43,13 @@ public class TeamDisplayService {
     private final PreQuestionRepository preQuestionRepository;
     private final TimeStandard timeStandard;
 
-    public TeamsDto findAll(final Optional<String> status, final Long memberId) {
+    public TeamListDto findAll(final Optional<String> status, final Long memberId) {
         final List<Team> teams = status.map(this::findAllByIsClosedAndOrderByCreatedAt)
                 .orElseGet(this::findAllOrderByIsClosedAndCreatedAt);
 
         final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
 
-        return new TeamsDto(teamDtos);
+        return new TeamListDto(teamDtos);
     }
 
     private List<Team> findAllByIsClosedAndOrderByCreatedAt(final String status) {
@@ -82,11 +82,11 @@ public class TeamDisplayService {
         return createTeamAndRoleDto(team, memberId);
     }
 
-    public TeamsDto findAllByMemberId(final Long memberId) {
+    public TeamListDto findAllByMemberId(final Long memberId) {
         final List<Team> teams = getTeamsByMemberId(memberId);
         final List<TeamDto> teamDtos = toTeamDtos(memberId, teams);
 
-        return new TeamsDto(teamDtos);
+        return new TeamListDto(teamDtos);
     }
 
     private List<TeamDto> toTeamDtos(final Long memberId, final List<Team> teams) {

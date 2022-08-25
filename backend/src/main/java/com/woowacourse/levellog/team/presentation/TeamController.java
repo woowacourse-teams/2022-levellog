@@ -4,11 +4,11 @@ import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
-import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
 import com.woowacourse.levellog.teamdisplay.application.TeamDisplayService;
+import com.woowacourse.levellog.teamdisplay.dto.TeamDto;
+import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
 import java.net.URI;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -41,9 +41,9 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamsDto> findAll(@RequestParam final Optional<String> status,
-                                            @Authentic final Long memberId) {
-        final TeamsDto response = teamDisplayService.findAll(status, memberId);
+    public ResponseEntity<TeamListDto> findAll(@RequestParam final Optional<String> status,
+                                               @Authentic final Long memberId) {
+        final TeamListDto response = teamDisplayService.findAll(status, memberId);
         return ResponseEntity.ok(response);
     }
 

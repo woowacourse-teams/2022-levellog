@@ -12,8 +12,8 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.dto.TeamDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
+import com.woowacourse.levellog.teamdisplay.dto.TeamDto;
+import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ class TeamDisplayServiceTest extends ServiceTest {
     // TODO: 2022/08/25 FindAll, FindByTeamIdAndMemberId, FindAllByMemberId 메서드 옮기기 ✅
     // TODO: 2022/08/25 TeamController, MyInfoController 가 TeamDisplayService 를 의존하도록 변경하기 ✅
     // TODO: 2022/08/25 TeamService에 불필요한 메서드 삭제 & TeamService에 불필요한 의존성 제거 ✅
-    // TODO: 2022/08/25 team 패키지에 존재하는 전시 관련 dto를 teamdisplay 패키지로 옮기기
+    // TODO: 2022/08/25 team 패키지에 존재하는 전시 관련 dto를 teamdisplay 패키지로 옮기기 ✅
     @Nested
     @DisplayName("findAll 메서드는")
     class FindAll {
@@ -48,7 +48,7 @@ class TeamDisplayServiceTest extends ServiceTest {
             rickTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamDisplayService.findAll(Optional.empty(), rick.getId());
+            final TeamListDto response = teamDisplayService.findAll(Optional.empty(), rick.getId());
 
             //then
             assertAll(
@@ -82,7 +82,7 @@ class TeamDisplayServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamDisplayService.findAll(Optional.of("ready"), rick.getId());
+            final TeamListDto response = teamDisplayService.findAll(Optional.of("ready"), rick.getId());
 
             //then
             assertAll(
@@ -114,7 +114,7 @@ class TeamDisplayServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamDisplayService.findAll(Optional.of("in-progress"), rick.getId());
+            final TeamListDto response = teamDisplayService.findAll(Optional.of("in-progress"), rick.getId());
 
             //then
             assertAll(
@@ -146,7 +146,7 @@ class TeamDisplayServiceTest extends ServiceTest {
             eveTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamDisplayService.findAll(Optional.of("closed"), rick.getId());
+            final TeamListDto response = teamDisplayService.findAll(Optional.of("closed"), rick.getId());
 
             //then
             assertAll(
@@ -186,27 +186,27 @@ class TeamDisplayServiceTest extends ServiceTest {
             team.delete(BEFORE_START_TIME);
 
             //when
-            final TeamsDto response = teamDisplayService.findAll(Optional.empty(), rick.getId());
+            final TeamListDto response = teamDisplayService.findAll(Optional.empty(), rick.getId());
 
             //then
             assertThat(response.getTeams()).hasSize(1);
         }
 
-        private List<String> toTitles(final TeamsDto response) {
+        private List<String> toTitles(final TeamListDto response) {
             return response.getTeams()
                     .stream()
                     .map(TeamDto::getTitle)
                     .collect(Collectors.toList());
         }
 
-        private List<Long> toHostIds(final TeamsDto response) {
+        private List<Long> toHostIds(final TeamListDto response) {
             return response.getTeams()
                     .stream()
                     .map(TeamDto::getHostId)
                     .collect(Collectors.toList());
         }
 
-        private List<Integer> toParticipantsSizes(final TeamsDto response) {
+        private List<Integer> toParticipantsSizes(final TeamListDto response) {
             return response.getTeams()
                     .stream()
                     .map(TeamDto::getParticipants)
@@ -214,14 +214,14 @@ class TeamDisplayServiceTest extends ServiceTest {
                     .collect(Collectors.toList());
         }
 
-        private List<TeamStatus> toCloseStatuses(final TeamsDto response) {
+        private List<TeamStatus> toCloseStatuses(final TeamListDto response) {
             return response.getTeams()
                     .stream()
                     .map(TeamDto::getStatus)
                     .collect(Collectors.toList());
         }
 
-        private List<Boolean> toIsParticipants(final TeamsDto response) {
+        private List<Boolean> toIsParticipants(final TeamListDto response) {
             return response.getTeams()
                     .stream().map(TeamDto::getIsParticipant)
                     .collect(Collectors.toList());

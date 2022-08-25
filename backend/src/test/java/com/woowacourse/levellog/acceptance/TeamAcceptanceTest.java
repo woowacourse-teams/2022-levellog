@@ -77,8 +77,13 @@ class TeamAcceptanceTest extends AcceptanceTest {
         POBI.save();
 
         saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
-        saveTeam("잠실 브리조", EVE, 1, EVE, RICK);
+        final String eveTeamId = saveTeam("잠실 브리조", EVE, 1, EVE, RICK).getTeamId();
         final String teamId = saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER).getTeamId();
+
+        final String eveLevellogId = saveLevellog("이브의 레벨로그", eveTeamId, EVE).getLevellogId();
+        saveLevellog("릭의 레벨로그", eveTeamId, RICK);
+
+        savePreQuestion("이브에게 하려는 질문", eveLevellogId, RICK);
 
         timeStandard.setInProgress();
         RestAssuredTemplate.post("/api/teams/" + teamId + "/close", RICK.getToken());

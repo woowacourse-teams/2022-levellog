@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useContext } from 'react';
+
+import { SnackbarDispatchContext } from 'contexts/snackbarContext';
 
 const useSnackbar = () => {
-  const [snackbars, setSnackbars] = useState([]);
+  const dispatch = useContext(SnackbarDispatchContext);
 
-  const showSnackbar = ({ message }: any) => {
-    setSnackbars((prev): any => [...prev, `${message}`]);
+  const showSnackbar = ({ message }: ShowSnackbarProps) => {
+    dispatch({ type: 'add', message });
     removeSnackbar();
-    console.log(snackbars);
   };
 
   const removeSnackbar = () => {
@@ -14,7 +15,7 @@ const useSnackbar = () => {
     const callback = () => {
       const currentTime = new Date().getTime();
       if (currentTime - 2000 > showSnackbarTime) {
-        setSnackbars((prev) => prev.slice(1, snackbars.length));
+        dispatch({ type: 'delete' });
       } else {
         requestAnimationFrame(callback);
       }
@@ -22,7 +23,10 @@ const useSnackbar = () => {
     requestAnimationFrame(callback);
   };
 
-  return { snackbars, showSnackbar };
+  return { showSnackbar };
 };
+interface ShowSnackbarProps {
+  message: string;
+}
 
 export default useSnackbar;

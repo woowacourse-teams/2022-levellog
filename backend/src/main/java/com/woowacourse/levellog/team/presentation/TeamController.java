@@ -7,7 +7,7 @@ import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.teamdisplay.application.TeamDisplayService;
-import com.woowacourse.levellog.teamdisplay.dto.TeamDto;
+import com.woowacourse.levellog.teamdisplay.dto.TeamDetailDto;
 import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
 import java.net.URI;
 import java.util.Optional;
@@ -49,9 +49,9 @@ public class TeamController {
 
     @GetMapping("/{teamId}")
     @PublicAPI
-    public ResponseEntity<TeamDto> findById(@PathVariable final Long teamId,
-                                            @Authentic final Long memberId) {
-        final TeamDto response = teamDisplayService.findByTeamIdAndMemberId(teamId, memberId);
+    public ResponseEntity<TeamDetailDto> findById(@PathVariable final Long teamId,
+                                                  @Authentic final Long memberId) {
+        final TeamDetailDto response = teamDisplayService.findByTeamIdAndMemberId(teamId, memberId);
         return ResponseEntity.ok(response);
     }
 

@@ -13,7 +13,7 @@ import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
-import com.woowacourse.levellog.teamdisplay.dto.TeamDto;
+import com.woowacourse.levellog.teamdisplay.dto.TeamDetailDto;
 import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
 import com.woowacourse.levellog.teamdisplay.dto.TeamListDto.TeamListItem;
 import java.util.List;
@@ -239,7 +239,7 @@ class TeamDisplayServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             //when
-            final TeamDto response = teamDisplayService.findByTeamIdAndMemberId(team.getId(), rick.getId());
+            final TeamDetailDto response = teamDisplayService.findByTeamIdAndMemberId(team.getId(), rick.getId());
 
             //then
             assertAll(
@@ -276,9 +276,9 @@ class TeamDisplayServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma, alien, eve);
 
                 //when
-                final TeamDto responseOfPepper = teamDisplayService.findByTeamIdAndMemberId(team.getId(),
+                final TeamDetailDto responseOfPepper = teamDisplayService.findByTeamIdAndMemberId(team.getId(),
                         pepper.getId());
-                final TeamDto responseOfEve = teamDisplayService.findByTeamIdAndMemberId(team.getId(),
+                final TeamDetailDto responseOfEve = teamDisplayService.findByTeamIdAndMemberId(team.getId(),
                         eve.getId());
 
                 //then
@@ -310,7 +310,7 @@ class TeamDisplayServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma);
 
                 //when
-                final TeamDto response = teamDisplayService.findByTeamIdAndMemberId(team.getId(), pepper.getId());
+                final TeamDetailDto response = teamDisplayService.findByTeamIdAndMemberId(team.getId(), pepper.getId());
 
                 //then
                 assertAll(
@@ -340,7 +340,7 @@ class TeamDisplayServiceTest extends ServiceTest {
                 final Team team = saveTeam(1, rick, List.of(pobi), pepper);
 
                 //when
-                final TeamDto response = teamDisplayService.findByTeamIdAndMemberId(team.getId(), pobi.getId());
+                final TeamDetailDto response = teamDisplayService.findByTeamIdAndMemberId(team.getId(), pobi.getId());
 
                 //then
                 assertAll(
@@ -371,7 +371,7 @@ class TeamDisplayServiceTest extends ServiceTest {
                 final Team team = saveTeam(rick, pepper, roma);
 
                 //when
-                final TeamDto response = teamDisplayService.findByTeamIdAndMemberId(team.getId(), alien.getId());
+                final TeamDetailDto response = teamDisplayService.findByTeamIdAndMemberId(team.getId(), alien.getId());
 
                 //then
                 assertAll(

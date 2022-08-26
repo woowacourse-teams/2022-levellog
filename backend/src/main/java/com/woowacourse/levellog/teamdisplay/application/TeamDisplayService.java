@@ -1,16 +1,11 @@
 package com.woowacourse.levellog.teamdisplay.application;
 
-
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
-import com.woowacourse.levellog.prequestion.domain.PreQuestion;
-import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Participants;
@@ -19,11 +14,11 @@ import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
+import com.woowacourse.levellog.teamdisplay.domain.ParticipantDetail;
 import com.woowacourse.levellog.teamdisplay.domain.TeamDisplay;
-import com.woowacourse.levellog.teamdisplay.dto.ParticipantDto;
-import com.woowacourse.levellog.teamdisplay.dto.TeamDto;
+import com.woowacourse.levellog.teamdisplay.domain.TeamDisplayRepository;
+import com.woowacourse.levellog.teamdisplay.dto.TeamDetailDto;
 import com.woowacourse.levellog.teamdisplay.dto.TeamListDto;
-import com.woowacourse.levellog.teamdisplay.dto.WatcherDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,10 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamDisplayService {
 
     private final TeamRepository teamRepository;
+    private final TeamDisplayRepository teamDisplayRepository;
     private final ParticipantRepository participantRepository;
     private final MemberRepository memberRepository;
-    private final LevellogRepository levellogRepository;
-    private final PreQuestionRepository preQuestionRepository;
     private final TimeStandard timeStandard;
 
     public TeamListDto findAll(final Optional<String> status, final Long memberId) {
@@ -78,10 +72,17 @@ public class TeamDisplayService {
         return teamRepository.findAll(sort);
     }
 
-    public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
+    public TeamDetailDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
         final Team team = getTeam(teamId);
+        Member member = null;
+        if (memberId != -1) {
+            member = getMember(memberId);
+        }
 
-        return createTeamAndRoleDto(team, memberId);
+        final TeamDisplay teamDisplay = getTeamDisplay(team);
+        final List<ParticipantDetail> participantDetails = teamDisplayRepository.findAllParticipantDetail(member, team);
+
+        return TeamDetailDto.of(teamDisplay, participantDetails, memberId);
     }
 
     public TeamListDto findAllByMemberId(final Long memberId) {
@@ -97,17 +98,6 @@ public class TeamDisplayService {
         final Participants participants = new Participants(participantRepository.findByTeam(team));
 
         return new TeamDisplay(team, team.status(timeStandard.now()), participants);
-    }
-
-    private TeamDto createTeamAndRoleDto(final Team team, final Long memberId) {
-        final TeamStatus status = team.status(timeStandard.now());
-
-        final Participants participants = new Participants(participantRepository.findByTeam(team));
-        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
-        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
-
-        return TeamDto.from(team, participants.toHostId(), status, participants.isContains(memberId), interviewers,
-                interviewees, toParticipantResponses(participants, memberId), toWatcherResponses(participants));
     }
 
     private Member getMember(final Long memberId) {
@@ -130,41 +120,5 @@ public class TeamDisplayService {
         return participants.stream()
                 .map(Participant::getTeam)
                 .collect(Collectors.toList());
-    }
-
-    private List<ParticipantDto> toParticipantResponses(final Participants participants, final Long memberId) {
-        return participants.getValues().stream()
-                .filter(Participant::isParticipant)
-                .map(it -> createParticipantDto(it, memberId))
-                .collect(Collectors.toList());
-    }
-
-    private List<WatcherDto> toWatcherResponses(final Participants participants) {
-        return participants.getValues().stream()
-                .filter(Participant::isWatcher)
-                .map(WatcherDto::from)
-                .collect(Collectors.toList());
-    }
-
-    private ParticipantDto createParticipantDto(final Participant participant, final Long memberId) {
-        final Levellog levellog = getLevellog(participant);
-
-        if (levellog == null) {
-            return ParticipantDto.from(participant, null, null);
-        }
-
-        return ParticipantDto.from(participant, levellog.getId(), getPreQuestionId(memberId, levellog));
-    }
-
-    private Levellog getLevellog(final Participant participant) {
-        return levellogRepository
-                .findByAuthorIdAndTeamId(participant.getMember().getId(), participant.getTeam().getId())
-                .orElse(null);
-    }
-
-    private Long getPreQuestionId(final Long memberId, final Levellog levellog) {
-        return preQuestionRepository.findByLevellogAndAuthorId(levellog, memberId)
-                .map(PreQuestion::getId)
-                .orElse(null);
     }
 }

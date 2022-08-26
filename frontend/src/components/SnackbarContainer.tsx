@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import SnackbarPortal from 'portal/SnackbarPortal';
 
-const SnackbarContainer = ({ children }: any) => {
+const SnackbarContainer = ({ children }: SnackbarContainerProps) => {
   return (
     <SnackbarPortal>
       <SnackbarContainerStyle>{children}</SnackbarContainerStyle>
@@ -15,8 +15,13 @@ interface SnackbarContainerProps {
 }
 
 const SnackbarContainerStyle = styled.div`
-  position: relative;
-  top: -7.5rem;
+  position: fixed;
+  bottom: 1rem;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1rem;
+  z-index: 20;
+  width: 100%;
 `;
 
 export default SnackbarContainer;

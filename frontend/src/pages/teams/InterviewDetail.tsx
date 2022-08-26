@@ -72,7 +72,7 @@ const InterviewDetail = () => {
       <ContentHeader
         imageUrl={(team as InterviewTeamType).teamImage}
         title={(team as InterviewTeamType).title}
-        subTitle={`${(team as InterviewTeamType).place} ${convertDateAndTime({
+        subTitle={`${(team as InterviewTeamType).place} | ${convertDateAndTime({
           startAt: (team as InterviewTeamType).startAt,
         })}`}
       >

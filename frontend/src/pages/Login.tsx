@@ -7,12 +7,13 @@ import useUser from 'hooks/useUser';
 
 import { ROUTES_PATH } from 'constants/constants';
 
+import Loading from './status/Loading';
 import { requestGetUserAuthority, requestGetUserLogin } from 'apis/login';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 
 const Login = () => {
   const { userInfoDispatch } = useUser();
-  const location = useLocation() as unknown as { state: { pathname: string } };
+  // const location = useLocation() as unknown as { state: { pathname: string } };
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const Login = () => {
             nickname: res.data.nickname,
             profileUrl: res.data.profileUrl,
           });
-          navigate(location.state.pathname);
+          navigate(ROUTES_PATH.HOME);
 
           return;
         }
@@ -45,16 +46,17 @@ const Login = () => {
           });
         }
 
-        if (location.state) {
-          if (location.state.pathname === ROUTES_PATH.LOGIN) {
-            navigate(location.state.pathname);
+        // if (location.state) {
+        //   if (location.state.pathname === ROUTES_PATH.LOGIN) {
+        //     navigate(location.state.pathname);
 
-            return;
-          }
-          navigate(location.state.pathname);
+        //     return;
+        //   }
+        //   navigate(location.state.pathname);
 
-          return;
-        }
+        //   return;
+        // }
+
         navigate(ROUTES_PATH.HOME);
       } catch (err: unknown) {
         if (axios.isAxiosError(err) && err instanceof Error) {
@@ -69,7 +71,7 @@ const Login = () => {
     loginGithub();
   }, []);
 
-  return <Outlet />;
+  return <Loading />;
 };
 
 export default Login;

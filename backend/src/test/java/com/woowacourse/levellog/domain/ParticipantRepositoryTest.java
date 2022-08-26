@@ -22,7 +22,7 @@ class ParticipantRepositoryTest extends RepositoryTest {
         final Member alien = saveMember("알린");
         final Member roma = saveMember("로마");
 
-        final Team team = saveTeam(alien, roma);
+        final Team team = saveTeam(alien, alien, roma);
 
         // when
         final List<Participant> participants = participantRepository.findByTeam(team);
@@ -58,7 +58,7 @@ class ParticipantRepositoryTest extends RepositoryTest {
         final Member alien = saveMember("알린");
         final Member roma = saveMember("로마");
 
-        final Team team = saveTeam(alien);
+        final Team team = saveTeam(alien, alien);
 
         // when
         final boolean existsAlien = participantRepository.existsByMemberAndTeam(alien, team);
@@ -78,8 +78,8 @@ class ParticipantRepositoryTest extends RepositoryTest {
         final Member alien = saveMember("알린");
         final Member roma = saveMember("로마");
 
-        final Team team1 = saveTeam(alien, roma);
-        final Team team2 = saveTeam(roma);
+        final Team team1 = saveTeam(alien, alien, roma);
+        final Team team2 = saveTeam(roma, roma);
 
         // when
         final List<Participant> participants = participantRepository.findAllByMember(roma);

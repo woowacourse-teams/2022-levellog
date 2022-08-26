@@ -18,9 +18,9 @@ import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
-import java.util.Arrays;
+import com.woowacourse.levellog.teamdisplay.domain.TeamDisplayRepository;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -31,7 +31,10 @@ import org.springframework.test.context.ActiveProfiles;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Import(JpaConfig.class)
+@Import({
+        JpaConfig.class,
+        TeamDisplayRepository.class
+})
 abstract class RepositoryTest {
 
     @Autowired
@@ -56,6 +59,9 @@ abstract class RepositoryTest {
     protected TeamRepository teamRepository;
 
     @Autowired
+    protected TeamDisplayRepository teamDisplayRepository;
+
+    @Autowired
     protected NicknameMappingRepository nicknameMappingRepository;
 
     protected Member saveMember(final String nickname) {
@@ -64,14 +70,18 @@ abstract class RepositoryTest {
     }
 
     protected Team saveTeam(final Member host, final Member... members) {
+        return saveTeam(host, Collections.emptyList(), members);
+    }
+
+    protected Team saveTeam(final Member host, final List<Member> watchers, final Member... members) {
         final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", 1));
 
-        participantRepository.save(new Participant(team, host, true, false));
-
-        final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it, false, false))
-                .collect(Collectors.toList());
-        participantRepository.saveAll(participants);
+        for (final Member member : members) {
+            participantRepository.save(new Participant(team, member, member.getNickname().equals(host.getNickname()), false));
+        }
+        for (final Member watcher : watchers) {
+            participantRepository.save(new Participant(team, watcher, watcher.getNickname().equals(host.getNickname()), true));
+        }
 
         return team;
     }

@@ -17,7 +17,7 @@ module.exports = merge(common, {
   plugins: [
     new webpack.EnvironmentPlugin({
       SERVICE_URI: 'http://localhost:3000',
-      API_URI: 'https://local.levellog.app/api',
+      API_URI: 'https:/dev.levellog.app/api',
       CLIENT_ID: '7a432a0c919a356b4efa',
     }),
   ],

@@ -3,6 +3,51 @@ import styled from 'styled-components';
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 
+const ExceptionContainer = ({ children }: ExceptionContainerProps) => {
+  return <S.Container>{children}</S.Container>;
+};
+
+const ExceptionErrorTitle = ({ children }: ExceptionTitleProps) => {
+  return <S.Title>{children}</S.Title>;
+};
+
+const ExceptionErrorText = ({ children }: ExceptionTextProps) => {
+  return <S.Text>{children}</S.Text>;
+};
+
+const ExceptionImage = ({ borderRadius = false, children }: ExceptionImage) => {
+  return <Image src={children} sizes={'EXTRA_HUGE'} borderRadius={borderRadius} />;
+};
+
+const ExceptionButton = ({ children }: ExceptionButtonProps) => {
+  return <Button>{children}</Button>;
+};
+
+const ExceptionLoading = () => {
+  return <S.Spinner />;
+};
+
+interface ExceptionContainerProps {
+  children: JSX.Element | JSX.Element[];
+}
+
+interface ExceptionTitleProps {
+  children: string;
+}
+
+interface ExceptionTextProps {
+  children: string;
+}
+
+interface ExceptionImage {
+  borderRadius?: boolean;
+  children: string;
+}
+
+interface ExceptionButtonProps {
+  children: string;
+}
+
 const S = {
   Container: styled.div`
     display: flex;
@@ -40,30 +85,6 @@ const S = {
   `,
 };
 
-const ExceptionContainer = ({ children }: ExceptionContainerProps) => {
-  return <S.Container>{children}</S.Container>;
-};
-
-const ExceptionErrorTitle = ({ children }: ExceptionTitleProps) => {
-  return <S.Title>{children}</S.Title>;
-};
-
-const ExceptionErrorText = ({ children }: ExceptionTextProps) => {
-  return <S.Text>{children}</S.Text>;
-};
-
-const ExceptionImage = ({ borderRadius = false, children }: ExceptionImage) => {
-  return <Image src={children} sizes={'EXTRA_HUGE'} borderRadius={borderRadius} />;
-};
-
-const ExceptionButton = ({ children }: ExceptionButtonProps) => {
-  return <Button>{children}</Button>;
-};
-
-const ExceptionLoading = () => {
-  return <S.Spinner />;
-};
-
 export const Exception = Object.assign(ExceptionContainer, {
   Title: ExceptionErrorTitle,
   Text: ExceptionErrorText,
@@ -71,24 +92,3 @@ export const Exception = Object.assign(ExceptionContainer, {
   Button: ExceptionButton,
   Loading: ExceptionLoading,
 });
-
-interface ExceptionContainerProps {
-  children: JSX.Element | JSX.Element[];
-}
-
-interface ExceptionTitleProps {
-  children: string;
-}
-
-interface ExceptionTextProps {
-  children: string;
-}
-
-interface ExceptionImage {
-  borderRadius?: boolean;
-  children: string;
-}
-
-interface ExceptionButtonProps {
-  children: string;
-}

@@ -194,8 +194,8 @@ const S = {
   `,
 
   RightContent: styled.div`
-    overflow: auto;
     display: flex;
+    overflow: auto;
     flex-direction: column;
     gap: 3.125rem;
     width: 50%;

@@ -38,8 +38,8 @@ export const ButtonStyle = styled.button`
     opacity: 70%;
   }
   @media (max-width: 520px) {
-    padding: 10px 12px;
-    font-size: 14px;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
   }
 `;
 

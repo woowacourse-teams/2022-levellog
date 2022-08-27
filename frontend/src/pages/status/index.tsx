@@ -63,8 +63,8 @@ const S = {
   `,
 
   Text: styled.p`
-    font-size: 1rem;
     color: ${(props) => props.theme.new_default.GRAY};
+    font-size: 1rem;
   `,
 
   Spinner: styled.div`

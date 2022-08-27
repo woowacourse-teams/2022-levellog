@@ -104,13 +104,13 @@ const GlobalStyles = createGlobalStyle`
 
   ::-webkit-scrollbar {
     display: block;
-    width: 12px;
+    width: 0.75rem;
   }
   ::-webkit-scrollbar-thumb {
     background-color: #3E3E3E;
     background-clip: padding-box;
-    border: 2px solid transparent;
-    border-radius: 10px;
+    border: 0.125rem solid transparent;
+    border-radius: 0.625rem;
   }
   ::-webkit-scrollbar-track {
     background-color: #FFFFFF;

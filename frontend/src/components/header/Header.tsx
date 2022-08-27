@@ -49,9 +49,8 @@ const S = {
     display: flex;
     position: relative;
     justify-content: space-between;
-    box-sizing: content-box;
-    height: max-content;
     align-items: center;
+    box-sizing: content-box;
     height: 4.3125rem;
     border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     @media (min-width: 1620px) {

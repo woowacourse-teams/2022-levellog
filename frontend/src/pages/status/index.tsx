@@ -55,7 +55,7 @@ const S = {
     justify-content: center;
     align-items: center;
     gap: 0.875rem;
-    height: calc(100vh - 8.75rem);
+    height: calc(100vh - 16.25rem);
   `,
 
   Title: styled.h1`

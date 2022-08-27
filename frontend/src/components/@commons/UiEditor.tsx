@@ -25,7 +25,8 @@ const UiEditor = ({
       <Editor
         autofocus={autoFocus}
         previewStyle={'tab'}
-        height={height}
+        minHeight={'inherit'}
+        height={height ? height : '100%'}
         initialEditType={initialEditType}
         initialValue={' '}
         ref={contentRef}
@@ -40,7 +41,7 @@ const UiEditor = ({
 interface UiEditorProps {
   needToolbar: boolean;
   autoFocus: boolean;
-  height: string;
+  height?: string;
   contentRef: LegacyRef<Editor>;
   initialEditType: 'markdown' | 'wysiwyg';
   toolbarItems?: Array<Array<string>>;
@@ -52,6 +53,13 @@ interface ContainerProps {
 
 const S = {
   Container: styled.div<ContainerProps>`
+    min-height: inherit;
+    > div {
+      min-height: inherit;
+    }
+    .toastui-editor-defaultUI {
+      min-height: inherit;
+    }
     .toastui-editor-toolbar {
       display: ${(props) => (props.needToolbar ? 'block' : 'none')};
     }

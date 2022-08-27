@@ -4,7 +4,8 @@ import NotoSans from 'assets/fonts/noto-sans-kr-v27-latin-regular.woff';
 
 const GlobalStyles = createGlobalStyle` 
   #root {
-    height: 100%;
+    min-height: 100vh;
+    height: max-content;
     width: 100%;
     margin: 0;
   }

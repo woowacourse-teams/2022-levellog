@@ -1,11 +1,7 @@
 import styled from 'styled-components';
 
-import { MESSAGE } from 'constants/constants';
-
 import Button from 'components/@commons/Button';
-import FlexBox from 'components/@commons/FlexBox';
 import Input from 'components/@commons/Input';
-import ToolTip from 'components/@commons/ToolTip';
 import InterviewQuestionContent from 'components/interviewQuestion/InterviewQuestionContent';
 import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';
 
@@ -88,7 +84,7 @@ const S = {
     height: '3.125rem';
     padding-right: 0.5rem;
     border-radius: 0.5rem;
-    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.default.WHITE};
   `,
 

@@ -47,7 +47,6 @@ const PreQuestionAdd = () => {
           <UiEditor
             needToolbar={true}
             autoFocus={true}
-            height={'60rem'}
             contentRef={preQuestionRef}
             initialEditType={'markdown'}
           />
@@ -66,18 +65,21 @@ const S = {
     display: flex;
     overflow: auto;
     flex-direction: column;
-
+    min-height: calc(100vh - 8.75rem);
+    height: max-content;
     @media (min-width: 1620px) {
-      padding: 1.25rem calc((100vw - 100rem) / 2);
+      padding: 1.25rem calc((100vw - 100rem) / 2) 0 calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 1.25rem 1.25rem;
+      padding: 1.25rem 1.25rem 0 1.25rem;
     }
   `,
 
   Content: styled.div`
     display: flex;
     gap: 1rem;
+    min-height: calc(100vh - 14.375rem);
+    height: 100%;
     @media (max-width: 520px) {
       flex-direction: column;
     }
@@ -85,6 +87,7 @@ const S = {
 
   LeftContent: styled.div`
     width: 50%;
+    min-height: inherit;
     @media (max-width: 520px) {
       width: 100%;
     }
@@ -97,6 +100,7 @@ const S = {
 
   RightContent: styled.div`
     width: 50%;
+    min-height: inherit;
     @media (max-width: 520px) {
       width: 100%;
     }

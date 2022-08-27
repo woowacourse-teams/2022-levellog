@@ -25,8 +25,8 @@ const S = {
   Container: styled.div<{ isShowProfileDropdown: boolean }>`
     display: ${(props) => (props.isShowProfileDropdown ? 'flex' : 'none')};
     position: absolute;
-    top: 4.375rem;
-    right: 0;
+    top: 4.75rem;
+    right: 0.3125rem;
     z-index: 10;
     flex-direction: column;
     justify-content: space-around;

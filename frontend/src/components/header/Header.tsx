@@ -40,6 +40,7 @@ const Header = () => {
           handleClickLogoutButton={handleClickLogoutButton}
         />
       </S.Container>
+      <S.Line />
     </>
   );
 };
@@ -52,12 +53,11 @@ const S = {
     align-items: center;
     box-sizing: content-box;
     height: 4.3125rem;
-    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     @media (min-width: 1620px) {
-      padding: 0 calc((100vw - 100rem) / 2);
+      margin: 0 calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 0 1.25rem;
+      margin: 0 1.25rem;
     }
   `,
 
@@ -66,6 +66,10 @@ const S = {
     height: 2.75rem;
     border-radius: 1.375rem;
     cursor: pointer;
+  `,
+
+  Line: styled.div`
+    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,
 };
 

@@ -199,6 +199,7 @@ const S = {
     gap: 1rem;
     @media (max-width: 560px) {
       flex-direction: column;
+      gap: 0.5rem;
     }
   `,
 
@@ -207,9 +208,14 @@ const S = {
     background-color: ${(props) => props.theme.new_default.WHITE};
     font-weight: 700;
     color: ${(props) => props.theme.new_default.BLACK};
+    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     :hover {
       background-color: ${(props) => props.theme.new_default.LIGHT_GRAY};
       box-shadow: 0.25rem 0.25rem 0.375rem ${(props) => props.theme.new_default.DARK_GRAY};
+    }
+    @media (max-width: 520px) {
+      padding: 0.4375rem 0.75rem;
+      font-size: 0.75rem;
     }
   `,
 };

@@ -65,21 +65,22 @@ const S = {
     display: flex;
     overflow: auto;
     flex-direction: column;
-    min-height: calc(100vh - 8.75rem);
-    height: max-content;
+    height: calc(100vh - 8.75rem);
     @media (min-width: 1620px) {
       padding: 1.25rem calc((100vw - 100rem) / 2) 0 calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
       padding: 1.25rem 1.25rem 0 1.25rem;
     }
+    @media (max-width: 520px) {
+      height: max-content;
+    }
   `,
 
   Content: styled.div`
     display: flex;
     gap: 1rem;
-    min-height: calc(100vh - 14.375rem);
-    height: 100%;
+    height: calc(100vh - 14.375rem);
     @media (max-width: 520px) {
       flex-direction: column;
     }
@@ -87,7 +88,7 @@ const S = {
 
   LeftContent: styled.div`
     width: 50%;
-    min-height: inherit;
+    height: inherit;
     @media (max-width: 520px) {
       width: 100%;
     }
@@ -100,9 +101,10 @@ const S = {
 
   RightContent: styled.div`
     width: 50%;
-    min-height: inherit;
+    height: inherit;
     @media (max-width: 520px) {
       width: 100%;
+      height: 31.25rem;
     }
   `,
 

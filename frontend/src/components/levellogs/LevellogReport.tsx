@@ -19,7 +19,6 @@ const S = {
   Container: styled.div`
     overflow: auto;
     width: 100%;
-    min-height: inherit;
     height: 100%;
     padding: 1rem;
     border-radius: 0.5rem;

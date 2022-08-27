@@ -25,8 +25,7 @@ const UiEditor = ({
       <Editor
         autofocus={autoFocus}
         previewStyle={'tab'}
-        minHeight={'inherit'}
-        height={height ? height : '100%'}
+        height={height ? height : 'inherit'}
         initialEditType={initialEditType}
         initialValue={' '}
         ref={contentRef}
@@ -53,13 +52,7 @@ interface ContainerProps {
 
 const S = {
   Container: styled.div<ContainerProps>`
-    min-height: inherit;
-    > div {
-      min-height: inherit;
-    }
-    .toastui-editor-defaultUI {
-      min-height: inherit;
-    }
+    height: inherit;
     .toastui-editor-toolbar {
       display: ${(props) => (props.needToolbar ? 'block' : 'none')};
     }

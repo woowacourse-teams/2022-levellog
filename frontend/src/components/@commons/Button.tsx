@@ -37,6 +37,10 @@ export const ButtonStyle = styled.button`
   :hover {
     opacity: 70%;
   }
+  @media (max-width: 520px) {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
 `;
 
 export default Button;

@@ -54,7 +54,7 @@ const Feedbacks = () => {
       <>
         <ContentHeader
           imageUrl={levellogInfo.author.profileUrl}
-          title={`${levellogInfo.author.nickname}의 레벨 인터뷰 피드백`}
+          title={`${levellogInfo.author.nickname}에 대한 레벨 인터뷰 피드백`}
         ></ContentHeader>
         <EmptyFeedback
           isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
@@ -68,7 +68,7 @@ const Feedbacks = () => {
     <>
       <ContentHeader
         imageUrl={levellogInfo.author.profileUrl}
-        title={`${levellogInfo.author.nickname}의 레벨 인터뷰 피드백`}
+        title={`${levellogInfo.author.nickname}에 대한 레벨 인터뷰 피드백`}
       >
         <>
           {/*내가 피드백을 작성했다면 '작성하기' 버튼 제거하기*/}

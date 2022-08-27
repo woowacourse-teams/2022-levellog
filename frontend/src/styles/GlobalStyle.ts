@@ -50,10 +50,8 @@ const GlobalStyles = createGlobalStyle`
     outline: 0;
     font-style: normal;
     ::-webkit-scrollbar {
-      display: none;
-    }
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+      display: none
+    };
   }
 
   p {
@@ -102,6 +100,20 @@ const GlobalStyles = createGlobalStyle`
 
   :disabled {
     cursor: inherit;
+  }
+
+  ::-webkit-scrollbar {
+    display: block;
+    width: 12px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #3E3E3E;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: #FFFFFF;
   }
 `;
 

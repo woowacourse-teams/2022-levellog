@@ -13,11 +13,11 @@ import { LevellogCustomHookType, LevellogInfoType } from 'types/levellog';
 
 const useLevellog = () => {
   const { teamGetUriBuilder } = useUriBuilder();
+  const levellogRef = useRef<Editor>(null);
+  const navigate = useNavigate();
   const [levellogInfo, setLevellogInfo] = useState<LevellogInfoType>(
     {} as unknown as LevellogInfoType,
   );
-  const levellogRef = useRef<Editor>(null);
-  const navigate = useNavigate();
 
   const accessToken = localStorage.getItem('accessToken');
 

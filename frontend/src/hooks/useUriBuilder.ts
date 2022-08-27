@@ -72,7 +72,7 @@ const useUriBuilder = () => {
     teamId,
     levellogId,
   }: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-    return `/teams/${teamId}/levellogs/${levellogId}/intervie2w-questions`;
+    return `/teams/${teamId}/levellogs/${levellogId}/interview-questions`;
   };
 
   return {

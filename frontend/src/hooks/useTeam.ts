@@ -3,6 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useSnackbar from 'hooks/useSnackbar';
 import useUser from 'hooks/useUser';
 import useUtil from 'hooks/useUtil';
 
@@ -24,31 +25,35 @@ import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } f
 const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { isDebounce } = useUtil();
+  const { showSnackbar } = useSnackbar();
   const [members, setMembers] = useState<MemberType[]>([]);
   const [nicknameValue, setNicknameValue] = useState('');
+  const [participants, setParticipants] = useState<MemberType[]>([
+    { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
+  ]);
   const team = useContext(TeamContext);
   const teamInfoDispatch = useContext(TeamDispatchContext);
   const location = useLocation() as { state: InterviewTeamType };
   const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const navigate = useNavigate();
   const { teamId } = useParams();
+
   const teamLocationState: InterviewTeamType | undefined = location.state;
   const accessToken = localStorage.getItem('accessToken');
-  const [participants, setParticipants] = useState<MemberType[]>([
-    { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
-  ]);
 
   const postTeam = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
     try {
       teamInfo.participants.ids = teamInfo.participants.ids.filter((id) => id !== loginUserId);
       await requestPostTeam({ teamInfo, accessToken });
-      alert(MESSAGE.TEAM_CREATE);
+      showSnackbar({ message: MESSAGE.TEAM_CREATE });
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -73,8 +78,10 @@ const useTeam = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -88,8 +95,10 @@ const useTeam = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -102,8 +111,10 @@ const useTeam = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -115,8 +126,10 @@ const useTeam = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (err instanceof Error) {
+          showSnackbar({ message: responseBody.data.message });
+          navigate(ROUTES_PATH.HOME);
+        }
       }
     }
   };
@@ -197,7 +210,9 @@ const useTeam = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
+        if (err instanceof Error) {
+          showSnackbar({ message: responseBody.data.message });
+        }
       }
     }
   };
@@ -221,20 +236,20 @@ const useTeam = () => {
   return {
     team,
     teamLocationState,
-    getTeam,
     members,
     participants,
     nicknameValue,
-    setNicknameValue,
     teamInfoRef,
+    setNicknameValue,
+    getTeam,
     getTeamOnRef,
     updateMembers,
     addToParticipants,
     removeToParticipants,
     onSubmitTeamAddForm,
-    handleSubmitTeamEditForm,
     onClickDeleteTeamButton,
     onClickCloseTeamInterviewButton,
+    handleSubmitTeamEditForm,
   };
 };
 

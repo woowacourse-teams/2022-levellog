@@ -25,7 +25,7 @@ const useSnackbar = () => {
 
   return { showSnackbar };
 };
-interface ShowSnackbarProps {
+export interface ShowSnackbarProps {
   message: string;
 }
 

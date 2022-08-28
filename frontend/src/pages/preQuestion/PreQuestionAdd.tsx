@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
 import usePreQuestion from 'hooks/usePreQuestion';
+import useSnackbar from 'hooks/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
@@ -15,6 +16,7 @@ import LevellogReport from 'components/levellogs/LevellogReport';
 const PreQuestionAdd = () => {
   const { levellogInfo, getLevellog } = useLevellog();
   const { preQuestionRef, onClickPreQuestionAddButton } = usePreQuestion();
+  const { showSnackbar } = useSnackbar();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
 
@@ -24,7 +26,7 @@ const PreQuestionAdd = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
   };
 
   useEffect(() => {
@@ -33,7 +35,7 @@ const PreQuestionAdd = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
   }, []);
 

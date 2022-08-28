@@ -3,9 +3,9 @@ import { useRoutes } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import Snackbar from 'components/@commons/Snackbar';
+import Snackbar from 'components/@commons/snackbar/Snackbar';
+import SnackbarContainer from 'components/@commons/snackbar/SnackbarContainer';
 import Footer from 'components/Footer';
-import SnackbarContainer from 'components/SnackbarContainer';
 import Header from 'components/header/Header';
 import { SnackbarContext } from 'contexts/snackbarContext';
 import { routes } from 'routes/Routes';

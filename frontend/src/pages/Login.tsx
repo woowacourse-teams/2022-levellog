@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useSnackbar from 'hooks/useSnackbar';
 import useUser from 'hooks/useUser';
 
 import { ROUTES_PATH } from 'constants/constants';
@@ -12,6 +13,7 @@ import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 
 const Login = () => {
   const { userInfoDispatch } = useUser();
+  const { showSnackbar } = useSnackbar();
   const location = useLocation() as unknown as { state: { pathname: string } };
   const navigate = useNavigate();
 
@@ -59,8 +61,10 @@ const Login = () => {
       } catch (err: unknown) {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-            alert(responseBody.data.message);
+          if (
+            토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+          ) {
+            showSnackbar({ message: responseBody.data.message });
           }
         }
       }

@@ -1,5 +1,7 @@
 import { RequestType } from 'types';
 
+import { ShowSnackbarProps } from 'hooks/useSnackbar';
+
 import { MESSAGE } from 'constants/constants';
 
 export const 엑세스토큰이없는경우헤더제거 = ({
@@ -21,6 +23,7 @@ export const 엑세스토큰이없는경우헤더제거 = ({
 
 export const 토큰이올바르지못한경우홈페이지로 = ({
   message,
+  showSnackbar,
 }: 토큰이올바르지못한경우홈페이지로Props) => {
   if (window.location.pathname === '/login') {
     localStorage.removeItem('accessToken');
@@ -30,7 +33,7 @@ export const 토큰이올바르지못한경우홈페이지로 = ({
   }
 
   if (message === MESSAGE.WRONG_TOKEN) {
-    alert(MESSAGE.NEED_RE_LOGIN);
+    showSnackbar({ message: MESSAGE.NEED_RE_LOGIN });
     localStorage.removeItem('accessToken');
     window.location.href = '/';
 
@@ -42,4 +45,5 @@ export const 토큰이올바르지못한경우홈페이지로 = ({
 
 interface 토큰이올바르지못한경우홈페이지로Props {
   message: string;
+  showSnackbar: ({ message }: ShowSnackbarProps) => void;
 }

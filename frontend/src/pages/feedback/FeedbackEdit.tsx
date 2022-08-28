@@ -9,6 +9,7 @@ import useInterviewQuestion from 'hooks/useInterviewQuestion';
 import useLevellog from 'hooks/useLevellog';
 import usePreQuestion from 'hooks/usePreQuestion';
 import useRole from 'hooks/useRole';
+import useSnackbar from 'hooks/useSnackbar';
 
 import Loading from 'pages/status/Loading';
 
@@ -27,8 +28,6 @@ const FeedbackEdit = () => {
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
   const { getFeedbackOnRef, feedbackRef, onClickFeedbackEditButton } = useFeedback();
   const { feedbackWriterRole, getWriterInfo } = useRole();
-  const { teamId, levellogId, feedbackId } = useParams();
-  const navigate = useNavigate();
   const {
     interviewQuestionInfos,
     interviewQuestionRef,
@@ -38,6 +37,9 @@ const FeedbackEdit = () => {
     onSubmitEditInterviewQuestion,
     handleSubmitInterviewQuestion,
   } = useInterviewQuestion();
+  const { showSnackbar } = useSnackbar();
+  const { teamId, levellogId, feedbackId } = useParams();
+  const navigate = useNavigate();
 
   const handleClickFeedbackEditButton = () => {
     if (
@@ -49,7 +51,7 @@ const FeedbackEdit = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
   };
 
@@ -67,7 +69,7 @@ const FeedbackEdit = () => {
       return;
     }
 
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
   };
 

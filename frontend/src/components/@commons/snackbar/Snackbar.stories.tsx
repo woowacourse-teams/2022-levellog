@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import Snackbar from 'components/@commons/Snackbar';
+import Snackbar from 'components/@commons/snackbar/Snackbar';
 
 export default {
   title: 'Snackbar',

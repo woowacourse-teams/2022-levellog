@@ -7,13 +7,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.domain.MockEntityFactory;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,12 +38,36 @@ class ParticipantsTest {
                 .collect(Collectors.toList());
     }
 
+    @ParameterizedTest(name = "isContains 메서드는 주어진 memberId {0} 이 Participants에 포함되어있는지 여부를 반환한다.")
+    @CsvSource(value = {"1, true", "100, false", "3, true"})
+    void isContains(final Long memberId, final boolean expected) {
+        // given
+        final int interviewerNumber = 2;
+        final Team team = MockEntityFactory.setId(1L,
+                new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
+
+        final Member rick = getMember("릭", 1L);
+        final List<Participant> values = List.of(
+                new Participant(team, rick, true, false),
+                new Participant(team, getMember("로마", 2L), false, false),
+                new Participant(team, getMember("알린", 3L), false, true),
+                new Participant(team, getMember("이브", 4L), false, false),
+                new Participant(team, getMember("해리", 5L), false, false));
+        final Participants participants = new Participants(values);
+
+        // when
+        final boolean result = participants.isContains(memberId);
+
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
+
     @Nested
     @DisplayName("toInterviewerIds 메서드는")
     class ToInterviewerIds {
 
-        @ParameterizedTest(name = "인터뷰어 수가 {0}명이고 참가자 아이디가 [1, 2, 3, 4, 5]인 팀에서 아이디가 {1}인 참가자의 인터뷰어 아이디는 [{2}]이다.")
-        @CsvSource(value = {"2:1:2, 3", "2:4:5, 1", "4:3:4, 5, 1, 2"}, delimiter = ':')
+        @ParameterizedTest(name = "인터뷰어 수가 {0}명이고 참가자 아이디가 [1, 2, 3, 5, 6]인 팀에서 아이디가 {1}인 참가자의 인터뷰어 아이디는 [{2}]이다.")
+        @CsvSource(value = {"2:1:2, 3", "2:5:6, 1", "4:3:5, 6, 1, 2"}, delimiter = ':')
         void success(final int interviewerNumber, final Long targetMemberId, final String expectedIds) {
             // given
             final List<Long> expected = toIdList(expectedIds);
@@ -51,11 +75,12 @@ class ParticipantsTest {
                     interviewerNumber);
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true),
-                    new Participant(team, getMember("로마", 2L), false),
-                    new Participant(team, getMember("알린", 3L), false),
-                    new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false));
+                    new Participant(team, getMember("릭", 1L), true, false),
+                    new Participant(team, getMember("로마", 2L), false, false),
+                    new Participant(team, getMember("알린", 3L), false, false),
+                    new Participant(team, getMember("이브", 4L), false, true),
+                    new Participant(team, getMember("해리", 5L), false, false),
+                    new Participant(team, getMember("결", 6L), false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -77,11 +102,12 @@ class ParticipantsTest {
                     interviewerNumber);
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true),
-                    new Participant(team, getMember("로마", 2L), false),
-                    new Participant(team, getMember("알린", 3L), false),
-                    new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false));
+                    new Participant(team, getMember("릭", 1L), true, false),
+                    new Participant(team, getMember("로마", 2L), false, false),
+                    new Participant(team, getMember("알린", 3L), false, false),
+                    new Participant(team, getMember("결", 4L), false, true),
+                    new Participant(team, getMember("이브", 5L), false, false),
+                    new Participant(team, getMember("해리", 6L), false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -106,11 +132,12 @@ class ParticipantsTest {
                     interviewerNumber);
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true),
-                    new Participant(team, getMember("로마", 2L), false),
-                    new Participant(team, getMember("알린", 3L), false),
-                    new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false));
+                    new Participant(team, getMember("릭", 1L), true, false),
+                    new Participant(team, getMember("로마", 2L), false, false),
+                    new Participant(team, getMember("알린", 3L), false, false),
+                    new Participant(team, getMember("이브", 4L), false, false),
+                    new Participant(team, getMember("해리", 5L), false, false),
+                    new Participant(team, getMember("결", 6L), false, true));
             final Participants participants = new Participants(values);
 
             // when
@@ -132,11 +159,11 @@ class ParticipantsTest {
                     interviewerNumber);
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true),
-                    new Participant(team, getMember("로마", 2L), false),
-                    new Participant(team, getMember("알린", 3L), false),
-                    new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false));
+                    new Participant(team, getMember("릭", 1L), true, false),
+                    new Participant(team, getMember("로마", 2L), false, false),
+                    new Participant(team, getMember("알린", 3L), false, false),
+                    new Participant(team, getMember("이브", 4L), false, false),
+                    new Participant(team, getMember("해리", 5L), false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -160,11 +187,11 @@ class ParticipantsTest {
                     new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true),
-                    new Participant(team, getMember("로마", 2L), false),
-                    new Participant(team, getMember("알린", 3L), false),
-                    new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false));
+                    new Participant(team, getMember("릭", 1L), true, false),
+                    new Participant(team, getMember("로마", 2L), false, false),
+                    new Participant(team, getMember("알린", 3L), false, false),
+                    new Participant(team, getMember("이브", 4L), false, false),
+                    new Participant(team, getMember("해리", 5L), false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -183,11 +210,11 @@ class ParticipantsTest {
             final Team team = MockEntityFactory.setId(1L,
                     new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true),
-                    new Participant(team, getMember("로마", 2L), false),
-                    new Participant(team, getMember("알린", 3L), false),
-                    new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false));
+                    new Participant(team, getMember("릭", 1L), true, false),
+                    new Participant(team, getMember("로마", 2L), false, false),
+                    new Participant(team, getMember("알린", 3L), false, false),
+                    new Participant(team, getMember("이브", 4L), false, false),
+                    new Participant(team, getMember("해리", 5L), false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -206,16 +233,16 @@ class ParticipantsTest {
                     new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true),
-                    new Participant(team, getMember("로마", 2L), false),
-                    new Participant(team, getMember("알린", 3L), false),
-                    new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false));
+                    new Participant(team, getMember("릭", 1L), true, false),
+                    new Participant(team, getMember("로마", 2L), false, false),
+                    new Participant(team, getMember("알린", 3L), false, false),
+                    new Participant(team, getMember("이브", 4L), false, false),
+                    new Participant(team, getMember("해리", 5L), false, false));
             final Participants participants = new Participants(values);
 
             // when & then
             assertThatThrownBy(() -> participants.toInterviewRole(team.getId(), 1L, 9L, interviewerNumber))
-                    .isInstanceOf(UnauthorizedException.class);
+                    .isInstanceOf(ParticipantNotSameTeamException.class);
         }
 
         @Test
@@ -227,40 +254,16 @@ class ParticipantsTest {
                     new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true),
-                    new Participant(team, getMember("로마", 2L), false),
-                    new Participant(team, getMember("알린", 3L), false),
-                    new Participant(team, getMember("이브", 4L), false),
-                    new Participant(team, getMember("해리", 5L), false));
+                    new Participant(team, getMember("릭", 1L), true, false),
+                    new Participant(team, getMember("로마", 2L), false, false),
+                    new Participant(team, getMember("알린", 3L), false, false),
+                    new Participant(team, getMember("이브", 4L), false, false),
+                    new Participant(team, getMember("해리", 5L), false, false));
             final Participants participants = new Participants(values);
 
             // when & then
             assertThatThrownBy(() -> participants.toInterviewRole(team.getId(), 9L, 1L, interviewerNumber))
                     .isInstanceOf(ParticipantNotFoundException.class);
         }
-    }
-
-    @ParameterizedTest(name = "isContains 메서드는 주어진 memberId {0} 이 Participants에 포함되어있는지 여부를 반환한다.")
-    @CsvSource(value = {"1, true", "100, false"})
-    void isContains(final Long memberId, final boolean expected) {
-        // given
-        final int interviewerNumber = 2;
-        final Team team = MockEntityFactory.setId(1L,
-                new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
-
-        final Member rick = getMember("릭", 1L);
-        final List<Participant> values = List.of(
-                new Participant(team, rick, true),
-                new Participant(team, getMember("로마", 2L), false),
-                new Participant(team, getMember("알린", 3L), false),
-                new Participant(team, getMember("이브", 4L), false),
-                new Participant(team, getMember("해리", 5L), false));
-        final Participants participants = new Participants(values);
-
-        // when
-        final boolean result = participants.isContains(memberId);
-
-        // then
-        assertThat(result).isEqualTo(expected);
     }
 }

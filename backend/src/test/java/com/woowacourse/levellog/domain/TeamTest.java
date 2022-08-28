@@ -11,7 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -63,7 +65,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> new Team(title, place, TEAM_START_TIME, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("잘못된 팀 이름을 입력했습니다.");
+                    .hasMessageContaining("팀 이름은 255 이하여야 합니다.");
         }
 
         @ParameterizedTest
@@ -92,7 +94,7 @@ class TeamTest {
             // when & then
             assertThatThrownBy(() -> new Team(title, place, TEAM_START_TIME, profileUrl, 1))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("잘못된 장소를 입력했습니다.");
+                    .hasMessageContaining("장소 이름은 255 이하여야 합니다.");
         }
 
         @ParameterizedTest
@@ -106,7 +108,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("시작 시간이 없습니다.");
         }
 
@@ -121,7 +123,7 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> new Team(title, place, startAt, profileUrl, 1))
-                    .isInstanceOf(InterviewTimeException.class)
+                    .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("인터뷰 시작 시간은 현재 시간 이후여야 합니다.");
         }
 
@@ -201,8 +203,8 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.update(updatedTeam, AFTER_START_TIME))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작된 이후에는 수정할 수 없습니다.");
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
         }
     }
 
@@ -262,20 +264,20 @@ class TeamTest {
 
             // when & then
             assertThatThrownBy(() -> team.close(AFTER_START_TIME))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("이미 종료된 인터뷰");
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
 
         @Test
         @DisplayName("인터뷰 시작 시간 전 종료를 요청할 경우 예외가 발생한다.")
-        void close_beforeStart_exception() {
+        void close_notInProgress_exception() {
             // given
             final Team team = saveTeam();
 
             // when & then
             assertThatThrownBy(() -> team.close(BEFORE_START_TIME))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작되기 전에 종료할 수 없습니다.");
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContaining("인터뷰 진행중인 상태가 아닙니다.");
         }
     }
 
@@ -297,15 +299,15 @@ class TeamTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 이후 삭제를 요청할 경우 예외가 발생한다.")
-        void delete_afterStart_exception() {
+        @DisplayName("Ready 상태가 아닐 때 삭제를 요청할 경우 예외가 발생한다.")
+        void delete_notReady_exception() {
             // given
             final Team team = saveTeam();
 
             // when & then
             assertThatThrownBy(() -> team.delete(AFTER_START_TIME))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
         }
 
     }
@@ -314,18 +316,16 @@ class TeamTest {
     @DisplayName("validateInProgress 메서드는")
     class ValidateInProgress {
 
-        final String message = "피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다.";
-
         @Test
-        @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이전이면 예외가 발생한다.")
-        void validate_afterStartAt_exception() {
+        @DisplayName("InProgress 상태가 아닐 때 예외가 발생한다.")
+        void validate_notInProgress_exception() {
             // given
             final Team team = saveTeam();
 
             // when & then
-            assertThatThrownBy(() -> team.validateInProgress(BEFORE_START_TIME, message))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining(message);
+            assertThatThrownBy(() -> team.validateInProgress(BEFORE_START_TIME))
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContaining("인터뷰 진행중인 상태가 아닙니다.");
         }
 
         @Test
@@ -337,27 +337,27 @@ class TeamTest {
             team.close(AFTER_START_TIME);
 
             // when & then
-            assertThatThrownBy(() -> team.validateInProgress(AFTER_START_TIME.plusDays(1), message))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("이미 종료된 인터뷰입니다.");
+            assertThatThrownBy(() -> team.validateInProgress(AFTER_START_TIME.plusDays(1)))
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
     }
 
     @Nested
-    @DisplayName("validateBeforeStartAt 메서드는")
-    class ValidateBeforeStartAt {
+    @DisplayName("validateReady 메서드는")
+    class ValidateReady {
 
         @Test
         @DisplayName("입력 받은 시간이 인터뷰 시작 시간보다 이후면 예외가 발생한다.")
-        void validate_beforeStartAt_thrownException() {
+        void validateReady_notReady_exception() {
             // given
             final Team team = saveTeam();
 
             // when & then
             assertThatThrownBy(
-                    () -> team.validateReady(AFTER_START_TIME, "피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다."))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContaining("피드백은 인터뷰가 진행되는 도중에만 작성할 수 있습니다.");
+                    () -> team.validateReady(AFTER_START_TIME))
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
         }
     }
 

@@ -25,3 +25,6 @@ security:
     token:
       secret-key: ${JWT_TOKEN_SECRET}
       expire-length: 36000000
+
+  admin:
+    hash: ${ADMIN_HASH}

@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.interviewquestion.exception;
 
 import com.woowacourse.levellog.common.exception.LevellogException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -10,7 +11,7 @@ public class InterviewQuestionNotFoundException extends LevellogException {
 
     private static final String CLIENT_MESSAGE = "인터뷰 질문이 존재하지 않습니다.";
 
-    public InterviewQuestionNotFoundException(final String message) {
-        super(message, CLIENT_MESSAGE, HttpStatus.NOT_FOUND);
+    public InterviewQuestionNotFoundException(final DebugMessage debugMessage) {
+        super(CLIENT_MESSAGE, debugMessage, HttpStatus.NOT_FOUND);
     }
 }

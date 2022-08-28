@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.feedback.application;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
@@ -16,6 +16,7 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,8 +44,8 @@ public class FeedbackService {
         final Team team = levellog.getTeam();
 
         levellog.validateSelfFeedback(member);
-        validateTeamMember(team, member, "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.");
-        team.validateInProgress(timeStandard.now(), "인터뷰가 시작되기 전에 피드백을 작성할 수 없습니다.");
+        validateTeamMember(team, member);
+        team.validateInProgress(timeStandard.now());
 
         final Feedback feedback = request.getFeedback()
                 .toFeedback(member, levellog);
@@ -57,7 +58,7 @@ public class FeedbackService {
         final Levellog levellog = getLevellog(levellogId);
         final List<FeedbackDto> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
 
-        validateTeamMember(levellog.getTeam(), getMember(memberId), "자신이 속한 팀의 피드백만 조회할 수 있습니다.");
+        validateTeamMember(levellog.getTeam(), getMember(memberId));
 
         return new FeedbacksDto(responses);
     }
@@ -67,7 +68,7 @@ public class FeedbackService {
         final Levellog levellog = getLevellog(levellogId);
         final Member member = getMember(memberId);
 
-        validateTeamMember(levellog.getTeam(), member, "자신이 속한 팀의 피드백만 조회할 수 있습니다.");
+        validateTeamMember(levellog.getTeam(), member);
         feedback.validateLevellog(levellog);
 
         return FeedbackDto.from(feedback);
@@ -87,7 +88,7 @@ public class FeedbackService {
         final Team team = feedback.getLevellog().getTeam();
 
         feedback.validateAuthor(member);
-        team.validateInProgress(timeStandard.now(), "인터뷰가 시작되기 전에 피드백을 수정할 수 없습니다.");
+        team.validateInProgress(timeStandard.now());
 
         feedback.updateFeedback(
                 request.getFeedback().getStudy(),
@@ -97,14 +98,16 @@ public class FeedbackService {
 
     private void validateExistence(final Long levellogId, final Long fromMemberId) {
         if (feedbackRepository.existsByLevellogIdAndFromId(levellogId, fromMemberId)) {
-            throw new FeedbackAlreadyExistException("피드백이 이미 존재합니다. levellogId : " + levellogId);
+            throw new FeedbackAlreadyExistException(DebugMessage.init()
+                    .append("levellogId", levellogId));
         }
     }
 
-    private void validateTeamMember(final Team team, final Member member, final String message) {
+    private void validateTeamMember(final Team team, final Member member) {
         if (!participantRepository.existsByMemberAndTeam(member, team)) {
-            throw new UnauthorizedException(
-                    message + " [ teamId : " + team.getId() + " memberId : " + member.getId() + " ]");
+            throw new ParticipantNotSameTeamException(DebugMessage.init()
+                    .append("teamId", team.getId())
+                    .append("memberId", member.getId()));
         }
     }
 
@@ -117,16 +120,19 @@ public class FeedbackService {
     private Member getMember(final Long memberId) {
         return memberRepository
                 .findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버가 존재하지 않음 [memberId : " + memberId + "]"));
+                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
+                        .append("memberId", memberId)));
     }
 
     private Levellog getLevellog(final Long levellogId) {
         return levellogRepository.findById(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException("존재하지 않는 레벨로그. levellogId : " + levellogId));
+                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
+                        .append("levellogId", levellogId)));
     }
 
     private Feedback getFeedback(final Long feedbackId) {
         return feedbackRepository.findById(feedbackId)
-                .orElseThrow(() -> new FeedbackNotFoundException("존재하지 않는 피드백. feedbackId : " + feedbackId));
+                .orElseThrow(() -> new FeedbackNotFoundException(DebugMessage.init()
+                        .append("feedbackId", feedbackId)));
     }
 }

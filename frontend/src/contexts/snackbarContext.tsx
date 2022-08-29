@@ -33,7 +33,7 @@ type Reducer<S, A> = (prevState: S, action: A) => S;
 type State = string[];
 type Action = { type: 'add'; message: string } | { type: 'delete' };
 
-type SnackbarDispatchType = Dispatch<any>;
+type SnackbarDispatchType = Dispatch<Action>;
 
 interface SnackbarProviderProps {
   children: JSX.Element;

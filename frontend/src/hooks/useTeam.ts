@@ -5,7 +5,6 @@ import axios, { AxiosResponse } from 'axios';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
-import { requestGetMembers } from 'apis/member';
 import {
   requestGetTeam,
   requestPostTeam,
@@ -16,12 +15,13 @@ import {
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 import { MemberType } from 'types/member';
-import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
+import { InterviewTeamType, TeamApiType, TeamCustomHookType } from 'types/team';
 
 const useTeam = () => {
   const team = useContext(TeamContext);
   const teamInfoDispatch = useContext(TeamDispatchContext);
   const [participants, setParticipants] = useState<MemberType[]>([]);
+  const [watchers, setWatchers] = useState<MemberType[]>([]);
   const location = useLocation() as { state: InterviewTeamType };
   const navigate = useNavigate();
   const { teamId } = useParams();
@@ -30,9 +30,7 @@ const useTeam = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const postTeam = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
-    console.log('postTeam', teamInfo);
     try {
-      return;
       await requestPostTeam({ teamInfo, accessToken });
       alert(MESSAGE.TEAM_CREATE);
       navigate(ROUTES_PATH.HOME);
@@ -51,13 +49,21 @@ const useTeam = () => {
       if (typeof teamId === 'string') {
         const res = await requestGetTeam({ teamId, accessToken });
         teamInfoDispatch(res.data);
-        console.log('getTeam', res.data.participants);
         setParticipants(
           res.data.participants.map((participant) => {
             return {
               id: participant.memberId,
               nickname: participant.nickname,
               profileUrl: participant.profileUrl,
+            };
+          }),
+        );
+        setWatchers(
+          res.data.watchers.map((watcher) => {
+            return {
+              id: watcher.memberId,
+              nickname: watcher.nickname,
+              profileUrl: watcher.profileUrl,
             };
           }),
         );
@@ -74,7 +80,7 @@ const useTeam = () => {
     }
   };
 
-  const editTeam = async ({ teamInfo }: Pick<TeamEditApiType, 'teamInfo'>) => {
+  const editTeam = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
     try {
       if (typeof teamId !== 'string') throw Error;
       await requestEditTeam({ teamId, teamInfo, accessToken });
@@ -141,10 +147,11 @@ const useTeam = () => {
 
   return {
     participants,
+    watchers,
     team,
     teamLocationState,
     setParticipants,
-    requestGetMembers,
+    setWatchers,
     getTeam,
     postTeam,
     editTeam,

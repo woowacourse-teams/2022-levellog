@@ -69,6 +69,8 @@ export const MESSAGE = Object.freeze({
   INTERVIEW_DATE_VALIDATE_FAIL: '올바른 인터뷰 날짜를 입력해주세요.',
   INTERVIEW_TIME_VALIDATE_FAIL: '올바른 인터뷰 시간를 입력해주세요.',
   INTERVIEW_INTERVIEWEE_VALIDATE_FAIL: '인터뷰이는 1명 이상 3명 이하로 작성해주세요.',
+  INTERVIEW_HOLE_VALUE_VALIDATE:
+    '필수값 모두 입력해주세요. (필수값: 제목, 장소, 날짜, 시간, 인터뷰어 수, 참여자)',
 });
 
 export const TEAM_STATUS = Object.freeze({

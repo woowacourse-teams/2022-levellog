@@ -1,30 +1,34 @@
-export const interviewTitleValidate = ({ text }: InterviewTextValidateProps): boolean => {
-  if (text.length >= 3 && text.length <= 14) {
-    return false;
+export const interviewTitleValidate = ({ value }: InterviewStringValueValidateProps): boolean => {
+  if (value.length >= 3 && value.length <= 14) {
+    return true;
   }
 
-  return true;
+  return false;
 };
 
-export const interviewLocationValidate = ({ text }: InterviewTextValidateProps): boolean => {
-  if (text.length >= 3 && text.length <= 12) {
-    return false;
+export const interviewLocationValidate = ({
+  value,
+}: InterviewStringValueValidateProps): boolean => {
+  if (value.length >= 3 && value.length <= 12) {
+    return true;
   }
 
-  return true;
+  return false;
 };
 
-export const interviewDateValidate = ({ text }: InterviewTextValidateProps) => {
+export const interviewDateValidate = ({ value }: InterviewStringValueValidateProps) => {
   const date = new Date();
   if (
-    text.split('-').join('') <
-      `${date.getFullYear()}${setDateFormat({ text: String(date.getMonth() + 1) })}${setDateFormat({
-        text: String(date.getDate()),
-      })}` ||
-    text.split('-').join('') >
+    value.split('-').join('') >
+      `${date.getFullYear()}${setDateFormat({ value: String(date.getMonth() + 1) })}${setDateFormat(
+        {
+          value: String(date.getDate()),
+        },
+      )}` &&
+    value.split('-').join('') <
       `${date.getFullYear() + 1}${setDateFormat({
-        text: String(date.getMonth() + 1),
-      })}${setDateFormat({ text: String(date.getDate()) })}`
+        value: String(date.getMonth() + 1),
+      })}${setDateFormat({ value: String(date.getDate()) })}`
   ) {
     return true;
   }
@@ -32,30 +36,38 @@ export const interviewDateValidate = ({ text }: InterviewTextValidateProps) => {
   return false;
 };
 
-export const interviewTimeValidate = ({ text }: InterviewTextValidateProps) => {
-  if (text) {
-    return false;
+export const interviewTimeValidate = ({ value }: InterviewStringValueValidateProps) => {
+  if (value) {
+    return true;
   }
 
-  return true;
+  return false;
 };
 
-export const interviewIntervieweeValidate = ({ text }: InterviewNumberValidateProps) => {
-  if (text >= 1 && text <= 3) {
-    return false;
+export const interviewInterviewerValidate = ({ value }: InterviewNumberValueValidateProps) => {
+  if (value - Math.floor(value) === 0 && value >= 1 && value <= 3) {
+    return true;
   }
 
-  return true;
+  return false;
 };
 
-const setDateFormat = ({ text }: InterviewTextValidateProps) => {
-  return text.length === 1 ? `0${text}` : text;
+export const interviewParticipantValidate = ({ value }: InterviewNumberValueValidateProps) => {
+  if (value > 1) {
+    return true;
+  }
+
+  return false;
 };
 
-interface InterviewTextValidateProps {
-  text: string;
+const setDateFormat = ({ value }: InterviewStringValueValidateProps) => {
+  return value.length === 1 ? `0${value}` : value;
+};
+
+interface InterviewStringValueValidateProps {
+  value: string;
 }
 
-interface InterviewNumberValidateProps {
-  text: number;
+interface InterviewNumberValueValidateProps {
+  value: number;
 }

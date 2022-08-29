@@ -13,7 +13,7 @@ const teamInfo: InterviewTeamType = {
   hostId: '',
   status: '',
   isParticipant: false,
-  interviewerNumber: '',
+  interviewerNumber: 0,
   interviewers: [],
   interviewees: [],
   participants: [],

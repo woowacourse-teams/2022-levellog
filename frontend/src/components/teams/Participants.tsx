@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import useUser from 'hooks/useUser';
-
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';

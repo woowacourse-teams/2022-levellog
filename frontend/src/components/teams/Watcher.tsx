@@ -1,18 +1,19 @@
 import styled from 'styled-components';
 
 import Image from 'components/@commons/Image';
+import { WatcherType } from 'types/team';
 
 const Watcher = ({ watcher }: WatcherProps) => {
   return (
     <S.Container>
-      <Image src={'https://avatars.githubusercontent.com/u/28749734?v=4'} sizes={'SMALL'} />
-      <S.Text>kk</S.Text>
+      <Image src={watcher.profileUrl} sizes={'SMALL'} />
+      <S.Text>{watcher.nickname}</S.Text>
     </S.Container>
   );
 };
 
 interface WatcherProps {
-  watcher: any;
+  watcher: Pick<WatcherType, 'memberId' | 'nickname' | 'profileUrl'>;
 }
 
 const S = {

@@ -19,7 +19,7 @@ import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
 import Watcher from 'components/teams/Watcher';
-import { InterviewTeamType, ParticipantType } from 'types/team';
+import { InterviewTeamType, ParticipantType, WatcherType } from 'types/team';
 
 const InterviewDetail = () => {
   const { loginUserId } = useUser();
@@ -106,16 +106,20 @@ const InterviewDetail = () => {
           />
         )}
         <FlexBox flexFlow={'column wrap'} gap={5}>
-          <FlexBox flexFlow={'column wrap'} gap={2}>
-            <S.Title>참관자</S.Title>
-            <S.WatcherContent>
-              <Watcher watcher={''} />
-              {/* {(team as InterviewTeamType).watchers.map((watcher: any) => {
-              <Watcher watcher={watcher} />;
-            })} */}
-            </S.WatcherContent>
-          </FlexBox>
-
+          {team.watchers.length !== 0 && (
+            <FlexBox flexFlow={'column wrap'} gap={2}>
+              <S.Title>참관자</S.Title>
+              <S.WatcherContent>
+                <>
+                  {(team as InterviewTeamType).watchers.map(
+                    (watcher: Pick<WatcherType, 'memberId' | 'nickname' | 'profileUrl'>) => (
+                      <Watcher key={watcher.memberId} watcher={watcher} />
+                    ),
+                  )}
+                </>
+              </S.WatcherContent>
+            </FlexBox>
+          )}
           <FlexBox flexFlow={'column wrap'} gap={2}>
             <S.Title>참여자</S.Title>
             <S.Content>

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { MESSAGE } from 'constants/constants';
 import {
   interviewDateValidate,
-  interviewIntervieweeValidate,
+  interviewInterviewerValidate,
   interviewLocationValidate,
   interviewTimeValidate,
   interviewTitleValidate,
@@ -44,7 +44,7 @@ const TeamForm = ({
   }, []);
 
   return (
-    <S.FormContainer>
+    <S.Container>
       <S.Title>인터뷰 팀 {purpose}</S.Title>
       <TeamFormInput
         label={'제목'}
@@ -77,7 +77,7 @@ const TeamForm = ({
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[4] = el)}
         type={'number'}
         errorText={MESSAGE.INTERVIEW_INTERVIEWEE_VALIDATE_FAIL}
-        validate={interviewIntervieweeValidate}
+        validate={interviewInterviewerValidate}
       />
       <TeamFormInput
         label={'참관자'}
@@ -85,13 +85,14 @@ const TeamForm = ({
         onChange={handleChangeWatcherInput}
       >
         <S.ParticipantsBox>
-          {watchers.map((watcher: MemberType) => (
-            <Participant
-              key={watcher.id}
-              participant={watcher}
-              removeToParticipants={remoteToWatcherParticipants}
-            />
-          ))}
+          {watchers.length !== 0 &&
+            watchers.map((watcher: MemberType) => (
+              <Participant
+                key={watcher.id}
+                participant={watcher}
+                removeToParticipants={remoteToWatcherParticipants}
+              />
+            ))}
         </S.ParticipantsBox>
       </TeamFormInput>
       <S.MembersBox isNoneMember={watcherMembers.length === 0}>
@@ -130,7 +131,7 @@ const TeamForm = ({
         ))}
       </S.MembersBox>
       <S.SubmitButton onClick={handleClickTeamButton}>{purpose}</S.SubmitButton>
-    </S.FormContainer>
+    </S.Container>
   );
 };
 
@@ -156,7 +157,7 @@ interface TeamFormProps {
 }
 
 const S = {
-  FormContainer: styled.form`
+  Container: styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;

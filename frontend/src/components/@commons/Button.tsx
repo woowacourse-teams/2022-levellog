@@ -4,8 +4,8 @@ const Button = ({
   children,
   type = 'button',
   disabled = false,
-  onClick,
   color,
+  onClick,
   ...props
 }: ButtonProps) => {
   return (

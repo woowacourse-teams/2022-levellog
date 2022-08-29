@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 
 import styled from 'styled-components';
 
-import { MESSAGE } from 'constants/constants';
-import { interviewTitleValidate } from 'constants/validate';
-
 import Input from 'components/@commons/Input';
 
 const TeamFormInput = ({
@@ -18,12 +15,12 @@ const TeamFormInput = ({
   children,
   ...props
 }: TeamFormInputProps) => {
-  const [isErrorText, setIsErrorText] = useState(false);
+  const [isCorrectValue, setIsCorrectValue] = useState(true);
 
   const handleOnBlurInput = (e: FocusEvent) => {
     const input = e.target as HTMLInputElement;
     if (validate) {
-      setIsErrorText(validate({ text: input.value }));
+      setIsCorrectValue(validate({ value: input.value }));
     }
   };
 
@@ -32,7 +29,7 @@ const TeamFormInput = ({
       <S.Label>{label}</S.Label>
       {children}
       <S.Input type={type} inputRef={inputRef} onChange={onChange} onBlur={handleOnBlurInput} />
-      <S.ErrorBox>{isErrorText && <S.ErrorText>{errorText}</S.ErrorText>}</S.ErrorBox>
+      <S.ErrorBox>{isCorrectValue || <S.ErrorText>{errorText}</S.ErrorText>}</S.ErrorBox>
     </S.InputContainer>
   );
 };

@@ -13,10 +13,11 @@ const teamInfo: InterviewTeamType = {
   hostId: '',
   status: '',
   isParticipant: false,
-  interviewerNumber: '',
+  interviewerNumber: 0,
   interviewers: [],
   interviewees: [],
   participants: [],
+  watchers: [],
 };
 
 export const TeamContext = createContext<InterviewTeamType>(teamInfo);

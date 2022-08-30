@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
@@ -20,7 +20,7 @@ import {
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 import { MembersCustomHookType, MemberType } from 'types/member';
-import { InterviewTeamType, TeamApiType, TeamCustomHookType, TeamEditApiType } from 'types/team';
+import { InterviewTeamType, TeamApiType, TeamCustomHookType } from 'types/team';
 
 const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
@@ -33,8 +33,9 @@ const useTeam = () => {
   ]);
   const team = useContext(TeamContext);
   const teamInfoDispatch = useContext(TeamDispatchContext);
+  const [watchers, setWatchers] = useState<MemberType[]>([]);
   const location = useLocation() as { state: InterviewTeamType };
-  const teamInfoRef = useRef<HTMLInputElement[]>([]);
+  // const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const navigate = useNavigate();
   const { teamId } = useParams();
 
@@ -43,7 +44,6 @@ const useTeam = () => {
 
   const postTeam = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
     try {
-      teamInfo.participants.ids = teamInfo.participants.ids.filter((id) => id !== loginUserId);
       await requestPostTeam({ teamInfo, accessToken });
       showSnackbar({ message: MESSAGE.TEAM_CREATE });
       navigate(ROUTES_PATH.HOME);
@@ -73,6 +73,16 @@ const useTeam = () => {
             };
           }),
         );
+        setWatchers(
+          res.data.watchers.map((watcher) => {
+            return {
+              id: watcher.memberId,
+              nickname: watcher.nickname,
+              profileUrl: watcher.profileUrl,
+            };
+          }),
+        );
+
         return res.data;
       }
     } catch (err: unknown) {
@@ -87,7 +97,7 @@ const useTeam = () => {
     }
   };
 
-  const editTeam = async ({ teamInfo }: Pick<TeamEditApiType, 'teamInfo'>) => {
+  const editTeam = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
     try {
       if (typeof teamId !== 'string') throw Error;
       await requestEditTeam({ teamId, teamInfo, accessToken });
@@ -135,37 +145,6 @@ const useTeam = () => {
     }
   };
 
-  const onSubmitTeamAddForm = ({ participants }: Record<'participants', MemberType[]>) => {
-    const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
-    const teamInfo = {
-      title: title.value,
-      place: place.value,
-      startAt: `${date.value}T${time.value}`,
-      interviewerNumber: interviewerNumber.value,
-      participants: {
-        ids: Object.values(participants).map((participants) => participants.id),
-      },
-    };
-    postTeam({ teamInfo });
-  };
-
-  const handleSubmitTeamEditForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
-    const teamInfo = {
-      title: title.value,
-      place: place.value,
-      startAt: `${date.value}T${time.value}`,
-      interviewerNumber: interviewerNumber.value,
-      participants: {
-        ids: Object.values(participants)
-          .filter((participants) => participants.id !== loginUserId)
-          .map((participants) => participants.id),
-      },
-    };
-    editTeam({ teamInfo });
-  };
-
   const onClickDeleteTeamButton = ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     if (confirm(MESSAGE.TEAM_DELETE_CONFIRM)) {
       deleteTeam({ teamId });
@@ -184,50 +163,6 @@ const useTeam = () => {
     }
   };
 
-  const getTeamOnRef = async () => {
-    const team = await getTeam();
-
-    if (team && Object.keys(team).length === 0) return;
-    if (teamInfoRef.current[0] === null) return;
-
-    teamInfoRef.current[0].value = (team as unknown as InterviewTeamType).title;
-    teamInfoRef.current[1].value = (team as unknown as InterviewTeamType).place;
-    teamInfoRef.current[2].value = (team as unknown as InterviewTeamType).startAt.slice(0, 10);
-    teamInfoRef.current[3].value = (team as unknown as InterviewTeamType).startAt.slice(-8);
-    teamInfoRef.current[4].value = String(
-      (team as unknown as InterviewTeamType).interviewers.length,
-    );
-  };
-
-  const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {
-    try {
-      if (isDebounce()) return;
-
-      const res = await requestGetMembers({ accessToken, nickname: nicknameValue });
-      const members = res.data.members.filter((member) =>
-        participants.every((participant) => participant.id !== member.id),
-      );
-      setMembers(members);
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) {
-          showSnackbar({ message: responseBody.data.message });
-        }
-      }
-    }
-  };
-
-  const addToParticipants = ({ id, nickname, profileUrl }: MemberType) => {
-    if (participants.every((participant) => id !== participant.id)) {
-      setParticipants((prev) => prev.concat({ id, nickname, profileUrl }));
-    }
-  };
-
-  const removeToParticipants = ({ id }: Pick<MemberType, 'id'>) => {
-    setParticipants(participants.filter((participant) => id !== participant.id));
-  };
-
   useEffect(() => {
     if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
       teamInfoDispatch(teamLocationState);
@@ -235,22 +170,20 @@ const useTeam = () => {
   }, []);
 
   return {
+    participants,
+    watchers,
     team,
     teamLocationState,
     members,
-    participants,
     nicknameValue,
-    teamInfoRef,
     setNicknameValue,
+    setParticipants,
+    setWatchers,
     getTeam,
-    getTeamOnRef,
-    updateMembers,
-    addToParticipants,
-    removeToParticipants,
-    onSubmitTeamAddForm,
+    postTeam,
+    editTeam,
     onClickDeleteTeamButton,
     onClickCloseTeamInterviewButton,
-    handleSubmitTeamEditForm,
   };
 };
 

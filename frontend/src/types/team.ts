@@ -1,23 +1,23 @@
+import { MemberType } from 'types/member';
+
 export interface TeamApiType {
   teamId: string;
   teamInfo: TeamCustomHookType;
   accessToken: string | null;
 }
 
-export interface TeamEditApiType {
-  teamId: string;
-  teamInfo: Pick<TeamCustomHookType, 'title' | 'place' | 'startAt'>;
-  accessToken: string | null;
+export interface TeamSubmitType {
+  watchers: MemberType[];
+  participants: MemberType[];
 }
 
 export interface TeamCustomHookType {
   title: string;
   place: string;
   startAt: string;
-  interviewerNumber: string;
-  participants: {
-    ids: Array<string>;
-  };
+  interviewerNumber: number;
+  watcherIds: string[];
+  participantIds: string[];
 }
 
 export interface Team {
@@ -35,23 +35,25 @@ export interface InterviewTeamType {
   hostId: string;
   status: string;
   isParticipant: Boolean;
-  interviewerNumber: string;
+  interviewerNumber: number;
   interviewers: Array<number | null>;
   interviewees: Array<number | null>;
+  watchers: WatcherType[];
   participants: ParticipantType[];
 }
 
 export interface ParticipantType {
   memberId: string;
   levellogId: string;
+  preQuestionId: string;
   nickname: string;
   profileUrl: string;
-  preQuestionId: string;
 }
 
-//제거 하고 멤버타입 활용하기
-export interface ParticipantSmallType {
-  id: string;
+export interface WatcherType {
+  memberId: string;
+  levellogId: string;
+  preQuestionId: string;
   nickname: string;
   profileUrl: string;
 }

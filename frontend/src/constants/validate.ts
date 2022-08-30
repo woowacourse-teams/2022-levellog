@@ -19,7 +19,7 @@ export const interviewLocationValidate = ({
 export const interviewDateValidate = ({ value }: InterviewStringValueValidateProps) => {
   const date = new Date();
   if (
-    value.split('-').join('') >
+    value.split('-').join('') >=
       `${date.getFullYear()}${setDateFormat({ value: String(date.getMonth() + 1) })}${setDateFormat(
         {
           value: String(date.getDate()),

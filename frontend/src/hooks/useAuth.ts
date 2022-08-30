@@ -47,6 +47,11 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
           .map((participant) => participant.memberId)
           .every((memberId) => {
             return String(memberId) !== String(loginUserId);
+          }) &&
+        Object.values(team.watchers)
+          .map((watcher) => watcher.memberId)
+          .every((memberId) => {
+            return String(memberId) !== String(loginUserId);
           })
       ) {
         setIsLoad(false);

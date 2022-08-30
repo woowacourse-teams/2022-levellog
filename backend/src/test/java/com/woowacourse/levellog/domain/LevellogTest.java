@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.team.domain.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -48,7 +48,7 @@ class LevellogTest {
             //  when & then
             assertThatThrownBy(() -> Levellog.of(author, team, invalidContent))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
     }
 
@@ -83,8 +83,8 @@ class LevellogTest {
 
             //  when & then
             assertThatThrownBy(() -> levellog.updateContent(member, "update content"))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("레벨로그를 수정할 권한이 없습니다.", String.valueOf(member.getId()),
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContainingAll("작성자가 아닙니다.", String.valueOf(member.getId()),
                             String.valueOf(levellog.getId()));
 
         }
@@ -102,7 +102,7 @@ class LevellogTest {
             //  when & then
             assertThatThrownBy(() -> levellog.updateContent(author, invalidContent))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
     }
 }

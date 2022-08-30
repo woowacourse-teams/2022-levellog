@@ -5,11 +5,12 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,8 +33,11 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            final String message = "팀에 레벨로그를 이미 작성했습니다.";
-            willThrow(new LevellogAlreadyExistException(message)).given(levellogService)
+            final String message = "레벨로그가 이미 존재합니다.";
+            willThrow(new LevellogAlreadyExistException(DebugMessage.init()
+                    .append("authorId", authorId)
+                    .append("teamId", teamId)))
+                    .given(levellogService)
                     .save(request, authorId, teamId);
 
             // when
@@ -70,15 +74,15 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 저장하는 경우 예외를 던진다.")
-        void save_afterStart_exception() throws Exception {
+        @DisplayName("Ready 상태가 아닐 때 레벨로그를 저장하는 경우 예외를 던진다.")
+        void save_notReady_exception() throws Exception {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("content");
             final Long authorId = 1L;
             final Long teamId = 1L;
 
-            final String message = "인터뷰 시작 전에만 레벨로그 작성이 가능합니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "인터뷰 준비 상태가 아닙니다.";
+            willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(levellogService)
                     .save(request, authorId, teamId);
 
@@ -115,7 +119,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long levellogId = 1000L;
 
             final String message = "레벨로그가 존재하지 않습니다.";
-            willThrow(new LevellogNotFoundException(message))
+            willThrow(new LevellogNotFoundException(DebugMessage.init()
+                    .append("levellogId", levellogId)))
                     .given(levellogService)
                     .findById(levellogId);
 
@@ -174,8 +179,8 @@ class LevellogControllerTest extends ControllerTest {
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
 
-            final String message = "권한이 없습니다.";
-            willThrow(new UnauthorizedException(message))
+            final String message = "작성자가 아닙니다.";
+            willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
 
@@ -193,16 +198,16 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("팀의 인터뷰가 시작된 이후에 레벨로그를 수정하는 경우 예외를 던진다.")
-        void update_afterStart_exception() throws Exception {
+        @DisplayName("Ready 상태가 아닐 때 레벨로그를 수정하는 경우 예외를 던진다.")
+        void update_notReady_exception() throws Exception {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
             final LevellogWriteDto request = LevellogWriteDto.from("new content");
 
-            final String message = "인터뷰 시작 전에만 레벨로그 수정이 가능합니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "인터뷰 준비 상태가 아닙니다.";
+            willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(levellogService)
                     .update(request, levellogId, authorId);
 

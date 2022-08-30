@@ -1,14 +1,17 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import styled, { CSSProperties } from 'styled-components';
 
 import useLevellogModal from 'hooks/useLevellogModal';
 import usePreQuestionModal from 'hooks/usePreQuestionModal';
 import useTeam from 'hooks/useTeam';
+import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
+import useUtil from 'hooks/useUtil';
 
 import Error from 'pages/status/Error';
+import Loading from 'pages/status/Loading';
 
 import { TEAM_STATUS } from 'constants/constants';
 
@@ -23,6 +26,9 @@ import { InterviewTeamType, ParticipantType, WatcherType } from 'types/team';
 
 const InterviewDetail = () => {
   const { loginUserId } = useUser();
+  const { teamId } = useParams();
+  const { teamEditUriBuilder } = useUriBuilders();
+  const { convertDateAndTime } = useUtil();
   const {
     teamLocationState,
     team,
@@ -61,20 +67,23 @@ const InterviewDetail = () => {
   }, []);
 
   if (team && Object.keys(team).length === 0) return <Error />;
+  if (!teamId) return <Loading />;
 
   return (
     <>
       <ContentHeader
         imageUrl={(team as InterviewTeamType).teamImage}
         title={(team as InterviewTeamType).title}
-        subTitle={`${(team as InterviewTeamType).place} ${(team as InterviewTeamType).startAt} `}
+        subTitle={`${(team as InterviewTeamType).place} | ${convertDateAndTime({
+          startAt: (team as InterviewTeamType).startAt,
+        })}`}
       >
         <>
           {(team as InterviewTeamType).hostId === loginUserId && (
             <S.ButtonBox>
               {(team as InterviewTeamType).status === TEAM_STATUS.READY && (
                 <>
-                  <Link to={`/interview/teams/${(team as InterviewTeamType).id}/edit`}>
+                  <Link to={teamEditUriBuilder({ teamId })}>
                     <S.Button>팀 수정하기</S.Button>
                   </Link>
                   <S.Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</S.Button>
@@ -90,6 +99,7 @@ const InterviewDetail = () => {
       <S.Container>
         {isLevellogModalOpen && (
           <LevellogViewModal
+            teamId={teamId}
             levellogInfo={levellogInfo}
             participant={levellogParticipant}
             userInTeam={(team as InterviewTeamType).isParticipant}
@@ -98,6 +108,7 @@ const InterviewDetail = () => {
         )}
         {isPreQuestionModalOpen && (
           <PreQuestionViewModal
+            teamId={teamId}
             preQuestion={preQuestion}
             participant={preQuestionParticipant}
             getTeam={getTeam}
@@ -158,8 +169,8 @@ const InterviewDetail = () => {
 
 const S = {
   Container: styled.div`
-    max-width: 1600px;
-    margin: auto;
+    max-width: 100rem;
+    margin: 0 auto 6.25rem auto;
     @media (max-width: 1700px) {
       width: 1270px;
     }
@@ -208,21 +219,23 @@ const S = {
     gap: 1rem;
     @media (max-width: 560px) {
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.5rem;
     }
   `,
 
   Button: styled(Button)`
-    border-radius: 1.25rem;
+    border-radius: 2rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
     font-weight: 700;
     color: ${(props) => props.theme.new_default.BLACK};
-    @media (max-width: 560px) {
-      font-size: 0.875rem;
-    }
+    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     :hover {
       background-color: ${(props) => props.theme.new_default.LIGHT_GRAY};
       box-shadow: 0.25rem 0.25rem 0.375rem ${(props) => props.theme.new_default.DARK_GRAY};
+    }
+    @media (max-width: 520px) {
+      padding: 0.4375rem 0.75rem;
+      font-size: 0.75rem;
     }
   `,
 };

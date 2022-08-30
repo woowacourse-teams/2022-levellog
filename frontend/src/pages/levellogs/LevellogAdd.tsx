@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
+import useSnackbar from 'hooks/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -11,6 +12,7 @@ import UiEditor from 'components/@commons/UiEditor';
 
 const LevellogAdd = () => {
   const { levellogRef, onClickLevellogAddButton } = useLevellog();
+  const { showSnackbar } = useSnackbar();
   const { teamId } = useParams();
 
   const handleClickLevellogAddButton = () => {
@@ -19,7 +21,7 @@ const LevellogAdd = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
   };
 
   return (
@@ -27,7 +29,6 @@ const LevellogAdd = () => {
       <UiEditor
         needToolbar={true}
         autoFocus={true}
-        height={'50rem'}
         contentRef={levellogRef}
         initialEditType={'markdown'}
       />
@@ -41,11 +42,12 @@ const LevellogAdd = () => {
 
 const S = {
   Container: styled.main`
+    height: calc(100vh - 14.375rem);
     @media (min-width: 1620px) {
-      padding: 1.25rem calc((100vw - 100rem) / 2);
+      padding: 1.25rem calc((100vw - 100rem) / 2) 0 calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 1.25rem 1.25rem;
+      padding: 1.25rem 1.25rem 0 1.25rem;
     }
   `,
 };

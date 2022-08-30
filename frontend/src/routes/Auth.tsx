@@ -2,20 +2,14 @@ import { useNavigate } from 'react-router-dom';
 
 import useAuth from 'hooks/useAuth';
 
+import ErrorToHome from 'pages/status/ErrorToHome';
 import Loading from 'pages/status/Loading';
-
-import { ROUTES_PATH } from 'constants/constants';
 
 const Auth = ({ children, requireAuth }: AuthProps) => {
   const { isLoad, isError } = useAuth({ requireAuth });
-  const navigate = useNavigate();
 
   if (isLoad) return <Loading />;
-  // 동작 체크 필요
-  if (isError) {
-    navigate(ROUTES_PATH.HOME);
-    return <Loading />;
-  }
+  if (isError) return <ErrorToHome />;
 
   return children;
 };

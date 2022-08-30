@@ -2,7 +2,10 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.common.support.DebugMessage;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -68,51 +71,61 @@ public class Team extends BaseEntity {
 
     private void validateTitle(final String title) {
         if (title == null || title.isBlank()) {
-            throw new InvalidFieldException("팀 이름이 null 또는 공백입니다. 입력한 팀 이름 : [" + title + "]");
+            throw new InvalidFieldException("팀 이름이 null 또는 공백입니다.", DebugMessage.init()
+                    .append("title", title));
         }
         if (title.length() > DEFAULT_STRING_SIZE) {
-            throw new InvalidFieldException("잘못된 팀 이름을 입력했습니다. 입력한 팀 이름 : [" + title + "]");
+            throw new InvalidFieldException("팀 이름은 " + DEFAULT_STRING_SIZE + " 이하여야 합니다.", DebugMessage.init()
+                    .append("title 길이", title.length()));
         }
     }
 
     private void validatePlace(final String place) {
         if (place == null || place.isBlank()) {
-            throw new InvalidFieldException("장소가 null 또는 공백입니다. 입력한 장소 : [" + place + "]");
+            throw new InvalidFieldException("장소가 null 또는 공백입니다.", DebugMessage.init()
+                    .append("place", place));
         }
         if (place.length() > DEFAULT_STRING_SIZE) {
-            throw new InvalidFieldException("잘못된 장소를 입력했습니다. 입력한 장소 : [" + place + "]");
+            throw new InvalidFieldException("장소 이름은 " + DEFAULT_STRING_SIZE + " 이하여야 합니다.", DebugMessage.init()
+                    .append("place 길이", place.length()));
         }
     }
 
     private void validateStartAt(final LocalDateTime startAt) {
         if (startAt == null) {
-            throw new InterviewTimeException("시작 시간이 없습니다.");
+            throw new InvalidFieldException("시작 시간이 없습니다.", DebugMessage.init()
+                    .append("startAt", startAt));
         }
 
         final LocalDateTime now = LocalDateTime.now();
         if (now.isAfter(startAt)) {
-            throw new InterviewTimeException("인터뷰 시작 시간은 현재 시간 이후여야 합니다.", getId(), startAt, now);
+            throw new InvalidFieldException("인터뷰 시작 시간은 현재 시간 이후여야 합니다.", DebugMessage.init()
+                    .append("startAt", startAt)
+                    .append("now", now));
         }
     }
 
     private void validateProfileUrl(final String profileUrl) {
         if (profileUrl == null || profileUrl.isBlank()) {
-            throw new InvalidFieldException("팀 프로필 사진이 null 또는 공백입니다. 입력한 프로필 URL : [" + profileUrl + "]");
+            throw new InvalidFieldException("팀 프로필 사진이 null 또는 공백입니다.", DebugMessage.init()
+                    .append("profileUrl", profileUrl));
         }
         if (profileUrl.length() > PROFILE_URL_SIZE) {
-            throw new InvalidFieldException("잘못된 팀 프로필 사진을 입력했습니다. 입력한 프로필 URL : [" + profileUrl + "]");
+            throw new InvalidFieldException("잘못된 팀 프로필 사진을 입력했습니다.", DebugMessage.init()
+                    .append("profileUrl", profileUrl));
         }
     }
 
     private void validateInterviewerNumber(final int interviewerNumber) {
         if (interviewerNumber < MIN_INTERVIEWER_NUMBER) {
-            throw new InvalidFieldException("팀 생성시 인터뷰어 수는 " + MIN_INTERVIEWER_NUMBER + "명 이상이어야 합니다. "
-                    + "입력한 인터뷰어 수 : [" + interviewerNumber + "]");
+            throw new InvalidFieldException("팀 생성시 인터뷰어 수는 " + MIN_INTERVIEWER_NUMBER + "명 이상이어야 합니다.",
+                    DebugMessage.init()
+                            .append("interviewerNumber", interviewerNumber));
         }
     }
 
     public void update(final Team team, final LocalDateTime presentTime) {
-        validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 수정할 수 없습니다.");
+        validateReady(presentTime);
 
         this.title = team.title;
         this.place = team.place;
@@ -123,39 +136,43 @@ public class Team extends BaseEntity {
 
     public void validParticipantNumber(final int participantNumber) {
         if (participantNumber <= interviewerNumber) {
-            throw new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
-        }
-    }
-
-    private void validateTeamBeforeStartAt(final LocalDateTime presentTime, final String errorMessage) {
-        if (presentTime.isAfter(this.startAt)) {
-            throw new InterviewTimeException(errorMessage, getId(), startAt, presentTime);
+            throw new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다.", DebugMessage.init()
+                    .append("participantNumber", participantNumber)
+                    .append("interviewerNumber", interviewerNumber));
         }
     }
 
     public void close(final LocalDateTime presentTime) {
-        validateInProgress(presentTime, "인터뷰가 시작되기 전에 종료할 수 없습니다.");
+        validateInProgress(presentTime);
 
         isClosed = true;
     }
 
-    public void validateInProgress(final LocalDateTime presentTime, final String message) {
+    public void validateInProgress(final LocalDateTime presentTime) {
         if (presentTime.isBefore(startAt)) {
-            throw new InterviewTimeException(message, getId(), startAt, presentTime);
+            throw new TeamNotInProgressException(DebugMessage.init()
+                    .append("teamId", getId())
+                    .append("isClosed", isClosed)
+                    .append("startAt", startAt)
+                    .append("presentTime", presentTime));
         }
         if (isClosed) {
-            throw new InterviewTimeException("이미 종료된 인터뷰입니다.", getId(), startAt, presentTime);
+            throw new TeamAlreadyClosedException(DebugMessage.init()
+                    .append("teamId", getId()));
         }
     }
 
-    public void validateReady(final LocalDateTime presentTime, final String message) {
-        if (presentTime.isAfter(startAt)) {
-            throw new InterviewTimeException(message, getId(), startAt, presentTime);
+    public void validateReady(final LocalDateTime presentTime) {
+        if (presentTime.isAfter(this.startAt)) {
+            throw new TeamNotReadyException(DebugMessage.init()
+                    .append("teamId", getId())
+                    .append("startAt", startAt)
+                    .append("presentTime", presentTime));
         }
     }
 
     public void delete(final LocalDateTime presentTime) {
-        validateTeamBeforeStartAt(presentTime, "인터뷰가 시작된 이후에는 삭제할 수 없습니다.");
+        validateReady(presentTime);
 
         this.deleted = true;
     }

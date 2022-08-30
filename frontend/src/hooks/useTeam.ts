@@ -3,6 +3,10 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useSnackbar from 'hooks/useSnackbar';
+import useUser from 'hooks/useUser';
+import useUtil from 'hooks/useUtil';
+
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import {
@@ -18,6 +22,14 @@ import { MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType } from 'types/team';
 
 const useTeam = () => {
+  const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
+  const { isDebounce } = useUtil();
+  const { showSnackbar } = useSnackbar();
+  const [members, setMembers] = useState<MemberType[]>([]);
+  const [nicknameValue, setNicknameValue] = useState('');
+  const [participants, setParticipants] = useState<MemberType[]>([
+    { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
+  ]);
   const team = useContext(TeamContext);
   const teamInfoDispatch = useContext(TeamDispatchContext);
   const [participants, setParticipants] = useState<MemberType[]>([]);
@@ -32,13 +44,15 @@ const useTeam = () => {
   const postTeam = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
     try {
       await requestPostTeam({ teamInfo, accessToken });
-      alert(MESSAGE.TEAM_CREATE);
+      showSnackbar({ message: MESSAGE.TEAM_CREATE });
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -73,8 +87,10 @@ const useTeam = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -88,8 +104,10 @@ const useTeam = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -102,8 +120,10 @@ const useTeam = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -112,11 +132,14 @@ const useTeam = () => {
   const closeTeamInterview = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     try {
       await requestCloseTeamInterview({ teamId, accessToken });
+      navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
-        navigate(ROUTES_PATH.HOME);
+        if (err instanceof Error) {
+          showSnackbar({ message: responseBody.data.message });
+          navigate(ROUTES_PATH.HOME);
+        }
       }
     }
   };
@@ -139,6 +162,50 @@ const useTeam = () => {
     }
   };
 
+  const getTeamOnRef = async () => {
+    const team = await getTeam();
+
+    if (team && Object.keys(team).length === 0) return;
+    if (teamInfoRef.current[0] === null) return;
+
+    teamInfoRef.current[0].value = (team as unknown as InterviewTeamType).title;
+    teamInfoRef.current[1].value = (team as unknown as InterviewTeamType).place;
+    teamInfoRef.current[2].value = (team as unknown as InterviewTeamType).startAt.slice(0, 10);
+    teamInfoRef.current[3].value = (team as unknown as InterviewTeamType).startAt.slice(-8);
+    teamInfoRef.current[4].value = String(
+      (team as unknown as InterviewTeamType).interviewers.length,
+    );
+  };
+
+  const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {
+    try {
+      if (isDebounce()) return;
+
+      const res = await requestGetMembers({ accessToken, nickname: nicknameValue });
+      const members = res.data.members.filter((member) =>
+        participants.every((participant) => participant.id !== member.id),
+      );
+      setMembers(members);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const responseBody: AxiosResponse = err.response!;
+        if (err instanceof Error) {
+          showSnackbar({ message: responseBody.data.message });
+        }
+      }
+    }
+  };
+
+  const addToParticipants = ({ id, nickname, profileUrl }: MemberType) => {
+    if (participants.every((participant) => id !== participant.id)) {
+      setParticipants((prev) => prev.concat({ id, nickname, profileUrl }));
+    }
+  };
+
+  const removeToParticipants = ({ id }: Pick<MemberType, 'id'>) => {
+    setParticipants(participants.filter((participant) => id !== participant.id));
+  };
+
   useEffect(() => {
     if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
       teamInfoDispatch(teamLocationState);
@@ -150,13 +217,20 @@ const useTeam = () => {
     watchers,
     team,
     teamLocationState,
-    setParticipants,
-    setWatchers,
+    members,
+    participants,
+    nicknameValue,
+    teamInfoRef,
+    setNicknameValue,
     getTeam,
-    postTeam,
-    editTeam,
+    getTeamOnRef,
+    updateMembers,
+    addToParticipants,
+    removeToParticipants,
+    onSubmitTeamAddForm,
     onClickDeleteTeamButton,
     onClickCloseTeamInterviewButton,
+    handleSubmitTeamEditForm,
   };
 };
 

@@ -1,39 +1,27 @@
 export const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}`;
 
-// 통일성 없는 ROUTES_PATH 리팩터링 -> 종속관계 순으로
-// interview/teams -> teams
 export const ROUTES_PATH = Object.freeze({
   HOME: '/',
+  LOGIN: '/login',
+  NOT_FOUND: '*',
+  ERROR: '/error',
 
-  FEEDBACK_ROUTE: '/teams/:teamId/levellogs/:levellogId/feedbacks',
+  FEEDBACK: '/teams/:teamId/levellogs/:levellogId/feedbacks',
   FEEDBACK_ADD: `/teams/:teamId/levellogs/:levellogId/feedbacks/add`,
   FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedbacks/:feedbackId/author/:authorId/edit`,
 
-  LOGIN: '/login',
+  LEVELLOG_ADD: '/teams/:teamId/levellogs/add',
+  LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId/author/:authorId/edit',
 
-  LEVELLOG_ADD: '/levellog/add',
-  LEVELLOG_ADD_ROUTE: '/levellog/add/:teamId',
-  LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId',
-  // LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId/author/:authorId/edit',
+  INTERVIEW_TEAMS_DETAIL: `/teams/:teamId`,
+  INTERVIEW_TEAMS_ADD: `/teams/add`,
+  INTERVIEW_TEAMS_EDIT: `/teams/:teamId/edit`,
 
-  INTERVIEW_TEAMS: '/interview/teams',
-  INTERVIEW_TEAMS_DETAIL: `/interview/teams/:teamId`,
-  INTERVIEW_TEAMS_ADD: `/interview/teams/add`,
-  INTERVIEW_TEAMS_EDIT: `/interview/teams/:teamId/edit`,
+  PREQUESTION_ADD: '/teams/:teamId/levellogs/:levellogId/pre-questions/add',
+  PREQUESTION_EDIT:
+    '/teams/:teamId/levellogs/:levellogId/pre-questions/:preQuestionId/author/:authorId/edit',
 
-  PREQUESTION_ADD: '/pre-questions/teams/:teamId/levellogs/:levellogId',
-  PREQUESTION_EDIT: '/pre-questions/teams/:teamId/levellog/:levellogId/pre-question/:preQuestionId',
-  // PREQUESTION_EDIT: 'teams/:teamId/levellog/:levellogId/pre-question/:preQuestionId/author/:authorId/edit',
-
-  INTERVIEW_QUESTION: '/interview-questions/teams/:teamId/levellogs/:levellogId',
-
-  NOT_FOUND: '*',
-  ERROR: 'error',
-});
-
-export const SERVER_PATH = Object.freeze({
-  FEEDBACKS: `${process.env.API_URI}/feedbacks`,
-  LEVELLOGS: `${process.env.API_URI}/levellogs`,
+  INTERVIEW_QUESTION: '/teams/:teamId/levellogs/:levellogId/interview-questions',
 });
 
 export const MESSAGE = Object.freeze({
@@ -42,8 +30,7 @@ export const MESSAGE = Object.freeze({
   NEED_LOGIN: '로그인이 필요한 페이지입니다.',
   NEED_IN_TEAM: '해당 팀에 소속된 유저만 접근할 수 있습니다!',
   NEED_HOST: '호스트만 접근할 수 있습니다!',
-  NEED_ME: '본인이 작성하지 않은 글을 수정할 수 없습니다.',
-  NEED_NOT_ME: '본인이 본인에 대한 질문,피드백을 작성,수정할 수 없습니다.',
+  NEED_NOT_ME: '본인이 본인에 대한 질문,피드백을 작성할 수 없습니다.',
   NEED_AUTHOR: '작성자만 글을 수정할 수 있습니다.',
 
   TEAM_CREATE: '인터뷰팀 생성을 완료했습니다!',
@@ -54,6 +41,7 @@ export const MESSAGE = Object.freeze({
   FEEDBACK_CREATE: '피드백 작성을 완료하였습니다.',
 
   LEVELLOG_ADD_CONFIRM: '레벨로그 작성이 완료되었습니다.',
+  LEVELLOG_EDIT_CONFIRM: '레벨로그 수정이 완료되었습니다.',
 
   PREQUESTION_ADD_CONFIRM: '사전질문 등록이 완료되었습니다.',
   PREQUESTION_DELETE_CONFIRM: '사전질문 삭제가 완료되었습니다.',

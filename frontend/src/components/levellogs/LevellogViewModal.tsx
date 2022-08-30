@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
 import useTeam from 'hooks/useTeam';
+import useUriBuilder from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import closeIcon from 'assets/images/close.svg';
@@ -14,6 +14,7 @@ import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/UiViewer';
+import ModalPortal from 'portal/ModalPortal';
 import { LevellogInfoType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
@@ -21,13 +22,15 @@ const LevellogViewModal = ({
   levellogInfo,
   participant,
   userInTeam,
+  teamId,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
   const { levellogId, preQuestionId } = participant;
   const { author, content } = levellogInfo;
-  const { teamId } = useParams();
   const { loginUserId } = useUser();
   const { team } = useTeam();
+  const { levellogEditUriBuilder, preQuestionAddUriBuilder, preQuestionEditUriBuilder } =
+    useUriBuilder();
 
   if (author.id === loginUserId) {
     return (
@@ -48,7 +51,7 @@ const LevellogViewModal = ({
           </S.Levellog>
           <S.Footer>
             {team.status === TEAM_STATUS.READY && (
-              <Link to={`/teams/${teamId}/levellogs/${levellogId}`}>
+              <Link to={levellogEditUriBuilder({ teamId, levellogId, authorId: author.id })}>
                 <Button>수정하기</Button>
               </Link>
             )}
@@ -79,12 +82,17 @@ const LevellogViewModal = ({
             userInTeam &&
             (participant.preQuestionId ? (
               <Link
-                to={`/pre-questions/teams/${teamId}/levellog/${levellogId}/pre-question/${preQuestionId}`}
+                to={preQuestionEditUriBuilder({
+                  teamId,
+                  levellogId,
+                  preQuestionId,
+                  authorId: author.id,
+                })}
               >
                 <Button>사전질문 수정</Button>
               </Link>
             ) : (
-              <Link to={`/pre-questions/teams/${teamId}/levellogs/${levellogId}`}>
+              <Link to={preQuestionAddUriBuilder({ teamId, levellogId })}>
                 <Button>사전질문 작성</Button>
               </Link>
             ))}
@@ -95,6 +103,7 @@ const LevellogViewModal = ({
 };
 
 interface LevellogViewModalProps {
+  teamId: string;
   levellogInfo: LevellogInfoType;
   participant: ParticipantType;
   userInTeam: Boolean;

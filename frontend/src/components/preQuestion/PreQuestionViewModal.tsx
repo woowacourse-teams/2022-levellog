@@ -1,8 +1,8 @@
-import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
+
+import useUriBuilder from 'hooks/useUriBuilder';
 
 import closeIcon from 'assets/images/close.svg';
 
@@ -10,18 +10,20 @@ import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/UiViewer';
-import { PreQuestionCustomHookType } from 'types/preQuestion';
+import ModalPortal from 'portal/ModalPortal';
+import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
 
 const PreQuestionViewModal = ({
+  teamId,
   preQuestion,
   participant,
   getTeam,
   onClickDeletePreQuestion,
   handleClickClosePreQuestionModal,
 }: PreQuestionViewModalProps) => {
-  const { levellogId, preQuestionId, nickname } = participant;
-  const { teamId } = useParams();
+  const { levellogId, preQuestionId } = participant;
+  const { preQuestionEditUriBuilder } = useUriBuilder();
 
   const handleClickDeleteLevellog = async () => {
     if (levellogId && preQuestionId) {
@@ -29,26 +31,31 @@ const PreQuestionViewModal = ({
       getTeam();
     }
   };
-  // 사전질문 조화에 작성한 사람 정보 추가되면 변경
+
   return (
     <ModalPortal>
       <S.Dimmer id="dimmer" onClick={handleClickClosePreQuestionModal} />
       <S.Container>
         <S.Header>
           <FlexBox alignItems={'center'} gap={0.375}>
-            {/* <Image src={author.profileUrl} sizes={'MEDIUM'} />
-            <S.AuthorText>{author.nickname}의 사전질문</S.AuthorText> */}
+            <Image src={preQuestion.author.profileUrl} sizes={'MEDIUM'} />
+            <S.AuthorText>{preQuestion.author.nickname}의 사전질문</S.AuthorText>
           </FlexBox>
           <S.CloseButton id="closeButton" onClick={handleClickClosePreQuestionModal}>
             <Image src={closeIcon} sizes={'SMALL'} />
           </S.CloseButton>
         </S.Header>
         <S.PreQuestion>
-          <UiViewer content={preQuestion} />
+          <UiViewer content={preQuestion.content} />
         </S.PreQuestion>
         <S.Footer>
           <Link
-            to={`/pre-questions/teams/${teamId}/levellog/${levellogId}/pre-question/${preQuestionId}`}
+            to={preQuestionEditUriBuilder({
+              teamId,
+              levellogId,
+              preQuestionId,
+              authorId: preQuestion.author.id,
+            })}
           >
             <Button>수정하기</Button>
           </Link>
@@ -60,7 +67,8 @@ const PreQuestionViewModal = ({
 };
 
 interface PreQuestionViewModalProps {
-  preQuestion: string;
+  teamId: string;
+  preQuestion: PreQuestionFormatType;
   participant: ParticipantType;
   getTeam: () => void;
   onClickDeletePreQuestion: ({

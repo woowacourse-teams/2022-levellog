@@ -17,13 +17,13 @@ import lombok.NoArgsConstructor;
 public class InterviewQuestionWriteDto {
 
     @NotBlank
-    private String interviewQuestion;
+    private String content;
 
     public static InterviewQuestionWriteDto from(final String interviewQuestion) {
         return new InterviewQuestionWriteDto(interviewQuestion);
     }
 
     public InterviewQuestion toInterviewQuestion(final Member fromMember, final Levellog levellog) {
-        return InterviewQuestion.of(fromMember, levellog, interviewQuestion);
+        return InterviewQuestion.of(fromMember, levellog, content);
     }
 }

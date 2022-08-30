@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.authentication.support;
 
 import com.woowacourse.levellog.authentication.exception.InvalidTokenException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtTokenProvider {
+
+    public static final String ADMIN_TOKEN_PAYLOAD = "This is admin token.";
 
     private final SecretKey secretKey;
     private final long validityInMilliseconds;
@@ -46,7 +49,8 @@ public class JwtTokenProvider {
                     .getBody()
                     .getSubject();
         } catch (final JwtException e) {
-            throw new InvalidTokenException("token에서 payload 추출 실패 - token:" + token);
+            throw new InvalidTokenException(DebugMessage.init()
+                    .append("token", token));
         }
     }
 
@@ -65,5 +69,30 @@ public class JwtTokenProvider {
         } catch (final JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public boolean validateAdminToken(final String token) {
+        try {
+            final Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+
+            if (!isValid(claims)) {
+                throw new InvalidTokenException(DebugMessage.init());
+            }
+
+            return !claims.getBody()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (final JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    private boolean isValid(final Jws<Claims> claims) {
+        return claims.getBody()
+                .getSubject()
+                .equals(ADMIN_TOKEN_PAYLOAD);
     }
 }

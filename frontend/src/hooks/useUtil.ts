@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
-import { MemberType } from 'types/member';
-import { ParticipantType } from 'types/team';
+import { Team } from 'types/team';
 
 const useUtil = () => {
   const [debounce, setDebounce] = useState<boolean>(false);
@@ -17,19 +16,16 @@ const useUtil = () => {
     return false;
   };
 
-  // 코드 고쳐서 써야함
-  const participantsToSmallType = (participants: ParticipantType[]): MemberType[] => {
-    const smallParticipants = participants.map((participant) => {
-      return {
-        id: participant.memberId,
-        nickname: participant.nickname,
-        profileUrl: participant.profileUrl,
-      };
-    });
-    return smallParticipants;
+  const convertDateAndTime = ({ startAt }: Pick<Team, 'startAt'>) => {
+    const year = startAt.slice(0, 4);
+    const month = startAt.slice(5, 7);
+    const day = startAt.slice(8, 10);
+    const time = `${startAt.slice(11, 13)}시 ${startAt.slice(14, 16)}분`;
+
+    return `${year}년 ${month}월 ${day}일 ${time}`;
   };
 
-  return { isDebounce, participantsToSmallType };
+  return { isDebounce, convertDateAndTime };
 };
 
 export default useUtil;

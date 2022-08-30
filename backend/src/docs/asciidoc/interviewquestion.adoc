@@ -44,6 +44,10 @@ include::{snippets}/interview-question/save/exception/is-ready/http-response.ado
 
 include::{snippets}/interview-question/save/exception/self-interview-question/http-response.adoc[]
 
+==== 같은 팀이 아닌 멤버에게 인터뷰 질문을 작성하려는 경우
+
+include::{snippets}/interview-question/save/exception/not-my-team/http-response.adoc[]
+
 [[find-all-by-levellog]]
 == 레벨로그에 작성된 인터뷰 질문 목록 조회
 

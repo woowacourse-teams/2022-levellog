@@ -51,12 +51,13 @@ const S = {
     position: relative;
     justify-content: space-between;
     align-items: center;
-    height: 4.375rem;
+    box-sizing: content-box;
+    height: 4.3125rem;
     @media (min-width: 1620px) {
-      padding: 0 calc((100vw - 100rem) / 2);
+      margin: 0 calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 0 1.25rem;
+      margin: 0 1.25rem;
     }
   `,
 
@@ -68,10 +69,7 @@ const S = {
   `,
 
   Line: styled.div`
-    position: absolute;
-    left: 0;
-    width: 100%;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,
 };
 

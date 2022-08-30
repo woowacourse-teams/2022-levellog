@@ -1,7 +1,5 @@
-import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
 import useUriBuilder from 'hooks/useUriBuilder';
@@ -12,6 +10,7 @@ import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/UiViewer';
+import ModalPortal from 'portal/ModalPortal';
 import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
 

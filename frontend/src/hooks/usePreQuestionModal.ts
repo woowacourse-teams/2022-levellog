@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import usePreQuestion from 'hooks/usePreQuestion';
+import useSnackbar from 'hooks/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -9,6 +10,7 @@ import { ParticipantType } from 'types/team';
 
 const usePreQuestionModal = () => {
   const { preQuestion, getPreQuestion, deletePreQuestion } = usePreQuestion();
+  const { showSnackbar } = useSnackbar();
   const [isPreQuestionModalOpen, setIsPreQuestionModalOpen] = useState(false);
   const [preQuestionParticipant, setPreQuestionParticipant] = useState({} as ParticipantType);
 
@@ -27,7 +29,7 @@ const usePreQuestionModal = () => {
       preQuestionId,
     });
     setIsPreQuestionModalOpen(false);
-    alert(MESSAGE.PREQUESTION_DELETE_CONFIRM);
+    showSnackbar({ message: MESSAGE.PREQUESTION_DELETE_CONFIRM });
   };
 
   const handleClickClosePreQuestionModal = (e: React.MouseEvent<HTMLElement>) => {

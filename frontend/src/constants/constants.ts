@@ -41,6 +41,7 @@ export const MESSAGE = Object.freeze({
   FEEDBACK_CREATE: '피드백 작성을 완료하였습니다.',
 
   LEVELLOG_ADD_CONFIRM: '레벨로그 작성이 완료되었습니다.',
+  LEVELLOG_EDIT_CONFIRM: '레벨로그 수정이 완료되었습니다.',
 
   PREQUESTION_ADD_CONFIRM: '사전질문 등록이 완료되었습니다.',
   PREQUESTION_DELETE_CONFIRM: '사전질문 삭제가 완료되었습니다.',

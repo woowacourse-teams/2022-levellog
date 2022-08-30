@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
+import useSnackbar from 'hooks/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
@@ -12,6 +13,7 @@ import UiEditor from 'components/@commons/UiEditor';
 
 const LevellogEdit = () => {
   const { levellogRef, getLevellogOnRef, onClickLevellogEditButton } = useLevellog();
+  const { showSnackbar } = useSnackbar();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ const LevellogEdit = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
   };
 
   useEffect(() => {
@@ -30,7 +32,7 @@ const LevellogEdit = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
   }, []);
 

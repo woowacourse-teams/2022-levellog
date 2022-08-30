@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useFeedback from 'hooks/useFeedback';
+import useSnackbar from 'hooks/useSnackbar';
 import useLevellog from 'hooks/useLevellog';
 import useTeam from 'hooks/useTeam';
 import useUriBuilders from 'hooks/useUriBuilder';
@@ -25,11 +26,12 @@ const Feedbacks = () => {
   const { feedbackAddUriBuilder } = useUriBuilders();
   const { team } = useTeam();
   const { loginUserId } = useUser();
+  const { showSnackbar } = useSnackbar();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
 
   if (typeof levellogId !== 'string' || typeof teamId !== 'string') {
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
 
     return <Loading />;

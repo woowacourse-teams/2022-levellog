@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
+import useSnackbar from 'hooks/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -11,6 +12,7 @@ import UiEditor from 'components/@commons/UiEditor';
 
 const LevellogAdd = () => {
   const { levellogRef, onClickLevellogAddButton } = useLevellog();
+  const { showSnackbar } = useSnackbar();
   const { teamId } = useParams();
 
   const handleClickLevellogAddButton = () => {
@@ -19,7 +21,7 @@ const LevellogAdd = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
   };
 
   return (

@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useSnackbar from 'hooks/useSnackbar';
+import useUriBuilder from 'hooks/useUriBuilder';
+
 import { MESSAGE } from 'constants/constants';
 
-import useUriBuilder from './useUriBuilder';
 import { Editor } from '@toast-ui/react-editor';
 import {
   requestPostFeedback,
@@ -17,10 +19,11 @@ import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
 const useFeedback = () => {
+  const { feedbacksGetUriBuilder } = useUriBuilder();
+  const { showSnackbar } = useSnackbar();
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const feedbackRef = useRef<Editor[]>([]);
   const navigate = useNavigate();
-  const { feedbacksGetUriBuilder } = useUriBuilder();
 
   const accessToken = localStorage.getItem('accessToken');
 
@@ -30,12 +33,14 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackResult'>) => {
     try {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
-      alert(MESSAGE.FEEDBACK_CREATE);
+      showSnackbar({ message: MESSAGE.FEEDBACK_CREATE });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -50,8 +55,10 @@ const useFeedback = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -68,8 +75,10 @@ const useFeedback = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -85,8 +94,10 @@ const useFeedback = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }

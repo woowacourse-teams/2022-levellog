@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useSnackbar from 'hooks/useSnackbar';
+import useUriBuilder from 'hooks/useUriBuilder';
+
 import { MESSAGE } from 'constants/constants';
 
-import useUriBuilder from './useUriBuilder';
 import { Editor } from '@toast-ui/react-editor';
 import {
   requestDeletePreQuestion,
@@ -17,14 +19,15 @@ import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
 
 const usePreQuestion = () => {
-  const preQuestionRef = useRef<Editor>(null);
-  const navigate = useNavigate();
-
   const { teamGetUriBuilder } = useUriBuilder();
-  const accessToken = localStorage.getItem('accessToken');
+  const { showSnackbar } = useSnackbar();
   const [preQuestion, setPreQuestion] = useState<PreQuestionFormatType>(
     {} as unknown as PreQuestionFormatType,
   );
+  const preQuestionRef = useRef<Editor>(null);
+  const navigate = useNavigate();
+
+  const accessToken = localStorage.getItem('accessToken');
 
   const getPreQuestion = async ({ levellogId }: Pick<PreQuestionCustomHookType, 'levellogId'>) => {
     try {
@@ -35,8 +38,10 @@ const usePreQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          // alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -57,8 +62,10 @@ const usePreQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -73,8 +80,10 @@ const usePreQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -97,8 +106,10 @@ const usePreQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -130,7 +141,7 @@ const usePreQuestion = () => {
         preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
           .innerText,
       });
-      alert(MESSAGE.PREQUESTION_ADD_CONFIRM);
+      showSnackbar({ message: MESSAGE.PREQUESTION_ADD_CONFIRM });
     }
   };
 
@@ -147,7 +158,7 @@ const usePreQuestion = () => {
         preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
           .innerText,
       });
-      alert(MESSAGE.PREQUESTION_EDIT_CONFIRM);
+      showSnackbar({ message: MESSAGE.PREQUESTION_EDIT_CONFIRM });
     }
     navigate(teamGetUriBuilder({ teamId }));
   };

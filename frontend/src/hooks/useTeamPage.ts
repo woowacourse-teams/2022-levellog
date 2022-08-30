@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useSnackbar from 'hooks/useSnackbar';
 import useTeam from 'hooks/useTeam';
 import useUtil from 'hooks/useUtil';
 
@@ -23,6 +24,7 @@ const useTeamPage = () => {
   const { isDebounce } = useUtil();
   const { participants, watchers, setParticipants, setWatchers, getTeam, postTeam, editTeam } =
     useTeam();
+  const { showSnackbar } = useSnackbar();
   const [participantNicknameValue, setParticipantNicknameValue] = useState('');
   const [watcherNicknameValue, setWatcherNicknameValue] = useState('');
   const [participantMembers, setParticipantMembers] = useState<MemberType[]>([]);
@@ -44,7 +46,9 @@ const useTeamPage = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
+        if (err instanceof Error) {
+          showSnackbar({ message: responseBody.data.message });
+        }
       }
     }
   };
@@ -61,7 +65,9 @@ const useTeamPage = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) alert(responseBody.data.message);
+        if (err instanceof Error) {
+          showSnackbar({ message: responseBody.data.message });
+        }
       }
     }
   };
@@ -145,7 +151,7 @@ const useTeamPage = () => {
 
       return;
     }
-    alert(MESSAGE.INTERVIEW_HOLE_VALUE_VALIDATE);
+    showSnackbar({ message: MESSAGE.INTERVIEW_HOLE_VALUE_VALIDATE });
   };
 
   const handleClickTeamEditButton = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -155,7 +161,7 @@ const useTeamPage = () => {
 
       return;
     }
-    alert(MESSAGE.INTERVIEW_HOLE_VALUE_VALIDATE);
+    showSnackbar({ message: MESSAGE.INTERVIEW_HOLE_VALUE_VALIDATE });
   };
 
   useEffect(() => {

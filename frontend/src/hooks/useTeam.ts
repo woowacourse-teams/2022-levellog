@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
@@ -9,6 +9,7 @@ import useUtil from 'hooks/useUtil';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
+import { requestGetMembers } from 'apis/member';
 import {
   requestGetTeam,
   requestPostTeam,
@@ -18,7 +19,7 @@ import {
 } from 'apis/teams';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
-import { MemberType } from 'types/member';
+import { MembersCustomHookType, MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType } from 'types/team';
 
 const useTeam = () => {
@@ -32,9 +33,9 @@ const useTeam = () => {
   ]);
   const team = useContext(TeamContext);
   const teamInfoDispatch = useContext(TeamDispatchContext);
-  const [participants, setParticipants] = useState<MemberType[]>([]);
   const [watchers, setWatchers] = useState<MemberType[]>([]);
   const location = useLocation() as { state: InterviewTeamType };
+  // const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const navigate = useNavigate();
   const { teamId } = useParams();
 
@@ -162,50 +163,6 @@ const useTeam = () => {
     }
   };
 
-  const getTeamOnRef = async () => {
-    const team = await getTeam();
-
-    if (team && Object.keys(team).length === 0) return;
-    if (teamInfoRef.current[0] === null) return;
-
-    teamInfoRef.current[0].value = (team as unknown as InterviewTeamType).title;
-    teamInfoRef.current[1].value = (team as unknown as InterviewTeamType).place;
-    teamInfoRef.current[2].value = (team as unknown as InterviewTeamType).startAt.slice(0, 10);
-    teamInfoRef.current[3].value = (team as unknown as InterviewTeamType).startAt.slice(-8);
-    teamInfoRef.current[4].value = String(
-      (team as unknown as InterviewTeamType).interviewers.length,
-    );
-  };
-
-  const updateMembers = async ({ nicknameValue = '' }: MembersCustomHookType) => {
-    try {
-      if (isDebounce()) return;
-
-      const res = await requestGetMembers({ accessToken, nickname: nicknameValue });
-      const members = res.data.members.filter((member) =>
-        participants.every((participant) => participant.id !== member.id),
-      );
-      setMembers(members);
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const responseBody: AxiosResponse = err.response!;
-        if (err instanceof Error) {
-          showSnackbar({ message: responseBody.data.message });
-        }
-      }
-    }
-  };
-
-  const addToParticipants = ({ id, nickname, profileUrl }: MemberType) => {
-    if (participants.every((participant) => id !== participant.id)) {
-      setParticipants((prev) => prev.concat({ id, nickname, profileUrl }));
-    }
-  };
-
-  const removeToParticipants = ({ id }: Pick<MemberType, 'id'>) => {
-    setParticipants(participants.filter((participant) => id !== participant.id));
-  };
-
   useEffect(() => {
     if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
       teamInfoDispatch(teamLocationState);
@@ -218,19 +175,15 @@ const useTeam = () => {
     team,
     teamLocationState,
     members,
-    participants,
     nicknameValue,
-    teamInfoRef,
     setNicknameValue,
+    setParticipants,
+    setWatchers,
     getTeam,
-    getTeamOnRef,
-    updateMembers,
-    addToParticipants,
-    removeToParticipants,
-    onSubmitTeamAddForm,
+    postTeam,
+    editTeam,
     onClickDeleteTeamButton,
     onClickCloseTeamInterviewButton,
-    handleSubmitTeamEditForm,
   };
 };
 

@@ -86,7 +86,7 @@ const LevellogViewModal = ({
                   teamId,
                   levellogId,
                   preQuestionId,
-                  authorId: author.id,
+                  authorId: loginUserId,
                 })}
               >
                 <Button>사전질문 수정</Button>

@@ -3,11 +3,16 @@ import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useSnackbar from 'hooks/useSnackbar';
+import useUriBuilders from 'hooks/useUriBuilder';
+
 import { requestGetTeams } from 'apis/teams';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { InterviewTeamType } from 'types/team';
 
 const useTeams = () => {
+  const { teamGetUriBuilder } = useUriBuilders();
+  const { showSnackbar } = useSnackbar();
   const [teams, setTeams] = useState<InterviewTeamType[]>([]);
   const navigate = useNavigate();
 
@@ -20,26 +25,23 @@ const useTeams = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
   };
 
-  const handleClickInterviewGroup = (e: React.MouseEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
-    const team = teams.find((team) => +team.id === +target.id);
-
-    navigate(`/interview/teams/${target.id}`, {
-      state: team,
-    });
+  const onClickInterviewTeam = ({ id }: Pick<InterviewTeamType, 'id'>) => {
+    navigate(teamGetUriBuilder({ teamId: id }));
   };
 
   return {
     teams,
     getTeams,
-    handleClickInterviewGroup,
+    onClickInterviewTeam,
   };
 };
 

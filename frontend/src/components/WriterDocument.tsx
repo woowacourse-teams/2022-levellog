@@ -6,7 +6,7 @@ import { LevellogInfoType } from 'types/levellog';
 
 const WriterDocument = ({
   levellogInfo,
-  preQuestion,
+  preQuestionContent,
   whichContentShow,
   handleClickLevellogTag,
   handleClickPreQuestionTag,
@@ -26,7 +26,7 @@ const WriterDocument = ({
       </S.ButtonBox>
       <S.Content>
         {whichContentShow.levellog && <UiViewer content={levellogInfo.content} />}
-        {whichContentShow.preQuestion && <UiViewer content={preQuestion} />}
+        {whichContentShow.preQuestion && <UiViewer content={preQuestionContent} />}
       </S.Content>
     </S.Container>
   );
@@ -34,7 +34,7 @@ const WriterDocument = ({
 
 interface LevellogReportProps {
   levellogInfo: LevellogInfoType;
-  preQuestion: string;
+  preQuestionContent: string;
   whichContentShow: {
     levellog: boolean;
     preQuestion: boolean;
@@ -45,9 +45,10 @@ interface LevellogReportProps {
 
 const S = {
   Container: styled.div`
+    overflow: auto;
     position: relative;
     width: 100%;
-    height: calc(100% - 3.125rem);
+    height: calc(100vh - 21.875rem);
     box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.new_default.GRAY};
     border-radius: 0.1875rem 0.5rem 0.1875rem 0.1875rem;
     border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
@@ -89,7 +90,6 @@ const S = {
   Content: styled.div`
     overflow: auto;
     width: 100%;
-    height: 60rem;
     padding: 2rem 1rem;
     border-radius: 0.5rem;
     background-color: ${(props) => props.theme.default.WHITE};

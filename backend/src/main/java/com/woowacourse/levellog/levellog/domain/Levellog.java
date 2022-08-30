@@ -2,11 +2,11 @@ package com.woowacourse.levellog.levellog.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.team.domain.Team;
 import javax.persistence.Column;
@@ -49,19 +49,26 @@ public class Levellog extends BaseEntity {
 
     private void validateContent(final String content) {
         if (content == null || content.isBlank()) {
-            throw new InvalidFieldException("레벨로그 내용은 공백이나 null일 수 없습니다.");
+            throw new InvalidFieldException("레벨로그 내용은 공백이나 null일 수 없습니다.",
+                    DebugMessage.init()
+                            .append("content", content));
         }
     }
 
-    private void validateAuthor(final Member member, final String errorMessage) {
+    private void validateAuthor(final Member member) {
         final boolean isNotAuthor = !author.equals(member);
         if (isNotAuthor) {
-            throw new UnauthorizedException(errorMessage);
+            throw new MemberNotAuthorException(DebugMessage.init()
+                    .append("loginMemberId", member.getId())
+                    .append("authorMemberId", author.getId())
+                    .append("levellogId", getId())
+            );
         }
+
     }
 
     public void updateContent(final Member member, final String content) {
-        validateAuthor(member, "레벨로그를 수정할 권한이 없습니다. memberId : " + member.getId() + " levellogId : " + getId());
+        validateAuthor(member);
         validateContent(content);
         this.content = content;
     }
@@ -72,22 +79,24 @@ public class Levellog extends BaseEntity {
 
     public void validateSelfFeedback(final Member member) {
         if (isAuthor(member)) {
-            throw new InvalidFeedbackException(" [levellogId : " + getId() + "]", "자기 자신에게 피드백을 할 수 없습니다.");
+            throw new InvalidFeedbackException(DebugMessage.init()
+                    .append("levellogId", getId()));
         }
     }
 
     public void validateSelfPreQuestion(final Member member) {
         if (isAuthor(member)) {
-            throw new InvalidPreQuestionException(" [levellogId : " + getId() + "]", "자기 자신에게 사전 질문을 등록할 수 없습니다.");
+            throw new InvalidPreQuestionException(DebugMessage.init()
+                    .append("levellogAuthorId", getAuthor().getId())
+                    .append("preQuestionAuthorId", member.getId()));
         }
     }
 
     public void validateSelfInterviewQuestion(final Member member) {
         if (isAuthor(member)) {
-            throw new InvalidInterviewQuestionException("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.",
-                    DebugMessage.init()
-                            .append("levellogId", getId())
-                            .append("memberId", member.getId()));
+            throw new InvalidInterviewQuestionException(DebugMessage.init()
+                    .append("levellogId", getId())
+                    .append("memberId", member.getId()));
         }
     }
 }

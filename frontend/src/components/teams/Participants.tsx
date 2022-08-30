@@ -1,13 +1,10 @@
 import styled from 'styled-components';
 
-import useUser from 'hooks/useUser';
-
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';
 
 const Participant = ({ participant, removeToParticipants }: ParticipantProps) => {
-  const { loginUserId } = useUser();
   const { id, nickname, profileUrl } = participant;
 
   const handleClickDeleteButton = () => {
@@ -18,7 +15,7 @@ const Participant = ({ participant, removeToParticipants }: ParticipantProps) =>
     <S.Container>
       <Image src={profileUrl} sizes={'SMALL'} />
       <S.Nickname>{nickname}</S.Nickname>
-      {loginUserId !== id && <S.DeleteButton onClick={handleClickDeleteButton}>X</S.DeleteButton>}
+      <S.DeleteButton onClick={handleClickDeleteButton}>X</S.DeleteButton>
     </S.Container>
   );
 };

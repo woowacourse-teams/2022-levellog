@@ -1,12 +1,16 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
 import useInterviewQuestion from 'hooks/useInterviewQuestion';
+import useLevellog from 'hooks/useLevellog';
 import useTeam from 'hooks/useTeam';
+import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';
+import Loading from 'pages/status/Loading';
 
 import { TEAM_STATUS } from 'constants/constants';
 import { checkFirstWordFinalConsonant } from 'constants/util';
@@ -19,19 +23,49 @@ import {
 } from 'types/interviewQuestion';
 
 const InterviewQuestions = () => {
+  const { levellogInfo, getLevellog } = useLevellog();
   const { interviewQuestionInfosInLevellog } = useInterviewQuestion();
-  const { loginUserNickname, loginUserProfileUrl } = useUser();
+  const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { team } = useTeam();
   const { teamId, levellogId } = useParams();
-  {
-    /* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */
+  const { feedbackAddUriBuilder } = useUriBuilders();
+
+  if (typeof levellogId !== 'string' || typeof teamId !== 'string') {
+    return <Loading />;
   }
+
+  useEffect(() => {
+    getLevellog({ teamId, levellogId });
+  }, []);
+
+  if (
+    !loginUserId ||
+    !loginUserNickname ||
+    !loginUserProfileUrl ||
+    Object.keys(levellogInfo).length === 0
+  ) {
+    return <Loading />;
+  }
+
   if (interviewQuestionInfosInLevellog.length === 0) {
     return (
-      <EmptyInterviewQuestion
-        isShow={team.status !== TEAM_STATUS.CLOSED}
-        path={`/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`}
-      />
+      <>
+        <ContentHeader
+          imageUrl={loginUserProfileUrl}
+          title={`${
+            checkFirstWordFinalConsonant({
+              word: loginUserNickname,
+            })
+              ? `${loginUserNickname}이 `
+              : `${loginUserNickname}가 `
+          }
+        받은 인터뷰 질문들`}
+        ></ContentHeader>
+        <EmptyInterviewQuestion
+          isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
+          path={feedbackAddUriBuilder({ teamId, levellogId })}
+        />
+      </>
     );
   }
 

@@ -9,7 +9,8 @@
     "build-prod": "webpack --config .webpack/webpack.prod.js  --mode production --entry ./src/index.tsx",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "test": "cypress run --browser chrome"
+    "test": "cypress run --browser chrome",
+    "test-ci": "cypress run --browser chrome --record --key <record key>  --spec 'cypress/e2e/PageRoute.cy.ts"
   },
   "dependencies": {
     "@babel/cli": "^7.18.6",

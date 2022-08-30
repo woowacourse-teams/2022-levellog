@@ -2,6 +2,7 @@ package com.woowacourse.levellog.feedback.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
@@ -66,7 +67,9 @@ public class Feedback extends BaseEntity {
 
     private void validateFeedbackLength(final String feedbackContent, final String contentType) {
         if (feedbackContent.length() > FEEDBACK_CONTENT_MAX_LENGTH) {
-            throw new InvalidFieldException(contentType + " 피드백은 " + FEEDBACK_CONTENT_MAX_LENGTH + "자 이하여야 합니다.");
+            throw new InvalidFieldException(contentType + " 피드백은 " + FEEDBACK_CONTENT_MAX_LENGTH + "자 이하여야 합니다.",
+                    DebugMessage.init()
+                            .append("content 길이", feedbackContent.length()));
         }
     }
 
@@ -80,15 +83,17 @@ public class Feedback extends BaseEntity {
 
     public void validateAuthor(final Member member) {
         if (!from.equals(member)) {
-            throw new InvalidFeedbackException("자신이 남긴 피드백만 수정할 수 있습니다.",
-                    " [feedbackId : " + getId() + ", memberId : " + member.getId() + "]");
+            throw new InvalidFeedbackException(DebugMessage.init()
+                    .append("feedbackId", getId())
+                    .append("memberId", member.getId()));
         }
     }
 
     public void validateLevellog(final Levellog levellog) {
         if (!isSameLevellog(levellog)) {
-            throw new InvalidLevellogException(
-                    "입력한 levellogId와 피드백의 levellogId가 다릅니다.", "[ 입력한 levellogId : " + levellog.getId() + " ] ");
+            throw new InvalidLevellogException(DebugMessage.init()
+                    .append("Feedback's levellogId'", this.levellog.getId())
+                    .append("Input levellogId", levellog.getId()));
         }
     }
 

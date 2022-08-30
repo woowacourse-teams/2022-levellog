@@ -1,7 +1,7 @@
 import axios, { AxiosPromise } from 'axios';
 
 import { 엑세스토큰이없는경우헤더제거 } from 'apis/utils';
-import { TeamApiType, InterviewTeamType, TeamEditApiType } from 'types/team';
+import { TeamApiType, InterviewTeamType } from 'types/team';
 
 export const requestPostTeam = ({
   teamInfo,
@@ -42,7 +42,7 @@ export const requestGetTeam = ({
   );
 };
 
-export const requestEditTeam = ({ teamId, teamInfo, accessToken }: TeamEditApiType) => {
+export const requestEditTeam = ({ teamId, teamInfo, accessToken }: TeamApiType) => {
   return axios({
     method: 'put',
     headers: { Authorization: `Bearer ${accessToken}` },

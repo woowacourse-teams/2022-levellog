@@ -1,7 +1,10 @@
 import { useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
+
+import useSnackbar from 'hooks/useSnackbar';
+import useUriBuilder from 'hooks/useUriBuilder';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -16,7 +19,8 @@ import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/feedback';
 
 const useFeedback = () => {
-  const [feedback, setFeedback] = useState();
+  const { feedbacksGetUriBuilder } = useUriBuilder();
+  const { showSnackbar } = useSnackbar();
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const feedbackRef = useRef<Editor[]>([]);
   const navigate = useNavigate();
@@ -29,12 +33,14 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackResult'>) => {
     try {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
-      alert(MESSAGE.FEEDBACK_CREATE);
+      showSnackbar({ message: MESSAGE.FEEDBACK_CREATE });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -49,8 +55,10 @@ const useFeedback = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -62,14 +70,15 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId'>) => {
     try {
       const res = await requestGetFeedback({ accessToken, levellogId, feedbackId });
-      setFeedback(res.data.feedback);
 
       return res.data.feedback;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -85,8 +94,10 @@ const useFeedback = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -106,7 +117,7 @@ const useFeedback = () => {
     };
 
     await postFeedback({ levellogId, feedbackResult });
-    navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
+    navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
   };
 
   const onClickFeedbackEditButton = async ({
@@ -124,7 +135,7 @@ const useFeedback = () => {
     };
 
     await editFeedback({ levellogId, feedbackId, feedbackResult });
-    navigate(`/teams/${teamId}/levellogs/${levellogId}/feedbacks`);
+    navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
   };
 
   const getFeedbackOnRef = async ({

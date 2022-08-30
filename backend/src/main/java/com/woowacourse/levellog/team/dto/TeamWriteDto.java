@@ -2,8 +2,10 @@ package com.woowacourse.levellog.team.dto;
 
 import com.woowacourse.levellog.team.domain.Team;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.AccessLevel;
@@ -31,8 +33,10 @@ public class TeamWriteDto {
     private LocalDateTime startAt;
 
     @Valid
-    @NotNull
-    private ParticipantIdsDto participants;
+    @NotEmpty
+    private List<Long> participantIds;
+
+    private List<Long> watcherIds;
 
     public Team toEntity(final String profileUrl) {
         return new Team(title, place, startAt, profileUrl, interviewerNumber);

@@ -2,6 +2,15 @@ import { useEffect } from 'react';
 
 import styled from 'styled-components';
 
+import { MESSAGE } from 'constants/constants';
+import {
+  interviewDateValidate,
+  interviewInterviewerValidate,
+  interviewLocationValidate,
+  interviewTimeValidate,
+  interviewTitleValidate,
+} from 'constants/validate';
+
 import Member from './Member';
 import Participant from './Participants';
 import TeamFormInput from './TeamFormInput';
@@ -10,16 +19,23 @@ import { MemberType } from 'types/member';
 
 const TeamForm = ({
   purpose,
-  handleSubmitTeamForm,
-  teamInfoRef,
+  participantNicknameValue,
+  watcherNicknameValue,
+  participantMembers,
+  watcherMembers,
   participants,
-  members,
-  nicknameValue,
-  setNicknameValue,
-  handleChangeInput,
-  addToParticipants,
-  removeToParticipants,
+  watchers,
+  teamInfoRef,
   getTeamOnRef,
+  setParticipantNicknameValue,
+  setWatcherNicknameValue,
+  addToParticipants,
+  addToWatcherParticipants,
+  removeToParticipants,
+  remoteToWatcherParticipants,
+  handleChangeParticipantInput,
+  handleChangeWatcherInput,
+  handleClickTeamButton,
 }: TeamFormProps) => {
   useEffect(() => {
     if (!getTeamOnRef) return;
@@ -28,43 +44,72 @@ const TeamForm = ({
   }, []);
 
   return (
-    <S.FormContainer onSubmit={handleSubmitTeamForm}>
+    <S.Container>
       <S.Title>인터뷰 팀 {purpose}</S.Title>
       <TeamFormInput
         label={'제목'}
+        errorText={MESSAGE.INTERVIEW_TITLE_VALIDATE_FAIL}
+        validate={interviewTitleValidate}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[0] = el)}
-        minLength={'3'}
-        maxLength={'14'}
-        required
       />
       <TeamFormInput
         label={'장소'}
+        errorText={MESSAGE.INTERVIEW_LOCATION_VALIDATE_FAIL}
+        validate={interviewLocationValidate}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[1] = el)}
-        minLength={'3'}
-        maxLength={'12'}
-        required
       />
       <TeamFormInput
         label={'날짜'}
-        inputRef={(el: HTMLInputElement) => (teamInfoRef.current[2] = el)}
         type={'date'}
-        required
+        errorText={MESSAGE.INTERVIEW_DATE_VALIDATE_FAIL}
+        validate={interviewDateValidate}
+        inputRef={(el: HTMLInputElement) => (teamInfoRef.current[2] = el)}
       />
       <TeamFormInput
         label={'시간'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[3] = el)}
         type={'time'}
-        required
+        errorText={MESSAGE.INTERVIEW_TIME_VALIDATE_FAIL}
+        validate={interviewTimeValidate}
       />
       <TeamFormInput
         label={'인터뷰어의 수'}
         inputRef={(el: HTMLInputElement) => (teamInfoRef.current[4] = el)}
         type={'number'}
-        min={'1'}
-        max={'3'}
-        required
+        errorText={MESSAGE.INTERVIEW_INTERVIEWEE_VALIDATE_FAIL}
+        validate={interviewInterviewerValidate}
       />
-      <TeamFormInput label={'참가자'} value={nicknameValue} onChange={handleChangeInput}>
+      <TeamFormInput
+        label={'참관자'}
+        value={watcherNicknameValue}
+        onChange={handleChangeWatcherInput}
+      >
+        <S.ParticipantsBox>
+          {watchers.length !== 0 &&
+            watchers.map((watcher: MemberType) => (
+              <Participant
+                key={watcher.id}
+                participant={watcher}
+                removeToParticipants={remoteToWatcherParticipants}
+              />
+            ))}
+        </S.ParticipantsBox>
+      </TeamFormInput>
+      <S.MembersBox isNoneMember={watcherMembers.length === 0}>
+        {watcherMembers.map((watcherMember: MemberType) => (
+          <Member
+            key={watcherMember.id}
+            member={watcherMember}
+            setNicknameValue={setWatcherNicknameValue}
+            addToParticipants={addToWatcherParticipants}
+          />
+        ))}
+      </S.MembersBox>
+      <TeamFormInput
+        label={'참가자'}
+        value={participantNicknameValue}
+        onChange={handleChangeParticipantInput}
+      >
         <S.ParticipantsBox>
           {participants.map((participant: MemberType) => (
             <Participant
@@ -75,37 +120,44 @@ const TeamForm = ({
           ))}
         </S.ParticipantsBox>
       </TeamFormInput>
-      <S.MembersBox isNoneMember={members.length === 0}>
-        {members.map((member: MemberType) => (
+      <S.MembersBox isNoneMember={participantMembers.length === 0}>
+        {participantMembers.map((participantMember: MemberType) => (
           <Member
-            key={member.id}
-            member={member}
-            setNicknameValue={setNicknameValue}
+            key={participantMember.id}
+            member={participantMember}
+            setNicknameValue={setParticipantNicknameValue}
             addToParticipants={addToParticipants}
           />
         ))}
       </S.MembersBox>
-      <S.SubmitButton>{purpose}</S.SubmitButton>
-    </S.FormContainer>
+      <S.SubmitButton onClick={handleClickTeamButton}>{purpose}</S.SubmitButton>
+    </S.Container>
   );
 };
 
 interface TeamFormProps {
   purpose: '생성하기' | '수정하기';
-  handleSubmitTeamForm: (e: React.FormEvent<HTMLFormElement>) => void;
-  teamInfoRef: React.MutableRefObject<HTMLInputElement[]>;
+  participantNicknameValue: string;
+  watcherNicknameValue: string;
+  participantMembers: Array<MemberType>;
+  watcherMembers: Array<MemberType>;
   participants: Array<MemberType>;
-  nicknameValue: string;
-  members: Array<MemberType>;
-  setNicknameValue: React.Dispatch<React.SetStateAction<string>>;
-  handleChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  addToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
-  removeToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  watchers: Array<MemberType>;
+  teamInfoRef: React.MutableRefObject<HTMLInputElement[]>;
+  setParticipantNicknameValue: React.Dispatch<React.SetStateAction<string>>;
+  setWatcherNicknameValue: React.Dispatch<React.SetStateAction<string>>;
   getTeamOnRef?: () => Promise<void>;
+  addToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  addToWatcherParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  removeToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  remoteToWatcherParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  handleChangeParticipantInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChangeWatcherInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleClickTeamButton: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const S = {
-  FormContainer: styled.form`
+  Container: styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -113,7 +165,7 @@ const S = {
     width: 45.125rem;
     height: max-content;
     margin: 1.25rem auto 1.25rem auto;
-    padding-bottom: 1.875rem;
+    padding: 0 1.875rem 1.875rem 1.875rem;
     border-radius: 1.25rem;
     box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
     @media (min-width: 560px) and (max-width: 760px) {
@@ -133,6 +185,16 @@ const S = {
     height: 6.25rem;
     font-weight: 600;
   `,
+
+  ErrorBox: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+  `,
+
+  ErrorText: styled.p``,
 
   ParticipantsBox: styled.div`
     display: flex;

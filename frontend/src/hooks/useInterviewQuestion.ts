@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 
 import useScrollDown from 'hooks/useScrollDown';
+import useSnackbar from 'hooks/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -23,6 +24,7 @@ import {
 
 const useInterviewQuestion = () => {
   const { scrollRef: interviewQuestionContentRef, afterRequestScrollDown } = useScrollDown();
+  const { showSnackbar } = useSnackbar();
   const [interviewQuestionInfos, setInterviewQuestionInfos] = useState<InterviewQuestionInfoType[]>(
     [],
   );
@@ -43,8 +45,10 @@ const useInterviewQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -59,8 +63,10 @@ const useInterviewQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -76,8 +82,10 @@ const useInterviewQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -93,8 +101,10 @@ const useInterviewQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -117,8 +127,10 @@ const useInterviewQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message })) {
-          alert(responseBody.data.message);
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
     }
@@ -147,7 +159,7 @@ const useInterviewQuestion = () => {
     e.preventDefault();
     if (interviewQuestionRef.current) {
       if (interviewQuestionRef.current.value.length < 3) {
-        alert(MESSAGE.WRITE_MORE);
+        showSnackbar({ message: MESSAGE.WRITE_MORE });
 
         return;
       }

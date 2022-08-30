@@ -6,14 +6,16 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
+import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,7 +41,8 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "피드백이 이미 존재합니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new FeedbackAlreadyExistException(message));
+                    .willThrow(new FeedbackAlreadyExistException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -63,9 +66,10 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "자기 자신에게 피드백을 할 수 없습니다.";
+            final String message = "잘못된 피드백 요청입니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(message, " [levellogId : " + levellogId + "]"));
+                    .willThrow(new InvalidFeedbackException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -89,16 +93,16 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "같은 팀에 속한 멤버만 피드백을 작성할 수 있습니다.";
+            final String message = "같은 팀에 속해있지 않습니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InvalidFeedbackException(message, " [memberId :" + memberId + "]"));
+                    .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
 
             // then
             perform.andExpectAll(
-                    status().isBadRequest(),
+                    status().isUnauthorized(),
                     jsonPath("message").value(message)
             );
 
@@ -117,7 +121,8 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "레벨로그가 존재하지 않습니다.";
             given(feedbackService.save(request, levellogId, memberId)).willThrow(
-                    new LevellogNotFoundException(message));
+                    new LevellogNotFoundException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -134,16 +139,16 @@ class FeedbackControllerTest extends ControllerTest {
 
         @Test
         @DisplayName("팀 인터뷰 시작 전에 피드백을 작성할 경우 예외를 발생시킨다.")
-        void save_beforeStartAt_exception() throws Exception {
+        void save_notInProgress_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.";
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InterviewTimeException(message));
+                    .willThrow(new TeamNotInProgressException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -167,9 +172,9 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "이미 종료된 인터뷰입니다.";
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
             given(feedbackService.save(request, levellogId, memberId))
-                    .willThrow(new InterviewTimeException(message));
+                    .willThrow(new TeamAlreadyClosedException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestCreateFeedback(levellogId, request);
@@ -206,9 +211,10 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "자신이 남긴 피드백만 수정할 수 있습니다.";
-            willThrow(new InvalidFeedbackException(
-                    message, " [feedbackId : " + feedbackId + ", memberId : " + memberId + "]"))
+            final String message = "잘못된 피드백 요청입니다.";
+            willThrow(new InvalidFeedbackException(DebugMessage.init()
+                    .append("feedbackId", feedbackId)
+                    .append("memberId", memberId)))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);
 
@@ -235,8 +241,9 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "존재하지 않는 피드백입니다.";
-            willThrow(new FeedbackNotFoundException(message))
+            final String message = "피드백이 존재하지 않습니다.";
+            willThrow(new FeedbackNotFoundException(DebugMessage.init()
+                    .append("feedbackId", feedbackId)))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);
 
@@ -254,8 +261,8 @@ class FeedbackControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("인터뷰 시작 전에 피드백을 수정하면 예외가 발생한다.")
-        void update_beforeStartAt_exception() throws Exception {
+        @DisplayName("팀 진행 상태가 아닐 때 피드백을 수정하면 예외가 발생한다.")
+        void update_notInProgress_exception() throws Exception {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
@@ -263,8 +270,8 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "인터뷰가 시작되기 전에 피드백을 작성 또는 수정할 수 없습니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
+            willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);
 
@@ -291,8 +298,8 @@ class FeedbackControllerTest extends ControllerTest {
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
-            final String message = "이미 종료된 인터뷰입니다.";
-            willThrow(new InterviewTimeException(message))
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
+            willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(feedbackService)
                     .update(request, feedbackId, memberId);
 
@@ -330,7 +337,8 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "레벨로그가 존재하지 않습니다.";
             given(feedbackService.findAll(levellogId, memberId))
-                    .willThrow(new LevellogNotFoundException(message));
+                    .willThrow(new LevellogNotFoundException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestFindAllFeedback(levellogId);
@@ -352,9 +360,9 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
 
-            final String message = "권한이 없습니다.";
+            final String message = "같은 팀에 속해있지 않습니다.";
             given(feedbackService.findAll(levellogId, memberId))
-                    .willThrow(new UnauthorizedException(message));
+                    .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestFindAllFeedback(levellogId);
@@ -390,7 +398,8 @@ class FeedbackControllerTest extends ControllerTest {
 
             final String message = "레벨로그가 존재하지 않습니다.";
             given(feedbackService.findById(levellogId, feedbackId, memberId))
-                    .willThrow(new LevellogNotFoundException(message));
+                    .willThrow(new LevellogNotFoundException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);
@@ -413,9 +422,9 @@ class FeedbackControllerTest extends ControllerTest {
             final Long feedbackId = 1L;
             final Long levellogId = 1L;
 
-            final String message = "권한이 없습니다.";
+            final String message = "같은 팀에 속해있지 않습니다.";
             given(feedbackService.findById(levellogId, feedbackId, memberId))
-                    .willThrow(new UnauthorizedException(message));
+                    .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);
@@ -438,9 +447,10 @@ class FeedbackControllerTest extends ControllerTest {
             final Long feedbackId = 1L;
             final Long levellogId = 1L;
 
-            final String message = "입력한 levellogId와 피드백의 levellogId가 다릅니다.";
+            final String message = "잘못된 레벨로그 요청입니다.";
             given(feedbackService.findById(levellogId, feedbackId, memberId))
-                    .willThrow(new InvalidLevellogException(message, "[ 입력한 levellogId : 1 ]"));
+                    .willThrow(new InvalidLevellogException(DebugMessage.init()
+                            .append("levellogId", levellogId)));
 
             // when
             final ResultActions perform = requestFindByIdFeedback(levellogId, feedbackId);

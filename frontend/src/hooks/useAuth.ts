@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import useSnackbar from 'hooks/useSnackbar';
 import useTeam from 'hooks/useTeam';
 
 import { MESSAGE, REQUIRE_AUTH } from 'constants/constants';
@@ -9,6 +10,7 @@ import { requestGetUserAuthority } from 'apis/login';
 
 const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
   const { getTeam } = useTeam();
+  const { showSnackbar } = useSnackbar();
   const { levellogId, authorId } = useParams();
   const [isLoad, setIsLoad] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -19,14 +21,14 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     const team = await getTeam();
 
     if (!accessToken) {
-      alert(MESSAGE.NEED_LOGIN);
+      showSnackbar({ message: MESSAGE.NEED_LOGIN });
       return;
     }
 
     if (!team) {
       setIsLoad(false);
       setIsError(true);
-      alert(MESSAGE.WRONG_ACCESS);
+      showSnackbar({ message: MESSAGE.WRONG_ACCESS });
 
       return;
     }
@@ -38,18 +40,23 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
       participant.levellogId,
     ]);
 
-    if (requireAuth === (REQUIRE_AUTH.IN_TEAM || REQUIRE_AUTH.ME || REQUIRE_AUTH.NOT_ME)) {
+    if (requireAuth === (REQUIRE_AUTH.IN_TEAM || REQUIRE_AUTH.NOT_ME)) {
       if (
         team &&
         Object.values(team.participants)
           .map((participant) => participant.memberId)
           .every((memberId) => {
             return String(memberId) !== String(loginUserId);
+          }) &&
+        Object.values(team.watchers)
+          .map((watcher) => watcher.memberId)
+          .every((memberId) => {
+            return String(memberId) !== String(loginUserId);
           })
       ) {
         setIsLoad(false);
         setIsError(true);
-        alert(MESSAGE.NEED_IN_TEAM);
+        showSnackbar({ message: MESSAGE.NEED_IN_TEAM });
 
         return;
       }
@@ -59,23 +66,8 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
       if (String(team.hostId) !== String(loginUserId)) {
         setIsLoad(false);
         setIsError(true);
-        alert(MESSAGE.NEED_HOST);
+        showSnackbar({ message: MESSAGE.NEED_HOST });
 
-        return;
-      }
-    }
-
-    if (requireAuth === REQUIRE_AUTH.ME) {
-      if (
-        !idsAndLevellogIds.some(
-          (idAndLevellogId) =>
-            String(levellogId) === String(idAndLevellogId[1]) &&
-            String(loginUserId) === String(idAndLevellogId[0]),
-        )
-      ) {
-        setIsLoad(false);
-        setIsError(true);
-        alert(MESSAGE.NEED_ME);
         return;
       }
     }
@@ -90,16 +82,17 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
       ) {
         setIsLoad(false);
         setIsError(true);
-        alert(MESSAGE.NEED_NOT_ME);
+        showSnackbar({ message: MESSAGE.NEED_NOT_ME });
+
         return;
       }
     }
 
     if (requireAuth === REQUIRE_AUTH.AUTHOR) {
-      if (loginUserId !== authorId) {
+      if (String(loginUserId) !== authorId) {
         setIsLoad(false);
         setIsError(true);
-        alert(MESSAGE.NEED_AUTHOR);
+        showSnackbar({ message: MESSAGE.NEED_AUTHOR });
       }
     }
     setIsLoad(false);

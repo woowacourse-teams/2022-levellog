@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
@@ -13,10 +12,11 @@ import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
+import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -76,7 +76,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(authorId));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(authorId));
         }
 
         @Test
@@ -93,7 +93,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
                     .isInstanceOf(LevellogAlreadyExistException.class)
-                    .hasMessageContainingAll("레벨로그를 이미 작성하였습니다.", String.valueOf(authorId), String.valueOf(teamId));
+                    .hasMessageContainingAll("레벨로그가 이미 존재합니다.", String.valueOf(authorId), String.valueOf(teamId));
         }
 
         @ParameterizedTest
@@ -110,12 +110,12 @@ class LevellogServiceTest extends ServiceTest {
             //  when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
 
         @Test
-        @DisplayName("인터뷰 시작 후에 요청한 경우 예외를 반환한다.")
-        void save_afterStart_exception() {
+        @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 반환한다.")
+        void save_notReady_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
             final Member author = saveMember("알린");
@@ -126,8 +126,8 @@ class LevellogServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 작성이 가능합니다.", String.valueOf(teamId));
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContainingAll("인터뷰 준비 상태가 아닙니다.", String.valueOf(teamId));
         }
     }
 
@@ -214,7 +214,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, memberId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(memberId));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(memberId));
         }
 
         @Test
@@ -230,7 +230,7 @@ class LevellogServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, otherMemberId))
-                    .isInstanceOf(UnauthorizedException.class);
+                    .isInstanceOf(MemberNotAuthorException.class);
         }
 
         @ParameterizedTest
@@ -248,12 +248,12 @@ class LevellogServiceTest extends ServiceTest {
             //  when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, authorId))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("레벨로그 내용은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
 
         @Test
-        @DisplayName("인터뷰 시작 후에 요청한 경우 예외를 반환한다.")
-        void update_afterStart_exception() {
+        @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 반환한다.")
+        void update_notReady_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
             final Member author = saveMember("알린");
@@ -264,8 +264,8 @@ class LevellogServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, author.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에만 레벨로그 수정이 가능합니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContainingAll("인터뷰 준비 상태가 아닙니다.", String.valueOf(team.getId()));
         }
     }
 
@@ -298,7 +298,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.findAllByAuthorId(1_000_000L))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않음", String.valueOf(1_000_000L));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(1_000_000L));
         }
     }
 }

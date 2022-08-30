@@ -6,18 +6,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("InterviewQuestionController 의")
@@ -42,7 +42,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("interviewQuestion must not be blank")
+                    jsonPath("message").value("content must not be blank")
             );
 
             // docs
@@ -55,7 +55,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
-            willThrow(new InvalidFieldException(message))
+            willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(interviewQuestionService)
                     .save(request, 1L, 1L);
 
@@ -80,7 +80,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
             final String message = "레벨로그가 존재하지 않습니다.";
-            willThrow(new LevellogNotFoundException(message))
+            willThrow(new LevellogNotFoundException(DebugMessage.init()
+                    .append("levellogId", invalidLevellogId)))
                     .given(interviewQuestionService)
                     .save(request, invalidLevellogId, 1L);
 
@@ -97,15 +98,15 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "levellog-not-found"));
         }
 
-        @ParameterizedTest
-        @CsvSource(value = {"이미 종료된 인터뷰입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
-        @DisplayName("인터뷰 생성 정책에 위반되면 예외를 던진다.")
-        void save_interviewTime_exception(final String message, final String snippet) throws Exception {
+        @Test
+        @DisplayName("진행 중 상태가 아닐 때 예외가 발생한다.")
+        void save_notInProgress_exception() throws Exception {
             // given
             final long levellogId = 1L;
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
-            willThrow(new InterviewTimeException(message))
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
+            willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .save(request, levellogId, 1L);
 
@@ -119,7 +120,57 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document(BASE_SNIPPET_PATH + snippet));
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-ready"));
+        }
+
+        @Test
+        @DisplayName("이미 종료된 상태일 때 예외가 발생한다.")
+        void save_alreadyClosed_exception() throws Exception {
+            // given
+            final long levellogId = 1L;
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
+
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
+            willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
+                    .given(interviewQuestionService)
+                    .save(request, levellogId, 1L);
+
+            // when
+            final ResultActions perform = requestCreateInterviewQuestion(levellogId, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-closed"));
+        }
+
+        @Test
+        @DisplayName("같은 팀에 속해있지 않을 때 예외가 발생한다.")
+        void save_notMyTeam_exception() throws Exception {
+            // given
+            final long levellogId = 1L;
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
+
+            final String message = "같은 팀에 속해있지 않습니다.";
+            willThrow(new ParticipantNotSameTeamException(DebugMessage.init()))
+                    .given(interviewQuestionService)
+                    .save(request, levellogId, 1L);
+
+            // when
+            final ResultActions perform = requestCreateInterviewQuestion(levellogId, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isUnauthorized(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "not-my-team"));
         }
 
         @Test
@@ -129,7 +180,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final long levellogId = 1L;
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 왜 사용했나요?");
 
-            willThrow(new InvalidInterviewQuestionException("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.", DebugMessage.init()))
+            willThrow(new InvalidInterviewQuestionException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .save(request, levellogId, 1L);
 
@@ -139,7 +190,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.")
+                    jsonPath("message").value("잘못된 인터뷰 질문 요청입니다.")
             );
 
             // docs
@@ -164,7 +215,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final long invalidLevellogId = 20000000L;
             final String message = "레벨로그가 존재하지 않습니다.";
-            willThrow(new LevellogNotFoundException(message))
+            willThrow(new LevellogNotFoundException(DebugMessage.init()
+                    .append("levellogId", invalidLevellogId)))
                     .given(interviewQuestionService)
                     .findAllByLevellog(invalidLevellogId);
 
@@ -198,7 +250,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final long invalidLevellogId = 20000000L;
             final String message = "레벨로그가 존재하지 않습니다.";
-            willThrow(new LevellogNotFoundException(message))
+            willThrow(new LevellogNotFoundException(DebugMessage.init()
+                    .append("levellogId", invalidLevellogId)))
                     .given(interviewQuestionService)
                     .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
 
@@ -238,7 +291,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // then
             perform.andExpectAll(
                     status().isBadRequest(),
-                    jsonPath("message").value("interviewQuestion must not be blank")
+                    jsonPath("message").value("content must not be blank")
             );
 
             // docs
@@ -251,7 +304,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
-            willThrow(new InvalidFieldException(message))
+            willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
@@ -276,7 +329,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
 
             final String message = "인터뷰 질문이 존재하지 않습니다.";
-            willThrow(new InterviewQuestionNotFoundException(message))
+            willThrow(new InterviewQuestionNotFoundException(DebugMessage.init()
+                    .append("interviewQuestionId", invalidInterviewQuestionId)))
                     .given(interviewQuestionService)
                     .update(request, invalidInterviewQuestionId, 1L);
 
@@ -298,8 +352,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void update_unauthorized_exception() throws Exception {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
-            final String message = "권한이 없습니다.";
-            willThrow(new UnauthorizedException(message))
+            final String message = "작성자가 아닙니다.";
+            willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
@@ -316,13 +370,13 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
-        @ParameterizedTest
-        @CsvSource(value = {"이미 종료된 인터뷰입니다.,is-closed", "인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.,is-ready"})
-        @DisplayName("인터뷰 수정 정책에 위반되면 예외를 던진다.")
-        void update_interviewTime_exception(final String message, final String snippet) throws Exception {
+        @Test
+        @DisplayName("진행 중 상태가 아닐 때 예외가 발생한다.")
+        void update_notInProgress_exception() throws Exception {
             // given
             final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
-            willThrow(new InterviewTimeException(message))
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
+            willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .update(request, 1L, 1L);
 
@@ -336,7 +390,30 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document(BASE_SNIPPET_PATH + snippet));
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-ready"));
+        }
+
+        @Test
+        @DisplayName("이미 종료된 상태일 때 예외가 발생한다.")
+        void update_alreadyClosed_exception() throws Exception {
+            // given
+            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
+            willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
+                    .given(interviewQuestionService)
+                    .update(request, 1L, 1L);
+
+            // when
+            final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-closed"));
         }
 
         private ResultActions requestUpdateInterviewQuestion(final Long levellogId, final Long interviewQuestionId,
@@ -357,7 +434,9 @@ class InterviewQuestionControllerTest extends ControllerTest {
             // given
             final Long invalidInterviewQuestionId = 1000L;
             final String message = "인터뷰 질문이 존재하지 않습니다.";
-            willThrow(new InterviewQuestionNotFoundException(message))
+
+            willThrow(new InterviewQuestionNotFoundException(DebugMessage.init()
+                    .append("interviewQuestionId", invalidInterviewQuestionId)))
                     .given(interviewQuestionService)
                     .deleteById(invalidInterviewQuestionId, 1L);
 
@@ -378,8 +457,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void deleteById_unauthorized_exception() throws Exception {
             // given
-            final String message = "권한이 없습니다.";
-            willThrow(new UnauthorizedException(message))
+            final String message = "작성자가 아닙니다.";
+            willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .deleteById(1L, 1L);
 
@@ -396,12 +475,12 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "unauthorized"));
         }
 
-        @ParameterizedTest
-        @CsvSource(value = {"이미 종료된 인터뷰입니다.,is-closed", "인터뷰 시작 전입니다.,is-ready"})
-        @DisplayName("인터뷰 삭제 정책에 위반되면 예외를 던진다.")
-        void deleteById_interviewTime_exception(final String message, final String snippet) throws Exception {
+        @Test
+        @DisplayName("이미 종료된 상태일 때 예외가 발생한다.")
+        void deleteById_alreadyClosed_exception() throws Exception {
             // given
-            willThrow(new InterviewTimeException(message))
+            final String message = "이미 인터뷰가 종료된 팀입니다.";
+            willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(interviewQuestionService)
                     .deleteById(1L, 1L);
 
@@ -415,7 +494,29 @@ class InterviewQuestionControllerTest extends ControllerTest {
             );
 
             // docs
-            perform.andDo(document(BASE_SNIPPET_PATH + "" + snippet));
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-closed"));
+        }
+
+        @Test
+        @DisplayName("진행 중 상태가 아닐 때 예외가 발생한다.")
+        void deleteById_notInProgress_exception() throws Exception {
+            // given
+            final String message = "인터뷰 진행중인 상태가 아닙니다.";
+            willThrow(new TeamNotInProgressException(DebugMessage.init()))
+                    .given(interviewQuestionService)
+                    .deleteById(1L, 1L);
+
+            // when
+            final ResultActions perform = requestDeleteInterviewQuestion(1L, 1L);
+
+            // then
+            perform.andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("message").value(message)
+            );
+
+            // docs
+            perform.andDo(document(BASE_SNIPPET_PATH + "is-ready"));
         }
 
         private ResultActions requestDeleteInterviewQuestion(final Long levellogId,

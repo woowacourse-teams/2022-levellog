@@ -41,12 +41,11 @@ const LevellogEdit = () => {
       <UiEditor
         needToolbar={true}
         autoFocus={true}
-        height={'50rem'}
         contentRef={levellogRef}
         initialEditType={'markdown'}
       />
       <BottomBar
-        buttonText={'작성하기'}
+        buttonText={'수정하기'}
         handleClickRightButton={handleClickLevellogEditButton}
       ></BottomBar>
     </S.Container>
@@ -55,11 +54,12 @@ const LevellogEdit = () => {
 
 const S = {
   Container: styled.main`
+    height: calc(100vh - 14.375rem);
     @media (min-width: 1620px) {
-      padding: 1.25rem calc((100vw - 100rem) / 2);
+      padding: 1.25rem calc((100vw - 100rem) / 2) 0 calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 1.25rem 1.25rem;
+      padding: 1.25rem 1.25rem 0 1.25rem;
     }
   `,
 };

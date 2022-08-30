@@ -39,7 +39,7 @@ class MemberTest {
             // when & then
             assertThatThrownBy(() -> new Member(invalidNickname, 123456, "validProfileUrl"))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("닉네임은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("닉네임은 공백이나 null일 수 없습니다.");
         }
 
         @Test
@@ -48,7 +48,7 @@ class MemberTest {
             // when & then
             assertThatThrownBy(() -> new Member("test", null, "validProfileUrl"))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("깃허브 ID는 null일 수 없습니다.");
+                    .hasMessageContaining("깃허브 ID는 null일 수 없습니다.");
         }
 
         @Test
@@ -71,7 +71,7 @@ class MemberTest {
             // when & then
             assertThatThrownBy(() -> new Member("test", 123456, invalidProfileUrl))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("프로필 url은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("프로필 url은 공백이나 null일 수 없습니다.");
         }
     }
 
@@ -116,7 +116,7 @@ class MemberTest {
             // when & then
             assertThatThrownBy(() -> member.updateNickname(invalidNickname))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("닉네임은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("닉네임은 공백이나 null일 수 없습니다.");
         }
     }
 }

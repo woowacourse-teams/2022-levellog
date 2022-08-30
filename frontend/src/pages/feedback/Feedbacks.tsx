@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import useFeedback from 'hooks/useFeedback';
 import useSnackbar from 'hooks/useSnackbar';
+import useLevellog from 'hooks/useLevellog';
 import useTeam from 'hooks/useTeam';
 import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
@@ -21,6 +22,7 @@ import { FeedbackType } from 'types/feedback';
 
 const Feedbacks = () => {
   const { feedbacks, getFeedbacksInTeam } = useFeedback();
+  const { levellogInfo, getLevellog } = useLevellog();
   const { feedbackAddUriBuilder } = useUriBuilders();
   const { team } = useTeam();
   const { loginUserId } = useUser();
@@ -36,27 +38,43 @@ const Feedbacks = () => {
   }
 
   useEffect(() => {
+    getLevellog({ teamId, levellogId });
     getFeedbacksInTeam({ levellogId });
   }, []);
 
-  /* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */
+  if (
+    !loginUserId ||
+    Object.keys(levellogInfo).length === 0
+  ) {
+    return <Loading />;
+  }
+
   if (feedbacks.length === 0) {
     return (
-      <EmptyFeedback
-        isShow={team.status !== TEAM_STATUS.CLOSED}
-        path={feedbackAddUriBuilder({ teamId, levellogId })}
-      />
+      <>
+        <ContentHeader
+          imageUrl={levellogInfo.author.profileUrl}
+          title={`${levellogInfo.author.nickname}에 대한 레벨 인터뷰 피드백`}
+        ></ContentHeader>
+        <EmptyFeedback
+          isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
+          path={feedbackAddUriBuilder({ teamId, levellogId })}
+        />
+      </>
     );
   }
 
   return (
     <>
-      <ContentHeader title={'레벨 인터뷰 피드백'}>
+      <ContentHeader
+        imageUrl={levellogInfo.author.profileUrl}
+        title={`${levellogInfo.author.nickname}에 대한 레벨 인터뷰 피드백`}
+      >
         <>
-          {/* 본인의 피드백리스트 페이지에서 `추가하기`버튼 제거해야함 */}
+          {/*내가 피드백을 작성했다면 '작성하기' 버튼 제거하기*/}
           {team.status !== TEAM_STATUS.CLOSED && (
             <Link to={feedbackAddUriBuilder({ teamId, levellogId })}>
-              <Button>추가하기</Button>
+              <Button>작성하기</Button>
             </Link>
           )}
         </>

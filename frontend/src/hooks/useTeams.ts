@@ -34,19 +34,14 @@ const useTeams = () => {
     }
   };
 
-  const handleClickInterviewGroup = (e: React.MouseEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
-    const team = teams.find((team) => +team.id === +target.id);
-
-    navigate(teamGetUriBuilder({ teamId: target.id }), {
-      state: team,
-    });
+  const onClickInterviewTeam = ({ id }: Pick<InterviewTeamType, 'id'>) => {
+    navigate(teamGetUriBuilder({ teamId: id }));
   };
 
   return {
     teams,
     getTeams,
-    handleClickInterviewGroup,
+    onClickInterviewTeam,
   };
 };
 

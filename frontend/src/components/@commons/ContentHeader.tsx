@@ -45,12 +45,12 @@ interface ContentHeaderProps {
 
 const ContentHeaderStyle = styled.div`
   display: flex;
-  justify-content: space-between;
   position: relative;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 4.375rem;
-  margin-bottom: 3.125rem;
+  margin-bottom: 1.25rem;
   border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   @media (min-width: 1620px) {
     padding: 0.625rem calc((100vw - 100rem) / 2);
@@ -60,7 +60,7 @@ const ContentHeaderStyle = styled.div`
   }
   @media (max-width: 800px) {
     margin-top: 0.625rem;
-    margin-bottom: 1.25rem;
+    padding: 0 1.25rem;
     border: none;
     font-size: 0.75rem;
   }
@@ -101,8 +101,8 @@ const Title = styled.h1`
 `;
 
 const SubTitle = styled.p`
-  font-size: 1rem;
-  font-weight: 300;
+  font-size: 0.875rem;
+  font-weight: 500;
 `;
 
 const FilterButtonBox = styled.div`
@@ -111,10 +111,6 @@ const FilterButtonBox = styled.div`
   gap: 0.625rem;
 `;
 
-const ButtonBox = styled.div`
-  @media (max-width: 800px) {
-    top: 0.625rem;
-  }
-`;
+const ButtonBox = styled.div``;
 
 export default ContentHeader;

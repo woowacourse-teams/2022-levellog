@@ -64,7 +64,8 @@ class PreQuestionRepositoryTest extends RepositoryTest {
         final PreQuestion preQuestion = savePreQuestion(levellog, questioner);
 
         // when
-        final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthorId(levellog, questioner.getId());
+        final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthorId(levellog,
+                questioner.getId());
 
         // then
         assertThat(actual).hasValue(preQuestion);

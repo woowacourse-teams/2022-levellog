@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.exception.UnauthorizedException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
@@ -17,9 +16,12 @@ import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQues
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
+import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.InterviewTimeException;
+import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
+import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
+import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -74,7 +76,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, authorId))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessage("인터뷰 질문은 공백이나 null일 수 없습니다.");
+                    .hasMessageContaining("인터뷰 질문은 공백이나 null일 수 없습니다.");
         }
 
         @Test
@@ -92,7 +94,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, invalidMemberId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 멤버", String.valueOf(invalidMemberId));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(invalidMemberId));
         }
 
         @Test
@@ -109,7 +111,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, invalidLevellogId, memberId))
                     .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 레벨로그", String.valueOf(invalidLevellogId));
+                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
         }
 
         @Test
@@ -125,8 +127,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, otherTeamMemberId))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("같은 팀에 속한 멤버만 인터뷰 질문을 작성할 수 있습니다.", String.valueOf(team.getId()),
+                    .isInstanceOf(ParticipantNotSameTeamException.class)
+                    .hasMessageContainingAll("같은 팀에 속해있지 않습니다.", String.valueOf(team.getId()),
                             String.valueOf(pepperLevellogId), String.valueOf(otherTeamMemberId));
         }
 
@@ -145,8 +147,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
 
         @Test
@@ -161,8 +163,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 작성 할 수 없습니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContainingAll("인터뷰 진행중인 상태가 아닙니다.", String.valueOf(team.getId()));
         }
 
         @Test
@@ -179,7 +181,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, pepper.getId()))
                     .isInstanceOf(InvalidInterviewQuestionException.class)
-                    .hasMessageContainingAll("자신의 레벨로그에 인터뷰 질문을 작성할 수 없습니다.", String.valueOf(pepperLevellogId),
+                    .hasMessageContainingAll("잘못된 인터뷰 질문 요청입니다.", String.valueOf(pepperLevellogId),
                             String.valueOf(pepper.getId()));
         }
     }
@@ -251,7 +253,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.findAllByLevellog(invalidLevellogId))
                     .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 레벨로그", String.valueOf(invalidLevellogId));
+                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
         }
     }
 
@@ -300,7 +302,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.findAllByLevellogAndAuthor(invalidLevellogId, memberId))
                     .isInstanceOf(LevellogNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 레벨로그", String.valueOf(invalidLevellogId));
+                    .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
         }
 
         @Test
@@ -316,7 +318,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             assertThatThrownBy(
                     () -> interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellogId, invalidMemberId))
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 멤버", String.valueOf(invalidMemberId));
+                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(invalidMemberId));
         }
     }
 
@@ -361,7 +363,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, invalidInterviewQuestionId, authorId))
                     .isInstanceOf(InterviewQuestionNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 인터뷰 질문", String.valueOf(invalidInterviewQuestionId));
+                    .hasMessageContainingAll("인터뷰 질문이 존재하지 않습니다.", String.valueOf(invalidInterviewQuestionId));
         }
 
         @Test
@@ -380,9 +382,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, otherMemberId))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("인터뷰 질문을 수정할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
-                            String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContaining("작성자가 아닙니다.");
         }
 
         @Test
@@ -401,8 +402,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
 
         @Test
@@ -418,8 +419,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 수정 할 수 없습니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContainingAll("인터뷰 진행중인 상태가 아닙니다.", String.valueOf(team.getId()));
         }
     }
 
@@ -458,7 +459,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(invalidInterviewQuestionId, authorId))
                     .isInstanceOf(InterviewQuestionNotFoundException.class)
-                    .hasMessageContainingAll("존재하지 않는 인터뷰 질문", String.valueOf(invalidInterviewQuestionId));
+                    .hasMessageContainingAll("인터뷰 질문이 존재하지 않습니다", String.valueOf(invalidInterviewQuestionId));
         }
 
         @Test
@@ -474,9 +475,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, otherMemberId))
-                    .isInstanceOf(UnauthorizedException.class)
-                    .hasMessageContainingAll("인터뷰 질문을 삭제할 수 있는 권한이 없습니다.", String.valueOf(otherMemberId),
-                            String.valueOf(eve.getId()), String.valueOf(pepperLevellog.getId()));
+                    .isInstanceOf(MemberNotAuthorException.class)
+                    .hasMessageContaining("작성자가 아닙니다.");
         }
 
         @Test
@@ -494,8 +494,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("이미 종료된 인터뷰입니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamAlreadyClosedException.class)
+                    .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
 
         @Test
@@ -510,8 +510,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
-                    .isInstanceOf(InterviewTimeException.class)
-                    .hasMessageContainingAll("인터뷰 시작 전에 인터뷰 질문을 삭제 할 수 없습니다.", String.valueOf(team.getId()));
+                    .isInstanceOf(TeamNotInProgressException.class)
+                    .hasMessageContainingAll("인터뷰 진행중인 상태가 아닙니다.", String.valueOf(team.getId()));
         }
     }
 }

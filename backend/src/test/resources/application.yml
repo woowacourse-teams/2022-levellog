@@ -1,3 +1,7 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
 security:
   github:
     client-id: "github_client_Id"
@@ -7,3 +11,6 @@ security:
     token:
       secret-key: "testjwttoken_testjwttoken_testjwttoken"
       expire-length: 36000000
+
+  admin:
+    hash: $2a$10$CdY3w6SXVzWCxRJEImIhk.ymCYyvL45R4J0Y9EJMxSd.jFkSkZOKC

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>레벨로그 관리자 페이지</title>
+</head>
+<body>
+<main>
+    <div align="center">
+        <h1 class="centered">팀 목록</h1>
+        <table>
+            <tr align="center">
+                <td>id</td>
+                <td>제목</td>
+                <td>장소</td>
+                <td>시작일자</td>
+                <td>상태</td>
+                <td>삭제</td>
+            </tr>
+            {{#teams}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{title}}</td>
+                    <td>{{place}}</td>
+                    <td>{{startAt}}</td>
+                    <td>{{status}}</td>
+                    <td>
+                        <button type="button" onclick="deleteTeams({{id}})">
+                            삭제
+                        </button>
+                    </td>
+                </tr>
+            {{/teams}}
+        </table>
+    </div>
+</main>
+</body>
+<script src="/src/admin.js"></script>
+</html>

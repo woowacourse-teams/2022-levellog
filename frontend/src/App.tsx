@@ -18,17 +18,24 @@ const App = () => {
   }
 
   return (
-    <>
+    <Container>
       <GlobalStyles />
       <Header />
       <PageContainer>{content}</PageContainer>
       <Footer />
-    </>
+    </Container>
   );
 };
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: inherit;
+  height: inherit;
+`;
+
 const PageContainer = styled.div`
-  min-height: calc(100vh - 15rem);
+  flex: 1;
 `;
 
 export default App;

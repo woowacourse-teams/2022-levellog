@@ -24,6 +24,7 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 4.375rem;
+  padding: 0.3125rem 0;
 `;
 
 const LeftBox = styled.div``;

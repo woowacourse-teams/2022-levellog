@@ -120,10 +120,6 @@ export const routes = [
         element: <Login />,
       },
       {
-        path: ROUTES_PATH.INTERVIEW_TEAMS,
-        element: <InterviewTeams />,
-      },
-      {
         path: ROUTES_PATH.INTERVIEW_TEAMS_DETAIL,
         element: <InterviewDetail />,
       },

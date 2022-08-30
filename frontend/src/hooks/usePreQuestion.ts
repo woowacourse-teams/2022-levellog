@@ -119,12 +119,12 @@ const usePreQuestion = () => {
     }
   };
 
-  const onClickPreQuestionAddButton = ({
+  const onClickPreQuestionAddButton = async ({
     teamId,
     levellogId,
   }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId'>) => {
     if (preQuestionRef.current) {
-      postPreQuestion({
+      await postPreQuestion({
         teamId,
         levellogId,
         preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
@@ -134,13 +134,13 @@ const usePreQuestion = () => {
     }
   };
 
-  const onClickPreQuestionEditButton = ({
+  const onClickPreQuestionEditButton = async ({
     teamId,
     levellogId,
     preQuestionId,
   }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId' | 'preQuestionId'>) => {
     if (preQuestionRef.current) {
-      editPreQuestion({
+      await editPreQuestion({
         teamId,
         levellogId,
         preQuestionId,

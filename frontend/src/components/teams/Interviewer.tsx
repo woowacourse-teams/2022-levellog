@@ -37,7 +37,7 @@ const Interviewer = ({
     levellogAddUriBuilder,
   } = useUriBuilder();
 
-  if (!teamId) return <div></div>;
+  if (!teamId) return <S.Container />;
 
   const handleClickOpenLevellogModal = () => {
     if (typeof teamId === 'string') {

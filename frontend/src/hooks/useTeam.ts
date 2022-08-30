@@ -112,6 +112,7 @@ const useTeam = () => {
   const closeTeamInterview = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     try {
       await requestCloseTeamInterview({ teamId, accessToken });
+      navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;

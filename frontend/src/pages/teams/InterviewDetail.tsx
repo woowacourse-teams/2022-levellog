@@ -8,6 +8,7 @@ import usePreQuestionModal from 'hooks/usePreQuestionModal';
 import useTeam from 'hooks/useTeam';
 import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
+import useUtil from 'hooks/useUtil';
 
 import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
@@ -25,6 +26,7 @@ const InterviewDetail = () => {
   const { loginUserId } = useUser();
   const { teamId } = useParams();
   const { teamEditUriBuilder } = useUriBuilders();
+  const { convertDateAndTime } = useUtil();
   const {
     teamLocationState,
     team,
@@ -70,7 +72,9 @@ const InterviewDetail = () => {
       <ContentHeader
         imageUrl={(team as InterviewTeamType).teamImage}
         title={(team as InterviewTeamType).title}
-        subTitle={`${(team as InterviewTeamType).place} ${(team as InterviewTeamType).startAt} `}
+        subTitle={`${(team as InterviewTeamType).place} | ${convertDateAndTime({
+          startAt: (team as InterviewTeamType).startAt,
+        })}`}
       >
         <>
           {(team as InterviewTeamType).hostId === loginUserId && (
@@ -144,8 +148,8 @@ const InterviewDetail = () => {
 
 const S = {
   Container: styled.div`
-    max-width: 1600px;
-    margin: auto;
+    max-width: 100rem;
+    margin: 0 auto 6.25rem auto;
     @media (max-width: 1700px) {
       width: 1270px;
     }
@@ -195,6 +199,7 @@ const S = {
     gap: 1rem;
     @media (max-width: 560px) {
       flex-direction: column;
+      gap: 0.5rem;
     }
   `,
 
@@ -203,9 +208,14 @@ const S = {
     background-color: ${(props) => props.theme.new_default.WHITE};
     font-weight: 700;
     color: ${(props) => props.theme.new_default.BLACK};
+    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     :hover {
       background-color: ${(props) => props.theme.new_default.LIGHT_GRAY};
       box-shadow: 0.25rem 0.25rem 0.375rem ${(props) => props.theme.new_default.DARK_GRAY};
+    }
+    @media (max-width: 520px) {
+      padding: 0.4375rem 0.75rem;
+      font-size: 0.75rem;
     }
   `,
 };

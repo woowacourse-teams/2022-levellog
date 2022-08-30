@@ -24,7 +24,7 @@ const Feedbacks = () => {
   const { levellogInfo, getLevellog } = useLevellog();
   const { feedbackAddUriBuilder } = useUriBuilders();
   const { team } = useTeam();
-  const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
+  const { loginUserId } = useUser();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
 
@@ -42,8 +42,6 @@ const Feedbacks = () => {
 
   if (
     !loginUserId ||
-    !loginUserNickname ||
-    !loginUserProfileUrl ||
     Object.keys(levellogInfo).length === 0
   ) {
     return <Loading />;

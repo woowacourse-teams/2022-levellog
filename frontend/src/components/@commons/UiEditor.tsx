@@ -24,7 +24,7 @@ const UiEditor = ({
     <S.Container needToolbar={needToolbar}>
       <Editor
         autofocus={autoFocus}
-        previewStyle={'tab'}
+        previewStyle={'vertical'}
         height={height ? height : 'inherit'}
         initialEditType={initialEditType}
         initialValue={' '}

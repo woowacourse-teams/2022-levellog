@@ -135,6 +135,7 @@ const useFeedback = () => {
     };
 
     await editFeedback({ levellogId, feedbackId, feedbackResult });
+    showSnackbar({ message: MESSAGE.FEEDBACK_EDIT_CONFIRM });
     navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
   };
 
@@ -158,9 +159,9 @@ const useFeedback = () => {
     getFeedbacksInTeam,
     postFeedback,
     editFeedback,
+    getFeedbackOnRef,
     onClickFeedbackAddButton,
     onClickFeedbackEditButton,
-    getFeedbackOnRef,
   };
 };
 

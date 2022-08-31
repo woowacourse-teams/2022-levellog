@@ -29,6 +29,9 @@ const Container = styled.div`
 
 const LeftBox = styled.div``;
 
-const RightBox = styled.div``;
+const RightBox = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
 
 export default BottomBar;

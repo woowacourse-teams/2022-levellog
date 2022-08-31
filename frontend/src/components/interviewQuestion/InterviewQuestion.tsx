@@ -58,10 +58,6 @@ const S = {
     font-size: 1.875rem;
   `,
 
-  ToolTipBox: styled.div`
-    padding-top: 0.25rem;
-  `,
-
   Content: styled.ul`
     overflow: auto;
     display: flex;

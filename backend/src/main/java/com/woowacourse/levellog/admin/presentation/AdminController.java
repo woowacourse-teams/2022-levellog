@@ -52,4 +52,11 @@ public class AdminController {
         adminService.deleteTeamById(teamId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/teams/{teamId}/close")
+    @ResponseBody
+    public ResponseEntity<Void> closeTeam(@PathVariable final Long teamId) {
+        adminService.closeTeam(teamId);
+        return ResponseEntity.noContent().build();
+    }
 }

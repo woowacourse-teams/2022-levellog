@@ -3,37 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>레벨로그 관리자 페이지</title>
+    <link rel="stylesheet" href="/css/team.css">
 </head>
-<body>
+<body class="body">
 <main>
-    <div align="center">
+    <div class="main">
         <h1 class="centered">팀 목록</h1>
-        <table>
-            <tr align="center">
-                <td>id</td>
-                <td>제목</td>
-                <td>장소</td>
-                <td>시작일자</td>
-                <td>상태</td>
-                <td>삭제</td>
-            </tr>
-            {{#teams}}
-                <tr>
-                    <td>{{id}}</td>
-                    <td>{{title}}</td>
-                    <td>{{place}}</td>
-                    <td>{{startAt}}</td>
-                    <td>{{status}}</td>
-                    <td>
-                        <button type="button" onclick="deleteTeams({{id}})">
-                            삭제
-                        </button>
-                    </td>
-                </tr>
-            {{/teams}}
-        </table>
+        <div class="content_header">
+            <div class="team_id">id</div>
+            <div class="title">제목</div>
+            <div class="place">장소</div>
+            <div class="start_at">시작 시간</div>
+            <div class="status">상태</div>
+            <div class="delete_button"></div>
+            <div class="close_button"></div>
+        </div>
+        {{#teams}}
+            <div class="team">
+                <div class="team_id">{{id}}</div>
+                <div class="title">{{title}}</div>
+                <div class="place">{{place}}</div>
+                <div class="start_at">{{startAt}}</div>
+                <div class="status">{{status}}</div>
+                <div class="delete_button">
+                    <button type="button" class="ui-button" onclick="deleteTeam({{id}})">
+                        삭제
+                    </button>
+                </div>
+                <div class="close_button">
+                    <button type="button" class="ui-button" onclick="closeTeam({{id}})">
+                        종료
+                    </button>
+                </div>
+            </div>
+        {{/teams}}
     </div>
 </main>
 </body>
-<script src="/src/admin.js"></script>
+<script src="/js/team.js"></script>
 </html>

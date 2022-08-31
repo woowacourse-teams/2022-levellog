@@ -26,9 +26,9 @@ const InterviewTeams = () => {
     <>
       <ContentHeader title={'인터뷰 팀'}>
         <div>
-          <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>
+          {/* <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>
           <FilterButton>종료된 인터뷰</FilterButton>
-          <FilterButton>나의 인터뷰</FilterButton>
+          <FilterButton>나의 인터뷰</FilterButton> */}
         </div>
         <span />
       </ContentHeader>

@@ -2,15 +2,6 @@ import styled from 'styled-components';
 
 import Button from 'components/@commons/Button';
 
-export const BottomBarr = ({ children }: any) => {
-  return (
-    <Container>
-      <LeftBox></LeftBox>
-      <RightBox>{children}</RightBox>
-    </Container>
-  );
-};
-
 const BottomBar = ({ buttonText, handleClickRightButton }: BottomBarProps) => {
   return (
     <Container>

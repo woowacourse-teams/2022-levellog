@@ -6,8 +6,7 @@ import useFeedbackAddPage from 'hooks/useFeedbackAddPage';
 
 import { MESSAGE } from 'constants/constants';
 
-import BottomBar, { BottomBarr } from 'components/@commons/BottomBar';
-import Button from 'components/@commons/Button';
+import BottomBar from 'components/@commons/BottomBar';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
 import ToolTip from 'components/@commons/ToolTip';
@@ -101,13 +100,10 @@ const FeedbackAdd = () => {
             </S.FeedbackContent>
           </S.RightContent>
         </S.Content>
-        <BottomBarr>
-          <Button onClick={handleClickFeedbackAddButton}>{'작성하기'}</Button>
-        </BottomBarr>
-        {/* <BottomBar
+        <BottomBar
           buttonText={'작성하기'}
           handleClickRightButton={handleClickFeedbackAddButton}
-        ></BottomBar> */}
+        ></BottomBar>
       </S.Container>
     </>
   );

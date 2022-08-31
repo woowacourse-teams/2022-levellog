@@ -13,6 +13,7 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.mindrot.jbcrypt.BCrypt;
@@ -54,9 +55,11 @@ public class AdminService {
     }
 
     public List<AdminTeamDto> findAllTeam() {
+        final LocalDateTime presentTime = timeStandard.now();
+        
         return teamRepository.findAll()
                 .stream()
-                .map(it -> AdminTeamDto.of(it, it.status(timeStandard.now())))
+                .map(it -> AdminTeamDto.of(it, it.status(presentTime)))
                 .collect(Collectors.toList());
     }
 
@@ -65,6 +68,14 @@ public class AdminService {
         final Team team = getTeam(teamId);
         participantRepository.deleteByTeam(team);
         teamRepository.deleteById(teamId);
+    }
+
+    @Transactional
+    public void closeTeam(final Long teamId) {
+        final Team team = getTeam(teamId);
+        final LocalDateTime presentTime = team.getStartAt()
+                .plusDays(1);
+        team.close(presentTime);
     }
 
     private Team getTeam(final Long teamId) {

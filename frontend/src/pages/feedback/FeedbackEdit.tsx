@@ -15,8 +15,7 @@ import Loading from 'pages/status/Loading';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
-import BottomBar, { BottomBarr } from 'components/@commons/BottomBar';
-import Button from 'components/@commons/Button';
+import BottomBar from 'components/@commons/BottomBar';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
 import ToolTip from 'components/@commons/ToolTip';
@@ -28,8 +27,7 @@ const FeedbackEdit = () => {
   const { preQuestion, getPreQuestion } = usePreQuestion();
   const { levellogInfo, getLevellog } = useLevellog();
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
-  const { feedbackRef, getFeedbackOnRef, onClickFeedbackEditButton, onClickFeedbackSaveButton } =
-    useFeedback();
+  const { feedbackRef, getFeedbackOnRef, onClickFeedbackEditButton } = useFeedback();
   const { feedbackWriterRole, getWriterInfo } = useRole();
   const {
     interviewQuestionInfos,
@@ -51,16 +49,6 @@ const FeedbackEdit = () => {
       typeof levellogId === 'string'
     ) {
       onClickFeedbackEditButton({ teamId, levellogId, feedbackId });
-
-      return;
-    }
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-    navigate(ROUTES_PATH.ERROR);
-  };
-
-  const handleClickFeedbackSaveButton = () => {
-    if (typeof feedbackId === 'string' && typeof levellogId === 'string') {
-      onClickFeedbackSaveButton({ levellogId, feedbackId });
 
       return;
     }
@@ -161,14 +149,10 @@ const FeedbackEdit = () => {
             </S.FeedbackContent>
           </S.RightContent>
         </S.Content>
-        <BottomBarr>
-          <Button onClick={handleClickFeedbackSaveButton}>{'저장하기'}</Button>
-          <Button onClick={handleClickFeedbackEditButton}>{'수정하기'}</Button>
-        </BottomBarr>
-        {/* <BottomBar
+        <BottomBar
           buttonText={'수정하기'}
           handleClickRightButton={handleClickFeedbackEditButton}
-        ></BottomBar> */}
+        ></BottomBar>
       </S.Container>
     </>
   );

@@ -7,6 +7,7 @@ import useInterviewQuestion from 'hooks/useInterviewQuestion';
 import useLevellog from 'hooks/useLevellog';
 import usePreQuestion from 'hooks/usePreQuestion';
 import useRole from 'hooks/useRole';
+import useSnackbar from 'hooks/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
@@ -25,15 +26,17 @@ const useFeedbackAddPage = () => {
     handleSubmitInterviewQuestion,
   } = useInterviewQuestion();
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
+  const { showSnackbar } = useSnackbar();
   const { teamId, levellogId } = useParams();
   const navigate = useNavigate();
+
   const handleClickFeedbackAddButton = () => {
     if (typeof teamId === 'string' && typeof levellogId === 'string') {
       onClickFeedbackAddButton({ teamId, levellogId });
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
   };
 
   const init = async () => {
@@ -46,7 +49,7 @@ const useFeedbackAddPage = () => {
       return;
     }
 
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
   };
 

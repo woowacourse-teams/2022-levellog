@@ -9,6 +9,7 @@ import useInterviewQuestion from 'hooks/useInterviewQuestion';
 import useLevellog from 'hooks/useLevellog';
 import usePreQuestion from 'hooks/usePreQuestion';
 import useRole from 'hooks/useRole';
+import useSnackbar from 'hooks/useSnackbar';
 
 import Loading from 'pages/status/Loading';
 
@@ -27,8 +28,6 @@ const FeedbackEdit = () => {
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
   const { getFeedbackOnRef, feedbackRef, onClickFeedbackEditButton } = useFeedback();
   const { feedbackWriterRole, getWriterInfo } = useRole();
-  const { teamId, levellogId, feedbackId } = useParams();
-  const navigate = useNavigate();
   const {
     interviewQuestionInfos,
     interviewQuestionRef,
@@ -38,6 +37,9 @@ const FeedbackEdit = () => {
     onSubmitEditInterviewQuestion,
     handleSubmitInterviewQuestion,
   } = useInterviewQuestion();
+  const { showSnackbar } = useSnackbar();
+  const { teamId, levellogId, feedbackId } = useParams();
+  const navigate = useNavigate();
 
   const handleClickFeedbackEditButton = () => {
     if (
@@ -49,7 +51,7 @@ const FeedbackEdit = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
   };
 
@@ -67,7 +69,7 @@ const FeedbackEdit = () => {
       return;
     }
 
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
   };
 
@@ -83,7 +85,7 @@ const FeedbackEdit = () => {
     <>
       <ContentHeader
         imageUrl={levellogInfo.author.profileUrl}
-        title={`${levellogInfo.author.nickname}의 인터뷰 피드백`}
+        title={`${levellogInfo.author.nickname}에 대한 레벨 인터뷰 피드백`}
       ></ContentHeader>
       <S.Container>
         <S.Content>
@@ -139,11 +141,15 @@ const S = {
     display: flex;
     overflow: auto;
     flex-direction: column;
+    height: calc(100vh - 14.375rem);
     @media (min-width: 1620px) {
-      padding: 1.25rem calc((100vw - 100rem) / 2);
+      padding: 0 calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 1.25rem 1.25rem;
+      padding: 0 1.25rem;
+    }
+    @media (max-width: 520px) {
+      height: max-content;
     }
   `,
 
@@ -151,19 +157,23 @@ const S = {
     display: flex;
     gap: 1rem;
     width: 100%;
+    height: calc(100vh - 18.75rem);
     @media (max-width: 1024px) {
       gap: 1.875rem;
     }
     @media (max-width: 520px) {
       flex-direction: column;
+      height: max-content;
     }
   `,
 
   LeftContent: styled.div`
     position: relative;
     width: 50%;
+    height: inherit;
     @media (max-width: 520px) {
       width: 100%;
+      height: max-content;
     }
   `,
 
@@ -187,11 +197,14 @@ const S = {
 
   RightContent: styled.div`
     display: flex;
+    overflow: auto;
     flex-direction: column;
     gap: 3.125rem;
     width: 50%;
+    height: inherit;
     @media (max-width: 520px) {
       width: 100%;
+      height: max-content;
     }
   `,
 

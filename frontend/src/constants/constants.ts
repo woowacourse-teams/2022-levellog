@@ -13,16 +13,15 @@ export const ROUTES_PATH = Object.freeze({
   LEVELLOG_ADD: '/teams/:teamId/levellogs/add',
   LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId/author/:authorId/edit',
 
-  INTERVIEW_TEAMS: '/teams',
   INTERVIEW_TEAMS_DETAIL: `/teams/:teamId`,
   INTERVIEW_TEAMS_ADD: `/teams/add`,
   INTERVIEW_TEAMS_EDIT: `/teams/:teamId/edit`,
 
-  PREQUESTION_ADD: '/teams/:teamId/levellogs/:levellogId/preQuestions/add',
+  PREQUESTION_ADD: '/teams/:teamId/levellogs/:levellogId/pre-questions/add',
   PREQUESTION_EDIT:
-    '/teams/:teamId/levellogs/:levellogId/preQuestions/:preQuestionId/author/:authorId/edit',
+    '/teams/:teamId/levellogs/:levellogId/pre-questions/:preQuestionId/author/:authorId/edit',
 
-  INTERVIEW_QUESTION: '/teams/:teamId/levellogs/:levellogId/interviewQuestions',
+  INTERVIEW_QUESTION: '/teams/:teamId/levellogs/:levellogId/interview-questions',
 });
 
 export const MESSAGE = Object.freeze({
@@ -42,6 +41,7 @@ export const MESSAGE = Object.freeze({
   FEEDBACK_CREATE: '피드백 작성을 완료하였습니다.',
 
   LEVELLOG_ADD_CONFIRM: '레벨로그 작성이 완료되었습니다.',
+  LEVELLOG_EDIT_CONFIRM: '레벨로그 수정이 완료되었습니다.',
 
   PREQUESTION_ADD_CONFIRM: '사전질문 등록이 완료되었습니다.',
   PREQUESTION_DELETE_CONFIRM: '사전질문 삭제가 완료되었습니다.',
@@ -51,6 +51,14 @@ export const MESSAGE = Object.freeze({
   INTERVIEW_STATUS_NOT_READY: '인터뷰가 시작 전이 아닙니다!',
   INTERVIEW_STATUS_NOT_IN_PROGRESS: '인터뷰가 진행 중이 아닙니다!',
   WRONG_TOKEN: '유효하지 않은 토큰입니다.',
+
+  INTERVIEW_TITLE_VALIDATE_FAIL: '3글자 이상 14자 이하로 작성해주세요.',
+  INTERVIEW_LOCATION_VALIDATE_FAIL: '3글자 이상 12자 이하로 작성해주세요.',
+  INTERVIEW_DATE_VALIDATE_FAIL: '올바른 인터뷰 날짜를 입력해주세요.',
+  INTERVIEW_TIME_VALIDATE_FAIL: '올바른 인터뷰 시간를 입력해주세요.',
+  INTERVIEW_INTERVIEWEE_VALIDATE_FAIL: '인터뷰이는 1명 이상 3명 이하로 작성해주세요.',
+  INTERVIEW_HOLE_VALUE_VALIDATE:
+    '필수값 모두 입력해주세요. (필수값: 제목, 장소, 날짜, 시간, 인터뷰어 수, 참여자)',
 });
 
 export const TEAM_STATUS = Object.freeze({

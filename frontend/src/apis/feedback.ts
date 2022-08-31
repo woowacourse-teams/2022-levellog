@@ -1,6 +1,5 @@
 import axios, { AxiosPromise } from 'axios';
 
-import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import { FeedbackApiType, FeedbackType } from 'types/feedback';
 
 export const requestPostFeedback = ({

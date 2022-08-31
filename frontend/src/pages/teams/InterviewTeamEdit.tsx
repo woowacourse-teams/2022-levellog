@@ -1,46 +1,64 @@
 import { useEffect } from 'react';
 
-import useTeam from 'hooks/useTeam';
+import useTeamPage from 'hooks/useTeamPage';
 
-import Button from 'components/@commons/Button';
-import ContentHeader from 'components/@commons/ContentHeader';
 import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamEdit = () => {
   const {
-    teamInfoRef,
-    getTeamOnRef,
-    handleSubmitTeamEditForm,
-    members,
-    nicknameValue,
-    setNicknameValue,
-    participants,
-    updateMembers,
-    addToParticipants,
-    removeToParticipants,
-  } = useTeam();
-
-  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNicknameValue(e.target.value);
-  };
+    state: {
+      participantNicknameValue,
+      watcherNicknameValue,
+      watcherMembers,
+      participantMembers,
+      watchers,
+      participants,
+    },
+    ref: { teamInfoRef },
+    handle: {
+      setParticipantNicknameValue,
+      setWatcherNicknameValue,
+      getTeamOnRef,
+      updateMembers,
+      updateWatchers,
+      addToParticipants,
+      addToWatcherParticipants,
+      removeToParticipants,
+      remoteToWatcherParticipants,
+      handleChangeParticipantInput,
+      handleChangeWatcherInput,
+      handleClickTeamEditButton,
+    },
+  } = useTeamPage();
 
   useEffect(() => {
-    updateMembers({ nicknameValue });
-  }, [nicknameValue, participants]);
+    updateMembers({ nicknameValue: participantNicknameValue });
+  }, [participantNicknameValue]);
+
+  useEffect(() => {
+    updateWatchers({ nicknameValue: watcherNicknameValue });
+  }, [watcherNicknameValue]);
 
   return (
     <TeamForm
       purpose={'수정하기'}
-      handleSubmitTeamForm={handleSubmitTeamEditForm}
-      teamInfoRef={teamInfoRef}
+      participantNicknameValue={participantNicknameValue}
+      watcherNicknameValue={watcherNicknameValue}
       participants={participants}
-      members={members}
+      participantMembers={participantMembers}
+      watcherMembers={watcherMembers}
+      watchers={watchers}
+      teamInfoRef={teamInfoRef}
+      setParticipantNicknameValue={setParticipantNicknameValue}
+      setWatcherNicknameValue={setWatcherNicknameValue}
       getTeamOnRef={getTeamOnRef}
-      nicknameValue={nicknameValue}
-      setNicknameValue={setNicknameValue}
-      handleChangeInput={handleChangeInput}
       addToParticipants={addToParticipants}
+      addToWatcherParticipants={addToWatcherParticipants}
       removeToParticipants={removeToParticipants}
+      remoteToWatcherParticipants={remoteToWatcherParticipants}
+      handleChangeWatcherInput={handleChangeWatcherInput}
+      handleChangeParticipantInput={handleChangeParticipantInput}
+      handleClickTeamButton={handleClickTeamEditButton}
     />
   );
 };

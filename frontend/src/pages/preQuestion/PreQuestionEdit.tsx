@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import useLevellog from 'hooks/useLevellog';
 import usePreQuestion from 'hooks/usePreQuestion';
+import useSnackbar from 'hooks/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
@@ -15,6 +16,7 @@ import LevellogReport from 'components/levellogs/LevellogReport';
 const PreQuestionEdit = () => {
   const { levellogInfo, getLevellog } = useLevellog();
   const { preQuestionRef, getPreQuestionOnRef, onClickPreQuestionEditButton } = usePreQuestion();
+  const { showSnackbar } = useSnackbar();
   const { teamId, levellogId, preQuestionId } = useParams();
   const navigate = useNavigate();
 
@@ -28,7 +30,7 @@ const PreQuestionEdit = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
   };
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const PreQuestionEdit = () => {
 
       return;
     }
-    alert(MESSAGE.WRONG_ACCESS);
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
   }, []);
 
@@ -52,7 +54,6 @@ const PreQuestionEdit = () => {
           <UiEditor
             needToolbar={true}
             autoFocus={true}
-            height={'60rem'}
             contentRef={preQuestionRef}
             initialEditType={'markdown'}
           />
@@ -71,24 +72,30 @@ const S = {
     display: flex;
     overflow: auto;
     flex-direction: column;
+    height: calc(100vh - 8.75rem);
     @media (min-width: 1620px) {
       padding: 1.25rem calc((100vw - 100rem) / 2);
     }
     @media (max-width: 1620px) {
-      padding: 1.25rem 1.25rem;
+      padding: 1.25rem 1.25rem 0 1.25rem;
     }
     @media (max-width: 520px) {
-      flex-direction: column;
+      height: max-content;
     }
   `,
 
   Content: styled.div`
     display: flex;
     gap: 1rem;
+    height: calc(100vh - 14.375rem);
+    @media (max-width: 520px) {
+      flex-direction: column;
+    }
   `,
 
   LeftContent: styled.div`
     width: 50%;
+    height: inherit;
     @media (max-width: 520px) {
       width: 100%;
     }
@@ -101,8 +108,10 @@ const S = {
 
   RightContent: styled.div`
     width: 50%;
+    height: inherit;
     @media (max-width: 520px) {
       width: 100%;
+      height: 31.25rem;
     }
   `,
 

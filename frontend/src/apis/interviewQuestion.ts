@@ -32,6 +32,7 @@ export const requestGetInterviewQuestionsInLevellog = ({
   });
 };
 
+//레벨로그, 사전질문 등의 방식과 비교 후 조정
 export const requestPostInterviewQuestion = ({
   accessToken,
   levellogId,
@@ -41,7 +42,7 @@ export const requestPostInterviewQuestion = ({
     method: 'post',
     url: `${process.env.API_URI}/levellogs/${levellogId}/interview-questions`,
     headers: { Authorization: `Bearer ${accessToken}` },
-    data: { interviewQuestion },
+    data: { content: interviewQuestion },
   });
 };
 
@@ -67,6 +68,6 @@ export const requestEditInterviewQuestion = ({
     method: 'put',
     url: `${process.env.API_URI}/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`,
     headers: { Authorization: `Bearer ${accessToken}` },
-    data: { interviewQuestion },
+    data: { content: interviewQuestion },
   });
 };

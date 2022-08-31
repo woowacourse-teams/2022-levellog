@@ -21,17 +21,21 @@ import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("TeamController의")
 class TeamControllerTest extends ControllerTest {
+
+    public static final int DEFAULT_PAGE = 0;
+    public static final int DEFAULT_SIZE = 100;
 
     @Test
     @DisplayName("findAll 메서드는 status로 잘못된 값을 입력 받으면 예외가 발생한다.")
@@ -40,9 +44,14 @@ class TeamControllerTest extends ControllerTest {
         final String invalidStatus = "invalid";
         final String message = "입력 받은 status가 올바르지 않습니다.";
 
+        final Sort sort = Sort.by(
+                Sort.Order.asc("isClosed"),
+                Sort.Order.desc("createdAt")
+        );
+
         willThrow(new InvalidFieldException(message, DebugMessage.init()))
                 .given(teamService)
-                .findAll(Optional.of(invalidStatus), 1L);
+                .findAll(PageRequest.of(DEFAULT_PAGE, DEFAULT_SIZE, sort), invalidStatus, 1L);
 
         // when
         final ResultActions perform = requestGet("/api/teams?status=" + invalidStatus);

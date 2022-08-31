@@ -56,7 +56,7 @@ const useUriBuilder = () => {
     teamId,
     levellogId,
   }: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-    return `/teams/${teamId}/levellogs/${levellogId}/preQuestions/add`;
+    return `/teams/${teamId}/levellogs/${levellogId}/pre-questions/add`;
   };
 
   const preQuestionEditUriBuilder = ({
@@ -65,14 +65,14 @@ const useUriBuilder = () => {
     preQuestionId,
     authorId,
   }: Omit<UriCustomHookType, 'feedbackId'>) => {
-    return `/teams/${teamId}/levellogs/${levellogId}/preQuestions/${preQuestionId}/author/${authorId}/edit`;
+    return `/teams/${teamId}/levellogs/${levellogId}/pre-questions/${preQuestionId}/author/${authorId}/edit`;
   };
 
   const interviewQuestionsGetUriBuilder = ({
     teamId,
     levellogId,
   }: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-    return `/teams/${teamId}/levellogs/${levellogId}/interviewQuestions`;
+    return `/teams/${teamId}/levellogs/${levellogId}/interview-questions`;
   };
 
   return {

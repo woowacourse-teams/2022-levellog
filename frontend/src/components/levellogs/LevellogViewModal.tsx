@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-import ModalPortal from 'ModalPortal';
 import styled from 'styled-components';
 
 import useTeam from 'hooks/useTeam';
@@ -15,6 +14,7 @@ import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/UiViewer';
+import ModalPortal from 'portal/ModalPortal';
 import { LevellogInfoType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
@@ -86,7 +86,7 @@ const LevellogViewModal = ({
                   teamId,
                   levellogId,
                   preQuestionId,
-                  authorId: author.id,
+                  authorId: loginUserId,
                 })}
               >
                 <Button>사전질문 수정</Button>

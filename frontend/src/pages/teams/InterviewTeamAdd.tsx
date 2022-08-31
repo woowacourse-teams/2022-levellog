@@ -2,49 +2,64 @@ import { useEffect } from 'react';
 
 import styled from 'styled-components';
 
-import useTeam from 'hooks/useTeam';
+import useTeamPage from 'hooks/useTeamPage';
 
 import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamAdd = () => {
   const {
-    teamInfoRef,
-    onSubmitTeamAddForm,
-    members,
-    nicknameValue,
-    setNicknameValue,
-    participants,
-    updateMembers,
-    addToParticipants,
-    removeToParticipants,
-  } = useTeam();
-
-  const handleSubmitTeamAddForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSubmitTeamAddForm({ participants });
-  };
-
-  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNicknameValue(e.target.value);
-  };
+    state: {
+      participantNicknameValue,
+      watcherNicknameValue,
+      watcherMembers,
+      participantMembers,
+      watchers,
+      participants,
+    },
+    ref: { teamInfoRef },
+    handle: {
+      setParticipantNicknameValue,
+      setWatcherNicknameValue,
+      updateMembers,
+      updateWatchers,
+      addToParticipants,
+      addToWatcherParticipants,
+      removeToParticipants,
+      remoteToWatcherParticipants,
+      handleChangeParticipantInput,
+      handleChangeWatcherInput,
+      handleClickTeamAddButton,
+    },
+  } = useTeamPage();
 
   useEffect(() => {
-    updateMembers({ nicknameValue });
-  }, [nicknameValue, participants]);
+    updateMembers({ nicknameValue: participantNicknameValue });
+  }, [participantNicknameValue]);
+
+  useEffect(() => {
+    updateWatchers({ nicknameValue: watcherNicknameValue });
+  }, [watcherNicknameValue]);
 
   return (
     <S.Container>
       <TeamForm
         purpose={'생성하기'}
-        handleSubmitTeamForm={handleSubmitTeamAddForm}
-        teamInfoRef={teamInfoRef}
+        participantNicknameValue={participantNicknameValue}
+        watcherNicknameValue={watcherNicknameValue}
         participants={participants}
-        members={members}
-        nicknameValue={nicknameValue}
-        setNicknameValue={setNicknameValue}
-        handleChangeInput={handleChangeInput}
+        participantMembers={participantMembers}
+        watcherMembers={watcherMembers}
+        watchers={watchers}
+        teamInfoRef={teamInfoRef}
+        setParticipantNicknameValue={setParticipantNicknameValue}
+        setWatcherNicknameValue={setWatcherNicknameValue}
         addToParticipants={addToParticipants}
+        addToWatcherParticipants={addToWatcherParticipants}
         removeToParticipants={removeToParticipants}
+        remoteToWatcherParticipants={remoteToWatcherParticipants}
+        handleChangeWatcherInput={handleChangeWatcherInput}
+        handleChangeParticipantInput={handleChangeParticipantInput}
+        handleClickTeamButton={handleClickTeamAddButton}
       />
     </S.Container>
   );
@@ -63,14 +78,6 @@ const S = {
       padding: 0 calc((100vw - 1187.5px) / 2);
       padding-bottom: 200px;
     }
-    /* @media (min-width: 775px) and (max-width: 1207.5px) {
-      padding: 0 calc((100vw - 775px) / 2);
-      padding-bottom: 200px;
-    }
-    @media (min-width: 560px) and (max-width: 800px) {
-      padding: 0 calc((100vw - 362.5px) / 2);
-      padding-bottom: 200px;
-    } */
     @media (max-width: 560px) {
       padding: 0 1.25rem;
       padding-bottom: 200px;

@@ -4,8 +4,8 @@ const Button = ({
   children,
   type = 'button',
   disabled = false,
-  onClick,
   color,
+  onClick,
   ...props
 }: ButtonProps) => {
   return (
@@ -36,6 +36,10 @@ export const ButtonStyle = styled.button`
   white-space: pre;
   :hover {
     opacity: 70%;
+  }
+  @media (max-width: 520px) {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
   }
 `;
 

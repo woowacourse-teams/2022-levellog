@@ -1,0 +1,52 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 560px;
+    padding: 50px calc((100vw - 560px) / 2)
+}
+
+.body {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1em;
+}
+
+.form {
+    display: flex;
+    align-items: center;
+}
+
+.input {
+    padding: 0.5em;
+    margin-right: 0.5em;
+    line-height: 1em;
+    font-size: 1em;
+    height: fit-content;
+    width: 300px;
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+}
+
+.input:focus {
+    outline: 1px solid #222222;
+}
+
+.ui-button {
+    padding: 0.5em 1em;
+    line-height: 1em;
+    font-size: 1em;
+    height: fit-content;
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+    background-color: #222222;
+    color: #FFFFFF;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.ui-button:hover {
+    box-shadow: #BEBEBE;
+    opacity: 70%;
+}

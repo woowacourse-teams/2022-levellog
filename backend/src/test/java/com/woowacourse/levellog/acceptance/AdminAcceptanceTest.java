@@ -3,7 +3,9 @@ package com.woowacourse.levellog.acceptance;
 import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
 import static com.woowacourse.levellog.fixture.MemberFixture.RICK;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.delete;
+import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.notNullValue;
 
 import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
@@ -51,8 +53,7 @@ class AdminAcceptanceTest extends AcceptanceTest {
 
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, RICK, PEPPER).getTeamId();
 
-        final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
-        final String token = post("/admin/login", request).getAdminToken();
+        final String token = getAdminToken();
 
         timeStandard.setInProgress();
 
@@ -61,5 +62,40 @@ class AdminAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    /*
+     * Scenario: 팀 종료
+     *   given: 진행 중 인 팀이 존재한다.
+     *   given: 관리자가 로그인을 한다.
+     *   when: 시작 전인 팀을 종료한다.
+     *   then: 204 상태 코드를 담아 응답받는다.
+     */
+    @Test
+    @DisplayName("팀 종료")
+    void closeTeam() {
+        // given
+        PEPPER.save();
+        RICK.save();
+
+        final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, RICK, PEPPER).getTeamId();
+
+        final String token = getAdminToken();
+
+        timeStandard.setInProgress();
+
+        // when
+        final ValidatableResponse response = post("/admin/teams/" + teamId + "/close?token=" + token)
+                .getResponse();
+
+        // then
+        response.statusCode(HttpStatus.NO_CONTENT.value());
+        get("/api/teams").getResponse()
+                .body("teams.status", contains("CLOSED"));
+    }
+
+    private String getAdminToken() {
+        final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
+        return post("/admin/login", request).getAdminToken();
     }
 }

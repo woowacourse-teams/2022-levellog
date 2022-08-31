@@ -93,9 +93,6 @@ public class AdminServiceTest extends ServiceTest {
             // when
             adminService.deleteTeamById(teamId);
 
-            entityManager.flush();
-            entityManager.clear();
-
             // then
             final Optional<Team> actual = teamRepository.findById(teamId);
             assertThat(actual).isEmpty();
@@ -115,9 +112,6 @@ public class AdminServiceTest extends ServiceTest {
 
             // when
             adminService.deleteTeamById(teamId);
-
-            entityManager.flush();
-            entityManager.clear();
 
             // then
             final Optional<Team> actual = teamRepository.findById(teamId);
@@ -139,9 +133,6 @@ public class AdminServiceTest extends ServiceTest {
             // when
             adminService.deleteTeamById(teamId);
 
-            entityManager.flush();
-            entityManager.clear();
-
             // then
             final Optional<Team> actual = teamRepository.findById(teamId);
             assertThat(actual).isEmpty();
@@ -155,6 +146,60 @@ public class AdminServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> adminService.deleteTeamById(teamId))
+                    .isInstanceOf(TeamNotFoundException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("closeTeam 메서드는")
+    class CloseTeam {
+
+        @Test
+        @DisplayName("팀 id가 주어지면 해당하는 팀을 종료한다. - status: ready")
+        void closeTeam_ready_success() {
+            // given
+            final Member rick = saveMember("릭");
+            final Member alien = saveMember("알린");
+
+            final Team team = saveTeam(rick, alien);
+            final Long teamId = team.getId();
+
+            // when
+            adminService.closeTeam(teamId);
+
+            // then
+            final Team actual = teamRepository.findById(teamId).get();
+            assertThat(actual.isClosed()).isTrue();
+        }
+
+        @Test
+        @DisplayName("팀 id가 주어지면 해당하는 팀을 종료한다. - status: inProgress")
+        void closeTeam_inProgress_success() {
+            // given
+            final Member rick = saveMember("릭");
+            final Member alien = saveMember("알린");
+
+            final Team team = saveTeam(rick, alien);
+            final Long teamId = team.getId();
+
+            timeStandard.setInProgress();
+
+            // when
+            adminService.closeTeam(teamId);
+
+            // then
+            final Team actual = teamRepository.findById(teamId).get();
+            assertThat(actual.isClosed()).isTrue();
+        }
+
+        @Test
+        @DisplayName("id에 해당하는 팀이 존재하지 않으면 예외를 던진다.")
+        void closeTeam_notFound_exception() {
+            // given
+            final Long teamId = 999L;
+
+            // when & then
+            assertThatThrownBy(() -> adminService.closeTeam(teamId))
                     .isInstanceOf(TeamNotFoundException.class);
         }
     }

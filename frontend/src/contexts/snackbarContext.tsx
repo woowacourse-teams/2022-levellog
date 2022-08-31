@@ -5,7 +5,7 @@ const initialState: string[] = [];
 const reducer = (prevState: State, action: Action): string[] => {
   switch (action.type) {
     case 'add':
-      return [action.message, ...prevState];
+      return [...prevState, action.message];
     case 'delete':
       return prevState.slice(1, prevState.length);
     default:

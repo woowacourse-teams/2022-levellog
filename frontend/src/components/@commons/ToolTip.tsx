@@ -17,7 +17,7 @@ interface ToolTipProps {
 
 const ToolTipContent = styled.div`
   position: absolute;
-  top: -0.25rem;
+  top: 2px;
   left: 2rem;
   padding: 0.375rem;
   width: 12.5rem;
@@ -28,9 +28,10 @@ const ToolTipContent = styled.div`
   line-height: 1.25rem;
   opacity: 0;
   transition: all 0.5s;
+  white-space: pre;
   &:before {
     position: absolute;
-    top: 30%;
+    top: 12%;
     left: -0.4375rem;
     border-width: 0.25rem 0.375rem 0.25rem 0;
     border-style: solid;

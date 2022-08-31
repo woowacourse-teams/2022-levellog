@@ -91,7 +91,7 @@ const Interviewer = ({
                   onClick={handleClickViewFeedbackButton}
                 >
                   <Image src={feedbackIcon} sizes={'SMALL'} borderRadius={false} />
-                  <S.ButtonText>피드백 보기</S.ButtonText>
+                  <S.ButtonText>피드백 작성 / 보기</S.ButtonText>
                 </S.Button>
               </>
             ) : (
@@ -158,7 +158,7 @@ const Interviewer = ({
                 onClick={handleClickViewFeedbackButton}
               >
                 <Image src={feedbackIcon} sizes={'SMALL'} borderRadius={false} />
-                <S.ButtonText>피드백 보기</S.ButtonText>
+                <S.ButtonText>피드백 작성 / 보기</S.ButtonText>
               </S.Button>
             </>
           )}

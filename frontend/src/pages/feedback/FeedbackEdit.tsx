@@ -15,9 +15,11 @@ import Loading from 'pages/status/Loading';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
-import BottomBar from 'components/@commons/BottomBar';
+import BottomBar, { BottomBarr } from 'components/@commons/BottomBar';
+import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
+import ToolTip from 'components/@commons/ToolTip';
 import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
@@ -26,7 +28,8 @@ const FeedbackEdit = () => {
   const { preQuestion, getPreQuestion } = usePreQuestion();
   const { levellogInfo, getLevellog } = useLevellog();
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
-  const { getFeedbackOnRef, feedbackRef, onClickFeedbackEditButton } = useFeedback();
+  const { feedbackRef, getFeedbackOnRef, onClickFeedbackEditButton, onClickFeedbackSaveButton } =
+    useFeedback();
   const { feedbackWriterRole, getWriterInfo } = useRole();
   const {
     interviewQuestionInfos,
@@ -48,6 +51,16 @@ const FeedbackEdit = () => {
       typeof levellogId === 'string'
     ) {
       onClickFeedbackEditButton({ teamId, levellogId, feedbackId });
+
+      return;
+    }
+    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
+    navigate(ROUTES_PATH.ERROR);
+  };
+
+  const handleClickFeedbackSaveButton = () => {
+    if (typeof feedbackId === 'string' && typeof levellogId === 'string') {
+      onClickFeedbackSaveButton({ levellogId, feedbackId });
 
       return;
     }
@@ -77,6 +90,19 @@ const FeedbackEdit = () => {
     init();
   }, []);
 
+  useEffect(() => {
+    const preventGoBack = () => {
+      if (confirm(MESSAGE.ESCAPE_NOW_PAGE)) {
+        return history.back();
+      }
+      history.pushState(null, '', location.href);
+    };
+    history.pushState(null, '', location.href);
+    window.addEventListener('popstate', preventGoBack);
+
+    return () => window.removeEventListener('popstate', preventGoBack);
+  }, []);
+
   if (Object.keys(levellogInfo).length === 0) return <Loading />;
   if (!feedbackWriterRole) return <Loading />;
   if (!levellogId || !feedbackId) return <Loading />;
@@ -91,8 +117,8 @@ const FeedbackEdit = () => {
         <S.Content>
           <S.LeftContent>
             <FlexBox alignItems={'center'} gap={1}>
-              {whichContentShow.levellog && <S.LevellogTitle>레벨로그</S.LevellogTitle>}
-              {whichContentShow.preQuestion && <S.LevellogTitle>사전질문</S.LevellogTitle>}
+              {whichContentShow.levellog && <S.LevellogTitle>{'레벨로그'}</S.LevellogTitle>}
+              {whichContentShow.preQuestion && <S.LevellogTitle>{'사전질문'}</S.LevellogTitle>}
               {feedbackWriterRole === 'OBSERVER' && <S.RoleContent>{'옵저버'}</S.RoleContent>}
               {feedbackWriterRole === 'INTERVIEWER' && <S.RoleContent>{'인터뷰어'}</S.RoleContent>}
               {feedbackWriterRole === 'INTERVIEWEE' && <S.RoleContent>{'인터뷰이'}</S.RoleContent>}
@@ -107,7 +133,15 @@ const FeedbackEdit = () => {
           </S.LeftContent>
           <S.RightContent>
             <S.QuestionContent>
-              <S.QuestionTitle>인터뷰에서 받은 질문</S.QuestionTitle>
+              <FlexBox gap={1}>
+                <S.QuestionTitle>{'인터뷰에서 받은 질문'}</S.QuestionTitle>
+                <ToolTip
+                  toolTipText={`질문 텍스트를 클릭하면 수정
+가능합니다.
+질문 수정 후 엔터를 눌러 
+반영해주세요.`}
+                />
+              </FlexBox>
               <InterviewQuestion
                 interviewQuestionInfos={interviewQuestionInfos}
                 interviewQuestionRef={interviewQuestionRef}
@@ -127,10 +161,14 @@ const FeedbackEdit = () => {
             </S.FeedbackContent>
           </S.RightContent>
         </S.Content>
-        <BottomBar
+        <BottomBarr>
+          <Button onClick={handleClickFeedbackSaveButton}>{'저장하기'}</Button>
+          <Button onClick={handleClickFeedbackEditButton}>{'수정하기'}</Button>
+        </BottomBarr>
+        {/* <BottomBar
           buttonText={'수정하기'}
           handleClickRightButton={handleClickFeedbackEditButton}
-        ></BottomBar>
+        ></BottomBar> */}
       </S.Container>
     </>
   );
@@ -197,7 +235,8 @@ const S = {
 
   RightContent: styled.div`
     display: flex;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     flex-direction: column;
     gap: 3.125rem;
     width: 50%;

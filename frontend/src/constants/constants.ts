@@ -32,13 +32,17 @@ export const MESSAGE = Object.freeze({
   NEED_HOST: '호스트만 접근할 수 있습니다!',
   NEED_NOT_ME: '본인이 본인에 대한 질문,피드백을 작성할 수 없습니다.',
   NEED_AUTHOR: '작성자만 글을 수정할 수 있습니다.',
+  WRITE_MORE: '3글자 이상 작성해주세요.',
+  CAN_EDIT: '수정하고 싶은 질문을 클릭해서 수정할 수 있어요!',
+  WRONG_TOKEN: '유효하지 않은 토큰입니다.',
+  ESCAPE_NOW_PAGE: '현재 페이지에서 나가시겠습니끼?',
 
   TEAM_CREATE: '인터뷰팀 생성을 완료했습니다!',
   TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
 
-  WRITE_MORE: '3글자 이상 작성해주세요.',
-  CAN_EDIT: '수정하고 싶은 질문을 클릭해서 수정할 수 있어요!',
-  FEEDBACK_CREATE: '피드백 작성을 완료하였습니다.',
+  FEEDBACK_CREATE: '피드백 작성이 완료되었습니다.',
+  FEEDBACK_EDIT_CONFIRM: '피드백 수정이 완료되었습니다.',
+  FEEDBACK_SAVE_CONFIRM: '피드백 저장이 완료되었습니다.',
 
   LEVELLOG_ADD_CONFIRM: '레벨로그 작성이 완료되었습니다.',
   LEVELLOG_EDIT_CONFIRM: '레벨로그 수정이 완료되었습니다.',
@@ -50,7 +54,6 @@ export const MESSAGE = Object.freeze({
   INTERVIEW_CLOSE_CONFIRM: '정말로 인터뷰를 종료하시겠습니까?',
   INTERVIEW_STATUS_NOT_READY: '인터뷰가 시작 전이 아닙니다!',
   INTERVIEW_STATUS_NOT_IN_PROGRESS: '인터뷰가 진행 중이 아닙니다!',
-  WRONG_TOKEN: '유효하지 않은 토큰입니다.',
 
   INTERVIEW_TITLE_VALIDATE_FAIL: '3글자 이상 14자 이하로 작성해주세요.',
   INTERVIEW_LOCATION_VALIDATE_FAIL: '3글자 이상 12자 이하로 작성해주세요.',

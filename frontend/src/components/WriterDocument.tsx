@@ -67,11 +67,10 @@ const S = {
     padding: 0;
     border-radius: 0 0 0.375rem 0.375rem;
     background-color: ${(props) =>
-      props.whichContentShow.levellog && props.theme.default.LIGHT_GRAY};
+      props.whichContentShow.levellog
+        ? props.theme.new_default.BLACK
+        : props.theme.new_default.GRAY};
     font-size: 0.875rem;
-    :hover {
-      background-color: ${(props) => props.theme.default.LIGHT_GRAY};
-    }
   `,
 
   PreQuestionButton: styled(Button)`
@@ -79,12 +78,12 @@ const S = {
     height: 1.5rem;
     padding: 0;
     border-radius: 0 0 0.375rem 0.375rem;
-    background-color: ${(props) =>
-      props.whichContentShow.preQuestion && props.theme.default.LIGHT_GRAY};
     font-size: 0.875rem;
-    :hover {
-      background-color: ${(props) => props.theme.default.LIGHT_GRAY};
-    }
+    background-color: ${(props) =>
+      props.whichContentShow.preQuestion
+        ? props.theme.new_default.BLACK
+        : props.theme.new_default.GRAY};
+    font-size: 0.875rem;
   `,
 
   Content: styled.div`

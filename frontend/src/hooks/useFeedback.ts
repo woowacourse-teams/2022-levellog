@@ -135,7 +135,25 @@ const useFeedback = () => {
     };
 
     await editFeedback({ levellogId, feedbackId, feedbackResult });
+    showSnackbar({ message: MESSAGE.FEEDBACK_EDIT_CONFIRM });
     navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+  };
+
+  const onClickFeedbackSaveButton = async ({
+    levellogId,
+    feedbackId,
+  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId'>) => {
+    const [study, speak, etc] = feedbackRef.current;
+    const feedbackResult: FeedbackFormatType = {
+      feedback: {
+        study: study.getInstance().getEditorElements().mdEditor.innerText,
+        speak: speak.getInstance().getEditorElements().mdEditor.innerText,
+        etc: etc.getInstance().getEditorElements().mdEditor.innerText,
+      },
+    };
+
+    await editFeedback({ levellogId, feedbackId, feedbackResult });
+    showSnackbar({ message: MESSAGE.FEEDBACK_SAVE_CONFIRM });
   };
 
   const getFeedbackOnRef = async ({
@@ -158,9 +176,10 @@ const useFeedback = () => {
     getFeedbacksInTeam,
     postFeedback,
     editFeedback,
+    getFeedbackOnRef,
     onClickFeedbackAddButton,
     onClickFeedbackEditButton,
-    getFeedbackOnRef,
+    onClickFeedbackSaveButton,
   };
 };
 

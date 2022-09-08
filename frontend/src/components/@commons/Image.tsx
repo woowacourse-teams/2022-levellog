@@ -1,8 +1,21 @@
 import styled from 'styled-components';
 import { ImageSizeType } from 'types';
 
-const Image = ({ src, sizes = 'LARGE', boxShadow = false, borderRadius = true }: ImageProps) => {
-  return <ImageStyle src={src} sizes={sizes} boxShadow={boxShadow} borderRadius={borderRadius} />;
+const Image = ({
+  src,
+  sizes = 'LARGE',
+  boxShadow = false,
+  borderRadius = true,
+  githubAvatarSize = 0,
+}: ImageProps) => {
+  return (
+    <ImageStyle
+      src={githubAvatarSize ? `${src}&s=${githubAvatarSize}` : src}
+      sizes={sizes}
+      boxShadow={boxShadow}
+      borderRadius={borderRadius}
+    />
+  );
 };
 
 interface ImageProps {
@@ -10,6 +23,7 @@ interface ImageProps {
   sizes: ImageSizeType;
   boxShadow?: boolean;
   borderRadius?: boolean;
+  githubAvatarSize?: number;
 }
 
 const ImageStyle = styled.img<{ boxShadow: boolean; borderRadius: boolean }>`

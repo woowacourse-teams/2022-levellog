@@ -9,7 +9,7 @@ import feedbackIcon from 'assets/images/feedbackIcon.svg';
 import interviewQuestionIcon from 'assets/images/interviewQuestionIcon.svg';
 import levellogIcon from 'assets/images/levellogIcon.svg';
 import preQuestionIcon from 'assets/images/preQuestionIcon.svg';
-import { TEAM_STATUS } from 'constants/constants';
+import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
@@ -65,7 +65,11 @@ const Interviewer = ({
     return (
       <S.Container>
         <S.Profile>
-          <Image src={participant.profileUrl} sizes={'HUGE'} />
+          <Image
+            src={participant.profileUrl}
+            sizes={'HUGE'}
+            githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.HUGE}
+          />
           <S.NicknameBox>
             <S.Nickname>{participant.nickname}</S.Nickname>
           </S.NicknameBox>
@@ -123,7 +127,11 @@ const Interviewer = ({
       {role.interviewer && role.interviewee === false && <Role role={'인터뷰어'} />}
       {role.interviewee && role.interviewer && <Role role={'상호 인터뷰'} />}
       <S.Profile>
-        <Image src={participant.profileUrl} sizes={'HUGE'} />
+        <Image
+          src={participant.profileUrl}
+          sizes={'HUGE'}
+          githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.HUGE}
+        />
         <S.NicknameBox>
           <S.Nickname>{participant.nickname}</S.Nickname>
         </S.NicknameBox>

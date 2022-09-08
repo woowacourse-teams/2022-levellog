@@ -4,6 +4,7 @@ import useUtil from 'hooks/useUtil';
 
 import checkIcon from 'assets/images/check.svg';
 import locationIcon from 'assets/images/location.svg';
+import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
@@ -20,7 +21,12 @@ const InterviewTeam = ({ team, onClickInterviewTeam }: InterviewTeamsProp) => {
   return (
     <S.Container id={id} status={status} onClick={handleClickInterviewTeam}>
       <FlexBox gap={0.625}>
-        <Image src={teamImage} sizes={'LARGE'} boxShadow={true} />
+        <Image
+          src={teamImage}
+          sizes={'LARGE'}
+          boxShadow={true}
+          githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.LARGE}
+        />
         <FlexBox flexFlow="column wrap" gap={0.625}>
           <S.Title id={id}>{title}</S.Title>
         </FlexBox>
@@ -45,7 +51,12 @@ const InterviewTeam = ({ team, onClickInterviewTeam }: InterviewTeamsProp) => {
       </FlexBox>
       <S.ParticipantsBox>
         {participants.map((participant: ParticipantType) => (
-          <Image key={participant.memberId} src={participant.profileUrl} sizes={'SMALL'} />
+          <Image
+            key={participant.memberId}
+            src={participant.profileUrl}
+            sizes={'SMALL'}
+            githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL}
+          />
         ))}
       </S.ParticipantsBox>
     </S.Container>

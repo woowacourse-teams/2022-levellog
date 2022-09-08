@@ -2,6 +2,8 @@ import React from 'react';
 
 import styled from 'styled-components';
 
+import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
+
 import Image from 'components/@commons/Image';
 
 const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderProps) => {
@@ -14,7 +16,11 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
           <FlexBox>
             {imageUrl && (
               <ImageBox>
-                <Image src={imageUrl} sizes={'MEDIUM'} />
+                <Image
+                  src={imageUrl}
+                  sizes={'MEDIUM'}
+                  githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
+                />
               </ImageBox>
             )}
             <TitleBox>

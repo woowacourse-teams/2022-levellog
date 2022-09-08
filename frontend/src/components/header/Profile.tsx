@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import hamburgerMenu from 'assets/images/hamburger.svg';
+import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import Image from 'components/@commons/Image';
 
@@ -17,7 +18,15 @@ const Profile = ({
       onError={handleErrorProfile}
     >
       <S.HamburgerBar src={hamburgerMenu} />
-      <Image src={loginUserProfileUrl} sizes={'SMALL'} />
+      <Image
+        src={loginUserProfileUrl}
+        sizes={'SMALL'}
+        githubAvatarSize={
+          loginUserProfileUrl.includes('avatars.githubusercontent')
+            ? GITHUB_AVATAR_SIZE_LIST.SMALL
+            : 0
+        }
+      />
     </S.Container>
   );
 };

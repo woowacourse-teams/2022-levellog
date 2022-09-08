@@ -1,12 +1,18 @@
 import styled from 'styled-components';
 
+import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
+
 import Image from 'components/@commons/Image';
 import { WatcherType } from 'types/team';
 
 const Watcher = ({ watcher }: WatcherProps) => {
   return (
     <S.Container>
-      <Image src={watcher.profileUrl} sizes={'SMALL'} />
+      <Image
+        src={watcher.profileUrl}
+        sizes={'SMALL'}
+        githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL}
+      />
       <S.Text>{watcher.nickname}</S.Text>
     </S.Container>
   );

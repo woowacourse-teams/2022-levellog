@@ -3,19 +3,19 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { MESSAGE } from 'constants/constants';
+
+import Button from 'components/@commons/Button';
+import Member from 'components/teams/Member';
+import Participant from 'components/teams/Participants';
+import TeamFormInput from 'components/teams/TeamFormInput';
+import { MemberType } from 'types/member';
 import {
   interviewDateValidate,
   interviewInterviewerValidate,
   interviewLocationValidate,
   interviewTimeValidate,
   interviewTitleValidate,
-} from 'constants/validate';
-
-import Member from './Member';
-import Participant from './Participants';
-import TeamFormInput from './TeamFormInput';
-import Button from 'components/@commons/Button';
-import { MemberType } from 'types/member';
+} from 'utils/validate';
 
 const TeamForm = ({
   purpose,

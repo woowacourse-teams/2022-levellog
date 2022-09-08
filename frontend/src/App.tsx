@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, Suspense } from 'react';
 import { useRoutes } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -25,13 +25,15 @@ const App = () => {
     <Container>
       <GlobalStyles />
       <Header />
-      <PageContainer>{content}</PageContainer>
-      <SnackbarContainer>
-        {snackbars.map((snackbar, index) => (
-          <Snackbar key={index}>{snackbar}</Snackbar>
-        ))}
-      </SnackbarContainer>
-      <Footer />
+      <Suspense>
+        <PageContainer>{content}</PageContainer>
+        <SnackbarContainer>
+          {snackbars.map((snackbar, index) => (
+            <Snackbar key={index}>{snackbar}</Snackbar>
+          ))}
+        </SnackbarContainer>
+        <Footer />
+      </Suspense>
     </Container>
   );
 };

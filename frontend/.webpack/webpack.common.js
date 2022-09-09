@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CompressionPlugin = require('compression-webpack-plugin');
 require('dotenv').config();
 
@@ -37,7 +36,6 @@ module.exports = {
     new Dotenv(),
     new HtmlWebpackPlugin({ template: 'public/index.html' }),
     new CleanWebpackPlugin(),
-    new BundleAnalyzerPlugin(),
     new CompressionPlugin({
       algorithm: 'gzip',
       exclude: /\.(svg|woff|png|jpg|webp|txt|map|ico)$/i,

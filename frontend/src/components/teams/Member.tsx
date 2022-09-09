@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction } from 'react';
 
 import styled from 'styled-components';
 
+import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
+
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';
 
@@ -15,7 +17,7 @@ const Member = ({ member, setNicknameValue, addToParticipants }: MemberProps) =>
 
   return (
     <S.MemberButton type={'button'} onClick={handleClickMember}>
-      <Image src={profileUrl} sizes={'SMALL'} />
+      <Image src={profileUrl} sizes={'SMALL'} githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL} />
       <S.Nickname>{nickname}</S.Nickname>
     </S.MemberButton>
   );

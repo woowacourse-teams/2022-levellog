@@ -7,6 +7,10 @@ import useTeam from 'hooks/useTeam';
 import useUtil from 'hooks/useUtil';
 
 import { MESSAGE } from 'constants/constants';
+
+import { requestGetMembers } from 'apis/member';
+import { MembersCustomHookType, MemberType } from 'types/member';
+import { InterviewTeamType } from 'types/team';
 import {
   interviewDateValidate,
   interviewInterviewerValidate,
@@ -14,11 +18,7 @@ import {
   interviewParticipantValidate,
   interviewTimeValidate,
   interviewTitleValidate,
-} from 'constants/validate';
-
-import { requestGetMembers } from 'apis/member';
-import { MembersCustomHookType, MemberType } from 'types/member';
-import { InterviewTeamType } from 'types/team';
+} from 'utils/validate';
 
 const useTeamPage = () => {
   const { isDebounce } = useUtil();

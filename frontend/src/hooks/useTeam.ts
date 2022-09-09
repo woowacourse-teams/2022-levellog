@@ -9,7 +9,6 @@ import useUtil from 'hooks/useUtil';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
-import { requestGetMembers } from 'apis/member';
 import {
   requestGetTeam,
   requestPostTeam,
@@ -19,7 +18,7 @@ import {
 } from 'apis/teams';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
-import { MembersCustomHookType, MemberType } from 'types/member';
+import { MemberType } from 'types/member';
 import { InterviewTeamType, TeamApiType, TeamCustomHookType } from 'types/team';
 
 const useTeam = () => {

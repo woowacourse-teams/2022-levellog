@@ -13,7 +13,7 @@ import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';
 import Loading from 'pages/status/Loading';
 
 import { TEAM_STATUS } from 'constants/constants';
-import { checkFirstWordFinalConsonant } from 'constants/util';
+import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import ContentHeader from 'components/@commons/ContentHeader';
 import Image from 'components/@commons/Image';
@@ -21,6 +21,7 @@ import {
   InterviewQuestionsInLevellogType,
   InterviewQuestionInfoType,
 } from 'types/interviewQuestion';
+import { checkFirstWordFinalConsonant } from 'utils/util';
 
 const InterviewQuestions = () => {
   const { levellogInfo, getLevellog } = useLevellog();
@@ -87,7 +88,11 @@ const InterviewQuestions = () => {
           (interviewQuestionInfoInLevellog: InterviewQuestionsInLevellogType) => (
             <S.Box key={interviewQuestionInfoInLevellog.author.id}>
               <S.AuthorBox>
-                <Image src={interviewQuestionInfoInLevellog.author.profileUrl} sizes={'MEDIUM'} />
+                <Image
+                  src={interviewQuestionInfoInLevellog.author.profileUrl}
+                  sizes={'MEDIUM'}
+                  githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
+                />
                 <S.AuthorText>
                   {checkFirstWordFinalConsonant({
                     word: interviewQuestionInfoInLevellog.author.nickname,

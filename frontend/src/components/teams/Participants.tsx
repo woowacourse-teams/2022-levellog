@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
+
 import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';
@@ -13,7 +15,7 @@ const Participant = ({ participant, removeToParticipants }: ParticipantProps) =>
 
   return (
     <S.Container>
-      <Image src={profileUrl} sizes={'SMALL'} />
+      <Image src={profileUrl} sizes={'SMALL'} githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL} />
       <S.Nickname>{nickname}</S.Nickname>
       <S.DeleteButton onClick={handleClickDeleteButton}>X</S.DeleteButton>
     </S.Container>

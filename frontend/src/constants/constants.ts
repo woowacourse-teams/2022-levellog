@@ -78,3 +78,10 @@ export const REQUIRE_AUTH = Object.freeze({
   NOT_ME: 'notMe',
   AUTHOR: 'author',
 });
+
+export const GITHUB_AVATAR_SIZE_LIST = {
+  HUGE: 120,
+  LARGE: 60,
+  MEDIUM: 44,
+  SMALL: 30,
+};

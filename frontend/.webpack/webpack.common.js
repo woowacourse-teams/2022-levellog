@@ -2,7 +2,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const CompressionPlugin = require('compression-webpack-plugin');
 require('dotenv').config();
+
 module.exports = {
   entry: '../src/index.tsx',
   module: {
@@ -12,26 +14,8 @@ module.exports = {
         use: ['babel-loader', 'ts-loader'],
       },
       {
-        test: /\.(png|jpe?g|gif|svg|webp)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: 'assets/images/[name].[ext]',
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: 'assets/fonts/[name].[ext]',
-            },
-          },
-        ],
+        test: /\.(png|jpe?g|svg|webp|woff)$/,
+        type: 'asset/resource',
       },
       {
         test: /\.css$/,
@@ -52,5 +36,9 @@ module.exports = {
     new Dotenv(),
     new HtmlWebpackPlugin({ template: 'public/index.html' }),
     new CleanWebpackPlugin(),
+    new CompressionPlugin({
+      algorithm: 'gzip',
+      exclude: /\.(svg|woff|png|jpg|webp|txt|map|ico)$/i,
+    }),
   ],
 };

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import useUser from 'hooks/useUser';
 
 import defaultProfile from 'assets/images/defaultProfile.webp';
-import levellogLogo from 'assets/images/levellogNewLogo.png';
+import levellogLogo from 'assets/images/levellogLogo.webp';
 import { ROUTES_PATH } from 'constants/constants';
 
 import { LogoStyle } from 'components/@commons/Style';

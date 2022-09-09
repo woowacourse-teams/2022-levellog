@@ -1,24 +1,26 @@
-import Login from 'pages/Login';
-import FeedbackAdd from 'pages/feedback/FeedbackAdd';
-import FeedbackEdit from 'pages/feedback/FeedbackEdit';
-import Feedbacks from 'pages/feedback/Feedbacks';
-import InterviewQuestions from 'pages/interviewQuestion/InterviewQuestions';
-import LevellogAdd from 'pages/levellogs/LevellogAdd';
-import LevellogEdit from 'pages/levellogs/LevellogEdit';
-import PreQuestionAdd from 'pages/preQuestion/PreQuestionAdd';
-import PreQuestionEdit from 'pages/preQuestion/PreQuestionEdit';
-import Error from 'pages/status/Error';
-import NotFound from 'pages/status/NotFound';
-import InterviewDetail from 'pages/teams/InterviewDetail';
-import InterviewTeamAdd from 'pages/teams/InterviewTeamAdd';
-import InterviewTeamEdit from 'pages/teams/InterviewTeamEdit';
-import InterviewTeams from 'pages/teams/InterviewTeams';
+import { lazy } from 'react';
 
 import { REQUIRE_AUTH, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Auth from 'routes/Auth';
 import AuthLogin from 'routes/AuthLogin';
 import TeamStatus from 'routes/TeamStatus';
+
+const Login = lazy(() => import('pages/Login'));
+const FeedbackAdd = lazy(() => import('pages/feedback/FeedbackAdd'));
+const FeedbackEdit = lazy(() => import('pages/feedback/FeedbackEdit'));
+const Feedbacks = lazy(() => import('pages/feedback/Feedbacks'));
+const InterviewQuestions = lazy(() => import('pages/interviewQuestion/InterviewQuestions'));
+const LevellogAdd = lazy(() => import('pages/levellogs/LevellogAdd'));
+const LevellogEdit = lazy(() => import('pages/levellogs/LevellogEdit'));
+const PreQuestionAdd = lazy(() => import('pages/preQuestion/PreQuestionAdd'));
+const PreQuestionEdit = lazy(() => import('pages/preQuestion/PreQuestionEdit'));
+const Error = lazy(() => import('pages/status/Error'));
+const NotFound = lazy(() => import('pages/status/NotFound'));
+const InterviewDetail = lazy(() => import('pages/teams/InterviewDetail'));
+const InterviewTeamAdd = lazy(() => import('pages/teams/InterviewTeamAdd'));
+const InterviewTeamEdit = lazy(() => import('pages/teams/InterviewTeamEdit'));
+const InterviewTeams = lazy(() => import('pages/teams/InterviewTeams'));
 
 export const routes = [
   {

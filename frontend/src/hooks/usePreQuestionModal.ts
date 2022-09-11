@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import useModal from 'hooks/useModal';
 import usePreQuestion from 'hooks/usePreQuestion';
 import useSnackbar from 'hooks/useSnackbar';
 
@@ -9,14 +10,14 @@ import { PreQuestionCustomHookType, PreQuestionParticipantType } from 'types/pre
 import { ParticipantType } from 'types/team';
 
 const usePreQuestionModal = () => {
+  const { isModalOpen, onClickOpenModal, onClickCloseModal } = useModal();
   const { preQuestion, getPreQuestion, deletePreQuestion } = usePreQuestion();
   const { showSnackbar } = useSnackbar();
-  const [isPreQuestionModalOpen, setIsPreQuestionModalOpen] = useState(false);
   const [preQuestionParticipant, setPreQuestionParticipant] = useState({} as ParticipantType);
 
   const onClickOpenPreQuestionModal = async ({ participant }: PreQuestionParticipantType) => {
     await getPreQuestion({ levellogId: participant.levellogId });
-    setIsPreQuestionModalOpen(true);
+    onClickOpenModal();
     setPreQuestionParticipant(participant);
   };
 
@@ -28,21 +29,17 @@ const usePreQuestionModal = () => {
       levellogId,
       preQuestionId,
     });
-    setIsPreQuestionModalOpen(false);
+    onClickCloseModal();
     showSnackbar({ message: MESSAGE.PREQUESTION_DELETE_CONFIRM });
-  };
-
-  const handleClickClosePreQuestionModal = (e: React.MouseEvent<HTMLElement>) => {
-    setIsPreQuestionModalOpen(false);
   };
 
   return {
     preQuestion,
     preQuestionParticipant,
-    isPreQuestionModalOpen,
+    isPreQuestionModalOpen: isModalOpen,
     onClickOpenPreQuestionModal,
     onClickDeletePreQuestion,
-    handleClickClosePreQuestionModal,
+    handleClickClosePreQuestionModal: onClickCloseModal,
   };
 };
 

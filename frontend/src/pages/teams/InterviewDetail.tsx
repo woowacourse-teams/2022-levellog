@@ -71,6 +71,26 @@ const InterviewDetail = () => {
 
   return (
     <>
+      {isLevellogModalOpen && (
+        <LevellogViewModal
+          teamId={teamId}
+          levellogInfo={levellogInfo}
+          participant={levellogParticipant}
+          userInTeam={(team as InterviewTeamType).isParticipant}
+          handleClickCloseLevellogModal={handleClickCloseLevellogModal}
+        />
+      )}
+      {isPreQuestionModalOpen && (
+        <PreQuestionViewModal
+          teamId={teamId}
+          preQuestion={preQuestion}
+          participant={preQuestionParticipant}
+          getTeam={getTeam}
+          onClickDeletePreQuestion={onClickDeletePreQuestion}
+          handleClickClosePreQuestionModal={handleClickClosePreQuestionModal}
+        />
+      )}
+
       <ContentHeader
         imageUrl={(team as InterviewTeamType).teamImage}
         title={(team as InterviewTeamType).title}
@@ -97,25 +117,6 @@ const InterviewDetail = () => {
         </>
       </ContentHeader>
       <S.Container>
-        {isLevellogModalOpen && (
-          <LevellogViewModal
-            teamId={teamId}
-            levellogInfo={levellogInfo}
-            participant={levellogParticipant}
-            userInTeam={(team as InterviewTeamType).isParticipant}
-            handleClickCloseLevellogModal={handleClickCloseLevellogModal}
-          />
-        )}
-        {isPreQuestionModalOpen && (
-          <PreQuestionViewModal
-            teamId={teamId}
-            preQuestion={preQuestion}
-            participant={preQuestionParticipant}
-            getTeam={getTeam}
-            onClickDeletePreQuestion={onClickDeletePreQuestion}
-            handleClickClosePreQuestionModal={handleClickClosePreQuestionModal}
-          />
-        )}
         <FlexBox flexFlow={'column wrap'} gap={5}>
           {team.watchers.length !== 0 && (
             <FlexBox flexFlow={'column wrap'} gap={2}>

@@ -9,6 +9,23 @@ export const checkFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConson
   return (uniCode - 44032) % 28 != 0;
 };
 
+export const createParam = (object: CreateParamType) => {
+  return Object.entries(object)
+    .flat(1)
+    .map((v) => v && `/${v}`)
+    .join('');
+};
+
 interface CheckFirstWordFinalConsonantType {
   word: string;
+}
+
+interface CreateParamType {
+  teams?: string;
+  levellogs?: string;
+  feedbackId?: string;
+  'pre-questions'?: string;
+  author?: string;
+  feedbacks?: string;
+  ''?: string;
 }

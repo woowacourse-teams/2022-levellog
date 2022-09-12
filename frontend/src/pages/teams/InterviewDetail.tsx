@@ -5,7 +5,6 @@ import styled, { CSSProperties } from 'styled-components';
 import useLevellogModal from 'hooks/useLevellogModal';
 import usePreQuestionModal from 'hooks/usePreQuestionModal';
 import useTeam from 'hooks/useTeam';
-import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 import useUtil from 'hooks/useUtil';
 
@@ -22,11 +21,10 @@ import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
 import Watcher from 'components/teams/Watcher';
 import { ParticipantType, WatcherType } from 'types/team';
+import { convertDateAndTime, createParam } from 'utils/util';
 
 const InterviewDetail = () => {
   const { loginUserId } = useUser();
-  const { teamEditUriBuilder } = useUriBuilders();
-  const { convertDateAndTime } = useUtil();
   const { team, getTeam, handleClickDeleteTeamButton, handleClickCloseTeamInterviewButton } =
     useTeam();
   const {
@@ -83,7 +81,7 @@ const InterviewDetail = () => {
             <S.ButtonBox>
               {team.status === TEAM_STATUS.READY && (
                 <>
-                  <Link to={teamEditUriBuilder({ teamId })}>
+                  <Link to={createParam({ teams: teamId, '': 'edit' })}>
                     <S.Button>팀 수정하기</S.Button>
                   </Link>
                   <S.Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</S.Button>

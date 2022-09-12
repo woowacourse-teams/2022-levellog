@@ -11,10 +11,9 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import { InterviewTeamType, ParticipantType } from 'types/team';
-import { createParam } from 'utils/util';
+import { convertDateAndTime, createParam } from 'utils/util';
 
 const InterviewTeam = ({ team }: InterviewTeamsProp) => {
-  const { convertDateAndTime } = useUtil();
   const { id, teamImage, title, status, place, startAt, participants } = team;
 
   return (

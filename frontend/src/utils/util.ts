@@ -1,3 +1,5 @@
+import { Team } from 'types/team';
+
 export const checkFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConsonantType) => {
   if (typeof word !== 'string') return;
 
@@ -14,6 +16,15 @@ export const createParam = (object: CreateParamType) => {
     .flat(1)
     .map((v) => v && `/${v}`)
     .join('');
+};
+
+export const convertDateAndTime = ({ startAt }: Pick<Team, 'startAt'>) => {
+  const year = startAt.slice(0, 4);
+  const month = startAt.slice(5, 7);
+  const day = startAt.slice(8, 10);
+  const time = `${startAt.slice(11, 13)}시 ${startAt.slice(14, 16)}분`;
+
+  return `${year}년 ${month}월 ${day}일 ${time}`;
 };
 
 interface CheckFirstWordFinalConsonantType {

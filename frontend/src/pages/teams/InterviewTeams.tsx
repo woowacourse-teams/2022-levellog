@@ -16,7 +16,7 @@ import InterviewTeam from 'components/teams/InterviewTeam';
 import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
-  const { teams, getTeams, onClickInterviewTeam } = useTeams();
+  const { teams, getTeams } = useTeams();
 
   useEffect(() => {
     getTeams();
@@ -35,7 +35,7 @@ const InterviewTeams = () => {
       <S.Container>
         <S.Content>
           {teams.map((team: InterviewTeamType) => (
-            <InterviewTeam key={team.id} onClickInterviewTeam={onClickInterviewTeam} team={team} />
+            <InterviewTeam key={team.id} team={team} />
           ))}
         </S.Content>
         <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>

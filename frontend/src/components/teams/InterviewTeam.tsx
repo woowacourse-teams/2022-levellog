@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import styled from 'styled-components';
 
 import useUtil from 'hooks/useUtil';
@@ -9,63 +11,61 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import { InterviewTeamType, ParticipantType } from 'types/team';
+import { createParam } from 'utils/util';
 
-const InterviewTeam = ({ team, onClickInterviewTeam }: InterviewTeamsProp) => {
+const InterviewTeam = ({ team }: InterviewTeamsProp) => {
   const { convertDateAndTime } = useUtil();
   const { id, teamImage, title, status, place, startAt, participants } = team;
 
-  const handleClickInterviewTeam = () => {
-    onClickInterviewTeam({ id });
-  };
-
   return (
-    <S.Container id={id} status={status} onClick={handleClickInterviewTeam}>
-      <FlexBox gap={0.625}>
-        <Image
-          src={teamImage}
-          sizes={'LARGE'}
-          boxShadow={true}
-          githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.LARGE}
-        />
-        <FlexBox flexFlow="column wrap" gap={0.625}>
-          <S.Title id={id}>{title}</S.Title>
-        </FlexBox>
-      </FlexBox>
-      <FlexBox flexFlow="column">
-        <S.Info>
-          <S.Notice>
-            <S.ImageBox>
-              <Image src={locationIcon} sizes={'TINY'} />
-            </S.ImageBox>
-            {place}
-          </S.Notice>
-        </S.Info>
-        <S.Info>
-          <S.Notice>
-            <S.ImageBox>
-              <Image src={checkIcon} sizes={'TINY'} />
-            </S.ImageBox>
-            {convertDateAndTime({ startAt })}
-          </S.Notice>
-        </S.Info>
-      </FlexBox>
-      <S.ParticipantsBox>
-        {participants.map((participant: ParticipantType) => (
+    <Link to={createParam({ teams: id })} state={team}>
+      <S.Container status={status}>
+        <FlexBox gap={0.625}>
           <Image
-            key={participant.memberId}
-            src={participant.profileUrl}
-            sizes={'SMALL'}
-            githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL}
+            src={teamImage}
+            sizes={'LARGE'}
+            boxShadow={true}
+            githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.LARGE}
           />
-        ))}
-      </S.ParticipantsBox>
-    </S.Container>
+          <FlexBox flexFlow="column wrap" gap={0.625}>
+            <S.Title>{title}</S.Title>
+          </FlexBox>
+        </FlexBox>
+        <FlexBox flexFlow="column">
+          <S.Info>
+            <S.Notice>
+              <S.ImageBox>
+                <Image src={locationIcon} sizes={'TINY'} />
+              </S.ImageBox>
+              {place}
+            </S.Notice>
+          </S.Info>
+          <S.Info>
+            <S.Notice>
+              <S.ImageBox>
+                <Image src={checkIcon} sizes={'TINY'} />
+              </S.ImageBox>
+              {convertDateAndTime({ startAt })}
+            </S.Notice>
+          </S.Info>
+        </FlexBox>
+        <S.ParticipantsBox>
+          {participants.map((participant: ParticipantType) => (
+            <Image
+              key={participant.memberId}
+              src={participant.profileUrl}
+              sizes={'SMALL'}
+              githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL}
+            />
+          ))}
+        </S.ParticipantsBox>
+      </S.Container>
+    </Link>
   );
 };
 
 interface InterviewTeamsProp {
   team: InterviewTeamType;
-  onClickInterviewTeam: ({ id }: Pick<InterviewTeamType, 'id'>) => void;
 }
 
 const S = {

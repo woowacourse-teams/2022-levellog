@@ -6,7 +6,6 @@ import useLevellogModal from 'hooks/useLevellogModal';
 import usePreQuestionModal from 'hooks/usePreQuestionModal';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
-import useUtil from 'hooks/useUtil';
 
 import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
@@ -46,7 +45,7 @@ const InterviewDetail = () => {
 
   if (team && Object.keys(team).length === 0) return <Error />;
   if (!teamId) return <Loading />;
-  console.log(team);
+
   return (
     <>
       {isLevellogModalOpen && (

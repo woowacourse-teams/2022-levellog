@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 
 import useSnackbar from 'hooks/useSnackbar';
-import useUriBuilder from 'hooks/useUriBuilder';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -12,9 +11,9 @@ import { Editor } from '@toast-ui/react-editor';
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { LevellogCustomHookType, LevellogInfoType } from 'types/levellog';
+import { teamGetUriBuilder } from 'utils/util';
 
 const useLevellog = () => {
-  const { teamGetUriBuilder } = useUriBuilder();
   const { showSnackbar } = useSnackbar();
   const levellogRef = useRef<Editor>(null);
   const navigate = useNavigate();

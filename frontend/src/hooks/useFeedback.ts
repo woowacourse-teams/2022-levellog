@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 
 import useSnackbar from 'hooks/useSnackbar';
-import useUriBuilder from 'hooks/useUriBuilder';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -17,9 +16,9 @@ import {
 } from 'apis/feedback';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/feedback';
+import { feedbacksGetUriBuilder } from 'utils/util';
 
 const useFeedback = () => {
-  const { feedbacksGetUriBuilder } = useUriBuilder();
   const { showSnackbar } = useSnackbar();
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const feedbackRef = useRef<Editor[]>([]);

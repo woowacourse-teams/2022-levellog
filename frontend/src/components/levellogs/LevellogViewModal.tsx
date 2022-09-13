@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useTeam from 'hooks/useTeam';
-import useUriBuilder from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import closeIcon from 'assets/images/close.svg';
@@ -17,6 +16,11 @@ import UiViewer from 'components/@commons/UiViewer';
 import ModalPortal from 'portal/ModalPortal';
 import { LevellogInfoType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
+import {
+  levellogEditUriBuilder,
+  preQuestionEditUriBuilder,
+  preQuestionAddUriBuilder,
+} from 'utils/util';
 
 const LevellogViewModal = ({
   levellogInfo,
@@ -29,8 +33,6 @@ const LevellogViewModal = ({
   const { author, content } = levellogInfo;
   const { loginUserId } = useUser();
   const { team } = useTeam();
-  const { levellogEditUriBuilder, preQuestionAddUriBuilder, preQuestionEditUriBuilder } =
-    useUriBuilder();
 
   if (author.id === loginUserId) {
     return (

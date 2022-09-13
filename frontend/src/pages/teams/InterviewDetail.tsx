@@ -20,7 +20,7 @@ import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
 import Watcher from 'components/teams/Watcher';
 import { ParticipantType, WatcherType } from 'types/team';
-import { convertDateAndTime, createParam } from 'utils/util';
+import { convertDateAndTime, teamEditUriBuilder } from 'utils/util';
 
 const InterviewDetail = () => {
   const { loginUserId } = useUser();
@@ -80,7 +80,7 @@ const InterviewDetail = () => {
             <S.ButtonBox>
               {team.status === TEAM_STATUS.READY && (
                 <>
-                  <Link to={createParam({ teams: teamId, '': 'edit' })}>
+                  <Link to={teamEditUriBuilder({ teamId })}>
                     <S.Button>팀 수정하기</S.Button>
                   </Link>
                   <S.Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</S.Button>

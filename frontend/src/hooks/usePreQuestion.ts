@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 
 import useSnackbar from 'hooks/useSnackbar';
-import useUriBuilder from 'hooks/useUriBuilder';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -17,9 +16,9 @@ import {
 } from 'apis/preQuestion';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
+import { teamGetUriBuilder } from 'utils/util';
 
 const usePreQuestion = () => {
-  const { teamGetUriBuilder } = useUriBuilder();
   const { showSnackbar } = useSnackbar();
   const [preQuestion, setPreQuestion] = useState<PreQuestionFormatType>(
     {} as unknown as PreQuestionFormatType,

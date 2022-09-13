@@ -21,7 +21,7 @@ const InterviewTeams = () => {
   useEffect(() => {
     getTeams();
   }, []);
-
+  console.log(teams);
   return (
     <>
       <ContentHeader title={'인터뷰 팀'}>

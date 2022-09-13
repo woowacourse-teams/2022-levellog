@@ -14,11 +14,16 @@ import Button from 'components/@commons/Button';
 import CustomLink from 'components/@commons/CustomLink';
 import Image from 'components/@commons/Image';
 import Role from 'components/@commons/Role';
-import PresenceButtonIndicator from 'components/PresenceButtonIndicator';
+import VisibleButtonList from 'components/VisibleButtonList';
 import { LevellogParticipantType } from 'types/levellog';
 import { PreQuestionParticipantType } from 'types/preQuestion';
 import { ParticipantType, TeamStatusType } from 'types/team';
-import { createParam } from 'utils/util';
+import {
+  feedbacksGetUriBuilder,
+  interviewQuestionsGetUriBuilder,
+  levellogAddUriBuilder,
+  preQuestionAddUriBuilder,
+} from 'utils/util';
 
 const Interviewer = ({
   participant,
@@ -71,7 +76,7 @@ const Interviewer = ({
       </S.Profile>
       <S.Content>
         <S.ButtonBox>
-          <PresenceButtonIndicator
+          <VisibleButtonList
             type={'levellogLook'}
             interviewerId={participant.memberId}
             loginUserId={loginUserId}
@@ -81,16 +86,16 @@ const Interviewer = ({
               <Image src={levellogIcon} sizes={'SMALL'} borderRadius={false} />
               <S.ButtonText>레벨로그 보기</S.ButtonText>
             </S.Button>
-          </PresenceButtonIndicator>
+          </VisibleButtonList>
 
-          <PresenceButtonIndicator
+          <VisibleButtonList
             type={'levellogWrite'}
             interviewerId={participant.memberId}
             loginUserId={loginUserId}
             levellogId={participant.levellogId}
           >
             <CustomLink
-              path={createParam({ teams: teamId, levellogs: 'add' })}
+              path={levellogAddUriBuilder({ teamId })}
               disabled={teamStatus !== TEAM_STATUS.READY}
             >
               <S.Button disabled={teamStatus !== TEAM_STATUS.READY}>
@@ -98,19 +103,15 @@ const Interviewer = ({
                 <S.ButtonText>레벨로그 작성</S.ButtonText>
               </S.Button>
             </CustomLink>
-          </PresenceButtonIndicator>
+          </VisibleButtonList>
 
-          <PresenceButtonIndicator
+          <VisibleButtonList
             type={'interviewQuestionLook'}
             interviewerId={participant.memberId}
             loginUserId={loginUserId}
           >
             <CustomLink
-              path={createParam({
-                teams: teamId,
-                levellogs: participant.levellogId,
-                '': 'interview-questions',
-              })}
+              path={interviewQuestionsGetUriBuilder({ teamId, levellogId: participant.levellogId })}
               disabled={!participant.levellogId || !userInTeam}
             >
               <S.Button disabled={!participant.levellogId || !userInTeam}>
@@ -118,9 +119,9 @@ const Interviewer = ({
                 <S.ButtonText>인터뷰질문 보기</S.ButtonText>
               </S.Button>
             </CustomLink>
-          </PresenceButtonIndicator>
+          </VisibleButtonList>
 
-          <PresenceButtonIndicator
+          <VisibleButtonList
             type={'preQuestionLook'}
             interviewerId={participant.memberId}
             loginUserId={loginUserId}
@@ -133,20 +134,16 @@ const Interviewer = ({
               <Image src={preQuestionIcon} sizes={'SMALL'} borderRadius={false} />
               <S.ButtonText>사전질문 보기</S.ButtonText>
             </S.Button>
-          </PresenceButtonIndicator>
+          </VisibleButtonList>
 
-          <PresenceButtonIndicator
+          <VisibleButtonList
             type={'preQuestionWrite'}
             interviewerId={participant.memberId}
             loginUserId={loginUserId}
             preQuestionId={participant.preQuestionId}
           >
             <CustomLink
-              path={createParam({
-                teams: teamId,
-                levellogs: participant.levellogId,
-                'pre-questions': 'add',
-              })}
+              path={preQuestionAddUriBuilder({ teamId, levellogId: participant.levellogId })}
               disabled={!participant.levellogId || !userInTeam}
             >
               <S.Button disabled={!participant.levellogId || !userInTeam}>
@@ -154,14 +151,10 @@ const Interviewer = ({
                 <S.ButtonText>사전질문 작성</S.ButtonText>
               </S.Button>
             </CustomLink>
-          </PresenceButtonIndicator>
+          </VisibleButtonList>
 
           <CustomLink
-            path={createParam({
-              teams: teamId,
-              levellogs: participant.levellogId,
-              '': 'feedbacks',
-            })}
+            path={feedbacksGetUriBuilder({ teamId, levellogId: participant.levellogId })}
             disabled={!participant.levellogId || !userInTeam}
           >
             <S.Button disabled={!participant.levellogId || !userInTeam}>

@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useUtil from 'hooks/useUtil';
-
 import checkIcon from 'assets/images/check.svg';
 import locationIcon from 'assets/images/location.svg';
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
@@ -11,13 +9,13 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import { InterviewTeamType, ParticipantType } from 'types/team';
-import { convertDateAndTime, createParam } from 'utils/util';
+import { convertDateAndTime, teamGetUriBuilder } from 'utils/util';
 
 const InterviewTeam = ({ team }: InterviewTeamsProp) => {
   const { id, teamImage, title, status, place, startAt, participants } = team;
 
   return (
-    <Link to={createParam({ teams: id })} state={team}>
+    <Link to={teamGetUriBuilder({ teamId: id })} state={team}>
       <S.Container status={status}>
         <FlexBox gap={0.625}>
           <Image

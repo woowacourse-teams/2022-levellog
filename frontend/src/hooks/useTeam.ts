@@ -98,6 +98,7 @@ const useTeam = () => {
     try {
       if (typeof teamId !== 'string') throw Error;
       await requestEditTeam({ teamId, teamInfo, accessToken });
+      showSnackbar({ message: MESSAGE.TEAM_EDIT });
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
@@ -114,6 +115,7 @@ const useTeam = () => {
   const deleteTeam = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     try {
       await requestDeleteTeam({ teamId, accessToken });
+      showSnackbar({ message: MESSAGE.TEAM_DELETE });
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
@@ -130,6 +132,7 @@ const useTeam = () => {
   const closeTeamInterview = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     try {
       await requestCloseTeamInterview({ teamId, accessToken });
+      showSnackbar({ message: MESSAGE.INTERVIEW_CLOSE });
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -142,8 +145,8 @@ const useTeam = () => {
     }
   };
 
-  const handleClickDeleteTeamButton = ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
-    if (confirm(MESSAGE.TEAM_DELETE_CONFIRM)) {
+  const handleClickDeleteTeamButton = () => {
+    if (confirm(MESSAGE.TEAM_DELETE_CONFIRM) && typeof teamId === 'string') {
       deleteTeam({ teamId });
       navigate(ROUTES_PATH.HOME);
 
@@ -151,8 +154,8 @@ const useTeam = () => {
     }
   };
 
-  const handleClickCloseTeamInterviewButton = ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
-    if (confirm(MESSAGE.INTERVIEW_CLOSE_CONFIRM)) {
+  const handleClickCloseTeamInterviewButton = () => {
+    if (confirm(MESSAGE.INTERVIEW_CLOSE_CONFIRM) && typeof teamId === 'string') {
       closeTeamInterview({ teamId });
       navigate(ROUTES_PATH.HOME);
 

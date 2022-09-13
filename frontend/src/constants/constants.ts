@@ -39,6 +39,8 @@ export const MESSAGE = Object.freeze({
 
   TEAM_CREATE: '인터뷰팀 생성을 완료했습니다!',
   TEAM_DELETE_CONFIRM: '정말로 팀을 삭제하시겠습니까?',
+  TEAM_DELETE: '팀 삭제가 완료되었습니다',
+  TEAM_EDIT: '팀 수정이 완료되었습니다.',
 
   FEEDBACK_CREATE: '피드백 작성이 완료되었습니다.',
   FEEDBACK_EDIT_CONFIRM: '피드백 수정이 완료되었습니다.',
@@ -54,6 +56,7 @@ export const MESSAGE = Object.freeze({
   INTERVIEW_CLOSE_CONFIRM: '정말로 인터뷰를 종료하시겠습니까?',
   INTERVIEW_STATUS_NOT_READY: '인터뷰가 시작 전이 아닙니다!',
   INTERVIEW_STATUS_NOT_IN_PROGRESS: '인터뷰가 진행 중이 아닙니다!',
+  INTERVIEW_CLOSE: '인터뷰가 종료되었습니다.',
 
   INTERVIEW_TITLE_VALIDATE_FAIL: '3글자 이상 14자 이하로 작성해주세요.',
   INTERVIEW_LOCATION_VALIDATE_FAIL: '3글자 이상 12자 이하로 작성해주세요.',

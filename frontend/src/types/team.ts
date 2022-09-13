@@ -33,7 +33,7 @@ export interface InterviewTeamType {
   startAt: string;
   teamImage: string;
   hostId: string;
-  status: string;
+  status: TeamStatusType;
   isParticipant: Boolean;
   interviewerNumber: number;
   interviewers: Array<number | null>;
@@ -57,3 +57,5 @@ export interface WatcherType {
   nickname: string;
   profileUrl: string;
 }
+
+export type TeamStatusType = 'READY' | 'IN_PROGRESS' | 'CLOSED' | '';

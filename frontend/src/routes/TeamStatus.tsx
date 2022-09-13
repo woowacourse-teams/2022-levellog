@@ -6,6 +6,8 @@ import useTeam from 'hooks/useTeam';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
+import { TeamStatusType } from 'types/team';
+
 const TeamStatus = ({ allowedStatuses, children }: TeamStatusProps) => {
   const { team } = useTeam();
   const { showSnackbar } = useSnackbar();
@@ -23,7 +25,7 @@ const TeamStatus = ({ allowedStatuses, children }: TeamStatusProps) => {
 };
 
 interface TeamStatusProps {
-  allowedStatuses: string[];
+  allowedStatuses: TeamStatusType[];
   children: JSX.Element;
 }
 

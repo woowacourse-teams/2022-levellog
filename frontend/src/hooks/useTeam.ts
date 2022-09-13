@@ -5,7 +5,6 @@ import axios, { AxiosResponse } from 'axios';
 
 import useSnackbar from 'hooks/useSnackbar';
 import useUser from 'hooks/useUser';
-import useUtil from 'hooks/useUtil';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
@@ -23,21 +22,20 @@ import { InterviewTeamType, TeamApiType, TeamCustomHookType } from 'types/team';
 
 const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
-  const { isDebounce } = useUtil();
   const { showSnackbar } = useSnackbar();
-  const [members, setMembers] = useState<MemberType[]>([]);
+
+  const team = useContext(TeamContext);
+  const teamInfoDispatch = useContext(TeamDispatchContext);
+
   const [nicknameValue, setNicknameValue] = useState('');
   const [participants, setParticipants] = useState<MemberType[]>([
     { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
   ]);
-  const team = useContext(TeamContext);
-  const teamInfoDispatch = useContext(TeamDispatchContext);
   const [watchers, setWatchers] = useState<MemberType[]>([]);
+
   const location = useLocation() as { state: InterviewTeamType };
-  // const teamInfoRef = useRef<HTMLInputElement[]>([]);
   const navigate = useNavigate();
   const { teamId } = useParams();
-
   const teamLocationState: InterviewTeamType | undefined = location.state;
   const accessToken = localStorage.getItem('accessToken');
 
@@ -100,6 +98,7 @@ const useTeam = () => {
     try {
       if (typeof teamId !== 'string') throw Error;
       await requestEditTeam({ teamId, teamInfo, accessToken });
+      showSnackbar({ message: MESSAGE.TEAM_EDIT });
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
@@ -116,6 +115,7 @@ const useTeam = () => {
   const deleteTeam = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     try {
       await requestDeleteTeam({ teamId, accessToken });
+      showSnackbar({ message: MESSAGE.TEAM_DELETE });
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
@@ -132,6 +132,7 @@ const useTeam = () => {
   const closeTeamInterview = async ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
     try {
       await requestCloseTeamInterview({ teamId, accessToken });
+      showSnackbar({ message: MESSAGE.INTERVIEW_CLOSE });
       navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -144,8 +145,8 @@ const useTeam = () => {
     }
   };
 
-  const onClickDeleteTeamButton = ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
-    if (confirm(MESSAGE.TEAM_DELETE_CONFIRM)) {
+  const handleClickDeleteTeamButton = () => {
+    if (confirm(MESSAGE.TEAM_DELETE_CONFIRM) && typeof teamId === 'string') {
       deleteTeam({ teamId });
       navigate(ROUTES_PATH.HOME);
 
@@ -153,8 +154,8 @@ const useTeam = () => {
     }
   };
 
-  const onClickCloseTeamInterviewButton = ({ teamId }: Pick<TeamApiType, 'teamId'>) => {
-    if (confirm(MESSAGE.INTERVIEW_CLOSE_CONFIRM)) {
+  const handleClickCloseTeamInterviewButton = () => {
+    if (confirm(MESSAGE.INTERVIEW_CLOSE_CONFIRM) && typeof teamId === 'string') {
       closeTeamInterview({ teamId });
       navigate(ROUTES_PATH.HOME);
 
@@ -163,26 +164,27 @@ const useTeam = () => {
   };
 
   useEffect(() => {
-    if (teamLocationState && (teamLocationState as InterviewTeamType).id !== undefined) {
+    if (teamLocationState) {
       teamInfoDispatch(teamLocationState);
+
+      return;
     }
+    getTeam();
   }, []);
 
   return {
+    nicknameValue,
     participants,
     watchers,
-    team,
-    teamLocationState,
-    members,
-    nicknameValue,
+    team: teamLocationState || team,
     setNicknameValue,
     setParticipants,
     setWatchers,
     getTeam,
     postTeam,
     editTeam,
-    onClickDeleteTeamButton,
-    onClickCloseTeamInterviewButton,
+    handleClickDeleteTeamButton,
+    handleClickCloseTeamInterviewButton,
   };
 };
 

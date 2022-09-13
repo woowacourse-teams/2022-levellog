@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import useInterviewQuestion from 'hooks/useInterviewQuestion';
 import useLevellog from 'hooks/useLevellog';
 import useTeam from 'hooks/useTeam';
-import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';
@@ -21,7 +20,7 @@ import {
   InterviewQuestionsInLevellogType,
   InterviewQuestionInfoType,
 } from 'types/interviewQuestion';
-import { checkFirstWordFinalConsonant } from 'utils/util';
+import { checkFirstWordFinalConsonant, feedbackAddUriBuilder } from 'utils/util';
 
 const InterviewQuestions = () => {
   const { levellogInfo, getLevellog } = useLevellog();
@@ -29,7 +28,6 @@ const InterviewQuestions = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { team } = useTeam();
   const { teamId, levellogId } = useParams();
-  const { feedbackAddUriBuilder } = useUriBuilders();
 
   if (typeof levellogId !== 'string' || typeof teamId !== 'string') {
     return <Loading />;

@@ -1,3 +1,7 @@
+const VisibleButtonList = ({ type, children, ...props }: VisibleButtonListProps) => {
+  return <>{isButtonShow[type]({ ...props }) && children}</>;
+};
+
 const isButtonShow = {
   levellogLook: ({ interviewerId, loginUserId, levellogId }: IsButtonShowProps) => {
     if (interviewerId === loginUserId && levellogId) return true;
@@ -29,13 +33,7 @@ const isButtonShow = {
   },
 };
 
-const PresenceButtonIndicator = ({ type, children, ...props }: PresenceButtonIndicatorProps) => {
-  return <>{isButtonShow[type]({ ...props }) && children}</>;
-};
-
-export default PresenceButtonIndicator;
-
-interface PresenceButtonIndicatorProps extends IsButtonShowProps {
+interface VisibleButtonListProps extends IsButtonShowProps {
   type:
     | 'levellogLook'
     | 'levellogWrite'
@@ -51,3 +49,5 @@ interface IsButtonShowProps {
   levellogId?: string;
   preQuestionId?: string;
 }
+
+export default VisibleButtonList;

@@ -12,17 +12,21 @@ public class TeamCustomRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public List<ParticipantDto> findAllParticipantsByTeamAndAuthor(final Team team, final Long authorId) {
+    public TeamCustomRepository(final EntityManager em) {
+        this.em = em;
+    }
+
+    public List<ParticipantDto> findAllParticipants(final Team team, final Long memberId) {
         final String jpql = "SELECT new com.woowacourse.levellog.team.dto.ParticipantDto("
                 + "m.id, l.id, pq.id, m.nickname, m.profileUrl) "
                 + "FROM Participant p "
                 + "INNER JOIN Member m ON p.member = m "
                 + "LEFT OUTER JOIN Levellog l ON p.team = l.team AND l.author = m "
-                + "LEFT OUTER JOIN PreQuestion pq ON pq.levellog = l AND pq.author.id = :authorId "
+                + "LEFT OUTER JOIN PreQuestion pq ON pq.levellog = l AND pq.author.id = :memberId "
                 + "WHERE p.team = :team AND p.isWatcher = false ";
 
         return em.createQuery(jpql, ParticipantDto.class)
-                .setParameter("authorId", authorId)
+                .setParameter("memberId", memberId)
                 .setParameter("team", team)
                 .getResultList();
     }

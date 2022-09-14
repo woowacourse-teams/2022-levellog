@@ -2,13 +2,9 @@ package com.woowacourse.levellog.team.application;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
-import com.woowacourse.levellog.prequestion.domain.PreQuestion;
-import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -48,8 +44,6 @@ public class TeamService {
     private final TeamCustomRepository teamCustomRepository;
     private final ParticipantRepository participantRepository;
     private final MemberRepository memberRepository;
-    private final LevellogRepository levellogRepository;
-    private final PreQuestionRepository preQuestionRepository;
     private final TimeStandard timeStandard;
 
     @Transactional
@@ -66,7 +60,7 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    // 팀 전체 조회 ( /api/teams )
+    // FIXME 팀 전체 조회 ( /api/teams )
     public TeamsDto findAll(final Pageable pageable, final String status, final Long memberId) {
         final List<Team> teams = getTeams(pageable, status);
         final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
@@ -74,14 +68,13 @@ public class TeamService {
         return new TeamsDto(teamDtos);
     }
 
-    // 팀 상세 조회 ( /api/teams/teamId )
     public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
-        final Team team = getTeam(teamId); // q 1
+        final Team team = getTeam(teamId);
 
         return createTeamAndRoleDto(team, memberId);
     }
 
-    // 내 팀 조회 ( /api/my-info/teams )
+    // FIXME 내 팀 조회 ( /api/my-info/teams )
     public TeamsDto findAllByMemberId(final Long memberId) {
         final List<Team> teams = getTeamsByMemberId(memberId);
         final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
@@ -169,14 +162,13 @@ public class TeamService {
     private TeamDto createTeamAndRoleDto(final Team team, final Long memberId) {
         final TeamStatus status = team.status(timeStandard.now());
 
-        final Participants participants = new Participants(participantRepository.findByTeam(team)); //N+1 문제 발발(해결완)
+        final Participants participants = new Participants(participantRepository.findByTeam(team));
         final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
-        final List<ParticipantDto> allParticipantsByTeamAndAuthor = teamCustomRepository.findAllParticipantsByTeamAndAuthor(
-                team, memberId);
+        final List<ParticipantDto> participantDtos = teamCustomRepository.findAllParticipants(team, memberId);
         return TeamDto.from(team, participants.toHostId(), status, participants.isContains(memberId), interviewers,
-                interviewees, allParticipantsByTeamAndAuthor, toWatcherResponses(participants));
+                interviewees, participantDtos, toWatcherResponses(participants));
     }
 
     private Member getMember(final Long memberId) {
@@ -272,40 +264,11 @@ public class TeamService {
                 .collect(Collectors.toList());
     }
 
-    private List<ParticipantDto> toParticipantResponses(final Participants participants, final Long memberId) {
-        return participants.getValues().stream()
-                .filter(Participant::isParticipant)
-                .map(it -> createParticipantDto(it, memberId)) // 멤버당 getLevellog, getPreQuestionId 해버림!
-                .collect(Collectors.toList());
-    }
-
     private List<WatcherDto> toWatcherResponses(final Participants participants) {
         return participants.getValues().stream()
                 .filter(Participant::isWatcher)
                 .map(WatcherDto::from)
                 .collect(Collectors.toList());
-    }
-
-    private ParticipantDto createParticipantDto(final Participant participant, final Long memberId) {
-        final Levellog levellog = getLevellog(participant);
-
-        if (levellog == null) {
-            return ParticipantDto.from(participant, null, null);
-        }
-
-        return ParticipantDto.from(participant, levellog.getId(), getPreQuestionId(memberId, levellog));
-    }
-
-    private Levellog getLevellog(final Participant participant) {
-        return levellogRepository
-                .findByAuthorIdAndTeamId(participant.getMember().getId(), participant.getTeam().getId())
-                .orElse(null);
-    }
-
-    private Long getPreQuestionId(final Long memberId, final Levellog levellog) {
-        return preQuestionRepository.findByLevellogAndAuthorId(levellog, memberId)
-                .map(PreQuestion::getId)
-                .orElse(null);
     }
 
     private void validateHostAuthorization(final Long memberId, final Team team) {

@@ -64,6 +64,7 @@ public class TeamService {
         return savedTeam.getId();
     }
 
+    // 팀 전체 조회 ( /api/teams )
     public TeamsDto findAll(final Pageable pageable, final String status, final Long memberId) {
         final List<Team> teams = getTeams(pageable, status);
         final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
@@ -71,12 +72,14 @@ public class TeamService {
         return new TeamsDto(teamDtos);
     }
 
+    // 팀 상세 조회 ( /api/teams/teamId )
     public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
-        final Team team = getTeam(teamId);
+        final Team team = getTeam(teamId); // q 1
 
         return createTeamAndRoleDto(team, memberId);
     }
 
+    // 내 팀 조회 ( /api/my-info/teams )
     public TeamsDto findAllByMemberId(final Long memberId) {
         final List<Team> teams = getTeamsByMemberId(memberId);
         final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
@@ -164,7 +167,7 @@ public class TeamService {
     private TeamDto createTeamAndRoleDto(final Team team, final Long memberId) {
         final TeamStatus status = team.status(timeStandard.now());
 
-        final Participants participants = new Participants(participantRepository.findByTeam(team));
+        final Participants participants = new Participants(participantRepository.findByTeam(team)); //N+1 문제 발발(해결완)
         final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 

@@ -14,6 +14,7 @@ import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamCustomRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
@@ -44,6 +45,7 @@ public class TeamService {
     private static final String ALL_STATUS = "all";
 
     private final TeamRepository teamRepository;
+    private final TeamCustomRepository teamCustomRepository;
     private final ParticipantRepository participantRepository;
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
@@ -171,8 +173,10 @@ public class TeamService {
         final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
 
+        final List<ParticipantDto> allParticipantsByTeamAndAuthor = teamCustomRepository.findAllParticipantsByTeamAndAuthor(
+                team, memberId);
         return TeamDto.from(team, participants.toHostId(), status, participants.isContains(memberId), interviewers,
-                interviewees, toParticipantResponses(participants, memberId), toWatcherResponses(participants));
+                interviewees, allParticipantsByTeamAndAuthor, toWatcherResponses(participants));
     }
 
     private Member getMember(final Long memberId) {
@@ -271,7 +275,7 @@ public class TeamService {
     private List<ParticipantDto> toParticipantResponses(final Participants participants, final Long memberId) {
         return participants.getValues().stream()
                 .filter(Participant::isParticipant)
-                .map(it -> createParticipantDto(it, memberId))
+                .map(it -> createParticipantDto(it, memberId)) // 멤버당 getLevellog, getPreQuestionId 해버림!
                 .collect(Collectors.toList());
     }
 

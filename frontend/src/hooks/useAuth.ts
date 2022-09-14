@@ -6,24 +6,17 @@ import useTeam from 'hooks/useTeam';
 
 import { MESSAGE, REQUIRE_AUTH } from 'constants/constants';
 
-import { requestGetUserAuthority } from 'apis/login';
-
 const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
   const { getTeam } = useTeam();
   const { showSnackbar } = useSnackbar();
-  const { levellogId, authorId } = useParams();
   const [isLoad, setIsLoad] = useState(true);
   const [isError, setIsError] = useState(false);
+  const { levellogId, authorId } = useParams();
 
-  const accessToken = localStorage.getItem('accessToken');
+  const loginUserId = localStorage.getItem('userId');
 
   const checkAuth = async () => {
     const team = await getTeam();
-
-    if (!accessToken) {
-      showSnackbar({ message: MESSAGE.NEED_LOGIN });
-      return;
-    }
 
     if (!team) {
       setIsLoad(false);
@@ -33,8 +26,6 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
       return;
     }
 
-    const res = await requestGetUserAuthority({ accessToken });
-    const loginUserId = res.data.id;
     const idsAndLevellogIds = Object.values(team.participants).map((participant) => [
       participant.memberId,
       participant.levellogId,

@@ -27,7 +27,7 @@ export const 토큰이올바르지못한경우홈페이지로 = ({
 }: 토큰이올바르지못한경우홈페이지로Props) => {
   if (window.location.pathname === '/login') {
     localStorage.removeItem('accessToken');
-    window.location.href = '/';
+    window.location.replace('/');
 
     return false;
   }
@@ -35,7 +35,7 @@ export const 토큰이올바르지못한경우홈페이지로 = ({
   if (message === MESSAGE.WRONG_TOKEN) {
     showSnackbar({ message: MESSAGE.NEED_RE_LOGIN });
     localStorage.removeItem('accessToken');
-    window.location.href = '/';
+    window.location.replace('/');
 
     return false;
   }

@@ -105,7 +105,7 @@ const useLevellog = () => {
     if (levellogRef.current) {
       postLevellog({
         teamId,
-        inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
+        inputValue: levellogRef.current.getInstance().getMarkdown(),
       });
       showSnackbar({ message: MESSAGE.LEVELLOG_ADD_CONFIRM });
     }
@@ -119,7 +119,7 @@ const useLevellog = () => {
       editLevellog({
         teamId,
         levellogId,
-        inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
+        inputValue: levellogRef.current.getInstance().getMarkdown(),
       });
     }
   };

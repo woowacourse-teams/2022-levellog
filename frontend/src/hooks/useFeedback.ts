@@ -109,9 +109,9 @@ const useFeedback = () => {
     const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackFormatType = {
       feedback: {
-        study: study.getInstance().getEditorElements().mdEditor.innerText,
-        speak: speak.getInstance().getEditorElements().mdEditor.innerText,
-        etc: etc.getInstance().getEditorElements().mdEditor.innerText,
+        study: study.getInstance().getMarkdown(),
+        speak: speak.getInstance().getMarkdown(),
+        etc: etc.getInstance().getMarkdown(),
       },
     };
 

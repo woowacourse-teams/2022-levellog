@@ -44,7 +44,7 @@ const LevellogEdit = () => {
         contentRef={levellogRef}
         initialEditType={'markdown'}
       />
-      {/* <BottomBar buttonText={'수정하기'} handleClickRightButton={handleClickLevellogEditButton} /> */}
+      <BottomBar buttonText={'수정하기'} handleClickRightButton={handleClickLevellogEditButton} />
     </S.Container>
   );
 };

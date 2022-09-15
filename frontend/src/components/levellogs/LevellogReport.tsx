@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import UiViewer from 'components/@commons/UiViewer';
+import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import { LevellogInfoType } from 'types/levellog';
 
 const LevellogReport = ({ levellogInfo }: LevellogReportProps) => {

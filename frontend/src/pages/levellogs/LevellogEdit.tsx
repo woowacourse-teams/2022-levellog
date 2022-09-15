@@ -9,7 +9,7 @@ import useSnackbar from 'hooks/useSnackbar';
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import BottomBar from 'components/@commons/BottomBar';
-import UiEditor from 'components/@commons/UiEditor';
+import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 
 const LevellogEdit = () => {
   const { levellogRef, getLevellogOnRef, onClickLevellogEditButton } = useLevellog();
@@ -44,10 +44,7 @@ const LevellogEdit = () => {
         contentRef={levellogRef}
         initialEditType={'markdown'}
       />
-      <BottomBar
-        buttonText={'수정하기'}
-        handleClickRightButton={handleClickLevellogEditButton}
-      ></BottomBar>
+      {/* <BottomBar buttonText={'수정하기'} handleClickRightButton={handleClickLevellogEditButton} /> */}
     </S.Container>
   );
 };

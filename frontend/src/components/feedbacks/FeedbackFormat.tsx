@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Editor } from '@toast-ui/react-editor';
 import { FeedbackTitle } from 'components/@commons/Style';
-import UiEditor from 'components/@commons/UiEditor';
+import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 import { FeedbackCustomHookType } from 'types/feedback';
 
 const FeedbackFormat = ({

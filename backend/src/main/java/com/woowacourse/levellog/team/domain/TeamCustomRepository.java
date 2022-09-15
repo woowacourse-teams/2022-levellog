@@ -38,7 +38,9 @@ public class TeamCustomRepository {
                 + "FROM Participant p "
                 + "INNER JOIN Member m ON p.member = m "
                 + "LEFT OUTER JOIN Levellog l ON p.team = l.team AND l.author = m "
-                + "LEFT OUTER JOIN PreQuestion pq ON pq.levellog = l AND pq.author.id = :memberId";
+                + "LEFT OUTER JOIN PreQuestion pq ON pq.levellog = l AND pq.author.id = :memberId "
+                + "WHERE p.team.deleted = false "
+                + "ORDER BY p.team.isClosed ASC, p.team.createdAt DESC";
 
         return em.createQuery(jpql, AllParticipantDto.class)
                 .setParameter("memberId", memberId)

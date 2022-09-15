@@ -95,16 +95,16 @@ class TeamCustomRepositoryTest extends RepositoryTest {
         assertThat(actual).hasSize(8)
                 .extracting("team", "memberId", "levellogId", "preQuestionId", "nickname", "isWatcher", "isHost")
                 .containsExactly(
-                        tuple(team1, roma.getId(), romaLevellog.getId(), null, "로마", false, true),
-                        tuple(team1, pep.getId(), pepLevellog.getId(), pepPreQuestion.getId(), "페퍼", false, false),
-                        tuple(team1, rick.getId(), rickLevellog.getId(), rickPreQuestion.getId(), "릭", false, false),
-                        tuple(team1, jun.getId(), null, null, "준", true, false),
+                        tuple(team3, harry.getId(), harryLevellog.getId(), null, "해리", false, true),
+                        tuple(team3, kyoul.getId(), kyoulLevellog.getId(), null, "결", false, false),
 
                         tuple(team2, eve.getId(), eveLevellog.getId(), null, "이브", false, true),
                         tuple(team2, alien.getId(), alienLevellog.getId(), null, "알린", false, false),
 
-                        tuple(team3, harry.getId(), harryLevellog.getId(), null, "해리", false, true),
-                        tuple(team3, kyoul.getId(), kyoulLevellog.getId(), null, "결", false, false)
+                        tuple(team1, roma.getId(), romaLevellog.getId(), null, "로마", false, true),
+                        tuple(team1, pep.getId(), pepLevellog.getId(), pepPreQuestion.getId(), "페퍼", false, false),
+                        tuple(team1, rick.getId(), rickLevellog.getId(), rickPreQuestion.getId(), "릭", false, false),
+                        tuple(team1, jun.getId(), null, null, "준", true, false)
                 );
     }
 }

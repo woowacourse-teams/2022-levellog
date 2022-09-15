@@ -4,12 +4,14 @@ import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.woowacourse.levellog.common.domain.MockEntityFactory;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.team.domain.Team;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayName("PreQuestion의")
 public class PreQuestionTest {
+
+    final Member author = new Member("알린", 12345678, "알린.img");
+    final Member from = new Member("로마", 56781234, "로마.img");
+
+    @BeforeEach
+    void setUp() {
+        MockEntityFactory.setId(1L, author);
+        MockEntityFactory.setId(2L, from);
+    }
 
     @Nested
     @DisplayName("생성자 메서드는")
@@ -30,11 +41,8 @@ public class PreQuestionTest {
         @DisplayName("사전 질문이 null 또는 공백이 들어오면 예외를 던진다.")
         void constructor_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
-            final Member author = new Member("알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
-
-            final Member from = new Member("로마", 56781234, "로마.img");
 
             // when & then
             assertThatThrownBy(() -> new PreQuestion(levellog, from, preQuestion))
@@ -46,7 +54,6 @@ public class PreQuestionTest {
         @DisplayName("내가 쓴 레벨로그의 사전 질문을 작성하면 예외를 던진다.")
         void constructor_preQuestionMyLevellog_exception() {
             // given
-            final Member author = new Member("알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
@@ -67,11 +74,8 @@ public class PreQuestionTest {
         @DisplayName("사전 질문을 수정한다.")
         void success() {
             // given
-            final Member author = new Member("알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
-
-            final Member from = new Member("로마", 56781234, "로마.img");
 
             final PreQuestion preQuestion = new PreQuestion(levellog, from, "로마가 쓴 사전 질문");
 
@@ -88,11 +92,8 @@ public class PreQuestionTest {
         @DisplayName("사전 질문이 null 또는 공백이 들어오면 예외를 던진다.")
         void update_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
-            final Member author = new Member("알린", 12345678, "알린.img");
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
-
-            final Member from = new Member("로마", 56781234, "로마.img");
 
             // when & then
             assertThatThrownBy(() -> new PreQuestion(levellog, from, preQuestion))

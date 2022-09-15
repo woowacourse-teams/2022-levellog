@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.team.dto;
 
+import com.woowacourse.levellog.team.domain.SimpleParticipant;
 import com.woowacourse.levellog.team.domain.Team;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,4 +17,8 @@ public class AllParticipantDto {
     private final String profileUrl;
     private final boolean isHost;
     private final boolean isWatcher;
+
+    public SimpleParticipant toSimpleParticipant() {
+        return new SimpleParticipant(team.getId(), memberId, isHost, isWatcher);
+    }
 }

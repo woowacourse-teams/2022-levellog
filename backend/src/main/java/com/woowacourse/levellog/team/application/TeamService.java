@@ -9,10 +9,13 @@ import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Participants;
+import com.woowacourse.levellog.team.domain.SimpleParticipant;
+import com.woowacourse.levellog.team.domain.SimpleParticipants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamCustomRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
+import com.woowacourse.levellog.team.dto.AllParticipantDto;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
@@ -62,10 +65,68 @@ public class TeamService {
 
     // FIXME 팀 전체 조회 ( /api/teams )
     public TeamsDto findAll(final Pageable pageable, final String status, final Long memberId) {
-        final List<Team> teams = getTeams(pageable, status);
-        final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
+        if (!status.equals(ALL_STATUS)) {
+            TeamStatus.checkClosed(status);
+            final List<AllParticipantDto> participantDtos = teamCustomRepository.findAll(memberId);
+
+            final List<TeamDto> teamDtos = participantDtos.stream()
+                    .map(AllParticipantDto::getTeam)
+                    .filter(it -> it.isSameStatus(status, timeStandard.now()))
+                    .distinct()
+                    .map(it -> toTeamDto(filterParticipantsByTeam(participantDtos, it), it, memberId))
+                    .collect(Collectors.toList());
+
+            return new TeamsDto(teamDtos);
+        }
+
+        final List<AllParticipantDto> participantDtos = teamCustomRepository.findAll(memberId);
+
+        final List<TeamDto> teamDtos = participantDtos.stream()
+                .map(AllParticipantDto::getTeam)
+                .distinct()
+                .map(it -> toTeamDto(filterParticipantsByTeam(participantDtos, it), it, memberId))
+                .collect(Collectors.toList());
 
         return new TeamsDto(teamDtos);
+    }
+
+    private TeamDto toTeamDto(final List<AllParticipantDto> filtered, final Team team, final Long memberId) {
+        final SimpleParticipants participants = toSimpleParticipants(filtered);
+
+        final TeamStatus status = team.status(timeStandard.now());
+        final boolean isParticipant = participants.isContains(memberId);
+        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
+        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
+
+        return TeamDto.from(team, participants.toHostId(), status, isParticipant, interviewers, interviewees,
+                toParticipantDto(filtered), toWatcherDtos(filtered));
+    }
+
+    private List<AllParticipantDto> filterParticipantsByTeam(final List<AllParticipantDto> all, final Team team) {
+        return all.stream()
+                .filter(it -> it.getTeam().equals(team))
+                .collect(Collectors.toList());
+    }
+
+    private SimpleParticipants toSimpleParticipants(final List<AllParticipantDto> filteredParticipants) {
+        final List<SimpleParticipant> participants = filteredParticipants.stream()
+                .map(AllParticipantDto::toSimpleParticipant)
+                .collect(Collectors.toList());
+        return new SimpleParticipants(participants);
+    }
+
+    private List<ParticipantDto> toParticipantDto(final List<AllParticipantDto> filteredParticipants) {
+        return filteredParticipants.stream()
+                .filter(it -> !it.isWatcher())
+                .map(ParticipantDto::from)
+                .collect(Collectors.toList());
+    }
+
+    private List<WatcherDto> toWatcherDtos(final List<AllParticipantDto> filteredParticipants) {
+        return filteredParticipants.stream()
+                .filter(AllParticipantDto::isWatcher)
+                .map(WatcherDto::from)
+                .collect(Collectors.toList());
     }
 
     public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {

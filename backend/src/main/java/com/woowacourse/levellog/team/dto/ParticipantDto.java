@@ -27,4 +27,13 @@ public class ParticipantDto {
                 participant.getMember().getNickname(),
                 participant.getMember().getProfileUrl());
     }
+
+    public static ParticipantDto from(final AllParticipantDto allParticipantDto) {
+        return new ParticipantDto(
+                allParticipantDto.getMemberId(),
+                allParticipantDto.getLevellogId(),
+                allParticipantDto.getPreQuestionId(),
+                allParticipantDto.getNickname(),
+                allParticipantDto.getProfileUrl());
+    }
 }

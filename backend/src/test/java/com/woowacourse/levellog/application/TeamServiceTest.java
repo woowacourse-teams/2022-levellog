@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 @DisplayName("TeamService의")
 class TeamServiceTest extends ServiceTest {
@@ -56,7 +54,7 @@ class TeamServiceTest extends ServiceTest {
             rickTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getDefaultPageRequest(), "all", rick.getId());
+            final TeamsDto response = teamService.findAll("all", rick.getId());
 
             //then
             assertAll(
@@ -90,7 +88,7 @@ class TeamServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getDefaultPageRequest(), "ready", rick.getId());
+            final TeamsDto response = teamService.findAll("ready", rick.getId());
 
             //then
             assertAll(
@@ -122,7 +120,7 @@ class TeamServiceTest extends ServiceTest {
             romaTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getDefaultPageRequest(), "in-progress", rick.getId());
+            final TeamsDto response = teamService.findAll("in-progress", rick.getId());
 
             //then
             assertAll(
@@ -154,7 +152,7 @@ class TeamServiceTest extends ServiceTest {
             eveTeam.close(AFTER_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getDefaultPageRequest(), "closed", rick.getId());
+            final TeamsDto response = teamService.findAll("closed", rick.getId());
 
             //then
             assertAll(
@@ -174,7 +172,7 @@ class TeamServiceTest extends ServiceTest {
             final Member rick = saveMember("릭");
 
             // when & then
-            assertThatThrownBy(() -> teamService.findAll(getDefaultPageRequest(), "invalid", rick.getId()))
+            assertThatThrownBy(() -> teamService.findAll("invalid", rick.getId()))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("입력 받은 status가 올바르지 않습니다.");
         }
@@ -193,19 +191,10 @@ class TeamServiceTest extends ServiceTest {
             team.delete(BEFORE_START_TIME);
 
             //when
-            final TeamsDto response = teamService.findAll(getDefaultPageRequest(), "all", rick.getId());
+            final TeamsDto response = teamService.findAll("all", rick.getId());
 
             //then
             assertThat(response.getTeams()).hasSize(1);
-        }
-
-        private PageRequest getDefaultPageRequest() {
-            final Sort sort = Sort.by(
-                    Sort.Order.asc("isClosed"),
-                    Sort.Order.desc("createdAt")
-            );
-
-            return PageRequest.of(0, 20, sort);
         }
 
         private List<String> toTitles(final TeamsDto response) {

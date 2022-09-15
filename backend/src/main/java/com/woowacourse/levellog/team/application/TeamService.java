@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,8 +62,7 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    // FIXME 팀 전체 조회 ( /api/teams )
-    public TeamsDto findAll(final Pageable pageable, final String status, final Long memberId) {
+    public TeamsDto findAll(final String status, final Long memberId) {
         if (!status.equals(ALL_STATUS)) {
             TeamStatus.checkClosed(status);
             final List<AllParticipantDto> participantDtos = teamCustomRepository.findAll(memberId);
@@ -187,31 +185,6 @@ public class TeamService {
 
         participantRepository.deleteByTeam(team);
         team.delete(timeStandard.now());
-    }
-
-    private List<Team> getTeams(final Pageable pageable, final String status) {
-        if (status.equals(ALL_STATUS)) {
-            return findAllOrderByIsClosedAndCreatedAt(pageable);
-        }
-        return findAllByIsClosedAndOrderByCreatedAt(pageable, status);
-    }
-
-    private List<Team> findAllOrderByIsClosedAndCreatedAt(final Pageable pageable) {
-        return teamRepository.findAll(pageable)
-                .getContent();
-    }
-
-    private List<Team> findAllByIsClosedAndOrderByCreatedAt(final Pageable pageable, final String status) {
-        final List<Team> teams = teamRepository.findAllByIsClosed(TeamStatus.checkClosed(status), pageable)
-                .getContent();
-
-        return filteringTeamByStatus(status, teams);
-    }
-
-    private List<Team> filteringTeamByStatus(final String status, final List<Team> teams) {
-        return teams.stream()
-                .filter(it -> it.isSameStatus(status, timeStandard.now()))
-                .collect(Collectors.toList());
     }
 
     private List<TeamDto> toTeamDtos(final List<Team> teams, final Long memberId) {

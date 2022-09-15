@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -51,7 +50,7 @@ class TeamControllerTest extends ControllerTest {
 
         willThrow(new InvalidFieldException(message, DebugMessage.init()))
                 .given(teamService)
-                .findAll(PageRequest.of(DEFAULT_PAGE, DEFAULT_SIZE, sort), invalidStatus, 1L);
+                .findAll(invalidStatus, 1L);
 
         // when
         final ResultActions perform = requestGet("/api/teams?status=" + invalidStatus);

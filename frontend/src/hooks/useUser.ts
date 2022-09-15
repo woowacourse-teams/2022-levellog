@@ -13,7 +13,11 @@ const useUser = () => {
   const navigate = useNavigate();
 
   const handleClickProfile = () => {
-    if (id) return setIsShowProfileDropdown((prev) => !prev);
+    if (id) {
+      setIsShowProfileDropdown((prev) => !prev);
+
+      return;
+    }
     window.location.href = GITHUB_LOGIN_URL;
   };
 
@@ -24,6 +28,7 @@ const useUser = () => {
 
   const handleClickLogoutButton = () => {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('userId');
     userInfoDispatch({ id: '', nickname: '', profileUrl: '' });
     setIsShowProfileDropdown(false);
     navigate(ROUTES_PATH.HOME);

@@ -11,10 +11,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
-    @Query("SELECT f FROM Feedback f JOIN FETCH f.from WHERE f.levellog = :levellog")
+    @Query("SELECT f FROM Feedback f INNER JOIN FETCH f.from WHERE f.levellog = :levellog")
     List<Feedback> findAllByLevellog(@Param("levellog") Levellog levellog);
 
-    List<Feedback> findAllByToOrderByUpdatedAtDesc(Member member);
+    @Query("SELECT f FROM Feedback f INNER JOIN FETCH f.from WHERE f.to = :member ORDER BY f.updatedAt DESC")
+    List<Feedback> findAllByToOrderByUpdatedAtDesc(@Param("member") Member member);
 
     boolean existsByLevellogIdAndFromId(Long levellogId, Long fromId);
 }

@@ -6,6 +6,8 @@ import axios, { AxiosResponse } from 'axios';
 import useSnackbar from 'hooks/useSnackbar';
 import useUser from 'hooks/useUser';
 
+import Loading from 'pages/status/Loading';
+
 import { ROUTES_PATH } from 'constants/constants';
 
 import { requestGetUserAuthority } from 'apis/login';
@@ -42,13 +44,15 @@ const AuthLogin = ({ needLogin }: AuthProps) => {
 
   useEffect(() => {
     if (needLogin && !accessToken) {
-      navigate(ROUTES_PATH.HOME);
+      navigate(ROUTES_PATH.HOME, { replace: true });
     }
 
     if (!loginUserId && accessToken) {
       checkUserAuthority();
     }
   }, [navigate]);
+
+  if (!navigate) return <Loading />;
 
   return <Outlet />;
 };

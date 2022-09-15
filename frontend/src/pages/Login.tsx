@@ -28,7 +28,6 @@ const Login = () => {
       if (accessToken && loginUserId) {
         window.location.replace('/');
       }
-
       if (code) {
         const res = await requestGetUserLogin({ code });
         const resLogin = await requestGetUserAuthority({ accessToken: res.data.accessToken });
@@ -41,13 +40,12 @@ const Login = () => {
           profileUrl: resLogin.data.profileUrl,
         });
       }
-
       if (beforeLoginPathname) {
-        navigate(beforeLoginPathname);
+        navigate(beforeLoginPathname, { replace: true });
 
         return;
       }
-      navigate(ROUTES_PATH.HOME);
+      navigate(ROUTES_PATH.HOME, { replace: true });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;

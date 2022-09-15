@@ -29,7 +29,7 @@ export const 토큰이올바르지못한경우홈페이지로 = ({
     showSnackbar({ message: MESSAGE.NEED_RE_LOGIN });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userId');
-    window.location.href = '/';
+    window.location.replace('/');
 
     return false;
   }

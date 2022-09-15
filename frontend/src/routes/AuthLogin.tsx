@@ -3,6 +3,8 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import useUser from 'hooks/useUser';
 
+import Loading from 'pages/status/Loading';
+
 import { ROUTES_PATH } from 'constants/constants';
 
 const AuthLogin = ({ needLogin }: AuthProps) => {
@@ -13,13 +15,15 @@ const AuthLogin = ({ needLogin }: AuthProps) => {
 
   useEffect(() => {
     if (needLogin && !accessToken) {
-      navigate(ROUTES_PATH.HOME);
+      navigate(ROUTES_PATH.HOME, { replace: true });
     }
 
     if (!loginUserId && accessToken) {
       navigate(ROUTES_PATH.LOGIN, { state: location, replace: true });
     }
   }, [navigate]);
+
+  if (!navigate) return <Loading />;
 
   return <Outlet />;
 };

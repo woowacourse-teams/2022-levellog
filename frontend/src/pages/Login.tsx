@@ -30,9 +30,6 @@ const Login = () => {
             nickname: res.data.nickname,
             profileUrl: res.data.profileUrl,
           });
-          navigate(location.state.pathname);
-
-          return;
         }
 
         if (code) {
@@ -47,17 +44,13 @@ const Login = () => {
           });
         }
 
-        if (location.state) {
-          if (location.state.pathname === ROUTES_PATH.LOGIN) {
-            navigate(location.state.pathname);
-
-            return;
-          }
-          navigate(location.state.pathname);
+        if (location.state && location.state.pathname !== ROUTES_PATH.LOGIN) {
+          navigate(location.state.pathname, { replace: true });
 
           return;
         }
-        navigate(ROUTES_PATH.HOME);
+
+        navigate(ROUTES_PATH.HOME, { replace: true });
       } catch (err: unknown) {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;

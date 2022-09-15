@@ -8,7 +8,6 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.dto.AllParticipantDto;
-import com.woowacourse.levellog.team.dto.ParticipantDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ import org.junit.jupiter.api.Test;
 class TeamCustomRepositoryTest extends RepositoryTest {
 
     @Test
-    @DisplayName("findAllParticipants 메서드는 참관자를 제외한 팀 참가자들의 상세 정보를 조회한다.")
+    @DisplayName("findAllParticipants 메서드는 참관자를 포함한 팀 참가자들의 상세 정보를 조회한다.")
     void findAllParticipants() {
         // given
         final Member roma = saveMember("로마");
@@ -35,16 +34,18 @@ class TeamCustomRepositoryTest extends RepositoryTest {
         final PreQuestion rickPreQuestion = savePreQuestion(rickLevellog, roma);
 
         // when
-        final List<ParticipantDto> actual = teamCustomRepository.findAllParticipants(team, roma.getId());
+        final List<AllParticipantDto> actual = teamCustomRepository.findAllByTeamId(team.getId(), roma.getId());
 
         // then
-        assertThat(actual).hasSize(3)
-                .extracting("memberId", "levellogId", "preQuestionId", "nickname")
+        assertThat(actual).hasSize(4)
+                .extracting("memberId", "levellogId", "preQuestionId", "nickname", "isWatcher", "isHost")
                 .containsExactly(
-                        tuple(roma.getId(), romaLevellog.getId(), null, "로마"),
-                        tuple(pep.getId(), pepLevellog.getId(), pepPreQuestion.getId(), "페퍼"),
-                        tuple(rick.getId(), rickLevellog.getId(), rickPreQuestion.getId(), "릭")
+                        tuple(roma.getId(), romaLevellog.getId(), null, "로마", false, true),
+                        tuple(pep.getId(), pepLevellog.getId(), pepPreQuestion.getId(), "페퍼", false, false),
+                        tuple(rick.getId(), rickLevellog.getId(), rickPreQuestion.getId(), "릭", false, false),
+                        tuple(jun.getId(), null, null, "준", true, false)
                 );
+
     }
 
     @Test

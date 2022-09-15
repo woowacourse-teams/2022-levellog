@@ -96,6 +96,27 @@ public class TeamService {
         return new TeamsDto(teamDtos);
     }
 
+    public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
+        final List<AllParticipantDto> allParticipants = teamCustomRepository.findAllByTeamId(teamId, memberId);
+        if (allParticipants.isEmpty()) {
+            throw new TeamNotFoundException(DebugMessage.init()
+                    .append("teamId", teamId)
+                    .append("membmerId", memberId));
+        }
+
+        final Team team = allParticipants.get(0).getTeam();
+
+        final SimpleParticipants participants = toSimpleParticipants(allParticipants);
+
+        final TeamStatus status = team.status(timeStandard.now());
+        final boolean isParticipant = participants.isContains(memberId);
+        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
+        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
+
+        return TeamDto.from(team, participants.toHostId(), status, isParticipant, interviewers, interviewees,
+                toParticipantDto(allParticipants), toWatcherDtos(allParticipants));
+    }
+
     private TeamDto toTeamDto(final List<AllParticipantDto> filtered, final Team team, final Long memberId) {
         final SimpleParticipants participants = toSimpleParticipants(filtered);
 
@@ -133,12 +154,6 @@ public class TeamService {
                 .filter(AllParticipantDto::isWatcher)
                 .map(WatcherDto::from)
                 .collect(Collectors.toList());
-    }
-
-    public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
-        final Team team = getTeam(teamId);
-
-        return createTeamAndRoleDto(team, memberId);
     }
 
     public TeamStatusDto findStatus(final Long teamId) {
@@ -185,18 +200,6 @@ public class TeamService {
 
         participantRepository.deleteByTeam(team);
         team.delete(timeStandard.now());
-    }
-
-    private TeamDto createTeamAndRoleDto(final Team team, final Long memberId) {
-        final TeamStatus status = team.status(timeStandard.now());
-
-        final Participants participants = new Participants(participantRepository.findByTeam(team));
-        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
-        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
-
-        final List<ParticipantDto> participantDtos = teamCustomRepository.findAllParticipants(team, memberId);
-        return TeamDto.from(team, participants.toHostId(), status, participants.isContains(memberId), interviewers,
-                interviewees, participantDtos, toWatcherResponses(participants));
     }
 
     private Member getMember(final Long memberId) {
@@ -280,13 +283,6 @@ public class TeamService {
     private List<Participant> toWatchers(final Team team, final Long hostId, final List<Long> watcherIds) {
         return watcherIds.stream()
                 .map(it -> new Participant(team, getMember(it), it.equals(hostId), true))
-                .collect(Collectors.toList());
-    }
-
-    private List<WatcherDto> toWatcherResponses(final Participants participants) {
-        return participants.getValues().stream()
-                .filter(Participant::isWatcher)
-                .map(WatcherDto::from)
                 .collect(Collectors.toList());
     }
 

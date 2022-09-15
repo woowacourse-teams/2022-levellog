@@ -18,7 +18,6 @@ const useUser = () => {
 
       return;
     }
-    sessionStorage.setItem('beforeLoginPathname', window.location.pathname);
     window.location.href = GITHUB_LOGIN_URL;
   };
 

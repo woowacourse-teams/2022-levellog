@@ -22,7 +22,6 @@ const Login = () => {
     const params = new URL(window.location.href).searchParams;
     const code = params.get('code');
     const accessToken = localStorage.getItem('accessToken');
-    const beforeLoginPathname = sessionStorage.getItem('beforeLoginPathname');
 
     try {
       if (accessToken && loginUserId) {
@@ -39,11 +38,6 @@ const Login = () => {
           nickname: resLogin.data.nickname,
           profileUrl: resLogin.data.profileUrl,
         });
-      }
-      if (beforeLoginPathname) {
-        navigate(beforeLoginPathname, { replace: true });
-
-        return;
       }
       navigate(ROUTES_PATH.HOME, { replace: true });
     } catch (err: unknown) {

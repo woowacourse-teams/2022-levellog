@@ -52,6 +52,7 @@ class TeamServiceTest extends ServiceTest {
             final Team romaTeam = saveTeam(roma, rick);
 
             rickTeam.close(AFTER_START_TIME);
+            entityManager.flush();
 
             //when
             final TeamsDto response = teamService.findAll("all", rick.getId());
@@ -119,6 +120,8 @@ class TeamServiceTest extends ServiceTest {
             timeStandard.setInProgress();
             romaTeam.close(AFTER_START_TIME);
 
+            entityManager.flush();
+
             //when
             final TeamsDto response = teamService.findAll("in-progress", rick.getId());
 
@@ -150,6 +153,8 @@ class TeamServiceTest extends ServiceTest {
 
             rickTeam.close(AFTER_START_TIME);
             eveTeam.close(AFTER_START_TIME);
+
+            entityManager.flush();
 
             //when
             final TeamsDto response = teamService.findAll("closed", rick.getId());
@@ -190,6 +195,7 @@ class TeamServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             team.delete(BEFORE_START_TIME);
+            entityManager.flush();
 
             //when
             final TeamsDto response = teamService.findAll("all", rick.getId());

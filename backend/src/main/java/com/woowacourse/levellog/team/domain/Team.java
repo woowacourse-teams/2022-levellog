@@ -58,6 +58,7 @@ public class Team extends BaseEntity {
         this.interviewerNumber = interviewerNumber;
         this.isClosed = false;
         this.deleted = false;
+
     }
 
     private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,

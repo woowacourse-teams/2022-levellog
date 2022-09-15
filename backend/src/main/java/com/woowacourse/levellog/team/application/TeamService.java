@@ -65,12 +65,12 @@ public class TeamService {
     public TeamsDto findAll(final String status, final Long memberId) {
         TeamStatus.checkClosed(status);
 
-        final List<TeamDto> teamDtos = teamCustomRepository.findAll(memberId)
-                .stream()
+        final List<AllParticipantDto> allParticipants = teamCustomRepository.findAll(memberId);
+        final List<TeamDto> teamDtos = allParticipants.stream()
                 .map(AllParticipantDto::getTeam)
                 .filter(it -> filterStatus(status, it))
                 .distinct()
-                .map(it -> toTeamDto(filterParticipantsByTeam(teamCustomRepository.findAll(memberId), it), it, memberId))
+                .map(it -> toTeamDto(filterParticipantsByTeam(allParticipants, it), it, memberId))
                 .collect(Collectors.toList());
 
         return new TeamsDto(teamDtos);
@@ -86,11 +86,11 @@ public class TeamService {
     public TeamsDto findAllByMemberId(final Long memberId) {
         final Member member = getMember(memberId);
 
-        final List<TeamDto> teamDtos = teamCustomRepository.findAllMy(member)
-                .stream()
+        final List<AllParticipantDto> allParticipants = teamCustomRepository.findAllMy(member);
+        final List<TeamDto> teamDtos = allParticipants.stream()
                 .map(AllParticipantDto::getTeam)
                 .distinct()
-                .map(it -> toTeamDto(filterParticipantsByTeam(teamCustomRepository.findAllMy(member), it), it, memberId))
+                .map(it -> toTeamDto(filterParticipantsByTeam(allParticipants, it), it, memberId))
                 .collect(Collectors.toList());
 
         return new TeamsDto(teamDtos);

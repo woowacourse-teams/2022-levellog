@@ -179,6 +179,6 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"));
+                .body("teams.title", contains("잠실 브리조", "잠실 제이슨조"));
     }
 }

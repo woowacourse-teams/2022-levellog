@@ -107,4 +107,44 @@ class TeamCustomRepositoryTest extends RepositoryTest {
                         tuple(team1, jun.getId(), null, null, "준", true, false)
                 );
     }
+
+    @Test
+    @DisplayName("findAllMy 메서드는 내가 속한 팀 목록을 조회한다.")
+    void findAllMy() {
+        // given
+        // 팀 1
+        final Member pep = saveMember("페퍼");
+        final Member ali = saveMember("알린");
+
+        final Team team1 = saveTeam(pep, ali);
+
+        final Levellog pepLevellog1 = saveLevellog(pep, team1);
+        final Levellog aliLevellog = saveLevellog(ali, team1);
+
+        final PreQuestion aliPreQuestion = savePreQuestion(aliLevellog, pep);
+
+        // 팀 2
+        final Member kyoul = saveMember("결");
+
+        final Team team2 = saveTeam(pep, kyoul);
+
+        final Levellog pepLevellog2 = saveLevellog(pep, team2);
+        final Levellog kyoulLevellog = saveLevellog(kyoul, team2);
+
+        final PreQuestion kyoulPreQuestion = savePreQuestion(kyoulLevellog, pep);
+
+        // when
+        final List<AllParticipantDto> actual = teamCustomRepository.findAllMy(pep);
+
+        // then
+        assertThat(actual).hasSize(4)
+                .extracting("team", "memberId", "levellogId", "preQuestionId", "nickname", "isWatcher", "isHost")
+                .containsExactly(
+                        tuple(team2, pep.getId(), pepLevellog2.getId(), null, "페퍼", false, true),
+                        tuple(team2, kyoul.getId(), kyoulLevellog.getId(), kyoulPreQuestion.getId(), "결", false, false),
+
+                        tuple(team1, pep.getId(), pepLevellog1.getId(), null, "페퍼", false, true),
+                        tuple(team1, ali.getId(), aliLevellog.getId(), aliPreQuestion.getId(), "알린", false, false)
+                );
+    }
 }

@@ -63,26 +63,34 @@ public class TeamService {
     }
 
     public TeamsDto findAll(final String status, final Long memberId) {
+        TeamStatus.checkClosed(status);
+
+        final List<TeamDto> teamDtos = teamCustomRepository.findAll(memberId)
+                .stream()
+                .map(AllParticipantDto::getTeam)
+                .filter(it -> filterStatus(status, it))
+                .distinct()
+                .map(it -> toTeamDto(filterParticipantsByTeam(teamCustomRepository.findAll(memberId), it), it, memberId))
+                .collect(Collectors.toList());
+
+        return new TeamsDto(teamDtos);
+    }
+
+    private boolean filterStatus(final String status, final Team team) {
         if (!status.equals(ALL_STATUS)) {
-            TeamStatus.checkClosed(status);
-            final List<AllParticipantDto> participantDtos = teamCustomRepository.findAll(memberId);
-
-            final List<TeamDto> teamDtos = participantDtos.stream()
-                    .map(AllParticipantDto::getTeam)
-                    .filter(it -> it.isSameStatus(status, timeStandard.now()))
-                    .distinct()
-                    .map(it -> toTeamDto(filterParticipantsByTeam(participantDtos, it), it, memberId))
-                    .collect(Collectors.toList());
-
-            return new TeamsDto(teamDtos);
+            return team.isSameStatus(status, timeStandard.now());
         }
+        return true;
+    }
 
-        final List<AllParticipantDto> participantDtos = teamCustomRepository.findAll(memberId);
+    public TeamsDto findAllByMemberId(final Long memberId) {
+        final Member member = getMember(memberId);
 
-        final List<TeamDto> teamDtos = participantDtos.stream()
+        final List<TeamDto> teamDtos = teamCustomRepository.findAllMy(member)
+                .stream()
                 .map(AllParticipantDto::getTeam)
                 .distinct()
-                .map(it -> toTeamDto(filterParticipantsByTeam(participantDtos, it), it, memberId))
+                .map(it -> toTeamDto(filterParticipantsByTeam(teamCustomRepository.findAllMy(member), it), it, memberId))
                 .collect(Collectors.toList());
 
         return new TeamsDto(teamDtos);
@@ -133,14 +141,6 @@ public class TeamService {
         return createTeamAndRoleDto(team, memberId);
     }
 
-    // FIXME 내 팀 조회 ( /api/my-info/teams )
-    public TeamsDto findAllByMemberId(final Long memberId) {
-        final List<Team> teams = getTeamsByMemberId(memberId);
-        final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
-
-        return new TeamsDto(teamDtos);
-    }
-
     public TeamStatusDto findStatus(final Long teamId) {
         final Team team = getTeam(teamId);
         final TeamStatus status = team.status(timeStandard.now());
@@ -187,12 +187,6 @@ public class TeamService {
         team.delete(timeStandard.now());
     }
 
-    private List<TeamDto> toTeamDtos(final List<Team> teams, final Long memberId) {
-        return teams.stream()
-                .map(it -> createTeamAndRoleDto(it, memberId))
-                .collect(Collectors.toList());
-    }
-
     private TeamDto createTeamAndRoleDto(final Team team, final Long memberId) {
         final TeamStatus status = team.status(timeStandard.now());
 
@@ -216,15 +210,6 @@ public class TeamService {
                 .orElseThrow(
                         () -> new TeamNotFoundException(DebugMessage.init()
                                 .append("teamId", teamId)));
-    }
-
-    private List<Team> getTeamsByMemberId(final Long memberId) {
-        final Member member = getMember(memberId);
-        final List<Participant> participants = participantRepository.findAllByMember(member);
-
-        return participants.stream()
-                .map(Participant::getTeam)
-                .collect(Collectors.toList());
     }
 
     private Participants createParticipants(final Team team, final Long hostId, final List<Long> participantIds,

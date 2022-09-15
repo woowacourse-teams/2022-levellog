@@ -170,6 +170,7 @@ class TeamServiceTest extends ServiceTest {
         void findAll_invalidStatus_exception() {
             // given
             final Member rick = saveMember("릭");
+            saveTeam(rick, rick);
 
             // when & then
             assertThatThrownBy(() -> teamService.findAll("invalid", rick.getId()))

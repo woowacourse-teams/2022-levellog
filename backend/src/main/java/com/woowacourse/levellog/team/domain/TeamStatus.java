@@ -14,10 +14,16 @@ public enum TeamStatus {
     IN_PROGRESS("in-progress", false),
     CLOSED("closed", true);
 
+    private static final String ALL = "all";
+
     private final String status;
     private final boolean isClosed;
 
     public static boolean checkClosed(final String status) {
+        if (ALL.equals(status)) {
+            return true;
+        }
+
         return Arrays.stream(values())
                 .filter(it -> it.getStatus().equals(status))
                 .findFirst()

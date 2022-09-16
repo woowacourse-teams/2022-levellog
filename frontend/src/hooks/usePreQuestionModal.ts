@@ -30,7 +30,7 @@ const usePreQuestionModal = () => {
       preQuestionId,
     });
     onClickCloseModal();
-    showSnackbar({ message: MESSAGE.PREQUESTION_DELETE_CONFIRM });
+    showSnackbar({ message: MESSAGE.PREQUESTION_DELETE });
   };
 
   return {

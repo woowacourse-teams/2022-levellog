@@ -57,7 +57,8 @@ const usePreQuestion = () => {
         levellogId,
         preQuestionResult: { content: preQuestionContent },
       });
-      navigate(teamGetUriBuilder({ teamId }));
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -76,6 +77,8 @@ const usePreQuestion = () => {
   }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
     try {
       await requestDeletePreQuestion({ accessToken, levellogId, preQuestionId });
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -89,7 +92,6 @@ const usePreQuestion = () => {
   };
 
   const editPreQuestion = async ({
-    teamId,
     levellogId,
     preQuestionId,
     preQuestionContent,
@@ -101,7 +103,8 @@ const usePreQuestion = () => {
         preQuestionId,
         preQuestionResult: { content: preQuestionContent },
       });
-      navigate(teamGetUriBuilder({ teamId }));
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -133,14 +136,18 @@ const usePreQuestion = () => {
     teamId,
     levellogId,
   }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId'>) => {
-    if (preQuestionRef.current) {
+    if (!preQuestionRef.current) return;
+
+    if (
       await postPreQuestion({
         teamId,
         levellogId,
         preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
           .innerText,
-      });
-      showSnackbar({ message: MESSAGE.PREQUESTION_ADD_CONFIRM });
+      })
+    ) {
+      showSnackbar({ message: MESSAGE.PREQUESTION_ADD });
+      navigate(teamGetUriBuilder({ teamId }));
     }
   };
 
@@ -149,17 +156,20 @@ const usePreQuestion = () => {
     levellogId,
     preQuestionId,
   }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId' | 'preQuestionId'>) => {
-    if (preQuestionRef.current) {
+    if (!preQuestionRef.current) return;
+
+    if (
       await editPreQuestion({
         teamId,
         levellogId,
         preQuestionId,
         preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
           .innerText,
-      });
-      showSnackbar({ message: MESSAGE.PREQUESTION_EDIT_CONFIRM });
+      })
+    ) {
+      showSnackbar({ message: MESSAGE.PREQUESTION_EDIT });
+      navigate(teamGetUriBuilder({ teamId }));
     }
-    navigate(teamGetUriBuilder({ teamId }));
   };
 
   return {

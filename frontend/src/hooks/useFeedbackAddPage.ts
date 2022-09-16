@@ -48,7 +48,6 @@ const useFeedbackAddPage = () => {
 
       return;
     }
-
     showSnackbar({ message: MESSAGE.WRONG_ACCESS });
     navigate(ROUTES_PATH.ERROR);
   };

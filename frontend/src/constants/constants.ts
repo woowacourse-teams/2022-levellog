@@ -43,15 +43,15 @@ export const MESSAGE = Object.freeze({
   TEAM_EDIT: '팀 수정이 완료되었습니다.',
 
   FEEDBACK_CREATE: '피드백 작성이 완료되었습니다.',
-  FEEDBACK_EDIT_CONFIRM: '피드백 수정이 완료되었습니다.',
-  FEEDBACK_SAVE_CONFIRM: '피드백 저장이 완료되었습니다.',
+  FEEDBACK_EDIT: '피드백 수정이 완료되었습니다.',
+  FEEDBACK_SAVE: '피드백 저장이 완료되었습니다.',
 
-  LEVELLOG_ADD_CONFIRM: '레벨로그 작성이 완료되었습니다.',
-  LEVELLOG_EDIT_CONFIRM: '레벨로그 수정이 완료되었습니다.',
+  LEVELLOG_ADD: '레벨로그 작성이 완료되었습니다.',
+  LEVELLOG_EDIT: '레벨로그 수정이 완료되었습니다.',
 
-  PREQUESTION_ADD_CONFIRM: '사전질문 등록이 완료되었습니다.',
-  PREQUESTION_DELETE_CONFIRM: '사전질문 삭제가 완료되었습니다.',
-  PREQUESTION_EDIT_CONFIRM: '사전질문 수정이 완료되었습니다.',
+  PREQUESTION_ADD: '사전질문 등록이 완료되었습니다.',
+  PREQUESTION_DELETE: '사전질문 삭제가 완료되었습니다.',
+  PREQUESTION_EDIT: '사전질문 수정이 완료되었습니다.',
 
   INTERVIEW_CLOSE_CONFIRM: '정말로 인터뷰를 종료하시겠습니까?',
   INTERVIEW_STATUS_NOT_READY: '인터뷰가 시작 전이 아닙니다!',

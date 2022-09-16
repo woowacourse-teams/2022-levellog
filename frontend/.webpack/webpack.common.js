@@ -9,10 +9,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(ts|tsx)$/,
-        use: ['babel-loader', 'ts-loader'],
-      },
-      {
         test: /\.(png|jpe?g|svg|webp|woff)$/,
         type: 'asset/resource',
       },

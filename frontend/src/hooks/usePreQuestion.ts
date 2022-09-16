@@ -142,8 +142,7 @@ const usePreQuestion = () => {
       await postPreQuestion({
         teamId,
         levellogId,
-        preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
-          .innerText,
+        preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
       })
     ) {
       showSnackbar({ message: MESSAGE.PREQUESTION_ADD });
@@ -163,8 +162,7 @@ const usePreQuestion = () => {
         teamId,
         levellogId,
         preQuestionId,
-        preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
-          .innerText,
+        preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
       })
     ) {
       showSnackbar({ message: MESSAGE.PREQUESTION_EDIT });

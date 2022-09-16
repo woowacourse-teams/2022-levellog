@@ -107,7 +107,7 @@ const useLevellog = () => {
     if (
       await postLevellog({
         teamId,
-        inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
+        inputValue: levellogRef.current.getInstance().getMarkdown(),
       })
     ) {
       showSnackbar({ message: MESSAGE.LEVELLOG_ADD });
@@ -125,7 +125,7 @@ const useLevellog = () => {
       await editLevellog({
         teamId,
         levellogId,
-        inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
+        inputValue: levellogRef.current.getInstance().getMarkdown(),
       })
     ) {
       showSnackbar({ message: MESSAGE.LEVELLOG_EDIT });

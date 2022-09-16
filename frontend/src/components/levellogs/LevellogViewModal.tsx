@@ -12,7 +12,7 @@ import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
-import UiViewer from 'components/@commons/UiViewer';
+import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import ModalPortal from 'portal/ModalPortal';
 import { LevellogInfoType } from 'types/levellog';
 import { ParticipantType } from 'types/team';

@@ -5,6 +5,14 @@ const common = require('./webpack.common.js');
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'eval-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.(ts|tsx)$/,
+        use: 'ts-loader',
+      },
+    ],
+  },
   plugins: [
     new webpack.EnvironmentPlugin({
       SERVICE_URI: 'https://test.levellog.app',

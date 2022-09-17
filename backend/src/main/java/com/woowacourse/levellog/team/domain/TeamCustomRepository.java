@@ -2,6 +2,7 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.dto.AllParticipantDto;
+import com.woowacourse.levellog.team.dto.AllSimpleParticipantDto;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,6 +12,15 @@ import org.springframework.stereotype.Repository;
 public class TeamCustomRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<AllSimpleParticipantDto> simpleRowMapper = (resultSet, rowNumber) -> new AllSimpleParticipantDto(
+            resultSet.getObject("teamId", Long.class),
+            resultSet.getString("title"),
+            resultSet.getString("place"),
+            resultSet.getTimestamp("start_at").toLocalDateTime(),
+            resultSet.getString("teamProfileUrl"),
+            resultSet.getBoolean("is_closed"),
+            resultSet.getString("profile_url")
+    );
     private final RowMapper<AllParticipantDto> rowMapper = (resultSet, rowNumber) -> new AllParticipantDto(
             resultSet.getObject("teamId", Long.class),
             resultSet.getString("title"),
@@ -47,6 +57,21 @@ public class TeamCustomRepository {
                 + "ORDER BY t.is_closed ASC, t.created_at DESC";
 
         return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
+    public List<AllSimpleParticipantDto> findAllSimple(final int limit, final int offset) {
+        final String sql = "SELECT /*! STRAIGHT_JOIN */ "
+                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, m.profile_url "
+                + "FROM "
+                    + "(SELECT * "
+                    + "FROM team "
+                    + "WHERE deleted = FALSE "
+                    + "LIMIT ? OFFSET ?) AS t "
+                    + "INNER JOIN participant p ON p.team_id = t.id AND p.is_watcher = FALSE "
+                    + "INNER JOIN member m ON m.id = p.member_id "
+                + "ORDER BY t.is_closed ASC, t.created_at DESC";
+
+        return jdbcTemplate.query(sql, simpleRowMapper, limit, offset);
     }
 
     public List<AllParticipantDto> findAllByTeamId(final Long teamId, final Long memberId) {

@@ -8,6 +8,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.dto.AllParticipantDto;
+import com.woowacourse.levellog.team.dto.AllSimpleParticipantDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -106,6 +107,49 @@ class TeamCustomRepositoryTest extends RepositoryTest {
                         tuple(team1, pep.getId(), pepLevellog.getId(), pepPreQuestion.getId(), "페퍼", false, false),
                         tuple(team1, rick.getId(), rickLevellog.getId(), rickPreQuestion.getId(), "릭", false, false),
                         tuple(team1, jun.getId(), null, null, "준", true, false)
+                );
+    }
+
+    @Test
+    @DisplayName("findAllSimple 메서드는 개선된 쿼리로 팀 목록을 조회한다.")
+    void findAllSimple() {
+        // given
+        // 팀 1
+        final Member roma = saveMember("로마");
+        final Member pep = saveMember("페퍼");
+        final Member rick = saveMember("릭");
+        final Member jun = saveMember("준");
+
+        final Team team1 = saveTeam(roma, List.of(jun), pep, rick);
+
+        // 팀 2
+        final Member eve = saveMember("이브");
+        final Member alien = saveMember("알린");
+
+        final Team team2 = saveTeam(eve, alien);
+
+        // 팀 3
+        final Member harry = saveMember("해리");
+        final Member kyoul = saveMember("결");
+
+        final Team team3 = saveTeam(harry, kyoul);
+
+        // when
+        final List<AllSimpleParticipantDto> actual = teamCustomRepository.findAllSimple(10, 0);
+
+        // then
+        assertThat(actual).hasSize(7)
+                .extracting("id", "memberImage")
+                .containsExactly(
+                        tuple(team3.getId(), harry.getProfileUrl()),
+                        tuple(team3.getId(), kyoul.getProfileUrl()),
+
+                        tuple(team2.getId(), eve.getProfileUrl()),
+                        tuple(team2.getId(), alien.getProfileUrl()),
+
+                        tuple(team1.getId(), roma.getProfileUrl()),
+                        tuple(team1.getId(), pep.getProfileUrl()),
+                        tuple(team1.getId(), rick.getProfileUrl())
                 );
     }
 

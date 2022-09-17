@@ -12,7 +12,7 @@ import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.SimpleParticipant;
 import com.woowacourse.levellog.team.domain.SimpleParticipants;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.domain.TeamCustomRepository;
+import com.woowacourse.levellog.team.domain.TeamQueryRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.AllParticipantDto;
@@ -46,7 +46,7 @@ public class TeamService {
     private static final String ALL_STATUS = "all";
 
     private final TeamRepository teamRepository;
-    private final TeamCustomRepository teamCustomRepository;
+    private final TeamQueryRepository teamQueryRepository;
     private final ParticipantRepository participantRepository;
     private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
@@ -68,7 +68,7 @@ public class TeamService {
     public TeamListDto findAll(final String status, final int page, final int size) {
         TeamStatus.checkClosed(status);
 
-        final List<AllSimpleParticipantDto> allParticipants = teamCustomRepository.findAll(size, page * size);
+        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findAllList(size, page * size);
         final List<TeamSimpleDto> teamSimpleDtos = allParticipants.stream()
                 .filter(it -> filterStatus(status, toTeamStatus(it)))
                 .collect(Collectors.groupingBy(AllSimpleParticipantDto::getId, LinkedHashMap::new, Collectors.toList()))
@@ -83,7 +83,7 @@ public class TeamService {
     public TeamListDto findAllByMemberId(final Long memberId) {
         final Member member = getMember(memberId);
 
-        final List<AllSimpleParticipantDto> allParticipants = teamCustomRepository.findAllMy(member);
+        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findMyList(member);
         final List<TeamSimpleDto> teamSimpleDtos = allParticipants.stream()
                 .collect(Collectors.groupingBy(AllSimpleParticipantDto::getId, LinkedHashMap::new, Collectors.toList()))
                 .values()
@@ -95,7 +95,7 @@ public class TeamService {
     }
 
     public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
-        final List<AllParticipantDto> allParticipants = teamCustomRepository.findAllByTeamId(teamId, memberId);
+        final List<AllParticipantDto> allParticipants = teamQueryRepository.findAllByTeamId(teamId, memberId);
         if (allParticipants.isEmpty()) {
             throw new TeamNotFoundException(DebugMessage.init()
                     .append("teamId", teamId)

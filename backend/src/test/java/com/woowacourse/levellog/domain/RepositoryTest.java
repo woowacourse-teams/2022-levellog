@@ -17,7 +17,7 @@ import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.domain.TeamCustomRepository;
+import com.woowacourse.levellog.team.domain.TeamQueryRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,7 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import({
         JpaConfig.class,
-        TeamCustomRepository.class
+        TeamQueryRepository.class
 })
 abstract class RepositoryTest {
 
@@ -61,7 +61,7 @@ abstract class RepositoryTest {
     protected TeamRepository teamRepository;
 
     @Autowired
-    protected TeamCustomRepository teamCustomRepository;
+    protected TeamQueryRepository teamQueryRepository;
 
     @Autowired
     protected NicknameMappingRepository nicknameMappingRepository;

@@ -13,8 +13,8 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("TeamCustomRepository의")
-class TeamCustomRepositoryTest extends RepositoryTest {
+@DisplayName("TeamQueryRepository의")
+class TeamQueryRepositoryTest extends RepositoryTest {
 
     @Test
     @DisplayName("findAllParticipants 메서드는 참관자를 포함한 팀 참가자들의 상세 정보를 조회한다.")
@@ -35,7 +35,7 @@ class TeamCustomRepositoryTest extends RepositoryTest {
         final PreQuestion rickPreQuestion = savePreQuestion(rickLevellog, roma);
 
         // when
-        final List<AllParticipantDto> actual = teamCustomRepository.findAllByTeamId(team.getId(), roma.getId());
+        final List<AllParticipantDto> actual = teamQueryRepository.findAllByTeamId(team.getId(), roma.getId());
 
         // then
         assertThat(actual).hasSize(4)
@@ -50,8 +50,8 @@ class TeamCustomRepositoryTest extends RepositoryTest {
     }
 
     @Test
-    @DisplayName("findAll 메서드는 개선된 쿼리로 팀 목록을 조회한다.")
-    void findAll() {
+    @DisplayName("findAllList 메서드는 개선된 쿼리로 팀 목록을 조회한다.")
+    void findAllList() {
         // given
         // 팀 1
         final Member roma = saveMember("로마");
@@ -74,7 +74,7 @@ class TeamCustomRepositoryTest extends RepositoryTest {
         final Team team3 = saveTeam(harry, kyoul);
 
         // when
-        final List<AllSimpleParticipantDto> actual = teamCustomRepository.findAll(10, 0);
+        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findAllList(10, 0);
 
         // then
         assertThat(actual).hasSize(7)
@@ -93,8 +93,8 @@ class TeamCustomRepositoryTest extends RepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllMy 메서드는 내가 속한 팀 목록을 조회한다.")
-    void findAllMy() {
+    @DisplayName("findMyList 메서드는 내가 속한 팀 목록을 조회한다.")
+    void findMyList() {
         // given
         // 팀 1
         final Member pep = saveMember("페퍼");
@@ -108,7 +108,7 @@ class TeamCustomRepositoryTest extends RepositoryTest {
         final Team team2 = saveTeam(pep, kyoul);
 
         // when
-        final List<AllSimpleParticipantDto> actual = teamCustomRepository.findAllMy(pep);
+        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findMyList(pep);
 
         // then
         assertThat(actual).hasSize(4)

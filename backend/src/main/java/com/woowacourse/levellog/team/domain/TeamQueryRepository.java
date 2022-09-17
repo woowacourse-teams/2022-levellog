@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TeamCustomRepository {
+public class TeamQueryRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<AllSimpleParticipantDto> simpleRowMapper = (resultSet, rowNumber) -> new AllSimpleParticipantDto(
@@ -21,7 +21,7 @@ public class TeamCustomRepository {
             resultSet.getBoolean("is_closed"),
             resultSet.getString("profile_url")
     );
-    private final RowMapper<AllParticipantDto> rowMapper = (resultSet, rowNumber) -> new AllParticipantDto(
+    private final RowMapper<AllParticipantDto> detailRowMapper = (resultSet, rowNumber) -> new AllParticipantDto(
             resultSet.getObject("teamId", Long.class),
             resultSet.getString("title"),
             resultSet.getString("place"),
@@ -40,11 +40,11 @@ public class TeamCustomRepository {
             resultSet.getBoolean("is_watcher")
     );
 
-    public TeamCustomRepository(final JdbcTemplate jdbcTemplate) {
+    public TeamQueryRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<AllSimpleParticipantDto> findAll(final int limit, final int offset) {
+    public List<AllSimpleParticipantDto> findAllList(final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, m.profile_url "
                 + "FROM "
@@ -71,10 +71,10 @@ public class TeamCustomRepository {
                 + "WHERE t.deleted = false AND t.id = ? "
                 + "ORDER BY t.is_closed ASC, t.created_at DESC";
 
-        return jdbcTemplate.query(sql, rowMapper, memberId, teamId);
+        return jdbcTemplate.query(sql, detailRowMapper, memberId, teamId);
     }
 
-    public List<AllSimpleParticipantDto> findAllMy(final Member member) {
+    public List<AllSimpleParticipantDto> findMyList(final Member member) {
         final String sql = "SELECT "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
                 + "m.profile_url "

@@ -16,9 +16,12 @@ import com.woowacourse.levellog.team.domain.TeamCustomRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.AllParticipantDto;
+import com.woowacourse.levellog.team.dto.AllSimpleParticipantDto;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamListDto;
+import com.woowacourse.levellog.team.dto.TeamSimpleDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.dto.TeamsDto;
@@ -28,6 +31,7 @@ import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,25 +66,30 @@ public class TeamService {
         return savedTeam.getId();
     }
 
-    public TeamsDto findAll(final String status, final Long memberId) {
+    public TeamListDto findAll(final String status, final int page, final int size) {
         TeamStatus.checkClosed(status);
 
-        final List<AllParticipantDto> allParticipants = teamCustomRepository.findAll(memberId);
-        final List<TeamDto> teamDtos = allParticipants.stream()
-                .map(AllParticipantDto::getTeam)
-                .filter(it -> filterStatus(status, it))
-                .distinct()
-                .map(it -> toTeamDto(filterParticipantsByTeam(allParticipants, it), it, memberId))
+        final List<AllSimpleParticipantDto> allParticipants = teamCustomRepository.findAllSimple(size, page * size);
+        final List<TeamSimpleDto> teamSimpleDtos = allParticipants.stream()
+                .filter(it -> filterStatus(status, toTeamStatus(it)))
+                .collect(Collectors.groupingBy(AllSimpleParticipantDto::getId, LinkedHashMap::new, Collectors.toList()))
+                .values()
+                .stream()
+                .map(it -> TeamSimpleDto.of(it, toTeamStatus(it.get(0))))
                 .collect(Collectors.toList());
 
-        return new TeamsDto(teamDtos);
+        return new TeamListDto(teamSimpleDtos);
     }
 
-    private boolean filterStatus(final String status, final Team team) {
+    private boolean filterStatus(final String status, final TeamStatus teamStatus) {
         if (!status.equals(ALL_STATUS)) {
-            return team.isSameStatus(status, timeStandard.now());
+            return teamStatus.isSame(status);
         }
         return true;
+    }
+
+    private TeamStatus toTeamStatus(final AllSimpleParticipantDto dto) {
+        return TeamStatus.of(dto.isClosed(), dto.getStartAt(), timeStandard.now());
     }
 
     public TeamsDto findAllByMemberId(final Long memberId) {

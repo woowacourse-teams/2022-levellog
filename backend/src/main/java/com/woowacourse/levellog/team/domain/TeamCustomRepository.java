@@ -44,21 +44,6 @@ public class TeamCustomRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<AllParticipantDto> findAll(final Long memberId) {
-        final String sql = "SELECT "
-                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.interviewer_number, t.is_closed, t.created_at, t.updated_at, "
-                + "m.id memberId, l.id levellogId, pq.id preQuestionId, m.nickname, m.profile_url, p.is_host, p.is_watcher "
-                + "FROM participant p "
-                + "INNER JOIN member m ON p.member_id = m.id "
-                + "INNER JOIN team t ON p.team_id = t.id "
-                + "LEFT OUTER JOIN levellog l ON p.team_id = l.team_id AND l.author_id = m.id "
-                + "LEFT OUTER JOIN pre_question pq ON pq.levellog_id = l.id AND pq.author_id = ? "
-                + "WHERE t.deleted = false "
-                + "ORDER BY t.is_closed ASC, t.created_at DESC";
-
-        return jdbcTemplate.query(sql, rowMapper, memberId);
-    }
-
     public List<AllSimpleParticipantDto> findAllSimple(final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, m.profile_url "

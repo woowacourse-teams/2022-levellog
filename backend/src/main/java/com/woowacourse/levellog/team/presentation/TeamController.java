@@ -5,9 +5,9 @@ import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamListDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +38,10 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamsDto> findAll(@RequestParam(defaultValue = "all") final String status,
-                                            @Authentic final Long memberId) {
-        final TeamsDto response = teamService.findAll(status, memberId);
+    public ResponseEntity<TeamListDto> findAll(@RequestParam(defaultValue = "all") final String status,
+                                               @RequestParam(defaultValue = "0") final String page,
+                                               @RequestParam(defaultValue = "20") final String size) {
+        final TeamListDto response = teamService.findAll(status, Integer.parseInt(page), Integer.parseInt(size));
         return ResponseEntity.ok(response);
     }
 

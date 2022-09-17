@@ -187,8 +187,4 @@ public class Team extends BaseEntity {
         }
         return TeamStatus.IN_PROGRESS;
     }
-
-    public boolean isSameStatus(final String status, final LocalDateTime presentTime) {
-        return status(presentTime).isSame(status);
-    }
 }

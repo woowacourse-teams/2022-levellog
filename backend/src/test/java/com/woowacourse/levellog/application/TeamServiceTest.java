@@ -40,12 +40,12 @@ import org.junit.jupiter.api.Test;
 class TeamServiceTest extends ServiceTest {
 
     @Nested
-    @DisplayName("findAll_v2 메서드는")
-    class FindAll_v2 {
+    @DisplayName("findAll 메서드는")
+    class FindAll {
 
         @Test
         @DisplayName("전체 팀 목록을 인터뷰 진행 상태(시작 전 or 진행 중 -> 종료)와 최근 생성일 순으로 정렬하여 조회한다.")
-        void findAll_v2_allTeam_success() {
+        void findAll_allTeam_success() {
             //given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -73,7 +73,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 시작 전인 팀의 목록을 최근 생성일 순으로 조회한다.")
-        void findAll_v2_ReadyTeam_success() {
+        void findAll_ReadyTeam_success() {
             //given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -103,7 +103,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰 진행 중인 팀의 목록을 최근 생성일 순으로 조회한다.")
-        void findAll_v2_InProgressTeam_success() {
+        void findAll_InProgressTeam_success() {
             //given
             final Member rick = saveMember("릭");
             final Member pep = saveMember("페퍼");
@@ -135,7 +135,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("인터뷰가 종료된 팀의 목록을 최근 생성일 순으로 조회한다.")
-        void findAll_v2_closedTeam_success() {
+        void findAll_closedTeam_success() {
             //given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -166,7 +166,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("잘못된 팀 Status를 받으면 예외가 발생한다.")
-        void findAll_v2_invalidStatus_exception() {
+        void findAll_invalidStatus_exception() {
             // given
             final Member rick = saveMember("릭");
             saveTeam(rick, rick);
@@ -179,7 +179,7 @@ class TeamServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("삭제된 팀을 제외한 팀 목록을 조회한다.")
-        void findAll_v2_exceptDeletedTeam_success() {
+        void findAll_exceptDeletedTeam_success() {
             //given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -896,7 +896,7 @@ class TeamServiceTest extends ServiceTest {
             saveTeam(harry, alien);
 
             // when
-            final List<TeamDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
+            final List<TeamSimpleDto> teams = teamService.findAllByMemberId(roma.getId()).getTeams();
 
             // then
             assertThat(teams).hasSize(2);

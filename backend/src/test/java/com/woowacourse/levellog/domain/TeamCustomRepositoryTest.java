@@ -50,8 +50,8 @@ class TeamCustomRepositoryTest extends RepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllSimple 메서드는 개선된 쿼리로 팀 목록을 조회한다.")
-    void findAllSimple() {
+    @DisplayName("findAll 메서드는 개선된 쿼리로 팀 목록을 조회한다.")
+    void findAll() {
         // given
         // 팀 1
         final Member roma = saveMember("로마");
@@ -74,7 +74,7 @@ class TeamCustomRepositoryTest extends RepositoryTest {
         final Team team3 = saveTeam(harry, kyoul);
 
         // when
-        final List<AllSimpleParticipantDto> actual = teamCustomRepository.findAllSimple(10, 0);
+        final List<AllSimpleParticipantDto> actual = teamCustomRepository.findAll(10, 0);
 
         // then
         assertThat(actual).hasSize(7)
@@ -102,33 +102,23 @@ class TeamCustomRepositoryTest extends RepositoryTest {
 
         final Team team1 = saveTeam(pep, ali);
 
-        final Levellog pepLevellog1 = saveLevellog(pep, team1);
-        final Levellog aliLevellog = saveLevellog(ali, team1);
-
-        final PreQuestion aliPreQuestion = savePreQuestion(aliLevellog, pep);
-
         // 팀 2
         final Member kyoul = saveMember("결");
 
         final Team team2 = saveTeam(pep, kyoul);
 
-        final Levellog pepLevellog2 = saveLevellog(pep, team2);
-        final Levellog kyoulLevellog = saveLevellog(kyoul, team2);
-
-        final PreQuestion kyoulPreQuestion = savePreQuestion(kyoulLevellog, pep);
-
         // when
-        final List<AllParticipantDto> actual = teamCustomRepository.findAllMy(pep);
+        final List<AllSimpleParticipantDto> actual = teamCustomRepository.findAllMy(pep);
 
         // then
         assertThat(actual).hasSize(4)
-                .extracting("team", "memberId", "levellogId", "preQuestionId", "nickname", "isWatcher", "isHost")
+                .extracting("id", Long.class)
                 .containsExactly(
-                        tuple(team2, pep.getId(), pepLevellog2.getId(), null, "페퍼", false, true),
-                        tuple(team2, kyoul.getId(), kyoulLevellog.getId(), kyoulPreQuestion.getId(), "결", false, false),
+                        team2.getId(),
+                        team2.getId(),
 
-                        tuple(team1, pep.getId(), pepLevellog1.getId(), null, "페퍼", false, true),
-                        tuple(team1, ali.getId(), aliLevellog.getId(), aliPreQuestion.getId(), "알린", false, false)
+                        team1.getId(),
+                        team1.getId()
                 );
     }
 }

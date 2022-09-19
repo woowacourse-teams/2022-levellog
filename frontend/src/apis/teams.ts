@@ -17,12 +17,16 @@ export const requestPostTeam = ({
 
 export const requestGetTeams = ({
   accessToken,
-}: Pick<TeamApiType, 'accessToken'>): AxiosPromise<Record<'teams', InterviewTeamType[]>> => {
+  teamsStatus,
+}: Pick<TeamApiType, 'accessToken' | 'teamsStatus'>): AxiosPromise<
+  Record<'teams', InterviewTeamType[]>
+> => {
   return axios(
     엑세스토큰이없는경우헤더제거({
       accessToken,
       method: 'get',
       url: `${process.env.API_URI}/teams`,
+      // url: `${process.env.API_URI}/teams?status=${teamsStatus}`,
       headers: { Authorization: `Bearer ${accessToken}` },
     }),
   );

@@ -73,6 +73,11 @@ export const TEAM_STATUS = Object.freeze({
   CLOSED: 'CLOSED',
 });
 
+export const TEAMS_STATUS = Object.freeze({
+  OPEN: 'open',
+  CLOSE: 'close',
+});
+
 export const REQUIRE_AUTH = Object.freeze({
   LOGIN: 'login',
   IN_TEAM: 'inTeam',

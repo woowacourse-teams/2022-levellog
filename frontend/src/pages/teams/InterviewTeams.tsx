@@ -5,8 +5,10 @@ import styled from 'styled-components';
 
 import useTeams from 'hooks/useTeams';
 
+import Loading from 'pages/status/Loading';
+
 import plusIcon from 'assets/images/plus.svg';
-import { ROUTES_PATH } from 'constants/constants';
+import { ROUTES_PATH, TEAMS_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -16,19 +18,17 @@ import InterviewTeam from 'components/teams/InterviewTeam';
 import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
-  const { teams, getTeams } = useTeams();
+  const { teams, getTeams, isActive, handleClickFilterButtons } = useTeams();
 
-  useEffect(() => {
-    getTeams();
-  }, []);
+  if (teams.length === 0) return <Loading />;
 
   return (
     <>
       <ContentHeader title={'인터뷰 팀'}>
-        <div>
-          <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>
-          <FilterButton>종료된 인터뷰</FilterButton>
-          <FilterButton>나의 인터뷰</FilterButton>
+        <div onClick={handleClickFilterButtons}>
+          <FilterButton isActive={isActive.open}>진행중인 인터뷰</FilterButton>
+          <FilterButton isActive={isActive.close}>종료된 인터뷰</FilterButton>
+          <FilterButton isActive={isActive.my}>나의 인터뷰</FilterButton>
         </div>
         <span />
       </ContentHeader>

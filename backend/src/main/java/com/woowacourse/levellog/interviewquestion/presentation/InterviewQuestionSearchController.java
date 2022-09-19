@@ -38,14 +38,14 @@ public class InterviewQuestionSearchController {
     }
 
     @PostMapping("/{interviewQuestionId}/like")
-    public ResponseEntity<Void> pushLike(@PathVariable final Long interviewQuestionId,
+    public ResponseEntity<Void> pressLike(@PathVariable final Long interviewQuestionId,
                                          @Authentic final Long memberId) {
         interviewQuestionService.pressLike(interviewQuestionId, memberId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{interviewQuestionId}/like")
-    public ResponseEntity<Void> deleteById(@PathVariable final Long interviewQuestionId,
+    public ResponseEntity<Void> cancelLike(@PathVariable final Long interviewQuestionId,
                                            @Authentic final Long memberId) {
         interviewQuestionService.cancelLike(interviewQuestionId, memberId);
         return ResponseEntity.noContent().build();

@@ -49,3 +49,16 @@ operation::interview-question-search/press-like[]
 === 좋아요 취소하기
 
 operation::interview-question-search/cancel-like[]
+
+[[like-exception]]
+=== 좋아요 관련 실패
+
+==== 이미 좋아요한 인터뷰 질문을 좋아요 한 경우
+
+include::{snippets}/interview-question-search/likes/exception/already-like/http-response.adoc[]
+
+==== 좋아요하지 않은 인터뷰 질문을 좋아요 취소 한 경우
+
+include::{snippets}/interview-question-search/likes/exception/not-found-cancel/http-response.adoc[]
+
+

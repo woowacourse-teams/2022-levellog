@@ -26,12 +26,9 @@ public class InterviewQuestionSearchController {
     @GetMapping
     @PublicAPI
     public ResponseEntity<InterviewQuestionSearchResultsDto> searchBy(
-            @RequestParam(required = false) final String keyword,
+            @RequestParam final String keyword,
             final Pageable pageable,
             @Authentic final Long memberId) {
-        if (keyword == null) {
-            return ResponseEntity.ok(InterviewQuestionSearchResultsDto.of(new ArrayList<>()));
-        }
         final InterviewQuestionSearchResultsDto response = interviewQuestionService
                 .searchByKeyword(keyword, pageable, memberId);
         return ResponseEntity.ok(response);

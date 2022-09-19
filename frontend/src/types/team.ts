@@ -32,6 +32,16 @@ export interface InterviewTeamType {
   place: string;
   startAt: string;
   teamImage: string;
+  status: TeamStatusType;
+  participants: Pick<ParticipantType, 'memberId' | 'profileUrl'>[];
+}
+
+export interface InterviewTeamDetailType {
+  id: string;
+  title: string;
+  place: string;
+  startAt: string;
+  teamImage: string;
   hostId: string;
   status: TeamStatusType;
   isParticipant: Boolean;

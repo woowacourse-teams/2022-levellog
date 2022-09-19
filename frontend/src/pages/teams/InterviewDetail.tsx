@@ -23,6 +23,8 @@ import { ParticipantType, WatcherType } from 'types/team';
 import { convertDateAndTime, teamEditUriBuilder } from 'utils/util';
 
 const InterviewDetail = () => {
+  const { teamId } = useParams();
+
   const { loginUserId } = useUser();
   const { team, getTeam, handleClickDeleteTeamButton, handleClickCloseTeamInterviewButton } =
     useTeam();
@@ -41,10 +43,9 @@ const InterviewDetail = () => {
     onClickDeletePreQuestion,
     handleClickClosePreQuestionModal,
   } = usePreQuestionModal();
-  const { teamId } = useParams();
 
   if (team && Object.keys(team).length === 0) return <Error />;
-  if (!teamId) return <Loading />;
+  if (!teamId || teamId !== String(team.id)) return <Loading />;
 
   return (
     <>

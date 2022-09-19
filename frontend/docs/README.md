@@ -1,6 +1,6 @@
 ## 팀 전체 조회 API 변경에 대응
 
-- [ ] 이제 무조건 `InterviewDetail` 페이지에서 `teamId`를 통해 팀을 요청한다.
+- [x] 이제 무조건 `InterviewDetail` 페이지에서 `teamId`를 통해 팀을 요청한다.
 - [ ] 팀을 불러오는 동안 `스켈레톤 UI`를 사용해 사용자 경험을 높인다.
 
 ## `InterviewTeams` 페이지 필터링

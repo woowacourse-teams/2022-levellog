@@ -125,7 +125,7 @@ public class InterviewQuestionService {
     public void cancelLike(final Long interviewQuestionId, final Long memberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
         final Member member = getMember(memberId);
-        final InterviewQuestionLikes interviewQuestionLikes = getInterviewQuestionLike(interviewQuestion, member);
+        final InterviewQuestionLikes interviewQuestionLikes = getInterviewQuestionLikes(interviewQuestion, member);
 
         interviewQuestionLikesRepository.deleteById(interviewQuestionLikes.getId());
         interviewQuestion.downLike();
@@ -149,8 +149,8 @@ public class InterviewQuestionService {
                         .append("memberId", memberId)));
     }
 
-    private InterviewQuestionLikes getInterviewQuestionLike(final InterviewQuestion interviewQuestion,
-                                                            final Member member) {
+    private InterviewQuestionLikes getInterviewQuestionLikes(final InterviewQuestion interviewQuestion,
+                                                             final Member member) {
         return interviewQuestionLikesRepository.findByInterviewQuestionIdAndLikerId(interviewQuestion.getId(),
                         member.getId())
                 .orElseThrow(() -> new InterviewQuestionLikeNotFoundException(

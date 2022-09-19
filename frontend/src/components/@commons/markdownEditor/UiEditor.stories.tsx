@@ -2,7 +2,7 @@ import { createRef } from 'react';
 
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import UiEditor from 'components/@commons/UiEditor';
+import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 
 export default {
   title: 'UiEditor',

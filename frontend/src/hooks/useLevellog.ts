@@ -20,7 +20,6 @@ const useLevellog = () => {
   const [levellogInfo, setLevellogInfo] = useState<LevellogInfoType>(
     {} as unknown as LevellogInfoType,
   );
-
   const accessToken = localStorage.getItem('accessToken');
 
   const postLevellog = async ({
@@ -33,7 +32,8 @@ const useLevellog = () => {
         teamId,
         levellogContent: { content: inputValue },
       });
-      navigate(teamGetUriBuilder({ teamId }));
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -77,8 +77,8 @@ const useLevellog = () => {
         levellogId,
         levellogContent: { content: inputValue },
       });
-      showSnackbar({ message: MESSAGE.LEVELLOG_EDIT_CONFIRM });
-      navigate(teamGetUriBuilder({ teamId }));
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -101,26 +101,35 @@ const useLevellog = () => {
     }
   };
 
-  const onClickLevellogAddButton = ({ teamId }: Pick<LevellogCustomHookType, 'teamId'>) => {
-    if (levellogRef.current) {
-      postLevellog({
+  const onClickLevellogAddButton = async ({ teamId }: Pick<LevellogCustomHookType, 'teamId'>) => {
+    if (!levellogRef.current) return;
+
+    if (
+      await postLevellog({
         teamId,
-        inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
-      });
-      showSnackbar({ message: MESSAGE.LEVELLOG_ADD_CONFIRM });
+        inputValue: levellogRef.current.getInstance().getMarkdown(),
+      })
+    ) {
+      showSnackbar({ message: MESSAGE.LEVELLOG_ADD });
+      navigate(teamGetUriBuilder({ teamId }));
     }
   };
 
-  const onClickLevellogEditButton = ({
+  const onClickLevellogEditButton = async ({
     teamId,
     levellogId,
   }: Omit<LevellogCustomHookType, 'inputValue'>) => {
-    if (levellogRef.current) {
-      editLevellog({
+    if (!levellogRef.current) return;
+
+    if (
+      await editLevellog({
         teamId,
         levellogId,
-        inputValue: levellogRef.current.getInstance().getEditorElements().mdEditor.innerText,
-      });
+        inputValue: levellogRef.current.getInstance().getMarkdown(),
+      })
+    ) {
+      showSnackbar({ message: MESSAGE.LEVELLOG_EDIT });
+      navigate(teamGetUriBuilder({ teamId }));
     }
   };
 

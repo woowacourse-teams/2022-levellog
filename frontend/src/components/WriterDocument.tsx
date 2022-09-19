@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Button from 'components/@commons/Button';
-import UiViewer from 'components/@commons/UiViewer';
+import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import { LevellogInfoType } from 'types/levellog';
 
 const WriterDocument = ({

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
@@ -8,72 +8,55 @@ import useUser from 'hooks/useUser';
 
 import { ROUTES_PATH } from 'constants/constants';
 
+import Loading from './status/Loading';
 import { requestGetUserAuthority, requestGetUserLogin } from 'apis/login';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 
 const Login = () => {
+  const { loginUserId } = useUser();
   const { userInfoDispatch } = useUser();
   const { showSnackbar } = useSnackbar();
-  const location = useLocation() as unknown as { state: { pathname: string } };
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loginGithub = async () => {
-      const params = new URL(window.location.href).searchParams;
-      const code = params.get('code');
-      const accessToken = localStorage.getItem('accessToken');
-      try {
-        if (accessToken) {
-          const res = await requestGetUserAuthority({ accessToken });
-          userInfoDispatch({
-            id: res.data.id,
-            nickname: res.data.nickname,
-            profileUrl: res.data.profileUrl,
-          });
-          navigate(location.state.pathname);
+  const loginGithub = async () => {
+    const params = new URL(window.location.href).searchParams;
+    const code = params.get('code');
+    const accessToken = localStorage.getItem('accessToken');
 
-          return;
-        }
+    try {
+      if (accessToken && loginUserId) {
+        window.location.replace('/');
+      }
+      if (code) {
+        const res = await requestGetUserLogin({ code });
+        const resLogin = await requestGetUserAuthority({ accessToken: res.data.accessToken });
 
-        if (code) {
-          const res = await requestGetUserLogin({ code });
-          localStorage.setItem('accessToken', res.data.accessToken);
-          const accessToken = localStorage.getItem('accessToken')!;
-          const resLogin = await requestGetUserAuthority({ accessToken });
-          userInfoDispatch({
-            id: resLogin.data.id,
-            nickname: resLogin.data.nickname,
-            profileUrl: resLogin.data.profileUrl,
-          });
-        }
-
-        if (location.state) {
-          if (location.state.pathname === ROUTES_PATH.LOGIN) {
-            navigate(location.state.pathname);
-
-            return;
-          }
-          navigate(location.state.pathname);
-
-          return;
-        }
-        navigate(ROUTES_PATH.HOME);
-      } catch (err: unknown) {
-        if (axios.isAxiosError(err) && err instanceof Error) {
-          const responseBody: AxiosResponse = err.response!;
-          if (
-            토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-          ) {
-            showSnackbar({ message: responseBody.data.message });
-          }
+        localStorage.setItem('accessToken', res.data.accessToken);
+        localStorage.setItem('userId', res.data.id);
+        userInfoDispatch({
+          id: resLogin.data.id,
+          nickname: resLogin.data.nickname,
+          profileUrl: resLogin.data.profileUrl,
+        });
+      }
+      navigate(ROUTES_PATH.HOME, { replace: true });
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err instanceof Error) {
+        const responseBody: AxiosResponse = err.response!;
+        if (
+          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
+        ) {
+          showSnackbar({ message: responseBody.data.message });
         }
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     loginGithub();
   }, []);
 
-  return <Outlet />;
+  return <Loading />;
 };
 
 export default Login;

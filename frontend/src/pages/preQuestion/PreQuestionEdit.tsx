@@ -10,7 +10,7 @@ import useSnackbar from 'hooks/useSnackbar';
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import BottomBar from 'components/@commons/BottomBar';
-import UiEditor from 'components/@commons/UiEditor';
+import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
 const PreQuestionEdit = () => {

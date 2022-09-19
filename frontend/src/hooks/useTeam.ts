@@ -116,7 +116,6 @@ const useTeam = () => {
     try {
       await requestDeleteTeam({ teamId, accessToken });
       showSnackbar({ message: MESSAGE.TEAM_DELETE });
-      navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -133,7 +132,6 @@ const useTeam = () => {
     try {
       await requestCloseTeamInterview({ teamId, accessToken });
       showSnackbar({ message: MESSAGE.INTERVIEW_CLOSE });
-      navigate(ROUTES_PATH.HOME);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const responseBody: AxiosResponse = err.response!;
@@ -145,18 +143,18 @@ const useTeam = () => {
     }
   };
 
-  const handleClickDeleteTeamButton = () => {
+  const handleClickDeleteTeamButton = async () => {
     if (confirm(MESSAGE.TEAM_DELETE_CONFIRM) && typeof teamId === 'string') {
-      deleteTeam({ teamId });
+      await deleteTeam({ teamId });
       navigate(ROUTES_PATH.HOME);
 
       return;
     }
   };
 
-  const handleClickCloseTeamInterviewButton = () => {
+  const handleClickCloseTeamInterviewButton = async () => {
     if (confirm(MESSAGE.INTERVIEW_CLOSE_CONFIRM) && typeof teamId === 'string') {
-      closeTeamInterview({ teamId });
+      await closeTeamInterview({ teamId });
       navigate(ROUTES_PATH.HOME);
 
       return;

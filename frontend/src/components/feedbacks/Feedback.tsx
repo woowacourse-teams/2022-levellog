@@ -8,7 +8,7 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
-import UiViewer from 'components/@commons/UiViewer';
+import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import { FeedbackType } from 'types/feedback';
 import { feedbackEditUriBuilder } from 'utils/util';
 

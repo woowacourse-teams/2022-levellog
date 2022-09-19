@@ -23,7 +23,6 @@ const useFeedback = () => {
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const feedbackRef = useRef<Editor[]>([]);
   const navigate = useNavigate();
-
   const accessToken = localStorage.getItem('accessToken');
 
   const postFeedback = async ({
@@ -32,7 +31,8 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackResult'>) => {
     try {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
-      showSnackbar({ message: MESSAGE.FEEDBACK_CREATE });
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -90,6 +90,8 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId' | 'feedbackResult'>) => {
     try {
       await requestEditFeedback({ accessToken, levellogId, feedbackId, feedbackResult });
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -109,14 +111,16 @@ const useFeedback = () => {
     const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackFormatType = {
       feedback: {
-        study: study.getInstance().getEditorElements().mdEditor.innerText,
-        speak: speak.getInstance().getEditorElements().mdEditor.innerText,
-        etc: etc.getInstance().getEditorElements().mdEditor.innerText,
+        study: study.getInstance().getMarkdown(),
+        speak: speak.getInstance().getMarkdown(),
+        etc: etc.getInstance().getMarkdown(),
       },
     };
 
-    await postFeedback({ levellogId, feedbackResult });
-    navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+    if (await postFeedback({ levellogId, feedbackResult })) {
+      showSnackbar({ message: MESSAGE.FEEDBACK_CREATE });
+      navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+    }
   };
 
   const onClickFeedbackEditButton = async ({
@@ -133,9 +137,10 @@ const useFeedback = () => {
       },
     };
 
-    await editFeedback({ levellogId, feedbackId, feedbackResult });
-    showSnackbar({ message: MESSAGE.FEEDBACK_EDIT_CONFIRM });
-    navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+    if (await editFeedback({ levellogId, feedbackId, feedbackResult })) {
+      showSnackbar({ message: MESSAGE.FEEDBACK_EDIT });
+      navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+    }
   };
 
   const getFeedbackOnRef = async ({

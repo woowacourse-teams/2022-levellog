@@ -4,6 +4,7 @@ import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
+import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamListDto;
@@ -40,10 +41,12 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamListDto> findAll(@RequestParam(defaultValue = "all") final String status,
+    public ResponseEntity<TeamListDto> findAll(@RequestParam(defaultValue = "open") final String condition,
                                                @RequestParam(defaultValue = "0") final String page,
                                                @RequestParam(defaultValue = "20") final String size) {
-        final TeamListDto response = teamQueryService.findAll(status, Integer.parseInt(page), Integer.parseInt(size));
+        final TeamFilterCondition filterCondition = TeamFilterCondition.from(condition);
+        final TeamListDto response = teamQueryService.findAll(filterCondition, Integer.parseInt(page),
+                Integer.parseInt(size));
         return ResponseEntity.ok(response);
     }
 

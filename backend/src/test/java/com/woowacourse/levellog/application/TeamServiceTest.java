@@ -1,26 +1,20 @@
 package com.woowacourse.levellog.application;
 
 import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
-import static com.woowacourse.levellog.fixture.TimeFixture.BEFORE_START_TIME;
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static com.woowacourse.levellog.team.domain.TeamStatus.CLOSED;
 import static com.woowacourse.levellog.team.domain.TeamStatus.IN_PROGRESS;
 import static com.woowacourse.levellog.team.domain.TeamStatus.READY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
-import com.woowacourse.levellog.team.dto.TeamDto;
-import com.woowacourse.levellog.team.dto.TeamListDto;
-import com.woowacourse.levellog.team.dto.TeamSimpleDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
@@ -32,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

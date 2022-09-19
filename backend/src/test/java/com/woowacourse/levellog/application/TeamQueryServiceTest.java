@@ -2,19 +2,17 @@ package com.woowacourse.levellog.application;
 
 import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
 import static com.woowacourse.levellog.fixture.TimeFixture.BEFORE_START_TIME;
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static com.woowacourse.levellog.team.domain.TeamStatus.CLOSED;
-import static com.woowacourse.levellog.team.domain.TeamStatus.IN_PROGRESS;
 import static com.woowacourse.levellog.team.domain.TeamStatus.READY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamListDto;
 import com.woowacourse.levellog.team.dto.TeamSimpleDto;
@@ -32,8 +30,8 @@ public class TeamQueryServiceTest extends ServiceTest {
     class FindAll {
 
         @Test
-        @DisplayName("전체 팀 목록을 인터뷰 진행 상태(시작 전 or 진행 중 -> 종료)와 최근 생성일 순으로 정렬하여 조회한다.")
-        void findAll_allTeam_success() {
+        @DisplayName("진행중인 팀 목록을 최근 생성일 순으로 정렬하여 조회한다.")
+        void findAll_openTeam_success() {
             //given
             final Member rick = saveMember("릭");
             final Member pepper = saveMember("페퍼");
@@ -47,77 +45,14 @@ public class TeamQueryServiceTest extends ServiceTest {
             entityManager.flush();
 
             //when
-            final TeamListDto response = teamQueryService.findAll("all", 0, 10);
+            final TeamListDto response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
 
             //then
-            assertThat(response.getTeams()).hasSize(3)
+            assertThat(response.getTeams()).hasSize(2)
                     .extracting(TeamSimpleDto::getId, TeamSimpleDto::getStatus)
                     .containsExactly(
                             tuple(romaTeam.getId(), READY),
-                            tuple(pepperTeam.getId(), READY),
-                            tuple(rickTeam.getId(), CLOSED)
-                    );
-        }
-
-        @Test
-        @DisplayName("인터뷰 시작 전인 팀의 목록을 최근 생성일 순으로 조회한다.")
-        void findAll_ReadyTeam_success() {
-            //given
-            final Member rick = saveMember("릭");
-            final Member pepper = saveMember("페퍼");
-            final Member roma = saveMember("로마");
-            final Member eve = saveMember("이브");
-            final Member alien = saveMember("알린");
-
-            saveTeam(TEAM_START_TIME, pepper, roma);
-            final Team rickTeam = saveTeam(TEAM_START_TIME.plusDays(3), rick, pepper);
-            final Team eveTeam = saveTeam(TEAM_START_TIME.plusDays(3), eve, alien);
-            final Team romaTeam = saveTeam(roma, rick);
-
-            timeStandard.setInProgress();
-            romaTeam.close(AFTER_START_TIME);
-
-            //when
-            final TeamListDto response = teamQueryService.findAll("ready", 0, 10);
-
-            //then
-            assertThat(response.getTeams()).hasSize(2)
-                    .extracting(TeamSimpleDto::getId, TeamSimpleDto::getStatus)
-                    .containsExactly(
-                            tuple(eveTeam.getId(), READY),
-                            tuple(rickTeam.getId(), READY)
-                    );
-        }
-
-        @Test
-        @DisplayName("인터뷰 진행 중인 팀의 목록을 최근 생성일 순으로 조회한다.")
-        void findAll_InProgressTeam_success() {
-            //given
-            final Member rick = saveMember("릭");
-            final Member pep = saveMember("페퍼");
-            final Member roma = saveMember("로마");
-            final Member eve = saveMember("이브");
-            final Member alien = saveMember("알린");
-
-            final Team pepperTeam = saveTeam(TEAM_START_TIME, pep, roma);
-            final Team rickTeam = saveTeam(TEAM_START_TIME, rick, pep);
-            saveTeam(TEAM_START_TIME.plusDays(3), eve, alien);
-            final Team romaTeam = saveTeam(roma, rick);
-
-            timeStandard.setInProgress();
-            romaTeam.close(AFTER_START_TIME);
-
-            entityManager.flush();
-
-            //when
-            final TeamListDto response = teamQueryService.findAll("in-progress", 0, 10);
-
-            //then
-            assertThat(response.getTeams()).hasSize(2)
-                    .extracting(TeamSimpleDto::getId, TeamSimpleDto::getStatus)
-                    .containsExactly(
-                            tuple(rickTeam.getId(), IN_PROGRESS),
-                            tuple(pepperTeam.getId(), IN_PROGRESS)
+                            tuple(pepperTeam.getId(), READY)
                     );
         }
 
@@ -141,7 +76,7 @@ public class TeamQueryServiceTest extends ServiceTest {
             entityManager.flush();
 
             //when
-            final TeamListDto response = teamQueryService.findAll("closed", 0, 10);
+            final TeamListDto response = teamQueryService.findAll(TeamFilterCondition.CLOSE, 0, 10);
 
             //then
             assertThat(response.getTeams()).hasSize(2)
@@ -150,19 +85,6 @@ public class TeamQueryServiceTest extends ServiceTest {
                             tuple(eveTeam.getId(), CLOSED),
                             tuple(rickTeam.getId(), CLOSED)
                     );
-        }
-
-        @Test
-        @DisplayName("잘못된 팀 Status를 받으면 예외가 발생한다.")
-        void findAll_invalidStatus_exception() {
-            // given
-            final Member rick = saveMember("릭");
-            saveTeam(rick, rick);
-
-            // when & then
-            assertThatThrownBy(() -> teamQueryService.findAll("invalid", 0, 10))
-                    .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("입력 받은 status가 올바르지 않습니다.");
         }
 
         @Test
@@ -180,7 +102,7 @@ public class TeamQueryServiceTest extends ServiceTest {
             entityManager.flush();
 
             //when
-            final TeamListDto response = teamQueryService.findAll("all", 0, 10);
+            final TeamListDto response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
 
             //then
             assertThat(response.getTeams()).hasSize(1);

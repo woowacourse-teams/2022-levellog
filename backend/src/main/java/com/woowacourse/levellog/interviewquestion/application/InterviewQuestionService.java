@@ -12,6 +12,7 @@ import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionAlreadyExistException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
+import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -183,7 +184,7 @@ public class InterviewQuestionService {
             final DebugMessage debugMessage = DebugMessage.init()
                     .append("interviewQuestionId", interviewQuestionId)
                     .append("likerId", memberId);
-            throw new InterviewQuestionAlreadyExistException(debugMessage);
+            throw new InterviewQuestionLikesAlreadyExistException(debugMessage);
         }
     }
 }

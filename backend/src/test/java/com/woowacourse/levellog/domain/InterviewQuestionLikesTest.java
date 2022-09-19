@@ -32,6 +32,6 @@ class InterviewQuestionLikesTest {
 
         // when & then
         assertDoesNotThrow(
-                () -> InterviewQuestionLikes.of(InterviewQuestion.of(author, levellog, content), author));
+                () -> InterviewQuestionLikes.of(interviewQuestion, author));
     }
 }

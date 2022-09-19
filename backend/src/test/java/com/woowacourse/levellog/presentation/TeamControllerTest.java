@@ -40,7 +40,7 @@ class TeamControllerTest extends ControllerTest {
         final String message = "입력 받은 status가 올바르지 않습니다.";
 
         willThrow(new InvalidFieldException(message, DebugMessage.init()))
-                .given(teamService)
+                .given(teamQueryService)
                 .findAll(invalidStatus, 0, 20);
 
         // when
@@ -790,7 +790,7 @@ class TeamControllerTest extends ControllerTest {
             // given
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
-                    .given(teamService)
+                    .given(teamQueryService)
                     .findByTeamIdAndMemberId(10000000L, 1L);
 
             // when

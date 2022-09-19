@@ -25,6 +25,7 @@ import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
+import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -78,6 +79,9 @@ abstract class ServiceTest {
 
     @Autowired
     protected TeamService teamService;
+
+    @Autowired
+    protected TeamQueryService teamQueryService;
 
     @Autowired
     protected PreQuestionService preQuestionService;

@@ -44,6 +44,7 @@ public class TeamQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // FIXME: 2022/09/19 member_id 추가
     public List<AllSimpleParticipantDto> findAllList(final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, m.profile_url "

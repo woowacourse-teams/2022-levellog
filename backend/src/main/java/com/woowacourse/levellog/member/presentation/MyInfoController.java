@@ -8,7 +8,7 @@ import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
-import com.woowacourse.levellog.team.application.TeamService;
+import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.dto.TeamListDto;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class MyInfoController {
 
     private final FeedbackService feedbackService;
     private final LevellogService levellogService;
-    private final TeamService teamService;
+    private final TeamQueryService teamQueryService;
     private final MemberService memberService;
 
     @GetMapping
@@ -52,7 +52,7 @@ public class MyInfoController {
 
     @GetMapping("/teams")
     public ResponseEntity<TeamListDto> findAllMyTeams(@Authentic final Long memberId) {
-        final TeamListDto teamsDto = teamService.findAllByMemberId(memberId);
+        final TeamListDto teamsDto = teamQueryService.findAllByMemberId(memberId);
 
         return ResponseEntity.ok(teamsDto);
     }

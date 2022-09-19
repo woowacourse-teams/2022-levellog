@@ -11,6 +11,7 @@ import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionExceptio
 import com.woowacourse.levellog.team.domain.Team;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -24,11 +25,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Levellog extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_levellog_author"))
     private Member author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_levellog_team"))
     private Team team;
 

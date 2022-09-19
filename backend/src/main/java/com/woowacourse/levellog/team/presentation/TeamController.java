@@ -2,19 +2,16 @@ package com.woowacourse.levellog.team.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
+import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamListDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
 
     private final TeamService teamService;
+    private final TeamQueryService teamQueryService;
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid final TeamWriteDto teamDto,
@@ -42,14 +40,10 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamsDto> findAll(@PageableDefault(size = 100)
-                                            @SortDefault.SortDefaults({
-                                                    @SortDefault(sort = "isClosed", direction = Direction.ASC),
-                                                    @SortDefault(sort = "createdAt", direction = Direction.DESC)
-                                            }) final Pageable pageable,
-                                            @RequestParam(defaultValue = "all") final String status,
-                                            @Authentic final Long memberId) {
-        final TeamsDto response = teamService.findAll(pageable, status, memberId);
+    public ResponseEntity<TeamListDto> findAll(@RequestParam(defaultValue = "all") final String status,
+                                               @RequestParam(defaultValue = "0") final String page,
+                                               @RequestParam(defaultValue = "20") final String size) {
+        final TeamListDto response = teamQueryService.findAll(status, Integer.parseInt(page), Integer.parseInt(size));
         return ResponseEntity.ok(response);
     }
 
@@ -57,7 +51,7 @@ public class TeamController {
     @PublicAPI
     public ResponseEntity<TeamDto> findById(@PathVariable final Long teamId,
                                             @Authentic final Long memberId) {
-        final TeamDto response = teamService.findByTeamIdAndMemberId(teamId, memberId);
+        final TeamDto response = teamQueryService.findByTeamIdAndMemberId(teamId, memberId);
         return ResponseEntity.ok(response);
     }
 

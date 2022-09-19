@@ -12,6 +12,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
+import java.util.List;
 import org.apache.http.HttpHeaders;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
@@ -179,6 +180,11 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("teams.title", contains("잠실 제이슨조", "잠실 브리조"));
+                .body("teams.title", contains("잠실 브리조", "잠실 제이슨조"),
+                        "teams.participants.memberId", contains(
+                                List.of(RICK.getId().intValue(), ROMA.getId().intValue(), ALIEN.getId().intValue()),
+                                List.of(RICK.getId().intValue(), ROMA.getId().intValue(), PEPPER.getId().intValue())
+                        )
+                );
     }
 }

@@ -17,8 +17,10 @@ import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamQueryRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,10 @@ import org.springframework.test.context.ActiveProfiles;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@Import(JpaConfig.class)
+@Import({
+        JpaConfig.class,
+        TeamQueryRepository.class
+})
 abstract class RepositoryTest {
 
     @Autowired
@@ -56,6 +61,9 @@ abstract class RepositoryTest {
     protected TeamRepository teamRepository;
 
     @Autowired
+    protected TeamQueryRepository teamQueryRepository;
+
+    @Autowired
     protected NicknameMappingRepository nicknameMappingRepository;
 
     protected Member saveMember(final String nickname) {
@@ -63,7 +71,7 @@ abstract class RepositoryTest {
         return memberRepository.save(member);
     }
 
-    protected Team saveTeam(final Member host, final Member... members) {
+    protected Team saveTeam(final Member host, final List<Member> watchers, final Member... members) {
         final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", 1));
 
         participantRepository.save(new Participant(team, host, true, false));
@@ -71,9 +79,19 @@ abstract class RepositoryTest {
         final List<Participant> participants = Arrays.stream(members)
                 .map(it -> new Participant(team, it, false, false))
                 .collect(Collectors.toList());
+
+        final List<Participant> watcherParticipants = watchers.stream()
+                .map(it -> new Participant(team, it, false, true))
+                .collect(Collectors.toList());
+
+        participants.addAll(watcherParticipants);
         participantRepository.saveAll(participants);
 
         return team;
+    }
+
+    protected Team saveTeam(final Member host, final Member... members) {
+        return saveTeam(host, Collections.emptyList(), members);
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {

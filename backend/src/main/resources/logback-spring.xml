@@ -22,6 +22,10 @@
             <appender-ref ref="console-appender"/>
         </logger>
 
+        <logger name="org.springframework.jdbc.core" level="TRACE">
+            <appender-ref ref="console-appender"/>
+        </logger>
+
     </springProfile>
 
     <!-- RollingFile 로그 설정 -->

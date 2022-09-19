@@ -1,10 +1,7 @@
 package com.woowacourse.levellog.interviewquestion.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
-import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.exception.InvalidMemberException;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;

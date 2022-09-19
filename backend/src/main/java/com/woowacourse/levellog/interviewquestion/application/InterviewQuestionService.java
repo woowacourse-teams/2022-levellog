@@ -10,7 +10,6 @@ import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchRes
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
-import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionAlreadyExistException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;

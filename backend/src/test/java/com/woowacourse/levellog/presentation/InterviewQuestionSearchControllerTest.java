@@ -54,6 +54,6 @@ class InterviewQuestionSearchControllerTest extends ControllerTest {
         );
 
         // docs
-        perform.andDo(document(BASE_SNIPPET_PATH + "already-like"));
+        perform.andDo(document(BASE_SNIPPET_PATH + "not-found-cancel"));
     }
 }

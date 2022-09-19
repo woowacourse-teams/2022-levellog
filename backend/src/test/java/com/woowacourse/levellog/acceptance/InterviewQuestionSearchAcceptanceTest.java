@@ -6,7 +6,6 @@ import static com.woowacourse.levellog.fixture.RestAssuredTemplate.delete;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.MemberFixture;

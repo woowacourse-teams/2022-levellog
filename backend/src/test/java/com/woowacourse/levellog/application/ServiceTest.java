@@ -193,7 +193,8 @@ abstract class ServiceTest {
     }
 
     @Transactional
-    protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion, final Member liker) {
+    protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
+                                                                final Member liker) {
         final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker);
         interviewQuestion.upLike();
         return interviewQuestionLikesRepository.save(interviewQuestionLikes);

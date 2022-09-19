@@ -58,6 +58,7 @@ public class Team extends BaseEntity {
         this.interviewerNumber = interviewerNumber;
         this.isClosed = false;
         this.deleted = false;
+
     }
 
     private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
@@ -185,9 +186,5 @@ public class Team extends BaseEntity {
             return TeamStatus.READY;
         }
         return TeamStatus.IN_PROGRESS;
-    }
-
-    public boolean isSameStatus(final String status, final LocalDateTime presentTime) {
-        return status(presentTime).isSame(status);
     }
 }

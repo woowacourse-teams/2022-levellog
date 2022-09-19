@@ -30,6 +30,7 @@ import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.presentation.MyInfoController;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.presentation.PreQuestionController;
+import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.presentation.TeamController;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,6 +83,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected TeamService teamService;
+
+    @MockBean
+    protected TeamQueryService teamQueryService;
 
     @MockBean
     protected PreQuestionService preQuestionService;

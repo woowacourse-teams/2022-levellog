@@ -19,6 +19,7 @@ public class TeamQueryRepository {
             resultSet.getTimestamp("start_at").toLocalDateTime(),
             resultSet.getString("teamProfileUrl"),
             resultSet.getBoolean("is_closed"),
+            resultSet.getObject("memberId", Long.class),
             resultSet.getString("profile_url")
     );
     private final RowMapper<AllParticipantDto> detailRowMapper = (resultSet, rowNumber) -> new AllParticipantDto(
@@ -44,10 +45,10 @@ public class TeamQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // FIXME: 2022/09/19 member_id 추가
     public List<AllSimpleParticipantDto> findAllList(final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
-                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, m.profile_url "
+                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, "
+                + "m.id memberId, m.profile_url "
                 + "FROM "
                     + "(SELECT * "
                     + "FROM team "
@@ -78,7 +79,7 @@ public class TeamQueryRepository {
     public List<AllSimpleParticipantDto> findMyList(final Member member) {
         final String sql = "SELECT "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
-                + "m.profile_url "
+                + "m.id memberId, m.profile_url "
                 + "FROM participant p "
                     + "INNER JOIN member m ON p.member_id = m.id "
                     + "INNER JOIN team t ON p.team_id = t.id "

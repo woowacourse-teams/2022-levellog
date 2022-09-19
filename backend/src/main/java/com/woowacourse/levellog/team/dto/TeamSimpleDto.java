@@ -22,7 +22,7 @@ public class TeamSimpleDto {
     private LocalDateTime startAt;
     private String teamImage;
     private TeamStatus status;
-    private List<ParticipantProfileUrlDto> participants;
+    private List<ParticipantSimpleDto> participants;
 
     public static TeamSimpleDto of(final List<AllSimpleParticipantDto> simpleParticipants, final TeamStatus status) {
         final AllSimpleParticipantDto dto = simpleParticipants.get(0);
@@ -34,18 +34,8 @@ public class TeamSimpleDto {
                 dto.getTeamImage(),
                 status,
                 simpleParticipants.stream()
-                        .map(AllSimpleParticipantDto::getMemberImage)
-                        .map(ParticipantProfileUrlDto::new)
+                        .map(ParticipantSimpleDto::from)
                         .collect(Collectors.toList())
         );
-    }
-
-    @Getter
-    @EqualsAndHashCode
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    @AllArgsConstructor
-    public static class ParticipantProfileUrlDto {
-
-        private String profileUrl;
     }
 }

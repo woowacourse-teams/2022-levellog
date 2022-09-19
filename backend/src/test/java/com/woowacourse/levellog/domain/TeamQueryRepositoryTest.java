@@ -78,17 +78,17 @@ class TeamQueryRepositoryTest extends RepositoryTest {
 
         // then
         assertThat(actual).hasSize(7)
-                .extracting("id", "memberImage")
+                .extracting("id", "memberId")
                 .containsExactly(
-                        tuple(team3.getId(), harry.getProfileUrl()),
-                        tuple(team3.getId(), kyoul.getProfileUrl()),
+                        tuple(team3.getId(), harry.getId()),
+                        tuple(team3.getId(), kyoul.getId()),
 
-                        tuple(team2.getId(), eve.getProfileUrl()),
-                        tuple(team2.getId(), alien.getProfileUrl()),
+                        tuple(team2.getId(), eve.getId()),
+                        tuple(team2.getId(), alien.getId()),
 
-                        tuple(team1.getId(), roma.getProfileUrl()),
-                        tuple(team1.getId(), pep.getProfileUrl()),
-                        tuple(team1.getId(), rick.getProfileUrl())
+                        tuple(team1.getId(), roma.getId()),
+                        tuple(team1.getId(), pep.getId()),
+                        tuple(team1.getId(), rick.getId())
                 );
     }
 
@@ -97,28 +97,28 @@ class TeamQueryRepositoryTest extends RepositoryTest {
     void findMyList() {
         // given
         // 팀 1
-        final Member pep = saveMember("페퍼");
-        final Member ali = saveMember("알린");
+        final Member pepper = saveMember("페퍼");
+        final Member alien = saveMember("알린");
 
-        final Team team1 = saveTeam(pep, ali);
+        final Team team1 = saveTeam(pepper, alien);
 
         // 팀 2
         final Member kyoul = saveMember("결");
 
-        final Team team2 = saveTeam(pep, kyoul);
+        final Team team2 = saveTeam(pepper, kyoul);
 
         // when
-        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findMyList(pep);
+        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findMyList(pepper);
 
         // then
         assertThat(actual).hasSize(4)
-                .extracting("id", Long.class)
+                .extracting("id", "memberId")
                 .containsExactly(
-                        team2.getId(),
-                        team2.getId(),
+                        tuple(team2.getId(), pepper.getId()),
+                        tuple(team2.getId(), kyoul.getId()),
 
-                        team1.getId(),
-                        team1.getId()
+                        tuple(team1.getId(), pepper.getId()),
+                        tuple(team1.getId(), alien.getId())
                 );
     }
 }

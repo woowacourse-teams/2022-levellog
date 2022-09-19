@@ -96,8 +96,12 @@ class TeamAcceptanceTest extends AcceptanceTest {
         response.statusCode(HttpStatus.OK.value())
                 .body("teams.title", contains("잠실 브리조", "잠실 제이슨조", "잠실 네오조"),
                         "teams.status", contains("IN_PROGRESS", "IN_PROGRESS", "CLOSED"),
-                        "teams.participants.profileUrl",
-                        contains(List.of("이브.com", "릭.com"), List.of("페퍼.com", "이브.com"), List.of("릭.com", "페퍼.com")));
+                        "teams.participants.memberId", contains(
+                                List.of(EVE.getId().intValue(), RICK.getId().intValue()),
+                                List.of(PEPPER.getId().intValue(), EVE.getId().intValue()),
+                                List.of(RICK.getId().intValue(), PEPPER.getId().intValue())
+                        )
+                );
     }
 
     /*

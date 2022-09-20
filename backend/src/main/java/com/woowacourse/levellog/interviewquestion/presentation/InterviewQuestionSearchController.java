@@ -4,9 +4,7 @@ import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +25,12 @@ public class InterviewQuestionSearchController {
     @PublicAPI
     public ResponseEntity<InterviewQuestionSearchResultsDto> searchBy(
             @RequestParam final String keyword,
-            final Pageable pageable,
+            @RequestParam(defaultValue = "10") final Long size,
+            @RequestParam(defaultValue = "0") final Long page,
+            @RequestParam(defaultValue = "likes") final String sort,
             @Authentic final Long memberId) {
         final InterviewQuestionSearchResultsDto response = interviewQuestionService
-                .searchByKeyword(keyword, pageable, memberId);
+                .searchByKeyword(keyword, memberId, size, page, sort);
         return ResponseEntity.ok(response);
     }
 

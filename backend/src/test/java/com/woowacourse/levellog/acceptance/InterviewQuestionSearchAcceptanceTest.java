@@ -123,7 +123,7 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .filter(document("interview-question-search/search-sort-updated-at-desc"))
                     .when()
-                    .get("/api/interview-questions?keyword=Spring&sort=updatedAt,desc")
+                    .get("/api/interview-questions?keyword=Spring&sort=latest")
                     .then().log().all();
 
             // then
@@ -158,7 +158,7 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .filter(document("interview-question-search/search-sort-updated-at-asc"))
                     .when()
-                    .get("/api/interview-questions?keyword=Spring&sort=updatedAt,asc")
+                    .get("/api/interview-questions?keyword=Spring&sort=oldest")
                     .then().log().all();
 
             // then
@@ -196,7 +196,7 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .filter(document("interview-question-search/search-sort-likes-desc"))
                     .when()
-                    .get("/api/interview-questions?keyword=Spring&sort=likes,desc")
+                    .get("/api/interview-questions?keyword=Spring&sort=likes")
                     .then().log().all();
 
             // then

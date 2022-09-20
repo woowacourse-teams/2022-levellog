@@ -4,7 +4,9 @@ import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesRepository;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
@@ -26,7 +28,9 @@ import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InterviewQuestionService {
 
     private final InterviewQuestionRepository interviewQuestionRepository;
+    private final InterviewQuestionQueryRepository interviewQuestionQueryRepository;
     private final InterviewQuestionLikesRepository interviewQuestionLikesRepository;
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
@@ -74,15 +79,18 @@ public class InterviewQuestionService {
         return InterviewQuestionContentsDto.from(interviewQuestions);
     }
 
-    public InterviewQuestionSearchResultsDto searchByKeyword(final String keyword, final Pageable pageable,
-                                                             final Long memberId) {
-        final List<InterviewQuestion> questions = interviewQuestionRepository
-                .findAllByContentContains(keyword, pageable);
-        final List<InterviewQuestionSearchResultDto> results = questions.stream()
-                .map(it -> InterviewQuestionSearchResultDto.of(it, isLiker(it.getId(), memberId)))
-                .collect(Collectors.toList());
+    public InterviewQuestionSearchResultsDto searchByKeyword(final String keyword, final Long memberId,
+                                                             final Long size, final Long page, final String sort) {
+//        final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository
+//                .searchByKeyword(keyword, memberId, size, page, InterviewQuestionSort.valueOf(sort.toUpperCase()));
 
-        return InterviewQuestionSearchResultsDto.of(results);
+        InterviewQuestionSort s = InterviewQuestionSort.valueOf(sort.toUpperCase());
+
+        Pageable pageable = PageRequest.of(page.intValue(), size.intValue(), Sort.by(s.getField()).descending());
+        final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository
+                .searchByKeyword(keyword, memberId, size, page, InterviewQuestionSort.valueOf(sort.toUpperCase()));
+
+        return InterviewQuestionSearchResultsDto.of(results, page);
     }
 
     @Transactional
@@ -169,13 +177,6 @@ public class InterviewQuestionService {
                     .append("memberId", member.getId())
                     .append("levellogId", levellog.getId()));
         }
-    }
-
-    private boolean isLiker(final Long interviewQuestionId, final Long memberId) {
-        if (memberId == null) {
-            return false;
-        }
-        return interviewQuestionLikesRepository.existsByInterviewQuestionIdAndLikerId(interviewQuestionId, memberId);
     }
 
     private void validateAlreadyExist(final Long interviewQuestionId, final Long memberId) {

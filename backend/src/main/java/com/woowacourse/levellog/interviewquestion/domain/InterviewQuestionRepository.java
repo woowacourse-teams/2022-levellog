@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.interviewquestion.domain;
 
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import java.util.List;
@@ -14,6 +15,4 @@ public interface InterviewQuestionRepository extends JpaRepository<InterviewQues
     List<InterviewQuestion> findAllByLevellog(@Param("levellog") Levellog levellog);
 
     List<InterviewQuestion> findAllByLevellogAndAuthor(Levellog levellog, Member member);
-
-    List<InterviewQuestion> findAllByContentContains(String content, Pageable pageable);
 }

@@ -8,6 +8,7 @@ import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesRepository;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
@@ -39,7 +40,8 @@ import org.springframework.test.context.ActiveProfiles;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import({
         JpaConfig.class,
-        TeamQueryRepository.class
+        TeamQueryRepository.class,
+        InterviewQuestionQueryRepository.class
 })
 abstract class RepositoryTest {
 
@@ -51,6 +53,9 @@ abstract class RepositoryTest {
 
     @Autowired
     protected InterviewQuestionLikesRepository interviewQuestionLikesRepository;
+
+    @Autowired
+    protected InterviewQuestionQueryRepository interviewQuestionQueryRepository;
 
     @Autowired
     protected LevellogRepository levellogRepository;

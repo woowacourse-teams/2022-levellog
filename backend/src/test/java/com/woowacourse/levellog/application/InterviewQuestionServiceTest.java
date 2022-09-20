@@ -35,8 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @DisplayName("InterviewQuestionService 클래스의")
 class InterviewQuestionServiceTest extends ServiceTest {
@@ -340,7 +338,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member eve = saveMember("이브");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
-            final Pageable pageable = PageRequest.of(0, 10);
+            Long size = 10L;
+            Long page = 0L;
+            String sort = "likes";
+
 
             timeStandard.setInProgress();
 
@@ -348,7 +349,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when
             final InterviewQuestionSearchResultsDto actual = interviewQuestionService.searchByKeyword(
-                    "스프링", pageable, eve.getId());
+                    "스프링", eve.getId(), size, page, sort);
 
             // then
             assertAll(
@@ -387,7 +388,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     () -> assertThat(interviewQuestionLikes.getInterviewQuestionId()).isEqualTo(
                             interviewQuestion.getId()),
                     () -> assertThat(interviewQuestionLikes.getLikerId()).isEqualTo(eve.getId()),
-                    () -> assertThat(interviewQuestion.getLikes()).isEqualTo(1)
+                    () -> assertThat(interviewQuestion.getLikeCount()).isEqualTo(1)
             );
         }
 
@@ -441,7 +442,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             assertAll(
                     () -> assertThat(interviewQuestionLikes).isNotPresent(),
-                    () -> assertThat(interviewQuestion.getLikes()).isEqualTo(0)
+                    () -> assertThat(interviewQuestion.getLikeCount()).isEqualTo(0)
             );
         }
 

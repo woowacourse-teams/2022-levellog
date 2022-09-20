@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InterviewQuestionSearchResultDto {
 
@@ -17,9 +17,4 @@ public class InterviewQuestionSearchResultDto {
     private String content;
     private boolean like;
     private int likeCount;
-
-    public static InterviewQuestionSearchResultDto of(final InterviewQuestion interviewQuestion, final boolean like) {
-        return new InterviewQuestionSearchResultDto(
-                interviewQuestion.getId(), interviewQuestion.getContent(), like, interviewQuestion.getLikes());
-    }
 }

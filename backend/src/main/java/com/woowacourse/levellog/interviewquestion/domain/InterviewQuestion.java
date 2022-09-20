@@ -35,7 +35,7 @@ public class InterviewQuestion extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-    private int likes = 0;
+    private int likeCount = 0;
 
     private InterviewQuestion(final Member author, final Levellog levellog, final String content) {
         validateContent(content);
@@ -83,10 +83,10 @@ public class InterviewQuestion extends BaseEntity {
     }
 
     public void upLike() {
-        this.likes++;
+        this.likeCount++;
     }
 
     public void downLike() {
-        this.likes--;
+        this.likeCount--;
     }
 }

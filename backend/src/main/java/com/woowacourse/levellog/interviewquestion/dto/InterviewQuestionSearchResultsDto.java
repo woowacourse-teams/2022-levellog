@@ -14,8 +14,10 @@ import lombok.NoArgsConstructor;
 public class InterviewQuestionSearchResultsDto {
 
     private List<InterviewQuestionSearchResultDto> results;
+    private Long page;
 
-    public static InterviewQuestionSearchResultsDto of(final List<InterviewQuestionSearchResultDto> results) {
-        return new InterviewQuestionSearchResultsDto(results);
+    public static InterviewQuestionSearchResultsDto of(final List<InterviewQuestionSearchResultDto> results,
+                                                       final Long page) {
+        return new InterviewQuestionSearchResultsDto(results, page);
     }
 }

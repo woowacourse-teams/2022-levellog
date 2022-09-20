@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
+import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
@@ -169,6 +170,11 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
 
         saveTeam("잠실 제이슨조", RICK, 1, RICK, ROMA, PEPPER);
         saveTeam("잠실 브리조", RICK, 1, RICK, ROMA, ALIEN);
+        saveTeam("잠실 브라운조", RICK, 1, RICK, ALIEN);
+        final String teamId = saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER, ROMA).getTeamId();
+
+        timeStandard.setInProgress();
+        RestAssuredTemplate.post("/api/teams/" + teamId + "/close", RICK.getToken());
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -180,10 +186,11 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("teams.title", contains("잠실 브리조", "잠실 제이슨조"),
+                .body("teams.title", contains("잠실 브리조", "잠실 제이슨조", "잠실 네오조"),
                         "teams.participants.memberId", contains(
                                 List.of(RICK.getId().intValue(), ROMA.getId().intValue(), ALIEN.getId().intValue()),
-                                List.of(RICK.getId().intValue(), ROMA.getId().intValue(), PEPPER.getId().intValue())
+                                List.of(RICK.getId().intValue(), ROMA.getId().intValue(), PEPPER.getId().intValue()),
+                                List.of(RICK.getId().intValue(), PEPPER.getId().intValue(), ROMA.getId().intValue())
                         )
                 );
     }

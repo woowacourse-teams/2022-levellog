@@ -3,6 +3,7 @@ package com.woowacourse.levellog.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
@@ -50,8 +51,50 @@ class TeamQueryRepositoryTest extends RepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllList 메서드는 개선된 쿼리로 팀 목록을 조회한다.")
-    void findAllList() {
+    @DisplayName("findAllList 메서드는 isClosed=false 일 때 종료되지 않은 팀 목록을 조회한다.")
+    void findAllList_open_success() {
+        // given
+        // 팀 1
+        final Member roma = saveMember("로마");
+        final Member pep = saveMember("페퍼");
+        final Member rick = saveMember("릭");
+        final Member jun = saveMember("준");
+
+        final Team team1 = saveTeam(roma, List.of(jun), pep, rick);
+        team1.close(TimeFixture.AFTER_START_TIME);
+
+        // 팀 2
+        final Member eve = saveMember("이브");
+        final Member alien = saveMember("알린");
+
+        final Team team2 = saveTeam(eve, alien);
+
+        // 팀 3
+        final Member harry = saveMember("해리");
+        final Member kyoul = saveMember("결");
+
+        final Team team3 = saveTeam(harry, kyoul);
+
+        teamRepository.flush();
+
+        // when
+        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findAllList(false, 10, 0);
+
+        // then
+        assertThat(actual).hasSize(4)
+                .extracting("id", "memberId")
+                .containsExactly(
+                        tuple(team3.getId(), harry.getId()),
+                        tuple(team3.getId(), kyoul.getId()),
+
+                        tuple(team2.getId(), eve.getId()),
+                        tuple(team2.getId(), alien.getId())
+                );
+    }
+
+    @Test
+    @DisplayName("findAllList 메서드는 isClosed=true 일 때 종료된 팀 목록을 조회한다.")
+    void findAllList_close_success() {
         // given
         // 팀 1
         final Member roma = saveMember("로마");
@@ -66,29 +109,29 @@ class TeamQueryRepositoryTest extends RepositoryTest {
         final Member alien = saveMember("알린");
 
         final Team team2 = saveTeam(eve, alien);
+        team2.close(TimeFixture.AFTER_START_TIME);
 
         // 팀 3
         final Member harry = saveMember("해리");
         final Member kyoul = saveMember("결");
 
         final Team team3 = saveTeam(harry, kyoul);
+        team3.close(TimeFixture.AFTER_START_TIME);
+
+        teamRepository.flush();
 
         // when
-        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findAllList(10, 0);
+        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findAllList(true, 10, 0);
 
         // then
-        assertThat(actual).hasSize(7)
+        assertThat(actual).hasSize(4)
                 .extracting("id", "memberId")
                 .containsExactly(
                         tuple(team3.getId(), harry.getId()),
                         tuple(team3.getId(), kyoul.getId()),
 
                         tuple(team2.getId(), eve.getId()),
-                        tuple(team2.getId(), alien.getId()),
-
-                        tuple(team1.getId(), roma.getId()),
-                        tuple(team1.getId(), pep.getId()),
-                        tuple(team1.getId(), rick.getId())
+                        tuple(team2.getId(), alien.getId())
                 );
     }
 

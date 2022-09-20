@@ -6,6 +6,7 @@ import static com.woowacourse.levellog.fixture.MemberFixture.POBI;
 import static com.woowacourse.levellog.fixture.MemberFixture.RICK;
 import static com.woowacourse.levellog.fixture.MemberFixture.ROMA;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
+import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_IN_PROGRESS_START_TIME;
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
@@ -62,14 +63,14 @@ class TeamAcceptanceTest extends AcceptanceTest {
     }
 
     /*
-     * Scenario: 레벨 인터뷰 팀 전체 목록 조회하기
+     * Scenario: 레벨 인터뷰 진행중인 팀 목록 조회하기
      *   given: 팀이 등록되어 있다.
-     *   when: 팀을 목록 조회를 요청한다.
-     *   then: 200 Ok 상태 코드와 인터뷰 종료 여부, 최근 생성일 순으로 정렬된 모든 팀 목록을 응답받는다.
+     *   when: 팀을 진행중인 인터뷰 목록 조회를 요청한다.
+     *   then: 200 Ok 상태 코드와 진행 혹은 준비 상태의 팀 목록을 최근 생성일 순으로 정렬한 응답받는다.
      */
     @Test
-    @DisplayName("레벨 인터뷰 팀 전체 목록 조회하기")
-    void findAllTeam_success() {
+    @DisplayName("레벨 인터뷰 진행중인 팀 목록 조회하기")
+    void findAllTeam_open_success() {
         // given
         PEPPER.save();
         EVE.save();
@@ -79,27 +80,27 @@ class TeamAcceptanceTest extends AcceptanceTest {
         saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
         saveTeam("잠실 브리조", EVE, 1, EVE, RICK);
         final String teamId = saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER).getTeamId();
+        saveTeam("잠실 포비조", POBI, 1, AFTER_IN_PROGRESS_START_TIME, List.of(POBI), RICK);
 
         timeStandard.setInProgress();
         RestAssuredTemplate.post("/api/teams/" + teamId + "/close", RICK.getToken());
-
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/find-all"))
                 .when()
-                .get("/api/teams?page=0&size=3")
+                .get("/api/teams?status=open")
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("teams.title", contains("잠실 브리조", "잠실 제이슨조", "잠실 네오조"),
-                        "teams.status", contains("IN_PROGRESS", "IN_PROGRESS", "CLOSED"),
+                .body("teams.title", contains("잠실 포비조", "잠실 브리조", "잠실 제이슨조"),
+                        "teams.status", contains("READY", "IN_PROGRESS", "IN_PROGRESS"),
                         "teams.participants.memberId", contains(
+                                List.of(RICK.getId().intValue()),
                                 List.of(EVE.getId().intValue(), RICK.getId().intValue()),
-                                List.of(PEPPER.getId().intValue(), EVE.getId().intValue()),
-                                List.of(RICK.getId().intValue(), PEPPER.getId().intValue())
+                                List.of(PEPPER.getId().intValue(), EVE.getId().intValue())
                         )
                 );
     }

@@ -23,6 +23,7 @@ import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.presentation.FeedbackController;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.presentation.InterviewQuestionController;
+import com.woowacourse.levellog.interviewquestion.presentation.InterviewQuestionSearchController;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.presentation.LevellogController;
 import com.woowacourse.levellog.member.application.MemberService;
@@ -54,6 +55,7 @@ import org.springframework.web.context.WebApplicationContext;
         MyInfoController.class,
         PreQuestionController.class,
         InterviewQuestionController.class,
+        InterviewQuestionSearchController.class,
         AdminController.class
 })
 @ExtendWith(RestDocumentationExtension.class)

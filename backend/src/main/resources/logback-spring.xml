@@ -22,7 +22,7 @@
             <appender-ref ref="console-appender"/>
         </logger>
 
-        <logger name="org.springframework.jdbc.core" level="TRACE">
+        <logger name="org.springframework.jdbc" level="TRACE">
             <appender-ref ref="console-appender"/>
         </logger>
 

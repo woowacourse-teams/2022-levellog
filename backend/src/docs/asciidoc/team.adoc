@@ -102,10 +102,10 @@ include::{snippets}/team/create/exception/host-existence/http-response.adoc[]
 |*Type*
 |*Default Value*
 
-|status
-|인터뷰 진행 상태에 따라 필터링 조건을 적용한다.
-|String(ready / in-progress / closed / all)
-|all
+|condition
+|인터뷰 종료 상태에 따라 필터링 조건을 적용한다.
+|String(open / close)
+|open
 
 |page
 |페이지 넘버를 지정한다.
@@ -115,12 +115,8 @@ include::{snippets}/team/create/exception/host-existence/http-response.adoc[]
 |size
 |가져올 데이터 개수를 지정한다.
 |정수형
-|100
+|20
 
-|sort
-|정렬 조건을 적용한다. 다중 조건인 경우 앞에 선언된 조건이 우선 적용된다.
-|String,String
-|isClosed,asc&createdAt,desc
 |<<find-all>>
 |===
 

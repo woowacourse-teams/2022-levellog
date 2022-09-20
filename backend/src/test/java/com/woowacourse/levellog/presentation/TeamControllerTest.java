@@ -37,14 +37,10 @@ class TeamControllerTest extends ControllerTest {
     void findAll_invalidStatus_exception() throws Exception {
         // given
         final String invalidStatus = "invalid";
-        final String message = "입력 받은 status가 올바르지 않습니다.";
-
-        willThrow(new InvalidFieldException(message, DebugMessage.init()))
-                .given(teamQueryService)
-                .findAll(invalidStatus, 0, 20);
+        final String message = "입력 받은 필터링 조건이 올바르지 않습니다.";
 
         // when
-        final ResultActions perform = requestGet("/api/teams?status=" + invalidStatus);
+        final ResultActions perform = requestGet("/api/teams?condition=" + invalidStatus);
 
         // then
         perform.andExpectAll(

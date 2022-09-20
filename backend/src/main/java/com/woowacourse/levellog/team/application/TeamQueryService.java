@@ -7,6 +7,7 @@ import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.SimpleParticipant;
 import com.woowacourse.levellog.team.domain.SimpleParticipants;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.domain.TeamQueryRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.AllParticipantDto;
@@ -36,12 +37,10 @@ public class TeamQueryService {
     private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
 
-    public TeamListDto findAll(final String status, final int page, final int size) {
-        TeamStatus.checkClosed(status);
-
-        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findAllList(size, page * size);
+    public TeamListDto findAll(final TeamFilterCondition condition, final int page, final int size) {
+        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findAllList(condition.isClosed(),
+                size, page * size);
         final List<TeamSimpleDto> teamSimpleDtos = allParticipants.stream()
-                .filter(it -> filterStatus(status, toTeamStatus(it))) // FIXME: 2022/09/19 삭제 후 쿼리로 필터링
                 .collect(Collectors.groupingBy(AllSimpleParticipantDto::getId, LinkedHashMap::new, Collectors.toList()))
                 .values()
                 .stream()
@@ -84,13 +83,6 @@ public class TeamQueryService {
 
         return TeamDto.from(team, participants.toHostId(), status, isParticipant, interviewers, interviewees,
                 toParticipantDto(allParticipants), toWatcherDtos(allParticipants));
-    }
-
-    private boolean filterStatus(final String status, final TeamStatus teamStatus) {
-        if (!status.equals(ALL_STATUS)) {
-            return teamStatus.isSame(status);
-        }
-        return true;
     }
 
     private TeamStatus toTeamStatus(final AllSimpleParticipantDto dto) {

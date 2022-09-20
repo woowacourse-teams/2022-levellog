@@ -45,20 +45,20 @@ public class TeamQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<AllSimpleParticipantDto> findAllList(final int limit, final int offset) {
+    public List<AllSimpleParticipantDto> findAllList(final boolean isClosed, final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, "
                 + "m.id memberId, m.profile_url "
                 + "FROM "
                     + "(SELECT * "
                     + "FROM team "
-                    + "WHERE deleted = FALSE "
+                    + "WHERE deleted = FALSE AND is_closed = ? "
                     + "LIMIT ? OFFSET ?) AS t "
                     + "INNER JOIN participant p ON p.team_id = t.id AND p.is_watcher = FALSE "
                     + "INNER JOIN member m ON m.id = p.member_id "
                 + "ORDER BY t.is_closed ASC, t.created_at DESC";
 
-        return jdbcTemplate.query(sql, simpleRowMapper, limit, offset);
+        return jdbcTemplate.query(sql, simpleRowMapper, isClosed, limit, offset);
     }
 
     public List<AllParticipantDto> findAllByTeamId(final Long teamId, final Long memberId) {

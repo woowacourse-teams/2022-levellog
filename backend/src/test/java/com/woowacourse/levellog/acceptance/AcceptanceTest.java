@@ -26,6 +26,7 @@ import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -124,18 +125,17 @@ abstract class AcceptanceTest {
 
     protected RestAssuredResponse saveTeam(final String title, final MemberFixture host, final int interviewerNumber,
                                            final MemberFixture... participants) {
-        final List<Long> participantIds = Arrays.stream(participants)
-                .map(MemberFixture::getId)
-                .collect(Collectors.toList());
-
-        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, TEAM_START_TIME,
-                participantIds, Collections.emptyList());
-
-        return post("/api/teams", host.getToken(), request);
+        return saveTeam(title, host, interviewerNumber, TEAM_START_TIME, Collections.emptyList(), participants);
     }
 
     protected RestAssuredResponse saveTeam(final String title, final MemberFixture host, final int interviewerNumber,
                                            final List<MemberFixture> watchers, final MemberFixture... participants) {
+        return saveTeam(title, host, interviewerNumber, TEAM_START_TIME, watchers, participants);
+    }
+
+    protected RestAssuredResponse saveTeam(final String title, final MemberFixture host, final int interviewerNumber,
+                                           final LocalDateTime startAt, final List<MemberFixture> watchers,
+                                           final MemberFixture... participants) {
         final List<Long> participantIds = Arrays.stream(participants)
                 .map(MemberFixture::getId)
                 .collect(Collectors.toList());
@@ -143,7 +143,7 @@ abstract class AcceptanceTest {
                 .map(MemberFixture::getId)
                 .collect(Collectors.toList());
 
-        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, TEAM_START_TIME,
+        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, startAt,
                 participantIds, watcherIds);
 
         return post("/api/teams", host.getToken(), request);

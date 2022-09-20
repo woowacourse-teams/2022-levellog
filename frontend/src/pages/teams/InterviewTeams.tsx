@@ -8,7 +8,7 @@ import useTeams from 'hooks/useTeams';
 import Loading from 'pages/status/Loading';
 
 import plusIcon from 'assets/images/plus.svg';
-import { ROUTES_PATH, TEAMS_STATUS } from 'constants/constants';
+import { ROUTES_PATH } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -18,7 +18,7 @@ import InterviewTeam from 'components/teams/InterviewTeam';
 import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
-  const { teams, getTeams, isActive, handleClickFilterButtons } = useTeams();
+  const { teams, isActive, handleClickFilterButtons } = useTeams();
 
   if (teams.length === 0) return <Loading />;
 

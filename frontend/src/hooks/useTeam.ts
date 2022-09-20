@@ -23,6 +23,7 @@ import { TeamApiType, TeamCustomHookType } from 'types/team';
 const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { showSnackbar } = useSnackbar();
+
   const { teamId } = useParams();
   const navigate = useNavigate();
 
@@ -160,7 +161,6 @@ const useTeam = () => {
 
   useEffect(() => {
     getTeam();
-    console.log('팀 상세 정보 요청..');
   }, []);
 
   return {

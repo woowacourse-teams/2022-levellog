@@ -54,17 +54,20 @@ const useTeams = () => {
     const eventTarget = e.target as HTMLElement;
     switch (eventTarget.innerText) {
       case '진행중인 인터뷰':
-        console.log('진행중');
+        if (isActive.open) return;
+
         await getTeams({ teamsStatus: TEAMS_STATUS.OPEN });
         setIsActive({ open: true, close: false, my: false });
         break;
       case '종료된 인터뷰':
-        console.log('종료');
+        if (isActive.close) return;
+
         await getTeams({ teamsStatus: TEAMS_STATUS.CLOSE });
         setIsActive({ open: false, close: true, my: false });
         break;
       case '나의 인터뷰':
-        console.log('나');
+        if (isActive.my) return;
+
         await getMyTeams();
         setIsActive({ open: false, close: false, my: true });
         break;

@@ -48,7 +48,7 @@ export const requestInterviewQuestionSearchSort = ({
   accessToken,
   keyword,
   page = 0,
-  size = 10,
+  size = 200,
   sort = 'likes',
 }: InterviewQuestionSearchSort): AxiosPromise<void> => {
   return axios(

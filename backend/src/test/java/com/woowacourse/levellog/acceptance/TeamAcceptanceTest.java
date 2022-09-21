@@ -106,6 +106,50 @@ class TeamAcceptanceTest extends AcceptanceTest {
     }
 
     /*
+     * Scenario: 레벨 인터뷰 종료된 팀 목록 조회하기
+     *   given: 팀이 등록되어 있고, 두 개의 팀이 종료되어 있다.
+     *   when: 팀을 종료된 인터뷰 목록 조회를 요청한다.
+     *   then: 200 Ok 상태 코드와 종료된 상태의 팀 목록을 최근 생성일 순으로 정렬한 응답을 받는다.
+     */
+    @Test
+    @DisplayName("레벨 인터뷰 종료된 팀 목록 조회하기")
+    void findAllTeam_close_success() {
+        // given
+        PEPPER.save();
+        EVE.save();
+        RICK.save();
+        POBI.save();
+
+        saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
+        saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER);
+        final String teamId = saveTeam("잠실 브리조", EVE, 1, List.of(POBI), EVE, RICK).getTeamId();
+        final String teamId2 = saveTeam("잠실 포비조", POBI, 1, List.of(POBI), RICK).getTeamId();
+
+        timeStandard.setInProgress();
+        RestAssuredTemplate.post("/api/teams/" + teamId + "/close", EVE.getToken());
+        RestAssuredTemplate.post("/api/teams/" + teamId2 + "/close", POBI.getToken());
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find-all/close"))
+                .when()
+                .get("/api/teams?condition=close")
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("teams.title", contains("잠실 포비조", "잠실 브리조"),
+                        "teams.status", contains("CLOSED", "CLOSED"),
+                        "teams.participants.memberId", contains(
+                                List.of(RICK.getId().intValue()),
+                                List.of(EVE.getId().intValue(), RICK.getId().intValue())
+                        )
+                );
+    }
+
+    /*
      * Scenario: 내가 속한 레벨 인터뷰 팀 상세 조회하기
      *   given: 팀이 등록되어 있다.
      *   given: 페퍼의 계정으로 로그인되어있다.

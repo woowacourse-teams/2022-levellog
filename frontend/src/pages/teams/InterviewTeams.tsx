@@ -5,10 +5,12 @@ import styled from 'styled-components';
 
 import useTeams from 'hooks/useTeams';
 
+import { Exception } from 'pages/status';
 import Loading from 'pages/status/Loading';
 
+import error from 'assets/images/error.webp';
 import plusIcon from 'assets/images/plus.svg';
-import { ROUTES_PATH } from 'constants/constants';
+import { NOT_YET_HTTP_STATUS, ROUTES_PATH, TEAMS_CONDITION } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -18,9 +20,13 @@ import InterviewTeam from 'components/teams/InterviewTeam';
 import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
-  const { teams, isActive, handleClickFilterButtons } = useTeams();
+  const { teams, isActive, getTeams, handleClickFilterButtons } = useTeams();
 
-  if (teams.length === 0) return <Loading />;
+  useEffect(() => {
+    getTeams({ teamsCondition: TEAMS_CONDITION.OPEN });
+  }, []);
+
+  if (isActive.status === NOT_YET_HTTP_STATUS) return <Loading />;
 
   return (
     <>
@@ -33,11 +39,21 @@ const InterviewTeams = () => {
         <span />
       </ContentHeader>
       <S.Container>
-        <S.Content>
-          {teams.map((team: InterviewTeamType) => (
-            <InterviewTeam key={team.id} team={team} />
-          ))}
-        </S.Content>
+        {teams.length === 0 && (
+          <S.Empty>
+            <Exception>
+              <Exception.Image>{error}</Exception.Image>
+              <Exception.Title>조건에 해당하는 팀이 없습니다.</Exception.Title>
+            </Exception>
+          </S.Empty>
+        )}
+        {teams.length > 0 && (
+          <S.Content>
+            {teams.map((team: InterviewTeamType) => (
+              <InterviewTeam key={team.id} team={team} />
+            ))}
+          </S.Content>
+        )}
         <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
           <S.TeamAddButton>
             {'팀 추가하기'}
@@ -75,6 +91,16 @@ const S = {
     @media (max-width: 560px) {
       padding: 0 1.25rem;
       padding-bottom: 6.25rem;
+    }
+  `,
+
+  Empty: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 3.125rem;
+    @media (max-width: 560px) {
+      justify-content: center;
+      gap: 2.5rem;
     }
   `,
 

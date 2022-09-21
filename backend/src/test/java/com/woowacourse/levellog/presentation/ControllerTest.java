@@ -23,12 +23,14 @@ import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.presentation.FeedbackController;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.presentation.InterviewQuestionController;
+import com.woowacourse.levellog.interviewquestion.presentation.InterviewQuestionSearchController;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.presentation.LevellogController;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.presentation.MyInfoController;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.presentation.PreQuestionController;
+import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.presentation.TeamController;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,6 +55,7 @@ import org.springframework.web.context.WebApplicationContext;
         MyInfoController.class,
         PreQuestionController.class,
         InterviewQuestionController.class,
+        InterviewQuestionSearchController.class,
         AdminController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
@@ -80,6 +83,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected TeamService teamService;
+
+    @MockBean
+    protected TeamQueryService teamQueryService;
 
     @MockBean
     protected PreQuestionService preQuestionService;

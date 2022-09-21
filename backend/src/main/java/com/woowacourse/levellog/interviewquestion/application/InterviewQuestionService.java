@@ -2,10 +2,18 @@ package com.woowacourse.levellog.interviewquestion.application;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesRepository;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
+import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
+import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -28,6 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class InterviewQuestionService {
 
     private final InterviewQuestionRepository interviewQuestionRepository;
+    private final InterviewQuestionQueryRepository interviewQuestionQueryRepository;
+    private final InterviewQuestionLikesRepository interviewQuestionLikesRepository;
     private final MemberRepository memberRepository;
     private final LevellogRepository levellogRepository;
     private final ParticipantRepository participantRepository;
@@ -65,6 +75,14 @@ public class InterviewQuestionService {
         return InterviewQuestionContentsDto.from(interviewQuestions);
     }
 
+    public InterviewQuestionSearchResultsDto searchByKeyword(final String keyword, final Long memberId,
+                                                             final Long size, final Long page, final String sort) {
+        final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository
+                .searchByKeyword(keyword, memberId, size, page, InterviewQuestionSort.valueOf(sort.toUpperCase()));
+
+        return InterviewQuestionSearchResultsDto.of(results, page);
+    }
+
     @Transactional
     public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId,
                        final Long fromMemberId) {
@@ -91,6 +109,26 @@ public class InterviewQuestionService {
         interviewQuestionRepository.delete(interviewQuestion);
     }
 
+    @Transactional
+    public void pressLike(final Long interviewQuestionId, final Long memberId) {
+        final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
+        final Member member = getMember(memberId);
+        validateAlreadyExist(interviewQuestionId, memberId);
+
+        interviewQuestionLikesRepository.save(InterviewQuestionLikes.of(interviewQuestion, member));
+        interviewQuestion.upLike();
+    }
+
+    @Transactional
+    public void cancelLike(final Long interviewQuestionId, final Long memberId) {
+        final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
+        final Member member = getMember(memberId);
+        final InterviewQuestionLikes interviewQuestionLikes = getInterviewQuestionLikes(interviewQuestion, member);
+
+        interviewQuestionLikesRepository.deleteById(interviewQuestionLikes.getId());
+        interviewQuestion.downLike();
+    }
+
     private InterviewQuestion getInterviewQuestion(final Long interviewQuestionId) {
         return interviewQuestionRepository.findById(interviewQuestionId)
                 .orElseThrow(() -> new InterviewQuestionNotFoundException(DebugMessage.init()
@@ -109,6 +147,17 @@ public class InterviewQuestionService {
                         .append("memberId", memberId)));
     }
 
+    private InterviewQuestionLikes getInterviewQuestionLikes(final InterviewQuestion interviewQuestion,
+                                                             final Member member) {
+        return interviewQuestionLikesRepository.findByInterviewQuestionIdAndLikerId(interviewQuestion.getId(),
+                        member.getId())
+                .orElseThrow(() -> new InterviewQuestionLikeNotFoundException(
+                        DebugMessage.init()
+                                .append("interviewQuestionId", interviewQuestion.getId())
+                                .append("likerId", member.getId())
+                ));
+    }
+
     private void validateMemberIsParticipant(final Member member, final Levellog levellog) {
         final Team team = levellog.getTeam();
 
@@ -117,6 +166,15 @@ public class InterviewQuestionService {
                     .append("teamId", team.getId())
                     .append("memberId", member.getId())
                     .append("levellogId", levellog.getId()));
+        }
+    }
+
+    private void validateAlreadyExist(final Long interviewQuestionId, final Long memberId) {
+        if (interviewQuestionLikesRepository.existsByInterviewQuestionIdAndLikerId(interviewQuestionId, memberId)) {
+            final DebugMessage debugMessage = DebugMessage.init()
+                    .append("interviewQuestionId", interviewQuestionId)
+                    .append("likerId", memberId);
+            throw new InterviewQuestionLikesAlreadyExistException(debugMessage);
         }
     }
 }

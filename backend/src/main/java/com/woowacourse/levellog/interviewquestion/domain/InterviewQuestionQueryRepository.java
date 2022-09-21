@@ -35,6 +35,6 @@ public class InterviewQuestionQueryRepository {
                 + String.format("ORDER BY %s %s ", sort.getField(), sort.getOrder())
                 + "LIMIT ? OFFSET ?";
 
-        return jdbcTemplate.query(sql, searchRowMapper, wrappedKeyword, memberId, size, page * size);
+        return jdbcTemplate.query(sql, searchRowMapper, memberId, wrappedKeyword, size, page * size);
     }
 }

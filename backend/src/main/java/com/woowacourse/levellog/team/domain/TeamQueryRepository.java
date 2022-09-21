@@ -53,10 +53,10 @@ public class TeamQueryRepository {
                     + "(SELECT * "
                     + "FROM team "
                     + "WHERE deleted = FALSE AND is_closed = ? "
+                    + "ORDER BY is_closed ASC, created_at DESC "
                     + "LIMIT ? OFFSET ?) AS t "
-                    + "INNER JOIN participant p ON p.team_id = t.id AND p.is_watcher = FALSE "
-                    + "INNER JOIN member m ON m.id = p.member_id "
-                + "ORDER BY t.is_closed ASC, t.created_at DESC";
+                + "INNER JOIN participant p ON p.team_id = t.id AND p.is_watcher = FALSE "
+                + "INNER JOIN member m ON m.id = p.member_id";
 
         return jdbcTemplate.query(sql, simpleRowMapper, isClosed, limit, offset);
     }

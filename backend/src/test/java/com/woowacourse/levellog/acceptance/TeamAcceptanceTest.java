@@ -65,8 +65,8 @@ class TeamAcceptanceTest extends AcceptanceTest {
     /*
      * Scenario: 레벨 인터뷰 진행중인 팀 목록 조회하기
      *   given: 팀이 등록되어 있다.
-     *   when: 팀을 진행중인 인터뷰 목록 조회를 요청한다.
-     *   then: 200 Ok 상태 코드와 진행 혹은 준비 상태의 팀 목록을 최근 생성일 순으로 정렬한 응답받는다.
+     *   when: 팀을 진행중인 인터뷰 목록 조회를 요청한다. 첫 번째 페이지에서 2개만 보여지도록 요청한다.
+     *   then: 200 Ok 상태 코드와 진행 혹은 준비 상태의 팀 목록을 최근 생성일 순으로 정렬한 응답을 받는다.
      */
     @Test
     @DisplayName("레벨 인터뷰 진행중인 팀 목록 조회하기")
@@ -90,17 +90,60 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/find-all"))
                 .when()
-                .get("/api/teams?status=open")
+                .get("/api/teams?condition=open&size=2&page=0")
                 .then().log().all();
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("teams.title", contains("잠실 포비조", "잠실 브리조", "잠실 제이슨조"),
-                        "teams.status", contains("READY", "IN_PROGRESS", "IN_PROGRESS"),
+                .body("teams.title", contains("잠실 포비조", "잠실 브리조"),
+                        "teams.status", contains("READY", "IN_PROGRESS"),
                         "teams.participants.memberId", contains(
                                 List.of(RICK.getId().intValue()),
-                                List.of(EVE.getId().intValue(), RICK.getId().intValue()),
-                                List.of(PEPPER.getId().intValue(), EVE.getId().intValue())
+                                List.of(EVE.getId().intValue(), RICK.getId().intValue())
+                        )
+                );
+    }
+
+    /*
+     * Scenario: 레벨 인터뷰 종료된 팀 목록 조회하기
+     *   given: 팀이 등록되어 있고, 두 개의 팀이 종료되어 있다.
+     *   when: 팀을 종료된 인터뷰 목록 조회를 요청한다.
+     *   then: 200 Ok 상태 코드와 종료된 상태의 팀 목록을 최근 생성일 순으로 정렬한 응답을 받는다.
+     */
+    @Test
+    @DisplayName("레벨 인터뷰 종료된 팀 목록 조회하기")
+    void findAllTeam_close_success() {
+        // given
+        PEPPER.save();
+        EVE.save();
+        RICK.save();
+        POBI.save();
+
+        saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
+        saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER);
+        final String teamId = saveTeam("잠실 브리조", EVE, 1, List.of(POBI), EVE, RICK).getTeamId();
+        final String teamId2 = saveTeam("잠실 포비조", POBI, 1, List.of(POBI), RICK).getTeamId();
+
+        timeStandard.setInProgress();
+        RestAssuredTemplate.post("/api/teams/" + teamId + "/close", EVE.getToken());
+        RestAssuredTemplate.post("/api/teams/" + teamId2 + "/close", POBI.getToken());
+
+        // when
+        final ValidatableResponse response = RestAssured.given(specification).log().all()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + PEPPER.getToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .filter(document("team/find-all/close"))
+                .when()
+                .get("/api/teams?condition=close")
+                .then().log().all();
+
+        // then
+        response.statusCode(HttpStatus.OK.value())
+                .body("teams.title", contains("잠실 포비조", "잠실 브리조"),
+                        "teams.status", contains("CLOSED", "CLOSED"),
+                        "teams.participants.memberId", contains(
+                                List.of(RICK.getId().intValue()),
+                                List.of(EVE.getId().intValue(), RICK.getId().intValue())
                         )
                 );
     }

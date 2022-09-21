@@ -3819,9 +3819,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@toast-ui/editor@npm:3.1.8":
-  version: 3.1.8
-  resolution: "@toast-ui/editor@npm:3.1.8"
+"@toast-ui/editor@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@toast-ui/editor@npm:3.2.0"
   dependencies:
     dompurify: ^2.3.3
     prosemirror-commands: ^1.1.9
@@ -3831,7 +3831,7 @@ __metadata:
     prosemirror-model: ^1.14.1
     prosemirror-state: ^1.3.4
     prosemirror-view: ^1.18.7
-  checksum: 8061b7f08c0a79fe75cbd3604215b2bdb4e1aa91839a7e4f06cb81d60f722210c4bbb8fff62c1c083c41272505b8f89442b9d96dd8b68c3d1af02c54bba362a5
+  checksum: 1402ff222b8caaa3a638ef0cb92d98100522f87b418b28a77dee9b0b38f663479a482bb94515e24d4ecac3c8822f4ad1ba8eff59aaffbb4347cab2f76dcf3618
   languageName: node
   linkType: hard
 

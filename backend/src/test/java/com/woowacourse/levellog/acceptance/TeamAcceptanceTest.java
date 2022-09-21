@@ -66,7 +66,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
      * Scenario: 레벨 인터뷰 진행중인 팀 목록 조회하기
      *   given: 팀이 등록되어 있다.
      *   when: 팀을 진행중인 인터뷰 목록 조회를 요청한다.
-     *   then: 200 Ok 상태 코드와 진행 혹은 준비 상태의 팀 목록을 최근 생성일 순으로 정렬한 응답받는다.
+     *   then: 200 Ok 상태 코드와 진행 혹은 준비 상태의 팀 목록을 최근 생성일 순으로 정렬한 응답을 받는다.
      */
     @Test
     @DisplayName("레벨 인터뷰 진행중인 팀 목록 조회하기")
@@ -90,7 +90,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("team/find-all"))
                 .when()
-                .get("/api/teams?status=open")
+                .get("/api/teams?condition=open")
                 .then().log().all();
 
         // then

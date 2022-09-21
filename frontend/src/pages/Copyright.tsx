@@ -70,7 +70,12 @@ const S = {
     display: flex;
     flex-direction: column;
     max-width: 100rem;
-    margin: 2rem auto 6.25rem auto;
+    @media (min-width: 1620px) {
+      margin: 2rem calc((100vw - 100rem) / 2);
+    }
+    @media (max-width: 1620px) {
+      margin: 2rem 1.25rem;
+    }
   `,
 
   IconBox: styled.div`

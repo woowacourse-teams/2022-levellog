@@ -23,6 +23,8 @@ import { ParticipantType, WatcherType } from 'types/team';
 import { convertDateAndTime, teamEditUriBuilder } from 'utils/util';
 
 const InterviewDetail = () => {
+  const { teamId } = useParams();
+
   const { loginUserId } = useUser();
   const { team, getTeam, handleClickDeleteTeamButton, handleClickCloseTeamInterviewButton } =
     useTeam();
@@ -41,10 +43,9 @@ const InterviewDetail = () => {
     onClickDeletePreQuestion,
     handleClickClosePreQuestionModal,
   } = usePreQuestionModal();
-  const { teamId } = useParams();
 
   if (team && Object.keys(team).length === 0) return <Error />;
-  if (!teamId) return <Loading />;
+  if (!teamId || teamId !== String(team.id)) return <Loading />;
 
   return (
     <>
@@ -137,16 +138,16 @@ const S = {
     max-width: 100rem;
     margin: 0 auto 6.25rem auto;
     @media (max-width: 1700px) {
-      width: 1270px;
+      width: 79.375rem;
     }
     @media (max-width: 1480px) {
-      width: 940px;
+      width: 58.75rem;
     }
     @media (max-width: 1024px) {
-      width: 610px;
+      width: 38.125rem;
     }
     @media (max-width: 620px) {
-      width: 280px;
+      width: 17.5rem;
     }
   `,
 

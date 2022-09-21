@@ -18,25 +18,23 @@ import {
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 import { MemberType } from 'types/member';
-import { InterviewTeamType, TeamApiType, TeamCustomHookType } from 'types/team';
+import { TeamApiType, TeamCustomHookType } from 'types/team';
 
 const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { showSnackbar } = useSnackbar();
 
-  const team = useContext(TeamContext);
-  const teamInfoDispatch = useContext(TeamDispatchContext);
-
-  const [nicknameValue, setNicknameValue] = useState('');
-  const [participants, setParticipants] = useState<MemberType[]>([
-    { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl },
-  ]);
-  const [watchers, setWatchers] = useState<MemberType[]>([]);
-
-  const location = useLocation() as { state: InterviewTeamType };
-  const navigate = useNavigate();
   const { teamId } = useParams();
-  const teamLocationState: InterviewTeamType | undefined = location.state;
+  const navigate = useNavigate();
+
+  const myInfo = { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl };
+  const [participants, setParticipants] = useState<MemberType[]>([myInfo]);
+  const [watchers, setWatchers] = useState<MemberType[]>([]);
+  const [nicknameValue, setNicknameValue] = useState('');
+
+  const teamInfoDispatch = useContext(TeamDispatchContext);
+  const team = useContext(TeamContext);
+
   const accessToken = localStorage.getItem('accessToken');
 
   const postTeam = async ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
@@ -162,11 +160,6 @@ const useTeam = () => {
   };
 
   useEffect(() => {
-    if (teamLocationState) {
-      teamInfoDispatch(teamLocationState);
-
-      return;
-    }
     getTeam();
   }, []);
 
@@ -174,7 +167,7 @@ const useTeam = () => {
     nicknameValue,
     participants,
     watchers,
-    team: teamLocationState || team,
+    team,
     setNicknameValue,
     setParticipants,
     setWatchers,

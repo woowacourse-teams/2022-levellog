@@ -76,6 +76,11 @@ export const TEAM_STATUS = Object.freeze({
   CLOSED: 'CLOSED',
 });
 
+export const TEAMS_CONDITION = Object.freeze({
+  OPEN: 'open',
+  CLOSE: 'close',
+});
+
 export const REQUIRE_AUTH = Object.freeze({
   LOGIN: 'login',
   IN_TEAM: 'inTeam',
@@ -91,3 +96,5 @@ export const GITHUB_AVATAR_SIZE_LIST = {
   MEDIUM: 44,
   SMALL: 30,
 };
+
+export const NOT_YET_HTTP_STATUS = 0;

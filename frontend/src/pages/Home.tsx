@@ -13,6 +13,7 @@ const Home = () => {
     getSearchResults,
     onClickLikeButton,
     onClickCancelLikeButton,
+    handleClickRemoveSearchTextButton,
     handleClickSearchSortLike,
     handleClickSearchSortNew,
     handleClickSearchSortOld,
@@ -24,6 +25,7 @@ const Home = () => {
     <>
       <InterviewQuestionSearchForm
         searchText={searchText}
+        handleClickRemoveSearchTextButton={handleClickRemoveSearchTextButton}
         handleChangeSearchInput={handleChangeSearchInput}
         handleSubmitInterviewQuestion={handleSubmitInterviewQuestion}
       />

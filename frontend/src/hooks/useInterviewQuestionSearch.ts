@@ -88,6 +88,10 @@ const useInterviewQuestionSearch = () => {
     }
   };
 
+  const handleClickRemoveSearchTextButton = () => {
+    setSearchText('');
+  };
+
   const handleClickSearchSortLike = async () => {
     const res = await tryCatch({
       func: requestInterviewQuestionSearchSort,
@@ -150,6 +154,7 @@ const useInterviewQuestionSearch = () => {
     getSearchResults,
     onClickLikeButton,
     onClickCancelLikeButton,
+    handleClickRemoveSearchTextButton,
     handleClickSearchSortLike,
     handleClickSearchSortNew,
     handleClickSearchSortOld,

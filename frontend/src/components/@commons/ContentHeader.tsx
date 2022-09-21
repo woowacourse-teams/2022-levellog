@@ -28,11 +28,11 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
               {subTitle && <SubTitle>{subTitle}</SubTitle>}
             </TitleBox>
           </FlexBox>
-          <FilterButtonBox>
-            {childrenArray &&
-              childrenArray.length === 2 &&
-              (childrenArray[0] as JSX.Element).props.children}
-          </FilterButtonBox>
+          {childrenArray && (
+            <FilterButtonBox onClick={(childrenArray[0] as JSX.Element).props.onClick}>
+              {childrenArray.length === 2 && (childrenArray[0] as JSX.Element).props.children}
+            </FilterButtonBox>
+          )}
         </LeftBox>
         <ButtonBox>
           {childrenArray && (childrenArray.length === 2 ? childrenArray[1] : childrenArray[0])}

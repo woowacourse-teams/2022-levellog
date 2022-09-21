@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useTeams from 'hooks/useTeams';
+import useUser from 'hooks/useUser';
 
 import { Exception } from 'pages/status';
 import Loading from 'pages/status/Loading';
@@ -21,6 +22,7 @@ import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
   const { teams, isActive, getTeams, handleClickFilterButtons } = useTeams();
+  const { loginUserId } = useUser();
 
   useEffect(() => {
     getTeams({ teamsCondition: TEAMS_CONDITION.OPEN });
@@ -34,7 +36,7 @@ const InterviewTeams = () => {
         <div onClick={handleClickFilterButtons}>
           <FilterButton isActive={isActive.open}>진행중인 인터뷰</FilterButton>
           <FilterButton isActive={isActive.close}>종료된 인터뷰</FilterButton>
-          <FilterButton isActive={isActive.my}>나의 인터뷰</FilterButton>
+          {loginUserId && <FilterButton isActive={isActive.my}>나의 인터뷰</FilterButton>}
         </div>
         <span />
       </ContentHeader>

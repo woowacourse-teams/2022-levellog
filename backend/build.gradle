@@ -33,7 +33,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// db
-	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.h2database:h2:2.1.214'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
 	// test

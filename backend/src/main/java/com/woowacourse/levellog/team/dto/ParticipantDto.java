@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class ParticipantDto {
 
     private Long memberId;
@@ -26,5 +26,14 @@ public class ParticipantDto {
                 preQuestionId,
                 participant.getMember().getNickname(),
                 participant.getMember().getProfileUrl());
+    }
+
+    public static ParticipantDto from(final AllParticipantDto allParticipantDto) {
+        return new ParticipantDto(
+                allParticipantDto.getMemberId(),
+                allParticipantDto.getLevellogId(),
+                allParticipantDto.getPreQuestionId(),
+                allParticipantDto.getNickname(),
+                allParticipantDto.getProfileUrl());
     }
 }

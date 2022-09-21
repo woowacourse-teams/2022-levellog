@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import com.woowacourse.levellog.common.domain.MockEntityFactory;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -100,6 +101,10 @@ class InterviewQuestionTest {
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 2222, "image.png");
             final Member otherMember = new Member("릭", 123123, "image.png");
+
+            MockEntityFactory.setId(1L, author);
+            MockEntityFactory.setId(2L, otherMember);
+
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
             final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
             final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");

@@ -13,6 +13,8 @@ import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.levellog.application.LevellogService;
@@ -25,6 +27,7 @@ import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
+import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -80,6 +83,9 @@ abstract class ServiceTest {
     protected TeamService teamService;
 
     @Autowired
+    protected TeamQueryService teamQueryService;
+
+    @Autowired
     protected PreQuestionService preQuestionService;
 
     @Autowired
@@ -102,6 +108,9 @@ abstract class ServiceTest {
 
     @Autowired
     protected InterviewQuestionRepository interviewQuestionRepository;
+
+    @Autowired
+    protected InterviewQuestionLikesRepository interviewQuestionLikesRepository;
 
     @Autowired
     protected ParticipantRepository participantRepository;
@@ -185,6 +194,14 @@ abstract class ServiceTest {
         final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(content);
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
         return interviewQuestionRepository.save(interviewQuestion);
+    }
+
+    @Transactional
+    protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
+                                                                final Member liker) {
+        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker);
+        interviewQuestion.upLike();
+        return interviewQuestionLikesRepository.save(interviewQuestionLikes);
     }
 
     protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {

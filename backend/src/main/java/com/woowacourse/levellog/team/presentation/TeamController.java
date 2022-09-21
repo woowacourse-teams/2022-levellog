@@ -42,11 +42,10 @@ public class TeamController {
     @GetMapping
     @PublicAPI
     public ResponseEntity<TeamListDto> findAll(@RequestParam(defaultValue = "open") final String condition,
-                                               @RequestParam(defaultValue = "0") final String page,
-                                               @RequestParam(defaultValue = "20") final String size) {
+                                               @RequestParam(defaultValue = "0") final int page,
+                                               @RequestParam(defaultValue = "20") final int size) {
         final TeamFilterCondition filterCondition = TeamFilterCondition.from(condition);
-        final TeamListDto response = teamQueryService.findAll(filterCondition, Integer.parseInt(page),
-                Integer.parseInt(size));
+        final TeamListDto response = teamQueryService.findAll(filterCondition, page, size);
         return ResponseEntity.ok(response);
     }
 

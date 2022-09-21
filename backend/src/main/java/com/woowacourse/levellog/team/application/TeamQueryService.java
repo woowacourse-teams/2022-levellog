@@ -31,8 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TeamQueryService {
 
-    private static final String ALL_STATUS = "all";
-
     private final TeamQueryRepository teamQueryRepository;
     private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;

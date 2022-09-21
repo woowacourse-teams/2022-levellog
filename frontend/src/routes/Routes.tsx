@@ -1,5 +1,7 @@
 import { lazy } from 'react';
 
+import Copyright from 'pages/Copyright';
+
 import { REQUIRE_AUTH, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Auth from 'routes/Auth';
@@ -137,6 +139,10 @@ export const routes = [
       {
         path: '*',
         element: <NotFound />,
+      },
+      {
+        path: ROUTES_PATH.COPYRIGHT,
+        element: <Copyright />,
       },
     ],
   },

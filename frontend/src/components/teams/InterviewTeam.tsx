@@ -15,7 +15,7 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
   const { id, teamImage, title, status, place, startAt, participants } = team;
 
   return (
-    <Link to={teamGetUriBuilder({ teamId: id })} state={team}>
+    <Link to={teamGetUriBuilder({ teamId: id })}>
       <S.Container status={status}>
         <FlexBox gap={0.625}>
           <Image
@@ -47,7 +47,7 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
           </S.Info>
         </FlexBox>
         <S.ParticipantsBox>
-          {participants.map((participant: ParticipantType) => (
+          {participants.map((participant) => (
             <Image
               key={participant.memberId}
               src={participant.profileUrl}

@@ -17,24 +17,6 @@ import org.junit.jupiter.api.Test;
 class PreQuestionRepositoryTest extends RepositoryTest {
 
     @Test
-    @DisplayName("findByIdAndAuthor 메서드는 preQuestionId와 From 멤버가 같은 사전 질문을 반환한다.")
-    void findByIdAndAuthor() {
-        // given
-        final Member author = saveMember("알린");
-        final Member questioner = saveMember("로마");
-        final Team team = saveTeam(author, questioner);
-        final Levellog levellog = saveLevellog(author, team);
-
-        final PreQuestion preQuestion = savePreQuestion(levellog, questioner);
-
-        // when
-        final Optional<PreQuestion> actual = preQuestionRepository.findByIdAndAuthor(preQuestion.getId(), questioner);
-
-        // then
-        assertThat(actual).hasValue(preQuestion);
-    }
-
-    @Test
     @DisplayName("findByLevellogAndAuthor 메서드는 Levellog와 Author가 같은 사전 질문을 반환한다.")
     void findByLevellogAndAuthor() {
         // given
@@ -47,25 +29,6 @@ class PreQuestionRepositoryTest extends RepositoryTest {
 
         // when
         final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner);
-
-        // then
-        assertThat(actual).hasValue(preQuestion);
-    }
-
-    @Test
-    @DisplayName("findByLevellogAndAuthorId 메서드는 Levellog와 AuthorId가 같은 사전 질문을 반환한다.")
-    void findByLevellogAndAuthorId() {
-        // given
-        final Member levellogAuthor = saveMember("알린");
-        final Member questioner = saveMember("로마");
-        final Team team = saveTeam(levellogAuthor, questioner);
-        final Levellog levellog = saveLevellog(levellogAuthor, team);
-
-        final PreQuestion preQuestion = savePreQuestion(levellog, questioner);
-
-        // when
-        final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthorId(levellog,
-                questioner.getId());
 
         // then
         assertThat(actual).hasValue(preQuestion);

@@ -90,8 +90,8 @@ class AdminAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.NO_CONTENT.value());
-        get("/api/teams").getResponse()
-                .body("teams.status", contains("CLOSED"));
+        get("/api/teams?condition=close").getResponse()
+                .body("teams.id", contains(Integer.parseInt(teamId)));
     }
 
     private String getAdminToken() {

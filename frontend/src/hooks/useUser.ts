@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import profileDefaultImage from 'assets/images/defaultProfile.png';
 import { GITHUB_LOGIN_URL, ROUTES_PATH } from 'constants/constants';
 
-import useTeams from './useTeams';
 import { UserContext, UserDispatchContext } from 'contexts/userContext';
 
 const useUser = () => {
@@ -12,7 +11,6 @@ const useUser = () => {
   const { id, nickname, profileUrl } = useContext(UserContext);
   const userInfoDispatch = useContext(UserDispatchContext);
   const navigate = useNavigate();
-  const { getTeams } = useTeams();
 
   const handleClickProfile = () => {
     if (id) {
@@ -32,9 +30,9 @@ const useUser = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userId');
 
-    userInfoDispatch({ id: '', nickname: '', profileUrl: '' });
-    setIsShowProfileDropdown(false);
-    if (location.pathname === ROUTES_PATH.HOME) await getTeams();
+    await userInfoDispatch({ id: '', nickname: '', profileUrl: '' });
+    await setIsShowProfileDropdown(false);
+    if (location.pathname === ROUTES_PATH.HOME) location.replace(ROUTES_PATH.HOME);
     navigate(ROUTES_PATH.HOME);
   };
 

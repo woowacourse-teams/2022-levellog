@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class WatcherDto {
 
     private Long memberId;
@@ -25,5 +25,12 @@ public class WatcherDto {
                 member.getId(),
                 member.getNickname(),
                 member.getProfileUrl());
+    }
+
+    public static WatcherDto from(final AllParticipantDto allParticipantDto) {
+        return new WatcherDto(
+                allParticipantDto.getMemberId(),
+                allParticipantDto.getNickname(),
+                allParticipantDto.getProfileUrl());
     }
 }

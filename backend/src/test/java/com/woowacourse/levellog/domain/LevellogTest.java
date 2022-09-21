@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import com.woowacourse.levellog.common.domain.MockEntityFactory;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
@@ -78,6 +79,8 @@ class LevellogTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member member = new Member("알린", 2222, "alien.png");
+            MockEntityFactory.setId(1L, author);
+            MockEntityFactory.setId(2L, member);
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
             final Levellog levellog = Levellog.of(author, team, "content");
 

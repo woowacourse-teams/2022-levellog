@@ -2,13 +2,9 @@ package com.woowacourse.levellog.team.application;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
-import com.woowacourse.levellog.prequestion.domain.PreQuestion;
-import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -17,12 +13,8 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
-import com.woowacourse.levellog.team.dto.ParticipantDto;
-import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
-import com.woowacourse.levellog.team.dto.TeamsDto;
-import com.woowacourse.levellog.team.dto.WatcherDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
@@ -32,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,13 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TeamService {
 
-    private static final String ALL_STATUS = "all";
-
     private final TeamRepository teamRepository;
     private final ParticipantRepository participantRepository;
     private final MemberRepository memberRepository;
-    private final LevellogRepository levellogRepository;
-    private final PreQuestionRepository preQuestionRepository;
     private final TimeStandard timeStandard;
 
     @Transactional
@@ -62,26 +49,6 @@ public class TeamService {
         participantRepository.saveAll(participants.getValues());
 
         return savedTeam.getId();
-    }
-
-    public TeamsDto findAll(final Pageable pageable, final String status, final Long memberId) {
-        final List<Team> teams = getTeams(pageable, status);
-        final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
-
-        return new TeamsDto(teamDtos);
-    }
-
-    public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
-        final Team team = getTeam(teamId);
-
-        return createTeamAndRoleDto(team, memberId);
-    }
-
-    public TeamsDto findAllByMemberId(final Long memberId) {
-        final List<Team> teams = getTeamsByMemberId(memberId);
-        final List<TeamDto> teamDtos = toTeamDtos(teams, memberId);
-
-        return new TeamsDto(teamDtos);
     }
 
     public TeamStatusDto findStatus(final Long teamId) {
@@ -130,48 +97,6 @@ public class TeamService {
         team.delete(timeStandard.now());
     }
 
-    private List<Team> getTeams(final Pageable pageable, final String status) {
-        if (status.equals(ALL_STATUS)) {
-            return findAllOrderByIsClosedAndCreatedAt(pageable);
-        }
-        return findAllByIsClosedAndOrderByCreatedAt(pageable, status);
-    }
-
-    private List<Team> findAllOrderByIsClosedAndCreatedAt(final Pageable pageable) {
-        return teamRepository.findAll(pageable)
-                .getContent();
-    }
-
-    private List<Team> findAllByIsClosedAndOrderByCreatedAt(final Pageable pageable, final String status) {
-        final List<Team> teams = teamRepository.findAllByIsClosed(TeamStatus.checkClosed(status), pageable)
-                .getContent();
-
-        return filteringTeamByStatus(status, teams);
-    }
-
-    private List<Team> filteringTeamByStatus(final String status, final List<Team> teams) {
-        return teams.stream()
-                .filter(it -> it.isSameStatus(status, timeStandard.now()))
-                .collect(Collectors.toList());
-    }
-
-    private List<TeamDto> toTeamDtos(final List<Team> teams, final Long memberId) {
-        return teams.stream()
-                .map(it -> createTeamAndRoleDto(it, memberId))
-                .collect(Collectors.toList());
-    }
-
-    private TeamDto createTeamAndRoleDto(final Team team, final Long memberId) {
-        final TeamStatus status = team.status(timeStandard.now());
-
-        final Participants participants = new Participants(participantRepository.findByTeam(team));
-        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
-        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
-
-        return TeamDto.from(team, participants.toHostId(), status, participants.isContains(memberId), interviewers,
-                interviewees, toParticipantResponses(participants, memberId), toWatcherResponses(participants));
-    }
-
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
@@ -183,15 +108,6 @@ public class TeamService {
                 .orElseThrow(
                         () -> new TeamNotFoundException(DebugMessage.init()
                                 .append("teamId", teamId)));
-    }
-
-    private List<Team> getTeamsByMemberId(final Long memberId) {
-        final Member member = getMember(memberId);
-        final List<Participant> participants = participantRepository.findAllByMember(member);
-
-        return participants.stream()
-                .map(Participant::getTeam)
-                .collect(Collectors.toList());
     }
 
     private Participants createParticipants(final Team team, final Long hostId, final List<Long> participantIds,
@@ -263,42 +179,6 @@ public class TeamService {
         return watcherIds.stream()
                 .map(it -> new Participant(team, getMember(it), it.equals(hostId), true))
                 .collect(Collectors.toList());
-    }
-
-    private List<ParticipantDto> toParticipantResponses(final Participants participants, final Long memberId) {
-        return participants.getValues().stream()
-                .filter(Participant::isParticipant)
-                .map(it -> createParticipantDto(it, memberId))
-                .collect(Collectors.toList());
-    }
-
-    private List<WatcherDto> toWatcherResponses(final Participants participants) {
-        return participants.getValues().stream()
-                .filter(Participant::isWatcher)
-                .map(WatcherDto::from)
-                .collect(Collectors.toList());
-    }
-
-    private ParticipantDto createParticipantDto(final Participant participant, final Long memberId) {
-        final Levellog levellog = getLevellog(participant);
-
-        if (levellog == null) {
-            return ParticipantDto.from(participant, null, null);
-        }
-
-        return ParticipantDto.from(participant, levellog.getId(), getPreQuestionId(memberId, levellog));
-    }
-
-    private Levellog getLevellog(final Participant participant) {
-        return levellogRepository
-                .findByAuthorIdAndTeamId(participant.getMember().getId(), participant.getTeam().getId())
-                .orElse(null);
-    }
-
-    private Long getPreQuestionId(final Long memberId, final Levellog levellog) {
-        return preQuestionRepository.findByLevellogAndAuthorId(levellog, memberId)
-                .map(PreQuestion::getId)
-                .orElse(null);
     }
 
     private void validateHostAuthorization(final Long memberId, final Team team) {

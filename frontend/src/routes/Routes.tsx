@@ -8,6 +8,7 @@ import Auth from 'routes/Auth';
 import AuthLogin from 'routes/AuthLogin';
 import TeamStatus from 'routes/TeamStatus';
 
+const Home = lazy(() => import('pages/Home'));
 const Login = lazy(() => import('pages/Login'));
 const FeedbackAdd = lazy(() => import('pages/feedback/FeedbackAdd'));
 const FeedbackEdit = lazy(() => import('pages/feedback/FeedbackEdit'));
@@ -117,7 +118,11 @@ export const routes = [
     children: [
       {
         path: ROUTES_PATH.HOME,
-        element: <InterviewTeams />,
+        element: <Home />,
+      },
+      {
+        path: ROUTES_PATH.INTERVIEW_QUESTION_SEARCH,
+        element: <Home />,
       },
       {
         path: ROUTES_PATH.LOGIN,

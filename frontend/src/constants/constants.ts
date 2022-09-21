@@ -73,7 +73,7 @@ export const TEAM_STATUS = Object.freeze({
   CLOSED: 'CLOSED',
 });
 
-export const TEAMS_STATUS = Object.freeze({
+export const TEAMS_CONDITION = Object.freeze({
   OPEN: 'open',
   CLOSE: 'close',
 });
@@ -93,3 +93,5 @@ export const GITHUB_AVATAR_SIZE_LIST = {
   MEDIUM: 44,
   SMALL: 30,
 };
+
+export const NOT_YET_HTTP_STATUS = 0;

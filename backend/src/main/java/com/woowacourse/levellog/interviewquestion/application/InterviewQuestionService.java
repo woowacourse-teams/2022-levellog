@@ -26,11 +26,7 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,12 +77,6 @@ public class InterviewQuestionService {
 
     public InterviewQuestionSearchResultsDto searchByKeyword(final String keyword, final Long memberId,
                                                              final Long size, final Long page, final String sort) {
-//        final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository
-//                .searchByKeyword(keyword, memberId, size, page, InterviewQuestionSort.valueOf(sort.toUpperCase()));
-
-        InterviewQuestionSort s = InterviewQuestionSort.valueOf(sort.toUpperCase());
-
-        Pageable pageable = PageRequest.of(page.intValue(), size.intValue(), Sort.by(s.getField()).descending());
         final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository
                 .searchByKeyword(keyword, memberId, size, page, InterviewQuestionSort.valueOf(sort.toUpperCase()));
 

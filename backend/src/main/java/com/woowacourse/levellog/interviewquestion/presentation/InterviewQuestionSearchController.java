@@ -24,7 +24,7 @@ public class InterviewQuestionSearchController {
     @GetMapping
     @PublicAPI
     public ResponseEntity<InterviewQuestionSearchResultsDto> searchBy(
-            @RequestParam final String keyword,
+            @RequestParam(defaultValue = "") final String keyword,
             @RequestParam(defaultValue = "10") final Long size,
             @RequestParam(defaultValue = "0") final Long page,
             @RequestParam(defaultValue = "likes") final String sort,

@@ -11,6 +11,7 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
@@ -29,6 +30,7 @@ import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -330,22 +332,28 @@ class InterviewQuestionServiceTest extends ServiceTest {
     @Nested
     @DisplayName("searchByKeyword 메서드는")
     class SearchByKeyword {
+
         @Test
-        @DisplayName("인터뷰 질문을 키워드로 검색하여 조회한다.")
-        void success() {
+        @DisplayName("인터뷰 질문을 최신순으로 정렬하여 조회한다.")
+        void searchByKeyword_latestSort_success() {
             // given
             final Member pepper = saveMember("페퍼");
             final Member eve = saveMember("이브");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
-            Long size = 10L;
-            Long page = 0L;
-            String sort = "likes";
 
+            final Long size = 10L;
+            final Long page = 0L;
+            final String sort = "latest";
 
             timeStandard.setInProgress();
 
-            saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+            final Long question1Id = saveInterviewQuestion("스프링 A", pepperLevellog, eve).getId();
+            final Long question2Id = saveInterviewQuestion("스프링 B", pepperLevellog, eve).getId();
+            final Long question3Id = saveInterviewQuestion("스프링 C", pepperLevellog, eve).getId();
+            final Long question4Id = saveInterviewQuestion("스프링 D", pepperLevellog, eve).getId();
+
+            interviewQuestionService.pressLike(question1Id, eve.getId()); // 업데이트를 해도 최신순 정렬이 유지되어야 함
 
             // when
             final InterviewQuestionSearchResultsDto actual = interviewQuestionService.searchByKeyword(
@@ -353,8 +361,47 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // then
             assertAll(
-                    () -> assertThat(actual.getResults()).hasSize(1),
-                    () -> assertThat(actual.getResults().get(0).getContent()).isEqualTo("스프링이란?")
+                    () -> assertThat(actual.getResults()).hasSize(4),
+                    () -> Assertions.assertThat(actual.getResults())
+                            .extracting(InterviewQuestionSearchResultDto::getId)
+                            .containsExactly(question4Id, question3Id, question2Id, question1Id)
+            );
+        }
+
+        @Test
+        @DisplayName("인터뷰 질문을 좋아요순으로 정렬하여 조회한다. ( 동률일 시 최신순으로 정렬된다. )")
+        void searchByKeyword_likesSort_success() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member eve = saveMember("이브");
+            final Team team = saveTeam(pepper, eve);
+            final Levellog pepperLevellog = saveLevellog(pepper, team);
+
+            final Long size = 10L;
+            final Long page = 0L;
+            final String sort = "likes";
+
+            timeStandard.setInProgress();
+
+            final Long question1Id = saveInterviewQuestion("스프링 A", pepperLevellog, eve).getId();
+            final Long question2Id = saveInterviewQuestion("스프링 B", pepperLevellog, eve).getId();
+            final Long question3Id = saveInterviewQuestion("스프링 C", pepperLevellog, eve).getId();
+            final Long question4Id = saveInterviewQuestion("스프링 D", pepperLevellog, eve).getId();
+
+            interviewQuestionService.pressLike(question1Id, eve.getId());
+            interviewQuestionService.pressLike(question1Id, pepper.getId());
+            interviewQuestionService.pressLike(question2Id, eve.getId());
+
+            // when
+            final InterviewQuestionSearchResultsDto actual = interviewQuestionService.searchByKeyword(
+                    "스프링", eve.getId(), size, page, sort);
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.getResults()).hasSize(4),
+                    () -> Assertions.assertThat(actual.getResults())
+                            .extracting(InterviewQuestionSearchResultDto::getId)
+                            .containsExactly(question1Id, question2Id, question3Id, question4Id)
             );
         }
     }
@@ -403,14 +450,14 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             timeStandard.setInProgress();
 
-            final InterviewQuestion interviewQuestion = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
-            pressLikeInterviewQuestion(interviewQuestion, eve);
+            final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+            interviewQuestionService.pressLike(interviewQuestionId, eve.getId());
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.pressLike(interviewQuestion.getId(), eve.getId()))
+            assertThatThrownBy(() -> interviewQuestionService.pressLike(interviewQuestionId, eve.getId()))
                     .isInstanceOf(InterviewQuestionLikesAlreadyExistException.class)
                     .hasMessageContainingAll("인터뷰 질문에 대한 좋아요가 이미 존재합니다.",
-                            String.valueOf(interviewQuestion.getId()),
+                            String.valueOf(interviewQuestionId),
                             String.valueOf(eve.getId()));
         }
     }
@@ -431,7 +478,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             timeStandard.setInProgress();
 
             final InterviewQuestion interviewQuestion = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
-            pressLikeInterviewQuestion(interviewQuestion, eve);
+            interviewQuestionService.pressLike(interviewQuestion.getId(), eve.getId());
 
             // when
             interviewQuestionService.cancelLike(interviewQuestion.getId(), eve.getId());
@@ -442,7 +489,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             assertAll(
                     () -> assertThat(interviewQuestionLikes).isNotPresent(),
-                    () -> assertThat(interviewQuestion.getLikeCount()).isEqualTo(0)
+                    () -> assertThat(interviewQuestion.getLikeCount()).isZero()
             );
         }
 

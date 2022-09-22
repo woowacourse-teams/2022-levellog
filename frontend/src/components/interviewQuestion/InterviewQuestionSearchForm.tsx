@@ -1,39 +1,41 @@
 import styled from 'styled-components';
 
+import useInterviewQuestionSearch from 'hooks/useInterviewQuestionSearch';
+
 import deleteIcon from 'assets/images/close.svg';
 import searchIcon from 'assets/images/search.svg';
 
 import Image from 'components/@commons/Image';
 import Input from 'components/@commons/Input';
 
-const InterviewQuestionSearchForm = ({
-  searchText,
-  handleChangeSearchInput,
-  handleSubmitInterviewQuestion,
-}: InterviewQuestionSearchFormProps) => {
+const InterviewQuestionSearchForm = () => {
+  const {
+    searchText,
+    handleClickRemoveSearchTextButton,
+    handleChangeSearchInput,
+    handleSubmitInterviewQuestion,
+  } = useInterviewQuestionSearch();
   return (
     <S.Container onSubmit={handleSubmitInterviewQuestion}>
       <S.Title>인터뷰 질문 검색</S.Title>
       <S.InputBox>
-        <S.IconBox>
-          <Image src={searchIcon} sizes={'MEDIUM'} />
-        </S.IconBox>
+        <S.Button type={'submit'}>
+          <Image src={searchIcon} sizes={'SMALL'} />
+        </S.Button>
         <S.SearchInput
           placeholder={'검색어를 입력하세요'}
           value={searchText}
           onChange={handleChangeSearchInput}
         />
-        <Image src={deleteIcon} sizes={'SMALL'} />
+        {searchText && (
+          <S.Button onClick={handleClickRemoveSearchTextButton}>
+            <Image src={deleteIcon} sizes={'TINY'} />
+          </S.Button>
+        )}
       </S.InputBox>
     </S.Container>
   );
 };
-
-interface InterviewQuestionSearchFormProps {
-  searchText: string;
-  handleChangeSearchInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmitInterviewQuestion: (e: React.FormEvent<HTMLFormElement>) => void;
-}
 
 const S = {
   Container: styled.form`
@@ -42,14 +44,15 @@ const S = {
     align-items: center;
     width: 100%;
     padding: 3.125rem 0;
+    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY}; ;
   `,
 
   Title: styled.h1`
     width: 47.5rem;
-    font-size: 2rem;
+    font-size: 24px;
     @media (max-width: 850px) {
       width: calc(100% - 2.5rem);
-      font-size: 1.5rem;
+      font-size: 1rem;
     }
   `,
 
@@ -58,21 +61,18 @@ const S = {
     align-items: center;
     width: 47.5rem;
     margin-top: 1rem;
+    padding: 0 0.625rem;
     border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-radius: 16px;
     @media (max-width: 850px) {
       width: calc(100% - 2.5rem);
       min-width: 20rem;
     }
   `,
 
-  IconBox: styled.div`
-    margin: 0 0.6875rem;
-  `,
-
   SearchInput: styled(Input)`
     width: 47.5rem;
     height: 2.125rem;
-    border-radius: 0.3125rem;
     font-size: 1.5rem;
     ::placeholder {
       color: ${(props) => props.theme.new_default.GRAY};
@@ -83,6 +83,11 @@ const S = {
         font-size: 1.25rem;
       }
     }
+  `,
+
+  Button: styled.button`
+    border: none;
+    background-color: ${(props) => props.theme.new_default.WHITE};
   `,
 };
 

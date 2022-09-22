@@ -1,3 +1,5 @@
+import { MutableRefObject, useRef } from 'react';
+
 import styled from 'styled-components';
 
 import goodActiveIcon from 'assets/images/good-active.svg';
@@ -63,6 +65,12 @@ const S = {
   LikeCountText: styled.p`
     width: max-content;
     margin-left: 0.625rem;
+    font-size: 1.25rem;
+  `,
+
+  LikeImage: styled.img`
+    width: 1.25rem;
+    height: 1.25rem;
   `,
 
   LikeButton: styled.button`

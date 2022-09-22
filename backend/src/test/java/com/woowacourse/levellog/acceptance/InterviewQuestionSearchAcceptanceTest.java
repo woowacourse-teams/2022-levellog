@@ -34,7 +34,7 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
          */
         @Test
         @DisplayName("로그인하지 않고 조회")
-        void searchBy_nonLogin() {
+        void searchBy_nonLogin(final String keyword) {
             // given
             PEPPER.save();
             ROMA.save();
@@ -53,7 +53,7 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .filter(document("interview-question-search/search-non-login"))
                     .when()
-                    .get("/api/interview-questions?keyword=Spring")
+                    .get("/api/interview-questions?keyword=" + keyword)
                     .then().log().all();
 
             // then

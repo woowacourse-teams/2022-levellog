@@ -30,10 +30,10 @@ public class InterviewQuestionQueryRepository {
                 + "THEN true ELSE false END ) AS press, "
                 + "like_count AS likeCount "
                 + "FROM interview_question "
-                + "WHERE MATCH(content) AGAINST(?) "
+                + "WHERE content LIKE '%" + keyword + "%' "
                 + String.format("ORDER BY %s %s ", sort.getField(), sort.getOrder())
                 + "LIMIT ? OFFSET ?";
 
-        return jdbcTemplate.query(sql, searchRowMapper, memberId, keyword, size, page * size);
+        return jdbcTemplate.query(sql, searchRowMapper, memberId, size, page * size);
     }
 }

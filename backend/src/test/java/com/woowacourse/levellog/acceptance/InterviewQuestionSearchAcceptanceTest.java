@@ -12,7 +12,6 @@ import com.woowacourse.levellog.fixture.MemberFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ import org.springframework.http.MediaType;
 @DisplayName("인터뷰 검색 관련 기능")
 class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
 
-    @Disabled
     @Nested
     @DisplayName("인터뷰 검색")
     class SearchBy {

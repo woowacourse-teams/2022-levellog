@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -330,7 +329,6 @@ class InterviewQuestionServiceTest extends ServiceTest {
         }
     }
 
-    @Disabled
     @Nested
     @DisplayName("searchByKeyword 메서드는")
     class SearchByKeyword {

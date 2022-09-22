@@ -2,6 +2,7 @@ package com.woowacourse.levellog.interviewquestion.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
+import com.woowacourse.levellog.common.support.StringConverter;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
 import java.util.ArrayList;
@@ -30,11 +31,12 @@ public class InterviewQuestionSearchController {
             @RequestParam(defaultValue = "0") final Long page,
             @RequestParam(defaultValue = "likes") final String sort,
             @Authentic final Long memberId) {
-        if (keyword.isBlank()) {
+        final String input = StringConverter.toSafeString(keyword);
+        if (input.isBlank()) {
             return ResponseEntity.ok(InterviewQuestionSearchResultsDto.of(new ArrayList<>(), 0L));
         }
         final InterviewQuestionSearchResultsDto response = interviewQuestionService
-                .searchByKeyword(keyword, memberId, size, page, sort);
+                .searchByKeyword(input, memberId, size, page, sort);
         return ResponseEntity.ok(response);
     }
 

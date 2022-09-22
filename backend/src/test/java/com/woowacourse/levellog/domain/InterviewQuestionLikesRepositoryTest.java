@@ -2,6 +2,7 @@ package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowacourse.levellog.common.support.StringConverter;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
@@ -11,7 +12,6 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,6 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
         assertThat(actual).isPresent();
     }
 
-    @Disabled
     @Nested
     @DisplayName("searchByKeyword 메서드는")
     class SearchByKeyword {
@@ -114,8 +113,9 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
 
             // when
             final String sqlInjectionKeyword = "왜%' or 1=1;--";
+            final String safeKeyword = StringConverter.toSafeString(sqlInjectionKeyword);
             final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
-                    sqlInjectionKeyword, eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
+                    safeKeyword, eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
             );
 
             // then

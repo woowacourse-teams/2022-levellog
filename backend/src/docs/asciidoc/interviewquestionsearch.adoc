@@ -42,6 +42,13 @@ operation::interview-question-search/search-sort-updated-at-asc[]
 
 operation::interview-question-search/search-sort-likes-desc[]
 
+[[search-exception]]
+=== 검색 관련 실패
+
+==== % 문자를 입력 한 경우
+
+include::{snippets}/interview-question-search/likes/exception/input-percent/http-response.adoc[]
+
 [[like]]
 == 좋아요 관련
 

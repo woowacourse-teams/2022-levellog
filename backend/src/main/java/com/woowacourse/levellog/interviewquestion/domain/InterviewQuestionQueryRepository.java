@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.interviewquestion.domain;
 
-import com.woowacourse.levellog.common.support.StringConverter;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,7 +30,7 @@ public class InterviewQuestionQueryRepository {
                 + "THEN true ELSE false END ) AS press, "
                 + "like_count AS likeCount "
                 + "FROM interview_question "
-                + "WHERE content LIKE '%" + StringConverter.toSafeString(keyword) + "%' "
+                + "WHERE content LIKE '%" + keyword + "%' "
                 + String.format("ORDER BY %s %s ", sort.getField(), sort.getOrder())
                 + "LIMIT ? OFFSET ?";
 

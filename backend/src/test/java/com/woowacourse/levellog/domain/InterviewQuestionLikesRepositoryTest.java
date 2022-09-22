@@ -2,6 +2,7 @@ package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowacourse.levellog.common.support.StringConverter;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
@@ -112,8 +113,9 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
 
             // when
             final String sqlInjectionKeyword = "왜%' or 1=1;--";
+            final String safeKeyword = StringConverter.toSafeString(sqlInjectionKeyword);
             final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
-                    sqlInjectionKeyword, eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
+                    safeKeyword, eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
             );
 
             // then

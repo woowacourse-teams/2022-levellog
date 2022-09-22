@@ -12,6 +12,7 @@ import com.woowacourse.levellog.fixture.MemberFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import org.springframework.http.MediaType;
 @DisplayName("인터뷰 검색 관련 기능")
 class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
 
+    @Disabled
     @Nested
     @DisplayName("인터뷰 검색")
     class SearchBy {
@@ -94,41 +96,6 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
             // then
             response.statusCode(HttpStatus.OK.value())
                     .body("results", hasSize(2));
-        }
-
-        /*
-         * Scenario: 인터뷰 질문 전체 조회
-         *   when: 토큰을 전송하여 인터뷰 검색을 한다.
-         *   then: 200 OK 상태 코드와 전체 인터뷰 질문을 응답받는다.
-         */
-        @Test
-        @DisplayName("인터뷰 질문 전체 조회")
-        void findAll() {
-            // given
-            PEPPER.save();
-            ROMA.save();
-
-            final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, ROMA).getTeamId();
-            final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
-
-            timeStandard.setInProgress();
-
-            saveInterviewQuestion("Spring을 사용한 이유", levellogId, ROMA);
-            saveInterviewQuestion("Spring이 무엇인가요?", levellogId, ROMA);
-            saveInterviewQuestion("Java가 무엇인가요?", levellogId, ROMA);
-
-            // when
-            final ValidatableResponse response = RestAssured.given(specification).log().all()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .filter(document("interview-question-search/findAll"))
-                    .when()
-                    .get("/api/interview-questions")
-                    .then().log().all();
-
-            // then
-            response.statusCode(HttpStatus.OK.value())
-                    .body("results", hasSize(3));
         }
 
         /*
@@ -238,6 +205,39 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
             response.statusCode(HttpStatus.OK.value())
                     .body("results.id", Matchers.contains(1, 2))
                     .body("results.likeCount", contains(1, 0));
+        }
+
+        /*
+         * Scenario: keyword 파라미터가 없이 조회
+         *   when: keyword 파라미터가 없이 인터뷰 검색을 한다.
+         *   then: 200 OK 상태 코드와 빈 결과를 응답받는다.
+         */
+        @Test
+        @DisplayName("keyword 파라미터가 없이 조회")
+        void searchBy_inputPercent() {
+            // given
+            PEPPER.save();
+            ROMA.save();
+
+            final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, ROMA).getTeamId();
+            final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
+
+            timeStandard.setInProgress();
+
+            saveInterviewQuestion("Spring을 사용한 이유", levellogId, ROMA);
+            saveInterviewQuestion("Spring이 무엇인가요?", levellogId, ROMA);
+            saveInterviewQuestion("Java가 무엇인가요?", levellogId, ROMA);
+
+            // when
+            final ValidatableResponse response = RestAssured.given(specification).log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when()
+                    .get("/api/interview-questions")
+                    .then().log().all();
+
+            // then
+            response.statusCode(HttpStatus.OK.value())
+                    .body("results", hasSize(0));
         }
     }
 

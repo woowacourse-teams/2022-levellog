@@ -3,19 +3,19 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { MESSAGE } from 'constants/constants';
+
+import Button from 'components/@commons/Button';
+import Member from 'components/teams/Member';
+import Participant from 'components/teams/Participants';
+import TeamFormInput from 'components/teams/TeamFormInput';
+import { MemberType } from 'types/member';
 import {
   interviewDateValidate,
   interviewInterviewerValidate,
   interviewLocationValidate,
   interviewTimeValidate,
   interviewTitleValidate,
-} from 'constants/validate';
-
-import Member from './Member';
-import Participant from './Participants';
-import TeamFormInput from './TeamFormInput';
-import Button from 'components/@commons/Button';
-import { MemberType } from 'types/member';
+} from 'utils/validate';
 
 const TeamForm = ({
   purpose,
@@ -169,7 +169,7 @@ const S = {
     border-radius: 1.25rem;
     box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
     @media (min-width: 560px) and (max-width: 760px) {
-      width: 520px;
+      width: 32.5rem;
     }
     @media (max-width: 560px) {
       justify-content: center;
@@ -201,8 +201,8 @@ const S = {
     flex-wrap: wrap;
     overflow: auto;
     gap: 0.5rem;
-    width: 42.625rem;
-    padding-bottom: 16px;
+    width: 100%;
+    padding-bottom: 1rem;
     @media (min-width: 560px) and (max-width: 760px) {
       width: 27.5rem;
     }
@@ -219,31 +219,19 @@ const S = {
 
   MembersBox: styled.div<{ isNoneMember: Boolean }>`
     display: ${(props) => (props.isNoneMember ? 'none' : 'block')};
-    box-sizing: content-box;
+    box-sizing: border-box;
     overflow: auto;
-    width: 40.625rem;
+    width: 100%;
     height: 10rem;
     padding: 1rem;
     border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
     border-radius: 0.3125rem;
     background-color: ${(props) => props.theme.default.WHITE};
-    @media (min-width: 560px) and (max-width: 760px) {
-      width: 27.5rem;
-    }
-    @media (max-width: 560px) {
-      width: calc(100vw - 5rem);
-    }
   `,
 
   SubmitButton: styled(Button)`
-    width: 42.625rem;
+    width: 100%;
     height: 3.125rem;
-    @media (min-width: 560px) and (max-width: 760px) {
-      width: 27.5rem;
-    }
-    @media (max-width: 560px) {
-      width: calc(100vw - 5rem);
-    }
   `,
 };
 

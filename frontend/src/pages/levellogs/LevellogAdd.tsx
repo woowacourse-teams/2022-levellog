@@ -8,7 +8,7 @@ import useSnackbar from 'hooks/useSnackbar';
 import { MESSAGE } from 'constants/constants';
 
 import BottomBar from 'components/@commons/BottomBar';
-import UiEditor from 'components/@commons/UiEditor';
+import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 
 const LevellogAdd = () => {
   const { levellogRef, onClickLevellogAddButton } = useLevellog();
@@ -32,10 +32,7 @@ const LevellogAdd = () => {
         contentRef={levellogRef}
         initialEditType={'markdown'}
       />
-      <BottomBar
-        buttonText={'작성하기'}
-        handleClickRightButton={handleClickLevellogAddButton}
-      ></BottomBar>
+      <BottomBar buttonText={'작성하기'} handleClickRightButton={handleClickLevellogAddButton} />
     </S.Container>
   );
 };

@@ -15,11 +15,12 @@
 ## 핵심가치 💎
 
 <p align="center">
-    <img width="800" alt="core-value" src="https://user-images.githubusercontent.com/68512686/178139351-1dc2b362-5cf5-44ae-851e-0aec6b868110.png">
+    <img width="800" alt="core-value" src="https://user-images.githubusercontent.com/76840965/187828194-52ea0a32-40d5-412a-8814-3017955c13bc.png">
 </p>
+
 
 ## 팀문화 📚
 
-<p align="center">
-    <img alt="culture" src="https://user-images.githubusercontent.com/28749734/178104130-125a9e3d-71e7-408a-bd3f-b2b34959b949.png" width="600"/>
+<p>
+    <img alt="culture" src="https://user-images.githubusercontent.com/76840965/187828413-4087b6c0-58a7-4b0c-b99c-8e7a7468d43e.png" width="700"/>
 </p>

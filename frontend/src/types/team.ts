@@ -4,6 +4,7 @@ export interface TeamApiType {
   teamId: string;
   teamInfo: TeamCustomHookType;
   accessToken: string | null;
+  teamsCondition?: teamsConditionType;
 }
 
 export interface TeamSubmitType {
@@ -32,8 +33,18 @@ export interface InterviewTeamType {
   place: string;
   startAt: string;
   teamImage: string;
+  status: TeamStatusType;
+  participants: Pick<ParticipantType, 'memberId' | 'profileUrl'>[];
+}
+
+export interface InterviewTeamDetailType {
+  id: string;
+  title: string;
+  place: string;
+  startAt: string;
+  teamImage: string;
   hostId: string;
-  status: string;
+  status: TeamStatusType;
   isParticipant: Boolean;
   interviewerNumber: number;
   interviewers: Array<number | null>;
@@ -57,3 +68,6 @@ export interface WatcherType {
   nickname: string;
   profileUrl: string;
 }
+
+export type TeamStatusType = 'READY' | 'IN_PROGRESS' | 'CLOSED' | '';
+export type teamsConditionType = 'open' | 'close';

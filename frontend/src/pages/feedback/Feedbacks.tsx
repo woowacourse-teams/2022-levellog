@@ -7,7 +7,6 @@ import useFeedback from 'hooks/useFeedback';
 import useLevellog from 'hooks/useLevellog';
 import useSnackbar from 'hooks/useSnackbar';
 import useTeam from 'hooks/useTeam';
-import useUriBuilders from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import EmptyFeedback from 'pages/status/EmptyFeedback';
@@ -21,11 +20,11 @@ import ContentHeader from 'components/@commons/ContentHeader';
 import Image from 'components/@commons/Image';
 import Feedback from 'components/feedbacks/Feedback';
 import { FeedbackType } from 'types/feedback';
+import { feedbackAddUriBuilder, teamGetUriBuilder } from 'utils/util';
 
 const Feedbacks = () => {
   const { feedbacks, getFeedbacksInTeam } = useFeedback();
   const { levellogInfo, getLevellog } = useLevellog();
-  const { feedbackAddUriBuilder, teamGetUriBuilder } = useUriBuilders();
   const { team } = useTeam();
   const { loginUserId } = useUser();
   const { showSnackbar } = useSnackbar();

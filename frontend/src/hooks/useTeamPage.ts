@@ -7,6 +7,10 @@ import useTeam from 'hooks/useTeam';
 import useUtil from 'hooks/useUtil';
 
 import { MESSAGE } from 'constants/constants';
+
+import { requestGetMembers } from 'apis/member';
+import { MembersCustomHookType, MemberType } from 'types/member';
+import { InterviewTeamDetailType } from 'types/team';
 import {
   interviewDateValidate,
   interviewInterviewerValidate,
@@ -14,11 +18,7 @@ import {
   interviewParticipantValidate,
   interviewTimeValidate,
   interviewTitleValidate,
-} from 'constants/validate';
-
-import { requestGetMembers } from 'apis/member';
-import { MembersCustomHookType, MemberType } from 'types/member';
-import { InterviewTeamType } from 'types/team';
+} from 'utils/validate';
 
 const useTeamPage = () => {
   const { isDebounce } = useUtil();
@@ -97,12 +97,15 @@ const useTeamPage = () => {
     if (team && Object.keys(team).length === 0) return;
     if (teamInfoRef.current[0] === null) return;
 
-    teamInfoRef.current[0].value = (team as unknown as InterviewTeamType).title;
-    teamInfoRef.current[1].value = (team as unknown as InterviewTeamType).place;
-    teamInfoRef.current[2].value = (team as unknown as InterviewTeamType).startAt.slice(0, 10);
-    teamInfoRef.current[3].value = (team as unknown as InterviewTeamType).startAt.slice(-8);
+    teamInfoRef.current[0].value = (team as unknown as InterviewTeamDetailType).title;
+    teamInfoRef.current[1].value = (team as unknown as InterviewTeamDetailType).place;
+    teamInfoRef.current[2].value = (team as unknown as InterviewTeamDetailType).startAt.slice(
+      0,
+      10,
+    );
+    teamInfoRef.current[3].value = (team as unknown as InterviewTeamDetailType).startAt.slice(-8);
     teamInfoRef.current[4].value = String(
-      (team as unknown as InterviewTeamType).interviewers.length,
+      (team as unknown as InterviewTeamDetailType).interviewers.length,
     );
   };
 

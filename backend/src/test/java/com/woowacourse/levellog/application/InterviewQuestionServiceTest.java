@@ -7,10 +7,15 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
+import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
+import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
+import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -23,7 +28,9 @@ import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -319,6 +326,192 @@ class InterviewQuestionServiceTest extends ServiceTest {
                     () -> interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellogId, invalidMemberId))
                     .isInstanceOf(MemberNotFoundException.class)
                     .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(invalidMemberId));
+        }
+    }
+
+    @Nested
+    @DisplayName("searchByKeyword 메서드는")
+    class SearchByKeyword {
+
+        @Test
+        @DisplayName("인터뷰 질문을 최신순으로 정렬하여 조회한다.")
+        void searchByKeyword_latestSort_success() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member eve = saveMember("이브");
+            final Team team = saveTeam(pepper, eve);
+            final Levellog pepperLevellog = saveLevellog(pepper, team);
+
+            final Long size = 10L;
+            final Long page = 0L;
+            final String sort = "latest";
+
+            timeStandard.setInProgress();
+
+            final Long question1Id = saveInterviewQuestion("스프링 A", pepperLevellog, eve).getId();
+            final Long question2Id = saveInterviewQuestion("스프링 B", pepperLevellog, eve).getId();
+            final Long question3Id = saveInterviewQuestion("스프링 C", pepperLevellog, eve).getId();
+            final Long question4Id = saveInterviewQuestion("스프링 D", pepperLevellog, eve).getId();
+
+            interviewQuestionService.pressLike(question1Id, eve.getId()); // 업데이트를 해도 최신순 정렬이 유지되어야 함
+
+            // when
+            final InterviewQuestionSearchResultsDto actual = interviewQuestionService.searchByKeyword(
+                    "스프링", eve.getId(), size, page, sort);
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.getResults()).hasSize(4),
+                    () -> Assertions.assertThat(actual.getResults())
+                            .extracting(InterviewQuestionSearchResultDto::getId)
+                            .containsExactly(question4Id, question3Id, question2Id, question1Id)
+            );
+        }
+
+        @Test
+        @DisplayName("인터뷰 질문을 좋아요순으로 정렬하여 조회한다. ( 동률일 시 최신순으로 정렬된다. )")
+        void searchByKeyword_likesSort_success() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member eve = saveMember("이브");
+            final Team team = saveTeam(pepper, eve);
+            final Levellog pepperLevellog = saveLevellog(pepper, team);
+
+            final Long size = 10L;
+            final Long page = 0L;
+            final String sort = "likes";
+
+            timeStandard.setInProgress();
+
+            final Long question1Id = saveInterviewQuestion("스프링 A", pepperLevellog, eve).getId();
+            final Long question2Id = saveInterviewQuestion("스프링 B", pepperLevellog, eve).getId();
+            final Long question3Id = saveInterviewQuestion("스프링 C", pepperLevellog, eve).getId();
+            final Long question4Id = saveInterviewQuestion("스프링 D", pepperLevellog, eve).getId();
+
+            interviewQuestionService.pressLike(question1Id, eve.getId());
+            interviewQuestionService.pressLike(question1Id, pepper.getId());
+            interviewQuestionService.pressLike(question2Id, eve.getId());
+
+            // when
+            final InterviewQuestionSearchResultsDto actual = interviewQuestionService.searchByKeyword(
+                    "스프링", eve.getId(), size, page, sort);
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.getResults()).hasSize(4),
+                    () -> Assertions.assertThat(actual.getResults())
+                            .extracting(InterviewQuestionSearchResultDto::getId)
+                            .containsExactly(question1Id, question2Id, question3Id, question4Id)
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("pressLike 메서드는")
+    class PressLike {
+
+        @Test
+        @DisplayName("인터뷰 질문에 좋아요를 누른다.")
+        void success() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member eve = saveMember("이브");
+            final Team team = saveTeam(pepper, eve);
+            final Levellog pepperLevellog = saveLevellog(pepper, team);
+
+            timeStandard.setInProgress();
+
+            final InterviewQuestion interviewQuestion = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
+
+            // when
+            interviewQuestionService.pressLike(interviewQuestion.getId(), eve.getId());
+
+            // then
+            final InterviewQuestionLikes interviewQuestionLikes = interviewQuestionLikesRepository
+                    .findByInterviewQuestionIdAndLikerId(interviewQuestion.getId(), eve.getId())
+                    .orElseThrow();
+
+            assertAll(
+                    () -> assertThat(interviewQuestionLikes.getInterviewQuestionId()).isEqualTo(
+                            interviewQuestion.getId()),
+                    () -> assertThat(interviewQuestionLikes.getLikerId()).isEqualTo(eve.getId()),
+                    () -> assertThat(interviewQuestion.getLikeCount()).isEqualTo(1)
+            );
+        }
+
+        @Test
+        @DisplayName("이미 좋아요를 누른 상태에서 좋아요를 누르는 경우 예외를 던진다.")
+        void pressLike_alreadyExist_exception() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member eve = saveMember("이브");
+            final Team team = saveTeam(pepper, eve);
+            final Levellog pepperLevellog = saveLevellog(pepper, team);
+
+            timeStandard.setInProgress();
+
+            final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
+            interviewQuestionService.pressLike(interviewQuestionId, eve.getId());
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.pressLike(interviewQuestionId, eve.getId()))
+                    .isInstanceOf(InterviewQuestionLikesAlreadyExistException.class)
+                    .hasMessageContainingAll("인터뷰 질문에 대한 좋아요가 이미 존재합니다.",
+                            String.valueOf(interviewQuestionId),
+                            String.valueOf(eve.getId()));
+        }
+    }
+
+    @Nested
+    @DisplayName("cancelLike 메서드는")
+    class CancelLike {
+
+        @Test
+        @DisplayName("인터뷰 질문에 좋아요를 취소한다.")
+        void success() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member eve = saveMember("이브");
+            final Team team = saveTeam(pepper, eve);
+            final Levellog pepperLevellog = saveLevellog(pepper, team);
+
+            timeStandard.setInProgress();
+
+            final InterviewQuestion interviewQuestion = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
+            interviewQuestionService.pressLike(interviewQuestion.getId(), eve.getId());
+
+            // when
+            interviewQuestionService.cancelLike(interviewQuestion.getId(), eve.getId());
+
+            // then
+            final Optional<InterviewQuestionLikes> interviewQuestionLikes = interviewQuestionLikesRepository
+                    .findByInterviewQuestionIdAndLikerId(interviewQuestion.getId(), eve.getId());
+
+            assertAll(
+                    () -> assertThat(interviewQuestionLikes).isNotPresent(),
+                    () -> assertThat(interviewQuestion.getLikeCount()).isZero()
+            );
+        }
+
+        @Test
+        @DisplayName("좋아요를 누르지 않았는데 좋아요를 취소하는 경우 예외를 던진다.")
+        void cancelLike_notFoundInterviewQuestionLikes_exception() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member eve = saveMember("이브");
+            final Team team = saveTeam(pepper, eve);
+            final Levellog pepperLevellog = saveLevellog(pepper, team);
+
+            timeStandard.setInProgress();
+
+            final InterviewQuestion interviewQuestion = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionService.cancelLike(interviewQuestion.getId(), eve.getId()))
+                    .isInstanceOf(InterviewQuestionLikeNotFoundException.class)
+                    .hasMessageContainingAll("인터뷰 질문을 '좋아요'하지 않았습니다.",
+                            String.valueOf(interviewQuestion.getId()),
+                            String.valueOf(eve.getId()));
         }
     }
 

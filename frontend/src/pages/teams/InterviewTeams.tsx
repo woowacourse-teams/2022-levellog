@@ -4,9 +4,14 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useTeams from 'hooks/useTeams';
+import useUser from 'hooks/useUser';
 
+import { Exception } from 'pages/status';
+import Loading from 'pages/status/Loading';
+
+import error from 'assets/images/error.webp';
 import plusIcon from 'assets/images/plus.svg';
-import { ROUTES_PATH } from 'constants/constants';
+import { NOT_YET_HTTP_STATUS, ROUTES_PATH, TEAMS_CONDITION } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -16,28 +21,41 @@ import InterviewTeam from 'components/teams/InterviewTeam';
 import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
-  const { teams, getTeams, onClickInterviewTeam } = useTeams();
+  const { teams, isActive, getTeams, handleClickFilterButtons } = useTeams();
+  const { loginUserId } = useUser();
 
   useEffect(() => {
-    getTeams();
+    getTeams({ teamsCondition: TEAMS_CONDITION.OPEN });
   }, []);
+
+  if (isActive.status === NOT_YET_HTTP_STATUS) return <Loading />;
 
   return (
     <>
       <ContentHeader title={'인터뷰 팀'}>
-        <div>
-          {/* <FilterButton isActive={true}>진행중인 인터뷰</FilterButton>
-          <FilterButton>종료된 인터뷰</FilterButton>
-          <FilterButton>나의 인터뷰</FilterButton> */}
+        <div onClick={handleClickFilterButtons}>
+          <FilterButton isActive={isActive.open}>진행중인 인터뷰</FilterButton>
+          <FilterButton isActive={isActive.close}>종료된 인터뷰</FilterButton>
+          {loginUserId && <FilterButton isActive={isActive.my}>나의 인터뷰</FilterButton>}
         </div>
         <span />
       </ContentHeader>
       <S.Container>
-        <S.Content>
-          {teams.map((team: InterviewTeamType) => (
-            <InterviewTeam key={team.id} onClickInterviewTeam={onClickInterviewTeam} team={team} />
-          ))}
-        </S.Content>
+        {teams.length === 0 && (
+          <S.Empty>
+            <Exception>
+              <Exception.Image>{error}</Exception.Image>
+              <Exception.Title>조건에 해당하는 팀이 없습니다.</Exception.Title>
+            </Exception>
+          </S.Empty>
+        )}
+        {teams.length > 0 && (
+          <S.Content>
+            {teams.map((team: InterviewTeamType) => (
+              <InterviewTeam key={team.id} team={team} />
+            ))}
+          </S.Content>
+        )}
         <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
           <S.TeamAddButton>
             {'팀 추가하기'}
@@ -78,6 +96,16 @@ const S = {
     }
   `,
 
+  Empty: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 3.125rem;
+    @media (max-width: 560px) {
+      justify-content: center;
+      gap: 2.5rem;
+    }
+  `,
+
   Content: styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -106,7 +134,7 @@ const S = {
   `,
 
   ImageBox: styled.div`
-    margin: 0 0 1px 5px;
+    margin: 0 0 0.0625rem 0.3125rem;
   `,
 };
 

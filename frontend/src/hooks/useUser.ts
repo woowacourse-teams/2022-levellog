@@ -13,7 +13,11 @@ const useUser = () => {
   const navigate = useNavigate();
 
   const handleClickProfile = () => {
-    if (id) return setIsShowProfileDropdown((prev) => !prev);
+    if (id) {
+      setIsShowProfileDropdown((prev) => !prev);
+
+      return;
+    }
     window.location.href = GITHUB_LOGIN_URL;
   };
 
@@ -22,10 +26,13 @@ const useUser = () => {
     target.src = `${profileDefaultImage}`;
   };
 
-  const handleClickLogoutButton = () => {
+  const handleClickLogoutButton = async () => {
     localStorage.removeItem('accessToken');
-    userInfoDispatch({ id: '', nickname: '', profileUrl: '' });
-    setIsShowProfileDropdown(false);
+    localStorage.removeItem('userId');
+
+    await userInfoDispatch({ id: '', nickname: '', profileUrl: '' });
+    await setIsShowProfileDropdown(false);
+    if (location.pathname === ROUTES_PATH.HOME) location.replace(ROUTES_PATH.HOME);
     navigate(ROUTES_PATH.HOME);
   };
 

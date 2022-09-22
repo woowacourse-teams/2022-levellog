@@ -1,6 +1,6 @@
 import { Exception } from 'pages/status';
 
-import levellogLogoLeft from 'assets/images/levellogLogoLeft.png';
+import levellogLogoLeft from 'assets/images/levellogLogoLeft.webp';
 
 import FlexBox from 'components/@commons/FlexBox';
 

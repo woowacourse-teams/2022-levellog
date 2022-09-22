@@ -4,19 +4,23 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useTeam from 'hooks/useTeam';
-import useUriBuilder from 'hooks/useUriBuilder';
 import useUser from 'hooks/useUser';
 
 import closeIcon from 'assets/images/close.svg';
-import { TEAM_STATUS } from 'constants/constants';
+import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
-import UiViewer from 'components/@commons/UiViewer';
+import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import ModalPortal from 'portal/ModalPortal';
 import { LevellogInfoType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
+import {
+  levellogEditUriBuilder,
+  preQuestionEditUriBuilder,
+  preQuestionAddUriBuilder,
+} from 'utils/util';
 
 const LevellogViewModal = ({
   levellogInfo,
@@ -29,8 +33,6 @@ const LevellogViewModal = ({
   const { author, content } = levellogInfo;
   const { loginUserId } = useUser();
   const { team } = useTeam();
-  const { levellogEditUriBuilder, preQuestionAddUriBuilder, preQuestionEditUriBuilder } =
-    useUriBuilder();
 
   if (author.id === loginUserId) {
     return (
@@ -39,7 +41,11 @@ const LevellogViewModal = ({
         <S.Container>
           <S.Header>
             <FlexBox alignItems={'center'} gap={0.375}>
-              <Image src={author.profileUrl} sizes={'MEDIUM'} />
+              <Image
+                src={author.profileUrl}
+                sizes={'MEDIUM'}
+                githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
+              />
               <S.AuthorText>{author.nickname}의 레벨로그</S.AuthorText>
             </FlexBox>
             <S.CloseButton onClick={handleClickCloseLevellogModal}>

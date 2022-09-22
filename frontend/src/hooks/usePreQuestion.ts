@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 
 import useSnackbar from 'hooks/useSnackbar';
-import useUriBuilder from 'hooks/useUriBuilder';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -17,9 +16,9 @@ import {
 } from 'apis/preQuestion';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
+import { teamGetUriBuilder } from 'utils/util';
 
 const usePreQuestion = () => {
-  const { teamGetUriBuilder } = useUriBuilder();
   const { showSnackbar } = useSnackbar();
   const [preQuestion, setPreQuestion] = useState<PreQuestionFormatType>(
     {} as unknown as PreQuestionFormatType,
@@ -58,7 +57,8 @@ const usePreQuestion = () => {
         levellogId,
         preQuestionResult: { content: preQuestionContent },
       });
-      navigate(teamGetUriBuilder({ teamId }));
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -77,6 +77,8 @@ const usePreQuestion = () => {
   }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
     try {
       await requestDeletePreQuestion({ accessToken, levellogId, preQuestionId });
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -90,7 +92,6 @@ const usePreQuestion = () => {
   };
 
   const editPreQuestion = async ({
-    teamId,
     levellogId,
     preQuestionId,
     preQuestionContent,
@@ -102,7 +103,8 @@ const usePreQuestion = () => {
         preQuestionId,
         preQuestionResult: { content: preQuestionContent },
       });
-      navigate(teamGetUriBuilder({ teamId }));
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -134,14 +136,17 @@ const usePreQuestion = () => {
     teamId,
     levellogId,
   }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId'>) => {
-    if (preQuestionRef.current) {
+    if (!preQuestionRef.current) return;
+
+    if (
       await postPreQuestion({
         teamId,
         levellogId,
-        preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
-          .innerText,
-      });
-      showSnackbar({ message: MESSAGE.PREQUESTION_ADD_CONFIRM });
+        preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
+      })
+    ) {
+      showSnackbar({ message: MESSAGE.PREQUESTION_ADD });
+      navigate(teamGetUriBuilder({ teamId }));
     }
   };
 
@@ -150,17 +155,19 @@ const usePreQuestion = () => {
     levellogId,
     preQuestionId,
   }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId' | 'preQuestionId'>) => {
-    if (preQuestionRef.current) {
+    if (!preQuestionRef.current) return;
+
+    if (
       await editPreQuestion({
         teamId,
         levellogId,
         preQuestionId,
-        preQuestionContent: preQuestionRef.current.getInstance().getEditorElements().mdEditor
-          .innerText,
-      });
-      showSnackbar({ message: MESSAGE.PREQUESTION_EDIT_CONFIRM });
+        preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
+      })
+    ) {
+      showSnackbar({ message: MESSAGE.PREQUESTION_EDIT });
+      navigate(teamGetUriBuilder({ teamId }));
     }
-    navigate(teamGetUriBuilder({ teamId }));
   };
 
   return {

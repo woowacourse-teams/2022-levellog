@@ -5,9 +5,13 @@ const common = require('./webpack.common.js');
 module.exports = merge(common, {
   mode: 'production',
   devtool: 'source-map',
-  performance: {
-    maxAssetSize: 400000,
-    maxEntrypointSize: 400000,
+  module: {
+    rules: [
+      {
+        test: /\.(ts|tsx)$/,
+        use: 'ts-loader',
+      },
+    ],
   },
   plugins: [
     new webpack.EnvironmentPlugin({

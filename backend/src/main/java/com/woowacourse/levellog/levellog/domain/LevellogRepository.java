@@ -4,6 +4,8 @@ import com.woowacourse.levellog.member.domain.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface LevellogRepository extends JpaRepository<Levellog, Long> {
 
@@ -11,5 +13,6 @@ public interface LevellogRepository extends JpaRepository<Levellog, Long> {
 
     boolean existsByAuthorIdAndTeamId(Long authorId, Long teamId);
 
-    List<Levellog> findAllByAuthor(Member author);
+    @Query("SELECT l FROM Levellog l INNER JOIN FETCH l.team WHERE l.author = :author")
+    List<Levellog> findAllByAuthor(@Param("author") Member author);
 }

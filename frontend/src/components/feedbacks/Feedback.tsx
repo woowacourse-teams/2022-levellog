@@ -2,24 +2,26 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useUriBuilder from 'hooks/useUriBuilder';
-
 import { TEAM_STATUS } from 'constants/constants';
+import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
-import UiViewer from 'components/@commons/UiViewer';
+import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import { FeedbackType } from 'types/feedback';
+import { feedbackEditUriBuilder } from 'utils/util';
 
 const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
-  const { feedbackEditUriBuilder } = useUriBuilder();
-
   return (
     <S.Container>
       <S.Header>
         <FlexBox alignItems={'center'} gap={0.375}>
-          <Image src={feedbackInfo.from.profileUrl} sizes={'MEDIUM'} />
+          <Image
+            src={feedbackInfo.from.profileUrl}
+            sizes={'MEDIUM'}
+            githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
+          />
           <S.AuthorText>{feedbackInfo.from.nickname}의 피드백</S.AuthorText>
         </FlexBox>
         {teamStatus === TEAM_STATUS.IN_PROGRESS && feedbackInfo.from.id === loginUserId && (

@@ -1,0 +1,76 @@
+= InterviewQuestionSearch
+:toc: left
+:toclevels: 2
+:sectlinks:
+:source-highlighter: highlightjs
+
+[[home]]
+== home
+
+* link:index.html[목록으로 가기]
+
+[[search]]
+== 인터뷰 검색
+
+[[findAll]]
+=== 인터뷰 질문 전체 조회
+
+operation::interview-question-search/findAll[]
+
+[[search-non-login]]
+=== 인터뷰 검색(비로그인)
+
+operation::interview-question-search/search-non-login[]
+
+[[search-login]]
+=== 인터뷰 검색(로그인)
+
+operation::interview-question-search/search-login[]
+
+[[search-sort-updated-at-desc]]
+=== 인터뷰 검색(최신 순 정렬)
+
+operation::interview-question-search/search-sort-updated-at-desc[]
+
+[[search-sort-updated-at-asc]]
+=== 인터뷰 검색(오래된 순 정렬)
+
+operation::interview-question-search/search-sort-updated-at-asc[]
+
+[[search-sort-likes-desc]]
+=== 인터뷰 검색(좋아요 순 정렬)
+
+operation::interview-question-search/search-sort-likes-desc[]
+
+[[search-exception]]
+=== 검색 관련 실패
+
+==== % 문자를 입력 한 경우
+
+include::{snippets}/interview-question-search/likes/exception/input-percent/http-response.adoc[]
+
+[[like]]
+== 좋아요 관련
+
+[[press-like]]
+=== 좋아요 누르기
+
+operation::interview-question-search/press-like[]
+
+[[cancel-like]]
+=== 좋아요 취소하기
+
+operation::interview-question-search/cancel-like[]
+
+[[like-exception]]
+=== 좋아요 관련 실패
+
+==== 이미 좋아요한 인터뷰 질문을 좋아요 한 경우
+
+include::{snippets}/interview-question-search/likes/exception/already-like/http-response.adoc[]
+
+==== 좋아요하지 않은 인터뷰 질문을 좋아요 취소 한 경우
+
+include::{snippets}/interview-question-search/likes/exception/not-found-cancel/http-response.adoc[]
+
+

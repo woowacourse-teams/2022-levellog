@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 
 import useSnackbar from 'hooks/useSnackbar';
-import useUriBuilder from 'hooks/useUriBuilder';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -17,14 +16,13 @@ import {
 } from 'apis/feedback';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
 import { FeedbackFormatType, FeedbackCustomHookType, FeedbackType } from 'types/feedback';
+import { feedbacksGetUriBuilder } from 'utils/util';
 
 const useFeedback = () => {
-  const { feedbacksGetUriBuilder } = useUriBuilder();
   const { showSnackbar } = useSnackbar();
   const [feedbacks, setFeedbacks] = useState<FeedbackType[]>([]);
   const feedbackRef = useRef<Editor[]>([]);
   const navigate = useNavigate();
-
   const accessToken = localStorage.getItem('accessToken');
 
   const postFeedback = async ({
@@ -33,7 +31,8 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackResult'>) => {
     try {
       await requestPostFeedback({ accessToken, levellogId, feedbackResult });
-      showSnackbar({ message: MESSAGE.FEEDBACK_CREATE });
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -91,6 +90,8 @@ const useFeedback = () => {
   }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId' | 'feedbackResult'>) => {
     try {
       await requestEditFeedback({ accessToken, levellogId, feedbackId, feedbackResult });
+
+      return true;
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
@@ -110,14 +111,16 @@ const useFeedback = () => {
     const [study, speak, etc] = feedbackRef.current;
     const feedbackResult: FeedbackFormatType = {
       feedback: {
-        study: study.getInstance().getEditorElements().mdEditor.innerText,
-        speak: speak.getInstance().getEditorElements().mdEditor.innerText,
-        etc: etc.getInstance().getEditorElements().mdEditor.innerText,
+        study: study.getInstance().getMarkdown(),
+        speak: speak.getInstance().getMarkdown(),
+        etc: etc.getInstance().getMarkdown(),
       },
     };
 
-    await postFeedback({ levellogId, feedbackResult });
-    navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+    if (await postFeedback({ levellogId, feedbackResult })) {
+      showSnackbar({ message: MESSAGE.FEEDBACK_CREATE });
+      navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+    }
   };
 
   const onClickFeedbackEditButton = async ({
@@ -134,9 +137,10 @@ const useFeedback = () => {
       },
     };
 
-    await editFeedback({ levellogId, feedbackId, feedbackResult });
-    showSnackbar({ message: MESSAGE.FEEDBACK_EDIT_CONFIRM });
-    navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+    if (await editFeedback({ levellogId, feedbackId, feedbackResult })) {
+      showSnackbar({ message: MESSAGE.FEEDBACK_EDIT });
+      navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+    }
   };
 
   const getFeedbackOnRef = async ({

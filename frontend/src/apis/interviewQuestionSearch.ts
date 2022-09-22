@@ -36,7 +36,7 @@ export const requestInterviewQuestionSearch = ({
 export const requestInterviewQuestionSearchPage = ({
   keyword,
   page = 0,
-  size = 10,
+  size = 200,
 }: InterviewQuestionSearchPage): AxiosPromise<void> => {
   return axios({
     method: 'get',

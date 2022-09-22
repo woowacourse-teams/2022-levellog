@@ -25,7 +25,7 @@ export const requestGetTeams = ({
     엑세스토큰이없는경우헤더제거({
       accessToken,
       method: 'get',
-      url: `${process.env.API_URI}/teams?condition=${teamsCondition}`,
+      url: `${process.env.API_URI}/teams?condition=${teamsCondition}&size=1000`,
       headers: { Authorization: `Bearer ${accessToken}` },
     }),
   );

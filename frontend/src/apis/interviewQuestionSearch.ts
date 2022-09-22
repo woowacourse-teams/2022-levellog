@@ -36,7 +36,7 @@ export const requestInterviewQuestionSearch = ({
 export const requestInterviewQuestionSearchPage = ({
   keyword,
   page = 0,
-  size = 10,
+  size = 2000,
 }: InterviewQuestionSearchPage): AxiosPromise<void> => {
   return axios({
     method: 'get',
@@ -48,7 +48,7 @@ export const requestInterviewQuestionSearchSort = ({
   accessToken,
   keyword,
   page = 0,
-  size = 200,
+  size = 2000,
   sort = 'latest',
 }: InterviewQuestionSearchSort): AxiosPromise<void> => {
   return axios(

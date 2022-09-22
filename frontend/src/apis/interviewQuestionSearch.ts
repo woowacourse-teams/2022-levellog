@@ -27,7 +27,7 @@ export const requestInterviewQuestionSearch = ({
     엑세스토큰이없는경우헤더제거({
       accessToken,
       method: 'get',
-      url: `${process.env.API_URI}/interview-questions?keyword=${keyword}`,
+      url: `${process.env.API_URI}/interview-questions?keyword=${keyword}&sort=latest`,
       headers: { Authorization: `Bearer ${accessToken}` },
     }),
   );
@@ -49,7 +49,7 @@ export const requestInterviewQuestionSearchSort = ({
   keyword,
   page = 0,
   size = 200,
-  sort = 'likes',
+  sort = 'latest',
 }: InterviewQuestionSearchSort): AxiosPromise<void> => {
   return axios(
     엑세스토큰이없는경우헤더제거({

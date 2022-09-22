@@ -23,7 +23,9 @@ const NotFound = lazy(() => import('pages/status/NotFound'));
 const InterviewDetail = lazy(() => import('pages/teams/InterviewDetail'));
 const InterviewTeamAdd = lazy(() => import('pages/teams/InterviewTeamAdd'));
 const InterviewTeamEdit = lazy(() => import('pages/teams/InterviewTeamEdit'));
-const InterviewTeams = lazy(() => import('pages/teams/InterviewTeams'));
+const InterviewQuestionSearch = lazy(
+  () => import('pages/interviewQuestion/InterviewQuestionSearch'),
+);
 
 export const routes = [
   {
@@ -122,7 +124,7 @@ export const routes = [
       },
       {
         path: ROUTES_PATH.INTERVIEW_QUESTION_SEARCH,
-        element: <Home />,
+        element: <InterviewQuestionSearch />,
       },
       {
         path: ROUTES_PATH.LOGIN,

@@ -7,6 +7,7 @@ import InterviewQuestion from 'assets/images/interviewQuestion.webp';
 import InterviewBoth from 'assets/images/interviewboth.webp';
 import Interviewee from 'assets/images/interviewee.webp';
 import Interviewer from 'assets/images/interviewer.webp';
+import SearchFail from 'assets/images/searchFail.webp';
 
 import Image from 'components/@commons/Image';
 
@@ -51,14 +52,23 @@ const Copyright = () => {
       </S.IconBox>
       <S.IconBox>
         <Image src={InterviewBoth} sizes={'LARGE'} />
-        <S.IconLink href="https://www.flaticon.com/free-icons/change" title="change icons">
-          Change icons created by Freepik - Flaticon
+        <S.IconLink href="https://www.flaticon.com/free-icons/mutual" title="mutual icons">
+          Mutual icons created by Freepik - Flaticon
         </S.IconLink>
       </S.IconBox>
       <S.IconBox>
         <Image src={Interviewer} sizes={'LARGE'} />
         <S.IconLink href="https://www.flaticon.com/free-icons/group" title="group icons">
-          Group icons created by Freepik - Flaticon
+          Group icons created by DinosoftLabs - Flaticon
+        </S.IconLink>
+      </S.IconBox>
+      <S.IconBox>
+        <Image src={SearchFail} sizes={'LARGE'} />
+        <S.IconLink
+          href="https://www.flaticon.com/free-icons/page-not-found"
+          title="page not found icons"
+        >
+          Page not found icons created by Freepik - Flaticon
         </S.IconLink>
       </S.IconBox>
     </S.Container>

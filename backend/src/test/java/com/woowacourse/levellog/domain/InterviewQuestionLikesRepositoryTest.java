@@ -12,6 +12,7 @@ import com.woowacourse.levellog.team.domain.Team;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("InterviewQuestionLikesRepository의")
@@ -63,32 +64,61 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
         assertThat(actual).isPresent();
     }
 
-    @Test
-    @DisplayName("test")
-    void test() {
-        // given
-        final Member eve = saveMember("eve");
-        final Member toMember = saveMember("toMember");
+    @Nested
+    @DisplayName("searchByKeyword 메서드는")
+    class SearchByKeyword {
 
-        final Team team = saveTeam(eve, toMember);
-        final Levellog levellog = saveLevellog(toMember, team);
+        @Test
+        @DisplayName("키워드가 포함된 인터뷰 질문을 반환한다.")
+        void success() {
+            // given
+            final Member eve = saveMember("eve");
+            final Member toMember = saveMember("toMember");
 
-        final InterviewQuestion savedInterviewQuestion1 = saveInterviewQuestion("스프링을 왜 사용하였나요?1", levellog, eve);
-        saveInterviewQuestion("스프링을 왜 사용하였나요?2", levellog, eve);
-        saveInterviewQuestion("스프링을 왜 사용하였나요?3", levellog, eve);
-        saveInterviewQuestion("스프링을 왜 사용하였나요?4", levellog, eve);
-        saveInterviewQuestion("스프링을 왜 사용하였나요?5", levellog, eve);
-        final InterviewQuestion savedInterviewQuestion2 = saveInterviewQuestion("AOP란?", levellog, eve);
+            final Team team = saveTeam(eve, toMember);
+            final Levellog levellog = saveLevellog(toMember, team);
 
-        pressLikeInterviewQuestion(savedInterviewQuestion1, eve);
+            final InterviewQuestion savedInterviewQuestion1 = saveInterviewQuestion("스프링을 왜 사용하였나요?1", levellog, eve);
+            saveInterviewQuestion("스프링을 왜 사용하였나요?2", levellog, eve);
+            saveInterviewQuestion("스프링을 왜 사용하였나요?3", levellog, eve);
+            saveInterviewQuestion("스프링을 왜 사용하였나요?4", levellog, eve);
+            saveInterviewQuestion("스프링을 왜 사용하였나요?5", levellog, eve);
+            saveInterviewQuestion("AOP란?", levellog, eve);
 
-        // when
-        final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
-                "스프링을 왜 사용하였나요?", eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
-        );
+            pressLikeInterviewQuestion(savedInterviewQuestion1, eve);
 
-        // then
-        assertThat(actual).hasSize(5);
-        assertThat(actual.get(0).getContent()).isEqualTo("스프링을 왜 사용하였나요?5");
+            // when
+            final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
+                    "스프링을 왜 사용하였나요?", eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
+            );
+
+            // then
+            assertThat(actual).hasSize(5);
+            assertThat(actual.get(0).getContent()).isEqualTo("스프링을 왜 사용하였나요?5");
+        }
+
+        @Test
+        @DisplayName("sql injection 위험이 있는 키워드로 인터뷰 질문 조회 시 0개를 반환한다.")
+        void success_sql_injection() {
+            // given
+            final Member eve = saveMember("eve");
+            final Member toMember = saveMember("toMember");
+
+            final Team team = saveTeam(eve, toMember);
+            final Levellog levellog = saveLevellog(toMember, team);
+
+            saveInterviewQuestion("스프링을 왜 사용하였나요?", levellog, eve);
+            saveInterviewQuestion("트랜잭션을 왜 사용하였나요?", levellog, eve);
+
+            // when
+            final String sqlInjectionKeyword = "왜%' or 1==1;--";
+            final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
+                    sqlInjectionKeyword, eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
+            );
+
+            // then
+            assertThat(actual).isEmpty();
+        }
+
     }
 }

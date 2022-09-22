@@ -2,8 +2,8 @@ package com.woowacourse.levellog.interviewquestion.domain;
 
 public enum InterviewQuestionSort {
 
-    LATEST("updated_at", "DESC"),
-    OLDEST("updated_at", "ASC"),
+    LATEST("created_at", "DESC"),
+    OLDEST("created_at", "ASC"),
     LIKES("like_count", "DESC");
 
     private final String field;

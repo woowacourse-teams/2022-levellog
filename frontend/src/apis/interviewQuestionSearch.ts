@@ -27,7 +27,7 @@ export const requestInterviewQuestionSearch = ({
     엑세스토큰이없는경우헤더제거({
       accessToken,
       method: 'get',
-      url: `${process.env.API_URI}/interview-questions?keyword=${keyword}&sort=latest`,
+      url: `${process.env.API_URI}/interview-questions?keyword=${keyword}&sort=latest&size=2000`,
       headers: { Authorization: `Bearer ${accessToken}` },
     }),
   );

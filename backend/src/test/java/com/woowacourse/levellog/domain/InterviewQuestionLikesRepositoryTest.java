@@ -11,6 +11,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,7 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
         assertThat(actual).isPresent();
     }
 
+    @Disabled
     @Nested
     @DisplayName("searchByKeyword 메서드는")
     class SearchByKeyword {

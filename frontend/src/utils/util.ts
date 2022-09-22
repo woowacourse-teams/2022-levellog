@@ -35,7 +35,11 @@ interface DebounceType {
   action: ({ func, args }: DebounceActionArgsType) => any;
 }
 
-export const tryCatch = async ({ func, args, snackbar }: TryCatchProps) => {
+export const tryCatch = async <T>({
+  func,
+  args,
+  snackbar,
+}: TryCatchProps): Promise<T | boolean> => {
   try {
     const res = await func(args && { ...args });
     return res.data;

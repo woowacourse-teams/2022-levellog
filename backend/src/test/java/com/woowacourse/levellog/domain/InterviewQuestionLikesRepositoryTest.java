@@ -111,7 +111,7 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
             saveInterviewQuestion("트랜잭션을 왜 사용하였나요?", levellog, eve);
 
             // when
-            final String sqlInjectionKeyword = "왜%' or 1==1;--";
+            final String sqlInjectionKeyword = "왜%' or 1=1;--";
             final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
                     sqlInjectionKeyword, eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
             );
@@ -119,6 +119,5 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
             // then
             assertThat(actual).isEmpty();
         }
-
     }
 }

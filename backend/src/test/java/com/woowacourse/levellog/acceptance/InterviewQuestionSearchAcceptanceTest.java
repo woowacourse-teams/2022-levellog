@@ -15,6 +15,8 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,8 +35,10 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
          *   then: 200 OK 상태 코드와 결과를 응답받는다.
          */
         @Test
+        @ParameterizedTest
+        @ValueSource(strings = {"Spring", "왜%or1==1;--"})
         @DisplayName("로그인하지 않고 조회")
-        void searchBy_nonLogin() {
+        void searchBy_nonLogin(final String keyword) {
             // given
             PEPPER.save();
             ROMA.save();
@@ -53,7 +57,7 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .filter(document("interview-question-search/search-non-login"))
                     .when()
-                    .get("/api/interview-questions?keyword=Spring")
+                    .get("/api/interview-questions?keyword=" + keyword)
                     .then().log().all();
 
             // then

@@ -5,6 +5,7 @@ export const ROUTES_PATH = Object.freeze({
   LOGIN: '/login',
   NOT_FOUND: '*',
   ERROR: '/error',
+  COPYRIGHT: '/copyright',
 
   FEEDBACK: '/teams/:teamId/levellogs/:levellogId/feedbacks',
   FEEDBACK_ADD: `/teams/:teamId/levellogs/:levellogId/feedbacks/add`,

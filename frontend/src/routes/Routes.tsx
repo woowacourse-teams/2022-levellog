@@ -1,5 +1,7 @@
 import { lazy } from 'react';
 
+import Copyright from 'pages/Copyright';
+
 import { REQUIRE_AUTH, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
 import Auth from 'routes/Auth';
@@ -21,7 +23,9 @@ const NotFound = lazy(() => import('pages/status/NotFound'));
 const InterviewDetail = lazy(() => import('pages/teams/InterviewDetail'));
 const InterviewTeamAdd = lazy(() => import('pages/teams/InterviewTeamAdd'));
 const InterviewTeamEdit = lazy(() => import('pages/teams/InterviewTeamEdit'));
-const InterviewTeams = lazy(() => import('pages/teams/InterviewTeams'));
+const InterviewQuestionSearch = lazy(
+  () => import('pages/interviewQuestion/InterviewQuestionSearch'),
+);
 
 export const routes = [
   {
@@ -120,7 +124,7 @@ export const routes = [
       },
       {
         path: ROUTES_PATH.INTERVIEW_QUESTION_SEARCH,
-        element: <Home />,
+        element: <InterviewQuestionSearch />,
       },
       {
         path: ROUTES_PATH.LOGIN,
@@ -137,6 +141,10 @@ export const routes = [
       {
         path: '*',
         element: <NotFound />,
+      },
+      {
+        path: ROUTES_PATH.COPYRIGHT,
+        element: <Copyright />,
       },
     ],
   },

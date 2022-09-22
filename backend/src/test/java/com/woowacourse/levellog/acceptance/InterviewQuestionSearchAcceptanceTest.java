@@ -204,6 +204,39 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
                     .body("results.id", Matchers.contains(1, 2))
                     .body("results.likeCount", contains(1, 0));
         }
+
+        /*
+         * Scenario: keyword 파라미터가 없이 조회
+         *   when: keyword 파라미터가 없이 인터뷰 검색을 한다.
+         *   then: 200 OK 상태 코드와 빈 결과를 응답받는다.
+         */
+        @Test
+        @DisplayName("keyword 파라미터가 없이 조회")
+        void searchBy_inputPercent() {
+            // given
+            PEPPER.save();
+            ROMA.save();
+
+            final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, ROMA).getTeamId();
+            final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
+
+            timeStandard.setInProgress();
+
+            saveInterviewQuestion("Spring을 사용한 이유", levellogId, ROMA);
+            saveInterviewQuestion("Spring이 무엇인가요?", levellogId, ROMA);
+            saveInterviewQuestion("Java가 무엇인가요?", levellogId, ROMA);
+
+            // when
+            final ValidatableResponse response = RestAssured.given(specification).log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when()
+                    .get("/api/interview-questions")
+                    .then().log().all();
+
+            // then
+            response.statusCode(HttpStatus.OK.value())
+                    .body("results", hasSize(0));
+        }
     }
 
     @Nested

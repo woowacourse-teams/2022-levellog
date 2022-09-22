@@ -1,44 +1,41 @@
 import styled from 'styled-components';
 
+import useInterviewQuestionSearch from 'hooks/useInterviewQuestionSearch';
+
 import deleteIcon from 'assets/images/close.svg';
 import searchIcon from 'assets/images/search.svg';
 
-import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import Input from 'components/@commons/Input';
 
-const InterviewQuestionSearchForm = ({
-  searchText,
-  handleClickRemoveSearchTextButton,
-  handleChangeSearchInput,
-  handleSubmitInterviewQuestion,
-}: InterviewQuestionSearchFormProps) => {
+const InterviewQuestionSearchForm = () => {
+  const {
+    searchText,
+    handleClickRemoveSearchTextButton,
+    handleChangeSearchInput,
+    handleSubmitInterviewQuestion,
+  } = useInterviewQuestionSearch();
   return (
     <S.Container onSubmit={handleSubmitInterviewQuestion}>
       <S.Title>인터뷰 질문 검색</S.Title>
       <S.InputBox>
-        <Image src={searchIcon} sizes={'SMALL'} />
+        <S.Button type={'submit'}>
+          <Image src={searchIcon} sizes={'SMALL'} />
+        </S.Button>
         <S.SearchInput
           placeholder={'검색어를 입력하세요'}
           value={searchText}
           onChange={handleChangeSearchInput}
         />
         {searchText && (
-          <S.DeleteButton onClick={handleClickRemoveSearchTextButton}>
+          <S.Button onClick={handleClickRemoveSearchTextButton}>
             <Image src={deleteIcon} sizes={'TINY'} />
-          </S.DeleteButton>
+          </S.Button>
         )}
       </S.InputBox>
     </S.Container>
   );
 };
-
-interface InterviewQuestionSearchFormProps {
-  searchText: string;
-  handleClickRemoveSearchTextButton: () => void;
-  handleChangeSearchInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmitInterviewQuestion: (e: React.FormEvent<HTMLFormElement>) => void;
-}
 
 const S = {
   Container: styled.form`
@@ -88,7 +85,7 @@ const S = {
     }
   `,
 
-  DeleteButton: styled.button`
+  Button: styled.button`
     border: none;
     background-color: ${(props) => props.theme.new_default.WHITE};
   `,

@@ -1,29 +1,21 @@
-import { useEffect } from 'react';
-
 import styled from 'styled-components';
+
+import useInterviewQuestionSearchResult from 'hooks/useInterviewQuestionSearchResult';
 
 import EmptySearchResult from 'pages/status/EmptySearchResult';
 
 import Button from 'components/@commons/Button';
 import InterviewQuestionSearchResult from 'components/interviewQuestion/InterviewQuestionSearchResult';
-import {
-  InterviewQuestionApiType,
-  InterviewQuestionSearchResultType,
-} from 'types/interviewQuestion';
 
-const InterviewQuestionSearchResults = ({
-  searchResults,
-  searchSortActive,
-  getSearchResults,
-  onClickLikeButton,
-  onClickCancelLikeButton,
-  handleClickSearchSortLike,
-  handleClickSearchSortNew,
-  handleClickSearchSortOld,
-}: InterviewQuestionSearchResultsProps) => {
-  useEffect(() => {
-    getSearchResults();
-  }, []);
+const InterviewQuestionSearchResults = () => {
+  const {
+    searchResults,
+    searchSortActive,
+    onClickLikeButton,
+    onClickCancelLikeButton,
+    handleClickSearchSortLike,
+    handleClickSearchSortNew,
+  } = useInterviewQuestionSearchResult();
 
   if (!searchResults || searchResults.length === 0) {
     return <EmptySearchResult />;
@@ -32,22 +24,15 @@ const InterviewQuestionSearchResults = ({
   return (
     <S.Container>
       <S.ButtonBox>
-        <S.RangeButton
-          onClick={handleClickSearchSortLike}
-          isActive={searchSortActive === '좋아요순'}
-        >
-          좋아요순
-        </S.RangeButton>
-        <S.DivisionLine></S.DivisionLine>
         <S.RangeButton onClick={handleClickSearchSortNew} isActive={searchSortActive === '최신순'}>
           최신순
         </S.RangeButton>
         <S.DivisionLine></S.DivisionLine>
         <S.RangeButton
-          onClick={handleClickSearchSortOld}
-          isActive={searchSortActive === '오래된순'}
+          onClick={handleClickSearchSortLike}
+          isActive={searchSortActive === '좋아요순'}
         >
-          오래된순
+          좋아요순
         </S.RangeButton>
       </S.ButtonBox>
       <S.Content>
@@ -64,29 +49,15 @@ const InterviewQuestionSearchResults = ({
   );
 };
 
-interface InterviewQuestionSearchResultsProps {
-  searchResults: InterviewQuestionSearchResultType[];
-  searchSortActive: string;
-  getSearchResults: () => void;
-  onClickLikeButton: ({
-    interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => void;
-  onClickCancelLikeButton: ({
-    interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => void;
-  handleClickSearchSortLike: () => void;
-  handleClickSearchSortNew: () => void;
-  handleClickSearchSortOld: () => void;
-}
-
 const S = {
   Container: styled.div`
     width: 71rem;
     height: 43.125rem;
     padding: 0 1.125rem 1.125rem 1.125rem;
     margin: auto;
+    margin-top: 1.875rem;
     margin-bottom: 1.875rem;
-    border-radius: 2.8125rem;
+    border-radius: 1.875rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
     box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
     @media (max-width: 1180px) {

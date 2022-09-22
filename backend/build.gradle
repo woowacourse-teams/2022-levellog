@@ -102,8 +102,7 @@ jacocoTestReport {
 				files(classDirectories.files.collect {
 					fileTree(dir: it,
 							excludes: ['**/support/**', '**/dto/**', '**/*Application*', '**/*BaseEntity*',
-									   '**/*Github*', '**/aspect/**', '**/*Config*', '**/AdminAuthInterceptor*', '**/AdminController*',
-									   '**/InterviewQuestionQueryRepository*', '**/InterviewQuestionSearchController*', '**/InterviewQuestionSort*'])
+									   '**/*Github*', '**/aspect/**', '**/*Config*', '**/AdminAuthInterceptor*', '**/AdminController*'])
 				})
 		)
 	}
@@ -127,8 +126,7 @@ jacocoTestCoverageVerification {
 				minimum = 0.80
 			}
 
-			excludes = ['*support*', '*dto*', '*Application*', '*BaseEntity*', '*Github*', '*aspect*', '*Config*', '*AdminAuthInterceptor*', '*AdminController*',
-						'*InterviewQuestionQueryRepository*', '*InterviewQuestionSearchController*', '*InterviewQuestionSort*']
+			excludes = ['*support*', '*dto*', '*Application*', '*BaseEntity*', '*Github*', '*aspect*', '*Config*', '*AdminAuthInterceptor*', '*AdminController*']
 		}
 	}
 }
@@ -148,7 +146,7 @@ sonarqube {
 		property "sonar.test.inclusions", "**/*Test.java"
 		property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
 		property 'sonar.exclusions',
-				'**/support/**, **/dto/**, **/*Application*, **/*BaseEntity*, **/*Github*, **/aspect/**, **/*Config*, **/*AdminAuthInterceptor*, **/*AdminController*, **/*InterviewQuestionQueryRepository*, **/*InterviewQuestionSearchController*, **/*InterviewQuestionSort*'
+				'**/support/**, **/dto/**, **/*Application*, **/*BaseEntity*, **/*Github*, **/aspect/**, **/*Config*, **/*AdminAuthInterceptor*, **/*AdminController*'
 
 		property 'sonar.issue.ignore.multicriteria', 'e1, e2'
 		property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'java:S6212'

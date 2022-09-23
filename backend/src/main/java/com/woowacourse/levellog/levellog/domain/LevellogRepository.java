@@ -15,4 +15,7 @@ public interface LevellogRepository extends JpaRepository<Levellog, Long> {
 
     @Query("SELECT l FROM Levellog l INNER JOIN FETCH l.team WHERE l.author = :author")
     List<Levellog> findAllByAuthor(@Param("author") Member author);
+
+    @Query("SELECT l FROM Levellog l INNER JOIN FETCH l.author WHERE l.id = :id")
+    Optional<Levellog> findLevellogAndMemberByLevelogId(@Param("id") Long id);
 }

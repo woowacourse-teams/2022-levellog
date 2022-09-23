@@ -71,7 +71,7 @@ public class LevellogService {
     }
 
     private Levellog getById(final Long levellogId) {
-        return levellogRepository.findById(levellogId)
+        return levellogRepository.findLevellogAndMemberByLevelogId(levellogId)
                 .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)));
     }

@@ -19,39 +19,6 @@ import org.junit.jupiter.api.Test;
 @DisplayName("LevellogRepository의")
 class LevellogRepositoryTest extends RepositoryTest {
 
-    @Nested
-    @DisplayName("getLevellog 메서드는")
-    class GetLevellog {
-
-        @Test
-        @DisplayName("levellogId에 해당하는 레코드가 존재하면 id에 해당하는 Levellog 엔티티를 반환한다.")
-        void success() {
-            // given
-            final Member member = saveMember("릭");
-            final Team team = saveTeam(member);
-            final Long expected = saveLevellog(member, team)
-                    .getId();
-
-            // when
-            final Long actual = levellogRepository.getLevellog(expected)
-                    .getId();
-
-            // then
-            assertThat(actual).isEqualTo(expected);
-        }
-
-        @Test
-        @DisplayName("levellogId에 해당하는 레코드가 존재하지 않으면 예외를 던진다.")
-        void getLevellog_notExist_execption() {
-            // given
-            final Long levellogId = 999L;
-
-            // when & then
-            assertThatThrownBy(() -> levellogRepository.getLevellog(levellogId))
-                    .isInstanceOf(LevellogNotFoundException.class);
-        }
-    }
-
     @Test
     @DisplayName("findByAuthorIdAndTeamId 메서드는 memberId와 teamId이 모두 일치하는 레벨로그를 반환한다.")
     void findByAuthorIdAndTeamId() {
@@ -92,6 +59,39 @@ class LevellogRepositoryTest extends RepositoryTest {
                 () -> assertThat(levellogs).hasSize(2),
                 () -> assertThat(levellogs).contains(authorLevellog1, authorLevellog2)
         );
+    }
+
+    @Nested
+    @DisplayName("getLevellog 메서드는")
+    class GetLevellog {
+
+        @Test
+        @DisplayName("levellogId에 해당하는 레코드가 존재하면 id에 해당하는 Levellog 엔티티를 반환한다.")
+        void success() {
+            // given
+            final Member member = saveMember("릭");
+            final Team team = saveTeam(member);
+            final Long expected = saveLevellog(member, team)
+                    .getId();
+
+            // when
+            final Long actual = levellogRepository.getLevellog(expected)
+                    .getId();
+
+            // then
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("levellogId에 해당하는 레코드가 존재하지 않으면 예외를 던진다.")
+        void getLevellog_notExist_exception() {
+            // given
+            final Long levellogId = 999L;
+
+            // when & then
+            assertThatThrownBy(() -> levellogRepository.getLevellog(levellogId))
+                    .isInstanceOf(LevellogNotFoundException.class);
+        }
     }
 
     @Nested

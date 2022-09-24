@@ -18,6 +18,24 @@ import org.junit.jupiter.api.Test;
 @DisplayName("PreQuestionRepository의")
 class PreQuestionRepositoryTest extends RepositoryTest {
 
+    @Test
+    @DisplayName("findByLevellogAndAuthor 메서드는 Levellog와 Author가 같은 사전 질문을 반환한다.")
+    void findByLevellogAndAuthor() {
+        // given
+        final Member levellogAuthor = saveMember("알린");
+        final Member questioner = saveMember("로마");
+        final Team team = saveTeam(levellogAuthor, questioner);
+        final Levellog levellog = saveLevellog(levellogAuthor, team);
+
+        final PreQuestion preQuestion = savePreQuestion(levellog, questioner);
+
+        // when
+        final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner);
+
+        // then
+        assertThat(actual).hasValue(preQuestion);
+    }
+
     @Nested
     @DisplayName("getPreQuestion 메서드는")
     class GetPreQuestion {
@@ -43,7 +61,7 @@ class PreQuestionRepositoryTest extends RepositoryTest {
 
         @Test
         @DisplayName("preQuestionId에 해당하는 레코드가 존재하지 않으면 예외를 던진다.")
-        void getPreQuestion_notExist_execption() {
+        void getPreQuestion_notExist_exception() {
             // given
             final Long preQuestionId = 999L;
 
@@ -51,24 +69,6 @@ class PreQuestionRepositoryTest extends RepositoryTest {
             assertThatThrownBy(() -> preQuestionRepository.getPreQuestion(preQuestionId))
                     .isInstanceOf(PreQuestionNotFoundException.class);
         }
-    }
-
-    @Test
-    @DisplayName("findByLevellogAndAuthor 메서드는 Levellog와 Author가 같은 사전 질문을 반환한다.")
-    void findByLevellogAndAuthor() {
-        // given
-        final Member levellogAuthor = saveMember("알린");
-        final Member questioner = saveMember("로마");
-        final Team team = saveTeam(levellogAuthor, questioner);
-        final Levellog levellog = saveLevellog(levellogAuthor, team);
-
-        final PreQuestion preQuestion = savePreQuestion(levellog, questioner);
-
-        // when
-        final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner);
-
-        // then
-        assertThat(actual).hasValue(preQuestion);
     }
 
     @Nested

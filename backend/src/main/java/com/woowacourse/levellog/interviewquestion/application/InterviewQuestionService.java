@@ -20,7 +20,6 @@ import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
@@ -45,7 +44,7 @@ public class InterviewQuestionService {
 
     @Transactional
     public Long save(final InterviewQuestionWriteDto request, final Long levellogId, final Long fromMemberId) {
-        final Member author = getMember(fromMemberId);
+        final Member author = memberRepository.getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
@@ -68,7 +67,7 @@ public class InterviewQuestionService {
 
     public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
         final Levellog levellog = getLevellog(levellogId);
-        final Member author = getMember(fromMemberId);
+        final Member author = memberRepository.getMember(fromMemberId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(
                 levellog, author);
 
@@ -87,7 +86,7 @@ public class InterviewQuestionService {
     public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId,
                        final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
-        final Member author = getMember(fromMemberId);
+        final Member author = memberRepository.getMember(fromMemberId);
 
         interviewQuestion.getLevellog()
                 .getTeam()
@@ -99,7 +98,7 @@ public class InterviewQuestionService {
     @Transactional
     public void deleteById(final Long interviewQuestionId, final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
-        final Member author = getMember(fromMemberId);
+        final Member author = memberRepository.getMember(fromMemberId);
 
         interviewQuestion.validateMemberIsAuthor(author);
         interviewQuestion.getLevellog()
@@ -112,7 +111,7 @@ public class InterviewQuestionService {
     @Transactional
     public void pressLike(final Long interviewQuestionId, final Long memberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
-        final Member member = getMember(memberId);
+        final Member member = memberRepository.getMember(memberId);
         validateAlreadyExist(interviewQuestionId, memberId);
 
         interviewQuestionLikesRepository.save(InterviewQuestionLikes.of(interviewQuestion, member));
@@ -122,7 +121,7 @@ public class InterviewQuestionService {
     @Transactional
     public void cancelLike(final Long interviewQuestionId, final Long memberId) {
         final InterviewQuestion interviewQuestion = getInterviewQuestion(interviewQuestionId);
-        final Member member = getMember(memberId);
+        final Member member = memberRepository.getMember(memberId);
         final InterviewQuestionLikes interviewQuestionLikes = getInterviewQuestionLikes(interviewQuestion, member);
 
         interviewQuestionLikesRepository.deleteById(interviewQuestionLikes.getId());
@@ -139,12 +138,6 @@ public class InterviewQuestionService {
         return levellogRepository.findById(levellogId)
                 .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)));
-    }
-
-    private Member getMember(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
-                        .append("memberId", memberId)));
     }
 
     private InterviewQuestionLikes getInterviewQuestionLikes(final InterviewQuestion interviewQuestion,

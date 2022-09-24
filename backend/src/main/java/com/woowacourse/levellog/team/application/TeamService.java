@@ -4,7 +4,6 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -39,7 +38,7 @@ public class TeamService {
 
     @Transactional
     public Long save(final TeamWriteDto request, final Long hostId) {
-        final Member host = getMember(hostId);
+        final Member host = memberRepository.getMember(hostId);
         final Team team = request.toEntity(host.getProfileUrl());
         final Participants participants = createParticipants(team, hostId, request.getParticipantIds(),
                 request.getWatcherIds());
@@ -95,12 +94,6 @@ public class TeamService {
 
         participantRepository.deleteByTeam(team);
         team.delete(timeStandard.now());
-    }
-
-    private Member getMember(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
-                        .append("memberId", memberId)));
     }
 
     private Team getTeam(final Long teamId) {
@@ -171,13 +164,13 @@ public class TeamService {
 
     private List<Participant> toParticipants(final Team team, final Long hostId, final List<Long> participantIds) {
         return participantIds.stream()
-                .map(it -> new Participant(team, getMember(it), it.equals(hostId), false))
+                .map(it -> new Participant(team, memberRepository.getMember(it), it.equals(hostId), false))
                 .collect(Collectors.toList());
     }
 
     private List<Participant> toWatchers(final Team team, final Long hostId, final List<Long> watcherIds) {
         return watcherIds.stream()
-                .map(it -> new Participant(team, getMember(it), it.equals(hostId), true))
+                .map(it -> new Participant(team, memberRepository.getMember(it), it.equals(hostId), true))
                 .collect(Collectors.toList());
     }
 

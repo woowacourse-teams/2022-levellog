@@ -6,7 +6,6 @@ import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
@@ -33,7 +32,7 @@ public class PreQuestionService {
     @Transactional
     public Long save(final PreQuestionWriteDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getLevellog(levellogId);
-        final Member questioner = getMember(memberId);
+        final Member questioner = memberRepository.getMember(memberId);
 
         validatePreQuestionExistence(levellog, questioner);
         validateSameTeamMember(levellog.getTeam(), questioner);
@@ -44,7 +43,7 @@ public class PreQuestionService {
 
     public PreQuestionDto findMy(final Long levellogId, final Long questionerId) {
         final Levellog levellog = getLevellog(levellogId);
-        final Member questioner = getMember(questionerId);
+        final Member questioner = memberRepository.getMember(questionerId);
         final PreQuestion preQuestion = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner)
                 .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)
@@ -58,7 +57,7 @@ public class PreQuestionService {
                        final Long memberId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
         final Levellog levellog = getLevellog(levellogId);
-        final Member questioner = getMember(memberId);
+        final Member questioner = memberRepository.getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
         validateMyQuestion(preQuestion, questioner);
@@ -70,7 +69,7 @@ public class PreQuestionService {
     public void deleteById(final Long preQuestionId, final Long levellogId, final Long memberId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
         final Levellog levellog = getLevellog(levellogId);
-        final Member questioner = getMember(memberId);
+        final Member questioner = memberRepository.getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
         validateMyQuestion(preQuestion, questioner);
@@ -88,12 +87,6 @@ public class PreQuestionService {
         return levellogRepository.findById(levellogId)
                 .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)));
-    }
-
-    private Member getMember(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
-                        .append("memberId", memberId)));
     }
 
     private void validateSameTeamMember(final Team team, final Member member) {

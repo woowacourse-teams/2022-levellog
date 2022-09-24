@@ -13,7 +13,6 @@ import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
@@ -39,7 +38,7 @@ public class FeedbackService {
     public Long save(final FeedbackWriteDto request, final Long levellogId, final Long fromMemberId) {
         validateExistence(levellogId, fromMemberId);
 
-        final Member member = getMember(fromMemberId);
+        final Member member = memberRepository.getMember(fromMemberId);
         final Levellog levellog = getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
@@ -56,7 +55,7 @@ public class FeedbackService {
 
     public FeedbacksDto findAll(final Long levellogId, final Long memberId) {
         final Levellog levellog = getLevellog(levellogId);
-        validateTeamMember(levellog.getTeam(), getMember(memberId));
+        validateTeamMember(levellog.getTeam(), memberRepository.getMember(memberId));
 
         final List<FeedbackDto> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
 
@@ -66,7 +65,7 @@ public class FeedbackService {
     public FeedbackDto findById(final Long levellogId, final Long feedbackId, final Long memberId) {
         final Feedback feedback = getFeedback(feedbackId);
         final Levellog levellog = getLevellog(levellogId);
-        final Member member = getMember(memberId);
+        final Member member = memberRepository.getMember(memberId);
 
         validateTeamMember(levellog.getTeam(), member);
         feedback.validateLevellog(levellog);
@@ -75,7 +74,7 @@ public class FeedbackService {
     }
 
     public FeedbacksDto findAllByTo(final Long memberId) {
-        final Member member = getMember(memberId);
+        final Member member = memberRepository.getMember(memberId);
         final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(member);
 
         return new FeedbacksDto(getFeedbackResponses(feedbacks));
@@ -84,7 +83,7 @@ public class FeedbackService {
     @Transactional
     public void update(final FeedbackWriteDto request, final Long feedbackId, final Long memberId) {
         final Feedback feedback = getFeedback(feedbackId);
-        final Member member = getMember(memberId);
+        final Member member = memberRepository.getMember(memberId);
         final Team team = feedback.getLevellog().getTeam();
 
         feedback.validateAuthor(member);
@@ -115,13 +114,6 @@ public class FeedbackService {
         return feedbacks.stream()
                 .map(FeedbackDto::from)
                 .collect(Collectors.toList());
-    }
-
-    private Member getMember(final Long memberId) {
-        return memberRepository
-                .findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
-                        .append("memberId", memberId)));
     }
 
     private Levellog getLevellog(final Long levellogId) {

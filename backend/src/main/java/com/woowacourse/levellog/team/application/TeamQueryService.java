@@ -3,7 +3,6 @@ package com.woowacourse.levellog.team.application;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.SimpleParticipant;
 import com.woowacourse.levellog.team.domain.SimpleParticipants;
 import com.woowacourse.levellog.team.domain.Team;
@@ -49,7 +48,7 @@ public class TeamQueryService {
     }
 
     public TeamListDto findAllByMemberId(final Long memberId) {
-        final Member member = getMember(memberId);
+        final Member member = memberRepository.getMember(memberId);
 
         final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findMyList(member);
         final List<TeamSimpleDto> teamSimpleDtos = allParticipants.stream()
@@ -106,11 +105,5 @@ public class TeamQueryService {
                 .filter(AllParticipantDto::isWatcher)
                 .map(WatcherDto::from)
                 .collect(Collectors.toList());
-    }
-
-    private Member getMember(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
-                        .append("memberId", memberId)));
     }
 }

@@ -35,7 +35,7 @@ public class LevellogService {
     @Transactional
     public Long save(final LevellogWriteDto request, final Long authorId, final Long teamId) {
         final Team team = getTeam(teamId);
-        final Member author = getMember(authorId);
+        final Member author = memberRepository.getMember(authorId);
         validateLevellogExistence(authorId, teamId);
         team.validateReady(timeStandard.now());
 
@@ -51,7 +51,7 @@ public class LevellogService {
     }
 
     public LevellogsDto findAllByAuthorId(final Long authorId) {
-        final Member author = getMember(authorId);
+        final Member author = memberRepository.getMember(authorId);
 
         final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author);
         final List<LevellogWithIdDto> levellogWithIdDtos = levellogs.stream()
@@ -64,7 +64,7 @@ public class LevellogService {
     @Transactional
     public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
-        final Member member = getMember(memberId);
+        final Member member = memberRepository.getMember(memberId);
         levellog.getTeam().validateReady(timeStandard.now());
 
         levellog.updateContent(member, request.getContent());
@@ -80,12 +80,6 @@ public class LevellogService {
         return teamRepository.findById(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(DebugMessage.init()
                         .append("teamId", teamId)));
-    }
-
-    private Member getMember(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(DebugMessage.init()
-                        .append("memberId", memberId)));
     }
 
     private void validateLevellogExistence(final Long authorId, final Long teamId) {

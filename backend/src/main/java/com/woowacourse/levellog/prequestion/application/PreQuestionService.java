@@ -54,7 +54,7 @@ public class PreQuestionService {
     @Transactional
     public void update(final PreQuestionWriteDto request, final Long preQuestionId, final Long levellogId,
                        final Long memberId) {
-        final PreQuestion preQuestion = getPreQuestion(preQuestionId);
+        final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member questioner = memberRepository.getMember(memberId);
 
@@ -66,7 +66,7 @@ public class PreQuestionService {
 
     @Transactional
     public void deleteById(final Long preQuestionId, final Long levellogId, final Long memberId) {
-        final PreQuestion preQuestion = getPreQuestion(preQuestionId);
+        final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member questioner = memberRepository.getMember(memberId);
 
@@ -74,12 +74,6 @@ public class PreQuestionService {
         validateMyQuestion(preQuestion, questioner);
 
         preQuestionRepository.deleteById(preQuestion.getId());
-    }
-
-    private PreQuestion getPreQuestion(final Long preQuestionId) {
-        return preQuestionRepository.findById(preQuestionId)
-                .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
-                        .append("preQuestionId", preQuestionId)));
     }
 
     private void validateSameTeamMember(final Team team, final Member member) {

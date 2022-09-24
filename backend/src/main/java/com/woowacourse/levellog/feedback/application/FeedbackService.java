@@ -7,7 +7,6 @@ import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
-import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
@@ -62,7 +61,7 @@ public class FeedbackService {
     }
 
     public FeedbackDto findById(final Long levellogId, final Long feedbackId, final Long memberId) {
-        final Feedback feedback = getFeedback(feedbackId);
+        final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member member = memberRepository.getMember(memberId);
 
@@ -81,7 +80,7 @@ public class FeedbackService {
 
     @Transactional
     public void update(final FeedbackWriteDto request, final Long feedbackId, final Long memberId) {
-        final Feedback feedback = getFeedback(feedbackId);
+        final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
         final Member member = memberRepository.getMember(memberId);
         final Team team = feedback.getLevellog().getTeam();
 
@@ -113,11 +112,5 @@ public class FeedbackService {
         return feedbacks.stream()
                 .map(FeedbackDto::from)
                 .collect(Collectors.toList());
-    }
-
-    private Feedback getFeedback(final Long feedbackId) {
-        return feedbackRepository.findById(feedbackId)
-                .orElseThrow(() -> new FeedbackNotFoundException(DebugMessage.init()
-                        .append("feedbackId", feedbackId)));
     }
 }

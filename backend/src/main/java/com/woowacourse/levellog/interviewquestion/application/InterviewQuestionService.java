@@ -17,7 +17,6 @@ import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLik
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -45,7 +44,7 @@ public class InterviewQuestionService {
     @Transactional
     public Long save(final InterviewQuestionWriteDto request, final Long levellogId, final Long fromMemberId) {
         final Member author = memberRepository.getMember(fromMemberId);
-        final Levellog levellog = getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
         levellog.validateSelfInterviewQuestion(author);
@@ -59,14 +58,14 @@ public class InterviewQuestionService {
     }
 
     public InterviewQuestionsDto findAllByLevellog(final Long levellogId) {
-        final Levellog levellog = getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellog(levellog);
 
         return InterviewQuestionsDto.from(interviewQuestions);
     }
 
     public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
-        final Levellog levellog = getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member author = memberRepository.getMember(fromMemberId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(
                 levellog, author);
@@ -132,12 +131,6 @@ public class InterviewQuestionService {
         return interviewQuestionRepository.findById(interviewQuestionId)
                 .orElseThrow(() -> new InterviewQuestionNotFoundException(DebugMessage.init()
                         .append("interviewQuestionId", interviewQuestionId)));
-    }
-
-    private Levellog getLevellog(final Long levellogId) {
-        return levellogRepository.findById(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
-                        .append("levellogId", levellogId)));
     }
 
     private InterviewQuestionLikes getInterviewQuestionLikes(final InterviewQuestion interviewQuestion,

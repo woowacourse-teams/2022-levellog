@@ -3,7 +3,6 @@ package com.woowacourse.levellog.prequestion.application;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
@@ -31,7 +30,7 @@ public class PreQuestionService {
 
     @Transactional
     public Long save(final PreQuestionWriteDto request, final Long levellogId, final Long memberId) {
-        final Levellog levellog = getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member questioner = memberRepository.getMember(memberId);
 
         validatePreQuestionExistence(levellog, questioner);
@@ -42,7 +41,7 @@ public class PreQuestionService {
     }
 
     public PreQuestionDto findMy(final Long levellogId, final Long questionerId) {
-        final Levellog levellog = getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member questioner = memberRepository.getMember(questionerId);
         final PreQuestion preQuestion = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner)
                 .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
@@ -56,7 +55,7 @@ public class PreQuestionService {
     public void update(final PreQuestionWriteDto request, final Long preQuestionId, final Long levellogId,
                        final Long memberId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
-        final Levellog levellog = getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member questioner = memberRepository.getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
@@ -68,7 +67,7 @@ public class PreQuestionService {
     @Transactional
     public void deleteById(final Long preQuestionId, final Long levellogId, final Long memberId) {
         final PreQuestion preQuestion = getPreQuestion(preQuestionId);
-        final Levellog levellog = getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member questioner = memberRepository.getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
@@ -81,12 +80,6 @@ public class PreQuestionService {
         return preQuestionRepository.findById(preQuestionId)
                 .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
                         .append("preQuestionId", preQuestionId)));
-    }
-
-    private Levellog getLevellog(final Long levellogId) {
-        return levellogRepository.findById(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
-                        .append("levellogId", levellogId)));
     }
 
     private void validateSameTeamMember(final Team team, final Member member) {

@@ -15,7 +15,6 @@ import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -51,14 +50,14 @@ public class TeamService {
     }
 
     public TeamStatusDto findStatus(final Long teamId) {
-        final Team team = getTeam(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         final TeamStatus status = team.status(timeStandard.now());
 
         return new TeamStatusDto(status);
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
-        final Team team = getTeam(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
         final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId, memberId,
                 team.getInterviewerNumber());
@@ -68,7 +67,7 @@ public class TeamService {
 
     @Transactional
     public void update(final TeamWriteDto request, final Long teamId, final Long memberId) {
-        final Team team = getTeam(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         validateHostAuthorization(memberId, team);
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
 
@@ -81,7 +80,7 @@ public class TeamService {
 
     @Transactional
     public void close(final Long teamId, final Long memberId) {
-        final Team team = getTeam(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         validateHostAuthorization(memberId, team);
 
         team.close(timeStandard.now());
@@ -89,18 +88,11 @@ public class TeamService {
 
     @Transactional
     public void deleteById(final Long teamId, final Long memberId) {
-        final Team team = getTeam(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         validateHostAuthorization(memberId, team);
 
         participantRepository.deleteByTeam(team);
         team.delete(timeStandard.now());
-    }
-
-    private Team getTeam(final Long teamId) {
-        return teamRepository.findById(teamId)
-                .orElseThrow(
-                        () -> new TeamNotFoundException(DebugMessage.init()
-                                .append("teamId", teamId)));
     }
 
     private Participants createParticipants(final Team team, final Long hostId, final List<Long> participantIds,

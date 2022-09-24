@@ -11,10 +11,8 @@ import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
-import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +32,7 @@ public class LevellogService {
 
     @Transactional
     public Long save(final LevellogWriteDto request, final Long authorId, final Long teamId) {
-        final Team team = getTeam(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         final Member author = memberRepository.getMember(authorId);
         validateLevellogExistence(authorId, teamId);
         team.validateReady(timeStandard.now());
@@ -74,12 +72,6 @@ public class LevellogService {
         return levellogRepository.findLevellogAndMemberByLevelogId(levellogId)
                 .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)));
-    }
-
-    private Team getTeam(final Long teamId) {
-        return teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException(DebugMessage.init()
-                        .append("teamId", teamId)));
     }
 
     private void validateLevellogExistence(final Long authorId, final Long teamId) {

@@ -1,5 +1,5 @@
+import { ImageSize } from 'levellog-util-types';
 import styled from 'styled-components';
-import { ImageSizeType } from 'types';
 
 const Image = ({
   src,
@@ -20,7 +20,7 @@ const Image = ({
 
 interface ImageProps {
   src: string;
-  sizes: ImageSizeType;
+  sizes: keyof ImageSize;
   boxShadow?: boolean;
   borderRadius?: boolean;
   githubAvatarSize?: number;

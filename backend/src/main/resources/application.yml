@@ -28,3 +28,10 @@ security:
 
   admin:
     hash: ${ADMIN_HASH}
+
+server:
+  tomcat:
+    accept-count: 60
+    max-connections: 120
+    threads:
+      max: 8

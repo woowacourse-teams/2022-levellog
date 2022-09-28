@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.levellog.domain;
 
+import com.woowacourse.levellog.common.support.DebugMessage;
+import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +20,10 @@ public interface LevellogRepository extends JpaRepository<Levellog, Long> {
 
     @Query("SELECT l FROM Levellog l INNER JOIN FETCH l.author WHERE l.id = :id")
     Optional<Levellog> findLevellogAndMemberByLevelogId(@Param("id") Long id);
+
+    default Levellog getLevellog(final Long levellogId) {
+        return findById(levellogId)
+                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
+                        .append("levellogId", levellogId)));
+    }
 }

@@ -72,4 +72,26 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
                         tuple(eve.getId(), toMember.getId(), "study from eve")
                 );
     }
+
+    @Test
+    @DisplayName("findById 메서드는 입력된 멤버가 받은 피드백을 수정일 기준 내림차순으로 조회한다.")
+    void findById() {
+        // given
+        final Member eve = saveMember("eve");
+        final Member rick = saveMember("rick");
+        final Member toMember = saveMember("toMember");
+
+        final Team team = saveTeam(eve, rick, toMember);
+        final Levellog levellog = saveLevellog(toMember, team);
+
+        final Feedback feedback = saveFeedback(eve, toMember, levellog);
+
+        // when
+        final FeedbackDto actual = feedbackQueryRepository.findById(feedback.getId());
+
+        // then
+        assertThat(actual)
+                .extracting(it -> it.getFrom().getId(), it -> it.getTo().getId())
+                .containsExactly(eve.getId(), toMember.getId());
+    }
 }

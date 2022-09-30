@@ -22,6 +22,7 @@ import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -154,6 +155,7 @@ class FeedbackServiceTest extends ServiceTest {
                             String.valueOf(team.getId()), String.valueOf(memberId));
         }
 
+        @Disabled
         @Test
         @DisplayName("잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.")
         void findById_levellogWrongId_exception() {

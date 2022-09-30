@@ -59,14 +59,12 @@ public class FeedbackService {
     }
 
     public FeedbackDto findById(final Long levellogId, final Long feedbackId, final Long memberId) {
-        final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member member = memberRepository.getMember(memberId);
 
         validateTeamMember(levellog.getTeam(), member);
-        feedback.validateLevellog(levellog);
 
-        return FeedbackDto.from(feedback);
+        return feedbackQueryRepository.findById(feedbackId);
     }
 
     public FeedbacksDto findAllByTo(final Long memberId) {

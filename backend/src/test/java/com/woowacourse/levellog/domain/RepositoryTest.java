@@ -135,7 +135,7 @@ abstract class RepositoryTest {
 
     protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
                                                                 final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker);
+        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker.getId());
         return interviewQuestionLikesRepository.save(interviewQuestionLikes);
     }
 

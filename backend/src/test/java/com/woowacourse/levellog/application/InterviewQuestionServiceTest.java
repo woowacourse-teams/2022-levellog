@@ -87,24 +87,6 @@ class InterviewQuestionServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("인터뷰 질문 작성자가 존재하지 않는 경우 예외를 던진다.")
-        void save_memberNotFound_exception() {
-            // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
-
-            final Team team = saveTeam(pepper, eve);
-            final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
-            final Long invalidMemberId = 1000L;
-
-            // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, invalidMemberId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(invalidMemberId));
-        }
-
-        @Test
         @DisplayName("레벨로그가 존재하지 않는 경우 예외를 던진다.")
         void save_levellogNotFound_exception() {
             // given
@@ -310,22 +292,6 @@ class InterviewQuestionServiceTest extends ServiceTest {
             assertThatThrownBy(() -> interviewQuestionService.findAllByLevellogAndAuthor(invalidLevellogId, memberId))
                     .isInstanceOf(LevellogNotFoundException.class)
                     .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
-        }
-
-        @Test
-        @DisplayName("인터뷰 질문 작성자가 존재하지 않는 경우 예외를 던진다.")
-        void findAllByLevellogAndAuthor_memberNotFound_exception() {
-            // given
-            final Member pepper = saveMember("페퍼");
-            final Team team = saveTeam(pepper);
-            final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final Long invalidMemberId = 1000L;
-
-            // when & then
-            assertThatThrownBy(
-                    () -> interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellogId, invalidMemberId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(invalidMemberId));
         }
     }
 

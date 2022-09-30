@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.feedback.application;
 
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackQueryRepository;
@@ -10,7 +11,6 @@ import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
@@ -28,20 +28,18 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final FeedbackQueryRepository feedbackQueryRepository;
     private final LevellogRepository levellogRepository;
-    private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final FeedbackWriteDto request, final Long levellogId, final Long fromMemberId) {
+    public Long save(final FeedbackWriteDto request, final Long levellogId, @Authentic final Long fromMemberId) {
         validateExistence(levellogId, fromMemberId);
 
-        final Member member = memberRepository.getMember(fromMemberId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
         levellog.validateSelfFeedback(fromMemberId);
-        validateTeamMember(team, member);
+        validateTeamMember(team, fromMemberId);
         team.validateInProgress(timeStandard.now());
 
         final Feedback feedback = request.getFeedback()
@@ -51,30 +49,28 @@ public class FeedbackService {
                 .getId();
     }
 
-    public FeedbacksDto findAll(final Long levellogId, final Long memberId) {
+    public FeedbacksDto findAll(final Long levellogId, @Authentic final Long memberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        validateTeamMember(levellog.getTeam(), memberRepository.getMember(memberId));
+        validateTeamMember(levellog.getTeam(), memberId);
 
         return feedbackQueryRepository.findAllByLevellog(levellogId);
     }
 
-    public FeedbackDto findById(final Long levellogId, final Long feedbackId, final Long memberId) {
+    public FeedbackDto findById(final Long levellogId, final Long feedbackId, @Authentic final Long memberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        final Member member = memberRepository.getMember(memberId);
 
-        validateTeamMember(levellog.getTeam(), member);
+        validateTeamMember(levellog.getTeam(), memberId);
 
         return feedbackQueryRepository.findById(feedbackId);
     }
 
-    public FeedbacksDto findAllByTo(final Long memberId) {
+    public FeedbacksDto findAllByTo(@Authentic final Long memberId) {
         return feedbackQueryRepository.findAllByTo(memberId);
     }
 
     @Transactional
-    public void update(final FeedbackWriteDto request, final Long feedbackId, final Long memberId) {
+    public void update(final FeedbackWriteDto request, final Long feedbackId, @Authentic final Long memberId) {
         final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
-        memberRepository.getMember(memberId);
         final Team team = feedback.getLevellog().getTeam();
 
         feedback.validateAuthor(memberId);
@@ -93,11 +89,11 @@ public class FeedbackService {
         }
     }
 
-    private void validateTeamMember(final Team team, final Member member) {
-        if (!participantRepository.existsByMemberAndTeam(member, team)) {
+    private void validateTeamMember(final Team team, final Long memberId) {
+        if (!participantRepository.existsByMemberIdAndTeam(memberId, team)) {
             throw new ParticipantNotSameTeamException(DebugMessage.init()
                     .append("teamId", team.getId())
-                    .append("memberId", member.getId()));
+                    .append("memberId", memberId));
         }
     }
 }

@@ -5,7 +5,6 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -64,8 +63,8 @@ public class PreQuestion extends BaseEntity {
         return this.levellog.equals(levellog);
     }
 
-    public boolean isSameAuthor(final Member member) {
-        return authorId.equals(member.getId());
+    public boolean isSameAuthor(final Long memberId) {
+        return authorId.equals(memberId);
     }
 
     public void validateLevellog(final Levellog levellog) {
@@ -76,10 +75,10 @@ public class PreQuestion extends BaseEntity {
         }
     }
 
-    public void validateMyQuestion(final Member member) {
-        if (!isSameAuthor(member)) {
+    public void validateMyQuestion(final Long memberId) {
+        if (!isSameAuthor(memberId)) {
             throw new MemberNotAuthorException(DebugMessage.init()
-                    .append("loginMemberId", member.getId())
+                    .append("loginMemberId", memberId)
                     .append("authorMemberId", authorId)
                     .append("preQuestionId", getId()));
         }

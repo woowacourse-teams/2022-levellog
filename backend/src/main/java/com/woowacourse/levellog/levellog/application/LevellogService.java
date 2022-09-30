@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.levellog.application;
 
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogQueryRepository;
@@ -10,7 +11,6 @@ import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.support.TimeStandard;
@@ -28,13 +28,11 @@ public class LevellogService {
     private final LevellogRepository levellogRepository;
     private final LevellogQueryRepository levellogQueryRepository;
     private final TeamRepository teamRepository;
-    private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final LevellogWriteDto request, final Long authorId, final Long teamId) {
+    public Long save(final LevellogWriteDto request, @Authentic final Long authorId, final Long teamId) {
         final Team team = teamRepository.getTeam(teamId);
-        memberRepository.getMember(authorId);
         validateLevellogExistence(authorId, teamId);
         team.validateReady(timeStandard.now());
 
@@ -49,9 +47,7 @@ public class LevellogService {
                         .append("levellogId", levellogId)));
     }
 
-    public LevellogsDto findAllByAuthorId(final Long authorId) {
-        memberRepository.getMember(authorId);
-
+    public LevellogsDto findAllByAuthorId(@Authentic final Long authorId) {
         final List<Levellog> levellogs = levellogRepository.findAllByAuthor(authorId);
         final List<LevellogWithIdDto> levellogWithIdDtos = levellogs.stream()
                 .map(LevellogWithIdDto::from)
@@ -61,15 +57,14 @@ public class LevellogService {
     }
 
     @Transactional
-    public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
+    public void update(final LevellogWriteDto request, final Long levellogId, @Authentic final Long memberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        memberRepository.getMember(memberId);
         levellog.getTeam().validateReady(timeStandard.now());
 
         levellog.updateContent(memberId, request.getContent());
     }
 
-    private void validateLevellogExistence(final Long authorId, final Long teamId) {
+    private void validateLevellogExistence(@Authentic final Long authorId, final Long teamId) {
         final boolean isExists = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
         if (isExists) {
             throw new LevellogAlreadyExistException(DebugMessage.init()

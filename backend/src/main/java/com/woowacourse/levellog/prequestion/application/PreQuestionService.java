@@ -1,10 +1,9 @@
 package com.woowacourse.levellog.prequestion.application;
 
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionQueryRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
@@ -27,24 +26,21 @@ public class PreQuestionService {
     private final PreQuestionRepository preQuestionRepository;
     private final PreQuestionQueryRepository preQuestionQueryRepository;
     private final LevellogRepository levellogRepository;
-    private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public Long save(final PreQuestionWriteDto request, final Long levellogId, final Long memberId) {
+    public Long save(final PreQuestionWriteDto request, final Long levellogId, @Authentic final Long memberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        final Member questioner = memberRepository.getMember(memberId);
 
-        validatePreQuestionExistence(levellog, questioner);
-        validateSameTeamMember(levellog.getTeam(), questioner);
+        validatePreQuestionExistence(levellog, memberId);
+        validateSameTeamMember(levellog.getTeam(), memberId);
 
         return preQuestionRepository.save(request.toEntity(levellog, memberId))
                 .getId();
     }
 
-    public PreQuestionDto findMy(final Long levellogId, final Long questionerId) {
+    public PreQuestionDto findMy(final Long levellogId, @Authentic final Long questionerId) {
         levellogRepository.getLevellog(levellogId);
-        memberRepository.getMember(questionerId);
 
         return preQuestionQueryRepository.findByLevellogAndAuthor(levellogId, questionerId)
                 .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
@@ -54,41 +50,39 @@ public class PreQuestionService {
 
     @Transactional
     public void update(final PreQuestionWriteDto request, final Long preQuestionId, final Long levellogId,
-                       final Long memberId) {
+                       @Authentic final Long memberId) {
         final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        final Member questioner = memberRepository.getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
-        validateMyQuestion(preQuestion, questioner);
+        validateMyQuestion(preQuestion, memberId);
 
         preQuestion.update(request.getContent());
     }
 
     @Transactional
-    public void deleteById(final Long preQuestionId, final Long levellogId, final Long memberId) {
+    public void deleteById(final Long preQuestionId, final Long levellogId, @Authentic final Long memberId) {
         final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        final Member questioner = memberRepository.getMember(memberId);
 
         validateLevellog(preQuestion, levellog);
-        validateMyQuestion(preQuestion, questioner);
+        validateMyQuestion(preQuestion, memberId);
 
         preQuestionRepository.deleteById(preQuestion.getId());
     }
 
-    private void validateSameTeamMember(final Team team, final Member member) {
+    private void validateSameTeamMember(final Team team, final Long memberId) {
         final Participants participants = new Participants(participantRepository.findByTeam(team));
 
-        participants.validateExistsMember(member);
+        participants.validateExistsMember(memberId);
     }
 
-    private void validatePreQuestionExistence(final Levellog levellog, final Member questioner) {
-        final boolean isExists = preQuestionRepository.existsByLevellogAndAuthorId(levellog, questioner.getId());
+    private void validatePreQuestionExistence(final Levellog levellog, final Long questionerId) {
+        final boolean isExists = preQuestionRepository.existsByLevellogAndAuthorId(levellog, questionerId);
         if (isExists) {
             throw new PreQuestionAlreadyExistException(DebugMessage.init()
                     .append("levellogId", levellog.getId())
-                    .append("authorId", questioner.getId()));
+                    .append("authorId", questionerId));
         }
     }
 
@@ -96,7 +90,7 @@ public class PreQuestionService {
         preQuestion.validateLevellog(levellog);
     }
 
-    private void validateMyQuestion(final PreQuestion preQuestion, final Member member) {
-        preQuestion.validateMyQuestion(member);
+    private void validateMyQuestion(final PreQuestion preQuestion, final Long memberId) {
+        preQuestion.validateMyQuestion(memberId);
     }
 }

@@ -13,7 +13,6 @@ import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
@@ -62,21 +61,6 @@ class LevellogServiceTest extends ServiceTest {
             assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContainingAll("팀이 존재하지 않습니다.", String.valueOf(teamId));
-        }
-
-        @Test
-        @DisplayName("레벨로그의 작성자가 존재하지 않는 경우 예외를 던진다.")
-        void save_memberNotFound_exception() {
-            // given
-            final LevellogWriteDto request = LevellogWriteDto.from("스프링에 대해 학습하였습니다.");
-            final Member member = saveMember("알린");
-            final Long teamId = saveTeam(member).getId();
-            final Long authorId = 1000L;
-
-            // when & then
-            assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(authorId));
         }
 
         @Test
@@ -201,23 +185,6 @@ class LevellogServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("memberId에 해당하는 멤버가 존재하지 않는 경우 예외를 던진다.")
-        void update_memberNotFound_exception() {
-            // given
-            final Member author = saveMember("알린");
-            final Team team = saveTeam(author);
-            final Long levellogId = saveLevellog(author, team).getId();
-
-            final LevellogWriteDto request = LevellogWriteDto.from("JPA를 학습하였습니다.");
-            final Long memberId = 1000L;
-
-            // when & then
-            assertThatThrownBy(() -> levellogService.update(request, levellogId, memberId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(memberId));
-        }
-
-        @Test
         @DisplayName("작성자의 id와 로그인한 id가 다를 경우 권한 없음 예외를 던진다.")
         void update_unauthorized_exception() {
             // given
@@ -290,15 +257,6 @@ class LevellogServiceTest extends ServiceTest {
 
             // then
             assertThat(levellogsDto.getLevellogs()).hasSize(2);
-        }
-
-        @Test
-        @DisplayName("주어진 authorId에 해당하는 멤버가 없으면 예외를 던진다.")
-        void findAllByAuthorId_authorNotFound_exception() {
-            // when & then
-            assertThatThrownBy(() -> levellogService.findAllByAuthorId(1_000_000L))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(1_000_000L));
         }
     }
 }

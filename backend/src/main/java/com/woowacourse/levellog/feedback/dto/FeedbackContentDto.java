@@ -24,10 +24,6 @@ public class FeedbackContentDto {
     @NotNull
     private String etc;
 
-    public static FeedbackContentDto from(final Feedback feedback) {
-        return new FeedbackContentDto(feedback.getStudy(), feedback.getSpeak(), feedback.getEtc());
-    }
-
     public Feedback toFeedback(final Long fromId, final Levellog levellog) {
         return new Feedback(fromId, levellog.getAuthor().getId(), levellog, study, speak, etc);
     }

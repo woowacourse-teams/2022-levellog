@@ -53,7 +53,7 @@ public class LevellogService {
     public LevellogsDto findAllByAuthorId(final Long authorId) {
         final Member author = memberRepository.getMember(authorId);
 
-        final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author);
+        final List<Levellog> levellogs = levellogRepository.findAllByAuthor(authorId);
         final List<LevellogWithIdDto> levellogWithIdDtos = levellogs.stream()
                 .map(LevellogWithIdDto::from)
                 .collect(Collectors.toList());

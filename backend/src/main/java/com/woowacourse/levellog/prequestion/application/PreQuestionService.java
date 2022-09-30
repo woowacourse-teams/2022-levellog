@@ -84,7 +84,7 @@ public class PreQuestionService {
     }
 
     private void validatePreQuestionExistence(final Levellog levellog, final Member questioner) {
-        final boolean isExists = preQuestionRepository.existsByLevellogAndAuthor(levellog, questioner);
+        final boolean isExists = preQuestionRepository.existsByLevellogAndAuthorId(levellog, questioner.getId());
         if (isExists) {
             throw new PreQuestionAlreadyExistException(DebugMessage.init()
                     .append("levellogId", levellog.getId())

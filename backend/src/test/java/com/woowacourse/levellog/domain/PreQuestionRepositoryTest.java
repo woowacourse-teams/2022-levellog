@@ -67,7 +67,7 @@ class PreQuestionRepositoryTest extends RepositoryTest {
             savePreQuestion(levellog, questioner);
 
             // when
-            final boolean actual = preQuestionRepository.existsByLevellogAndAuthor(levellog, questioner);
+            final boolean actual = preQuestionRepository.existsByLevellogAndAuthorId(levellog, questioner.getId());
 
             // then
             assertTrue(actual);
@@ -83,7 +83,7 @@ class PreQuestionRepositoryTest extends RepositoryTest {
             final Levellog levellog = saveLevellog(levellogAuthor, team);
 
             // when
-            final boolean actual = preQuestionRepository.existsByLevellogAndAuthor(levellog, questioner);
+            final boolean actual = preQuestionRepository.existsByLevellogAndAuthorId(levellog, questioner.getId());
 
             // then
             assertFalse(actual);

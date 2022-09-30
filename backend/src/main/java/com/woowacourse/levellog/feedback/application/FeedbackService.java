@@ -45,7 +45,7 @@ public class FeedbackService {
         team.validateInProgress(timeStandard.now());
 
         final Feedback feedback = request.getFeedback()
-                .toFeedback(member, levellog);
+                .toFeedback(fromMemberId, levellog);
 
         return feedbackRepository.save(feedback)
                 .getId();
@@ -77,7 +77,7 @@ public class FeedbackService {
         final Member member = memberRepository.getMember(memberId);
         final Team team = feedback.getLevellog().getTeam();
 
-        feedback.validateAuthor(member);
+        feedback.validateAuthor(memberId);
         team.validateInProgress(timeStandard.now());
 
         feedback.updateFeedback(

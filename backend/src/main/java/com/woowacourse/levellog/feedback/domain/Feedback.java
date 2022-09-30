@@ -5,7 +5,6 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,13 +25,11 @@ public class Feedback extends BaseEntity {
     private static final String CONTENT_TYPE_ETC = "Etc";
     private static final String CONTENT_TYPE_STUDY = "Study";
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_from_member"))
-    private Member from;
+    @Column(nullable = false)
+    private Long fromId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_to_member"))
-    private Member to;
+    @Column(nullable = false)
+    private Long toId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_levellog"))
@@ -47,12 +44,12 @@ public class Feedback extends BaseEntity {
     @Column(length = FEEDBACK_CONTENT_MAX_LENGTH)
     private String etc;
 
-    public Feedback(final Member from, final Member to, final Levellog levellog, final String study, final String speak,
+    public Feedback(final Long fromId, final Long toId, final Levellog levellog, final String study, final String speak,
                     final String etc) {
         validateFeedback(study, speak, etc);
 
-        this.from = from;
-        this.to = to;
+        this.fromId = fromId;
+        this.toId = toId;
         this.levellog = levellog;
         this.study = study;
         this.speak = speak;
@@ -81,11 +78,11 @@ public class Feedback extends BaseEntity {
         this.etc = etc;
     }
 
-    public void validateAuthor(final Member member) {
-        if (!from.equals(member)) {
+    public void validateAuthor(final Long memberId) {
+        if (!fromId.equals(memberId)) {
             throw new InvalidFeedbackException(DebugMessage.init()
                     .append("feedbackId", getId())
-                    .append("memberId", member.getId()));
+                    .append("memberId", memberId));
         }
     }
 }

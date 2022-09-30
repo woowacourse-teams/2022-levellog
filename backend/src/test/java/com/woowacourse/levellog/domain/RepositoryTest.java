@@ -19,6 +19,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
+import com.woowacourse.levellog.prequestion.domain.PreQuestionQueryRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -43,7 +44,8 @@ import org.springframework.test.context.ActiveProfiles;
         JpaConfig.class,
         TeamQueryRepository.class,
         FeedbackQueryRepository.class,
-        InterviewQuestionQueryRepository.class
+        InterviewQuestionQueryRepository.class,
+        PreQuestionQueryRepository.class
 })
 abstract class RepositoryTest {
 
@@ -73,6 +75,9 @@ abstract class RepositoryTest {
 
     @Autowired
     protected PreQuestionRepository preQuestionRepository;
+
+    @Autowired
+    protected PreQuestionQueryRepository preQuestionQueryRepository;
 
     @Autowired
     protected TeamRepository teamRepository;

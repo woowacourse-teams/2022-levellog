@@ -193,6 +193,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             preQuestionService.update(PreQuestionWriteDto.from("수정된 사전 질문"), id, levellog.getId(), questioner.getId());
 
             //then
+            preQuestionRepository.flush();
             final PreQuestionDto response = preQuestionService.findMy(levellog.getId(), questioner.getId());
             assertThat(response.getContent()).isEqualTo("수정된 사전 질문");
         }

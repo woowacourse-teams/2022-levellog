@@ -6,6 +6,7 @@ import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
+import com.woowacourse.levellog.prequestion.domain.PreQuestionQueryRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PreQuestionService {
 
     private final PreQuestionRepository preQuestionRepository;
+    private final PreQuestionQueryRepository preQuestionQueryRepository;
     private final LevellogRepository levellogRepository;
     private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
@@ -41,14 +43,13 @@ public class PreQuestionService {
     }
 
     public PreQuestionDto findMy(final Long levellogId, final Long questionerId) {
-        final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        final Member questioner = memberRepository.getMember(questionerId);
-        final PreQuestion preQuestion = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner)
+        levellogRepository.getLevellog(levellogId);
+        memberRepository.getMember(questionerId);
+
+        return preQuestionQueryRepository.findByLevellogAndAuthor(levellogId, questionerId)
                 .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)
                         .append("memberId", questionerId)));
-
-        return PreQuestionDto.from(questioner, preQuestion.getContent());
     }
 
     @Transactional

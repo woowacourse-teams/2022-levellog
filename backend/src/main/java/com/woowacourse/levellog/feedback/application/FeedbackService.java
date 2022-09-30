@@ -2,6 +2,7 @@ package com.woowacourse.levellog.feedback.application;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
+import com.woowacourse.levellog.feedback.domain.FeedbackQueryRepository;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
+    private final FeedbackQueryRepository feedbackQueryRepository;
     private final LevellogRepository levellogRepository;
     private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
@@ -55,9 +57,7 @@ public class FeedbackService {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         validateTeamMember(levellog.getTeam(), memberRepository.getMember(memberId));
 
-        final List<FeedbackDto> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
-
-        return new FeedbacksDto(responses);
+        return feedbackQueryRepository.findAllByLevellog(levellogId);
     }
 
     public FeedbackDto findById(final Long levellogId, final Long feedbackId, final Long memberId) {

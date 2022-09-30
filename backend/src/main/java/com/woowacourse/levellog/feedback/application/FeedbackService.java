@@ -16,8 +16,6 @@ import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,10 +70,7 @@ public class FeedbackService {
     }
 
     public FeedbacksDto findAllByTo(final Long memberId) {
-        final Member member = memberRepository.getMember(memberId);
-        final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(member);
-
-        return new FeedbacksDto(getFeedbackResponses(feedbacks));
+        return feedbackQueryRepository.findAllByTo(memberId);
     }
 
     @Transactional
@@ -106,11 +101,5 @@ public class FeedbackService {
                     .append("teamId", team.getId())
                     .append("memberId", member.getId()));
         }
-    }
-
-    private List<FeedbackDto> getFeedbackResponses(final List<Feedback> feedbacks) {
-        return feedbacks.stream()
-                .map(FeedbackDto::from)
-                .collect(Collectors.toList());
     }
 }

@@ -49,4 +49,17 @@ public class FeedbackQueryRepository {
         final List<FeedbackDto> feedbacks = jdbcTemplate.query(sql, feedbackRowMapper, levellogId);
         return new FeedbacksDto(feedbacks);
     }
+
+    public FeedbacksDto findAllByTo(final Long memberId) {
+        final String sql = "SELECT f.id feedbackId, f.study, f.speak, f.etc, f.updated_at updatedAt, "
+                + "fm.id fromId, fm.nickname fromNickname, fm.profile_url fromProfileUrl, "
+                + "tm.id toId, tm.nickname toNickname, tm.profile_url toProfileUrl "
+                + "FROM feedback f "
+                + "INNER JOIN member fm ON f.from_id = fm.id "
+                + "INNER JOIN member tm ON f.to_id = tm.id AND tm.id = ? "
+                + "ORDER BY f.updated_at DESC";
+
+        final List<FeedbackDto> feedbacks = jdbcTemplate.query(sql, feedbackRowMapper, memberId);
+        return new FeedbacksDto(feedbacks);
+    }
 }

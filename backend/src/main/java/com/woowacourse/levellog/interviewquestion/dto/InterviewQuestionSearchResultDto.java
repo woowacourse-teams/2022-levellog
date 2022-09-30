@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.interviewquestion.dto;
 
-import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

@@ -30,8 +30,8 @@ class InterviewQuestionRepositoryTest extends RepositoryTest {
         final InterviewQuestion savedInterviewQuestion2 = saveInterviewQuestion("AOP란?", levellog, eve);
 
         // when
-        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(
-                levellog, eve);
+        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthorId(
+                levellog, eve.getId());
 
         // then
         assertThat(interviewQuestions).hasSize(2)

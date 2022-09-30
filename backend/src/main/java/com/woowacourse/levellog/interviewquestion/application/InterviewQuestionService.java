@@ -80,9 +80,9 @@ public class InterviewQuestionService {
 
     public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        final Member author = memberRepository.getMember(fromMemberId);
-        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(
-                levellog, author);
+        memberRepository.getMember(fromMemberId);
+        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthorId(
+                levellog, fromMemberId);
 
         return InterviewQuestionContentsDto.from(interviewQuestions);
     }

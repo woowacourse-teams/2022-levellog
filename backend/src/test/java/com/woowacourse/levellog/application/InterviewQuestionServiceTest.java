@@ -537,7 +537,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // then
             final List<String> actualInterviewQuestions = interviewQuestionRepository
-                    .findAllByLevellogAndAuthor(pepperLevellog, eve)
+                    .findAllByLevellogAndAuthorId(pepperLevellog, eve.getId())
                     .stream()
                     .map(InterviewQuestion::getContent)
                     .collect(Collectors.toList());

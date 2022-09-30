@@ -22,7 +22,6 @@ import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -153,27 +152,6 @@ class FeedbackServiceTest extends ServiceTest {
                     .isInstanceOf(ParticipantNotSameTeamException.class)
                     .hasMessageContainingAll("같은 팀에 속해있지 않습니다.",
                             String.valueOf(team.getId()), String.valueOf(memberId));
-        }
-
-        @Disabled
-        @Test
-        @DisplayName("잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.")
-        void findById_levellogWrongId_exception() {
-            // given
-            final Member eve = saveMember("이브");
-            final Member roma = saveMember("로마");
-            final Team team = saveTeam(eve, roma);
-
-            final Levellog levellog1 = saveLevellog(eve, team);
-            final Levellog levellog2 = saveLevellog(roma, team);
-
-            final Feedback feedback = saveFeedback(roma, eve, levellog1);
-
-            // when & then
-            assertThatThrownBy(() -> feedbackService.findById(levellog2.getId(), feedback.getId(), roma.getId()))
-                    .isInstanceOf(InvalidLevellogException.class)
-                    .hasMessageContainingAll("잘못된 레벨로그 요청입니다.",
-                            String.valueOf(levellog2.getId()));
         }
     }
 

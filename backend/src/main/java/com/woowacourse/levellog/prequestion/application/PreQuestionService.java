@@ -38,7 +38,7 @@ public class PreQuestionService {
         validatePreQuestionExistence(levellog, questioner);
         validateSameTeamMember(levellog.getTeam(), questioner);
 
-        return preQuestionRepository.save(request.toEntity(levellog, questioner))
+        return preQuestionRepository.save(request.toEntity(levellog, memberId))
                 .getId();
     }
 

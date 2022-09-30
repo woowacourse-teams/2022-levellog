@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.prequestion.dto;
 
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -23,7 +22,7 @@ public class PreQuestionWriteDto {
         return new PreQuestionWriteDto(content);
     }
 
-    public PreQuestion toEntity(final Levellog levellog, final Member from) {
-        return new PreQuestion(levellog, from, content);
+    public PreQuestion toEntity(final Levellog levellog, final Long fromId) {
+        return new PreQuestion(levellog, fromId, content);
     }
 }

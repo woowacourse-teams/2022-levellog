@@ -48,7 +48,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final PreQuestion actual = preQuestionRepository.findById(id).orElseThrow();
             assertAll(
                     () -> assertThat(actual.getLevellog()).isEqualTo(levellog),
-                    () -> assertThat(actual.getAuthor()).isEqualTo(questioner),
+                    () -> assertThat(actual.getAuthorId()).isEqualTo(questioner.getId()),
                     () -> assertThat(actual.getContent()).isEqualTo(preQuestion)
             );
         }

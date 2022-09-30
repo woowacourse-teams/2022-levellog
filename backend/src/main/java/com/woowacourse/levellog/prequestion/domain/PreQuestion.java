@@ -27,25 +27,24 @@ public class PreQuestion extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_pre_question_levellog"))
     private Levellog levellog;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_pre_question_from_member"))
-    private Member author;
+    @Column(nullable = false)
+    private Long authorId;
 
     @Column(nullable = false)
     @Lob
     private String content;
 
-    public PreQuestion(final Levellog levellog, final Member author, final String content) {
-        validateSelfPreQuestion(levellog, author);
+    public PreQuestion(final Levellog levellog, final Long authorId, final String content) {
+        validateSelfPreQuestion(levellog, authorId);
         validateContent(content);
 
         this.levellog = levellog;
-        this.author = author;
+        this.authorId = authorId;
         this.content = content;
     }
 
-    private void validateSelfPreQuestion(final Levellog levellog, final Member member) {
-        levellog.validateSelfPreQuestion(member);
+    private void validateSelfPreQuestion(final Levellog levellog, final Long memberId) {
+        levellog.validateSelfPreQuestion(memberId);
     }
 
     private void validateContent(final String content) {
@@ -66,7 +65,7 @@ public class PreQuestion extends BaseEntity {
     }
 
     public boolean isSameAuthor(final Member member) {
-        return author.equals(member);
+        return authorId.equals(member.getId());
     }
 
     public void validateLevellog(final Levellog levellog) {
@@ -81,7 +80,7 @@ public class PreQuestion extends BaseEntity {
         if (!isSameAuthor(member)) {
             throw new MemberNotAuthorException(DebugMessage.init()
                     .append("loginMemberId", member.getId())
-                    .append("authorMemberId", author.getId())
+                    .append("authorMemberId", authorId)
                     .append("preQuestionId", getId()));
         }
     }

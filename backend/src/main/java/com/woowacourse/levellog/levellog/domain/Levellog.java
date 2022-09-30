@@ -75,7 +75,11 @@ public class Levellog extends BaseEntity {
     }
 
     public boolean isAuthor(final Member member) {
-        return author.equals(member);
+        return author.getId().equals(member.getId());
+    }
+
+    public boolean isAuthor(final Long memberId) {
+        return author.getId().equals(memberId);
     }
 
     public void validateSelfFeedback(final Member member) {
@@ -85,11 +89,11 @@ public class Levellog extends BaseEntity {
         }
     }
 
-    public void validateSelfPreQuestion(final Member member) {
-        if (isAuthor(member)) {
+    public void validateSelfPreQuestion(final Long memberId) {
+        if (isAuthor(memberId)) {
             throw new InvalidPreQuestionException(DebugMessage.init()
                     .append("levellogAuthorId", getAuthor().getId())
-                    .append("preQuestionAuthorId", member.getId()));
+                    .append("preQuestionAuthorId", memberId));
         }
     }
 

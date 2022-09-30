@@ -152,7 +152,7 @@ abstract class RepositoryTest {
     }
 
     protected PreQuestion savePreQuestion(final Levellog levellog, final Member author) {
-        final PreQuestion preQuestion = new PreQuestion(levellog, author,
+        final PreQuestion preQuestion = new PreQuestion(levellog, author.getId(),
                 author.getNickname() + "이 " + levellog.getId() + "에 작성한 사전질문");
         return preQuestionRepository.save(preQuestion);
     }

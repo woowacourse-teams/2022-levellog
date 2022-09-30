@@ -215,7 +215,7 @@ abstract class ServiceTest {
     }
 
     protected PreQuestion savePreQuestion(final Levellog levellog, final Member author, final String content) {
-        final PreQuestion preQuestion = new PreQuestion(levellog, author, content);
+        final PreQuestion preQuestion = new PreQuestion(levellog, author.getId(), content);
         return preQuestionRepository.save(preQuestion);
     }
 }

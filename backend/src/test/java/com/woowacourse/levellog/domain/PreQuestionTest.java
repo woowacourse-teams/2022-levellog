@@ -45,7 +45,7 @@ public class PreQuestionTest {
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
             // when & then
-            assertThatThrownBy(() -> new PreQuestion(levellog, from, preQuestion))
+            assertThatThrownBy(() -> new PreQuestion(levellog, from.getId(), preQuestion))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("사전 내용은 공백이나 null일 수 없습니다.");
         }
@@ -60,7 +60,7 @@ public class PreQuestionTest {
             final String preQuestion = "알린의 사전 질문";
 
             // when & then
-            assertThatThrownBy(() -> new PreQuestion(levellog, author, preQuestion))
+            assertThatThrownBy(() -> new PreQuestion(levellog, author.getId(), preQuestion))
                     .isInstanceOf(InvalidPreQuestionException.class)
                     .hasMessageContaining("잘못된 사전 질문 요청입니다.");
         }
@@ -77,7 +77,7 @@ public class PreQuestionTest {
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
-            final PreQuestion preQuestion = new PreQuestion(levellog, from, "로마가 쓴 사전 질문");
+            final PreQuestion preQuestion = new PreQuestion(levellog, from.getId(), "로마가 쓴 사전 질문");
 
             // when
             preQuestion.update("수정된 사전 질문");
@@ -96,7 +96,7 @@ public class PreQuestionTest {
             final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
 
             // when & then
-            assertThatThrownBy(() -> new PreQuestion(levellog, from, preQuestion))
+            assertThatThrownBy(() -> new PreQuestion(levellog, from.getId(), preQuestion))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("사전 내용은 공백이나 null일 수 없습니다.");
         }

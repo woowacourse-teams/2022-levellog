@@ -54,7 +54,7 @@ public class InterviewQuestionService {
         validateMemberIsParticipant(author, levellog);
         team.validateInProgress(timeStandard.now());
 
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
+        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(fromMemberId, levellog);
 
         return interviewQuestionRepository.save(interviewQuestion)
                 .getId();
@@ -100,22 +100,22 @@ public class InterviewQuestionService {
                        final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
-        final Member author = memberRepository.getMember(fromMemberId);
+        memberRepository.getMember(fromMemberId);
 
         interviewQuestion.getLevellog()
                 .getTeam()
                 .validateInProgress(timeStandard.now());
 
-        interviewQuestion.updateContent(request.getContent(), author);
+        interviewQuestion.updateContent(request.getContent(), fromMemberId);
     }
 
     @Transactional
     public void deleteById(final Long interviewQuestionId, final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
-        final Member author = memberRepository.getMember(fromMemberId);
+        memberRepository.getMember(fromMemberId);
 
-        interviewQuestion.validateMemberIsAuthor(author);
+        interviewQuestion.validateMemberIsAuthor(fromMemberId);
         interviewQuestion.getLevellog()
                 .getTeam()
                 .validateInProgress(timeStandard.now());

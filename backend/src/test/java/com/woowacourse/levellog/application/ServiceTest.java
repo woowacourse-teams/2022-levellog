@@ -192,7 +192,7 @@ abstract class ServiceTest {
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
         final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(content);
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
+        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author.getId(), levellog);
         return interviewQuestionRepository.save(interviewQuestion);
     }
 

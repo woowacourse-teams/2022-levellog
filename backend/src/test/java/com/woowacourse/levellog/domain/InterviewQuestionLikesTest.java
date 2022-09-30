@@ -23,7 +23,7 @@ class InterviewQuestionLikesTest {
         final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
         final Levellog levellog = Levellog.of(to.getId(), team, "레벨로그 작성 내용");
         final String content = "스프링이란?";
-        final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, content);
+        final InterviewQuestion interviewQuestion = InterviewQuestion.of(author.getId(), levellog, content);
 
         // when & then
         assertDoesNotThrow(

@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LevellogDto {
 
     private MemberDto author;
     private String content;
 
+    @Deprecated
     public static LevellogDto from(final Levellog levellog) {
         return new LevellogDto(MemberDto.from(levellog.getAuthor()), levellog.getContent());
     }

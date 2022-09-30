@@ -2,6 +2,7 @@ package com.woowacourse.levellog.levellog.application;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.domain.LevellogQueryRepository;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.LevellogDto;
 import com.woowacourse.levellog.levellog.dto.LevellogWithIdDto;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LevellogService {
 
     private final LevellogRepository levellogRepository;
+    private final LevellogQueryRepository levellogQueryRepository;
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
@@ -43,9 +45,9 @@ public class LevellogService {
     }
 
     public LevellogDto findById(final Long levellogId) {
-        final Levellog levellog = getById(levellogId);
-
-        return LevellogDto.from(levellog);
+        return levellogQueryRepository.findById(levellogId)
+                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
+                        .append("levellogId", levellogId)));
     }
 
     public LevellogsDto findAllByAuthorId(final Long authorId) {
@@ -61,17 +63,11 @@ public class LevellogService {
 
     @Transactional
     public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
-        final Levellog levellog = getById(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member member = memberRepository.getMember(memberId);
         levellog.getTeam().validateReady(timeStandard.now());
 
         levellog.updateContent(member, request.getContent());
-    }
-
-    private Levellog getById(final Long levellogId) {
-        return levellogRepository.findLevellogAndMemberByLevelogId(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
-                        .append("levellogId", levellogId)));
     }
 
     private void validateLevellogExistence(final Long authorId, final Long teamId) {
@@ -81,6 +77,5 @@ public class LevellogService {
                     .append("authorId", authorId)
                     .append("teamId", teamId));
         }
-
     }
 }

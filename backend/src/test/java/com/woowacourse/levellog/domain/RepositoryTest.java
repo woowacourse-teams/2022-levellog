@@ -14,6 +14,7 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionReposi
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.domain.LevellogQueryRepository;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
@@ -45,7 +46,8 @@ import org.springframework.test.context.ActiveProfiles;
         TeamQueryRepository.class,
         FeedbackQueryRepository.class,
         InterviewQuestionQueryRepository.class,
-        PreQuestionQueryRepository.class
+        PreQuestionQueryRepository.class,
+        LevellogQueryRepository.class
 })
 abstract class RepositoryTest {
 
@@ -66,6 +68,9 @@ abstract class RepositoryTest {
 
     @Autowired
     protected LevellogRepository levellogRepository;
+
+    @Autowired
+    protected LevellogQueryRepository levellogQueryRepository;
 
     @Autowired
     protected MemberRepository memberRepository;

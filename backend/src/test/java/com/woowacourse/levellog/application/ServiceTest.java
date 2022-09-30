@@ -185,7 +185,7 @@ abstract class ServiceTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team, final String content) {
-        final Levellog levellog = Levellog.of(author, team, content);
+        final Levellog levellog = Levellog.of(author.getId(), team, content);
         return levellogRepository.save(levellog);
     }
 

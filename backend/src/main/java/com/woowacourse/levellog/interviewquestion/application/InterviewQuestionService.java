@@ -46,7 +46,7 @@ public class InterviewQuestionService {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
-        levellog.validateSelfInterviewQuestion(author);
+        levellog.validateSelfInterviewQuestion(fromMemberId);
         validateMemberIsParticipant(author, levellog);
         team.validateInProgress(timeStandard.now());
 

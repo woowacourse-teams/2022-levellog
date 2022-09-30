@@ -40,7 +40,7 @@ public class FeedbackService {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
-        levellog.validateSelfFeedback(member);
+        levellog.validateSelfFeedback(fromMemberId);
         validateTeamMember(team, member);
         team.validateInProgress(timeStandard.now());
 
@@ -74,7 +74,7 @@ public class FeedbackService {
     @Transactional
     public void update(final FeedbackWriteDto request, final Long feedbackId, final Long memberId) {
         final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
-        final Member member = memberRepository.getMember(memberId);
+        memberRepository.getMember(memberId);
         final Team team = feedback.getLevellog().getTeam();
 
         feedback.validateAuthor(memberId);

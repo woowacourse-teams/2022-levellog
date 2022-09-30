@@ -30,7 +30,7 @@ class InterviewQuestionTest {
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(to.getId(), team, "레벨로그 작성 내용");
             final String content = "스프링이란?";
 
             // when & then
@@ -44,7 +44,7 @@ class InterviewQuestionTest {
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "스프링을 공부하였습니다.");
+            final Levellog levellog = Levellog.of(to.getId(), team, "스프링을 공부하였습니다.");
             final String content = "a".repeat(256);
 
             // when & then
@@ -65,7 +65,7 @@ class InterviewQuestionTest {
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(to.getId(), team, "레벨로그 작성 내용");
             final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");
 
             // when
@@ -84,7 +84,7 @@ class InterviewQuestionTest {
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(to.getId(), team, "레벨로그 작성 내용");
             final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");
 
             // when & then
@@ -106,7 +106,7 @@ class InterviewQuestionTest {
             MockEntityFactory.setId(2L, otherMember);
 
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(to.getId(), team, "레벨로그 작성 내용");
             final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");
 
             // when & then

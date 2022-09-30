@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.levellog.dto;
 
-import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,9 +15,4 @@ public class LevellogDto {
 
     private MemberDto author;
     private String content;
-
-    @Deprecated
-    public static LevellogDto from(final Levellog levellog) {
-        return new LevellogDto(MemberDto.from(levellog.getAuthor()), levellog.getContent());
-    }
 }

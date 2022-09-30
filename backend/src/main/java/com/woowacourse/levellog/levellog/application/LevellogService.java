@@ -10,7 +10,6 @@ import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
 import com.woowacourse.levellog.levellog.dto.LevellogsDto;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
@@ -35,11 +34,11 @@ public class LevellogService {
     @Transactional
     public Long save(final LevellogWriteDto request, final Long authorId, final Long teamId) {
         final Team team = teamRepository.getTeam(teamId);
-        final Member author = memberRepository.getMember(authorId);
+        memberRepository.getMember(authorId);
         validateLevellogExistence(authorId, teamId);
         team.validateReady(timeStandard.now());
 
-        final Levellog savedLevellog = levellogRepository.save(request.toLevellog(author, team));
+        final Levellog savedLevellog = levellogRepository.save(request.toLevellog(authorId, team));
 
         return savedLevellog.getId();
     }
@@ -51,7 +50,7 @@ public class LevellogService {
     }
 
     public LevellogsDto findAllByAuthorId(final Long authorId) {
-        final Member author = memberRepository.getMember(authorId);
+        memberRepository.getMember(authorId);
 
         final List<Levellog> levellogs = levellogRepository.findAllByAuthor(authorId);
         final List<LevellogWithIdDto> levellogWithIdDtos = levellogs.stream()
@@ -64,10 +63,10 @@ public class LevellogService {
     @Transactional
     public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        final Member member = memberRepository.getMember(memberId);
+        memberRepository.getMember(memberId);
         levellog.getTeam().validateReady(timeStandard.now());
 
-        levellog.updateContent(member, request.getContent());
+        levellog.updateContent(memberId, request.getContent());
     }
 
     private void validateLevellogExistence(final Long authorId, final Long teamId) {

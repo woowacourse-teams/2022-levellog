@@ -122,7 +122,7 @@ abstract class RepositoryTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {
-        final Levellog levellog = Levellog.of(author, team, "levellog content");
+        final Levellog levellog = Levellog.of(author.getId(), team, "levellog content");
         return levellogRepository.save(levellog);
     }
 

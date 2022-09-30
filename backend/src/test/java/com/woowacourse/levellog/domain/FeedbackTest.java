@@ -31,7 +31,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
             assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma.getId(), levellog))
@@ -50,7 +50,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
             assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma.getId(), levellog))
@@ -69,7 +69,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
             assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma.getId(), levellog))
@@ -91,7 +91,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentDto.toFeedback(roma.getId(), levellog);
 
@@ -112,7 +112,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentDto.toFeedback(roma.getId(), levellog);
 
@@ -133,7 +133,7 @@ class FeedbackTest {
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentDto.toFeedback(roma.getId(), levellog);
 

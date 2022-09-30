@@ -5,7 +5,6 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -88,17 +87,5 @@ public class Feedback extends BaseEntity {
                     .append("feedbackId", getId())
                     .append("memberId", member.getId()));
         }
-    }
-
-    public void validateLevellog(final Levellog levellog) {
-        if (!isSameLevellog(levellog)) {
-            throw new InvalidLevellogException(DebugMessage.init()
-                    .append("Feedback's levellogId'", this.levellog.getId())
-                    .append("Input levellogId", levellog.getId()));
-        }
-    }
-
-    private boolean isSameLevellog(final Levellog levellog) {
-        return this.levellog.equals(levellog);
     }
 }

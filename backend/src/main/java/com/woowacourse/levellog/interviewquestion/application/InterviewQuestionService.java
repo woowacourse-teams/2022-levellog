@@ -8,10 +8,12 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryR
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
+import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
+import com.woowacourse.levellog.interviewquestion.dto.SimpleInterviewQuestionDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -22,7 +24,9 @@ import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,9 +62,20 @@ public class InterviewQuestionService {
 
     public InterviewQuestionsDto findAllByLevellog(final Long levellogId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellog(levellog);
+        final List<InterviewQuestionDto> interviewQuestions = interviewQuestionQueryRepository.findAllByLevellog(
+                        levellog)
+                .stream()
+                .collect(Collectors.groupingBy(
+                                SimpleInterviewQuestionDto::getAuthor,
+                                LinkedHashMap::new,
+                                Collectors.mapping(SimpleInterviewQuestionDto::getContent, Collectors.toList())
+                        )
+                ).entrySet()
+                .stream()
+                .map(it -> new InterviewQuestionDto(it.getKey(), it.getValue()))
+                .collect(Collectors.toList());
 
-        return InterviewQuestionsDto.from(interviewQuestions);
+        return new InterviewQuestionsDto(interviewQuestions);
     }
 
     public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {

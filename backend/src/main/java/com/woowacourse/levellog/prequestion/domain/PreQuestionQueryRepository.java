@@ -4,14 +4,16 @@ import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class PreQuestionQueryRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<PreQuestionDto> preQuestionRowMapper = (resultSet, rowNum) -> new PreQuestionDto(
             new MemberDto(
                     resultSet.getObject("authorId", Long.class),
@@ -21,7 +23,7 @@ public class PreQuestionQueryRepository {
             resultSet.getString("content")
     );
 
-    public PreQuestionQueryRepository(final JdbcTemplate jdbcTemplate) {
+    public PreQuestionQueryRepository(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -29,10 +31,14 @@ public class PreQuestionQueryRepository {
         final String sql = "SELECT m.id authorId, m.nickname, m.profile_url profileUrl, pq.content "
                 + "FROM pre_question pq "
                 + "INNER JOIN member m ON pq.author_id = m.id "
-                + "WHERE pq.levellog_id = ? AND pq.author_id = ?";
+                + "WHERE pq.levellog_id = :levellogId AND pq.author_id = :authorId";
+
+        final SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("levellogId", levellogId)
+                .addValue("authorId", authorId);
 
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, preQuestionRowMapper, levellogId, authorId));
+            return Optional.of(jdbcTemplate.queryForObject(sql, param, preQuestionRowMapper));
         } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }

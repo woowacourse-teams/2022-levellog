@@ -5,14 +5,16 @@ import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class FeedbackQueryRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<FeedbackDto> feedbackRowMapper = (resultSet, rowNum) -> new FeedbackDto(
             resultSet.getObject("feedbackId", Long.class),
             new MemberDto(
@@ -33,7 +35,7 @@ public class FeedbackQueryRepository {
             resultSet.getTimestamp("updatedAt").toLocalDateTime()
     );
 
-    public FeedbackQueryRepository(final JdbcTemplate jdbcTemplate) {
+    public FeedbackQueryRepository(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -44,9 +46,11 @@ public class FeedbackQueryRepository {
                 + "FROM feedback f "
                 + "INNER JOIN member fm ON f.from_id = fm.id "
                 + "INNER JOIN member tm ON f.to_id = tm.id "
-                + "WHERE f.levellog_id = ?";
+                + "WHERE f.levellog_id = :levellogId";
+        final SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("levellogId", levellogId);
 
-        final List<FeedbackDto> feedbacks = jdbcTemplate.query(sql, feedbackRowMapper, levellogId);
+        final List<FeedbackDto> feedbacks = jdbcTemplate.query(sql, param, feedbackRowMapper);
         return new FeedbacksDto(feedbacks);
     }
 
@@ -56,10 +60,12 @@ public class FeedbackQueryRepository {
                 + "tm.id toId, tm.nickname toNickname, tm.profile_url toProfileUrl "
                 + "FROM feedback f "
                 + "INNER JOIN member fm ON f.from_id = fm.id "
-                + "INNER JOIN member tm ON f.to_id = tm.id AND tm.id = ? "
+                + "INNER JOIN member tm ON f.to_id = tm.id AND tm.id = :memberId "
                 + "ORDER BY f.updated_at DESC";
+        final SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("memberId", memberId);
 
-        final List<FeedbackDto> feedbacks = jdbcTemplate.query(sql, feedbackRowMapper, memberId);
+        final List<FeedbackDto> feedbacks = jdbcTemplate.query(sql, param, feedbackRowMapper);
         return new FeedbacksDto(feedbacks);
     }
 
@@ -70,8 +76,10 @@ public class FeedbackQueryRepository {
                 + "FROM feedback f "
                 + "INNER JOIN member fm ON f.from_id = fm.id "
                 + "INNER JOIN member tm ON f.to_id = tm.id "
-                + "WHERE f.id = ?";
+                + "WHERE f.id = :feedbackId";
+        final SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("feedbackId", feedbackId);
 
-        return jdbcTemplate.queryForObject(sql, feedbackRowMapper, feedbackId);
+        return jdbcTemplate.queryForObject(sql, param, feedbackRowMapper);
     }
 }

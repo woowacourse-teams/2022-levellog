@@ -6,14 +6,16 @@ import com.woowacourse.levellog.interviewquestion.dto.SimpleInterviewQuestionDto
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class InterviewQuestionQueryRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     private final RowMapper<InterviewQuestionSearchResultDto> searchRowMapper = (resultSet, rowNum) -> new InterviewQuestionSearchResultDto(
             resultSet.getObject("id", Long.class),
@@ -33,7 +35,7 @@ public class InterviewQuestionQueryRepository {
             )
     );
 
-    public InterviewQuestionQueryRepository(final JdbcTemplate jdbcTemplate) {
+    public InterviewQuestionQueryRepository(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -41,15 +43,19 @@ public class InterviewQuestionQueryRepository {
                                                                   final Long size, final Long page,
                                                                   final InterviewQuestionSort sort) {
         final String sql = "SELECT id, content, "
-                + "(select CASE WHEN (id IN (select interview_question_id from interview_question_likes where liker_id = ?)) "
+                + "(select CASE WHEN (id IN (select interview_question_id from interview_question_likes where liker_id = :memberId)) "
                 + "THEN true ELSE false END ) AS press, "
                 + "like_count AS likeCount "
                 + "FROM interview_question "
                 + "WHERE content LIKE '%" + keyword + "%' "
                 + String.format("ORDER BY %s %s ", sort.getField(), sort.getOrder())
-                + "LIMIT ? OFFSET ?";
+                + "LIMIT :limit OFFSET :offset";
 
-        return jdbcTemplate.query(sql, searchRowMapper, memberId, size, page * size);
+        final SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("limit", size)
+                .addValue("offset", page * size);
+        return jdbcTemplate.query(sql, param, searchRowMapper);
     }
 
     public List<SimpleInterviewQuestionDto> findAllByLevellog(final Levellog levellog) {
@@ -57,8 +63,10 @@ public class InterviewQuestionQueryRepository {
                 + "iq.id interviewQuestionId, iq.content "
                 + "FROM interview_question iq "
                 + "INNER JOIN member m on iq.author_id = m.id "
-                + "WHERE iq.levellog_id = ?";
+                + "WHERE iq.levellog_id = :levellogId";
 
-        return jdbcTemplate.query(sql, interviewQuestionRowMapper, levellog.getId());
+        final SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("levellogId", levellog.getId());
+        return jdbcTemplate.query(sql, param, interviewQuestionRowMapper);
     }
 }

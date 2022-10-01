@@ -37,11 +37,10 @@ class LevellogServiceTest extends ServiceTest {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
             final Member author = saveMember("알린");
-            final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
 
             // when
-            final Long savedLevellogId = levellogService.save(request, authorId, teamId);
+            final Long savedLevellogId = levellogService.save(request, getLoginStatus(author), teamId);
 
             // then
             final Optional<Levellog> levellog = levellogRepository.findById(savedLevellogId);
@@ -53,12 +52,11 @@ class LevellogServiceTest extends ServiceTest {
         void save_teamNotFound_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("스프링에 대해 학습하였습니다.");
-            final Long authorId = saveMember("알린")
-                    .getId();
+            final Member author = saveMember("알린");
             final Long teamId = 1000L;
 
             // when & then
-            assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
+            assertThatThrownBy(() -> levellogService.save(request, getLoginStatus(author), teamId))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContainingAll("팀이 존재하지 않습니다.", String.valueOf(teamId));
         }
@@ -69,15 +67,14 @@ class LevellogServiceTest extends ServiceTest {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("굳굳");
             final Member author = saveMember("알린");
-            final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
 
-            levellogService.save(request, authorId, teamId);
+            levellogService.save(request, getLoginStatus(author), teamId);
 
             // when & then
-            assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
+            assertThatThrownBy(() -> levellogService.save(request, getLoginStatus(author), teamId))
                     .isInstanceOf(LevellogAlreadyExistException.class)
-                    .hasMessageContainingAll("레벨로그가 이미 존재합니다.", String.valueOf(authorId), String.valueOf(teamId));
+                    .hasMessageContainingAll("레벨로그가 이미 존재합니다.", String.valueOf(author.getId()), String.valueOf(teamId));
         }
 
         @ParameterizedTest
@@ -88,11 +85,10 @@ class LevellogServiceTest extends ServiceTest {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from(invalidContent);
             final Member author = saveMember("알린");
-            final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
 
             //  when & then
-            assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
+            assertThatThrownBy(() -> levellogService.save(request, getLoginStatus(author), teamId))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
@@ -103,13 +99,12 @@ class LevellogServiceTest extends ServiceTest {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
             final Member author = saveMember("알린");
-            final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
 
             timeStandard.setInProgress();
 
             // when & then
-            assertThatThrownBy(() -> levellogService.save(request, authorId, teamId))
+            assertThatThrownBy(() -> levellogService.save(request, getLoginStatus(author), teamId))
                     .isInstanceOf(TeamNotReadyException.class)
                     .hasMessageContainingAll("인터뷰 준비 상태가 아닙니다.", String.valueOf(teamId));
         }
@@ -163,7 +158,7 @@ class LevellogServiceTest extends ServiceTest {
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
 
             // when
-            levellogService.update(request, levellog.getId(), author.getId());
+            levellogService.update(request, levellog.getId(), getLoginStatus(author));
 
             // then
             final Levellog actual = levellogRepository.findById(levellog.getId()).orElseThrow();
@@ -175,11 +170,11 @@ class LevellogServiceTest extends ServiceTest {
         void update_notFound_exception() {
             // given
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
-            final Long authorId = saveMember("알린").getId();
+            final Member author = saveMember("알린");
             final Long levellogId = 1000L;
 
             // when & then
-            assertThatThrownBy(() -> levellogService.update(request, levellogId, authorId))
+            assertThatThrownBy(() -> levellogService.update(request, levellogId, getLoginStatus(author)))
                     .isInstanceOf(LevellogNotFoundException.class)
                     .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(levellogId));
         }
@@ -193,10 +188,10 @@ class LevellogServiceTest extends ServiceTest {
             final Long levellogId = saveLevellog(author, team).getId();
 
             final LevellogWriteDto request = LevellogWriteDto.from("update content");
-            final Long otherMemberId = saveMember("페퍼").getId();
+            final Member otherMember = saveMember("페퍼");
 
             // when & then
-            assertThatThrownBy(() -> levellogService.update(request, levellogId, otherMemberId))
+            assertThatThrownBy(() -> levellogService.update(request, levellogId, getLoginStatus(otherMember)))
                     .isInstanceOf(MemberNotAuthorException.class);
         }
 
@@ -210,10 +205,9 @@ class LevellogServiceTest extends ServiceTest {
             final Member author = saveMember("알린");
             final Team team = saveTeam(author);
             final Long levellogId = saveLevellog(author, team).getId();
-            final Long authorId = author.getId();
 
             //  when & then
-            assertThatThrownBy(() -> levellogService.update(request, levellogId, authorId))
+            assertThatThrownBy(() -> levellogService.update(request, levellogId, getLoginStatus(author)))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
@@ -230,7 +224,7 @@ class LevellogServiceTest extends ServiceTest {
             timeStandard.setInProgress();
 
             // when & then
-            assertThatThrownBy(() -> levellogService.update(request, levellogId, author.getId()))
+            assertThatThrownBy(() -> levellogService.update(request, levellogId, getLoginStatus(author)))
                     .isInstanceOf(TeamNotReadyException.class)
                     .hasMessageContainingAll("인터뷰 준비 상태가 아닙니다.", String.valueOf(team.getId()));
         }
@@ -253,7 +247,7 @@ class LevellogServiceTest extends ServiceTest {
             saveLevellog(author, team2);
 
             // when
-            final LevellogsDto levellogsDto = levellogService.findAllByAuthorId(author.getId());
+            final LevellogsDto levellogsDto = levellogService.findAllByAuthorId(getLoginStatus(author));
 
             // then
             assertThat(levellogsDto.getLevellogs()).hasSize(2);

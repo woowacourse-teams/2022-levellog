@@ -46,8 +46,8 @@ public class MyInfoController {
     }
 
     @GetMapping("/levellogs")
-    public ResponseEntity<LevellogsDto> findAllMyLevellogs(@Authentic final Long memberId) {
-        final LevellogsDto levellogsResponse = levellogService.findAllByAuthorId(memberId);
+    public ResponseEntity<LevellogsDto> findAllMyLevellogs(@FromToken final LoginStatus loginStatus) {
+        final LevellogsDto levellogsResponse = levellogService.findAllByAuthorId(loginStatus);
 
         return ResponseEntity.ok(levellogsResponse);
     }

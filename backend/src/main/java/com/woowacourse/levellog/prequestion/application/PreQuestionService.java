@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.prequestion.application;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.FromToken;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -29,44 +30,44 @@ public class PreQuestionService {
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public Long save(final PreQuestionWriteDto request, final Long levellogId, @Authentic final Long memberId) {
+    public Long save(final PreQuestionWriteDto request, final Long levellogId, @FromToken final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 
-        validatePreQuestionExistence(levellog, memberId);
-        validateSameTeamMember(levellog.getTeam(), memberId);
+        validatePreQuestionExistence(levellog, loginStatus.getMemberId());
+        validateSameTeamMember(levellog.getTeam(), loginStatus.getMemberId());
 
-        return preQuestionRepository.save(request.toEntity(levellog, memberId))
+        return preQuestionRepository.save(request.toEntity(levellog, loginStatus.getMemberId()))
                 .getId();
     }
 
-    public PreQuestionDto findMy(final Long levellogId, @Authentic final Long questionerId) {
+    public PreQuestionDto findMy(final Long levellogId, @FromToken final LoginStatus loginStatus) {
         levellogRepository.getLevellog(levellogId);
 
-        return preQuestionQueryRepository.findByLevellogAndAuthor(levellogId, questionerId)
+        return preQuestionQueryRepository.findByLevellogAndAuthor(levellogId, loginStatus.getMemberId())
                 .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)
-                        .append("memberId", questionerId)));
+                        .append("memberId", loginStatus.getMemberId())));
     }
 
     @Transactional
     public void update(final PreQuestionWriteDto request, final Long preQuestionId, final Long levellogId,
-                       @Authentic final Long memberId) {
+                       @FromToken final LoginStatus loginStatus) {
         final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 
         validateLevellog(preQuestion, levellog);
-        validateMyQuestion(preQuestion, memberId);
+        validateMyQuestion(preQuestion, loginStatus.getMemberId());
 
         preQuestion.update(request.getContent());
     }
 
     @Transactional
-    public void deleteById(final Long preQuestionId, final Long levellogId, @Authentic final Long memberId) {
+    public void deleteById(final Long preQuestionId, final Long levellogId, @FromToken final LoginStatus loginStatus) {
         final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 
         validateLevellog(preQuestion, levellog);
-        validateMyQuestion(preQuestion, memberId);
+        validateMyQuestion(preQuestion, loginStatus.getMemberId());
 
         preQuestionRepository.deleteById(preQuestion.getId());
     }

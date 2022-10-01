@@ -42,7 +42,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(author, team);
 
             //when
-            final Long id = preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId());
+            final Long id = preQuestionService.save(preQuestionWriteDto, levellog.getId(), getLoginStatus(questioner));
 
             //then
             final PreQuestion actual = preQuestionRepository.findById(id).orElseThrow();
@@ -68,7 +68,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             participantRepository.save(new Participant(team, author, true, false));
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), getLoginStatus(questioner)))
                     .isInstanceOf(ParticipantNotSameTeamException.class)
                     .hasMessageContaining("같은 팀에 속해있지 않습니다.");
         }
@@ -86,7 +86,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(author, team);
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), author.getId()))
+            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), getLoginStatus(author)))
                     .isInstanceOf(InvalidPreQuestionException.class)
                     .hasMessageContaining("잘못된 사전 질문 요청입니다.");
         }
@@ -106,7 +106,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             savePreQuestion(levellog, questioner);
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), getLoginStatus(questioner)))
                     .isInstanceOf(PreQuestionAlreadyExistException.class)
                     .hasMessageContainingAll("사전 질문이 이미 존재합니다.",
                             String.valueOf(levellog.getId()),
@@ -132,7 +132,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             savePreQuestion(levellog, questioner, content);
 
             //when
-            final PreQuestionDto response = preQuestionService.findMy(levellog.getId(), questioner.getId());
+            final PreQuestionDto response = preQuestionService.findMy(levellog.getId(), getLoginStatus(questioner));
 
             //then
             assertAll(
@@ -153,7 +153,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             savePreQuestion(levellog, questioner);
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.findMy(999L, questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.findMy(999L, getLoginStatus(author)))
                     .isInstanceOf(LevellogNotFoundException.class)
                     .hasMessageContaining("레벨로그가 존재하지 않습니다.");
         }
@@ -168,7 +168,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(author, team);
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.findMy(levellog.getId(), questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.findMy(levellog.getId(), getLoginStatus(author)))
                     .isInstanceOf(PreQuestionNotFoundException.class)
                     .hasMessageContainingAll("사전 질문이 존재하지 않습니다.", "1");
         }
@@ -190,11 +190,11 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Long id = savePreQuestion(levellog, questioner).getId();
 
             //when
-            preQuestionService.update(PreQuestionWriteDto.from("수정된 사전 질문"), id, levellog.getId(), questioner.getId());
+            preQuestionService.update(PreQuestionWriteDto.from("수정된 사전 질문"), id, levellog.getId(), getLoginStatus(questioner));
 
             //then
             preQuestionRepository.flush();
-            final PreQuestionDto response = preQuestionService.findMy(levellog.getId(), questioner.getId());
+            final PreQuestionDto response = preQuestionService.findMy(levellog.getId(), getLoginStatus(questioner));
             assertThat(response.getContent()).isEqualTo("수정된 사전 질문");
         }
 
@@ -212,7 +212,7 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(
-                    () -> preQuestionService.update(preQuestionWriteDto, 1L, levellog.getId(), questioner.getId()))
+                    () -> preQuestionService.update(preQuestionWriteDto, 1L, levellog.getId(), getLoginStatus(author)))
                     .isInstanceOf(PreQuestionNotFoundException.class)
                     .hasMessageContaining("사전 질문이 존재하지 않습니다.");
         }
@@ -235,7 +235,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(
                     () -> preQuestionService.update(preQuestionWriteDto, preQuestionId, levellog.getId(),
-                            questioner.getId()))
+                            getLoginStatus(author)))
                     .isInstanceOf(MemberNotAuthorException.class)
                     .hasMessageContaining("작성자가 아닙니다.");
         }
@@ -256,11 +256,11 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Team team2 = saveTeam(author2);
             final Levellog levellog2 = saveLevellog(author2, team2);
 
-            final Long id = preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId());
+            final Long id = preQuestionService.save(preQuestionWriteDto, levellog.getId(), getLoginStatus(questioner));
 
             // when, then
             assertThatThrownBy(
-                    () -> preQuestionService.update(preQuestionWriteDto, id, levellog2.getId(), questioner.getId()))
+                    () -> preQuestionService.update(preQuestionWriteDto, id, levellog2.getId(), getLoginStatus(author)))
                     .isInstanceOf(InvalidLevellogException.class)
                     .hasMessageContaining("잘못된 레벨로그 요청입니다.");
         }
@@ -282,7 +282,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Long id = savePreQuestion(levellog, questioner).getId();
 
             //when
-            preQuestionService.deleteById(id, levellog.getId(), questioner.getId());
+            preQuestionService.deleteById(id, levellog.getId(), getLoginStatus(questioner));
 
             //then
             assertThat(preQuestionRepository.existsById(id)).isFalse();
@@ -302,7 +302,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Long preQuestionId = savePreQuestion(levellog, eve).getId();
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.deleteById(preQuestionId, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.deleteById(preQuestionId, levellog.getId(), getLoginStatus(author)))
                     .isInstanceOf(MemberNotAuthorException.class)
                     .hasMessageContaining("작성자가 아닙니다.");
         }
@@ -317,7 +317,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(author, team);
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.deleteById(1L, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.deleteById(1L, levellog.getId(), getLoginStatus(author)))
                     .isInstanceOf(PreQuestionNotFoundException.class)
                     .hasMessageContaining("사전 질문이 존재하지 않습니다.");
         }
@@ -338,7 +338,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Long id = savePreQuestion(levellog, questioner).getId();
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.deleteById(id, levellog2.getId(), questioner.getId()))
+            assertThatThrownBy(() -> preQuestionService.deleteById(id, levellog2.getId(), getLoginStatus(author)))
                     .isInstanceOf(InvalidLevellogException.class)
                     .hasMessageContaining("잘못된 레벨로그 요청입니다.");
         }

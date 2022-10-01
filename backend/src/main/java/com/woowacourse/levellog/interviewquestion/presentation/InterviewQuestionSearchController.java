@@ -1,7 +1,9 @@
 package com.woowacourse.levellog.interviewquestion.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.FromToken;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.StringConverter;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
@@ -30,27 +32,27 @@ public class InterviewQuestionSearchController {
             @RequestParam(defaultValue = "10") final Long size,
             @RequestParam(defaultValue = "0") final Long page,
             @RequestParam(defaultValue = "likes") final String sort,
-            @Authentic final Long memberId) {
+            @FromToken final LoginStatus loginStatus) {
         final String input = StringConverter.toSafeString(keyword);
         if (input.isBlank()) {
             return ResponseEntity.ok(InterviewQuestionSearchResultsDto.of(new ArrayList<>(), 0L));
         }
         final InterviewQuestionSearchResultsDto response = interviewQuestionService
-                .searchByKeyword(input, memberId, size, page, sort);
+                .searchByKeyword(input, loginStatus, size, page, sort);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{interviewQuestionId}/like")
     public ResponseEntity<Void> pressLike(@PathVariable final Long interviewQuestionId,
-                                          @Authentic final Long memberId) {
-        interviewQuestionService.pressLike(interviewQuestionId, memberId);
+                                          @FromToken final LoginStatus loginStatus) {
+        interviewQuestionService.pressLike(interviewQuestionId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{interviewQuestionId}/like")
     public ResponseEntity<Void> cancelLike(@PathVariable final Long interviewQuestionId,
-                                           @Authentic final Long memberId) {
-        interviewQuestionService.cancelLike(interviewQuestionId, memberId);
+                                           @FromToken final LoginStatus loginStatus) {
+        interviewQuestionService.cancelLike(interviewQuestionId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 }

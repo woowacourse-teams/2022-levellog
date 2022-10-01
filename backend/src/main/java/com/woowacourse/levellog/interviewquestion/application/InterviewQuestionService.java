@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.interviewquestion.application;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.FromToken;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
@@ -43,15 +44,16 @@ public class InterviewQuestionService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final InterviewQuestionWriteDto request, final Long levellogId, @Authentic final Long fromMemberId) {
+    public Long save(final InterviewQuestionWriteDto request, final Long levellogId,
+                     @FromToken final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
-        levellog.validateSelfInterviewQuestion(fromMemberId);
-        validateMemberIsParticipant(fromMemberId, levellog);
+        levellog.validateSelfInterviewQuestion(loginStatus.getMemberId());
+        validateMemberIsParticipant(loginStatus.getMemberId(), levellog);
         team.validateInProgress(timeStandard.now());
 
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(fromMemberId, levellog);
+        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(loginStatus.getMemberId(), levellog);
 
         return interviewQuestionRepository.save(interviewQuestion)
                 .getId();
@@ -75,25 +77,28 @@ public class InterviewQuestionService {
         return new InterviewQuestionsDto(interviewQuestions);
     }
 
-    public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId, @Authentic final Long fromMemberId) {
+    public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId,
+                                                                   @FromToken final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthorId(
-                levellog, fromMemberId);
+                levellog, loginStatus.getMemberId());
 
         return InterviewQuestionContentsDto.from(interviewQuestions);
     }
 
-    public InterviewQuestionSearchResultsDto searchByKeyword(final String keyword, @Authentic final Long memberId,
+    public InterviewQuestionSearchResultsDto searchByKeyword(final String keyword,
+                                                             @FromToken final LoginStatus loginStatus,
                                                              final Long size, final Long page, final String sort) {
         final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository
-                .searchByKeyword(keyword, memberId, size, page, InterviewQuestionSort.valueOf(sort.toUpperCase()));
+                .searchByKeyword(keyword, loginStatus.getMemberId(), size, page,
+                        InterviewQuestionSort.valueOf(sort.toUpperCase()));
 
         return InterviewQuestionSearchResultsDto.of(results, page);
     }
 
     @Transactional
     public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId,
-                       @Authentic final Long fromMemberId) {
+                       @FromToken final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
 
@@ -101,15 +106,15 @@ public class InterviewQuestionService {
                 .getTeam()
                 .validateInProgress(timeStandard.now());
 
-        interviewQuestion.updateContent(request.getContent(), fromMemberId);
+        interviewQuestion.updateContent(request.getContent(), loginStatus.getMemberId());
     }
 
     @Transactional
-    public void deleteById(final Long interviewQuestionId, @Authentic final Long fromMemberId) {
+    public void deleteById(final Long interviewQuestionId, @FromToken final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
 
-        interviewQuestion.validateMemberIsAuthor(fromMemberId);
+        interviewQuestion.validateMemberIsAuthor(loginStatus.getMemberId());
         interviewQuestion.getLevellog()
                 .getTeam()
                 .validateInProgress(timeStandard.now());
@@ -118,20 +123,21 @@ public class InterviewQuestionService {
     }
 
     @Transactional
-    public void pressLike(final Long interviewQuestionId, @Authentic final Long memberId) {
+    public void pressLike(final Long interviewQuestionId, @FromToken final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
-        validateAlreadyExist(interviewQuestionId, memberId);
+        validateAlreadyExist(interviewQuestionId, loginStatus.getMemberId());
 
-        interviewQuestionLikesRepository.save(InterviewQuestionLikes.of(interviewQuestion, memberId));
+        interviewQuestionLikesRepository.save(InterviewQuestionLikes.of(interviewQuestion, loginStatus.getMemberId()));
         interviewQuestion.upLike();
     }
 
     @Transactional
-    public void cancelLike(final Long interviewQuestionId, @Authentic final Long memberId) {
+    public void cancelLike(final Long interviewQuestionId, @FromToken final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
-        final InterviewQuestionLikes interviewQuestionLikes = getInterviewQuestionLikes(interviewQuestion, memberId);
+        final InterviewQuestionLikes interviewQuestionLikes = getInterviewQuestionLikes(interviewQuestion,
+                loginStatus.getMemberId());
 
         interviewQuestionLikesRepository.deleteById(interviewQuestionLikes.getId());
         interviewQuestion.downLike();

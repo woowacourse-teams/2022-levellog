@@ -32,8 +32,8 @@ public class MyInfoController {
     private final MemberService memberService;
 
     @GetMapping
-    public ResponseEntity<MemberDto> myInfo(@Authentic final Long memberId) {
-        final MemberDto memberDto = memberService.findMemberById(memberId);
+    public ResponseEntity<MemberDto> myInfo(@FromToken final LoginStatus loginStatus) {
+        final MemberDto memberDto = memberService.findMemberById(loginStatus);
 
         return ResponseEntity.ok(memberDto);
     }
@@ -60,9 +60,9 @@ public class MyInfoController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateNickname(@Authentic final Long memberId,
+    public ResponseEntity<Void> updateNickname(@FromToken final LoginStatus loginStatus,
                                                @RequestBody @Valid final NicknameUpdateDto request) {
-        memberService.updateNickname(request, memberId);
+        memberService.updateNickname(request, loginStatus);
 
         return ResponseEntity.noContent().build();
     }

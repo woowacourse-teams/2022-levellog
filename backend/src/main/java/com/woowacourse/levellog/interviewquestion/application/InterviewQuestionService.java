@@ -89,9 +89,9 @@ public class InterviewQuestionService {
     public InterviewQuestionSearchResultsDto searchByKeyword(final String keyword,
                                                              @FromToken final LoginStatus loginStatus,
                                                              final Long size, final Long page, final String sort) {
-        final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository
-                .searchByKeyword(keyword, loginStatus.getMemberId(), size, page,
-                        InterviewQuestionSort.valueOf(sort.toUpperCase()));
+        final InterviewQuestionSort sortCondition = InterviewQuestionSort.valueOf(sort.toUpperCase());
+        final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository.searchByKeyword(keyword,
+                loginStatus, size, page, sortCondition);
 
         return InterviewQuestionSearchResultsDto.of(results, page);
     }

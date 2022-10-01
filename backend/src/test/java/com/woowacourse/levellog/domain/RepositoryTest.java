@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.domain;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackQueryRepository;
@@ -92,6 +93,10 @@ abstract class RepositoryTest {
 
     @Autowired
     protected NicknameMappingRepository nicknameMappingRepository;
+
+    protected LoginStatus getLoginStatus(final Member member) {
+        return LoginStatus.fromLogin(member.getId());
+    }
 
     protected Member saveMember(final String nickname) {
         final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".org");

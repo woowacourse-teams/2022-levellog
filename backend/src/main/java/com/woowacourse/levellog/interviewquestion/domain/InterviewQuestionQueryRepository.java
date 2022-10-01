@@ -1,11 +1,14 @@
 package com.woowacourse.levellog.interviewquestion.domain;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
 import com.woowacourse.levellog.interviewquestion.dto.SimpleInterviewQuestionDto;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.dto.MemberDto;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -39,23 +42,34 @@ public class InterviewQuestionQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<InterviewQuestionSearchResultDto> searchByKeyword(final String keyword, final Long memberId,
+    public List<InterviewQuestionSearchResultDto> searchByKeyword(final String keyword, final LoginStatus loginStatus,
                                                                   final Long size, final Long page,
                                                                   final InterviewQuestionSort sort) {
         final String sql = "SELECT id, content, "
-                + "(select CASE WHEN (id IN (select interview_question_id from interview_question_likes where liker_id = :memberId)) "
-                + "THEN true ELSE false END ) AS press, "
+                + createLikerCondition(loginStatus)
                 + "like_count AS likeCount "
                 + "FROM interview_question "
                 + "WHERE content LIKE '%" + keyword + "%' "
                 + String.format("ORDER BY %s %s ", sort.getField(), sort.getOrder())
                 + "LIMIT :limit OFFSET :offset";
 
-        final SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("memberId", memberId)
-                .addValue("limit", size)
-                .addValue("offset", page * size);
+        final Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("limit", size);
+        paramMap.put("offset", page * size);
+        if (loginStatus.isLogin()) {
+            paramMap.put("memberId", loginStatus.getMemberId());
+        }
+
+        final SqlParameterSource param = new MapSqlParameterSource(paramMap);
         return jdbcTemplate.query(sql, param, searchRowMapper);
+    }
+
+    private String createLikerCondition(final LoginStatus loginStatus) {
+        if (loginStatus.isLogin()) {
+            return "(select CASE WHEN (id IN (select interview_question_id from interview_question_likes where liker_id = :memberId)) "
+                    + "THEN true ELSE false END ) AS press, ";
+        }
+        return "FALSE AS press, ";
     }
 
     public List<SimpleInterviewQuestionDto> findAllByLevellog(final Levellog levellog) {

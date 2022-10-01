@@ -2,6 +2,7 @@ package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.StringConverter;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
@@ -90,12 +91,42 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
 
             // when
             final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
-                    "스프링을 왜 사용하였나요?", eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
+                    "스프링을 왜 사용하였나요?", getLoginStatus(eve), 10L, 0L, InterviewQuestionSort.LATEST
             );
 
             // then
             assertThat(actual).hasSize(5);
             assertThat(actual.get(0).getContent()).isEqualTo("스프링을 왜 사용하였나요?5");
+        }
+
+        @Test
+        @DisplayName("로그인하지 않은 경우 더 간결한 쿼리를 날린다.")
+        void success_notLogin() {
+            // given
+            final Member eve = saveMember("eve");
+            final Member toMember = saveMember("toMember");
+
+            final Team team = saveTeam(eve, toMember);
+            final Levellog levellog = saveLevellog(toMember, team);
+
+            final InterviewQuestion savedInterviewQuestion1 = saveInterviewQuestion("스프링을 왜 사용하였나요?1", levellog, eve);
+            saveInterviewQuestion("스프링을 왜 사용하였나요?2", levellog, eve);
+            saveInterviewQuestion("스프링을 왜 사용하였나요?3", levellog, eve);
+            saveInterviewQuestion("스프링을 왜 사용하였나요?4", levellog, eve);
+            saveInterviewQuestion("스프링을 왜 사용하였나요?5", levellog, eve);
+            saveInterviewQuestion("AOP란?", levellog, eve);
+
+            pressLikeInterviewQuestion(savedInterviewQuestion1, eve);
+
+            // when
+            final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
+                    "스프링을 왜 사용하였나요?", LoginStatus.fromNotLogin(), 10L, 0L, InterviewQuestionSort.LATEST
+            );
+
+            // then
+            assertThat(actual).hasSize(5)
+                    .extracting("like", Boolean.class)
+                    .containsExactly(false, false, false, false, false);
         }
 
         @Test
@@ -115,7 +146,7 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
             final String sqlInjectionKeyword = "왜%' or 1=1;--";
             final String safeKeyword = StringConverter.toSafeString(sqlInjectionKeyword);
             final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
-                    safeKeyword, eve.getId(), 10L, 0L, InterviewQuestionSort.LATEST
+                    safeKeyword, getLoginStatus(eve), 10L, 0L, InterviewQuestionSort.LATEST
             );
 
             // then

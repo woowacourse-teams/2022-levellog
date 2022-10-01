@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.team.application;
 
-import com.woowacourse.levellog.authentication.support.FromToken;
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
@@ -49,7 +49,7 @@ public class TeamQueryService {
         return new TeamListDto(teamSimpleDtos);
     }
 
-    public TeamListDto findAllByMemberId(@FromToken LoginStatus loginStatus) {
+    public TeamListDto findAllByMemberId(@Authentic LoginStatus loginStatus) {
         final Member member = memberRepository.getMember(loginStatus.getMemberId());
 
         final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findMyList(member);
@@ -63,7 +63,7 @@ public class TeamQueryService {
         return new TeamListDto(teamSimpleDtos);
     }
 
-    public TeamDto findByTeamIdAndMemberId(final Long teamId, @FromToken final LoginStatus loginStatus) {
+    public TeamDto findByTeamIdAndMemberId(final Long teamId, @Authentic final LoginStatus loginStatus) {
         final List<AllParticipantDto> allParticipants = teamQueryRepository.findAllByTeamId(teamId,
                 loginStatus.getMemberId());
         if (allParticipants.isEmpty()) {

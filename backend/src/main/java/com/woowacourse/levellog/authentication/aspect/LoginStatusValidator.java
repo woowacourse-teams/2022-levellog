@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.authentication.aspect;
 
-import com.woowacourse.levellog.authentication.support.FromToken;
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import java.util.Arrays;
@@ -29,6 +29,6 @@ public class LoginStatusValidator {
     }
 
     private boolean isAuthentic(final Object parameter) {
-        return parameter.getClass().isAnnotationPresent(FromToken.class);
+        return parameter.getClass().isAnnotationPresent(Authentic.class);
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class AuthenticationConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
-    private final LoginMemberResolver loginMemberResolver;
     private final LoginStatusResolver loginStatusResolver;
 
     @Bean
@@ -33,7 +32,6 @@ public class AuthenticationConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(loginMemberResolver);
         resolvers.add(loginStatusResolver);
     }
 }

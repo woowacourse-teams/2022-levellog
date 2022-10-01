@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.member.application;
 
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.authentication.support.FromToken;
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
@@ -50,7 +50,7 @@ public class MemberService {
         return save(new MemberCreateDto(request.getNickname(), githubId, request.getProfileUrl()));
     }
 
-    public MemberDto findMemberById(@FromToken final LoginStatus loginStatus) {
+    public MemberDto findMemberById(@Authentic final LoginStatus loginStatus) {
         final Member member = memberRepository.getMember(loginStatus.getMemberId());
 
         return MemberDto.from(member);
@@ -66,7 +66,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateNickname(final NicknameUpdateDto request, @FromToken LoginStatus loginStatus) {
+    public void updateNickname(final NicknameUpdateDto request, @Authentic LoginStatus loginStatus) {
         final Member member = memberRepository.getMember(loginStatus.getMemberId());
         member.updateNickname(request.getNickname());
     }

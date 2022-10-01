@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.interviewquestion.presentation;
 
-import com.woowacourse.levellog.authentication.support.FromToken;
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.StringConverter;
@@ -31,7 +31,7 @@ public class InterviewQuestionSearchController {
             @RequestParam(defaultValue = "10") final Long size,
             @RequestParam(defaultValue = "0") final Long page,
             @RequestParam(defaultValue = "likes") final String sort,
-            @FromToken final LoginStatus loginStatus) {
+            @Authentic final LoginStatus loginStatus) {
         final String input = StringConverter.toSafeString(keyword);
         if (input.isBlank()) {
             return ResponseEntity.ok(InterviewQuestionSearchResultsDto.of(new ArrayList<>(), 0L));
@@ -43,14 +43,14 @@ public class InterviewQuestionSearchController {
 
     @PostMapping("/{interviewQuestionId}/like")
     public ResponseEntity<Void> pressLike(@PathVariable final Long interviewQuestionId,
-                                          @FromToken final LoginStatus loginStatus) {
+                                          @Authentic final LoginStatus loginStatus) {
         interviewQuestionService.pressLike(interviewQuestionId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{interviewQuestionId}/like")
     public ResponseEntity<Void> cancelLike(@PathVariable final Long interviewQuestionId,
-                                           @FromToken final LoginStatus loginStatus) {
+                                           @Authentic final LoginStatus loginStatus) {
         interviewQuestionService.cancelLike(interviewQuestionId, loginStatus);
         return ResponseEntity.noContent().build();
     }

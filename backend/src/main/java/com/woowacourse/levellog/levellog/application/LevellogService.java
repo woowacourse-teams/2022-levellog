@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.levellog.application;
 
-import com.woowacourse.levellog.authentication.support.FromToken;
+import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -32,7 +32,7 @@ public class LevellogService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final LevellogWriteDto request, @FromToken LoginStatus loginStatus, final Long teamId) {
+    public Long save(final LevellogWriteDto request, @Authentic LoginStatus loginStatus, final Long teamId) {
         final Team team = teamRepository.getTeam(teamId);
         validateLevellogExistence(loginStatus.getMemberId(), teamId);
         team.validateReady(timeStandard.now());
@@ -48,7 +48,7 @@ public class LevellogService {
                         .append("levellogId", levellogId)));
     }
 
-    public LevellogsDto findAllByAuthorId(@FromToken LoginStatus loginStatus) {
+    public LevellogsDto findAllByAuthorId(@Authentic LoginStatus loginStatus) {
         final List<Levellog> levellogs = levellogRepository.findAllByAuthor(loginStatus.getMemberId());
         final List<LevellogWithIdDto> levellogWithIdDtos = levellogs.stream()
                 .map(LevellogWithIdDto::from)
@@ -58,7 +58,7 @@ public class LevellogService {
     }
 
     @Transactional
-    public void update(final LevellogWriteDto request, final Long levellogId, @FromToken LoginStatus loginStatus) {
+    public void update(final LevellogWriteDto request, final Long levellogId, @Authentic LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         levellog.getTeam().validateReady(timeStandard.now());
 

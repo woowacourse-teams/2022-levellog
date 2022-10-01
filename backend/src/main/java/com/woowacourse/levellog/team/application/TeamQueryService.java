@@ -64,12 +64,11 @@ public class TeamQueryService {
     }
 
     public TeamDto findByTeamIdAndMemberId(final Long teamId, @Authentic final LoginStatus loginStatus) {
-        final List<AllParticipantDto> allParticipants = teamQueryRepository.findAllByTeamId(teamId,
-                loginStatus.getMemberId());
+        final List<AllParticipantDto> allParticipants = teamQueryRepository.findAllByTeamId(teamId, loginStatus);
         if (allParticipants.isEmpty()) {
             throw new TeamNotFoundException(DebugMessage.init()
                     .append("teamId", teamId)
-                    .append("membmerId", loginStatus.getMemberId()));
+                    .append("memberId", loginStatus.getMemberId()));
         }
 
         final Team team = allParticipants.get(0).getTeam();

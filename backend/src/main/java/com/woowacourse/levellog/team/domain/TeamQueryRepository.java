@@ -1,17 +1,24 @@
 package com.woowacourse.levellog.team.domain;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.dto.AllParticipantDto;
 import com.woowacourse.levellog.team.dto.AllSimpleParticipantDto;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class TeamQueryRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<AllSimpleParticipantDto> simpleRowMapper = (resultSet, rowNumber) -> new AllSimpleParticipantDto(
             resultSet.getObject("teamId", Long.class),
             resultSet.getString("title"),
@@ -41,8 +48,10 @@ public class TeamQueryRepository {
             resultSet.getBoolean("is_watcher")
     );
 
-    public TeamQueryRepository(final JdbcTemplate jdbcTemplate) {
+    public TeamQueryRepository(final JdbcTemplate jdbcTemplate,
+                               final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public List<AllSimpleParticipantDto> findAllList(final boolean isClosed, final int limit, final int offset) {
@@ -62,19 +71,41 @@ public class TeamQueryRepository {
         return jdbcTemplate.query(sql, simpleRowMapper, isClosed, limit, offset);
     }
 
-    public List<AllParticipantDto> findAllByTeamId(final Long teamId, final Long memberId) {
+    public List<AllParticipantDto> findAllByTeamId(final Long teamId, final LoginStatus loginStatus) {
         final String sql = "SELECT "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.interviewer_number, t.is_closed, t.created_at, t.updated_at, "
-                + "m.id memberId, l.id levellogId, pq.id preQuestionId, m.nickname, m.profile_url, p.is_host, p.is_watcher "
+                + "m.id memberId, l.id levellogId, m.nickname, m.profile_url, p.is_host, p.is_watcher "
+                + createPreQuestionScala(loginStatus)
                 + "FROM participant p "
                     + "INNER JOIN member m ON p.member_id = m.id "
                     + "INNER JOIN team t ON p.team_id = t.id "
                     + "LEFT OUTER JOIN levellog l ON p.team_id = l.team_id AND l.author_id = m.id "
-                    + "LEFT OUTER JOIN pre_question pq ON pq.levellog_id = l.id AND pq.author_id = ? "
-                + "WHERE t.deleted = false AND t.id = ? "
+                    + createPreQuestionJoinSql(loginStatus)
+                + "WHERE t.deleted = false AND t.id = :teamId "
                 + "ORDER BY t.is_closed ASC, t.created_at DESC";
 
-        return jdbcTemplate.query(sql, detailRowMapper, memberId, teamId);
+        final Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("teamId", teamId);
+        if (loginStatus.isLogin()) {
+            paramMap.put("authorId", loginStatus.getMemberId());
+        }
+
+        final SqlParameterSource param = new MapSqlParameterSource(paramMap);
+        return namedParameterJdbcTemplate.query(sql, param, detailRowMapper);
+    }
+
+    private String createPreQuestionJoinSql(final LoginStatus loginStatus) {
+        if (loginStatus.isLogin()) {
+            return "LEFT OUTER JOIN pre_question pq ON pq.levellog_id = l.id AND pq.author_id = :authorId ";
+        }
+        return "";
+    }
+
+    private String createPreQuestionScala(final LoginStatus loginStatus) {
+        if (loginStatus.isLogin()) {
+            return ", pq.id preQuestionId ";
+        }
+        return ", NULL preQuestionId ";
     }
 
     public List<AllSimpleParticipantDto> findMyList(final Member member) {

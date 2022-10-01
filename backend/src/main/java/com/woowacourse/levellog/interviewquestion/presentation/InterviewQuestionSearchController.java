@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.interviewquestion.presentation;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.FromToken;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.common.dto.LoginStatus;

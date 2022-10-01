@@ -6,6 +6,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
@@ -34,13 +35,13 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("레벨로그에 내가 작성한 피드백이 이미 존재하는 경우 새로운 피드백을 작성하면 예외를 던진다.")
         void save_alreadyExist_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "피드백이 이미 존재합니다.";
-            given(feedbackService.save(request, levellogId, memberId))
+            given(feedbackService.save(request, levellogId, loginStatus))
                     .willThrow(new FeedbackAlreadyExistException(DebugMessage.init()
                             .append("levellogId", levellogId)));
 
@@ -61,13 +62,13 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("작성자가 직접 피드백을 작성하면 예외를 던진다.")
         void save_selfFeedback_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "잘못된 피드백 요청입니다.";
-            given(feedbackService.save(request, levellogId, memberId))
+            given(feedbackService.save(request, levellogId, loginStatus))
                     .willThrow(new InvalidFeedbackException(DebugMessage.init()
                             .append("levellogId", levellogId)));
 
@@ -88,13 +89,13 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("팀에 속하지 않은 멤버가 피드백을 작성할 경우 예외를 발생시킨다.")
         void save_otherMember_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "같은 팀에 속해있지 않습니다.";
-            given(feedbackService.save(request, levellogId, memberId))
+            given(feedbackService.save(request, levellogId, loginStatus))
                     .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
@@ -114,13 +115,13 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 작성을 요청하면 예외가 발생한다.")
         void save_notFoundLevellog_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 20000000L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "레벨로그가 존재하지 않습니다.";
-            given(feedbackService.save(request, levellogId, memberId)).willThrow(
+            given(feedbackService.save(request, levellogId, loginStatus)).willThrow(
                     new LevellogNotFoundException(DebugMessage.init()
                             .append("levellogId", levellogId)));
 
@@ -141,13 +142,13 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("팀 인터뷰 시작 전에 피드백을 작성할 경우 예외를 발생시킨다.")
         void save_notInProgress_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
-            given(feedbackService.save(request, levellogId, memberId))
+            given(feedbackService.save(request, levellogId, loginStatus))
                     .willThrow(new TeamNotInProgressException(DebugMessage.init()));
 
             // when
@@ -167,13 +168,13 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("팀 인터뷰 종료 후에 피드백을 작성할 경우 예외를 발생시킨다.")
         void save_alreadyClosed_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "이미 인터뷰가 종료된 팀입니다.";
-            given(feedbackService.save(request, levellogId, memberId))
+            given(feedbackService.save(request, levellogId, loginStatus))
                     .willThrow(new TeamAlreadyClosedException(DebugMessage.init()));
 
             // when
@@ -205,7 +206,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("피드백에 관련이 없는 멤버가 피드백을 수정하면 예외가 발생한다.")
         void update_otherMember_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
@@ -214,9 +215,9 @@ class FeedbackControllerTest extends ControllerTest {
             final String message = "잘못된 피드백 요청입니다.";
             willThrow(new InvalidFeedbackException(DebugMessage.init()
                     .append("feedbackId", feedbackId)
-                    .append("memberId", memberId)))
+                    .append("memberId", loginStatus.getMemberId())))
                     .given(feedbackService)
-                    .update(request, feedbackId, memberId);
+                    .update(request, feedbackId, loginStatus);
 
             // when
             final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
@@ -235,7 +236,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("존재하지 않는 피드백 정보로 피드백 수정을 요청하면 예외가 발생한다.")
         void update_notFoundFeedback_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
             final Long feedbackId = 1000000L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
@@ -245,7 +246,7 @@ class FeedbackControllerTest extends ControllerTest {
             willThrow(new FeedbackNotFoundException(DebugMessage.init()
                     .append("feedbackId", feedbackId)))
                     .given(feedbackService)
-                    .update(request, feedbackId, memberId);
+                    .update(request, feedbackId, loginStatus);
 
             // when
             final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
@@ -264,7 +265,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("팀 진행 상태가 아닐 때 피드백을 수정하면 예외가 발생한다.")
         void update_notInProgress_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
@@ -273,7 +274,7 @@ class FeedbackControllerTest extends ControllerTest {
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(feedbackService)
-                    .update(request, feedbackId, memberId);
+                    .update(request, feedbackId, loginStatus);
 
             // when
             final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
@@ -292,7 +293,7 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("인터뷰 종료 후에 피드백을 수정하면 예외가 발생한다.")
         void update_alreadyClosed_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
             final FeedbackWriteDto request = FeedbackWriteDto.from(
@@ -301,7 +302,7 @@ class FeedbackControllerTest extends ControllerTest {
             final String message = "이미 인터뷰가 종료된 팀입니다.";
             willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(feedbackService)
-                    .update(request, feedbackId, memberId);
+                    .update(request, feedbackId, loginStatus);
 
             // when
             final ResultActions perform = requestUpdateFeedback(levellogId, feedbackId, request);
@@ -332,11 +333,11 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
         void findAll_notFoundLevellog_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 200000L;
 
             final String message = "레벨로그가 존재하지 않습니다.";
-            given(feedbackService.findAll(levellogId, memberId))
+            given(feedbackService.findAll(levellogId, loginStatus))
                     .willThrow(new LevellogNotFoundException(DebugMessage.init()
                             .append("levellogId", levellogId)));
 
@@ -357,11 +358,11 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
         void findAll_notMyTeam_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long levellogId = 1L;
 
             final String message = "같은 팀에 속해있지 않습니다.";
-            given(feedbackService.findAll(levellogId, memberId))
+            given(feedbackService.findAll(levellogId, loginStatus))
                     .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
@@ -392,12 +393,12 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("존재하지 않는 레벨로그 정보로 피드백 목록 조회를 요청하면 예외가 발생한다.")
         void findById_notFoundLevellog_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long feedbackId = 1L;
             final Long levellogId = 200000L;
 
             final String message = "레벨로그가 존재하지 않습니다.";
-            given(feedbackService.findById(levellogId, feedbackId, memberId))
+            given(feedbackService.findById(levellogId, feedbackId, loginStatus))
                     .willThrow(new LevellogNotFoundException(DebugMessage.init()
                             .append("levellogId", levellogId)));
 
@@ -418,12 +419,12 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("속하지 않은 팀의 피드백 조회를 요청하면 예외가 발생한다.")
         void findById_notMyTeam_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long feedbackId = 1L;
             final Long levellogId = 1L;
 
             final String message = "같은 팀에 속해있지 않습니다.";
-            given(feedbackService.findById(levellogId, feedbackId, memberId))
+            given(feedbackService.findById(levellogId, feedbackId, loginStatus))
                     .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
@@ -443,12 +444,12 @@ class FeedbackControllerTest extends ControllerTest {
         @DisplayName("잘못된 레벨로그의 피드백 조회를 요청하면 예외가 발생한다.")
         void findById_levellogWrongId_exception() throws Exception {
             // given
-            final Long memberId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long feedbackId = 1L;
             final Long levellogId = 1L;
 
             final String message = "잘못된 레벨로그 요청입니다.";
-            given(feedbackService.findById(levellogId, feedbackId, memberId))
+            given(feedbackService.findById(levellogId, feedbackId, loginStatus))
                     .willThrow(new InvalidLevellogException(DebugMessage.init()
                             .append("levellogId", levellogId)));
 

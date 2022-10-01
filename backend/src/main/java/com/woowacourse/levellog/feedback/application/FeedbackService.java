@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.feedback.application;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.FromToken;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackQueryRepository;
@@ -31,48 +32,48 @@ public class FeedbackService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final FeedbackWriteDto request, final Long levellogId, @Authentic final Long fromMemberId) {
-        validateExistence(levellogId, fromMemberId);
+    public Long save(final FeedbackWriteDto request, final Long levellogId, @FromToken final LoginStatus loginStatus) {
+        validateExistence(levellogId, loginStatus.getMemberId());
 
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
-        levellog.validateSelfFeedback(fromMemberId);
-        validateTeamMember(team, fromMemberId);
+        levellog.validateSelfFeedback(loginStatus.getMemberId());
+        validateTeamMember(team, loginStatus.getMemberId());
         team.validateInProgress(timeStandard.now());
 
         final Feedback feedback = request.getFeedback()
-                .toFeedback(fromMemberId, levellog);
+                .toFeedback(loginStatus.getMemberId(), levellog);
 
         return feedbackRepository.save(feedback)
                 .getId();
     }
 
-    public FeedbacksDto findAll(final Long levellogId, @Authentic final Long memberId) {
+    public FeedbacksDto findAll(final Long levellogId, @FromToken final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        validateTeamMember(levellog.getTeam(), memberId);
+        validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
 
         return feedbackQueryRepository.findAllByLevellog(levellogId);
     }
 
-    public FeedbackDto findById(final Long levellogId, final Long feedbackId, @Authentic final Long memberId) {
+    public FeedbackDto findById(final Long levellogId, final Long feedbackId, @FromToken final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 
-        validateTeamMember(levellog.getTeam(), memberId);
+        validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
 
         return feedbackQueryRepository.findById(feedbackId);
     }
 
-    public FeedbacksDto findAllByTo(@Authentic final Long memberId) {
-        return feedbackQueryRepository.findAllByTo(memberId);
+    public FeedbacksDto findAllByTo(@FromToken final LoginStatus loginStatus) {
+        return feedbackQueryRepository.findAllByTo(loginStatus.getMemberId());
     }
 
     @Transactional
-    public void update(final FeedbackWriteDto request, final Long feedbackId, @Authentic final Long memberId) {
+    public void update(final FeedbackWriteDto request, final Long feedbackId, @FromToken final LoginStatus loginStatus) {
         final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
         final Team team = feedback.getLevellog().getTeam();
 
-        feedback.validateAuthor(memberId);
+        feedback.validateAuthor(loginStatus.getMemberId());
         team.validateInProgress(timeStandard.now());
 
         feedback.updateFeedback(

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
@@ -121,6 +122,10 @@ abstract class ServiceTest {
     @BeforeEach
     void setUp() {
         timeStandard.setBeforeStarted();
+    }
+
+    protected LoginStatus getLoginStatus(final Member member) {
+        return LoginStatus.fromLogin(member.getId());
     }
 
     protected Member saveMember(final String nickname) {

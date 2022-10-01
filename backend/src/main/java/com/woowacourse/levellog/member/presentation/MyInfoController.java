@@ -1,6 +1,8 @@
 package com.woowacourse.levellog.member.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.FromToken;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.levellog.application.LevellogService;
@@ -37,8 +39,8 @@ public class MyInfoController {
     }
 
     @GetMapping("/feedbacks")
-    public ResponseEntity<FeedbacksDto> findAllFeedbackToMe(@Authentic final Long memberId) {
-        final FeedbacksDto feedbacksResponse = feedbackService.findAllByTo(memberId);
+    public ResponseEntity<FeedbacksDto> findAllFeedbackToMe(@FromToken final LoginStatus loginStatus) {
+        final FeedbacksDto feedbacksResponse = feedbackService.findAllByTo(loginStatus);
 
         return ResponseEntity.ok(feedbacksResponse);
     }

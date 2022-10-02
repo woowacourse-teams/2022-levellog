@@ -13,12 +13,11 @@ import error from 'assets/images/error.webp';
 import plusIcon from 'assets/images/plus.svg';
 import { NOT_YET_HTTP_STATUS, ROUTES_PATH, TEAMS_CONDITION } from 'constants/constants';
 
+import Teams from './Teams';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FilterButton from 'components/@commons/FilterButton';
 import Image from 'components/@commons/Image';
-import InterviewTeam from 'components/teams/InterviewTeam';
-import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
   const { teams, isActive, getTeams, handleClickFilterButtons } = useTeams();
@@ -41,6 +40,9 @@ const InterviewTeams = () => {
         <span />
       </ContentHeader>
       <S.Container>
+        {isActive.open && <Teams teamsCondition={TEAMS_CONDITION.OPEN} />}
+        {isActive.close && <Teams teamsCondition={TEAMS_CONDITION.CLOSE} />}
+
         {teams.length === 0 && (
           <S.Empty>
             <Exception>
@@ -49,13 +51,13 @@ const InterviewTeams = () => {
             </Exception>
           </S.Empty>
         )}
-        {teams.length > 0 && (
+        {/* {teams.length > 0 && (
           <S.Content>
             {teams.map((team: InterviewTeamType) => (
               <InterviewTeam key={team.id} team={team} />
             ))}
           </S.Content>
-        )}
+        )} */}
         <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
           <S.TeamAddButton>
             {'팀 추가하기'}

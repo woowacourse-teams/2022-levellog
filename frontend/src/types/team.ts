@@ -4,7 +4,7 @@ export interface TeamApiType {
   teamId: string;
   teamInfo: TeamCustomHookType;
   accessToken: string | null;
-  teamsCondition?: teamsConditionType;
+  teamsCondition?: TeamsConditionType;
 }
 
 export interface TeamSubmitType {
@@ -70,4 +70,4 @@ export interface WatcherType {
 }
 
 export type TeamStatusType = 'READY' | 'IN_PROGRESS' | 'CLOSED' | '';
-export type teamsConditionType = 'open' | 'close';
+export type TeamsConditionType = 'open' | 'close' | 'my';

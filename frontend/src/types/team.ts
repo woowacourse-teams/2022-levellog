@@ -69,5 +69,11 @@ export interface WatcherType {
   profileUrl: string;
 }
 
+export interface TeamConditionsType {
+  open: boolean;
+  close: boolean;
+  my: boolean;
+}
+
 export type TeamStatusType = 'READY' | 'IN_PROGRESS' | 'CLOSED' | '';
 export type TeamsConditionType = 'open' | 'close' | 'my';

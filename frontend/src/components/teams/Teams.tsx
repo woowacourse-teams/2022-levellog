@@ -1,37 +1,32 @@
 import styled from 'styled-components';
 
-import useTeamsQuery from 'hooks/queries/useTeamsQuery';
+import useTeams from 'hooks/useTeams';
+
+import EmptyTeams from 'pages/status/EmptyTeams';
 
 import { useQuery } from '@tanstack/react-query';
 import InterviewTeam from 'components/teams/InterviewTeam';
-import { InterviewTeamType, TeamsConditionType } from 'types/team';
+import { InterviewTeamType, TeamConditionsType } from 'types/team';
 
 const Teams = ({ teamsCondition }: TeamsProps) => {
-  const { getTeams } = useTeamsQuery();
-  const { data, isError, isLoading } = useQuery(
-    ['teams', teamsCondition],
-    () => getTeams({ teamsCondition }),
-    {
-      suspense: true,
-    },
-  );
+  const { getTeams } = useTeams();
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-
-  console.log(data);
+  const getTeamsQuery = useQuery(['teams', teamsCondition], () => getTeams({ teamsCondition }), {
+    suspense: true,
+  });
 
   return (
     <S.Container>
-      {data.teams.map((team: InterviewTeamType) => (
+      {getTeamsQuery.data?.teams.map((team: InterviewTeamType) => (
         <InterviewTeam key={team.id} team={team} />
       ))}
+      {getTeamsQuery.data?.teams.length === 0 && <EmptyTeams />}
     </S.Container>
   );
 };
 
 interface TeamsProps {
-  teamsCondition: TeamsConditionType;
+  teamsCondition: TeamConditionsType;
 }
 
 const S = {

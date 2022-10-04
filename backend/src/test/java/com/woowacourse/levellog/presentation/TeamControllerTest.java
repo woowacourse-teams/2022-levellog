@@ -223,8 +223,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
         void save_participantsNull_exception() throws Exception {
             // given
-            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null,
-                    List.of(1L, 2L));
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    null, List.of(1L, 2L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -587,7 +587,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
         void update_participantsNull_exception() throws Exception {
             // given
-            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null,
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    null,
                     List.of(1L, 2L));
 
             // when

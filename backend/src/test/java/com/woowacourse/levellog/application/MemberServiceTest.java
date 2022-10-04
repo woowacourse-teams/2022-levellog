@@ -8,9 +8,9 @@ import com.woowacourse.levellog.authentication.dto.response.GithubProfileRespons
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.NicknameMapping;
 import com.woowacourse.levellog.member.dto.request.MemberCreateRequest;
+import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import com.woowacourse.levellog.member.dto.response.MemberResponses;
-import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
 import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -84,7 +84,8 @@ class MemberServiceTest extends ServiceTest {
         void save_nicknameMapping_success() {
             // given
             nicknameMappingRepository.save(new NicknameMapping("깃허브로마", "우테코로마"));
-            final MemberCreateRequest memberCreateRequest = new MemberCreateRequest("깃허브로마", 12345678, "profileUrl.image");
+            final MemberCreateRequest memberCreateRequest = new MemberCreateRequest("깃허브로마", 12345678,
+                    "profileUrl.image");
 
             // when
             final Long id = memberService.save(memberCreateRequest);
@@ -154,7 +155,8 @@ class MemberServiceTest extends ServiceTest {
             final Member savedMember = saveMember("로마");
             final Integer githubId = savedMember.getGithubId();
 
-            final GithubProfileResponse githubProfileResponse = new GithubProfileResponse(githubId.toString(), "test", "test.image");
+            final GithubProfileResponse githubProfileResponse = new GithubProfileResponse(githubId.toString(), "test",
+                    "test.image");
 
             // when
             final Long id = memberService.saveIfNotExist(githubProfileResponse, githubId);
@@ -170,7 +172,8 @@ class MemberServiceTest extends ServiceTest {
             final Member savedMember = saveMember("로마");
             final int githubId = savedMember.getGithubId() + 999;
 
-            final GithubProfileResponse githubProfileResponse = new GithubProfileResponse(Integer.toString(githubId), "test",
+            final GithubProfileResponse githubProfileResponse = new GithubProfileResponse(Integer.toString(githubId),
+                    "test",
                     "test.image");
 
             // when

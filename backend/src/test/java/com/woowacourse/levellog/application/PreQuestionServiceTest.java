@@ -10,8 +10,8 @@ import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
-import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
 import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
+import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
@@ -68,7 +68,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             participantRepository.save(new Participant(team, author, true, false));
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteRequest, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(
+                    () -> preQuestionService.save(preQuestionWriteRequest, levellog.getId(), questioner.getId()))
                     .isInstanceOf(ParticipantNotSameTeamException.class)
                     .hasMessageContaining("같은 팀에 속해있지 않습니다.");
         }
@@ -106,7 +107,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             savePreQuestion(levellog, questioner);
 
             // when, then
-            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteRequest, levellog.getId(), questioner.getId()))
+            assertThatThrownBy(
+                    () -> preQuestionService.save(preQuestionWriteRequest, levellog.getId(), questioner.getId()))
                     .isInstanceOf(PreQuestionAlreadyExistException.class)
                     .hasMessageContainingAll("사전 질문이 이미 존재합니다.",
                             String.valueOf(levellog.getId()),
@@ -190,7 +192,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Long id = savePreQuestion(levellog, questioner).getId();
 
             //when
-            preQuestionService.update(PreQuestionWriteRequest.from("수정된 사전 질문"), id, levellog.getId(), questioner.getId());
+            preQuestionService.update(PreQuestionWriteRequest.from("수정된 사전 질문"), id, levellog.getId(),
+                    questioner.getId());
 
             //then
             final PreQuestionResponse response = preQuestionService.findMy(levellog.getId(), questioner.getId());

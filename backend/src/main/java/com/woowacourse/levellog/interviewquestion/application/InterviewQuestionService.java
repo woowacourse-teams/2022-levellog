@@ -7,11 +7,11 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesR
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
+import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponses;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResponse;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResponses;
-import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponses;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -63,7 +63,8 @@ public class InterviewQuestionService {
         return InterviewQuestionResponses.from(interviewQuestions);
     }
 
-    public InterviewQuestionContentResponses findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
+    public InterviewQuestionContentResponses findAllByLevellogAndAuthor(final Long levellogId,
+                                                                        final Long fromMemberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member author = memberRepository.getMember(fromMemberId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(

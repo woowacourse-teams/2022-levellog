@@ -4,8 +4,8 @@ import static com.woowacourse.levellog.authentication.support.JwtTokenProvider.A
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.woowacourse.levellog.admin.dto.response.AdminAccessTokenResponse;
 import com.woowacourse.levellog.admin.dto.request.AdminPasswordRequest;
+import com.woowacourse.levellog.admin.dto.response.AdminAccessTokenResponse;
 import com.woowacourse.levellog.admin.dto.response.AdminTeamResponse;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.fixture.TimeFixture;

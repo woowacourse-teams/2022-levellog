@@ -20,7 +20,8 @@ public class ParticipantResponse {
     private String nickname;
     private String profileUrl;
 
-    public static ParticipantResponse from(final Participant participant, final Long levellogId, final Long preQuestionId) {
+    public static ParticipantResponse from(final Participant participant, final Long levellogId,
+                                           final Long preQuestionId) {
         return new ParticipantResponse(
                 participant.getMember().getId(),
                 levellogId,

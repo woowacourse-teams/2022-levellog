@@ -24,7 +24,8 @@ public class TeamSimpleQueryResult {
     private TeamStatus status;
     private List<ParticipantSimpleQueryResult> participants;
 
-    public static TeamSimpleQueryResult of(final List<AllSimpleParticipantQueryResult> simpleParticipants, final TeamStatus status) {
+    public static TeamSimpleQueryResult of(final List<AllSimpleParticipantQueryResult> simpleParticipants,
+                                           final TeamStatus status) {
         final AllSimpleParticipantQueryResult result = simpleParticipants.get(0);
         return new TeamSimpleQueryResult(
                 result.getId(),

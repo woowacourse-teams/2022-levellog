@@ -18,7 +18,8 @@ public class InterviewQuestionResponse {
     private MemberResponse author;
     private List<InterviewQuestionContentResponse> contents;
 
-    public static InterviewQuestionResponse of(final Member author, final List<InterviewQuestionContentResponse> contents) {
+    public static InterviewQuestionResponse of(final Member author,
+                                               final List<InterviewQuestionContentResponse> contents) {
         return new InterviewQuestionResponse(MemberResponse.from(author), contents);
     }
 }

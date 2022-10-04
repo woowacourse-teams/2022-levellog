@@ -10,11 +10,11 @@ import com.woowacourse.levellog.team.domain.TeamQueryRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.query.AllParticipantQueryResult;
 import com.woowacourse.levellog.team.dto.query.AllSimpleParticipantQueryResult;
+import com.woowacourse.levellog.team.dto.query.TeamSimpleQueryResult;
 import com.woowacourse.levellog.team.dto.response.ParticipantResponse;
 import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
-import com.woowacourse.levellog.team.dto.response.TeamResponse;
 import com.woowacourse.levellog.team.dto.response.TeamListResponses;
-import com.woowacourse.levellog.team.dto.query.TeamSimpleQueryResult;
+import com.woowacourse.levellog.team.dto.response.TeamResponse;
 import com.woowacourse.levellog.team.dto.response.WatcherResponse;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
@@ -35,10 +35,12 @@ public class TeamQueryService {
     private final TimeStandard timeStandard;
 
     public TeamListResponses findAll(final TeamFilterCondition condition, final int page, final int size) {
-        final List<AllSimpleParticipantQueryResult> allParticipants = teamQueryRepository.findAllList(condition.isClosed(),
+        final List<AllSimpleParticipantQueryResult> allParticipants = teamQueryRepository.findAllList(
+                condition.isClosed(),
                 size, page * size);
         final List<TeamSimpleQueryResult> teamSimpleQueryResults = allParticipants.stream()
-                .collect(Collectors.groupingBy(AllSimpleParticipantQueryResult::getId, LinkedHashMap::new, Collectors.toList()))
+                .collect(Collectors.groupingBy(AllSimpleParticipantQueryResult::getId, LinkedHashMap::new,
+                        Collectors.toList()))
                 .values()
                 .stream()
                 .map(it -> TeamSimpleQueryResult.of(it, toTeamStatus(it.get(0))))
@@ -52,7 +54,8 @@ public class TeamQueryService {
 
         final List<AllSimpleParticipantQueryResult> allParticipants = teamQueryRepository.findMyList(member);
         final List<TeamSimpleQueryResult> teamSimpleQueryResults = allParticipants.stream()
-                .collect(Collectors.groupingBy(AllSimpleParticipantQueryResult::getId, LinkedHashMap::new, Collectors.toList()))
+                .collect(Collectors.groupingBy(AllSimpleParticipantQueryResult::getId, LinkedHashMap::new,
+                        Collectors.toList()))
                 .values()
                 .stream()
                 .map(it -> TeamSimpleQueryResult.of(it, toTeamStatus(it.get(0))))

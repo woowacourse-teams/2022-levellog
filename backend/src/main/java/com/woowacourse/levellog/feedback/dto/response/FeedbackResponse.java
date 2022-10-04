@@ -23,7 +23,7 @@ public class FeedbackResponse {
     private LocalDateTime updatedAt;
 
     public static FeedbackResponse from(final Feedback feedback) {
-        return new FeedbackResponse(feedback.getId(), MemberResponse.from(feedback.getFrom()), MemberResponse.from(feedback.getTo()),
-                FeedbackContentRequest.from(feedback), feedback.getUpdatedAt());
+        return new FeedbackResponse(feedback.getId(), MemberResponse.from(feedback.getFrom()),
+                MemberResponse.from(feedback.getTo()), FeedbackContentRequest.from(feedback), feedback.getUpdatedAt());
     }
 }

@@ -45,7 +45,8 @@ class OAuthServiceTest extends ServiceTest {
             // given
             final Member member = saveMember("로마");
 
-            final GithubProfileResponse request = new GithubProfileResponse(member.getGithubId().toString(), member.getNickname(),
+            final GithubProfileResponse request = new GithubProfileResponse(member.getGithubId().toString(),
+                    member.getNickname(),
                     member.getProfileUrl());
 
             // when

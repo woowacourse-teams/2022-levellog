@@ -15,7 +15,8 @@ public class ParticipantSimpleQueryResult {
     private Long memberId;
     private String profileUrl;
 
-    public static ParticipantSimpleQueryResult from(final AllSimpleParticipantQueryResult allSimpleParticipantQueryResult) {
+    public static ParticipantSimpleQueryResult from(
+            final AllSimpleParticipantQueryResult allSimpleParticipantQueryResult) {
         return new ParticipantSimpleQueryResult(
                 allSimpleParticipantQueryResult.getMemberId(),
                 allSimpleParticipantQueryResult.getMemberImage()

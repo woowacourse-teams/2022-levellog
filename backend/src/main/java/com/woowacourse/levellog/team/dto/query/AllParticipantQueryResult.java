@@ -25,7 +25,7 @@ public class AllParticipantQueryResult {
     public AllParticipantQueryResult(final Long id, final String title, final String place, final LocalDateTime startAt,
                                      final String profileUrl, final int interviewerNumber, final boolean isClosed,
                                      final Long memberId, final Long levellogId, final Long preQuestionId,
-                                     final String nickname,  final boolean isHost,
+                                     final String nickname, final boolean isHost,
                                      final boolean isWatcher) {
         this.teamId = id;
         this.title = title;

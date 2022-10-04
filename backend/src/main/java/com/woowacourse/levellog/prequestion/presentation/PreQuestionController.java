@@ -2,8 +2,8 @@ package com.woowacourse.levellog.prequestion.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
-import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
 import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
+import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,8 @@ public class PreQuestionController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<PreQuestionResponse> findMy(@PathVariable final Long levellogId, @Authentic final Long memberId) {
+    public ResponseEntity<PreQuestionResponse> findMy(@PathVariable final Long levellogId,
+                                                      @Authentic final Long memberId) {
         final PreQuestionResponse response = preQuestionService.findMy(levellogId, memberId);
         return ResponseEntity.ok(response);
     }

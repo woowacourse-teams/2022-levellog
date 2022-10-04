@@ -25,13 +25,13 @@ public class TeamSimpleQueryResult {
     private List<ParticipantSimpleQueryResult> participants;
 
     public static TeamSimpleQueryResult of(final List<AllSimpleParticipantQueryResult> simpleParticipants, final TeamStatus status) {
-        final AllSimpleParticipantQueryResult dto = simpleParticipants.get(0);
+        final AllSimpleParticipantQueryResult result = simpleParticipants.get(0);
         return new TeamSimpleQueryResult(
-                dto.getId(),
-                dto.getTitle(),
-                dto.getPlace(),
-                dto.getStartAt(),
-                dto.getTeamImage(),
+                result.getId(),
+                result.getTitle(),
+                result.getPlace(),
+                result.getStartAt(),
+                result.getTeamImage(),
                 status,
                 simpleParticipants.stream()
                         .map(ParticipantSimpleQueryResult::from)

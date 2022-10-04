@@ -83,12 +83,12 @@ public class TeamQueryService {
                 interviewees, toParticipantDto(allParticipants), toWatcherDtos(allParticipants));
     }
 
-    private TeamStatus toTeamStatus(final AllParticipantQueryResult dto) {
-        return TeamStatus.of(dto.isClosed(), dto.getStartAt(), timeStandard.now());
+    private TeamStatus toTeamStatus(final AllParticipantQueryResult result) {
+        return TeamStatus.of(result.isClosed(), result.getStartAt(), timeStandard.now());
     }
 
-    private TeamStatus toTeamStatus(final AllSimpleParticipantQueryResult dto) {
-        return TeamStatus.of(dto.isClosed(), dto.getStartAt(), timeStandard.now());
+    private TeamStatus toTeamStatus(final AllSimpleParticipantQueryResult result) {
+        return TeamStatus.of(result.isClosed(), result.getStartAt(), timeStandard.now());
     }
 
     private SimpleParticipants toSimpleParticipants(final List<AllParticipantQueryResult> filteredParticipants) {

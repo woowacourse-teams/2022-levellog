@@ -11,8 +11,8 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponse;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponse;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResultResponse;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResultResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResponses;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
@@ -356,14 +356,14 @@ class InterviewQuestionServiceTest extends ServiceTest {
             interviewQuestionService.pressLike(question1Id, eve.getId()); // 업데이트를 해도 최신순 정렬이 유지되어야 함
 
             // when
-            final InterviewQuestionSearchResultResponses actual = interviewQuestionService.searchByKeyword(
+            final InterviewQuestionSearchResponses actual = interviewQuestionService.searchByKeyword(
                     "스프링", eve.getId(), size, page, sort);
 
             // then
             assertAll(
                     () -> assertThat(actual.getResults()).hasSize(4),
                     () -> Assertions.assertThat(actual.getResults())
-                            .extracting(InterviewQuestionSearchResultResponse::getId)
+                            .extracting(InterviewQuestionSearchResponse::getId)
                             .containsExactly(question4Id, question3Id, question2Id, question1Id)
             );
         }
@@ -393,14 +393,14 @@ class InterviewQuestionServiceTest extends ServiceTest {
             interviewQuestionService.pressLike(question2Id, eve.getId());
 
             // when
-            final InterviewQuestionSearchResultResponses actual = interviewQuestionService.searchByKeyword(
+            final InterviewQuestionSearchResponses actual = interviewQuestionService.searchByKeyword(
                     "스프링", eve.getId(), size, page, sort);
 
             // then
             assertAll(
                     () -> assertThat(actual.getResults()).hasSize(4),
                     () -> Assertions.assertThat(actual.getResults())
-                            .extracting(InterviewQuestionSearchResultResponse::getId)
+                            .extracting(InterviewQuestionSearchResponse::getId)
                             .containsExactly(question1Id, question2Id, question3Id, question4Id)
             );
         }

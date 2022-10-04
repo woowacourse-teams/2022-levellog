@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewQuestionSearchResultResponse {
+public class InterviewQuestionSearchResponse {
 
     private Long id;
     private String content;

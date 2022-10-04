@@ -8,8 +8,8 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryR
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResultResponse;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResultResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResponses;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponses;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
@@ -72,12 +72,12 @@ public class InterviewQuestionService {
         return InterviewQuestionContentResponses.from(interviewQuestions);
     }
 
-    public InterviewQuestionSearchResultResponses searchByKeyword(final String keyword, final Long memberId,
-                                                                  final Long size, final Long page, final String sort) {
-        final List<InterviewQuestionSearchResultResponse> results = interviewQuestionQueryRepository
+    public InterviewQuestionSearchResponses searchByKeyword(final String keyword, final Long memberId,
+                                                            final Long size, final Long page, final String sort) {
+        final List<InterviewQuestionSearchResponse> results = interviewQuestionQueryRepository
                 .searchByKeyword(keyword, memberId, size, page, InterviewQuestionSort.valueOf(sort.toUpperCase()));
 
-        return InterviewQuestionSearchResultResponses.of(results, page);
+        return InterviewQuestionSearchResponses.of(results, page);
     }
 
     @Transactional

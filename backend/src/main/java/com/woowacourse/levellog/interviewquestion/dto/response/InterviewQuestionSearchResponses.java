@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewQuestionSearchResultResponses {
+public class InterviewQuestionSearchResponses {
 
-    private List<InterviewQuestionSearchResultResponse> results;
+    private List<InterviewQuestionSearchResponse> results;
     private Long page;
 
-    public static InterviewQuestionSearchResultResponses of(final List<InterviewQuestionSearchResultResponse> results,
-                                                            final Long page) {
-        return new InterviewQuestionSearchResultResponses(results, page);
+    public static InterviewQuestionSearchResponses of(final List<InterviewQuestionSearchResponse> results,
+                                                      final Long page) {
+        return new InterviewQuestionSearchResponses(results, page);
     }
 }

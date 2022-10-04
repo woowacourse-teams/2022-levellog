@@ -30,13 +30,10 @@ public class TeamQueryRepository {
             resultSet.getString("teamProfileUrl"),
             resultSet.getInt("interviewer_number"),
             resultSet.getBoolean("is_closed"),
-            resultSet.getTimestamp("created_at").toLocalDateTime(),
-            resultSet.getTimestamp("updated_at").toLocalDateTime(),
             resultSet.getObject("memberId", Long.class),
             resultSet.getObject("levellogId", Long.class),
             resultSet.getObject("preQuestionId", Long.class),
             resultSet.getString("nickname"),
-            resultSet.getString("profile_url"),
             resultSet.getBoolean("is_host"),
             resultSet.getBoolean("is_watcher")
     );
@@ -64,8 +61,8 @@ public class TeamQueryRepository {
 
     public List<AllParticipantQueryResult> findAllByTeamId(final Long teamId, final Long memberId) {
         final String sql = "SELECT "
-                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.interviewer_number, t.is_closed, t.created_at, t.updated_at, "
-                + "m.id memberId, l.id levellogId, pq.id preQuestionId, m.nickname, m.profile_url, p.is_host, p.is_watcher "
+                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.interviewer_number, t.is_closed, "
+                + "m.id memberId, l.id levellogId, pq.id preQuestionId, m.nickname, p.is_host, p.is_watcher "
                 + "FROM participant p "
                     + "INNER JOIN member m ON p.member_id = m.id "
                     + "INNER JOIN team t ON p.team_id = t.id "

@@ -5,13 +5,13 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.SimpleParticipant;
 import com.woowacourse.levellog.team.domain.SimpleParticipants;
-import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.domain.TeamQueryRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.query.AllParticipantQueryResult;
 import com.woowacourse.levellog.team.dto.query.AllSimpleParticipantQueryResult;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
+import com.woowacourse.levellog.team.dto.TeamDetailResponse;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamListDto;
 import com.woowacourse.levellog.team.dto.query.TeamSimpleQueryResult;
@@ -61,7 +61,7 @@ public class TeamQueryService {
         return new TeamListDto(teamSimpleQueryResults);
     }
 
-    public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
+    public TeamDetailResponse findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
         final List<AllParticipantQueryResult> allParticipants = teamQueryRepository.findAllByTeamId(teamId, memberId);
         if (allParticipants.isEmpty()) {
             throw new TeamNotFoundException(DebugMessage.init()
@@ -69,17 +69,22 @@ public class TeamQueryService {
                     .append("membmerId", memberId));
         }
 
-        final Team team = allParticipants.get(0).getTeam();
+        final AllParticipantQueryResult allParticipantDto = allParticipants.get(0);
+        final TeamDto teamDto = allParticipantDto.getTeamDto();
 
         final SimpleParticipants participants = toSimpleParticipants(allParticipants);
 
-        final TeamStatus status = team.status(timeStandard.now());
+        final TeamStatus status = toTeamStatus(allParticipantDto);
         final boolean isParticipant = participants.isContains(memberId);
-        final List<Long> interviewers = participants.toInterviewerIds(memberId, team.getInterviewerNumber());
-        final List<Long> interviewees = participants.toIntervieweeIds(memberId, team.getInterviewerNumber());
+        final List<Long> interviewers = participants.toInterviewerIds(memberId, teamDto.getInterviewerNumber());
+        final List<Long> interviewees = participants.toIntervieweeIds(memberId, teamDto.getInterviewerNumber());
 
-        return TeamDto.from(team, participants.toHostId(), status, isParticipant, interviewers, interviewees,
-                toParticipantDto(allParticipants), toWatcherDtos(allParticipants));
+        return TeamDetailResponse.from(teamDto, participants.toHostId(), status, isParticipant, interviewers,
+                interviewees, toParticipantDto(allParticipants), toWatcherDtos(allParticipants));
+    }
+
+    private TeamStatus toTeamStatus(final AllParticipantQueryResult dto) {
+        return TeamStatus.of(dto.isClosed(), dto.getStartAt(), timeStandard.now());
     }
 
     private TeamStatus toTeamStatus(final AllSimpleParticipantQueryResult dto) {

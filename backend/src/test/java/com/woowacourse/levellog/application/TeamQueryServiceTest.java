@@ -14,7 +14,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
-import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.TeamDetailResponse;
 import com.woowacourse.levellog.team.dto.TeamListDto;
 import com.woowacourse.levellog.team.dto.TeamSimpleDto;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
@@ -123,7 +123,7 @@ public class TeamQueryServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             //when
-            final TeamDto response = teamQueryService.findByTeamIdAndMemberId(team.getId(), getLoginStatus(rick));
+            final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(), getLoginStatus(rick));
 
             //then
             assertAll(
@@ -160,9 +160,9 @@ public class TeamQueryServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma, alien, eve);
 
                 //when
-                final TeamDto responseOfPepper = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                final TeamDetailResponse responseOfPepper = teamQueryService.findByTeamIdAndMemberId(team.getId(),
                         getLoginStatus(pepper));
-                final TeamDto responseOfEve = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                final TeamDetailResponse responseOfEve = teamQueryService.findByTeamIdAndMemberId(team.getId(),
                         getLoginStatus(eve));
 
                 //then
@@ -194,7 +194,7 @@ public class TeamQueryServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma);
 
                 //when
-                final TeamDto response = teamQueryService.findByTeamIdAndMemberId(team.getId(), getLoginStatus(pepper));
+                final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(), getLoginStatus(pepper));
 
                 //then
                 assertAll(
@@ -224,7 +224,8 @@ public class TeamQueryServiceTest extends ServiceTest {
                 final Team team = saveTeam(1, rick, List.of(pobi), pepper);
 
                 //when
-                final TeamDto response = teamQueryService.findByTeamIdAndMemberId(team.getId(), getLoginStatus(pobi));
+                final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                        getLoginStatus(pobi));
 
                 //then
                 assertAll(
@@ -255,7 +256,8 @@ public class TeamQueryServiceTest extends ServiceTest {
                 final Team team = saveTeam(rick, pepper, roma);
 
                 //when
-                final TeamDto response = teamQueryService.findByTeamIdAndMemberId(team.getId(), getLoginStatus(alien));
+                final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                        getLoginStatus(alien));
 
                 //then
                 assertAll(

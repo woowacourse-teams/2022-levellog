@@ -22,7 +22,7 @@ import com.woowacourse.levellog.fixture.RestAssuredResponse;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
 import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
 import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
-import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
@@ -143,7 +143,7 @@ abstract class AcceptanceTest {
                 .map(MemberFixture::getId)
                 .collect(Collectors.toList());
 
-        final TeamWriteDto request = new TeamWriteDto(title, title + "place", interviewerNumber, startAt,
+        final TeamWriteRequest request = new TeamWriteRequest(title, title + "place", interviewerNumber, startAt,
                 participantIds, watcherIds);
 
         return post("/api/teams", host.getToken(), request);

@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.team.dto;
+package com.woowacourse.levellog.team.dto.request;
 
 import com.woowacourse.levellog.team.domain.Team;
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TeamWriteDto {
+public class TeamWriteRequest {
 
     @NotBlank
     private String title;

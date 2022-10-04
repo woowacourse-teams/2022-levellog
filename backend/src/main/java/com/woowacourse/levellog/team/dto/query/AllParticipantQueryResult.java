@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.team.dto.query;
 
 import com.woowacourse.levellog.team.domain.SimpleParticipant;
-import com.woowacourse.levellog.team.dto.TeamDto;
+import com.woowacourse.levellog.team.dto.response.TeamResponse;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -42,8 +42,8 @@ public class AllParticipantQueryResult {
         this.isWatcher = isWatcher;
     }
 
-    public TeamDto getTeamDto() {
-        return TeamDto.from(teamId, title, place, startAt, profileUrl, interviewerNumber, isClosed);
+    public TeamResponse getTeamDto() {
+        return TeamResponse.from(teamId, title, place, startAt, profileUrl, interviewerNumber, isClosed);
     }
 
     public SimpleParticipant toSimpleParticipant() {

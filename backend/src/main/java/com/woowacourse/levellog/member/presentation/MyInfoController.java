@@ -9,7 +9,7 @@ import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
 import com.woowacourse.levellog.team.application.TeamQueryService;
-import com.woowacourse.levellog.team.dto.TeamListDto;
+import com.woowacourse.levellog.team.dto.response.TeamListResponses;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +51,8 @@ public class MyInfoController {
     }
 
     @GetMapping("/teams")
-    public ResponseEntity<TeamListDto> findAllMyTeams(@Authentic final Long memberId) {
-        final TeamListDto teamsDto = teamQueryService.findAllByMemberId(memberId);
+    public ResponseEntity<TeamListResponses> findAllMyTeams(@Authentic final Long memberId) {
+        final TeamListResponses teamsDto = teamQueryService.findAllByMemberId(memberId);
 
         return ResponseEntity.ok(teamsDto);
     }

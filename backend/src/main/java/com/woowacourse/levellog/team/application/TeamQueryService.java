@@ -10,12 +10,12 @@ import com.woowacourse.levellog.team.domain.TeamQueryRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.query.AllParticipantQueryResult;
 import com.woowacourse.levellog.team.dto.query.AllSimpleParticipantQueryResult;
-import com.woowacourse.levellog.team.dto.ParticipantDto;
-import com.woowacourse.levellog.team.dto.TeamDetailResponse;
-import com.woowacourse.levellog.team.dto.TeamDto;
-import com.woowacourse.levellog.team.dto.TeamListDto;
+import com.woowacourse.levellog.team.dto.response.ParticipantResponse;
+import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
+import com.woowacourse.levellog.team.dto.response.TeamResponse;
+import com.woowacourse.levellog.team.dto.response.TeamListResponses;
 import com.woowacourse.levellog.team.dto.query.TeamSimpleQueryResult;
-import com.woowacourse.levellog.team.dto.WatcherDto;
+import com.woowacourse.levellog.team.dto.response.WatcherResponse;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.LinkedHashMap;
@@ -34,7 +34,7 @@ public class TeamQueryService {
     private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
 
-    public TeamListDto findAll(final TeamFilterCondition condition, final int page, final int size) {
+    public TeamListResponses findAll(final TeamFilterCondition condition, final int page, final int size) {
         final List<AllSimpleParticipantQueryResult> allParticipants = teamQueryRepository.findAllList(condition.isClosed(),
                 size, page * size);
         final List<TeamSimpleQueryResult> teamSimpleQueryResults = allParticipants.stream()
@@ -44,10 +44,10 @@ public class TeamQueryService {
                 .map(it -> TeamSimpleQueryResult.of(it, toTeamStatus(it.get(0))))
                 .collect(Collectors.toList());
 
-        return new TeamListDto(teamSimpleQueryResults);
+        return new TeamListResponses(teamSimpleQueryResults);
     }
 
-    public TeamListDto findAllByMemberId(final Long memberId) {
+    public TeamListResponses findAllByMemberId(final Long memberId) {
         final Member member = memberRepository.getMember(memberId);
 
         final List<AllSimpleParticipantQueryResult> allParticipants = teamQueryRepository.findMyList(member);
@@ -58,7 +58,7 @@ public class TeamQueryService {
                 .map(it -> TeamSimpleQueryResult.of(it, toTeamStatus(it.get(0))))
                 .collect(Collectors.toList());
 
-        return new TeamListDto(teamSimpleQueryResults);
+        return new TeamListResponses(teamSimpleQueryResults);
     }
 
     public TeamDetailResponse findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
@@ -70,16 +70,16 @@ public class TeamQueryService {
         }
 
         final AllParticipantQueryResult allParticipantDto = allParticipants.get(0);
-        final TeamDto teamDto = allParticipantDto.getTeamDto();
+        final TeamResponse teamResponse = allParticipantDto.getTeamDto();
 
         final SimpleParticipants participants = toSimpleParticipants(allParticipants);
 
         final TeamStatus status = toTeamStatus(allParticipantDto);
         final boolean isParticipant = participants.isContains(memberId);
-        final List<Long> interviewers = participants.toInterviewerIds(memberId, teamDto.getInterviewerNumber());
-        final List<Long> interviewees = participants.toIntervieweeIds(memberId, teamDto.getInterviewerNumber());
+        final List<Long> interviewers = participants.toInterviewerIds(memberId, teamResponse.getInterviewerNumber());
+        final List<Long> interviewees = participants.toIntervieweeIds(memberId, teamResponse.getInterviewerNumber());
 
-        return TeamDetailResponse.from(teamDto, participants.toHostId(), status, isParticipant, interviewers,
+        return TeamDetailResponse.from(teamResponse, participants.toHostId(), status, isParticipant, interviewers,
                 interviewees, toParticipantDto(allParticipants), toWatcherDtos(allParticipants));
     }
 
@@ -98,17 +98,17 @@ public class TeamQueryService {
         return new SimpleParticipants(participants);
     }
 
-    private List<ParticipantDto> toParticipantDto(final List<AllParticipantQueryResult> filteredParticipants) {
+    private List<ParticipantResponse> toParticipantDto(final List<AllParticipantQueryResult> filteredParticipants) {
         return filteredParticipants.stream()
                 .filter(it -> !it.isWatcher())
-                .map(ParticipantDto::from)
+                .map(ParticipantResponse::from)
                 .collect(Collectors.toList());
     }
 
-    private List<WatcherDto> toWatcherDtos(final List<AllParticipantQueryResult> filteredParticipants) {
+    private List<WatcherResponse> toWatcherDtos(final List<AllParticipantQueryResult> filteredParticipants) {
         return filteredParticipants.stream()
                 .filter(AllParticipantQueryResult::isWatcher)
-                .map(WatcherDto::from)
+                .map(WatcherResponse::from)
                 .collect(Collectors.toList());
     }
 }

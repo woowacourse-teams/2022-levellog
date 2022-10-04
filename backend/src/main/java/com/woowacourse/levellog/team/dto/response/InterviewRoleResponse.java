@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.team.dto;
+package com.woowacourse.levellog.team.dto.response;
 
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import lombok.AccessLevel;
@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewRoleDto {
+public class InterviewRoleResponse {
 
     private InterviewRole myRole;
 
-    public static InterviewRoleDto from(final InterviewRole interviewRole) {
-        return new InterviewRoleDto(interviewRole);
+    public static InterviewRoleResponse from(final InterviewRole interviewRole) {
+        return new InterviewRoleResponse(interviewRole);
     }
 }
 

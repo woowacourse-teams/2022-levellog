@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.team.dto;
+package com.woowacourse.levellog.team.dto.response;
 
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import java.time.LocalDateTime;
@@ -25,20 +25,20 @@ public class TeamDetailResponse {
     private Boolean isParticipant;
     private List<Long> interviewers;
     private List<Long> interviewees;
-    private List<ParticipantDto> participants;
-    private List<WatcherDto> watchers;
+    private List<ParticipantResponse> participants;
+    private List<WatcherResponse> watchers;
 
-    public static TeamDetailResponse from(final TeamDto teamDto, final Long hostId, final TeamStatus status,
+    public static TeamDetailResponse from(final TeamResponse teamResponse, final Long hostId, final TeamStatus status,
                                           final Boolean isParticipant, final List<Long> interviewers,
                                           final List<Long> interviewees,
-                                          final List<ParticipantDto> participantResponses,
-                                          final List<WatcherDto> watcherResponses) {
+                                          final List<ParticipantResponse> participantResponses,
+                                          final List<WatcherResponse> watcherResponses) {
         return new TeamDetailResponse(
-                teamDto.getId(),
-                teamDto.getTitle(),
-                teamDto.getPlace(),
-                teamDto.getStartAt(),
-                teamDto.getProfileUrl(),
+                teamResponse.getId(),
+                teamResponse.getTitle(),
+                teamResponse.getPlace(),
+                teamResponse.getStartAt(),
+                teamResponse.getProfileUrl(),
                 hostId,
                 status,
                 isParticipant,

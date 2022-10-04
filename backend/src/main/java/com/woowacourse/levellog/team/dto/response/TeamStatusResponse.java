@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.team.dto;
+package com.woowacourse.levellog.team.dto.response;
 
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import lombok.AccessLevel;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class TeamStatusDto {
+public class TeamStatusResponse {
 
     private TeamStatus status;
 }

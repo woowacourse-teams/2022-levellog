@@ -5,11 +5,11 @@ import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
-import com.woowacourse.levellog.team.dto.InterviewRoleDto;
-import com.woowacourse.levellog.team.dto.TeamDetailResponse;
-import com.woowacourse.levellog.team.dto.TeamListDto;
-import com.woowacourse.levellog.team.dto.TeamStatusDto;
-import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.response.InterviewRoleResponse;
+import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
+import com.woowacourse.levellog.team.dto.response.TeamListResponses;
+import com.woowacourse.levellog.team.dto.response.TeamStatusResponse;
+import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class TeamController {
     private final TeamQueryService teamQueryService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid final TeamWriteDto teamDto,
+    public ResponseEntity<Void> save(@RequestBody @Valid final TeamWriteRequest teamDto,
                                      @Authentic final Long memberId) {
         final Long teamId = teamService.save(teamDto, memberId);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId)).build();
@@ -41,11 +41,11 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamListDto> findAll(@RequestParam(defaultValue = "open") final String condition,
-                                               @RequestParam(defaultValue = "0") final int page,
-                                               @RequestParam(defaultValue = "20") final int size) {
+    public ResponseEntity<TeamListResponses> findAll(@RequestParam(defaultValue = "open") final String condition,
+                                                     @RequestParam(defaultValue = "0") final int page,
+                                                     @RequestParam(defaultValue = "20") final int size) {
         final TeamFilterCondition filterCondition = TeamFilterCondition.from(condition);
-        final TeamListDto response = teamQueryService.findAll(filterCondition, page, size);
+        final TeamListResponses response = teamQueryService.findAll(filterCondition, page, size);
         return ResponseEntity.ok(response);
     }
 
@@ -59,22 +59,22 @@ public class TeamController {
 
     @GetMapping("/{teamId}/status")
     @PublicAPI
-    public ResponseEntity<TeamStatusDto> findStatus(@PathVariable final Long teamId) {
-        final TeamStatusDto response = teamService.findStatus(teamId);
+    public ResponseEntity<TeamStatusResponse> findStatus(@PathVariable final Long teamId) {
+        final TeamStatusResponse response = teamService.findStatus(teamId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{teamId}/members/{targetMemberId}/my-role")
-    public ResponseEntity<InterviewRoleDto> findMyRole(@PathVariable final Long teamId,
-                                                       @PathVariable final Long targetMemberId,
-                                                       @Authentic final Long memberId) {
-        final InterviewRoleDto response = teamService.findMyRole(teamId, targetMemberId, memberId);
+    public ResponseEntity<InterviewRoleResponse> findMyRole(@PathVariable final Long teamId,
+                                                            @PathVariable final Long targetMemberId,
+                                                            @Authentic final Long memberId) {
+        final InterviewRoleResponse response = teamService.findMyRole(teamId, targetMemberId, memberId);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{teamId}")
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
-                                       @RequestBody @Valid final TeamWriteDto request,
+                                       @RequestBody @Valid final TeamWriteRequest request,
                                        @Authentic final Long memberId) {
         teamService.update(request, teamId, memberId);
         return ResponseEntity.noContent().build();

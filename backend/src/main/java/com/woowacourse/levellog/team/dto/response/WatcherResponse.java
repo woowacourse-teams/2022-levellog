@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.team.dto;
+package com.woowacourse.levellog.team.dto.response;
 
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Participant;
@@ -13,23 +13,23 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class WatcherDto {
+public class WatcherResponse {
 
     private Long memberId;
     private String nickname;
     private String profileUrl;
 
-    public static WatcherDto from(final Participant participant) {
+    public static WatcherResponse from(final Participant participant) {
         final Member member = participant.getMember();
 
-        return new WatcherDto(
+        return new WatcherResponse(
                 member.getId(),
                 member.getNickname(),
                 member.getProfileUrl());
     }
 
-    public static WatcherDto from(final AllParticipantQueryResult allParticipantQueryResult) {
-        return new WatcherDto(
+    public static WatcherResponse from(final AllParticipantQueryResult allParticipantQueryResult) {
+        return new WatcherResponse(
                 allParticipantQueryResult.getMemberId(),
                 allParticipantQueryResult.getNickname(),
                 allParticipantQueryResult.getProfileUrl());

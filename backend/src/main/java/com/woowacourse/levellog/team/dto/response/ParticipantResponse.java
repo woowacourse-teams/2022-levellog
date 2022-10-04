@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.team.dto;
+package com.woowacourse.levellog.team.dto.response;
 
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.dto.query.AllParticipantQueryResult;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class ParticipantDto {
+public class ParticipantResponse {
 
     private Long memberId;
     private Long levellogId;
@@ -20,8 +20,8 @@ public class ParticipantDto {
     private String nickname;
     private String profileUrl;
 
-    public static ParticipantDto from(final Participant participant, final Long levellogId, final Long preQuestionId) {
-        return new ParticipantDto(
+    public static ParticipantResponse from(final Participant participant, final Long levellogId, final Long preQuestionId) {
+        return new ParticipantResponse(
                 participant.getMember().getId(),
                 levellogId,
                 preQuestionId,
@@ -29,8 +29,8 @@ public class ParticipantDto {
                 participant.getMember().getProfileUrl());
     }
 
-    public static ParticipantDto from(final AllParticipantQueryResult allParticipantQueryResult) {
-        return new ParticipantDto(
+    public static ParticipantResponse from(final AllParticipantQueryResult allParticipantQueryResult) {
+        return new ParticipantResponse(
                 allParticipantQueryResult.getMemberId(),
                 allParticipantQueryResult.getLevellogId(),
                 allParticipantQueryResult.getPreQuestionId(),

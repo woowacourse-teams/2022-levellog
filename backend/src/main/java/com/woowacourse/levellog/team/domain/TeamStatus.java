@@ -26,8 +26,4 @@ public enum TeamStatus {
         }
         return TeamStatus.IN_PROGRESS;
     }
-
-    public boolean isSame(final String status) {
-        return this.status.equals(status);
-    }
 }

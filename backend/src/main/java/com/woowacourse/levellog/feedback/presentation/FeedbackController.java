@@ -4,7 +4,7 @@ import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
 import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
-import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponses;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +33,9 @@ public class FeedbackController {
     }
 
     @GetMapping
-    public ResponseEntity<FeedbackResponses> findAll(@PathVariable final Long levellogId,
-                                                     @Authentic final Long memberId) {
-        final FeedbackResponses response = feedbackService.findAll(levellogId, memberId);
+    public ResponseEntity<FeedbackListResponses> findAll(@PathVariable final Long levellogId,
+                                                         @Authentic final Long memberId) {
+        final FeedbackListResponses response = feedbackService.findAll(levellogId, memberId);
         return ResponseEntity.ok(response);
     }
 

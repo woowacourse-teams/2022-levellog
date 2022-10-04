@@ -8,7 +8,7 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
 import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
-import com.woowacourse.levellog.levellog.dto.response.LevellogResponses;
+import com.woowacourse.levellog.levellog.dto.response.LevellogListResponses;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -286,10 +286,10 @@ class LevellogServiceTest extends ServiceTest {
             saveLevellog(author, team2);
 
             // when
-            final LevellogResponses levellogResponses = levellogService.findAllByAuthorId(author.getId());
+            final LevellogListResponses levellogListResponses = levellogService.findAllByAuthorId(author.getId());
 
             // then
-            assertThat(levellogResponses.getLevellogs()).hasSize(2);
+            assertThat(levellogListResponses.getLevellogs()).hasSize(2);
         }
 
         @Test

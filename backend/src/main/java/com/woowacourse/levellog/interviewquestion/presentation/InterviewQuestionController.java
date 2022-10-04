@@ -4,8 +4,8 @@ import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionListResponses;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,16 +37,16 @@ public class InterviewQuestionController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<InterviewQuestionResponses> findAllByLevellog(@PathVariable final Long levellogId) {
-        final InterviewQuestionResponses response = interviewQuestionService.findAllByLevellog(levellogId);
+    public ResponseEntity<InterviewQuestionListResponses> findAllByLevellog(@PathVariable final Long levellogId) {
+        final InterviewQuestionListResponses response = interviewQuestionService.findAllByLevellog(levellogId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<InterviewQuestionContentResponses> findAllMyInterviewQuestion(
+    public ResponseEntity<InterviewQuestionContentListResponses> findAllMyInterviewQuestion(
             @PathVariable final Long levellogId,
             @Authentic final Long memberId) {
-        final InterviewQuestionContentResponses response = interviewQuestionService.findAllByLevellogAndAuthor(
+        final InterviewQuestionContentListResponses response = interviewQuestionService.findAllByLevellogAndAuthor(
                 levellogId,
                 memberId);
         return ResponseEntity.ok(response);

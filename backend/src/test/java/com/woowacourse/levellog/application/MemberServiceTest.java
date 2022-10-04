@@ -10,7 +10,7 @@ import com.woowacourse.levellog.member.domain.NicknameMapping;
 import com.woowacourse.levellog.member.dto.request.MemberCreateRequest;
 import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
-import com.woowacourse.levellog.member.dto.response.MemberResponses;
+import com.woowacourse.levellog.member.dto.response.MemberListResponses;
 import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ class MemberServiceTest extends ServiceTest {
         final Member alien = saveMember("alien");
 
         // when
-        final MemberResponses members = memberService.searchByNickname("ali");
+        final MemberListResponses members = memberService.searchByNickname("ali");
 
         // then
         assertAll(

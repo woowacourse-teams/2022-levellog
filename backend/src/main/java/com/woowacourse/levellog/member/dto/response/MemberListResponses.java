@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @EqualsAndHashCode
-public class MemberResponses {
+public class MemberListResponses {
 
     private List<MemberResponse> members;
 }

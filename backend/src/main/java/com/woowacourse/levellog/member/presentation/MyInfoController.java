@@ -2,9 +2,9 @@ package com.woowacourse.levellog.member.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
-import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponses;
 import com.woowacourse.levellog.levellog.application.LevellogService;
-import com.woowacourse.levellog.levellog.dto.response.LevellogResponses;
+import com.woowacourse.levellog.levellog.dto.response.LevellogListResponses;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
@@ -37,15 +37,15 @@ public class MyInfoController {
     }
 
     @GetMapping("/feedbacks")
-    public ResponseEntity<FeedbackResponses> findAllFeedbackToMe(@Authentic final Long memberId) {
-        final FeedbackResponses feedbackResponses = feedbackService.findAllByTo(memberId);
+    public ResponseEntity<FeedbackListResponses> findAllFeedbackToMe(@Authentic final Long memberId) {
+        final FeedbackListResponses feedbackListResponses = feedbackService.findAllByTo(memberId);
 
-        return ResponseEntity.ok(feedbackResponses);
+        return ResponseEntity.ok(feedbackListResponses);
     }
 
     @GetMapping("/levellogs")
-    public ResponseEntity<LevellogResponses> findAllMyLevellogs(@Authentic final Long memberId) {
-        final LevellogResponses levellogsResponse = levellogService.findAllByAuthorId(memberId);
+    public ResponseEntity<LevellogListResponses> findAllMyLevellogs(@Authentic final Long memberId) {
+        final LevellogListResponses levellogsResponse = levellogService.findAllByAuthorId(memberId);
 
         return ResponseEntity.ok(levellogsResponse);
     }

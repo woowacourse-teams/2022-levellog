@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.domain;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
-import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.fixture.TimeFixture;
@@ -11,7 +10,6 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesR
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
-import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
@@ -83,27 +81,27 @@ abstract class RepositoryTest {
         return memberRepository.save(member);
     }
 
+    protected Team saveTeam(final Member host, final Member... members) {
+        return saveTeam(host, Collections.emptyList(), members);
+    }
+
     protected Team saveTeam(final Member host, final List<Member> watchers, final Member... members) {
         final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", 1));
 
-        participantRepository.save(new Participant(team, host, true, false));
+        participantRepository.save(new Participant(team, host.getId(), true, false));
 
         final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it, false, false))
+                .map(it -> new Participant(team, it.getId(), false, false))
                 .collect(Collectors.toList());
 
         final List<Participant> watcherParticipants = watchers.stream()
-                .map(it -> new Participant(team, it, false, true))
+                .map(it -> new Participant(team, it.getId(), false, true))
                 .collect(Collectors.toList());
 
         participants.addAll(watcherParticipants);
         participantRepository.saveAll(participants);
 
         return team;
-    }
-
-    protected Team saveTeam(final Member host, final Member... members) {
-        return saveTeam(host, Collections.emptyList(), members);
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {
@@ -122,17 +120,6 @@ abstract class RepositoryTest {
                                                                 final Member liker) {
         final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker);
         return interviewQuestionLikesRepository.save(interviewQuestionLikes);
-    }
-
-    protected void cancelLikeInterviewQuestion(final InterviewQuestion interviewQuestion, final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = interviewQuestionLikesRepository.findByInterviewQuestionIdAndLikerId(
-                        interviewQuestion.getId(), liker.getId())
-                .orElseThrow(() -> new InterviewQuestionLikeNotFoundException(
-                        DebugMessage.init()
-                                .append("interviewQuestionId", interviewQuestion.getId())
-                                .append("likerId", liker.getId())
-                ));
-        interviewQuestionLikesRepository.deleteById(interviewQuestionLikes.getId());
     }
 
     protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {

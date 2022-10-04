@@ -7,7 +7,11 @@ import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -47,6 +51,9 @@ public class Team extends BaseEntity {
     @Column(nullable = false)
     private boolean deleted;
 
+    @Embedded
+    private Participants participants = new Participants();
+
     public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
                 final int interviewerNumber) {
         validate(title, place, startAt, profileUrl, interviewerNumber);
@@ -59,6 +66,20 @@ public class Team extends BaseEntity {
         this.isClosed = false;
         this.deleted = false;
     }
+//
+//    public Team(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
+//                final int interviewerNumber, final Participants participants) {
+//        validate(title, place, startAt, profileUrl, interviewerNumber);
+//
+//        this.title = title;
+//        this.place = place;
+//        this.startAt = startAt;
+//        this.profileUrl = profileUrl;
+//        this.interviewerNumber = interviewerNumber;
+//        this.isClosed = false;
+//        this.deleted = false;
+//        this.participants = participants;
+//    }
 
     private void validate(final String title, final String place, final LocalDateTime startAt, final String profileUrl,
                           final int interviewerNumber) {
@@ -134,6 +155,20 @@ public class Team extends BaseEntity {
         this.interviewerNumber = team.interviewerNumber;
     }
 
+    public void update(final Team team, final Long hostId, final List<Long> participantIds, final List<Long> watcherIds,
+                       final LocalDateTime presentTime) {
+        validateReady(presentTime);
+
+        this.title = team.title;
+        this.place = team.place;
+        this.startAt = team.startAt;
+        this.profileUrl = team.profileUrl;
+        this.interviewerNumber = team.interviewerNumber;
+
+        this.participants.clear();
+        updateParticipants(hostId, participantIds, watcherIds);
+    }
+
     public void validParticipantNumber(final int participantNumber) {
         if (participantNumber <= interviewerNumber) {
             throw new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다.", DebugMessage.init()
@@ -185,5 +220,71 @@ public class Team extends BaseEntity {
             return TeamStatus.READY;
         }
         return TeamStatus.IN_PROGRESS;
+    }
+
+    public void addParticipants(final Long hostId, final List<Long> participantIds, final List<Long> watcherIds) {
+        validateParticipants(hostId, participantIds, watcherIds);
+
+        this.participants = Participants.of(this, hostId, participantIds, watcherIds);
+    }
+
+    public void updateParticipants(final Long hostId, final List<Long> participantIds, final List<Long> watcherIds) {
+        validateParticipants(hostId, participantIds, watcherIds);
+
+        final Participants updateParticipants = Participants.of(this, hostId, participantIds, watcherIds);
+        updateParticipants.getValues().forEach(it -> this.participants.getValues().add(it));
+    }
+
+    private void validateParticipants(final Long hostId, final List<Long> participantIds, final List<Long> watcherIds) {
+        validateParticipantExistence(participantIds);
+        validateDistinctParticipant(participantIds);
+        validateDistinctWatcher(watcherIds);
+        validateIndependent(participantIds, watcherIds);
+        validateHostExistence(hostId, participantIds, watcherIds);
+        validParticipantNumber(participantIds.size());
+    }
+
+    private void validateParticipantExistence(final List<Long> participantsIds) {
+        if (participantsIds.isEmpty()) {
+            throw new InvalidFieldException("참가자가 존재하지 않습니다.", DebugMessage.init()
+                    .append("participants", participantsIds));
+        }
+    }
+
+    private void validateDistinctParticipant(final List<Long> participantIds) {
+        final Set<Long> distinct = new HashSet<>(participantIds);
+        if (distinct.size() != participantIds.size()) {
+            throw new InvalidFieldException("중복된 참가자가 존재합니다.", DebugMessage.init()
+                    .append("participants", participantIds));
+        }
+    }
+
+    private void validateDistinctWatcher(final List<Long> watcherIds) {
+        final Set<Long> distinct = new HashSet<>(watcherIds);
+        if (distinct.size() != watcherIds.size()) {
+            throw new InvalidFieldException("중복된 참관자가 존재합니다.", DebugMessage.init()
+                    .append("watchers", watcherIds));
+        }
+    }
+
+    private void validateIndependent(final List<Long> participantIds, final List<Long> watcherIds) {
+        final boolean notIndependent = participantIds.stream()
+                .anyMatch(watcherIds::contains);
+
+        if (notIndependent) {
+            throw new InvalidFieldException("참가자와 참관자에 모두 포함된 멤버가 존재합니다.", DebugMessage.init()
+                    .append("particiapnts", participantIds)
+                    .append("watchers", watcherIds));
+        }
+    }
+
+    private void validateHostExistence(final Long hostId, final List<Long> participantIds,
+                                       final List<Long> watcherIds) {
+        if (!participantIds.contains(hostId) && !watcherIds.contains(hostId)) {
+            throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.", DebugMessage.init()
+                    .append("hostId", hostId)
+                    .append("participants", participantIds)
+                    .append("watchers", watcherIds));
+        }
     }
 }

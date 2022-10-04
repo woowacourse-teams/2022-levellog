@@ -26,12 +26,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("TeamService의")
 class TeamServiceTest extends ServiceTest {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Nested
     @DisplayName("save 메서드는")
@@ -293,6 +298,7 @@ class TeamServiceTest extends ServiceTest {
             final List<Long> participantsIds = List.of(rick.getId(), eve.getId(), alien.getId(), roma.getId());
             final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 2, AFTER_START_TIME,
                     participantsIds, Collections.emptyList());
+            entityManager.clear();
 
             // when
             teamService.update(request, team.getId(), rick.getId());
@@ -301,8 +307,7 @@ class TeamServiceTest extends ServiceTest {
             final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
             final List<Long> actualParticipantsIds = participantRepository.findByTeam(actualTeam)
                     .stream()
-                    .map(Participant::getMember)
-                    .map(Member::getId)
+                    .map(Participant::getMemberId)
                     .collect(Collectors.toList());
 
             assertAll(

@@ -77,6 +77,7 @@ public class PreQuestionService {
     }
 
     private void validateSameTeamMember(final Team team, final Member member) {
+//        FIXME
         final Participants participants = new Participants(participantRepository.findByTeam(team));
 
         participants.validateExistsMember(member);

@@ -65,7 +65,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Team team = saveTeam(author);
             final Levellog levellog = saveLevellog(author, team);
 
-            participantRepository.save(new Participant(team, author, true, false));
+            participantRepository.save(new Participant(team, author.getId(), true, false));
 
             // when, then
             assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))

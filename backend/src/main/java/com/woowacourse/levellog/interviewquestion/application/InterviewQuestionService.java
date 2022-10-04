@@ -144,7 +144,7 @@ public class InterviewQuestionService {
     private void validateMemberIsParticipant(final Member member, final Levellog levellog) {
         final Team team = levellog.getTeam();
 
-        if (!participantRepository.existsByMemberAndTeam(member, team)) {
+        if (!participantRepository.existsByMemberIdAndTeam(member.getId(), team)) {
             throw new ParticipantNotSameTeamException(DebugMessage.init()
                     .append("teamId", team.getId())
                     .append("memberId", member.getId())

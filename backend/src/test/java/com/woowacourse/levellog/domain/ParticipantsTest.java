@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.domain.MockEntityFactory;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Participants;
@@ -26,12 +25,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 @DisplayName("Participants의")
 class ParticipantsTest {
 
-    Member getMember(final String nickname, final Long memberId) {
-        final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".com");
-
-        return MockEntityFactory.setId(memberId, member);
-    }
-
     private List<Long> toIdList(final String s) {
         return Arrays.stream(s.split(", "))
                 .map(Long::parseLong)
@@ -46,13 +39,12 @@ class ParticipantsTest {
         final Team team = MockEntityFactory.setId(1L,
                 new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
-        final Member rick = getMember("릭", 1L);
         final List<Participant> values = List.of(
-                new Participant(team, rick, true, false),
-                new Participant(team, getMember("로마", 2L), false, false),
-                new Participant(team, getMember("알린", 3L), false, true),
-                new Participant(team, getMember("이브", 4L), false, false),
-                new Participant(team, getMember("해리", 5L), false, false));
+                new Participant(team, 1L, true, false),
+                new Participant(team, 2L, false, false),
+                new Participant(team, 3L, false, true),
+                new Participant(team, 4L, false, false),
+                new Participant(team, 5L, false, false));
         final Participants participants = new Participants(values);
 
         // when
@@ -75,12 +67,12 @@ class ParticipantsTest {
                     interviewerNumber);
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true, false),
-                    new Participant(team, getMember("로마", 2L), false, false),
-                    new Participant(team, getMember("알린", 3L), false, false),
-                    new Participant(team, getMember("이브", 4L), false, true),
-                    new Participant(team, getMember("해리", 5L), false, false),
-                    new Participant(team, getMember("결", 6L), false, false));
+                    new Participant(team, 1L, true, false),
+                    new Participant(team, 2L, false, false),
+                    new Participant(team, 3L, false, false),
+                    new Participant(team, 4L, false, true),
+                    new Participant(team, 5L, false, false),
+                    new Participant(team, 6L, false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -102,12 +94,12 @@ class ParticipantsTest {
                     interviewerNumber);
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true, false),
-                    new Participant(team, getMember("로마", 2L), false, false),
-                    new Participant(team, getMember("알린", 3L), false, false),
-                    new Participant(team, getMember("결", 4L), false, true),
-                    new Participant(team, getMember("이브", 5L), false, false),
-                    new Participant(team, getMember("해리", 6L), false, false));
+                    new Participant(team, 1L, true, false),
+                    new Participant(team, 2L, false, false),
+                    new Participant(team, 3L, false, false),
+                    new Participant(team, 4L, false, true),
+                    new Participant(team, 5L, false, false),
+                    new Participant(team, 6L, false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -132,12 +124,12 @@ class ParticipantsTest {
                     interviewerNumber);
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true, false),
-                    new Participant(team, getMember("로마", 2L), false, false),
-                    new Participant(team, getMember("알린", 3L), false, false),
-                    new Participant(team, getMember("이브", 4L), false, false),
-                    new Participant(team, getMember("해리", 5L), false, false),
-                    new Participant(team, getMember("결", 6L), false, true));
+                    new Participant(team, 1L, true, false),
+                    new Participant(team, 2L, false, false),
+                    new Participant(team, 3L, false, false),
+                    new Participant(team, 4L, false, false),
+                    new Participant(team, 5L, false, false),
+                    new Participant(team, 6L, false, true));
             final Participants participants = new Participants(values);
 
             // when
@@ -159,11 +151,11 @@ class ParticipantsTest {
                     interviewerNumber);
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true, false),
-                    new Participant(team, getMember("로마", 2L), false, false),
-                    new Participant(team, getMember("알린", 3L), false, false),
-                    new Participant(team, getMember("이브", 4L), false, false),
-                    new Participant(team, getMember("해리", 5L), false, false));
+                    new Participant(team, 1L, true, false),
+                    new Participant(team, 2L, false, false),
+                    new Participant(team, 3L, false, false),
+                    new Participant(team, 4L, false, false),
+                    new Participant(team, 5L, false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -187,11 +179,11 @@ class ParticipantsTest {
                     new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true, false),
-                    new Participant(team, getMember("로마", 2L), false, false),
-                    new Participant(team, getMember("알린", 3L), false, false),
-                    new Participant(team, getMember("이브", 4L), false, false),
-                    new Participant(team, getMember("해리", 5L), false, false));
+                    new Participant(team, 1L, true, false),
+                    new Participant(team, 2L, false, false),
+                    new Participant(team, 3L, false, false),
+                    new Participant(team, 4L, false, false),
+                    new Participant(team, 5L, false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -210,11 +202,11 @@ class ParticipantsTest {
             final Team team = MockEntityFactory.setId(1L,
                     new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true, false),
-                    new Participant(team, getMember("로마", 2L), false, false),
-                    new Participant(team, getMember("알린", 3L), false, false),
-                    new Participant(team, getMember("이브", 4L), false, false),
-                    new Participant(team, getMember("해리", 5L), false, false));
+                    new Participant(team, 1L, true, false),
+                    new Participant(team, 2L, false, false),
+                    new Participant(team, 3L, false, false),
+                    new Participant(team, 4L, false, false),
+                    new Participant(team, 5L, false, false));
             final Participants participants = new Participants(values);
 
             // when
@@ -233,11 +225,11 @@ class ParticipantsTest {
                     new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true, false),
-                    new Participant(team, getMember("로마", 2L), false, false),
-                    new Participant(team, getMember("알린", 3L), false, false),
-                    new Participant(team, getMember("이브", 4L), false, false),
-                    new Participant(team, getMember("해리", 5L), false, false));
+                    new Participant(team, 1L, true, false),
+                    new Participant(team, 2L, false, false),
+                    new Participant(team, 3L, false, false),
+                    new Participant(team, 4L, false, false),
+                    new Participant(team, 5L, false, false));
             final Participants participants = new Participants(values);
 
             // when & then
@@ -254,11 +246,11 @@ class ParticipantsTest {
                     new Team("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", interviewerNumber));
 
             final List<Participant> values = List.of(
-                    new Participant(team, getMember("릭", 1L), true, false),
-                    new Participant(team, getMember("로마", 2L), false, false),
-                    new Participant(team, getMember("알린", 3L), false, false),
-                    new Participant(team, getMember("이브", 4L), false, false),
-                    new Participant(team, getMember("해리", 5L), false, false));
+                    new Participant(team, 1L, true, false),
+                    new Participant(team, 2L, false, false),
+                    new Participant(team, 3L, false, false),
+                    new Participant(team, 4L, false, false),
+                    new Participant(team, 5L, false, false));
             final Participants participants = new Participants(values);
 
             // when & then

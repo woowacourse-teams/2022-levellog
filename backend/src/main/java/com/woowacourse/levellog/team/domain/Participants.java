@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.team.domain;
 
-import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
@@ -8,15 +7,46 @@ import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
+import javax.persistence.Embeddable;
+import javax.persistence.OneToMany;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Embeddable
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Participants {
 
-    private final List<Participant> values;
+    @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Participant> values = new ArrayList<>();
+
+    public static Participants of(final Team team, final Long hostId, final List<Long> participantIds,
+                                  final List<Long> watcherIds) {
+        final List<Participant> participants = new ArrayList<>();
+        participants.addAll(toParticipants(team, hostId, participantIds));
+        participants.addAll(toWatchers(team, hostId, watcherIds));
+
+        return new Participants(participants);
+    }
+
+    private static List<Participant> toParticipants(final Team team, final Long hostId,
+                                                    final List<Long> participantIds) {
+        return participantIds.stream()
+                .map(it -> new Participant(team, it, Objects.equals(hostId, it), false))
+                .collect(Collectors.toList());
+    }
+
+    private static List<Participant> toWatchers(final Team team, final Long hostId, final List<Long> watcherIds) {
+        return watcherIds.stream()
+                .map(it -> new Participant(team, it, Objects.equals(hostId, it), true))
+                .collect(Collectors.toList());
+    }
 
     public List<Long> toInterviewerIds(final Long memberId, final int interviewerNumber) {
         if (!isContains(memberId) || isWatcher(memberId)) {
@@ -46,8 +76,7 @@ public class Participants {
                 .filter(Participant::isHost)
                 .findAny()
                 .orElseThrow()
-                .getMember()
-                .getId();
+                .getMemberId();
     }
 
     public InterviewRole toInterviewRole(final Long teamId, final Long targetMemberId, final Long memberId,
@@ -73,14 +102,13 @@ public class Participants {
 
     public boolean isContains(final Long memberId) {
         return values.stream()
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
+                .map(Participant::getMemberId)
                 .anyMatch(it -> it.equals(memberId));
     }
 
     private boolean isWatcher(final Long memberId) {
         return values.stream()
-                .filter(it -> it.getMember().getId().equals(memberId))
+                .filter(it -> it.getMemberId().equals(memberId))
                 .anyMatch(Participant::isWatcher);
     }
 
@@ -94,8 +122,7 @@ public class Participants {
     private List<Long> toParticipantIds() {
         return values.stream()
                 .filter(Participant::isParticipant)
-                .map(Participant::getMember)
-                .map(BaseEntity::getId)
+                .map(Participant::getMemberId)
                 .collect(Collectors.toList());
     }
 
@@ -123,6 +150,10 @@ public class Participants {
 
     private boolean existsParticipantByMember(final Member member) {
         return values.stream()
-                .anyMatch(participant -> participant.getMember().equals(member));
+                .anyMatch(participant -> participant.getMemberId().equals(member.getId()));
+    }
+
+    public void clear() {
+        values.clear();
     }
 }

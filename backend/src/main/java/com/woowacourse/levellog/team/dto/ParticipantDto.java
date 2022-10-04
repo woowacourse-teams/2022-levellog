@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.team.dto;
 
-import com.woowacourse.levellog.team.domain.Participant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -18,15 +17,6 @@ public class ParticipantDto {
     private Long preQuestionId;
     private String nickname;
     private String profileUrl;
-
-    public static ParticipantDto from(final Participant participant, final Long levellogId, final Long preQuestionId) {
-        return new ParticipantDto(
-                participant.getMember().getId(),
-                levellogId,
-                preQuestionId,
-                participant.getMember().getNickname(),
-                participant.getMember().getProfileUrl());
-    }
 
     public static ParticipantDto from(final AllParticipantDto allParticipantDto) {
         return new ParticipantDto(

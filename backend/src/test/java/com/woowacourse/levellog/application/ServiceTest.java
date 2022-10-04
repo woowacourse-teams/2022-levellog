@@ -150,10 +150,10 @@ abstract class ServiceTest {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "트랙룸", startAt, "jamsil.img", interviewerNumber));
 
-        participantRepository.save(new Participant(team, host, true, false));
+        participantRepository.save(new Participant(team, host.getId(), true, false));
 
         final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it, false, false))
+                .map(it -> new Participant(team, it.getId(), false, false))
                 .collect(Collectors.toList());
         participantRepository.saveAll(participants);
 
@@ -165,15 +165,15 @@ abstract class ServiceTest {
         final Team team = teamRepository.save(
                 new Team("잠실 네오조", "트랙룸", startAt, "jamsil.img", interviewerNumber));
 
-        participantRepository.save(new Participant(team, host, true, false));
+        participantRepository.save(new Participant(team, host.getId(), true, false));
 
         final List<Participant> watcherList = watchers.stream()
-                .map(it -> new Participant(team, it, false, true))
+                .map(it -> new Participant(team, it.getId(), false, true))
                 .collect(Collectors.toList());
         participantRepository.saveAll(watcherList);
 
         final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it, false, false))
+                .map(it -> new Participant(team, it.getId(), false, false))
                 .collect(Collectors.toList());
         participantRepository.saveAll(participants);
 

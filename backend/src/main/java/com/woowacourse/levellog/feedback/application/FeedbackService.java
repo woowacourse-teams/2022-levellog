@@ -101,7 +101,7 @@ public class FeedbackService {
     }
 
     private void validateTeamMember(final Team team, final Member member) {
-        if (!participantRepository.existsByMemberAndTeam(member, team)) {
+        if (!participantRepository.existsByMemberIdAndTeam(member.getId(), team)) {
             throw new ParticipantNotSameTeamException(DebugMessage.init()
                     .append("teamId", team.getId())
                     .append("memberId", member.getId()));

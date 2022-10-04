@@ -52,9 +52,9 @@ public class MyInfoController {
 
     @GetMapping("/teams")
     public ResponseEntity<TeamListResponses> findAllMyTeams(@Authentic final Long memberId) {
-        final TeamListResponses teamsDto = teamQueryService.findAllByMemberId(memberId);
+        final TeamListResponses response = teamQueryService.findAllByMemberId(memberId);
 
-        return ResponseEntity.ok(teamsDto);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping

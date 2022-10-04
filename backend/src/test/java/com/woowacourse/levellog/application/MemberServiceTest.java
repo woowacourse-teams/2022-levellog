@@ -101,15 +101,15 @@ class MemberServiceTest extends ServiceTest {
         @DisplayName("동일한 깃허브로 가입한 멤버가 존재하면 예외를 던진다.")
         void save_memberAlreadyExist_exception() {
             // given
-            final MemberCreateRequest beforeSavedDto = new MemberCreateRequest("로마", 12345678, "profileUrl.image");
-            memberService.save(beforeSavedDto);
+            final MemberCreateRequest beforeSavedRequest = new MemberCreateRequest("로마", 12345678, "profileUrl.image");
+            memberService.save(beforeSavedRequest);
 
-            final MemberCreateRequest newSaveDto = new MemberCreateRequest("로마", 12345678, "profileUrl.image");
+            final MemberCreateRequest newSaveRequest = new MemberCreateRequest("로마", 12345678, "profileUrl.image");
 
             // when & then
-            assertThatThrownBy(() -> memberService.save(newSaveDto))
+            assertThatThrownBy(() -> memberService.save(newSaveRequest))
                     .isInstanceOf(MemberAlreadyExistException.class)
-                    .hasMessageContainingAll("멤버가 이미 존재합니다.", String.valueOf(newSaveDto.getGithubId()));
+                    .hasMessageContainingAll("멤버가 이미 존재합니다.", String.valueOf(newSaveRequest.getGithubId()));
         }
     }
 

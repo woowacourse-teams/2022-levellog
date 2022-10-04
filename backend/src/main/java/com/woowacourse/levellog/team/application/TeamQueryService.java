@@ -72,18 +72,18 @@ public class TeamQueryService {
                     .append("membmerId", memberId));
         }
 
-        final AllParticipantQueryResult allParticipantDto = allParticipants.get(0);
-        final TeamResponse teamResponse = allParticipantDto.getTeamDto();
+        final AllParticipantQueryResult allParticipantQueryResult = allParticipants.get(0);
+        final TeamResponse teamResponse = allParticipantQueryResult.getTeamResponse();
 
         final SimpleParticipants participants = toSimpleParticipants(allParticipants);
 
-        final TeamStatus status = toTeamStatus(allParticipantDto);
+        final TeamStatus status = toTeamStatus(allParticipantQueryResult);
         final boolean isParticipant = participants.isContains(memberId);
         final List<Long> interviewers = participants.toInterviewerIds(memberId, teamResponse.getInterviewerNumber());
         final List<Long> interviewees = participants.toIntervieweeIds(memberId, teamResponse.getInterviewerNumber());
 
         return TeamDetailResponse.from(teamResponse, participants.toHostId(), status, isParticipant, interviewers,
-                interviewees, toParticipantDto(allParticipants), toWatcherDtos(allParticipants));
+                interviewees, toParticipantResponses(allParticipants), toWatcherResponses(allParticipants));
     }
 
     private TeamStatus toTeamStatus(final AllParticipantQueryResult result) {
@@ -101,14 +101,14 @@ public class TeamQueryService {
         return new SimpleParticipants(participants);
     }
 
-    private List<ParticipantResponse> toParticipantDto(final List<AllParticipantQueryResult> filteredParticipants) {
+    private List<ParticipantResponse> toParticipantResponses(final List<AllParticipantQueryResult> filteredParticipants) {
         return filteredParticipants.stream()
                 .filter(it -> !it.isWatcher())
                 .map(ParticipantResponse::from)
                 .collect(Collectors.toList());
     }
 
-    private List<WatcherResponse> toWatcherDtos(final List<AllParticipantQueryResult> filteredParticipants) {
+    private List<WatcherResponse> toWatcherResponses(final List<AllParticipantQueryResult> filteredParticipants) {
         return filteredParticipants.stream()
                 .filter(AllParticipantQueryResult::isWatcher)
                 .map(WatcherResponse::from)

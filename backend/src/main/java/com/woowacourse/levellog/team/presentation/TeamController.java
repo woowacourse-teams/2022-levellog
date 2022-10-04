@@ -33,9 +33,9 @@ public class TeamController {
     private final TeamQueryService teamQueryService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid final TeamWriteRequest teamDto,
+    public ResponseEntity<Void> save(@RequestBody @Valid final TeamWriteRequest request,
                                      @Authentic final Long memberId) {
-        final Long teamId = teamService.save(teamDto, memberId);
+        final Long teamId = teamService.save(request, memberId);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId)).build();
     }
 

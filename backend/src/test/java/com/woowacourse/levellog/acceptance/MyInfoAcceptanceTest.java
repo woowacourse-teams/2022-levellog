@@ -64,12 +64,12 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // given
         final String token = login("로마").getToken();
 
-        final NicknameUpdateRequest nicknameDto = new NicknameUpdateRequest("새이름");
+        final NicknameUpdateRequest request = new NicknameUpdateRequest("새이름");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(nicknameDto)
+                .body(request)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .filter(document("my-info/update/nickname"))
                 .when()

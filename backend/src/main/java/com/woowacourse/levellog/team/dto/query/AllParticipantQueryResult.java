@@ -44,7 +44,7 @@ public class AllParticipantQueryResult {
         this.isWatcher = isWatcher;
     }
 
-    public TeamResponse getTeamDto() {
+    public TeamResponse getTeamResponse() {
         return TeamResponse.from(teamId, title, place, startAt, profileUrl, interviewerNumber, isClosed);
     }
 

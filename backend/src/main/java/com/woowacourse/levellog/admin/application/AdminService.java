@@ -2,9 +2,9 @@ package com.woowacourse.levellog.admin.application;
 
 import static com.woowacourse.levellog.authentication.support.JwtTokenProvider.ADMIN_TOKEN_PAYLOAD;
 
-import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
-import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
-import com.woowacourse.levellog.admin.dto.AdminTeamDto;
+import com.woowacourse.levellog.admin.dto.response.AdminAccessTokenResponse;
+import com.woowacourse.levellog.admin.dto.request.AdminPasswordRequest;
+import com.woowacourse.levellog.admin.dto.response.AdminTeamResponse;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.common.support.DebugMessage;
@@ -40,7 +40,7 @@ public class AdminService {
         this.participantRepository = participantRepository;
     }
 
-    public AdminAccessTokenDto login(final AdminPasswordDto request) {
+    public AdminAccessTokenResponse login(final AdminPasswordRequest request) {
         final boolean isMatch = BCrypt.checkpw(request.getValue(), hash);
         if (!isMatch) {
             throw new WrongPasswordException(DebugMessage.init()
@@ -50,15 +50,15 @@ public class AdminService {
         }
 
         final String token = jwtTokenProvider.createToken(ADMIN_TOKEN_PAYLOAD);
-        return new AdminAccessTokenDto(token);
+        return new AdminAccessTokenResponse(token);
     }
 
-    public List<AdminTeamDto> findAllTeam() {
+    public List<AdminTeamResponse> findAllTeam() {
         final LocalDateTime presentTime = timeStandard.now();
         
         return teamRepository.findAll()
                 .stream()
-                .map(it -> AdminTeamDto.of(it, it.status(presentTime)))
+                .map(it -> AdminTeamResponse.of(it, it.status(presentTime)))
                 .collect(Collectors.toList());
     }
 

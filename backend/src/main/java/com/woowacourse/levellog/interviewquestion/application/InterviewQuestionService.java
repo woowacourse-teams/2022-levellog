@@ -7,11 +7,11 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesR
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResultResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResultResponses;
+import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponses;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -41,7 +41,7 @@ public class InterviewQuestionService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final InterviewQuestionWriteDto request, final Long levellogId, final Long fromMemberId) {
+    public Long save(final InterviewQuestionWriteRequest request, final Long levellogId, final Long fromMemberId) {
         final Member author = memberRepository.getMember(fromMemberId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
@@ -56,32 +56,32 @@ public class InterviewQuestionService {
                 .getId();
     }
 
-    public InterviewQuestionsDto findAllByLevellog(final Long levellogId) {
+    public InterviewQuestionResponses findAllByLevellog(final Long levellogId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellog(levellog);
 
-        return InterviewQuestionsDto.from(interviewQuestions);
+        return InterviewQuestionResponses.from(interviewQuestions);
     }
 
-    public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
+    public InterviewQuestionContentResponses findAllByLevellogAndAuthor(final Long levellogId, final Long fromMemberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member author = memberRepository.getMember(fromMemberId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(
                 levellog, author);
 
-        return InterviewQuestionContentsDto.from(interviewQuestions);
+        return InterviewQuestionContentResponses.from(interviewQuestions);
     }
 
-    public InterviewQuestionSearchResultsDto searchByKeyword(final String keyword, final Long memberId,
-                                                             final Long size, final Long page, final String sort) {
-        final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository
+    public InterviewQuestionSearchResultResponses searchByKeyword(final String keyword, final Long memberId,
+                                                                  final Long size, final Long page, final String sort) {
+        final List<InterviewQuestionSearchResultResponse> results = interviewQuestionQueryRepository
                 .searchByKeyword(keyword, memberId, size, page, InterviewQuestionSort.valueOf(sort.toUpperCase()));
 
-        return InterviewQuestionSearchResultsDto.of(results, page);
+        return InterviewQuestionSearchResultResponses.of(results, page);
     }
 
     @Transactional
-    public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId,
+    public void update(final InterviewQuestionWriteRequest request, final Long interviewQuestionId,
                        final Long fromMemberId) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);

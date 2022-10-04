@@ -4,9 +4,9 @@ import static com.woowacourse.levellog.authentication.support.JwtTokenProvider.A
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
-import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
-import com.woowacourse.levellog.admin.dto.AdminTeamDto;
+import com.woowacourse.levellog.admin.dto.response.AdminAccessTokenResponse;
+import com.woowacourse.levellog.admin.dto.request.AdminPasswordRequest;
+import com.woowacourse.levellog.admin.dto.response.AdminTeamResponse;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.member.domain.Member;
@@ -29,10 +29,10 @@ public class AdminServiceTest extends ServiceTest {
         @DisplayName("암호화된 비밀번호와 일치하는 비밀번호를 입력하면 token을 발급한다.")
         void success() {
             // given
-            final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
+            final AdminPasswordRequest request = new AdminPasswordRequest("levellog1!");
 
             // when
-            final AdminAccessTokenDto actual = adminService.login(request);
+            final AdminAccessTokenResponse actual = adminService.login(request);
 
             // then
             final String token = actual.getAccessToken();
@@ -45,7 +45,7 @@ public class AdminServiceTest extends ServiceTest {
         @DisplayName("잘못된 비밀번호를 입력하면 예외를 던진다.")
         void login_wrongPassword_exception() {
             // given
-            final AdminPasswordDto request = new AdminPasswordDto("wrong-password");
+            final AdminPasswordRequest request = new AdminPasswordRequest("wrong-password");
 
             // when & then
             assertThatThrownBy(() -> adminService.login(request))
@@ -69,7 +69,7 @@ public class AdminServiceTest extends ServiceTest {
             saveTeam(eve, alien);
 
             // when
-            final List<AdminTeamDto> actual = adminService.findAllTeam();
+            final List<AdminTeamResponse> actual = adminService.findAllTeam();
 
             // then
             assertThat(actual).hasSize(2);

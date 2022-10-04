@@ -3,9 +3,9 @@ package com.woowacourse.levellog.feedback.application;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
-import com.woowacourse.levellog.feedback.dto.FeedbackDto;
-import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
-import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
+import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -33,7 +33,7 @@ public class FeedbackService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final FeedbackWriteDto request, final Long levellogId, final Long fromMemberId) {
+    public Long save(final FeedbackWriteRequest request, final Long levellogId, final Long fromMemberId) {
         validateExistence(levellogId, fromMemberId);
 
         final Member member = memberRepository.getMember(fromMemberId);
@@ -51,16 +51,16 @@ public class FeedbackService {
                 .getId();
     }
 
-    public FeedbacksDto findAll(final Long levellogId, final Long memberId) {
+    public FeedbackResponses findAll(final Long levellogId, final Long memberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         validateTeamMember(levellog.getTeam(), memberRepository.getMember(memberId));
 
-        final List<FeedbackDto> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
+        final List<FeedbackResponse> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
 
-        return new FeedbacksDto(responses);
+        return new FeedbackResponses(responses);
     }
 
-    public FeedbackDto findById(final Long levellogId, final Long feedbackId, final Long memberId) {
+    public FeedbackResponse findById(final Long levellogId, final Long feedbackId, final Long memberId) {
         final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member member = memberRepository.getMember(memberId);
@@ -68,18 +68,18 @@ public class FeedbackService {
         validateTeamMember(levellog.getTeam(), member);
         feedback.validateLevellog(levellog);
 
-        return FeedbackDto.from(feedback);
+        return FeedbackResponse.from(feedback);
     }
 
-    public FeedbacksDto findAllByTo(final Long memberId) {
+    public FeedbackResponses findAllByTo(final Long memberId) {
         final Member member = memberRepository.getMember(memberId);
         final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(member);
 
-        return new FeedbacksDto(getFeedbackResponses(feedbacks));
+        return new FeedbackResponses(getFeedbackResponses(feedbacks));
     }
 
     @Transactional
-    public void update(final FeedbackWriteDto request, final Long feedbackId, final Long memberId) {
+    public void update(final FeedbackWriteRequest request, final Long feedbackId, final Long memberId) {
         final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
         final Member member = memberRepository.getMember(memberId);
         final Team team = feedback.getLevellog().getTeam();
@@ -108,9 +108,9 @@ public class FeedbackService {
         }
     }
 
-    private List<FeedbackDto> getFeedbackResponses(final List<Feedback> feedbacks) {
+    private List<FeedbackResponse> getFeedbackResponses(final List<Feedback> feedbacks) {
         return feedbacks.stream()
-                .map(FeedbackDto::from)
+                .map(FeedbackResponse::from)
                 .collect(Collectors.toList());
     }
 }

@@ -3,10 +3,10 @@ package com.woowacourse.levellog.levellog.application;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.levellog.dto.LevellogDto;
-import com.woowacourse.levellog.levellog.dto.LevellogWithIdDto;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
-import com.woowacourse.levellog.levellog.dto.LevellogsDto;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
+import com.woowacourse.levellog.levellog.dto.response.LevellogWithIdResponse;
+import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponses;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -31,7 +31,7 @@ public class LevellogService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final LevellogWriteDto request, final Long authorId, final Long teamId) {
+    public Long save(final LevellogWriteRequest request, final Long authorId, final Long teamId) {
         final Team team = teamRepository.getTeam(teamId);
         final Member author = memberRepository.getMember(authorId);
         validateLevellogExistence(authorId, teamId);
@@ -42,25 +42,25 @@ public class LevellogService {
         return savedLevellog.getId();
     }
 
-    public LevellogDto findById(final Long levellogId) {
+    public LevellogResponse findById(final Long levellogId) {
         final Levellog levellog = getById(levellogId);
 
-        return LevellogDto.from(levellog);
+        return LevellogResponse.from(levellog);
     }
 
-    public LevellogsDto findAllByAuthorId(final Long authorId) {
+    public LevellogResponses findAllByAuthorId(final Long authorId) {
         final Member author = memberRepository.getMember(authorId);
 
         final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author);
-        final List<LevellogWithIdDto> levellogWithIdDtos = levellogs.stream()
-                .map(LevellogWithIdDto::from)
+        final List<LevellogWithIdResponse> levellogWithIdResponses = levellogs.stream()
+                .map(LevellogWithIdResponse::from)
                 .collect(Collectors.toList());
 
-        return new LevellogsDto(levellogWithIdDtos);
+        return new LevellogResponses(levellogWithIdResponses);
     }
 
     @Transactional
-    public void update(final LevellogWriteDto request, final Long levellogId, final Long memberId) {
+    public void update(final LevellogWriteRequest request, final Long levellogId, final Long memberId) {
         final Levellog levellog = getById(levellogId);
         final Member member = memberRepository.getMember(memberId);
         levellog.getTeam().validateReady(timeStandard.now());

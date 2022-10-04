@@ -7,8 +7,8 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
+import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
+import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -29,7 +29,7 @@ public class PreQuestionService {
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public Long save(final PreQuestionWriteDto request, final Long levellogId, final Long memberId) {
+    public Long save(final PreQuestionWriteRequest request, final Long levellogId, final Long memberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member questioner = memberRepository.getMember(memberId);
 
@@ -40,7 +40,7 @@ public class PreQuestionService {
                 .getId();
     }
 
-    public PreQuestionDto findMy(final Long levellogId, final Long questionerId) {
+    public PreQuestionResponse findMy(final Long levellogId, final Long questionerId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member questioner = memberRepository.getMember(questionerId);
         final PreQuestion preQuestion = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner)
@@ -48,11 +48,11 @@ public class PreQuestionService {
                         .append("levellogId", levellogId)
                         .append("memberId", questionerId)));
 
-        return PreQuestionDto.from(questioner, preQuestion.getContent());
+        return PreQuestionResponse.from(questioner, preQuestion.getContent());
     }
 
     @Transactional
-    public void update(final PreQuestionWriteDto request, final Long preQuestionId, final Long levellogId,
+    public void update(final PreQuestionWriteRequest request, final Long preQuestionId, final Long levellogId,
                        final Long memberId) {
         final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);

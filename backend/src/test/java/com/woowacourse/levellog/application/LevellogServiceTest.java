@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.levellog.dto.LevellogDto;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
-import com.woowacourse.levellog.levellog.dto.LevellogsDto;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
+import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponses;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
@@ -36,7 +36,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("레벨로그를 저장한다.")
         void success() {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("Spring을 학습하였습니다.");
             final Member author = saveMember("알린");
             final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
@@ -53,7 +53,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("레벨로그의 팀이 존재하지 않는 경우 예외를 던진다.")
         void save_teamNotFound_exception() {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("스프링에 대해 학습하였습니다.");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("스프링에 대해 학습하였습니다.");
             final Long authorId = saveMember("알린")
                     .getId();
             final Long teamId = 1000L;
@@ -68,7 +68,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("레벨로그의 작성자가 존재하지 않는 경우 예외를 던진다.")
         void save_memberNotFound_exception() {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("스프링에 대해 학습하였습니다.");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("스프링에 대해 학습하였습니다.");
             final Member member = saveMember("알린");
             final Long teamId = saveTeam(member).getId();
             final Long authorId = 1000L;
@@ -83,7 +83,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
         void save_alreadyExist_exception() {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("굳굳");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("굳굳");
             final Member author = saveMember("알린");
             final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
@@ -102,7 +102,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("레벨로그 내용이 공백이나 null일 경우 예외를 던진다.")
         void save_contentBlank_exception(final String invalidContent) {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from(invalidContent);
+            final LevellogWriteRequest request = LevellogWriteRequest.from(invalidContent);
             final Member author = saveMember("알린");
             final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
@@ -117,7 +117,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 반환한다.")
         void save_notReady_exception() {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("Spring을 학습하였습니다.");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("Spring을 학습하였습니다.");
             final Member author = saveMember("알린");
             final Long authorId = author.getId();
             final Long teamId = saveTeam(author).getId();
@@ -145,7 +145,7 @@ class LevellogServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(author, team, content);
 
             // when
-            final LevellogDto response = levellogService.findById(levellog.getId());
+            final LevellogResponse response = levellogService.findById(levellog.getId());
 
             // then
             assertAll(
@@ -176,7 +176,7 @@ class LevellogServiceTest extends ServiceTest {
             final Team team = saveTeam(author);
 
             final Levellog levellog = saveLevellog(author, team);
-            final LevellogWriteDto request = LevellogWriteDto.from("update content");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("update content");
 
             // when
             levellogService.update(request, levellog.getId(), author.getId());
@@ -190,7 +190,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("id에 해당하는 레벨로그가 존재하지 않는 경우 예외를 던진다.")
         void update_notFound_exception() {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("update content");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("update content");
             final Long authorId = saveMember("알린").getId();
             final Long levellogId = 1000L;
 
@@ -208,7 +208,7 @@ class LevellogServiceTest extends ServiceTest {
             final Team team = saveTeam(author);
             final Long levellogId = saveLevellog(author, team).getId();
 
-            final LevellogWriteDto request = LevellogWriteDto.from("JPA를 학습하였습니다.");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("JPA를 학습하였습니다.");
             final Long memberId = 1000L;
 
             // when & then
@@ -225,7 +225,7 @@ class LevellogServiceTest extends ServiceTest {
             final Team team = saveTeam(author);
             final Long levellogId = saveLevellog(author, team).getId();
 
-            final LevellogWriteDto request = LevellogWriteDto.from("update content");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("update content");
             final Long otherMemberId = saveMember("페퍼").getId();
 
             // when & then
@@ -239,7 +239,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("수정한 레벨로그의 내용이 공백이나 null일 경우 예외를 던진다.")
         void update_contentBlank_exception(final String invalidContent) {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from(invalidContent);
+            final LevellogWriteRequest request = LevellogWriteRequest.from(invalidContent);
             final Member author = saveMember("알린");
             final Team team = saveTeam(author);
             final Long levellogId = saveLevellog(author, team).getId();
@@ -255,7 +255,7 @@ class LevellogServiceTest extends ServiceTest {
         @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 반환한다.")
         void update_notReady_exception() {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("update content");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("update content");
             final Member author = saveMember("알린");
             final Team team = saveTeam(author);
             final Long levellogId = saveLevellog(author, team).getId();
@@ -286,10 +286,10 @@ class LevellogServiceTest extends ServiceTest {
             saveLevellog(author, team2);
 
             // when
-            final LevellogsDto levellogsDto = levellogService.findAllByAuthorId(author.getId());
+            final LevellogResponses levellogResponses = levellogService.findAllByAuthorId(author.getId());
 
             // then
-            assertThat(levellogsDto.getLevellogs()).hasSize(2);
+            assertThat(levellogResponses.getLevellogs()).hasSize(2);
         }
 
         @Test

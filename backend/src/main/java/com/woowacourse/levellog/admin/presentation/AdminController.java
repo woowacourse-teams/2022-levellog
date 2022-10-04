@@ -1,9 +1,9 @@
 package com.woowacourse.levellog.admin.presentation;
 
 import com.woowacourse.levellog.admin.application.AdminService;
-import com.woowacourse.levellog.admin.dto.AdminAccessTokenDto;
-import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
-import com.woowacourse.levellog.admin.dto.AdminTeamDto;
+import com.woowacourse.levellog.admin.dto.response.AdminAccessTokenResponse;
+import com.woowacourse.levellog.admin.dto.request.AdminPasswordRequest;
+import com.woowacourse.levellog.admin.dto.response.AdminTeamResponse;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import java.util.List;
 import javax.validation.Valid;
@@ -34,14 +34,14 @@ public class AdminController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<AdminAccessTokenDto> login(@RequestBody @Valid final AdminPasswordDto request) {
-        final AdminAccessTokenDto response = adminService.login(request);
+    public ResponseEntity<AdminAccessTokenResponse> login(@RequestBody @Valid final AdminPasswordRequest request) {
+        final AdminAccessTokenResponse response = adminService.login(request);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/teams")
     public String findAllTeam(final Model model) {
-        final List<AdminTeamDto> response = adminService.findAllTeam();
+        final List<AdminTeamResponse> response = adminService.findAllTeam();
         model.addAttribute("teams", response);
         return "admin-teams";
     }

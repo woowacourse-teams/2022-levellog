@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.authentication.domain;
 
-import com.woowacourse.levellog.authentication.dto.GithubAccessTokenDto;
-import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.authentication.dto.GithubTokenDto;
+import com.woowacourse.levellog.authentication.dto.request.GithubAccessTokenRequest;
+import com.woowacourse.levellog.authentication.dto.response.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.response.GithubTokenResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,13 +24,13 @@ public class GithubOAuthClient implements OAuthClient {
 
     @Override
     public String getAccessToken(final String authorizationCode) {
-        final GithubAccessTokenDto request = new GithubAccessTokenDto(clientId, clientSecret, authorizationCode);
+        final GithubAccessTokenRequest request = new GithubAccessTokenRequest(clientId, clientSecret, authorizationCode);
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 
-        final HttpEntity<GithubAccessTokenDto> httpEntity = new HttpEntity<>(request, headers);
-        final GithubTokenDto response = new RestTemplate()
-                .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, GithubTokenDto.class)
+        final HttpEntity<GithubAccessTokenRequest> httpEntity = new HttpEntity<>(request, headers);
+        final GithubTokenResponse response = new RestTemplate()
+                .exchange(TOKEN_URL, HttpMethod.POST, httpEntity, GithubTokenResponse.class)
                 .getBody();
 
         if (response == null) {
@@ -41,13 +41,13 @@ public class GithubOAuthClient implements OAuthClient {
     }
 
     @Override
-    public GithubProfileDto getProfile(final String accessToken) {
+    public GithubProfileResponse getProfile(final String accessToken) {
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "token " + accessToken);
 
         final HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
         return new RestTemplate()
-                .exchange(USER_ACCESS_URL, HttpMethod.GET, httpEntity, GithubProfileDto.class)
+                .exchange(USER_ACCESS_URL, HttpMethod.GET, httpEntity, GithubProfileResponse.class)
                 .getBody();
     }
 }

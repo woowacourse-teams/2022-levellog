@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.MemberFixture;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
+import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +42,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         timeStandard.setInProgress();
 
         // when
-        final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("Spring을 사용하는 이유?");
+        final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("Spring을 사용하는 이유?");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
@@ -173,7 +173,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
                 .getInterviewQuestionId();
 
         // when
-        final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("수정된 인터뷰 질문");
+        final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("수정된 인터뷰 질문");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())

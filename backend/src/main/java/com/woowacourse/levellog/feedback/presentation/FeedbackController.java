@@ -2,9 +2,9 @@ package com.woowacourse.levellog.feedback.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
-import com.woowacourse.levellog.feedback.dto.FeedbackDto;
-import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
-import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
+import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,30 +26,30 @@ public class FeedbackController {
 
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long levellogId,
-                                     @RequestBody @Valid final FeedbackWriteDto request,
+                                     @RequestBody @Valid final FeedbackWriteRequest request,
                                      @Authentic final Long memberId) {
         final Long id = feedbackService.save(request, levellogId, memberId);
         return ResponseEntity.created(URI.create("/api/levellogs/" + levellogId + "/feedbacks/" + id)).build();
     }
 
     @GetMapping
-    public ResponseEntity<FeedbacksDto> findAll(@PathVariable final Long levellogId,
-                                                @Authentic final Long memberId) {
-        final FeedbacksDto response = feedbackService.findAll(levellogId, memberId);
+    public ResponseEntity<FeedbackResponses> findAll(@PathVariable final Long levellogId,
+                                                     @Authentic final Long memberId) {
+        final FeedbackResponses response = feedbackService.findAll(levellogId, memberId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{feedbackId}")
-    public ResponseEntity<FeedbackDto> findById(@PathVariable final Long levellogId,
-                                                @PathVariable final Long feedbackId,
-                                                @Authentic final Long memberId) {
-        final FeedbackDto response = feedbackService.findById(levellogId, feedbackId, memberId);
+    public ResponseEntity<FeedbackResponse> findById(@PathVariable final Long levellogId,
+                                                     @PathVariable final Long feedbackId,
+                                                     @Authentic final Long memberId) {
+        final FeedbackResponse response = feedbackService.findById(levellogId, feedbackId, memberId);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{feedbackId}")
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
-                                       @RequestBody @Valid final FeedbackWriteDto request,
+                                       @RequestBody @Valid final FeedbackWriteRequest request,
                                        @PathVariable final Long feedbackId,
                                        @Authentic final Long memberId) {
         feedbackService.update(request, feedbackId, memberId);

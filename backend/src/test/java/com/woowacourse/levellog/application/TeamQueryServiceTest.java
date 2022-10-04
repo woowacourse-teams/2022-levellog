@@ -15,7 +15,7 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamListDto;
-import com.woowacourse.levellog.team.dto.TeamSimpleDto;
+import com.woowacourse.levellog.team.dto.query.TeamSimpleQueryResult;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +49,7 @@ public class TeamQueryServiceTest extends ServiceTest {
 
             //then
             assertThat(response.getTeams()).hasSize(2)
-                    .extracting(TeamSimpleDto::getId, TeamSimpleDto::getStatus)
+                    .extracting(TeamSimpleQueryResult::getId, TeamSimpleQueryResult::getStatus)
                     .containsExactly(
                             tuple(romaTeam.getId(), READY),
                             tuple(pepperTeam.getId(), READY)
@@ -80,7 +80,7 @@ public class TeamQueryServiceTest extends ServiceTest {
 
             //then
             assertThat(response.getTeams()).hasSize(2)
-                    .extracting(TeamSimpleDto::getId, TeamSimpleDto::getStatus)
+                    .extracting(TeamSimpleQueryResult::getId, TeamSimpleQueryResult::getStatus)
                     .containsExactly(
                             tuple(eveTeam.getId(), CLOSED),
                             tuple(rickTeam.getId(), CLOSED)
@@ -286,7 +286,7 @@ public class TeamQueryServiceTest extends ServiceTest {
             saveTeam(harry, alien);
 
             // when
-            final List<TeamSimpleDto> teams = teamQueryService.findAllByMemberId(roma.getId()).getTeams();
+            final List<TeamSimpleQueryResult> teams = teamQueryService.findAllByMemberId(roma.getId()).getTeams();
 
             // then
             assertThat(teams).hasSize(2);

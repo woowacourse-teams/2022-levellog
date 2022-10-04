@@ -2,8 +2,8 @@ package com.woowacourse.levellog.prequestion.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
+import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
+import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class PreQuestionController {
     private final PreQuestionService preQuestionService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid final PreQuestionWriteDto request,
+    public ResponseEntity<Void> save(@RequestBody @Valid final PreQuestionWriteRequest request,
                                      @PathVariable final Long levellogId,
                                      @Authentic final Long memberId) {
         final Long preQuestionId = preQuestionService.save(request, levellogId, memberId);
@@ -34,13 +34,13 @@ public class PreQuestionController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<PreQuestionDto> findMy(@PathVariable final Long levellogId, @Authentic final Long memberId) {
-        final PreQuestionDto response = preQuestionService.findMy(levellogId, memberId);
+    public ResponseEntity<PreQuestionResponse> findMy(@PathVariable final Long levellogId, @Authentic final Long memberId) {
+        final PreQuestionResponse response = preQuestionService.findMy(levellogId, memberId);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{preQuestionId}")
-    public ResponseEntity<Void> update(@RequestBody @Valid final PreQuestionWriteDto request,
+    public ResponseEntity<Void> update(@RequestBody @Valid final PreQuestionWriteRequest request,
                                        @PathVariable final Long levellogId,
                                        @PathVariable final Long preQuestionId,
                                        @Authentic final Long memberId) {

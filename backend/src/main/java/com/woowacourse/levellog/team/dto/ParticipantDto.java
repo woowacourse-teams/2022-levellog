@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.team.dto;
 
 import com.woowacourse.levellog.team.domain.Participant;
+import com.woowacourse.levellog.team.dto.query.AllParticipantQueryResult;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -28,12 +29,12 @@ public class ParticipantDto {
                 participant.getMember().getProfileUrl());
     }
 
-    public static ParticipantDto from(final AllParticipantDto allParticipantDto) {
+    public static ParticipantDto from(final AllParticipantQueryResult allParticipantQueryResult) {
         return new ParticipantDto(
-                allParticipantDto.getMemberId(),
-                allParticipantDto.getLevellogId(),
-                allParticipantDto.getPreQuestionId(),
-                allParticipantDto.getNickname(),
-                allParticipantDto.getProfileUrl());
+                allParticipantQueryResult.getMemberId(),
+                allParticipantQueryResult.getLevellogId(),
+                allParticipantQueryResult.getPreQuestionId(),
+                allParticipantQueryResult.getNickname(),
+                allParticipantQueryResult.getProfileUrl());
     }
 }

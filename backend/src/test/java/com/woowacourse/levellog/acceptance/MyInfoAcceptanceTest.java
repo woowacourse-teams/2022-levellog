@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
-import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.util.List;
@@ -64,7 +64,7 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         // given
         final String token = login("로마").getToken();
 
-        final NicknameUpdateDto nicknameDto = new NicknameUpdateDto("새이름");
+        final NicknameUpdateRequest nicknameDto = new NicknameUpdateRequest("새이름");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

@@ -11,17 +11,17 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
-import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
+import com.woowacourse.levellog.authentication.dto.request.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.response.GithubProfileResponse;
 import com.woowacourse.levellog.config.DatabaseCleaner;
 import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
-import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
+import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
 import com.woowacourse.levellog.fixture.MemberFixture;
 import com.woowacourse.levellog.fixture.RestAssuredResponse;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
+import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
+import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
+import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -111,11 +111,11 @@ abstract class AcceptanceTest {
 
     protected RestAssuredResponse login(final String nickname) {
         try {
-            final GithubProfileDto response = new GithubProfileDto(
+            final GithubProfileResponse response = new GithubProfileResponse(
                     String.valueOf((int) System.nanoTime()), nickname, nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);
 
-            return post("/api/auth/login", new GithubCodeDto(code));
+            return post("/api/auth/login", new GithubCodeRequest(code));
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -150,14 +150,14 @@ abstract class AcceptanceTest {
     }
 
     protected RestAssuredResponse saveLevellog(final String content, final String teamId, final MemberFixture author) {
-        final LevellogWriteDto request = LevellogWriteDto.from(content);
+        final LevellogWriteRequest request = LevellogWriteRequest.from(content);
 
         return post("/api/teams/" + teamId + "/levellogs", author.getToken(), request);
     }
 
     protected RestAssuredResponse saveFeedback(final String content, final String levellogId,
                                                final MemberFixture author) {
-        final FeedbackWriteDto request = FeedbackWriteDto.from(
+        final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                 "study " + content, "speak " + content, "etc " + content);
 
         return post("/api/levellogs/" + levellogId + "/feedbacks", author.getToken(), request);
@@ -165,7 +165,7 @@ abstract class AcceptanceTest {
 
     protected RestAssuredResponse savePreQuestion(final String content, final String levellogId,
                                                   final MemberFixture author) {
-        final PreQuestionWriteDto request = PreQuestionWriteDto.from(content);
+        final PreQuestionWriteRequest request = PreQuestionWriteRequest.from(content);
 
         return post("/api/levellogs/" + levellogId + "/pre-questions/", author.getToken(), request);
     }
@@ -173,6 +173,6 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse saveInterviewQuestion(final String content, final String levellogId,
                                                         final MemberFixture author) {
         return post("/api/levellogs/" + levellogId + "/interview-questions", author.getToken(),
-                InterviewQuestionWriteDto.from(content));
+                InterviewQuestionWriteRequest.from(content));
     }
 }

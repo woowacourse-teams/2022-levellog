@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.interviewquestion.domain;
 
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResultResponse;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,7 +11,7 @@ public class InterviewQuestionQueryRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<InterviewQuestionSearchResultDto> searchRowMapper = (resultSet, rowNumber) -> new InterviewQuestionSearchResultDto(
+    private final RowMapper<InterviewQuestionSearchResultResponse> searchRowMapper = (resultSet, rowNumber) -> new InterviewQuestionSearchResultResponse(
             resultSet.getObject("id", Long.class),
             resultSet.getString("content"),
             resultSet.getBoolean("press"),
@@ -22,9 +22,9 @@ public class InterviewQuestionQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<InterviewQuestionSearchResultDto> searchByKeyword(final String keyword, final Long memberId,
-                                                                  final Long size, final Long page,
-                                                                  final InterviewQuestionSort sort) {
+    public List<InterviewQuestionSearchResultResponse> searchByKeyword(final String keyword, final Long memberId,
+                                                                       final Long size, final Long page,
+                                                                       final InterviewQuestionSort sort) {
         final String sql = "SELECT id, content, "
                 + "(select CASE WHEN (id IN (select interview_question_id from interview_question_likes where liker_id = ?)) "
                 + "THEN true ELSE false END ) AS press, "

@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
+import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
@@ -29,7 +29,7 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
         void save_alreadyExists_exception() throws Exception {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("content");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("content");
             final Long authorId = 1L;
             final Long teamId = 1L;
 
@@ -58,7 +58,7 @@ class LevellogControllerTest extends ControllerTest {
         void save_nameNullOrEmpty_exception() throws Exception {
             // given
             final Long teamId = 1L;
-            final LevellogWriteDto request = LevellogWriteDto.from(" ");
+            final LevellogWriteRequest request = LevellogWriteRequest.from(" ");
 
             // when
             final ResultActions perform = requestCreateLevellog(teamId, request);
@@ -77,7 +77,7 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("Ready 상태가 아닐 때 레벨로그를 저장하는 경우 예외를 던진다.")
         void save_notReady_exception() throws Exception {
             // given
-            final LevellogWriteDto request = LevellogWriteDto.from("content");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("content");
             final Long authorId = 1L;
             final Long teamId = 1L;
 
@@ -99,7 +99,7 @@ class LevellogControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "after-start"));
         }
 
-        private ResultActions requestCreateLevellog(final Long teamId, final LevellogWriteDto request)
+        private ResultActions requestCreateLevellog(final Long teamId, final LevellogWriteRequest request)
                 throws Exception {
             return requestPost("/api/teams/" + teamId + "/levellogs", request);
         }
@@ -155,7 +155,7 @@ class LevellogControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final LevellogWriteDto request = LevellogWriteDto.from(" ");
+            final LevellogWriteRequest request = LevellogWriteRequest.from(" ");
 
             // when
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
@@ -177,7 +177,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
-            final LevellogWriteDto request = LevellogWriteDto.from("update content");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("update content");
 
             final String message = "작성자가 아닙니다.";
             willThrow(new MemberNotAuthorException(DebugMessage.init()))
@@ -204,7 +204,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final Long authorId = 1L;
-            final LevellogWriteDto request = LevellogWriteDto.from("new content");
+            final LevellogWriteRequest request = LevellogWriteRequest.from("new content");
 
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
@@ -225,7 +225,7 @@ class LevellogControllerTest extends ControllerTest {
         }
 
         private ResultActions requestUpdateLevellog(final Long teamId, final Long levellogId,
-                                                    final LevellogWriteDto request) throws Exception {
+                                                    final LevellogWriteRequest request) throws Exception {
             return requestPut("/api/teams/" + teamId + "/levellogs/" + levellogId, request);
         }
     }

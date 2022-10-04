@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
+import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
@@ -36,7 +36,7 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "피드백이 이미 존재합니다.";
@@ -63,7 +63,7 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "잘못된 피드백 요청입니다.";
@@ -90,7 +90,7 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "같은 팀에 속해있지 않습니다.";
@@ -116,7 +116,7 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 20000000L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "레벨로그가 존재하지 않습니다.";
@@ -143,7 +143,7 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
@@ -169,7 +169,7 @@ class FeedbackControllerTest extends ControllerTest {
             // given
             final Long memberId = 1L;
             final Long levellogId = 1L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "이미 인터뷰가 종료된 팀입니다.";
@@ -189,7 +189,7 @@ class FeedbackControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "after-interview"));
         }
 
-        private ResultActions requestCreateFeedback(final Long levellogId, final FeedbackWriteDto request)
+        private ResultActions requestCreateFeedback(final Long levellogId, final FeedbackWriteRequest request)
                 throws Exception {
             return requestPost("/api/levellogs/" + levellogId + "/feedbacks", request);
         }
@@ -208,7 +208,7 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "잘못된 피드백 요청입니다.";
@@ -238,7 +238,7 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 1000000L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "피드백이 존재하지 않습니다.";
@@ -267,7 +267,7 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
@@ -295,7 +295,7 @@ class FeedbackControllerTest extends ControllerTest {
             final Long memberId = 1L;
             final Long levellogId = 1L;
             final Long feedbackId = 2L;
-            final FeedbackWriteDto request = FeedbackWriteDto.from(
+            final FeedbackWriteRequest request = FeedbackWriteRequest.from(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
             final String message = "이미 인터뷰가 종료된 팀입니다.";
@@ -317,7 +317,7 @@ class FeedbackControllerTest extends ControllerTest {
         }
 
         private ResultActions requestUpdateFeedback(final Long levellogId, final Long feedbackId,
-                                                    final FeedbackWriteDto request) throws Exception {
+                                                    final FeedbackWriteRequest request) throws Exception {
             return requestPut("/api/levellogs/" + levellogId + "/feedbacks/" + feedbackId, request);
         }
     }

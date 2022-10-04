@@ -3,9 +3,9 @@ package com.woowacourse.levellog.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
-import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.authentication.dto.LoginDto;
+import com.woowacourse.levellog.authentication.dto.request.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.response.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.response.LoginResponse;
 import com.woowacourse.levellog.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,11 +22,11 @@ class OAuthServiceTest extends ServiceTest {
         @DisplayName("첫 로그인 시 회원가입하고 id, 토큰, 이미지 URL를 반환한다.")
         void login_ifFirst_success() throws Exception {
             // given
-            final GithubProfileDto request = new GithubProfileDto("1234", "릭", "rick.org");
+            final GithubProfileResponse request = new GithubProfileResponse("1234", "릭", "rick.org");
 
             // when
-            final LoginDto tokenResponse = oAuthService.login(
-                    new GithubCodeDto(objectMapper.writeValueAsString(request)));
+            final LoginResponse tokenResponse = oAuthService.login(
+                    new GithubCodeRequest(objectMapper.writeValueAsString(request)));
 
             // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
@@ -45,12 +45,12 @@ class OAuthServiceTest extends ServiceTest {
             // given
             final Member member = saveMember("로마");
 
-            final GithubProfileDto request = new GithubProfileDto(member.getGithubId().toString(), member.getNickname(),
+            final GithubProfileResponse request = new GithubProfileResponse(member.getGithubId().toString(), member.getNickname(),
                     member.getProfileUrl());
 
             // when
-            final LoginDto tokenResponse = oAuthService.login(
-                    new GithubCodeDto(objectMapper.writeValueAsString(request)));
+            final LoginResponse tokenResponse = oAuthService.login(
+                    new GithubCodeRequest(objectMapper.writeValueAsString(request)));
 
             // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());

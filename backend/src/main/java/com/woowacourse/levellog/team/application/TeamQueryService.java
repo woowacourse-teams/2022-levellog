@@ -9,12 +9,12 @@ import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.domain.TeamQueryRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.dto.AllParticipantDto;
-import com.woowacourse.levellog.team.dto.AllSimpleParticipantDto;
+import com.woowacourse.levellog.team.dto.query.AllParticipantQueryResult;
+import com.woowacourse.levellog.team.dto.query.AllSimpleParticipantQueryResult;
 import com.woowacourse.levellog.team.dto.ParticipantDto;
 import com.woowacourse.levellog.team.dto.TeamDto;
 import com.woowacourse.levellog.team.dto.TeamListDto;
-import com.woowacourse.levellog.team.dto.TeamSimpleDto;
+import com.woowacourse.levellog.team.dto.query.TeamSimpleQueryResult;
 import com.woowacourse.levellog.team.dto.WatcherDto;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
@@ -35,34 +35,34 @@ public class TeamQueryService {
     private final TimeStandard timeStandard;
 
     public TeamListDto findAll(final TeamFilterCondition condition, final int page, final int size) {
-        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findAllList(condition.isClosed(),
+        final List<AllSimpleParticipantQueryResult> allParticipants = teamQueryRepository.findAllList(condition.isClosed(),
                 size, page * size);
-        final List<TeamSimpleDto> teamSimpleDtos = allParticipants.stream()
-                .collect(Collectors.groupingBy(AllSimpleParticipantDto::getId, LinkedHashMap::new, Collectors.toList()))
+        final List<TeamSimpleQueryResult> teamSimpleQueryResults = allParticipants.stream()
+                .collect(Collectors.groupingBy(AllSimpleParticipantQueryResult::getId, LinkedHashMap::new, Collectors.toList()))
                 .values()
                 .stream()
-                .map(it -> TeamSimpleDto.of(it, toTeamStatus(it.get(0))))
+                .map(it -> TeamSimpleQueryResult.of(it, toTeamStatus(it.get(0))))
                 .collect(Collectors.toList());
 
-        return new TeamListDto(teamSimpleDtos);
+        return new TeamListDto(teamSimpleQueryResults);
     }
 
     public TeamListDto findAllByMemberId(final Long memberId) {
         final Member member = memberRepository.getMember(memberId);
 
-        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findMyList(member);
-        final List<TeamSimpleDto> teamSimpleDtos = allParticipants.stream()
-                .collect(Collectors.groupingBy(AllSimpleParticipantDto::getId, LinkedHashMap::new, Collectors.toList()))
+        final List<AllSimpleParticipantQueryResult> allParticipants = teamQueryRepository.findMyList(member);
+        final List<TeamSimpleQueryResult> teamSimpleQueryResults = allParticipants.stream()
+                .collect(Collectors.groupingBy(AllSimpleParticipantQueryResult::getId, LinkedHashMap::new, Collectors.toList()))
                 .values()
                 .stream()
-                .map(it -> TeamSimpleDto.of(it, toTeamStatus(it.get(0))))
+                .map(it -> TeamSimpleQueryResult.of(it, toTeamStatus(it.get(0))))
                 .collect(Collectors.toList());
 
-        return new TeamListDto(teamSimpleDtos);
+        return new TeamListDto(teamSimpleQueryResults);
     }
 
     public TeamDto findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
-        final List<AllParticipantDto> allParticipants = teamQueryRepository.findAllByTeamId(teamId, memberId);
+        final List<AllParticipantQueryResult> allParticipants = teamQueryRepository.findAllByTeamId(teamId, memberId);
         if (allParticipants.isEmpty()) {
             throw new TeamNotFoundException(DebugMessage.init()
                     .append("teamId", teamId)
@@ -82,27 +82,27 @@ public class TeamQueryService {
                 toParticipantDto(allParticipants), toWatcherDtos(allParticipants));
     }
 
-    private TeamStatus toTeamStatus(final AllSimpleParticipantDto dto) {
+    private TeamStatus toTeamStatus(final AllSimpleParticipantQueryResult dto) {
         return TeamStatus.of(dto.isClosed(), dto.getStartAt(), timeStandard.now());
     }
 
-    private SimpleParticipants toSimpleParticipants(final List<AllParticipantDto> filteredParticipants) {
+    private SimpleParticipants toSimpleParticipants(final List<AllParticipantQueryResult> filteredParticipants) {
         final List<SimpleParticipant> participants = filteredParticipants.stream()
-                .map(AllParticipantDto::toSimpleParticipant)
+                .map(AllParticipantQueryResult::toSimpleParticipant)
                 .collect(Collectors.toList());
         return new SimpleParticipants(participants);
     }
 
-    private List<ParticipantDto> toParticipantDto(final List<AllParticipantDto> filteredParticipants) {
+    private List<ParticipantDto> toParticipantDto(final List<AllParticipantQueryResult> filteredParticipants) {
         return filteredParticipants.stream()
                 .filter(it -> !it.isWatcher())
                 .map(ParticipantDto::from)
                 .collect(Collectors.toList());
     }
 
-    private List<WatcherDto> toWatcherDtos(final List<AllParticipantDto> filteredParticipants) {
+    private List<WatcherDto> toWatcherDtos(final List<AllParticipantQueryResult> filteredParticipants) {
         return filteredParticipants.stream()
-                .filter(AllParticipantDto::isWatcher)
+                .filter(AllParticipantQueryResult::isWatcher)
                 .map(WatcherDto::from)
                 .collect(Collectors.toList());
     }

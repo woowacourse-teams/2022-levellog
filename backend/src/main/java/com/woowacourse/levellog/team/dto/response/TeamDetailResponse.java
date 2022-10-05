@@ -29,7 +29,7 @@ public class TeamDetailResponse {
     private List<ParticipantResponse> participants;
     private List<WatcherResponse> watchers;
 
-    public static TeamDetailResponse from2(final TeamResponse teamResponse,
+    public static TeamDetailResponse from(final TeamResponse teamResponse,
                                            final TeamStatus status,
                                            final Long memberId,
                                            final SimpleParticipants participants,

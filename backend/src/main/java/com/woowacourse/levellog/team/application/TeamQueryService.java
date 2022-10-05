@@ -29,14 +29,14 @@ public class TeamQueryService {
         final List<AllTeamListQueryResult> results = teamQueryRepository.findAllList(
                 condition.isClosed(), size, page * size);
 
-        return TeamListResponses.from(results);
+        return TeamListResponses.from(results, timeStandard.now());
     }
 
     public TeamListResponses findAllByMemberId(final Long memberId) {
         final Member member = memberRepository.getMember(memberId);
         final List<AllTeamListQueryResult> results = teamQueryRepository.findMyList(member);
 
-        return TeamListResponses.from(results);
+        return TeamListResponses.from(results, timeStandard.now());
     }
 
     public TeamDetailResponse findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
@@ -45,7 +45,7 @@ public class TeamQueryService {
 
         validateNotEmpty(results, teamId, memberId);
 
-        return results.toResponses(timeStandard.now());
+        return results.toResponses(memberId, timeStandard.now());
     }
 
     private void validateNotEmpty(final AllTeamDetailQueryResults allTeamDetailQueryResults,

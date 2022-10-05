@@ -23,15 +23,14 @@ public class AllTeamDetailQueryResults {
         return results.isEmpty();
     }
 
-    public TeamDetailResponse toResponses(final LocalDateTime nowTime) {
+    public TeamDetailResponse toResponses(final Long memberId, final LocalDateTime time) {
         final AllTeamDetailQueryResult result = results.get(0);
 
         final TeamResponse teamResponse = result.getTeamResponse();
-        final TeamStatus status = toTeamStatus(result, nowTime);
-        final Long memberId = result.getParticipantResponse().getMemberId();
+        final TeamStatus status = toTeamStatus(result, time);
         final SimpleParticipants participants = toSimpleParticipants(results);
 
-        return TeamDetailResponse.from2(
+        return TeamDetailResponse.from(
                 teamResponse,
                 status,
                 memberId,

@@ -1,19 +1,19 @@
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useFeedback from 'hooks/useFeedback';
+import useFeedbacks from 'hooks/feedback/useFeedbacks';
 import useLevellog from 'hooks/useLevellog';
-import useSnackbar from 'hooks/useSnackbar';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
 
 import EmptyFeedback from 'pages/status/EmptyFeedback';
+import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
 
 import plusIcon from 'assets/images/plus.svg';
-import { MESSAGE, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
+import { TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -23,54 +23,44 @@ import { FeedbackType } from 'types/feedback';
 import { feedbackAddUriBuilder, teamGetUriBuilder } from 'utils/util';
 
 const Feedbacks = () => {
-  const { feedbacks, getFeedbacksInTeam } = useFeedback();
-  const { levellogInfo, getLevellog } = useLevellog();
+  const { feedbackError, feedbacks } = useFeedbacks();
+  const { levellogError, levellogInfo } = useLevellog();
   const { team } = useTeam();
   const { loginUserId } = useUser();
-  const { showSnackbar } = useSnackbar();
   const { teamId, levellogId } = useParams();
-  const navigate = useNavigate();
 
-  if (typeof levellogId !== 'string' || typeof teamId !== 'string') {
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-    navigate(ROUTES_PATH.ERROR);
-
-    return <Loading />;
+  if (feedbackError) {
+    return <Error />;
   }
 
-  useEffect(() => {
-    getLevellog({ teamId, levellogId });
-    getFeedbacksInTeam({ levellogId });
-  }, []);
-
-  if (!loginUserId || Object.keys(levellogInfo).length === 0) {
-    return <Loading />;
+  if (levellogError) {
+    return <Error />;
   }
 
-  if (feedbacks.length === 0) {
+  if (feedbacks?.feedbacks.length === 0) {
     return (
-      <>
+      <Suspense fallback={<Loading />}>
         <ContentHeader
-          imageUrl={levellogInfo.author.profileUrl}
-          title={`${levellogInfo.author.nickname}에 대한 레벨 인터뷰 피드백`}
+          imageUrl={levellogInfo?.author.profileUrl}
+          title={`${levellogInfo?.author.nickname}에 대한 레벨 인터뷰 피드백`}
         >
           <Link to={teamGetUriBuilder({ teamId })}>
             <Button>팀 상세화면 이동</Button>
           </Link>
         </ContentHeader>
         <EmptyFeedback
-          isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
+          isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo?.author.id !== loginUserId}
           path={feedbackAddUriBuilder({ teamId, levellogId })}
         />
-      </>
+      </Suspense>
     );
   }
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       <ContentHeader
-        imageUrl={levellogInfo.author.profileUrl}
-        title={`${levellogInfo.author.nickname}에 대한 레벨 인터뷰 피드백`}
+        imageUrl={levellogInfo?.author.profileUrl}
+        title={`${levellogInfo?.author.nickname}에 대한 레벨 인터뷰 피드백`}
       >
         <>
           <Link to={teamGetUriBuilder({ teamId })}>
@@ -86,11 +76,10 @@ const Feedbacks = () => {
               </S.TeamDetailButton>
             </Link>
           )}
-          {/*내가 피드백을 작성했다면 '작성하기' 버튼 제거하기*/}
         </>
       </ContentHeader>
       <S.Container>
-        {feedbacks.map((feedbackInfo: FeedbackType) => (
+        {feedbacks?.feedbacks.map((feedbackInfo: FeedbackType) => (
           <Feedback
             key={feedbackInfo.id}
             loginUserId={loginUserId}
@@ -101,7 +90,7 @@ const Feedbacks = () => {
           />
         ))}
       </S.Container>
-    </>
+    </Suspense>
   );
 };
 

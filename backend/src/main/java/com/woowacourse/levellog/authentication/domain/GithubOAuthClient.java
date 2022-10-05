@@ -24,7 +24,8 @@ public class GithubOAuthClient implements OAuthClient {
 
     @Override
     public String getAccessToken(final String authorizationCode) {
-        final GithubAccessTokenRequest request = new GithubAccessTokenRequest(clientId, clientSecret, authorizationCode);
+        final GithubAccessTokenRequest request = new GithubAccessTokenRequest(
+                clientId, clientSecret, authorizationCode);
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 

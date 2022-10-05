@@ -1,12 +1,10 @@
 package com.woowacourse.levellog.team.dto.query;
 
 import com.woowacourse.levellog.team.domain.SimpleParticipant;
-import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.response.ParticipantResponse;
 import com.woowacourse.levellog.team.dto.response.TeamResponse;
 import com.woowacourse.levellog.team.dto.response.WatcherResponse;
 import java.time.LocalDateTime;
-import lombok.Getter;
 
 public class AllTeamDetailQueryResult {
 

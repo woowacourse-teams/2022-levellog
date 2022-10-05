@@ -197,7 +197,8 @@ class InterviewQuestionControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "self-interview-question"));
         }
 
-        private ResultActions requestCreateInterviewQuestion(final Long levellogId, final InterviewQuestionWriteRequest request)
+        private ResultActions requestCreateInterviewQuestion(final Long levellogId,
+                                                             final InterviewQuestionWriteRequest request)
                 throws Exception {
             return requestPost("/api/levellogs/" + levellogId + "/interview-questions", request);
         }

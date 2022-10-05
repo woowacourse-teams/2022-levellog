@@ -30,11 +30,11 @@ public class TeamDetailResponse {
     private List<WatcherResponse> watchers;
 
     public static TeamDetailResponse from(final TeamResponse teamResponse,
-                                           final TeamStatus status,
-                                           final Long memberId,
-                                           final SimpleParticipants participants,
-                                           final List<ParticipantResponse> participantResponses,
-                                           final List<WatcherResponse> watcherResponses) {
+                                          final TeamStatus status,
+                                          final Long memberId,
+                                          final SimpleParticipants participants,
+                                          final List<ParticipantResponse> participantResponses,
+                                          final List<WatcherResponse> watcherResponses) {
         return new TeamDetailResponse(
                 teamResponse.getId(),
                 teamResponse.getTitle(),

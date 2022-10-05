@@ -4,8 +4,8 @@ import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
-import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
 import com.woowacourse.levellog.levellog.dto.response.LevellogListResponses;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
 import com.woowacourse.levellog.levellog.dto.response.LevellogWithIdResponse;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -81,6 +81,5 @@ public class LevellogService {
                     .append("authorId", authorId)
                     .append("teamId", teamId));
         }
-
     }
 }

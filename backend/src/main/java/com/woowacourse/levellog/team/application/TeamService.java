@@ -57,14 +57,15 @@ public class TeamService {
 
     @Transactional
     public void update(final TeamWriteDto request, final Long teamId, final Long memberId) {
-        final Team team = teamRepository.getTeam(teamId);
+        final Team team = teamRepository.getTeamWithParticipants(teamId);
         validateHostAuthorization(memberId, team);
 
 //        final Team updateTeam = new Team(request.getTitle(), request.getPlace(), request.getStartAt(),
 //                team.getProfileUrl(), request.getInterviewerNumber(),
 //                Participants.of(team, memberId, request.getParticipantIds(), request.getWatcherIds()));
 
-        team.update(request.toEntity(team.getProfileUrl()), memberId, request.getParticipantIds(), request.getWatcherIds(), timeStandard.now());
+        team.update(request.toEntity(team.getProfileUrl()), memberId, request.getParticipantIds(),
+                request.getWatcherIds(), timeStandard.now());
     }
 
     @Transactional

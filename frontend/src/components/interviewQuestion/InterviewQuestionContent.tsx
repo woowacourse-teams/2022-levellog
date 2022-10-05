@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import useInterviewQuestionEdit from 'hooks/useInterviewQuestionEdit';
+import useInterviewQuestionEdit from 'hooks/interviewQuestion/useInterviewQuestionEdit';
 
 import Button from 'components/@commons/Button';
 import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';

@@ -3,9 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
+import useFeedbacks from 'hooks/feedback/useFeedbackAdd';
+import useInterviewQuestion from 'hooks/interviewQuestion/useInterviewQuestion';
 import useContentTag from 'hooks/useContentTag';
-import useFeedback from 'hooks/useFeedback';
-import useInterviewQuestion from 'hooks/useInterviewQuestion';
 import useLevellog from 'hooks/useLevellog';
 import usePreQuestion from 'hooks/usePreQuestion';
 import useRole from 'hooks/useRole';
@@ -27,7 +27,7 @@ const FeedbackEdit = () => {
   const { preQuestion, getPreQuestion } = usePreQuestion();
   const { levellogInfo, getLevellog } = useLevellog();
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
-  const { feedbackRef, getFeedbackOnRef, onClickFeedbackEditButton } = useFeedback();
+  const { feedbackRef, getFeedbackOnRef, onClickFeedbackEditButton } = useFeedbacks();
   const { feedbackWriterRole, getWriterInfo } = useRole();
   const {
     interviewQuestionInfos,

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useInterviewQuestion from 'hooks/useInterviewQuestion';
+import useInterviewQuestion from 'hooks/interviewQuestion/useInterviewQuestion';
 import useLevellog from 'hooks/useLevellog';
 import useTeam from 'hooks/useTeam';
 import useUser from 'hooks/useUser';
@@ -23,7 +23,7 @@ import {
 import { checkFirstWordFinalConsonant, feedbackAddUriBuilder } from 'utils/util';
 
 const InterviewQuestions = () => {
-  const { levellogInfo, getLevellog } = useLevellog();
+  const { levellogInfo } = useLevellog();
   const { interviewQuestionInfosInLevellog } = useInterviewQuestion();
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { team } = useTeam();

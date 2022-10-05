@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.team.dto.response;
 
 import com.woowacourse.levellog.team.dto.query.AllTeamListQueryResult;
-import com.woowacourse.levellog.team.dto.query.TeamListResponse;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -13,7 +13,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
-import com.woowacourse.levellog.team.dto.query.TeamListResponse;
+import com.woowacourse.levellog.team.dto.response.TeamListResponse;
 import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
 import com.woowacourse.levellog.team.dto.response.TeamListResponses;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;

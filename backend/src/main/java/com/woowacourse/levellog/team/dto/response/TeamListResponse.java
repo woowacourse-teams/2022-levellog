@@ -1,6 +1,7 @@
-package com.woowacourse.levellog.team.dto.query;
+package com.woowacourse.levellog.team.dto.response;
 
 import com.woowacourse.levellog.team.domain.TeamStatus;
+import com.woowacourse.levellog.team.dto.query.AllTeamListQueryResult;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class TeamListResponse {
     private LocalDateTime startAt;
     private String teamImage;
     private TeamStatus status;
-    private List<ParticipantSimpleQueryResult> participants;
+    private List<ParticipantInTeamListResponse> participants;
 
     public static TeamListResponse of(final List<AllTeamListQueryResult> simpleParticipants,
                                       final TeamStatus status) {
@@ -35,7 +36,7 @@ public class TeamListResponse {
                 result.getTeamImage(),
                 status,
                 simpleParticipants.stream()
-                        .map(ParticipantSimpleQueryResult::from)
+                        .map(ParticipantInTeamListResponse::from)
                         .collect(Collectors.toList())
         );
     }

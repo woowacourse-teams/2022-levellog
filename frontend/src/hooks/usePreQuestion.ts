@@ -1,13 +1,15 @@
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Editor } from '@toast-ui/react-editor';
 
 import useSnackbar from 'hooks/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { Editor } from '@toast-ui/react-editor';
 import {
   requestDeletePreQuestion,
   requestEditPreQuestion,
@@ -18,107 +20,67 @@ import { NotCorrectToken } from 'apis/utils';
 import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
 import { teamGetUriBuilder } from 'utils/util';
 
+const QUERY_KEY = {
+  PREQUESTION: 'preQuestion',
+};
+
 const usePreQuestion = () => {
   const { showSnackbar } = useSnackbar();
-  const [preQuestion, setPreQuestion] = useState<PreQuestionFormatType>(
-    {} as unknown as PreQuestionFormatType,
-  );
   const preQuestionRef = useRef<Editor>(null);
   const navigate = useNavigate();
+  const { levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const getPreQuestion = async ({ levellogId }: Pick<PreQuestionCustomHookType, 'levellogId'>) => {
-    try {
-      const res = await requestGetPreQuestion({ levellogId, accessToken });
-      setPreQuestion(res.data);
+  const { isError: preQuestionError, data: preQuestion } = useQuery(
+    [QUERY_KEY.PREQUESTION, accessToken, levellogId],
+    () =>
+      requestGetPreQuestion({
+        accessToken,
+        levellogId,
+      }),
+  );
 
-      return res.data;
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err) && err instanceof Error) {
-        const responseBody: AxiosResponse = err.response!;
-        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
-          showSnackbar({ message: responseBody.data.message });
-        }
-      }
-    }
-  };
-
-  const postPreQuestion = async ({
-    teamId,
-    levellogId,
-    preQuestionContent,
-  }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId' | 'preQuestionContent'>) => {
-    try {
-      await requestPostPreQuestion({
+  const { mutate: postPreQuestion } = useMutation(
+    ({
+      levellogId,
+      preQuestionContent,
+    }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionContent'>) => {
+      return requestPostPreQuestion({
         accessToken,
         levellogId,
         preQuestionResult: { content: preQuestionContent },
       });
+    },
+  );
 
-      return true;
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err) && err instanceof Error) {
-        const responseBody: AxiosResponse = err.response!;
-        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
-          showSnackbar({ message: responseBody.data.message });
-        }
-      }
-    }
-  };
-
-  const deletePreQuestion = async ({
-    levellogId,
-    preQuestionId,
-  }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
-    try {
-      await requestDeletePreQuestion({ accessToken, levellogId, preQuestionId });
-
-      return true;
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err) && err instanceof Error) {
-        const responseBody: AxiosResponse = err.response!;
-        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
-          showSnackbar({ message: responseBody.data.message });
-        }
-      }
-    }
-  };
-
-  const editPreQuestion = async ({
-    levellogId,
-    preQuestionId,
-    preQuestionContent,
-  }: Omit<PreQuestionCustomHookType, 'preQuestion'>) => {
-    try {
-      await requestEditPreQuestion({
+  const { mutate: editPreQuestion } = useMutation(
+    ({
+      levellogId,
+      preQuestionId,
+      preQuestionContent,
+    }: Omit<PreQuestionCustomHookType, 'preQuestion'>) => {
+      return requestEditPreQuestion({
         accessToken,
         levellogId,
         preQuestionId,
         preQuestionResult: { content: preQuestionContent },
       });
+    },
+  );
 
-      return true;
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err) && err instanceof Error) {
-        const responseBody: AxiosResponse = err.response!;
-        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
-          showSnackbar({ message: responseBody.data.message });
-        }
-      }
-    }
-  };
+  const { mutate: deletePreQuestion } = useMutation(
+    ({
+      levellogId,
+      preQuestionId,
+    }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
+      return requestDeletePreQuestion({ accessToken, levellogId, preQuestionId });
+    },
+  );
 
-  const getPreQuestionOnRef = async ({
-    levellogId,
-  }: Pick<PreQuestionCustomHookType, 'levellogId'>) => {
-    const preQuestion = await getPreQuestion({ levellogId });
-
+  const getPreQuestionOnRef = () => {
     if (!preQuestion) return;
 
-    if (typeof preQuestion.content === 'string') {
-      setPreQuestion(preQuestion);
-    }
     if (typeof preQuestion.content === 'string' && preQuestionRef.current) {
       preQuestionRef.current.getInstance().setMarkdown(preQuestion.content);
     }
@@ -130,16 +92,13 @@ const usePreQuestion = () => {
   }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId'>) => {
     if (!preQuestionRef.current) return;
 
-    if (
-      await postPreQuestion({
-        teamId,
-        levellogId,
-        preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
-      })
-    ) {
-      showSnackbar({ message: MESSAGE.PREQUESTION_ADD });
-      navigate(teamGetUriBuilder({ teamId }));
-    }
+    postPreQuestion({
+      levellogId,
+      preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
+    });
+
+    showSnackbar({ message: MESSAGE.PREQUESTION_ADD });
+    navigate(teamGetUriBuilder({ teamId }));
   };
 
   const onClickPreQuestionEditButton = async ({
@@ -149,23 +108,21 @@ const usePreQuestion = () => {
   }: Pick<PreQuestionCustomHookType, 'teamId' | 'levellogId' | 'preQuestionId'>) => {
     if (!preQuestionRef.current) return;
 
-    if (
-      await editPreQuestion({
-        teamId,
-        levellogId,
-        preQuestionId,
-        preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
-      })
-    ) {
-      showSnackbar({ message: MESSAGE.PREQUESTION_EDIT });
-      navigate(teamGetUriBuilder({ teamId }));
-    }
+    editPreQuestion({
+      teamId,
+      levellogId,
+      preQuestionId,
+      preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
+    });
+
+    showSnackbar({ message: MESSAGE.PREQUESTION_EDIT });
+    navigate(teamGetUriBuilder({ teamId }));
   };
 
   return {
+    preQuestionError,
     preQuestion,
     preQuestionRef,
-    getPreQuestion,
     deletePreQuestion,
     getPreQuestionOnRef,
     onClickPreQuestionAddButton,

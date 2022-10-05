@@ -1,39 +1,49 @@
-import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import axios, { AxiosResponse } from 'axios';
+import { useQuery } from '@tanstack/react-query';
 
-import useSnackbar from 'hooks/useSnackbar';
-
+import { requestGetLevellog } from 'apis/levellog';
 import { requestGetLoginUserRole } from 'apis/role';
-import { NotCorrectToken } from 'apis/utils';
-import { RoleCustomHookType } from 'types/role';
+
+const QUERY_KEY = {
+  ROLE: 'role',
+  LEVELLOG: 'levellog',
+};
 
 const useRole = () => {
-  const { showSnackbar } = useSnackbar();
-  const [feedbackWriterRole, setFeedbackWriterRole] = useState('');
+  const { teamId, levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const getWriterInfo = async ({
-    teamId,
-    participantId,
-  }: Omit<RoleCustomHookType, 'levellogId'>) => {
-    try {
-      const res = await requestGetLoginUserRole({ teamId, participantId, accessToken });
-      setFeedbackWriterRole(res.data.myRole);
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err) && err instanceof Error) {
-        const responseBody: AxiosResponse = err.response!;
-        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
-          showSnackbar({ message: responseBody.data.message });
-        }
-      }
-    }
-  };
+  const { data: levellogInfo } = useQuery(
+    [QUERY_KEY.LEVELLOG, accessToken, teamId, levellogId],
+    () =>
+      requestGetLevellog({
+        accessToken,
+        teamId,
+        levellogId,
+      }),
+  );
+
+  const author = levellogInfo?.author;
+
+  const { data: feedbackWriterRole } = useQuery(
+    [QUERY_KEY.ROLE, accessToken, teamId, author],
+    () => {
+      return requestGetLoginUserRole({
+        accessToken,
+        teamId,
+        participantId: author?.id,
+      });
+    },
+    {
+      enabled: !!author,
+    },
+  );
 
   return {
+    authorInfo: levellogInfo?.author,
     feedbackWriterRole,
-    getWriterInfo,
   };
 };
 

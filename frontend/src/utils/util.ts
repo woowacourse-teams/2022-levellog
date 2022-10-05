@@ -92,7 +92,7 @@ export const feedbackAddUriBuilder = ({
   teamId,
   levellogId,
 }: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`;
+  return `/teams/${teamId}/levellogs/${levellogId}/feedback/add`;
 };
 
 export const feedbackEditUriBuilder = ({
@@ -101,7 +101,7 @@ export const feedbackEditUriBuilder = ({
   feedbackId,
   authorId,
 }: Omit<UriCustomHookType, 'preQuestionId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackId}/author/${authorId}/edit`;
+  return `/teams/${teamId}/levellogs/${levellogId}/feedback/${feedbackId}/author/${authorId}/edit`;
 };
 
 export const feedbacksGetUriBuilder = ({
@@ -116,7 +116,7 @@ export const feedbackGetUriBuilder = ({
   levellogId,
   feedbackId,
 }: Pick<UriCustomHookType, 'teamId' | 'levellogId' | 'feedbackId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackId}`;
+  return `/teams/${teamId}/levellogs/${levellogId}/feedback/${feedbackId}`;
 };
 
 export const levellogAddUriBuilder = ({ teamId }: Pick<UriCustomHookType, 'teamId'>) => {

@@ -7,9 +7,9 @@ export const ROUTES_PATH = Object.freeze({
   ERROR: '/error',
   COPYRIGHT: '/copyright',
 
-  FEEDBACK: '/teams/:teamId/levellogs/:levellogId/feedbacks',
-  FEEDBACK_ADD: `/teams/:teamId/levellogs/:levellogId/feedbacks/add`,
-  FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedbacks/:feedbackId/author/:authorId/edit`,
+  FEEDBACKS: '/teams/:teamId/levellogs/:levellogId/feedbacks',
+  FEEDBACK_ADD: `/teams/:teamId/levellogs/:levellogId/feedback/add`,
+  FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedback/:feedbackId/author/:authorId/edit`,
 
   LEVELLOG_ADD: '/teams/:teamId/levellogs/add',
   LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId/author/:authorId/edit',

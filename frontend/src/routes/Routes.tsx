@@ -32,7 +32,7 @@ export const routes = [
     element: <AuthLogin needLogin={true} />,
     children: [
       {
-        path: ROUTES_PATH.FEEDBACK,
+        path: ROUTES_PATH.FEEDBACKS,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
             <Feedbacks />

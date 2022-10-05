@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.dto.LoginStatus;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.dto.AllParticipantDto;
 import com.woowacourse.levellog.team.dto.AllSimpleParticipantDto;
 import java.util.HashMap;
@@ -105,7 +104,7 @@ public class TeamQueryRepository {
         return ", NULL preQuestionId ";
     }
 
-    public List<AllSimpleParticipantDto> findMyList(final Member member) {
+    public List<AllSimpleParticipantDto> findMyList(final Long memberId) {
         final String sql = "SELECT "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
                 + "m.id memberId, m.profile_url "
@@ -121,7 +120,7 @@ public class TeamQueryRepository {
                 + "ORDER BY t.is_closed ASC, t.created_at DESC";
 
         final SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("memberId", member.getId());
+                .addValue("memberId", memberId);
         return jdbcTemplate.query(sql, param, simpleRowMapper);
     }
 }

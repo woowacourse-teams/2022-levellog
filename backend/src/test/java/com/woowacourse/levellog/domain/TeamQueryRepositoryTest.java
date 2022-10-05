@@ -193,7 +193,7 @@ class TeamQueryRepositoryTest extends RepositoryTest {
         final Team team2 = saveTeam(pepper, kyoul);
 
         // when
-        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findMyList(pepper);
+        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findMyList(pepper.getId());
 
         // then
         assertThat(actual).hasSize(4)

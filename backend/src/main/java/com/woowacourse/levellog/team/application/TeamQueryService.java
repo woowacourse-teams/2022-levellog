@@ -3,8 +3,6 @@ package com.woowacourse.levellog.team.application;
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.SimpleParticipant;
 import com.woowacourse.levellog.team.domain.SimpleParticipants;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
@@ -33,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamQueryService {
 
     private final TeamQueryRepository teamQueryRepository;
-    private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
 
     public TeamListDto findAll(final TeamFilterCondition condition, final int page, final int size) {
@@ -49,10 +46,8 @@ public class TeamQueryService {
         return new TeamListDto(teamSimpleDtos);
     }
 
-    public TeamListDto findAllByMemberId(@Authentic LoginStatus loginStatus) {
-        final Member member = memberRepository.getMember(loginStatus.getMemberId());
-
-        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findMyList(member);
+    public TeamListDto findAllByMemberId(@Authentic final LoginStatus loginStatus) {
+        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findMyList(loginStatus.getMemberId());
         final List<TeamSimpleDto> teamSimpleDtos = allParticipants.stream()
                 .collect(Collectors.groupingBy(AllSimpleParticipantDto::getId, LinkedHashMap::new, Collectors.toList()))
                 .values()

@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.dto.TeamDetailResponse;
@@ -293,15 +292,6 @@ public class TeamQueryServiceTest extends ServiceTest {
 
             // then
             assertThat(teams).hasSize(2);
-        }
-
-        @Test
-        @DisplayName("주어진 memberId의 멤버가 존재하지 않을 때 예외를 던진다.")
-        void findAllByMemberId_memberNotFound_exception() {
-            // when & then
-            assertThatThrownBy(() -> teamQueryService.findAllByMemberId(LoginStatus.fromLogin(100_000L)))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(100_000L));
         }
     }
 }

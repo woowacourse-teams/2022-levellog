@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import useSnackbar from 'hooks/useSnackbar';
-import useTeam from 'hooks/useTeam';
+import useTeam from 'hooks/team/useTeam';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, REQUIRE_AUTH } from 'constants/constants';
 

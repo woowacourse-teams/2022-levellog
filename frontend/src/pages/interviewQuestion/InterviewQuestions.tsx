@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useInterviewQuestion from 'hooks/interviewQuestion/useInterviewQuestion';
-import useLevellog from 'hooks/useLevellog';
-import useTeam from 'hooks/useTeam';
+import useLevellog from 'hooks/levellog/useLevellog';
+import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
 import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';

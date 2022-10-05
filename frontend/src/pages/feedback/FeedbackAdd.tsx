@@ -3,9 +3,9 @@ import { Suspense } from 'react';
 import styled from 'styled-components';
 
 import useFeedbackAdd from 'hooks/feedback/useFeedbackAdd';
-import useContentTag from 'hooks/useContentTag';
-import usePreventGoBack from 'hooks/usePreventGoBack';
 import useRole from 'hooks/useRole';
+import useContentTag from 'hooks/utils/useContentTag';
+import usePreventGoBack from 'hooks/utils/usePreventGoBack';
 
 import Loading from 'pages/status/Loading';
 

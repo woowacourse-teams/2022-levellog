@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useTeam from 'hooks/useTeam';
+import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
 import closeIcon from 'assets/images/close.svg';

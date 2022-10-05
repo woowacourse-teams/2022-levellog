@@ -2,8 +2,8 @@ import { Suspense } from 'react';
 
 import styled from 'styled-components';
 
-import useLevellog from 'hooks/useLevellog';
-import usePreQuestion from 'hooks/usePreQuestion';
+import useLevellog from 'hooks/levellog/useLevellog';
+import usePreQuestion from 'hooks/preQuestion/usePreQuestion';
 
 import Loading from 'pages/status/Loading';
 

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
+import usePreQuestion from 'hooks/preQuestion/usePreQuestion';
 import useModal from 'hooks/useModal';
-import usePreQuestion from 'hooks/usePreQuestion';
-import useSnackbar from 'hooks/useSnackbar';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 

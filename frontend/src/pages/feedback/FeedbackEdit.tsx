@@ -5,11 +5,11 @@ import styled from 'styled-components';
 
 import useFeedbacks from 'hooks/feedback/useFeedbackAdd';
 import useInterviewQuestion from 'hooks/interviewQuestion/useInterviewQuestion';
-import useContentTag from 'hooks/useContentTag';
-import useLevellog from 'hooks/useLevellog';
-import usePreQuestion from 'hooks/usePreQuestion';
+import useLevellog from 'hooks/levellog/useLevellog';
+import usePreQuestion from 'hooks/preQuestion/usePreQuestion';
 import useRole from 'hooks/useRole';
-import useSnackbar from 'hooks/useSnackbar';
+import useContentTag from 'hooks/utils/useContentTag';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import Loading from 'pages/status/Loading';
 

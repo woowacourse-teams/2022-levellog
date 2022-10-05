@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import axios, { AxiosResponse } from 'axios';
 
-import useSnackbar from 'hooks/useSnackbar';
-import useTeam from 'hooks/useTeam';
-import useUtil from 'hooks/useUtil';
+import useTeam from 'hooks/team/useTeam';
+import useSnackbar from 'hooks/utils/useSnackbar';
+import useUtil from 'hooks/utils/useUtil';
 
 import { MESSAGE } from 'constants/constants';
 

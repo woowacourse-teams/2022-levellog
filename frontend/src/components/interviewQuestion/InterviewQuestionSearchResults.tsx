@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import useInterviewQuestionSearchResult from 'hooks/useInterviewQuestionSearchResult';
+import useInterviewQuestionSearchResult from 'hooks/questionSearch/useInterviewQuestionSearchResult';
 
 import EmptySearchResult from 'pages/status/EmptySearchResult';
 

@@ -4,8 +4,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useFeedbacks from 'hooks/feedback/useFeedbacks';
-import useLevellog from 'hooks/useLevellog';
-import useTeam from 'hooks/useTeam';
+import useLevellog from 'hooks/levellog/useLevellog';
+import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
 import EmptyFeedback from 'pages/status/EmptyFeedback';

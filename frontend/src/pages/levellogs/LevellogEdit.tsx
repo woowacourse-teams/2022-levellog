@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useLevellog from 'hooks/useLevellog';
-import useSnackbar from 'hooks/useSnackbar';
+import useLevellog from 'hooks/levellog/useLevellog';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 

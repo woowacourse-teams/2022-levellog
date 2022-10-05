@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import useSnackbar from 'hooks/useSnackbar';
-import useTeam from 'hooks/useTeam';
+import useTeam from 'hooks/team/useTeam';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 

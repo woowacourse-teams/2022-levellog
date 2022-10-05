@@ -7,7 +7,6 @@ import com.woowacourse.levellog.team.dto.AllSimpleParticipantDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,8 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class TeamQueryRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<AllSimpleParticipantDto> simpleRowMapper = (resultSet, rowNumber) -> new AllSimpleParticipantDto(
             resultSet.getObject("teamId", Long.class),
             resultSet.getString("title"),
@@ -45,10 +43,8 @@ public class TeamQueryRepository {
             resultSet.getBoolean("is_watcher")
     );
 
-    public TeamQueryRepository(final JdbcTemplate jdbcTemplate,
-                               final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public TeamQueryRepository(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     public List<AllSimpleParticipantDto> findAllList(final boolean isClosed, final int limit, final int offset) {
@@ -58,14 +54,18 @@ public class TeamQueryRepository {
                 + "FROM "
                     + "(SELECT * "
                     + "FROM team "
-                    + "WHERE deleted = FALSE AND is_closed = ? "
+                    + "WHERE deleted = FALSE AND is_closed = :isClosed "
                     + "ORDER BY created_at DESC "
-                    + "LIMIT ? OFFSET ?) AS t "
+                    + "LIMIT :limit OFFSET :offset) AS t "
                 + "INNER JOIN participant p ON p.team_id = t.id AND p.is_watcher = FALSE "
                 + "INNER JOIN member m ON m.id = p.member_id "
                 + "ORDER BY t.created_at DESC";
 
-        return jdbcTemplate.query(sql, simpleRowMapper, isClosed, limit, offset);
+        final SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("isClosed", isClosed)
+                .addValue("limit", limit)
+                .addValue("offset", offset);
+        return jdbcTemplate.query(sql, param, simpleRowMapper);
     }
 
     public List<AllParticipantDto> findAllByTeamId(final Long teamId, final LoginStatus loginStatus) {
@@ -88,7 +88,7 @@ public class TeamQueryRepository {
         }
 
         final SqlParameterSource param = new MapSqlParameterSource(paramMap);
-        return namedParameterJdbcTemplate.query(sql, param, detailRowMapper);
+        return jdbcTemplate.query(sql, param, detailRowMapper);
     }
 
     private String createPreQuestionJoinSql(final LoginStatus loginStatus) {
@@ -117,9 +117,11 @@ public class TeamQueryRepository {
                     + "t.id FROM participant p "
                     + "INNER JOIN member m ON p.member_id = m.id "
                     + "INNER JOIN team t ON p.team_id = t.id "
-                    + "WHERE m.id = ? AND deleted = FALSE) "
+                    + "WHERE m.id = :memberId AND deleted = FALSE) "
                 + "ORDER BY t.is_closed ASC, t.created_at DESC";
 
-        return jdbcTemplate.query(sql, simpleRowMapper, member.getId());
+        final SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("memberId", member.getId());
+        return jdbcTemplate.query(sql, param, simpleRowMapper);
     }
 }

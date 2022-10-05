@@ -1,55 +1,62 @@
-import axios, { AxiosPromise } from 'axios';
+import { fetcher } from 'apis';
+import axios from 'axios';
 
 import { FeedbackApiType, FeedbackType } from 'types/feedback';
 
-export const requestPostFeedback = ({
+export const requestPostFeedback = async ({
   accessToken,
   levellogId,
   feedbackResult,
-}: Omit<FeedbackApiType, 'feedbackId'>): AxiosPromise<void> => {
-  return axios({
-    method: 'post',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks`,
-    headers: { Authorization: `Bearer ${accessToken}` },
-    data: { ...feedbackResult },
-  });
+}: Omit<FeedbackApiType, 'feedbackId'>) => {
+  await fetcher.post(
+    `/levellogs/${levellogId}/feedbacks`,
+    {
+      ...feedbackResult,
+    },
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  );
 };
 
-export const requestGetFeedbacksInTeam = ({
+export const requestGetFeedbacksInTeam = async ({
   accessToken,
   levellogId,
-}: Pick<FeedbackApiType, 'accessToken' | 'levellogId'>): AxiosPromise<
+}: Pick<FeedbackApiType, 'accessToken' | 'levellogId'>): Promise<
   Record<'feedbacks', FeedbackType[]>
 > => {
-  return axios({
-    method: 'get',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks`,
+  const { data } = await fetcher.get(`/levellogs/${levellogId}/feedbacks`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
+
+  return data;
 };
 
-export const requestGetFeedback = ({
+export const requestGetFeedback = async ({
   accessToken,
   levellogId,
   feedbackId,
-}: Omit<FeedbackApiType, 'feedbackResult'>) => {
-  return axios({
-    method: 'get',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks/${feedbackId}`,
+}: Omit<FeedbackApiType, 'feedbackResult'>): Promise<FeedbackType> => {
+  const { data } = await fetcher.get(`/levellogs/${levellogId}/feedbacks/${feedbackId}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
+
+  return data;
 };
 
-export const requestEditFeedback = ({
+export const requestEditFeedback = async ({
   accessToken,
   levellogId,
   feedbackId,
   feedbackResult,
-}: FeedbackApiType): AxiosPromise<void> => {
-  return axios({
-    method: 'put',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/feedbacks/${feedbackId}`,
-    headers: { Authorization: `Bearer ${accessToken}` },
-    data: { ...feedbackResult },
-  });
+}: FeedbackApiType) => {
+  await fetcher.put(
+    `/levellogs/${levellogId}/feedbacks/${feedbackId}`,
+    {
+      ...feedbackResult,
+    },
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  );
 };

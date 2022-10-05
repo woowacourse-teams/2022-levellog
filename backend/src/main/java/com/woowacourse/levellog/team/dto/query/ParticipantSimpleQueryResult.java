@@ -16,10 +16,10 @@ public class ParticipantSimpleQueryResult {
     private String profileUrl;
 
     public static ParticipantSimpleQueryResult from(
-            final AllSimpleParticipantQueryResult allSimpleParticipantQueryResult) {
+            final AllTeamListQueryResult allTeamListQueryResult) {
         return new ParticipantSimpleQueryResult(
-                allSimpleParticipantQueryResult.getMemberId(),
-                allSimpleParticipantQueryResult.getMemberImage()
+                allTeamListQueryResult.getMemberId(),
+                allTeamListQueryResult.getMemberImage()
         );
     }
 }

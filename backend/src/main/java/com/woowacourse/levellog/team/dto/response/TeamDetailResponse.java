@@ -1,5 +1,6 @@
 package com.woowacourse.levellog.team.dto.response;
 
+import com.woowacourse.levellog.team.domain.SimpleParticipants;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,30 +21,31 @@ public class TeamDetailResponse {
     private String place;
     private LocalDateTime startAt;
     private String teamImage;
-    private Long hostId;
     private TeamStatus status;
+    private Long hostId;
     private Boolean isParticipant;
     private List<Long> interviewers;
     private List<Long> interviewees;
     private List<ParticipantResponse> participants;
     private List<WatcherResponse> watchers;
 
-    public static TeamDetailResponse from(final TeamResponse teamResponse, final Long hostId, final TeamStatus status,
-                                          final Boolean isParticipant, final List<Long> interviewers,
-                                          final List<Long> interviewees,
-                                          final List<ParticipantResponse> participantResponses,
-                                          final List<WatcherResponse> watcherResponses) {
+    public static TeamDetailResponse from2(final TeamResponse teamResponse,
+                                           final TeamStatus status,
+                                           final Long memberId,
+                                           final SimpleParticipants participants,
+                                           final List<ParticipantResponse> participantResponses,
+                                           final List<WatcherResponse> watcherResponses) {
         return new TeamDetailResponse(
                 teamResponse.getId(),
                 teamResponse.getTitle(),
                 teamResponse.getPlace(),
                 teamResponse.getStartAt(),
                 teamResponse.getProfileUrl(),
-                hostId,
                 status,
-                isParticipant,
-                interviewers,
-                interviewees,
+                participants.toHostId(),
+                participants.isContains(memberId),
+                participants.toInterviewerIds(memberId, teamResponse.getInterviewerNumber()),
+                participants.toIntervieweeIds(memberId, teamResponse.getInterviewerNumber()),
                 participantResponses,
                 watcherResponses
         );

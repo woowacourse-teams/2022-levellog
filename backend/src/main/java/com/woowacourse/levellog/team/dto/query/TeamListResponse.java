@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TeamSimpleQueryResult {
+public class TeamListResponse {
 
     private Long id;
     private String title;
@@ -24,10 +24,10 @@ public class TeamSimpleQueryResult {
     private TeamStatus status;
     private List<ParticipantSimpleQueryResult> participants;
 
-    public static TeamSimpleQueryResult of(final List<AllSimpleParticipantQueryResult> simpleParticipants,
-                                           final TeamStatus status) {
-        final AllSimpleParticipantQueryResult result = simpleParticipants.get(0);
-        return new TeamSimpleQueryResult(
+    public static TeamListResponse of(final List<AllTeamListQueryResult> simpleParticipants,
+                                      final TeamStatus status) {
+        final AllTeamListQueryResult result = simpleParticipants.get(0);
+        return new TeamListResponse(
                 result.getId(),
                 result.getTitle(),
                 result.getPlace(),

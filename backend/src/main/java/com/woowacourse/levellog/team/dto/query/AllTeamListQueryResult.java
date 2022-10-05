@@ -1,12 +1,13 @@
 package com.woowacourse.levellog.team.dto.query;
 
+import com.woowacourse.levellog.team.domain.TeamStatus;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AllSimpleParticipantQueryResult {
+public class AllTeamListQueryResult {
 
     private Long id;
     private String title;
@@ -16,4 +17,8 @@ public class AllSimpleParticipantQueryResult {
     private boolean isClosed;
     private Long memberId;
     private String memberImage;
+
+    public TeamStatus getTeamStatus(final LocalDateTime time) {
+        return TeamStatus.of(isClosed, startAt, time);
+    }
 }

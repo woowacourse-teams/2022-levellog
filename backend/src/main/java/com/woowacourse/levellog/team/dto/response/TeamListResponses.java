@@ -1,13 +1,32 @@
 package com.woowacourse.levellog.team.dto.response;
 
-import com.woowacourse.levellog.team.dto.query.TeamSimpleQueryResult;
+import com.woowacourse.levellog.team.dto.query.AllTeamListQueryResult;
+import com.woowacourse.levellog.team.dto.query.TeamListResponse;
+import com.woowacourse.levellog.team.support.LocalTimeStandard;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TeamListResponses {
 
-    private List<TeamSimpleQueryResult> teams;
+    private List<TeamListResponse> teams;
+
+    public static TeamListResponses from(final List<AllTeamListQueryResult> allParticipants) {
+        final List<TeamListResponse> responses = allParticipants.stream()
+                .collect(Collectors.groupingBy(
+                        AllTeamListQueryResult::getId,
+                        LinkedHashMap::new,
+                        Collectors.toList()))
+                .values()
+                .stream()
+                .map(it -> TeamListResponse.of(it, it.get(0).getTeamStatus(new LocalTimeStandard().now())))
+                .collect(Collectors.toList());
+
+        return new TeamListResponses(responses);
+    }
 }

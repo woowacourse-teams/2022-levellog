@@ -1,16 +1,23 @@
+import { Suspense } from 'react';
+
 import styled from 'styled-components';
+
+import useLevellog from 'hooks/useLevellog';
+import usePreQuestion from 'hooks/usePreQuestion';
+
+import Loading from 'pages/status/Loading';
 
 import Button from 'components/@commons/Button';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
-import { LevellogInfoType } from 'types/levellog';
 
 const WriterDocument = ({
-  levellogInfo,
-  preQuestionContent,
   whichContentShow,
   handleClickLevellogTag,
   handleClickPreQuestionTag,
 }: LevellogReportProps) => {
+  const { levellogError, levellogInfo } = useLevellog();
+  const { preQuestionError, preQuestion } = usePreQuestion();
+
   return (
     <S.Container>
       <S.ButtonBox>
@@ -24,17 +31,25 @@ const WriterDocument = ({
           사전질문
         </S.PreQuestionButton>
       </S.ButtonBox>
-      <S.Content>
-        {whichContentShow.levellog && <UiViewer content={levellogInfo.content} />}
-        {whichContentShow.preQuestion && <UiViewer content={preQuestionContent} />}
-      </S.Content>
+      <Suspense fallback={<Loading />}>
+        <S.Content>
+          {whichContentShow.levellog && (
+            <UiViewer
+              content={levellogError ? '레벨로그가 존재하지 않습니다.' : levellogInfo!.content}
+            />
+          )}
+          {whichContentShow.preQuestion && (
+            <UiViewer
+              content={preQuestionError ? '사전 질문이 존재하지 않습니다.' : preQuestion!.content}
+            />
+          )}
+        </S.Content>
+      </Suspense>
     </S.Container>
   );
 };
 
 interface LevellogReportProps {
-  levellogInfo: LevellogInfoType;
-  preQuestionContent: string;
   whichContentShow: {
     levellog: boolean;
     preQuestion: boolean;

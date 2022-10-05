@@ -2,9 +2,9 @@ import { Link, useParams } from 'react-router-dom';
 
 import styled, { CSSProperties } from 'styled-components';
 
-import useLevellogModal from 'hooks/useLevellogModal';
-import usePreQuestionModal from 'hooks/usePreQuestionModal';
-import useTeam from 'hooks/useTeam';
+import useLevellogModal from 'hooks/levellog/useLevellogModal';
+import usePreQuestionModal from 'hooks/preQuestion/usePreQuestionModal';
+import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
 import Error from 'pages/status/Error';

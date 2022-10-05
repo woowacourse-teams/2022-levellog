@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import useSnackbar from 'hooks/useSnackbar';
+import useSnackbar from 'hooks//utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 

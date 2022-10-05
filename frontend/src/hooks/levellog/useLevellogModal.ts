@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import useLevellog from 'hooks/useLevellog';
+import useLevellog from 'hooks/levellog/useLevellog';
 import useModal from 'hooks/useModal';
 
 import { LevellogParticipantType } from 'types/levellog';

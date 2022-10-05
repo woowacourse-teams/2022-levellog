@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import useInterviewQuestionSearch from 'hooks/useInterviewQuestionSearch';
+import useInterviewQuestionSearch from 'hooks/questionSearch/useInterviewQuestionSearch';
 
 import deleteIcon from 'assets/images/close.svg';
 import searchIcon from 'assets/images/search.svg';

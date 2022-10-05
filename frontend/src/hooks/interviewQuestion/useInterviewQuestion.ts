@@ -5,8 +5,8 @@ import axios, { AxiosResponse } from 'axios';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import useScrollDown from 'hooks/useScrollDown';
-import useSnackbar from 'hooks/useSnackbar';
+import useScrollDown from 'hooks/utils/useScrollDown';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 

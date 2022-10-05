@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import axios, { AxiosResponse } from 'axios';
 
-import useSnackbar from 'hooks/useSnackbar';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { NOT_YET_HTTP_STATUS, TEAMS_CONDITION } from 'constants/constants';
 

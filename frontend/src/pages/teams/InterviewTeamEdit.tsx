@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import useTeamPage from 'hooks/useTeamPage';
+import useTeamPage from 'hooks/team/useTeamPage';
 
 import TeamForm from 'components/teams/TeamForm';
 

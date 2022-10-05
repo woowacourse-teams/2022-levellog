@@ -1,7 +1,7 @@
 export interface RoleApiType {
-  teamId: string;
-  participantId: string;
   accessToken: string | null;
+  teamId: string | undefined;
+  participantId: string | undefined;
 }
 
 export interface RoleType {
@@ -13,4 +13,8 @@ export interface RoleCustomHookType {
   teamId: string;
   levellogId: string;
   participantId: string;
+}
+
+export interface MyRoleType {
+  myRole: 'INTERVIEWER' | 'OBSERVER';
 }

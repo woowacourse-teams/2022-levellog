@@ -1,7 +1,7 @@
 export interface FeedbackApiType {
   accessToken: string | null;
-  levellogId: string;
-  feedbackId: string;
+  levellogId: string | undefined;
+  feedbackId: string | undefined;
   feedbackResult: FeedbackFormatType;
 }
 

@@ -8,8 +8,8 @@ export interface LevellogCustomHookType {
 
 export interface LevellogApiType {
   accessToken: string | null;
-  teamId: string;
-  levellogId: string;
+  teamId: string | undefined;
+  levellogId: string | undefined;
   levellogContent: LevellogFormatType;
 }
 

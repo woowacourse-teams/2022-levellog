@@ -1,6 +1,6 @@
 export interface InterviewQuestionApiType {
   accessToken: string | null;
-  levellogId: string;
+  levellogId: string | undefined;
   interviewQuestionId: string;
   interviewQuestion: string;
 }

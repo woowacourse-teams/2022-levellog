@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 
-const useScrollDown = () => {
-  const scrollRef = useRef<HTMLElement>(null);
+const useScrollDown = <T extends HTMLElement>() => {
+  const scrollRef = useRef<T>(null);
 
   const afterRequestScrollDown = ({ requestFunction }: AfterRequestScrollDownProps) => {
     requestFunction().then(() => {
@@ -17,7 +17,7 @@ const useScrollDown = () => {
 };
 
 interface AfterRequestScrollDownProps {
-  requestFunction: () => Promise<void>;
+  requestFunction: () => Promise<any>;
 }
 
 export default useScrollDown;

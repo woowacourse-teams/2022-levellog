@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.team.application;
 
-import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.InterviewRole;
@@ -12,7 +11,6 @@ import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
-import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +29,8 @@ public class TeamService {
     @Transactional
     public Long save(final TeamWriteDto request, final Long hostId) {
         final Member host = memberRepository.getMember(hostId);
-        final Team team = new Team(request.toTeamDetail(host.getProfileUrl()), request.toParticipantsIngredient(hostId));
+        final Team team = new Team(request.toTeamDetail(host.getProfileUrl()),
+                request.toParticipantsIngredient(hostId));
 
         final Team savedTeam = teamRepository.save(team);
 
@@ -58,35 +57,25 @@ public class TeamService {
     @Transactional
     public void update(final TeamWriteDto request, final Long teamId, final Long memberId) {
         final Team team = teamRepository.getTeamWithParticipants(teamId);
-        validateHostAuthorization(memberId, team);
+        team.validateHostAuthorization(memberId);
 
-        team.update(request.toTeamDetail(team.getProfileUrl()), request.toParticipantsIngredient(memberId), timeStandard.now());
+        team.update(request.toTeamDetail(team.getProfileUrl()), request.toParticipantsIngredient(memberId),
+                timeStandard.now());
     }
 
     @Transactional
     public void close(final Long teamId, final Long memberId) {
-        final Team team = teamRepository.getTeam(teamId);
-        validateHostAuthorization(memberId, team);
+        final Team team = teamRepository.getTeamWithParticipants(teamId);
+        team.validateHostAuthorization(memberId);
 
         team.close(timeStandard.now());
     }
 
     @Transactional
     public void deleteById(final Long teamId, final Long memberId) {
-        final Team team = teamRepository.getTeam(teamId);
-        validateHostAuthorization(memberId, team);
+        final Team team = teamRepository.getTeamWithParticipants(teamId);
+        team.validateHostAuthorization(memberId);
 
         team.delete(timeStandard.now());
-    }
-
-    private void validateHostAuthorization(final Long memberId, final Team team) {
-        final Participants participants = new Participants(participantRepository.findByTeam(team));
-        final Long hostId = participants.toHostId();
-
-        if (!memberId.equals(participants.toHostId())) {
-            throw new HostUnauthorizedException(DebugMessage.init()
-                    .append("hostId", hostId)
-                    .append("memberId", memberId));
-        }
     }
 }

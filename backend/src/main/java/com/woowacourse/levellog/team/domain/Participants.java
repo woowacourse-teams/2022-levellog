@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
+import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import java.util.ArrayList;
@@ -56,13 +57,22 @@ public class Participants {
         return concatSameTwice(participantIds).subList(to - interviewerNumber, to);
     }
 
-    public Long toHostId() {
+    private Long toHostId() {
         return values
                 .stream()
                 .filter(Participant::isHost)
                 .findAny()
                 .orElseThrow()
                 .getMemberId();
+    }
+
+    public void validateHost(final Long memberId){
+        final Long hostId = toHostId();
+        if (!hostId.equals(memberId)) {
+            throw new HostUnauthorizedException(DebugMessage.init()
+                    .append("hostId", toHostId())
+                    .append("memberId", memberId));
+        }
     }
 
     public InterviewRole toInterviewRole(final Long teamId, final Long targetMemberId, final Long memberId,

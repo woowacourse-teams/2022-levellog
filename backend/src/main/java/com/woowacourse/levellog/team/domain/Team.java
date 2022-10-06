@@ -44,15 +44,12 @@ public class Team extends BaseEntity {
     public void update(final TeamDetail detail, final ParticipantsIngredient ingredient,
                        final LocalDateTime presentTime) {
         validateReady(presentTime);
-
         this.detail = detail;
-
         updateParticipants(ingredient);
     }
 
     public void close(final LocalDateTime presentTime) {
         validateInProgress(presentTime);
-
         isClosed = true;
     }
 
@@ -89,7 +86,7 @@ public class Team extends BaseEntity {
         if (isClosed) {
             return TeamStatus.CLOSED;
         }
-        if (detail.isReady(presentTime)) {
+        if (!detail.isStarted(presentTime)) {
             return TeamStatus.READY;
         }
         return TeamStatus.IN_PROGRESS;
@@ -99,6 +96,10 @@ public class Team extends BaseEntity {
         final Participants target = Participants.of(this, ingredient);
 
         participants.update(target);
+    }
+
+    public void validateHostAuthorization(final Long memberId) {
+        participants.validateHost(memberId);
     }
 
     public int getInterviewerNumber() {

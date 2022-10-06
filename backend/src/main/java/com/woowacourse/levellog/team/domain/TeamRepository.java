@@ -5,6 +5,7 @@ import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
@@ -20,6 +21,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
                         .append("teamId", teamId)));
     }
 
-    @Query("SELECT t FROM Team t JOIN FETCH t.participants p")
-    Optional<Team> findTeamWithParticipants(Long teamId);
+    @Query("SELECT t FROM Team t JOIN FETCH t.participants p WHERE t.id = :teamId")
+    Optional<Team> findTeamWithParticipants(@Param("teamId") Long teamId);
 }

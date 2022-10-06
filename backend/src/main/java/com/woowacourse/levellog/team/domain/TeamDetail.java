@@ -110,16 +110,4 @@ public class TeamDetail {
     public boolean isStarted(final LocalDateTime presentTime) {
         return presentTime.isAfter(startAt);
     }
-
-//    public void validateBeforeStartAt(final LocalDateTime presentTime) {
-//        if (presentTime.isAfter(this.startAt)) {
-//            throw new TeamNotReadyException(DebugMessage.init()
-//                    .append("startAt", startAt)
-//                    .append("presentTime", presentTime));
-//        }
-//    }
-
-    public boolean isReady(final LocalDateTime presentTime) {
-        return startAt.isAfter(presentTime);
-    }
 }

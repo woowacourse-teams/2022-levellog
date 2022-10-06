@@ -29,7 +29,7 @@ public class OAuthService {
 
         final String token = jwtTokenProvider.createToken(memberId.toString());
 
-        return new LoginDto(memberId, token, githubProfile.getProfileUrl());
+        return new LoginDto(memberId, token, githubProfile.getNickname(), githubProfile.getProfileUrl());
     }
 
     private Long getMemberIdByGithubProfile(final GithubProfileDto githubProfile) {

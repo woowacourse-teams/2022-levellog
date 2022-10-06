@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.domain;
 
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
@@ -20,7 +19,7 @@ class InterviewQuestionLikesTest {
         // given
         final Member author = new Member("페퍼", 1111, "pepper.png");
         final Member to = new Member("이브", 123123, "image.png");
-        final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
+        final Team team = TeamTest.saveTeam();
         final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
         final String content = "스프링이란?";
         final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, content);

@@ -14,6 +14,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamDetail;
 import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
@@ -305,15 +306,16 @@ class TeamServiceTest extends ServiceTest {
 
             // then
             final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
+            final TeamDetail detail = actualTeam.getDetail();
             final List<Long> actualParticipantsIds = participantRepository.findByTeam(actualTeam)
                     .stream()
                     .map(Participant::getMemberId)
                     .collect(Collectors.toList());
 
             assertAll(
-                    () -> assertThat(actualTeam.getTitle()).isEqualTo(request.getTitle()),
-                    () -> assertThat(actualTeam.getPlace()).isEqualTo(request.getPlace()),
-                    () -> assertThat(actualTeam.getStartAt()).isEqualTo(request.getStartAt()),
+                    () -> assertThat(detail.getTitle()).isEqualTo(request.getTitle()),
+                    () -> assertThat(detail.getPlace()).isEqualTo(request.getPlace()),
+                    () -> assertThat(detail.getStartAt()).isEqualTo(request.getStartAt()),
                     () -> assertThat(actualTeam.getInterviewerNumber()).isEqualTo(request.getInterviewerNumber()),
                     () -> assertThat(actualParticipantsIds).isEqualTo(
                             List.of(rick.getId(), eve.getId(), alien.getId(), roma.getId()))
@@ -358,18 +360,20 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("Ready 상태가 아닐 때 팀을 수정하려고 하면 예외를 던진다.")
         void update_notReady_exception() {
             //given
-            final Member member = saveMember("릭");
-            final Team team = saveTeam(member);
+            final Member rick = saveMember("릭");
+            final Member roma = saveMember("로마");
+
+            final Team team = saveTeam(rick, roma);
             final TeamWriteDto request = new TeamWriteDto("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
-                    List.of(member.getId()), Collections.emptyList());
+                    List.of(rick.getId()), Collections.emptyList());
             timeStandard.setInProgress();
 
             //when & then
             final Long teamId = team.getId();
-            final Long memberId = member.getId();
+            final Long memberId = rick.getId();
             assertThatThrownBy(() -> teamService.update(request, teamId, memberId))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.", teamId, team.getStartAt());
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.", teamId, team.getDetail().getStartAt());
         }
 
         @Test
@@ -459,7 +463,8 @@ class TeamServiceTest extends ServiceTest {
         void success() {
             // given
             final Member rick = saveMember("릭");
-            final Team team = saveTeam(rick);
+            final Member pepper = saveMember("페퍼");
+            final Team team = saveTeam(rick, pepper);
 
             timeStandard.setInProgress();
 
@@ -543,16 +548,19 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("이미 삭제된 팀을 삭제하는 경우 팀이 존재하지 않는다는 예외를 던진다.")
         void delete_alreadyDeleted_exception() {
             //given
-            final Member member = saveMember("릭");
-            final Team team = saveTeam(member);
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Team team = saveTeam(rick, pepper);
+
             final Long teamId = team.getId();
-            final Long memberId = member.getId();
-            teamService.deleteById(teamId, memberId);
+            final Long rickId = rick.getId();
+
+            teamService.deleteById(teamId, rickId);
             entityManager.flush();
             entityManager.clear();
 
             //when & then
-            assertThatThrownBy(() -> teamService.deleteById(teamId, memberId))
+            assertThatThrownBy(() -> teamService.deleteById(teamId, rickId))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다.");
         }

@@ -47,7 +47,7 @@ public class InterviewQuestionService {
         final Team team = levellog.getTeam();
 
         levellog.validateSelfInterviewQuestion(author);
-        validateMemberIsParticipant(author, levellog);
+        validateMemberIsParticipant(author, levellog); // TODO 고쳐줭 팀에 넣어줘
         team.validateInProgress(timeStandard.now());
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);

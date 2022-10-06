@@ -126,7 +126,7 @@ public class TeamQueryServiceTest extends ServiceTest {
 
             //then
             assertAll(
-                    () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                    () -> assertThat(response.getTitle()).isEqualTo(team.getDetail().getTitle()),
                     () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                     () -> assertThat(response.getStatus()).isEqualTo(READY),
                     () -> assertThat(response.getParticipants()).hasSize(2)
@@ -166,7 +166,7 @@ public class TeamQueryServiceTest extends ServiceTest {
 
                 //then
                 assertAll(
-                        () -> assertThat(responseOfPepper.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(responseOfPepper.getTitle()).isEqualTo(team.getDetail().getTitle()),
                         () -> assertThat(responseOfPepper.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(responseOfPepper.getParticipants()).hasSize(5),
                         () -> assertThat(responseOfPepper.getIsParticipant()).isTrue(),
@@ -198,7 +198,7 @@ public class TeamQueryServiceTest extends ServiceTest {
 
                 //then
                 assertAll(
-                        () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(response.getTitle()).isEqualTo(team.getDetail().getTitle()),
                         () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(response.getParticipants()).hasSize(3),
 
@@ -229,7 +229,7 @@ public class TeamQueryServiceTest extends ServiceTest {
 
                 //then
                 assertAll(
-                        () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(response.getTitle()).isEqualTo(team.getDetail().getTitle()),
                         () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(response.getParticipants()).hasSize(2),
                         () -> assertThat(response.getWatchers()).hasSize(1),
@@ -261,7 +261,7 @@ public class TeamQueryServiceTest extends ServiceTest {
 
                 //then
                 assertAll(
-                        () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(response.getTitle()).isEqualTo(team.getDetail().getTitle()),
                         () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(response.getParticipants()).hasSize(3),
                         () -> assertThat(response.getInterviewers()).isEmpty(),

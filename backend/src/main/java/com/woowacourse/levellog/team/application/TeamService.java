@@ -31,8 +31,7 @@ public class TeamService {
     @Transactional
     public Long save(final TeamWriteDto request, final Long hostId) {
         final Member host = memberRepository.getMember(hostId);
-        final Team team = request.toEntity(host.getProfileUrl());
-        team.addParticipants(hostId, request.getParticipantIds(), request.getWatcherIds());
+        final Team team = new Team(request.toTeamDetail(host.getProfileUrl()), request.toParticipantsIngredient(hostId));
 
         final Team savedTeam = teamRepository.save(team);
 
@@ -47,7 +46,8 @@ public class TeamService {
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
-        final Team team = teamRepository.getTeam(teamId);
+        // FIXME : 로직 수정 필요 - Team한테만 메시지 던지기
+        final Team team = teamRepository.getTeamWithParticipants(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
         final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId, memberId,
                 team.getInterviewerNumber());
@@ -60,12 +60,7 @@ public class TeamService {
         final Team team = teamRepository.getTeamWithParticipants(teamId);
         validateHostAuthorization(memberId, team);
 
-//        final Team updateTeam = new Team(request.getTitle(), request.getPlace(), request.getStartAt(),
-//                team.getProfileUrl(), request.getInterviewerNumber(),
-//                Participants.of(team, memberId, request.getParticipantIds(), request.getWatcherIds()));
-
-        team.update(request.toEntity(team.getProfileUrl()), memberId, request.getParticipantIds(),
-                request.getWatcherIds(), timeStandard.now());
+        team.update(request.toTeamDetail(team.getProfileUrl()), request.toParticipantsIngredient(memberId), timeStandard.now());
     }
 
     @Transactional
@@ -81,7 +76,6 @@ public class TeamService {
         final Team team = teamRepository.getTeam(teamId);
         validateHostAuthorization(memberId, team);
 
-        participantRepository.deleteByTeam(team);
         team.delete(timeStandard.now());
     }
 

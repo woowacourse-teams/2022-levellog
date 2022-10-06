@@ -8,7 +8,6 @@ import com.woowacourse.levellog.admin.dto.AdminTeamDto;
 import com.woowacourse.levellog.admin.exception.WrongPasswordException;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.support.TimeStandard;
@@ -28,16 +27,13 @@ public class AdminService {
     private final JwtTokenProvider jwtTokenProvider;
     private final TimeStandard timeStandard;
     private final TeamRepository teamRepository;
-    private final ParticipantRepository participantRepository;
 
     public AdminService(@Value("${security.admin.hash}") final String hash, final JwtTokenProvider jwtTokenProvider,
-                        final TimeStandard timeStandard, final TeamRepository teamRepository,
-                        final ParticipantRepository participantRepository) {
+                        final TimeStandard timeStandard, final TeamRepository teamRepository) {
         this.hash = hash;
         this.jwtTokenProvider = jwtTokenProvider;
         this.timeStandard = timeStandard;
         this.teamRepository = teamRepository;
-        this.participantRepository = participantRepository;
     }
 
     public AdminAccessTokenDto login(final AdminPasswordDto request) {
@@ -55,7 +51,7 @@ public class AdminService {
 
     public List<AdminTeamDto> findAllTeam() {
         final LocalDateTime presentTime = timeStandard.now();
-        
+
         return teamRepository.findAll()
                 .stream()
                 .map(it -> AdminTeamDto.of(it, it.status(presentTime)))
@@ -64,16 +60,15 @@ public class AdminService {
 
     @Transactional
     public void deleteTeamById(final Long teamId) {
-        final Team team = teamRepository.getTeam(teamId);
-        participantRepository.deleteByTeam(team);
+        teamRepository.getTeam(teamId);
         teamRepository.deleteById(teamId);
     }
 
     @Transactional
     public void closeTeam(final Long teamId) {
         final Team team = teamRepository.getTeam(teamId);
-        final LocalDateTime presentTime = team.getStartAt()
-                .plusDays(1);
-        team.close(presentTime);
+        final LocalDateTime presentTime = team.getDetail()
+                .getStartAt();
+        team.close(presentTime.plusDays(1));
     }
 }

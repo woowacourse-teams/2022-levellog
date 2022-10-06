@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.admin.dto;
 
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamDetail;
 import com.woowacourse.levellog.team.domain.TeamStatus;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -22,6 +23,7 @@ public class AdminTeamDto {
     private TeamStatus status;
 
     public static AdminTeamDto of(final Team team, final TeamStatus status) {
-        return new AdminTeamDto(team.getId(), team.getTitle(), team.getPlace(), team.getStartAt(), status);
+        final TeamDetail detail = team.getDetail();
+        return new AdminTeamDto(team.getId(), detail.getTitle(), detail.getPlace(), detail.getStartAt(), status);
     }
 }

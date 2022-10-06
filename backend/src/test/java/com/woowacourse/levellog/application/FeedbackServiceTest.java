@@ -318,7 +318,8 @@ class FeedbackServiceTest extends ServiceTest {
         void save_selfFeedback_exception() {
             // given
             final Member eve = saveMember("이브");
-            final Team team = saveTeam(eve);
+            final Member roma = saveMember("로마");
+            final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
             final FeedbackWriteDto request = FeedbackWriteDto.from(

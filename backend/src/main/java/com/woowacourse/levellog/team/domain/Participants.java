@@ -1,13 +1,11 @@
 package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
@@ -26,26 +24,14 @@ public class Participants {
     @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Participant> values = new ArrayList<>();
 
-    public static Participants of(final Team team, final Long hostId, final List<Long> participantIds,
-                                  final List<Long> watcherIds) {
+    public static Participants of(final Team team, final ParticipantsIngredient ingredient) {
+        ingredient.validate(team.getInterviewerNumber());
         final List<Participant> participants = new ArrayList<>();
-        participants.addAll(toParticipants(team, hostId, participantIds));
-        participants.addAll(toWatchers(team, hostId, watcherIds));
+
+        participants.addAll(ingredient.toParticipants(team));
+        participants.addAll(ingredient.toWatchers(team));
 
         return new Participants(participants);
-    }
-
-    private static List<Participant> toParticipants(final Team team, final Long hostId,
-                                                    final List<Long> participantIds) {
-        return participantIds.stream()
-                .map(it -> new Participant(team, it, Objects.equals(hostId, it), false))
-                .collect(Collectors.toList());
-    }
-
-    private static List<Participant> toWatchers(final Team team, final Long hostId, final List<Long> watcherIds) {
-        return watcherIds.stream()
-                .map(it -> new Participant(team, it, Objects.equals(hostId, it), true))
-                .collect(Collectors.toList());
     }
 
     public List<Long> toInterviewerIds(final Long memberId, final int interviewerNumber) {
@@ -100,7 +86,7 @@ public class Participants {
         return values.size();
     }
 
-    public boolean isContains(final Long memberId) {
+    private boolean isContains(final Long memberId) {
         return values.stream()
                 .map(Participant::getMemberId)
                 .anyMatch(it -> it.equals(memberId));
@@ -140,17 +126,9 @@ public class Participants {
         }
     }
 
-    public void validateExistsMember(final Member member) {
-        if (!existsParticipantByMember(member)) {
-            throw new ParticipantNotSameTeamException(DebugMessage.init()
-                    .append("memberId", member.getId())
-            );
-        }
-    }
-
-    private boolean existsParticipantByMember(final Member member) {
-        return values.stream()
-                .anyMatch(participant -> participant.getMemberId().equals(member.getId()));
+    public void update(final Participants target) {
+        clear();
+        values.addAll(target.values);
     }
 
     public void clear() {

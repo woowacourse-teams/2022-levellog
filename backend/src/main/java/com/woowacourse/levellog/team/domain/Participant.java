@@ -32,10 +32,6 @@ public class Participant extends BaseEntity {
         this.isWatcher = isWatcher;
     }
 
-    private void add(final Team team) {
-        team.getParticipants().getValues().add(this);
-    }
-
     public boolean isParticipant() {
         return !isWatcher;
     }

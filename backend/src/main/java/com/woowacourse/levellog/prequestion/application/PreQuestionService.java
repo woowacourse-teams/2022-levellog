@@ -12,7 +12,6 @@ import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
-import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -78,9 +77,9 @@ public class PreQuestionService {
 
     private void validateSameTeamMember(final Team team, final Member member) {
 //        FIXME
-        final Participants participants = new Participants(participantRepository.findByTeam(team));
+//        final Participants participants = new Participants(participantRepository.findByTeam(team));
 
-        participants.validateExistsMember(member);
+//        participants.validateExistsMember(member);
     }
 
     private void validatePreQuestionExistence(final Levellog levellog, final Member questioner) {

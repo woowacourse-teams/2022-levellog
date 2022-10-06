@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.domain;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
+import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.fixture.TimeFixture;
@@ -17,11 +18,13 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
-import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
+import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamDetail;
 import com.woowacourse.levellog.team.domain.TeamQueryRepository;
 import com.woowacourse.levellog.team.domain.TeamRepository;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -86,22 +89,20 @@ abstract class RepositoryTest {
     }
 
     protected Team saveTeam(final Member host, final List<Member> watchers, final Member... members) {
-        final Team team = teamRepository.save(new Team("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", 1));
+        final TeamDetail teamDetail = new TeamDetail("잠실 네오조", "트랙룸", TimeFixture.TEAM_START_TIME, "jamsil.img", 1);
 
-        participantRepository.save(new Participant(team, host.getId(), true, false));
-
-        final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it.getId(), false, false))
+        final List<Long> participantsIds = new ArrayList<>(List.of(host.getId()));
+        final List<Long> participantsIdsWithoutHost = Arrays.stream(members)
+                .map(BaseEntity::getId)
                 .collect(Collectors.toList());
+        participantsIds.addAll(participantsIdsWithoutHost);
 
-        final List<Participant> watcherParticipants = watchers.stream()
-                .map(it -> new Participant(team, it.getId(), false, true))
+        final List<Long> watcherIds = watchers.stream()
+                .map(BaseEntity::getId)
                 .collect(Collectors.toList());
+        final ParticipantsIngredient ingredient = new ParticipantsIngredient(host.getId(), participantsIds, watcherIds);
 
-        participants.addAll(watcherParticipants);
-        participantRepository.saveAll(participants);
-
-        return team;
+        return teamRepository.save(new Team(teamDetail, ingredient));
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {

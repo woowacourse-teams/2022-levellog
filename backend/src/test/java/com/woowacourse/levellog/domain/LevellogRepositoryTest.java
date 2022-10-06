@@ -24,7 +24,9 @@ class LevellogRepositoryTest extends RepositoryTest {
     void findByAuthorIdAndTeamId() {
         // given
         final Member author = saveMember("pepper");
-        final Team team = saveTeam(author);
+        final Member teamMember = saveMember("roma");
+
+        final Team team = saveTeam(author, teamMember);
         final Levellog levellog = saveLevellog(author, team);
 
         final Long authorId = author.getId();
@@ -42,9 +44,11 @@ class LevellogRepositoryTest extends RepositoryTest {
     void findAllByAuthor() {
         // given
         final Member author = saveMember("pepper");
+        final Member authorTeamMember = saveMember("pepper");
+
         final Member anotherAuthor = saveMember("roma");
 
-        final Team team = saveTeam(author);
+        final Team team = saveTeam(author, authorTeamMember);
         final Team team2 = saveTeam(anotherAuthor, author);
 
         final Levellog authorLevellog1 = saveLevellog(author, team);
@@ -70,7 +74,9 @@ class LevellogRepositoryTest extends RepositoryTest {
         void success() {
             // given
             final Member member = saveMember("릭");
-            final Team team = saveTeam(member);
+            final Member teamMember = saveMember("roma");
+
+            final Team team = saveTeam(member, teamMember);
             final Long expected = saveLevellog(member, team)
                     .getId();
 
@@ -103,7 +109,9 @@ class LevellogRepositoryTest extends RepositoryTest {
         void existsByAuthorIdAndTeamId_exists_success() {
             // given
             final Member author = saveMember("pepper");
-            final Team team = saveTeam(author);
+            final Member teamMember = saveMember("roma");
+
+            final Team team = saveTeam(author, teamMember);
             saveLevellog(author, team);
 
             final Long authorId = author.getId();
@@ -121,7 +129,9 @@ class LevellogRepositoryTest extends RepositoryTest {
         void existsByAuthorIdAndTeamId_notExists_success() {
             // given
             final Member author = saveMember("pepper");
-            final Team team = saveTeam(author);
+            final Member teamMember = saveMember("roma");
+
+            final Team team = saveTeam(author, teamMember);
             saveLevellog(author, team);
 
             final Long anotherAuthorId = author.getId() + 1;

@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.team.dto;
 
-import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
+import com.woowacourse.levellog.team.domain.TeamDetail;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.Valid;
@@ -38,7 +39,11 @@ public class TeamWriteDto {
 
     private List<Long> watcherIds;
 
-    public Team toEntity(final String profileUrl) {
-        return new Team(title, place, startAt, profileUrl, interviewerNumber);
+    public TeamDetail toTeamDetail(final String profileUrl) {
+        return new TeamDetail(title, place, startAt, profileUrl, interviewerNumber);
+    }
+
+    public ParticipantsIngredient toParticipantsIngredient(final Long hostId) {
+        return new ParticipantsIngredient(hostId, participantIds, watcherIds);
     }
 }

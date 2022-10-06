@@ -102,6 +102,10 @@ public class Team extends BaseEntity {
         participants.validateHost(memberId);
     }
 
+    public void validateIsParticipants(final Long memberId) {
+        participants.validateIsParticipants(this.getId(), memberId);
+    }
+
     public int getInterviewerNumber() {
         return detail.getInterviewerNumber();
     }

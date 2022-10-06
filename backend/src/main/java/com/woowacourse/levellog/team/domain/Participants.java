@@ -3,7 +3,6 @@ package com.woowacourse.levellog.team.domain;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
-import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,7 +65,7 @@ public class Participants {
                 .getMemberId();
     }
 
-    public void validateHost(final Long memberId){
+    public void validateHost(final Long memberId) {
         final Long hostId = toHostId();
         if (!hostId.equals(memberId)) {
             throw new HostUnauthorizedException(DebugMessage.init()
@@ -123,16 +122,15 @@ public class Participants {
     }
 
     private void validateParticipant(final Long teamId, final Long targetMemberId, final Long memberId) {
-        if (!isContains(memberId)) {
-            throw new ParticipantNotSameTeamException(DebugMessage.init()
-                    .append("memberId", memberId)
-                    .append("teamId", teamId));
-        }
+        validateIsParticipants(teamId, memberId);
+        validateIsParticipants(teamId, targetMemberId);
+    }
 
-        if (!isContains(targetMemberId)) {
+    public void validateIsParticipants(final Long teamId, final Long memberId) {
+        if (!isContains(memberId)) {
             throw new ParticipantNotFoundException(DebugMessage.init()
-                    .append("memberId", targetMemberId)
-                    .append("teamId", teamId));
+                    .append("teamId", teamId)
+                    .append("memberId", memberId));
         }
     }
 

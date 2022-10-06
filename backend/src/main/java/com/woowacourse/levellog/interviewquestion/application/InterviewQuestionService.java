@@ -20,7 +20,6 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,15 +42,15 @@ public class InterviewQuestionService {
     @Transactional
     public Long save(final InterviewQuestionWriteDto request, final Long levellogId, final Long fromMemberId) {
         final Member author = memberRepository.getMember(fromMemberId);
-        final Levellog levellog = levellogRepository.getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellogWithTeamAndParticipantsById(levellogId);
+
         final Team team = levellog.getTeam();
 
         levellog.validateSelfInterviewQuestion(author);
-        validateMemberIsParticipant(author, levellog); // TODO 고쳐줭 팀에 넣어줘
+        team.validateIsParticipants(fromMemberId);
         team.validateInProgress(timeStandard.now());
 
         final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
-
         return interviewQuestionRepository.save(interviewQuestion)
                 .getId();
     }
@@ -139,17 +138,6 @@ public class InterviewQuestionService {
                                 .append("interviewQuestionId", interviewQuestion.getId())
                                 .append("likerId", member.getId())
                 ));
-    }
-
-    private void validateMemberIsParticipant(final Member member, final Levellog levellog) {
-        final Team team = levellog.getTeam();
-
-        if (!participantRepository.existsByMemberIdAndTeam(member.getId(), team)) {
-            throw new ParticipantNotSameTeamException(DebugMessage.init()
-                    .append("teamId", team.getId())
-                    .append("memberId", member.getId())
-                    .append("levellogId", levellog.getId()));
-        }
     }
 
     private void validateAlreadyExist(final Long interviewQuestionId, final Long memberId) {

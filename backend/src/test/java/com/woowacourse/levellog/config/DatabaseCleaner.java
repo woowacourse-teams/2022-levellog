@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class DatabaseCleaner implements InitializingBean {
 
-    private static final String CONSTRAINT_OFF_SQL = "SET REFERENTIAL_INTEGRITY FALSE";
-    private static final String CONSTRAINT_ON_SQL = "SET REFERENTIAL_INTEGRITY TRUE";
+    private static final String CONSTRAINT_OFF_SQL = "SET foreign_key_checks = 0";
+    private static final String CONSTRAINT_ON_SQL = "SET foreign_key_checks = 1";
     private static final String TRUNCATE_TABLE_SQL = "TRUNCATE TABLE ";
     private static final String SHOW_TABLES_SQL = "SHOW TABLES";
 
@@ -27,11 +27,10 @@ public class DatabaseCleaner implements InitializingBean {
     }
 
     private List<String> findTableNamesByEntities() {
-        final List<Object[]> tables = (List<Object[]>) entityManager.createNativeQuery(SHOW_TABLES_SQL)
-                .getResultList();
-
-        return tables.stream()
-                .map(it -> it[0].toString())
+        return (List<String>) entityManager.createNativeQuery(SHOW_TABLES_SQL)
+                .getResultList()
+                .stream()
+                .map(Object::toString)
                 .collect(Collectors.toList());
     }
 

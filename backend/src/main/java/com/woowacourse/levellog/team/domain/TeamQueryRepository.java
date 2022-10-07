@@ -3,6 +3,7 @@ package com.woowacourse.levellog.team.domain;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.dto.AllParticipantDto;
 import com.woowacourse.levellog.team.dto.AllSimpleParticipantDto;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,7 +21,8 @@ public class TeamQueryRepository {
             resultSet.getString("teamProfileUrl"),
             resultSet.getBoolean("is_closed"),
             resultSet.getObject("memberId", Long.class),
-            resultSet.getString("profile_url")
+            resultSet.getString("profile_url"),
+            resultSet.getObject("created_at", LocalDateTime.class)
     );
     private final RowMapper<AllParticipantDto> detailRowMapper = (resultSet, rowNumber) -> new AllParticipantDto(
             resultSet.getObject("teamId", Long.class),
@@ -47,7 +49,7 @@ public class TeamQueryRepository {
 
     public List<AllSimpleParticipantDto> findAllList(final boolean isClosed, final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
-                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, "
+                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
                 + "m.id memberId, m.profile_url "
                 + "FROM "
                     + "(SELECT * "
@@ -57,7 +59,7 @@ public class TeamQueryRepository {
                     + "LIMIT ? OFFSET ?) AS t "
                 + "INNER JOIN participant p ON p.team_id = t.id AND p.is_watcher = FALSE "
                 + "INNER JOIN member m ON m.id = p.member_id "
-                + "ORDER BY t.created_at DESC";
+                + "ORDER BY t.created_at DESC, p.created_at ASC";
 
         return jdbcTemplate.query(sql, simpleRowMapper, isClosed, limit, offset);
     }
@@ -90,7 +92,7 @@ public class TeamQueryRepository {
                     + "INNER JOIN member m ON p.member_id = m.id "
                     + "INNER JOIN team t ON p.team_id = t.id "
                     + "WHERE m.id = ? AND deleted = FALSE) "
-                + "ORDER BY t.is_closed ASC, t.created_at DESC";
+                + "ORDER BY t.is_closed ASC, t.created_at DESC, p.created_at ASC";
 
         return jdbcTemplate.query(sql, simpleRowMapper, member.getId());
     }

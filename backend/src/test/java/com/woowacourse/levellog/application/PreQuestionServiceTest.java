@@ -170,7 +170,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> preQuestionService.findMy(levellog.getId(), questioner.getId()))
                     .isInstanceOf(PreQuestionNotFoundException.class)
-                    .hasMessageContainingAll("사전 질문이 존재하지 않습니다.", "1");
+                    .hasMessageContainingAll("사전 질문이 존재하지 않습니다.", String.valueOf(levellog.getId()));
         }
     }
 

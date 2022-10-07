@@ -26,7 +26,6 @@ const TeamForm = ({
   participants,
   watchers,
   teamInfoRef,
-  getTeamOnRef,
   setParticipantNicknameValue,
   setWatcherNicknameValue,
   addToParticipants,
@@ -37,11 +36,11 @@ const TeamForm = ({
   handleChangeWatcherInput,
   handleClickTeamButton,
 }: TeamFormProps) => {
-  useEffect(() => {
-    if (!getTeamOnRef) return;
-
-    getTeamOnRef();
-  }, []);
+  //   useEffect(() => {
+  //     if (!getTeamOnRef) return;
+  //
+  //     getTeamOnRef();
+  //   }, []);
 
   return (
     <S.Container>
@@ -146,7 +145,7 @@ interface TeamFormProps {
   teamInfoRef: React.MutableRefObject<HTMLInputElement[]>;
   setParticipantNicknameValue: React.Dispatch<React.SetStateAction<string>>;
   setWatcherNicknameValue: React.Dispatch<React.SetStateAction<string>>;
-  getTeamOnRef?: () => Promise<void>;
+  // getTeamOnRef?: () => Promise<void>;
   addToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
   addToWatcherParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
   removeToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;

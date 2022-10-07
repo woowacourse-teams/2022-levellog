@@ -1,19 +1,18 @@
 import styled from 'styled-components';
 
-import UiViewer from 'components/@commons/markdownEditor/UiViewer';
-import { LevellogInfoType } from 'types/levellog';
+import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
 
-const LevellogReport = ({ levellogInfo }: LevellogReportProps) => {
+import UiViewer from 'components/@commons/markdownEditor/UiViewer';
+
+const LevellogReport = () => {
+  const { levellogInfo } = useLevellogQuery();
+
   return (
     <S.Container>
-      <UiViewer content={levellogInfo.content} />
+      <UiViewer content={levellogInfo!.content} />
     </S.Container>
   );
 };
-
-interface LevellogReportProps {
-  levellogInfo: LevellogInfoType;
-}
 
 const S = {
   Container: styled.div`

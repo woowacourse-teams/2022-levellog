@@ -20,7 +20,7 @@ export interface InterviewQuestionsInLevellogType {
 }
 
 export interface InterviewQuestionSearchType {
-  keyword: string;
+  keyword: string | null;
 }
 
 export interface InterviewQuestionSearchResultType {
@@ -33,3 +33,5 @@ export interface InterviewQuestionSearchApiType {
   results: InterviewQuestionSearchResultType[];
   page: number;
 }
+
+export type InterviewQuestionSort = 'likes' | 'latest' | 'oldest';

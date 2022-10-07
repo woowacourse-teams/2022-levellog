@@ -3,7 +3,7 @@ import { ParticipantType } from 'types/team';
 export interface PreQuestionCustomHookType {
   teamId: string;
   levellogId: string | undefined;
-  preQuestionId: string;
+  preQuestionId: string | undefined;
   preQuestion: PreQuestionFormatType;
   preQuestionContent: string;
 }
@@ -11,9 +11,9 @@ export interface PreQuestionCustomHookType {
 export interface PreQuestionApiType {
   accessToken: string | null;
   levellogId: string | undefined;
-  preQuestionId: string;
+  preQuestionId: string | undefined;
   preQuestion: PreQuestionFormatType;
-  preQuestionResult: PreQuestionResultType;
+  preQuestionContent: string;
 }
 
 export interface PreQuestionResultType {

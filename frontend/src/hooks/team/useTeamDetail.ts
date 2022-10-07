@@ -9,7 +9,7 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { requestCloseTeamInterview, requestDeleteTeam, requestGetTeam } from 'apis/teams';
-import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
+import { NotCorrectToken } from 'apis/utils';
 
 const QUERY_KEY = {
   TEAM: 'team',
@@ -41,9 +41,7 @@ const useTeamDetail = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (
-            토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-          ) {
+          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }

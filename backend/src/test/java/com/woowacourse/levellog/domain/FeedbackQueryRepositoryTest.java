@@ -9,7 +9,9 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("FeedbackQueryRepository의")
@@ -73,25 +75,44 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
                 );
     }
 
-    @Test
-    @DisplayName("findById 메서드는 입력된 멤버가 받은 피드백을 수정일 기준 내림차순으로 조회한다.")
-    void findById() {
-        // given
-        final Member eve = saveMember("eve");
-        final Member rick = saveMember("rick");
-        final Member toMember = saveMember("toMember");
+    @Nested
+    @DisplayName("findById 메서드는")
+    class FindById {
 
-        final Team team = saveTeam(eve, rick, toMember);
-        final Levellog levellog = saveLevellog(toMember, team);
+        @Test
+        @DisplayName("id에 해당하는 피드백을 조회한다.")
+        void findById_success() {
+            // given
+            final Member eve = saveMember("eve");
+            final Member rick = saveMember("rick");
+            final Member toMember = saveMember("toMember");
 
-        final Feedback feedback = saveFeedback(eve, toMember, levellog);
+            final Team team = saveTeam(eve, rick, toMember);
+            final Levellog levellog = saveLevellog(toMember, team);
 
-        // when
-        final FeedbackDto actual = feedbackQueryRepository.findById(feedback.getId());
+            final Feedback feedback = saveFeedback(eve, toMember, levellog);
 
-        // then
-        assertThat(actual)
-                .extracting(it -> it.getFrom().getId(), it -> it.getTo().getId())
-                .containsExactly(eve.getId(), toMember.getId());
+            // when
+            final Optional<FeedbackDto> actual = feedbackQueryRepository.findById(feedback.getId());
+
+            // then
+            assertThat(actual).isNotEmpty()
+                    .get()
+                    .extracting(it -> it.getFrom().getId(), it -> it.getTo().getId())
+                    .containsExactly(eve.getId(), toMember.getId());
+        }
+
+        @Test
+        @DisplayName("id에 해당하는 피드백이 존재하지 않으면 빈 Optional을 반환한다.")
+        void findById_success_emptyOptional() {
+            // given
+            final Long feedbackId = 999L;
+
+            // when
+            final Optional<FeedbackDto> actual = feedbackQueryRepository.findById(feedbackId);
+
+            // then
+            assertThat(actual).isEmpty();
+        }
     }
 }

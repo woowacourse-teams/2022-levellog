@@ -5,6 +5,8 @@ import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -69,7 +71,7 @@ public class FeedbackQueryRepository {
         return new FeedbacksDto(feedbacks);
     }
 
-    public FeedbackDto findById(final Long feedbackId) {
+    public Optional<FeedbackDto> findById(final Long feedbackId) {
         final String sql = "SELECT f.id feedbackId, f.study, f.speak, f.etc, f.updated_at updatedAt, "
                 + "fm.id fromId, fm.nickname fromNickname, fm.profile_url fromProfileUrl, "
                 + "tm.id toId, tm.nickname toNickname, tm.profile_url toProfileUrl "
@@ -80,6 +82,10 @@ public class FeedbackQueryRepository {
         final SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("feedbackId", feedbackId);
 
-        return jdbcTemplate.queryForObject(sql, param, feedbackRowMapper);
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, param, feedbackRowMapper));
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

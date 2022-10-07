@@ -10,6 +10,7 @@ import com.woowacourse.levellog.feedback.dto.FeedbackDto;
 import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
+import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -61,7 +62,10 @@ public class FeedbackService {
 
         validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
 
-        return feedbackQueryRepository.findById(feedbackId);
+        return feedbackQueryRepository.findById(feedbackId)
+                .orElseThrow(() -> new FeedbackNotFoundException(DebugMessage.init()
+                        .append("feedbackId", feedbackId)
+                        .append("levellogId", levellogId)));
     }
 
     public FeedbacksDto findAllByTo(@Authentic final LoginStatus loginStatus) {

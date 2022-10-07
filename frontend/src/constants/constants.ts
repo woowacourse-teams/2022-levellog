@@ -99,3 +99,9 @@ export const GITHUB_AVATAR_SIZE_LIST = {
 };
 
 export const NOT_YET_HTTP_STATUS = 0;
+
+export const INTERVIEW_QUESTION_FILTER = Object.freeze({
+  LATEST: 'latest',
+  OLDEST: 'oldest',
+  LIKES: 'likes',
+});

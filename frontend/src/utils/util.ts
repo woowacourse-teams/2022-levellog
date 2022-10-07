@@ -2,7 +2,7 @@ import { NavigateFunction } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ShowSnackbarProps } from 'hooks/useSnackbar';
+import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 

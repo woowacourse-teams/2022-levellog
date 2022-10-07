@@ -2,8 +2,8 @@ import { Suspense } from 'react';
 
 import styled from 'styled-components';
 
-import useLevellog from 'hooks/levellog/useLevellog';
-import usePreQuestion from 'hooks/preQuestion/usePreQuestion';
+import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
+import usePreQuestionQuery from 'hooks/preQuestion/usePreQuestionQuery';
 
 import Loading from 'pages/status/Loading';
 
@@ -15,8 +15,8 @@ const WriterDocument = ({
   handleClickLevellogTag,
   handleClickPreQuestionTag,
 }: LevellogReportProps) => {
-  const { levellogError, levellogInfo } = useLevellog();
-  const { preQuestionError, preQuestion } = usePreQuestion();
+  const { levellogError, levellogInfo } = useLevellogQuery();
+  const { preQuestionError, preQuestion } = usePreQuestionQuery();
 
   return (
     <S.Container>

@@ -20,6 +20,9 @@ const useFeedbacks = () => {
         accessToken,
         levellogId,
       }),
+    {
+      cacheTime: 0,
+    },
   );
 
   return {

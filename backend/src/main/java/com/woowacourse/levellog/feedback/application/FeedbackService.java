@@ -43,7 +43,7 @@ public class FeedbackService {
         team.validateInProgress(timeStandard.now());
 
         final Feedback feedback = request.getFeedback()
-                .toFeedback(loginStatus.getMemberId(), levellog);
+                .toEntity(loginStatus.getMemberId(), levellog);
 
         return feedbackRepository.save(feedback)
                 .getId();

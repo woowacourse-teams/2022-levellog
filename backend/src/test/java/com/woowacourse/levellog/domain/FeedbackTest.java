@@ -34,7 +34,7 @@ class FeedbackTest {
             final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
-            assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma.getId(), levellog))
+            assertThatThrownBy(() -> feedbackContentDto.toEntity(roma.getId(), levellog))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("피드백은 1000자 이하여야 합니다.");
         }
@@ -53,7 +53,7 @@ class FeedbackTest {
             final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
-            assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma.getId(), levellog))
+            assertThatThrownBy(() -> feedbackContentDto.toEntity(roma.getId(), levellog))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("피드백은 1000자 이하여야 합니다.");
         }
@@ -72,7 +72,7 @@ class FeedbackTest {
             final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
-            assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma.getId(), levellog))
+            assertThatThrownBy(() -> feedbackContentDto.toEntity(roma.getId(), levellog))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("피드백은 1000자 이하여야 합니다.");
         }
@@ -93,7 +93,7 @@ class FeedbackTest {
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
             final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
-            final Feedback feedback = feedbackContentDto.toFeedback(roma.getId(), levellog);
+            final Feedback feedback = feedbackContentDto.toEntity(roma.getId(), levellog);
 
             final String studyFeedback = "f".repeat(1001);
 
@@ -114,7 +114,7 @@ class FeedbackTest {
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
             final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
-            final Feedback feedback = feedbackContentDto.toFeedback(roma.getId(), levellog);
+            final Feedback feedback = feedbackContentDto.toEntity(roma.getId(), levellog);
 
             final String speakFeedback = "f".repeat(1001);
 
@@ -135,7 +135,7 @@ class FeedbackTest {
             final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
             final Levellog levellog = Levellog.of(eve.getId(), team, "레벨로그 작성 내용");
 
-            final Feedback feedback = feedbackContentDto.toFeedback(roma.getId(), levellog);
+            final Feedback feedback = feedbackContentDto.toEntity(roma.getId(), levellog);
 
             final String etcFeedback = "f".repeat(1001);
 

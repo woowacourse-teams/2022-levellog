@@ -24,7 +24,7 @@ public class FeedbackContentDto {
     @NotNull
     private String etc;
 
-    public Feedback toFeedback(final Long fromId, final Levellog levellog) {
+    public Feedback toEntity(final Long fromId, final Levellog levellog) {
         return new Feedback(fromId, levellog.getAuthorId(), levellog, study, speak, etc);
     }
 }

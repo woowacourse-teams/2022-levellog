@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useInterviewQuestion from 'hooks/interviewQuestion/useInterviewQuestion';
-import useLevellog from 'hooks/levellog/useLevellog';
+import useInterviewQuestions from 'hooks/interviewQuestion/useInterviewQuestions';
+import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
 import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
@@ -23,49 +22,20 @@ import {
 import { checkFirstWordFinalConsonant, feedbackAddUriBuilder } from 'utils/util';
 
 const InterviewQuestions = () => {
-  const { levellogInfo } = useLevellog();
-  const { interviewQuestionInfosInLevellog } = useInterviewQuestion();
+  const { levellogInfo } = useLevellogQuery();
+  const { interviewQuestions } = useInterviewQuestions();
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { team } = useTeam();
   const { teamId, levellogId } = useParams();
-
-  if (typeof levellogId !== 'string' || typeof teamId !== 'string') {
-    return <Loading />;
-  }
-
-  useEffect(() => {
-    getLevellog({ teamId, levellogId });
-  }, []);
 
   if (
     !loginUserId ||
     !loginUserNickname ||
     !loginUserProfileUrl ||
+    !levellogInfo ||
     Object.keys(levellogInfo).length === 0
   ) {
     return <Loading />;
-  }
-
-  if (interviewQuestionInfosInLevellog.length === 0) {
-    return (
-      <>
-        <ContentHeader
-          imageUrl={loginUserProfileUrl}
-          title={`${
-            checkFirstWordFinalConsonant({
-              word: loginUserNickname,
-            })
-              ? `${loginUserNickname}이 `
-              : `${loginUserNickname}가 `
-          }
-        받은 인터뷰 질문들`}
-        ></ContentHeader>
-        <EmptyInterviewQuestion
-          isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
-          path={feedbackAddUriBuilder({ teamId, levellogId })}
-        />
-      </>
-    );
   }
 
   return (
@@ -80,9 +50,15 @@ const InterviewQuestions = () => {
             : `${loginUserNickname}가 `
         }
         받은 인터뷰 질문들`}
-      ></ContentHeader>
+      />
       <S.Container>
-        {interviewQuestionInfosInLevellog.map(
+        {interviewQuestions?.length === 0 && (
+          <EmptyInterviewQuestion
+            isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
+            path={feedbackAddUriBuilder({ teamId, levellogId })}
+          />
+        )}
+        {interviewQuestions?.map(
           (interviewQuestionInfoInLevellog: InterviewQuestionsInLevellogType) => (
             <S.Box key={interviewQuestionInfoInLevellog.author.id}>
               <S.AuthorBox>

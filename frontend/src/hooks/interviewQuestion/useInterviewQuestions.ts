@@ -22,7 +22,9 @@ const useInterviewQuestions = () => {
       }),
   );
 
-  return {};
+  return {
+    interviewQuestions: interviewQuestions?.interviewQuestions,
+  };
 };
 
 export default useInterviewQuestions;

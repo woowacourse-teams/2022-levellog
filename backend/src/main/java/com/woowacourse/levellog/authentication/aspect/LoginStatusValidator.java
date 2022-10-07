@@ -21,7 +21,7 @@ public class LoginStatusValidator {
     public void validateMemberId(final JoinPoint joinPoint) {
         Arrays.stream(joinPoint.getArgs())
                 .filter(this::isAuthentic)
-                .map(LoginStatus.class::cast)
+                .map(this::castToLoginStatus)
                 .filter(LoginStatus::isLogin)
                 .map(LoginStatus::getMemberId)
                 .findFirst()
@@ -30,5 +30,12 @@ public class LoginStatusValidator {
 
     private boolean isAuthentic(final Object parameter) {
         return parameter.getClass().isAnnotationPresent(Authentic.class);
+    }
+
+    private LoginStatus castToLoginStatus(final Object parameter) {
+        if (!(parameter instanceof LoginStatus)) {
+            throw new IllegalArgumentException("@Authentic 어노테이션은 LoginStatus 객체에만 붙여야함");
+        }
+        return (LoginStatus) parameter;
     }
 }

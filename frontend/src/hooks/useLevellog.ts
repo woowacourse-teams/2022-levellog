@@ -9,7 +9,7 @@ import { MESSAGE } from 'constants/constants';
 
 import { Editor } from '@toast-ui/react-editor';
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
-import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
+import { NotCorrectToken } from 'apis/utils';
 import { LevellogCustomHookType, LevellogInfoType } from 'types/levellog';
 import { teamGetUriBuilder } from 'utils/util';
 
@@ -37,9 +37,7 @@ const useLevellog = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (
-          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-        ) {
+        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }
@@ -60,9 +58,7 @@ const useLevellog = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (
-          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-        ) {
+        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }
@@ -82,9 +78,7 @@ const useLevellog = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (
-          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-        ) {
+        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }

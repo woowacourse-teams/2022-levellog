@@ -36,6 +36,7 @@ class OAuthServiceTest extends ServiceTest {
             assertAll(
                     () -> assertThat(Long.parseLong(payload)).isEqualTo(savedMemberId),
                     () -> assertThat(tokenResponse.getProfileUrl()).isEqualTo("rick.org"),
+                    () -> assertThat(tokenResponse.getNickname()).isEqualTo("릭"),
                     () -> assertThat(tokenResponse.getId()).isNotNull()
             );
         }

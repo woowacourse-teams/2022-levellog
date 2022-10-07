@@ -38,6 +38,7 @@ public class TeamQueryRepository {
             resultSet.getObject("levellogId", Long.class),
             resultSet.getObject("preQuestionId", Long.class),
             resultSet.getString("nickname"),
+            resultSet.getString("profile_url"),
             resultSet.getBoolean("is_host"),
             resultSet.getBoolean("is_watcher")
     );

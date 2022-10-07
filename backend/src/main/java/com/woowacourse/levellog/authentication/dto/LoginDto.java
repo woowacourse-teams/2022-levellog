@@ -14,5 +14,6 @@ public class LoginDto {
 
     private Long id;
     private String accessToken;
+    private String nickname;
     private String profileUrl;
 }

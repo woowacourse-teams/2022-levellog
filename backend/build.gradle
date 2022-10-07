@@ -40,6 +40,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.rest-assured:rest-assured:4.4.0'
 
+	// testcontainers
+	testImplementation "org.testcontainers:testcontainers:1.17.4"
+	testImplementation "org.testcontainers:junit-jupiter:1.17.4"
+
 	// rest docs
 	testImplementation'org.springframework.restdocs:spring-restdocs-restassured'
 	testImplementation'org.springframework.restdocs:spring-restdocs-mockmvc'

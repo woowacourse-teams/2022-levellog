@@ -11,6 +11,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woowacourse.levellog.DockerTestContainer;
 import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
 import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
 import com.woowacourse.levellog.config.DatabaseCleaner;
@@ -46,7 +47,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Import(TestConfig.class)
 @ExtendWith(RestDocumentationExtension.class)
 @ActiveProfiles("test")
-abstract class AcceptanceTest {
+abstract class AcceptanceTest extends DockerTestContainer {
 
     protected RequestSpecification specification;
 

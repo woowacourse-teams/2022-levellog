@@ -43,7 +43,7 @@ const useRole = () => {
 
   return {
     authorInfo: levellogInfo?.author,
-    feedbackWriterRole,
+    feedbackWriterRole: feedbackWriterRole?.myRole,
   };
 };
 

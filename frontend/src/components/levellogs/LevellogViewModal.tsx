@@ -1,9 +1,7 @@
-import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
 import closeIcon from 'assets/images/close.svg';
@@ -14,8 +12,7 @@ import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import ModalPortal from 'portal/ModalPortal';
-import { LevellogInfoType } from 'types/levellog';
-import { ParticipantType } from 'types/team';
+import { ParticipantType, TeamStatusType } from 'types/team';
 import {
   levellogEditUriBuilder,
   preQuestionEditUriBuilder,
@@ -23,18 +20,18 @@ import {
 } from 'utils/util';
 
 const LevellogViewModal = ({
-  levellogInfo,
-  participant,
-  userInTeam,
   teamId,
+  participant,
+  levellogInfo,
+  userInTeam,
+  teamStatus,
   handleClickCloseLevellogModal,
 }: LevellogViewModalProps) => {
-  const { levellogId, preQuestionId } = participant;
-  const { author, content } = levellogInfo;
   const { loginUserId } = useUser();
-  const { team } = useTeam();
 
-  if (author.id === loginUserId) {
+  const { levellogId, preQuestionId } = participant;
+
+  if (levellogInfo?.author.id === loginUserId) {
     return (
       <ModalPortal>
         <S.Dimmer onClick={handleClickCloseLevellogModal} />
@@ -42,22 +39,28 @@ const LevellogViewModal = ({
           <S.Header>
             <FlexBox alignItems={'center'} gap={0.375}>
               <Image
-                src={author.profileUrl}
+                src={levellogInfo.author.profileUrl}
                 sizes={'MEDIUM'}
                 githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
               />
-              <S.AuthorText>{author.nickname}의 레벨로그</S.AuthorText>
+              <S.AuthorText>{levellogInfo.author.nickname}의 레벨로그</S.AuthorText>
             </FlexBox>
             <S.CloseButton onClick={handleClickCloseLevellogModal}>
               <Image src={closeIcon} sizes={'SMALL'} />
             </S.CloseButton>
           </S.Header>
           <S.Levellog>
-            <UiViewer content={content} />
+            <UiViewer content={levellogInfo.content} />
           </S.Levellog>
           <S.Footer>
-            {team.status === TEAM_STATUS.READY && (
-              <Link to={levellogEditUriBuilder({ teamId, levellogId, authorId: author.id })}>
+            {teamStatus === TEAM_STATUS.READY && (
+              <Link
+                to={levellogEditUriBuilder({
+                  teamId,
+                  levellogId,
+                  authorId: levellogInfo.author.id,
+                })}
+              >
                 <Button>수정하기</Button>
               </Link>
             )}
@@ -73,15 +76,15 @@ const LevellogViewModal = ({
       <S.Container>
         <S.Header>
           <FlexBox alignItems={'center'} gap={0.375}>
-            <Image src={author.profileUrl} sizes={'MEDIUM'} />
-            <S.AuthorText>{author.nickname}의 레벨로그</S.AuthorText>
+            <Image src={levellogInfo!.author.profileUrl} sizes={'MEDIUM'} />
+            <S.AuthorText>{levellogInfo?.author.nickname}의 레벨로그</S.AuthorText>
           </FlexBox>
           <S.CloseButton onClick={handleClickCloseLevellogModal}>
             <Image src={closeIcon} sizes={'SMALL'} />
           </S.CloseButton>
         </S.Header>
         <S.Levellog>
-          <UiViewer content={content} />
+          <UiViewer content={levellogInfo.content} />
         </S.Levellog>
         <S.Footer>
           {loginUserId &&
@@ -109,10 +112,11 @@ const LevellogViewModal = ({
 };
 
 interface LevellogViewModalProps {
-  teamId: string;
-  levellogInfo: LevellogInfoType;
+  teamId: string | undefined;
   participant: ParticipantType;
+  levellogInfo: any;
   userInTeam: Boolean;
+  teamStatus: TeamStatusType;
   handleClickCloseLevellogModal: (e: React.MouseEvent<HTMLElement>) => void;
 }
 

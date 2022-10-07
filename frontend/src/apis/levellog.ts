@@ -7,15 +7,9 @@ export const requestPostLevellog = async ({
   teamId,
   levellogContent,
 }: Omit<LevellogApiType, 'levellogId'>) => {
-  await fetcher.post(
-    `/teams/${teamId}/levellogs`,
-    {
-      levellogContent,
-    },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
-  );
+  await fetcher.post(`/teams/${teamId}/levellogs`, levellogContent, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
 };
 
 export const requestGetLevellog = async ({
@@ -36,13 +30,7 @@ export const requestEditLevellog = async ({
   levellogId,
   levellogContent,
 }: LevellogApiType) => {
-  await fetcher.put(
-    `/teams/${teamId}/levellogs/${levellogId}`,
-    {
-      levellogContent,
-    },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
-  );
+  await fetcher.put(`/teams/${teamId}/levellogs/${levellogId}`, levellogContent, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
 };

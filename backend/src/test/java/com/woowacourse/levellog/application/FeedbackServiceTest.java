@@ -16,7 +16,7 @@ import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
+import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
@@ -98,8 +98,8 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> feedbackService.findAll(levellogId, memberId))
-                    .isInstanceOf(ParticipantNotSameTeamException.class)
-                    .hasMessageContainingAll("같은 팀에 속해있지 않습니다.",
+                    .isInstanceOf(ParticipantNotFoundException.class)
+                    .hasMessageContainingAll("참가자가 존재하지 않습니다.",
                             String.valueOf(team.getId()), String.valueOf(memberId));
         }
     }
@@ -149,8 +149,8 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> feedbackService.findById(levellog.getId(), feedback.getId(), alien.getId()))
-                    .isInstanceOf(ParticipantNotSameTeamException.class)
-                    .hasMessageContainingAll("같은 팀에 속해있지 않습니다.",
+                    .isInstanceOf(ParticipantNotFoundException.class)
+                    .hasMessageContainingAll("참가자가 존재하지 않습니다.",
                             String.valueOf(team.getId()), String.valueOf(memberId));
         }
 
@@ -345,8 +345,8 @@ class FeedbackServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> feedbackService.save(FeedbackWriteDto.from("로마 스터디", "로마 말하기", "로마 기타"),
                     levellog.getId(), roma.getId()))
-                    .isInstanceOf(ParticipantNotSameTeamException.class)
-                    .hasMessageContaining("같은 팀에 속해있지 않습니다.");
+                    .isInstanceOf(ParticipantNotFoundException.class)
+                    .hasMessageContaining("참가자가 존재하지 않습니다.");
         }
 
         @Test

@@ -3,7 +3,6 @@ package com.woowacourse.levellog.application;
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowacourse.levellog.DockerTestContainer;
 import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
@@ -50,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @ActiveProfiles("test")
 @Import(TestConfig.class)
-abstract class ServiceTest extends DockerTestContainer {
+abstract class ServiceTest {
 
     @Autowired
     protected ObjectMapper objectMapper;

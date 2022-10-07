@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.domain;
 
-import com.woowacourse.levellog.DockerTestContainer;
 import com.woowacourse.levellog.common.config.JpaConfig;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
@@ -42,7 +41,7 @@ import org.springframework.test.context.ActiveProfiles;
         TeamQueryRepository.class,
         InterviewQuestionQueryRepository.class
 })
-abstract class RepositoryTest extends DockerTestContainer {
+abstract class RepositoryTest {
 
     @Autowired
     protected FeedbackRepository feedbackRepository;

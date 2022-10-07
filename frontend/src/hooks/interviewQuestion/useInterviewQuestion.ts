@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
@@ -14,16 +14,10 @@ import {
   requestDeleteInterviewQuestion,
   requestEditInterviewQuestion,
   requestGetInterviewQuestion,
-  requestGetInterviewQuestionsInLevellog,
   requestPostInterviewQuestion,
 } from 'apis/interviewQuestion';
 import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
-import {
-  InterviewQuestionApiType,
-  InterviewQuestionsInLevellogType,
-  InterviewQuestionInfoType,
-} from 'types/interviewQuestion';
-import { tryCatch } from 'utils/util';
+import { InterviewQuestionApiType } from 'types/interviewQuestion';
 
 const QUERY_KEY = {
   INTERVIEW_QUESTION: 'interviewQuestion',
@@ -41,14 +35,15 @@ const useInterviewQuestion = () => {
   const {
     isError: interviewQuestionError,
     data: interviewQuestionInfos,
-    refetch,
+    refetch: interviewQuestionRefetch,
   } = useQuery(
     [QUERY_KEY.INTERVIEW_QUESTION, accessToken, levellogId],
-    () =>
-      requestGetInterviewQuestion({
+    () => {
+      return requestGetInterviewQuestion({
         accessToken,
         levellogId,
-      }),
+      });
+    },
     {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
@@ -73,7 +68,7 @@ const useInterviewQuestion = () => {
           interviewQuestionRef.current.value = '';
           interviewQuestionRef.current.focus();
         }
-        afterRequestScrollDown({ requestFunction: refetch });
+        afterRequestScrollDown({ requestFunction: interviewQuestionRefetch });
       },
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
@@ -102,7 +97,7 @@ const useInterviewQuestion = () => {
     },
     {
       onSuccess: () => {
-        refetch();
+        interviewQuestionRefetch();
       },
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
@@ -123,7 +118,7 @@ const useInterviewQuestion = () => {
     },
     {
       onSuccess: () => {
-        refetch();
+        interviewQuestionRefetch();
       },
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {

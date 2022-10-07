@@ -89,7 +89,7 @@ public class TeamController {
 
     @DeleteMapping("/{teamId}")
     public ResponseEntity<Void> delete(@PathVariable final Long teamId, @Authentic final Long memberId) {
-        teamService.deleteById(teamId, memberId);
+        teamService.delete(teamId, memberId);
         return ResponseEntity.noContent().build();
     }
 }

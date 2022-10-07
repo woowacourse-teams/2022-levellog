@@ -48,31 +48,20 @@ public class Team extends BaseEntity {
         updateParticipants(ingredient);
     }
 
+    public void delete(final LocalDateTime presentTime) {
+        validateReady(presentTime);
+
+        participants.clear();
+        deleted = true;
+    }
+
     public void close(final LocalDateTime presentTime) {
         validateInProgress(presentTime);
         isClosed = true;
     }
 
-    public void validateInProgress(final LocalDateTime presentTime) {
-        validateAlreadyClosed();
-        if (!detail.isStarted(presentTime)) {
-            throw new TeamNotInProgressException(DebugMessage.init()
-                    .append("presentTime", presentTime));
-        }
-    }
-
-    private void validateAlreadyClosed() {
-        if (isClosed) {
-            throw new TeamAlreadyClosedException(DebugMessage.init()
-                    .append("teamId", getId()));
-        }
-    }
-
-    public void delete(final LocalDateTime presentTime) {
-        validateReady(presentTime);
-
-        this.participants.clear();
-        this.deleted = true;
+    public TeamStatus status(final LocalDateTime presentTime) {
+        return TeamStatus.of(isClosed, detail.getStartAt(), presentTime);
     }
 
     public void validateReady(final LocalDateTime presentTime) {
@@ -82,20 +71,12 @@ public class Team extends BaseEntity {
         }
     }
 
-    public TeamStatus status(final LocalDateTime presentTime) {
-        if (isClosed) {
-            return TeamStatus.CLOSED;
-        }
+    public void validateInProgress(final LocalDateTime presentTime) {
+        validateAlreadyClosed();
         if (!detail.isStarted(presentTime)) {
-            return TeamStatus.READY;
+            throw new TeamNotInProgressException(DebugMessage.init()
+                    .append("presentTime", presentTime));
         }
-        return TeamStatus.IN_PROGRESS;
-    }
-
-    public void updateParticipants(final ParticipantsIngredient ingredient) {
-        final Participants target = Participants.of(this, ingredient);
-
-        participants.update(target);
     }
 
     public void validateHostAuthorization(final Long memberId) {
@@ -107,7 +88,10 @@ public class Team extends BaseEntity {
     }
 
     public InterviewRole getInterviewRole(final Long targetMemberId, final Long sourceMemberId) {
-        return participants.toInterviewRole(getId(), targetMemberId, sourceMemberId, getInterviewerNumber());
+        validateIsParticipants(targetMemberId);
+        validateIsParticipants(sourceMemberId);
+
+        return participants.toInterviewRole(targetMemberId, sourceMemberId, getInterviewerNumber());
     }
 
     public int getInterviewerNumber() {
@@ -116,5 +100,18 @@ public class Team extends BaseEntity {
 
     public String getProfileUrl() {
         return detail.getProfileUrl();
+    }
+
+    private void updateParticipants(final ParticipantsIngredient ingredient) {
+        final Participants target = Participants.of(this, ingredient);
+
+        participants.update(target);
+    }
+
+    private void validateAlreadyClosed() {
+        if (isClosed) {
+            throw new TeamAlreadyClosedException(DebugMessage.init()
+                    .append("teamId", getId()));
+        }
     }
 }

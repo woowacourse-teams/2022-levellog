@@ -1019,7 +1019,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
-                    .deleteById(10000000L, 1L);
+                    .delete(10000000L, 1L);
 
             // when
             final ResultActions perform = requestDeleteTeam(10000000L);
@@ -1042,7 +1042,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
-                    .deleteById(teamId, 1L);
+                    .delete(teamId, 1L);
 
             // when
             final ResultActions perform = requestDeleteTeam(teamId);
@@ -1066,7 +1066,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "호스트 권한이 없습니다.";
             willThrow(new HostUnauthorizedException(DebugMessage.init()))
                     .given(teamService)
-                    .deleteById(teamId, 1L);
+                    .delete(teamId, 1L);
 
             // when
             final ResultActions perform = requestDeleteTeam(teamId);

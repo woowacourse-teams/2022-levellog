@@ -2,11 +2,7 @@ package com.woowacourse.levellog.domain;
 
 
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.team.domain.Participant;
-import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
@@ -14,10 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 @DisplayName("Participants의")
 class ParticipantsTest {
@@ -34,109 +26,6 @@ class ParticipantsTest {
         return Arrays.stream(s.split(", "))
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
-    }
-
-    @Nested
-    @DisplayName("toInterviewerIds 메서드는")
-    class ToInterviewerIds {
-
-        @ParameterizedTest(name = "인터뷰어 수가 {0}명이고 참가자 아이디가 [1, 2, 3, 5, 6]인 팀에서 아이디가 {1}인 참가자의 인터뷰어 아이디는 [{2}]이다.")
-        @CsvSource(value = {"2:1:2, 3", "2:5:6, 1", "4:3:5, 6, 1, 2"}, delimiter = ':')
-        void success(final int interviewerNumber, final Long targetMemberId, final String expectedIds) {
-            // given
-            final List<Long> expected = toIdList(expectedIds);
-
-            final List<Participant> values = List.of(
-                    new Participant(null, 1L, true, false),
-                    new Participant(null, 2L, false, false),
-                    new Participant(null, 3L, false, false),
-                    new Participant(null, 4L, false, true),
-                    new Participant(null, 5L, false, false),
-                    new Participant(null, 6L, false, false));
-            final Participants participants = new Participants(values);
-
-            // when
-            final List<Long> actual = participants.toInterviewerIds(targetMemberId, interviewerNumber);
-
-            // then
-            assertAll(
-                    () -> assertThat(actual).hasSize(interviewerNumber),
-                    () -> assertThat(actual).isEqualTo(expected)
-            );
-        }
-
-        @Test
-        @DisplayName("타겟 멤버가 참가자가 아니면 빈 리스트를 반환한다.")
-        void toInterviewerIds_emptyList_success() {
-            // given
-            final int interviewerNumber = 1;
-
-            final List<Participant> values = List.of(
-                    new Participant(null, 1L, true, false),
-                    new Participant(null, 2L, false, false),
-                    new Participant(null, 3L, false, false),
-                    new Participant(null, 4L, false, true),
-                    new Participant(null, 5L, false, false),
-                    new Participant(null, 6L, false, false));
-            final Participants participants = new Participants(values);
-
-            // when
-            final List<Long> actual = participants.toInterviewerIds(999L, interviewerNumber);
-
-            // then
-            assertThat(actual).isEmpty();
-        }
-    }
-
-    @Nested
-    @DisplayName("toIntervieweeIds 메서드는")
-    class ToIntervieweeIds {
-
-        @ParameterizedTest(name = "인터뷰어 수가 {0}명이고 참가자 아이디가 [1, 2, 3, 4, 5]인 팀에서 아이디가 {1}인 참가자의 인터뷰이 아이디는 [{2}]이다.")
-        @CsvSource(value = {"2:1:4, 5", "2:4:2, 3", "4:3:4, 5, 1, 2"}, delimiter = ':')
-        void success(final int interviewerNumber, final Long targetMemberId, final String expectedIds) {
-            // given
-            final List<Long> expected = toIdList(expectedIds);
-
-            final List<Participant> values = List.of(
-                    new Participant(null, 1L, true, false),
-                    new Participant(null, 2L, false, false),
-                    new Participant(null, 3L, false, false),
-                    new Participant(null, 4L, false, false),
-                    new Participant(null, 5L, false, false),
-                    new Participant(null, 6L, false, true));
-            final Participants participants = new Participants(values);
-
-            // when
-            final List<Long> actual = participants.toIntervieweeIds(targetMemberId, interviewerNumber);
-
-            // then
-            assertAll(
-                    () -> assertThat(actual).hasSize(interviewerNumber),
-                    () -> assertThat(actual).isEqualTo(expected)
-            );
-        }
-
-        @Test
-        @DisplayName("타겟 멤버가 참가자가 아니면 빈 리스트를 반환한다.")
-        void toIntervieweeIds_emptyList_success() {
-            // given
-            final int interviewerNumber = 1;
-
-            final List<Participant> values = List.of(
-                    new Participant(null, 1L, true, false),
-                    new Participant(null, 2L, false, false),
-                    new Participant(null, 3L, false, false),
-                    new Participant(null, 4L, false, false),
-                    new Participant(null, 5L, false, false));
-            final Participants participants = new Participants(values);
-
-            // when
-            final List<Long> actual = participants.toInterviewerIds(999L, interviewerNumber);
-
-            // then
-            assertThat(actual).isEmpty();
-        }
     }
 
 //    @Nested

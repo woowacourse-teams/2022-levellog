@@ -66,7 +66,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void deleteById(final Long teamId, final Long memberId) {
+    public void delete(final Long teamId, final Long memberId) {
         final Team team = teamRepository.getTeamWithParticipants(teamId);
         team.validateHostAuthorization(memberId);
 

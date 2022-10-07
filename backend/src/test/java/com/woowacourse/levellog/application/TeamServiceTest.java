@@ -501,7 +501,7 @@ class TeamServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             // when
-            teamService.deleteById(team.getId(), rick.getId());
+            teamService.delete(team.getId(), rick.getId());
             entityManager.flush();
             entityManager.clear();
 
@@ -524,7 +524,7 @@ class TeamServiceTest extends ServiceTest {
             // when, then
             final Long memberId = pepper.getId();
             final Long teamId = team.getId();
-            assertThatThrownBy(() -> teamService.deleteById(teamId, memberId))
+            assertThatThrownBy(() -> teamService.delete(teamId, memberId))
                     .isInstanceOf(HostUnauthorizedException.class)
                     .hasMessageContaining("호스트 권한이 없습니다.");
         }
@@ -536,7 +536,7 @@ class TeamServiceTest extends ServiceTest {
             final Long memberId = saveMember("릭").getId();
 
             //when & then
-            assertThatThrownBy(() -> teamService.deleteById(1000L, memberId))
+            assertThatThrownBy(() -> teamService.delete(1000L, memberId))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다.");
         }
@@ -552,12 +552,12 @@ class TeamServiceTest extends ServiceTest {
             final Long teamId = team.getId();
             final Long rickId = rick.getId();
 
-            teamService.deleteById(teamId, rickId);
+            teamService.delete(teamId, rickId);
             entityManager.flush();
             entityManager.clear();
 
             //when & then
-            assertThatThrownBy(() -> teamService.deleteById(teamId, rickId))
+            assertThatThrownBy(() -> teamService.delete(teamId, rickId))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다.");
         }

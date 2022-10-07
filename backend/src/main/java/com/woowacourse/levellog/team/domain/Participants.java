@@ -34,35 +34,13 @@ public class Participants {
         return new Participants(participants);
     }
 
-    public List<Long> toInterviewerIds(final Long memberId, final int interviewerNumber) {
-        if (!isContains(memberId) || isWatcher(memberId)) {
-            return Collections.emptyList();
-        }
-
-        final List<Long> participantIds = toParticipantIds();
-        final int from = participantIds.indexOf(memberId) + 1;
-
-        return concatSameTwice(participantIds).subList(from, from + interviewerNumber);
+    public void update(final Participants target) {
+        clear();
+        values.addAll(target.values);
     }
 
-    public List<Long> toIntervieweeIds(final Long memberId, final int interviewerNumber) {
-        if (!isContains(memberId) || isWatcher(memberId)) {
-            return Collections.emptyList();
-        }
-
-        final List<Long> participantIds = toParticipantIds();
-        final int to = participantIds.indexOf(memberId) + participantIds.size();
-
-        return concatSameTwice(participantIds).subList(to - interviewerNumber, to);
-    }
-
-    private Long toHostId() {
-        return values
-                .stream()
-                .filter(Participant::isHost)
-                .findAny()
-                .orElseThrow()
-                .getMemberId();
+    public void clear() {
+        values.clear();
     }
 
     public void validateHost(final Long memberId) {
@@ -74,9 +52,15 @@ public class Participants {
         }
     }
 
-    public InterviewRole toInterviewRole(final Long teamId, final Long targetMemberId, final Long memberId,
-                                         final int interviewerNumber) {
-        validateParticipant(teamId, targetMemberId, memberId);
+    public void validateIsParticipants(final Long teamId, final Long memberId) {
+        if (!isContains(memberId)) {
+            throw new ParticipantNotFoundException(DebugMessage.init()
+                    .append("teamId", teamId)
+                    .append("memberId", memberId));
+        }
+    }
+
+    public InterviewRole toInterviewRole(final Long targetMemberId, final Long memberId, final int interviewerNumber) {
         if (targetMemberId.equals(memberId)) {
             return InterviewRole.ME;
         }
@@ -91,8 +75,31 @@ public class Participants {
         return InterviewRole.OBSERVER;
     }
 
-    public int size() {
-        return values.size();
+    private Long toHostId() {
+        return values
+                .stream()
+                .filter(Participant::isHost)
+                .findAny()
+                .orElseThrow()
+                .getMemberId();
+    }
+
+    private List<Long> toInterviewerIds(final Long memberId, final int interviewerNumber) {
+        if (!isContains(memberId) || isWatcher(memberId)) {
+            return Collections.emptyList();
+        }
+
+        final List<Long> participantIds = toParticipantIds();
+        final int from = participantIds.indexOf(memberId) + 1;
+
+        return concatSameTwice(participantIds).subList(from, from + interviewerNumber);
+    }
+
+    private List<Long> concatSameTwice(final List<Long> participantIds) {
+        final List<Long> linear = new ArrayList<>(participantIds);
+        linear.addAll(participantIds);
+
+        return linear;
     }
 
     private boolean isContains(final Long memberId) {
@@ -107,39 +114,10 @@ public class Participants {
                 .anyMatch(Participant::isWatcher);
     }
 
-    private List<Long> concatSameTwice(final List<Long> participantIds) {
-        final List<Long> linear = new ArrayList<>(participantIds);
-        linear.addAll(participantIds);
-
-        return linear;
-    }
-
     private List<Long> toParticipantIds() {
         return values.stream()
                 .filter(Participant::isParticipant)
                 .map(Participant::getMemberId)
                 .collect(Collectors.toList());
-    }
-
-    private void validateParticipant(final Long teamId, final Long targetMemberId, final Long memberId) {
-        validateIsParticipants(teamId, memberId);
-        validateIsParticipants(teamId, targetMemberId);
-    }
-
-    public void validateIsParticipants(final Long teamId, final Long memberId) {
-        if (!isContains(memberId)) {
-            throw new ParticipantNotFoundException(DebugMessage.init()
-                    .append("teamId", teamId)
-                    .append("memberId", memberId));
-        }
-    }
-
-    public void update(final Participants target) {
-        clear();
-        values.addAll(target.values);
-    }
-
-    public void clear() {
-        values.clear();
     }
 }

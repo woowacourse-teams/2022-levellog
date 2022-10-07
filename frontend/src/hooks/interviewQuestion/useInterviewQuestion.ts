@@ -16,7 +16,7 @@ import {
   requestGetInterviewQuestion,
   requestPostInterviewQuestion,
 } from 'apis/interviewQuestion';
-import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
+import { NotCorrectToken } from 'apis/utils';
 import { InterviewQuestionApiType } from 'types/interviewQuestion';
 
 const QUERY_KEY = {
@@ -48,9 +48,7 @@ const useInterviewQuestion = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (
-            토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-          ) {
+          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }
@@ -73,9 +71,7 @@ const useInterviewQuestion = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (
-            토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-          ) {
+          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }
@@ -102,9 +98,7 @@ const useInterviewQuestion = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (
-            토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-          ) {
+          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }
@@ -123,9 +117,7 @@ const useInterviewQuestion = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (
-            토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-          ) {
+          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }

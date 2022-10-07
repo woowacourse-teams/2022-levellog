@@ -2,15 +2,10 @@ import { useState } from 'react';
 
 import axios, { AxiosResponse } from 'axios';
 
-<<<<<<< HEAD:frontend/src/hooks/team/useTeams.ts
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { NOT_YET_HTTP_STATUS, TEAMS_CONDITION } from 'constants/constants';
-=======
 import { TEAMS_CONDITION } from 'constants/constants';
->>>>>>> cfed6ca02558de1af987be912757c55717ea5b7c:frontend/src/hooks/useTeams.ts
 
-import useSnackbar from './useSnackbar';
 import { requestGetMyTeams } from 'apis/myInfo';
 import { requestGetTeams } from 'apis/teams';
 import { NotCorrectToken } from 'apis/utils';

@@ -39,7 +39,7 @@ public class FeedbackQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public FeedbacksDto findAllByLevellog(final Long levellogId) {
+    public FeedbacksDto findAllByLevellogId(final Long levellogId) {
         final String sql = "SELECT f.id feedbackId, f.study, f.speak, f.etc, f.updated_at updatedAt, "
                 + "fm.id fromId, fm.nickname fromNickname, fm.profile_url fromProfileUrl, "
                 + "tm.id toId, tm.nickname toNickname, tm.profile_url toProfileUrl "

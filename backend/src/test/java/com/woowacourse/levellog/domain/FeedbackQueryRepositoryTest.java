@@ -30,7 +30,7 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
         saveFeedback(rick, toMember, levellog);
 
         // when
-        final List<FeedbackDto> feedbacks = feedbackQueryRepository.findAllByLevellog(levellog.getId())
+        final List<FeedbackDto> feedbacks = feedbackQueryRepository.findAllByLevellogId(levellog.getId())
                 .getFeedbacks();
 
         // then

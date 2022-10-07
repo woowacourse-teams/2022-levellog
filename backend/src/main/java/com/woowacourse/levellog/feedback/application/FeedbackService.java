@@ -53,7 +53,7 @@ public class FeedbackService {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
 
-        return feedbackQueryRepository.findAllByLevellog(levellogId);
+        return feedbackQueryRepository.findAllByLevellogId(levellogId);
     }
 
     public FeedbackDto findById(final Long levellogId, final Long feedbackId, @Authentic final LoginStatus loginStatus) {

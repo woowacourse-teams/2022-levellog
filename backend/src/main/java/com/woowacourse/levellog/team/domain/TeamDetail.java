@@ -106,8 +106,4 @@ public class TeamDetail {
                             .append("interviewerNumber", interviewerNumber));
         }
     }
-
-    public boolean isStarted(final LocalDateTime presentTime) {
-        return presentTime.isAfter(startAt);
-    }
 }

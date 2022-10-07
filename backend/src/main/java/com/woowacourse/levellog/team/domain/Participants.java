@@ -76,8 +76,7 @@ public class Participants {
     }
 
     private Long toHostId() {
-        return values
-                .stream()
+        return values.stream()
                 .filter(Participant::isHost)
                 .findAny()
                 .orElseThrow()

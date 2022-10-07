@@ -1,9 +1,6 @@
 package com.woowacourse.levellog.domain;
 
-import static com.woowacourse.levellog.fixture.TimeFixture.AFTER_START_TIME;
-import static com.woowacourse.levellog.fixture.TimeFixture.BEFORE_START_TIME;
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
@@ -13,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -155,24 +151,5 @@ class TeamDetailTest {
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("팀 생성시 인터뷰어 수는 1명 이상이어야 합니다");
         }
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {"0, true", "1, false"})
-    @DisplayName("isStarted 메서드는")
-    void isStarted(final int index, final boolean expected) {
-        // given
-        final LocalDateTime[] startAt = {BEFORE_START_TIME, AFTER_START_TIME};
-        final String title = "네오와 함께하는 레벨 인터뷰";
-        final String place = "선릉 트랙룸";
-        final String profileUrl = "profile.org";
-
-        final TeamDetail teamDetail = new TeamDetail(title, place, startAt[index], profileUrl, 1);
-
-        // when
-        final boolean actual = teamDetail.isStarted(TEAM_START_TIME);
-
-        // then
-        assertThat(actual).isEqualTo(expected);
     }
 }

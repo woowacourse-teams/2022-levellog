@@ -65,15 +65,20 @@ public class Team extends BaseEntity {
     }
 
     public void validateReady(final LocalDateTime presentTime) {
-        if (detail.isStarted(presentTime)) {
+        if (status(presentTime) != TeamStatus.READY) {
             throw new TeamNotReadyException(DebugMessage.init()
                     .append("presentTime", presentTime));
         }
     }
 
     public void validateInProgress(final LocalDateTime presentTime) {
-        validateAlreadyClosed();
-        if (!detail.isStarted(presentTime)) {
+        final TeamStatus status = status(presentTime);
+        if (status == TeamStatus.CLOSED) {
+            throw new TeamAlreadyClosedException(DebugMessage.init()
+                    .append("teamId", getId()));
+        }
+
+        if (status != TeamStatus.IN_PROGRESS) {
             throw new TeamNotInProgressException(DebugMessage.init()
                     .append("presentTime", presentTime));
         }
@@ -106,12 +111,5 @@ public class Team extends BaseEntity {
         final Participants target = Participants.of(this, ingredient);
 
         participants.update(target);
-    }
-
-    private void validateAlreadyClosed() {
-        if (isClosed) {
-            throw new TeamAlreadyClosedException(DebugMessage.init()
-                    .append("teamId", getId()));
-        }
     }
 }

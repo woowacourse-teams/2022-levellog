@@ -6,9 +6,9 @@ export interface FeedbackApiType {
 }
 
 export interface FeedbackCustomHookType {
-  teamId: string;
-  levellogId: string;
-  feedbackId: string;
+  teamId: string | undefined;
+  levellogId: string | undefined;
+  feedbackId: string | undefined;
   feedbackInfo: FeedbackType;
   feedbackResult: FeedbackFormatType;
 }

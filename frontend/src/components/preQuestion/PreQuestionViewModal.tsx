@@ -36,15 +36,15 @@ const PreQuestionViewModal = ({
       <S.Container>
         <S.Header>
           <FlexBox alignItems={'center'} gap={0.375}>
-            <Image src={preQuestion.author.profileUrl} sizes={'MEDIUM'} />
-            <S.AuthorText>{preQuestion.author.nickname}의 사전질문</S.AuthorText>
+            <Image src={preQuestion!.author.profileUrl} sizes={'MEDIUM'} />
+            <S.AuthorText>{preQuestion?.author.nickname}의 사전질문</S.AuthorText>
           </FlexBox>
           <S.CloseButton id="closeButton" onClick={handleClickClosePreQuestionModal}>
             <Image src={closeIcon} sizes={'SMALL'} />
           </S.CloseButton>
         </S.Header>
         <S.PreQuestion>
-          <UiViewer content={preQuestion.content} />
+          <UiViewer content={preQuestion!.content} />
         </S.PreQuestion>
         <S.Footer>
           <Link
@@ -52,7 +52,7 @@ const PreQuestionViewModal = ({
               teamId,
               levellogId,
               preQuestionId,
-              authorId: preQuestion.author.id,
+              authorId: preQuestion!.author.id,
             })}
           >
             <Button>수정하기</Button>
@@ -65,8 +65,8 @@ const PreQuestionViewModal = ({
 };
 
 interface PreQuestionViewModalProps {
-  teamId: string;
-  preQuestion: PreQuestionFormatType;
+  teamId: string | undefined;
+  preQuestion: PreQuestionFormatType | undefined;
   participant: ParticipantType;
   getTeam: () => void;
   onClickDeletePreQuestion: ({

@@ -7,8 +7,6 @@ import useRole from 'hooks/useRole';
 import useContentTag from 'hooks/utils/useContentTag';
 import usePreventGoBack from 'hooks/utils/usePreventGoBack';
 
-import Loading from 'pages/status/Loading';
-
 import BottomBar from 'components/@commons/BottomBar';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
@@ -20,37 +18,26 @@ import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
 const FeedbackAdd = () => {
   const { feedbackRef, handleClickFeedbackAddButton } = useFeedbackAdd();
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
-
   const { authorInfo, feedbackWriterRole } = useRole();
 
   usePreventGoBack(); // 새로 고침할 때마다 쌓인다.
 
   return (
     <>
-      <Suspense fallback={<Loading />}>
-        <ContentHeader
-          imageUrl={authorInfo?.profileUrl}
-          title={`${authorInfo?.nickname}에 대한 레벨 인터뷰 피드백`}
-        />
-      </Suspense>
+      <ContentHeader
+        imageUrl={authorInfo?.profileUrl}
+        title={`${authorInfo?.nickname}에 대한 레벨 인터뷰 피드백`}
+      />
       <S.Container>
         <S.Content>
           <S.LeftContent>
-            <Suspense fallback={<Loading />}>
-              <FlexBox alignItems={'center'} gap={1}>
-                {whichContentShow.levellog && <S.LevellogTitle>{'레벨로그'}</S.LevellogTitle>}
-                {whichContentShow.preQuestion && <S.LevellogTitle>{'사전질문'}</S.LevellogTitle>}
-                {feedbackWriterRole?.myRole === 'OBSERVER' && (
-                  <S.RoleContent>{'옵저버'}</S.RoleContent>
-                )}
-                {feedbackWriterRole?.myRole === 'INTERVIEWER' && (
-                  <S.RoleContent>{'인터뷰어'}</S.RoleContent>
-                )}
-                {feedbackWriterRole?.myRole === 'INTERVIEWEE' && (
-                  <S.RoleContent>{'인터뷰이'}</S.RoleContent>
-                )}
-              </FlexBox>
-            </Suspense>
+            <FlexBox alignItems={'center'} gap={1}>
+              {whichContentShow.levellog && <S.LevellogTitle>{'레벨로그'}</S.LevellogTitle>}
+              {whichContentShow.preQuestion && <S.LevellogTitle>{'사전질문'}</S.LevellogTitle>}
+              {feedbackWriterRole === 'OBSERVER' && <S.RoleContent>{'옵저버'}</S.RoleContent>}
+              {feedbackWriterRole === 'INTERVIEWER' && <S.RoleContent>{'인터뷰어'}</S.RoleContent>}
+              {feedbackWriterRole === 'INTERVIEWEE' && <S.RoleContent>{'인터뷰이'}</S.RoleContent>}
+            </FlexBox>
             <WriterDocument
               whichContentShow={whichContentShow}
               handleClickLevellogTag={handleClickLevellogTag}

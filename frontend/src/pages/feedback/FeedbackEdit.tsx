@@ -1,19 +1,8 @@
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
 import styled from 'styled-components';
 
-import useFeedbacks from 'hooks/feedback/useFeedbackAdd';
-import useInterviewQuestion from 'hooks/interviewQuestion/useInterviewQuestion';
-import useLevellog from 'hooks/levellog/useLevellog';
-import usePreQuestion from 'hooks/preQuestion/usePreQuestion';
+import useFeedbackEdit from 'hooks/feedback/useFeedbackEdit';
 import useRole from 'hooks/useRole';
 import useContentTag from 'hooks/utils/useContentTag';
-import useSnackbar from 'hooks/utils/useSnackbar';
-
-import Loading from 'pages/status/Loading';
-
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import BottomBar from 'components/@commons/BottomBar';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -24,83 +13,16 @@ import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
 
 const FeedbackEdit = () => {
-  const { preQuestion, getPreQuestion } = usePreQuestion();
-  const { levellogInfo, getLevellog } = useLevellog();
+  const { feedbackRef, handleClickFeedbackEditButton } = useFeedbackEdit();
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
-  const { feedbackRef, getFeedbackOnRef, onClickFeedbackEditButton } = useFeedbacks();
-  const { feedbackWriterRole, getWriterInfo } = useRole();
-  const {
-    interviewQuestionInfos,
-    interviewQuestionRef,
-    interviewQuestionContentRef,
-    getInterviewQuestion,
-    onClickDeleteInterviewQuestionButton,
-    onSubmitEditInterviewQuestion,
-    handleSubmitInterviewQuestion,
-  } = useInterviewQuestion();
-  const { showSnackbar } = useSnackbar();
-  const { teamId, levellogId, feedbackId } = useParams();
-  const navigate = useNavigate();
-
-  const handleClickFeedbackEditButton = () => {
-    if (
-      typeof teamId === 'string' &&
-      typeof feedbackId === 'string' &&
-      typeof levellogId === 'string'
-    ) {
-      onClickFeedbackEditButton({ teamId, levellogId, feedbackId });
-
-      return;
-    }
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-    navigate(ROUTES_PATH.ERROR);
-  };
-
-  const init = async () => {
-    if (
-      typeof teamId === 'string' &&
-      typeof feedbackId === 'string' &&
-      typeof levellogId === 'string'
-    ) {
-      const res = await getLevellog({ teamId, levellogId });
-      getWriterInfo({ teamId, participantId: res!.author.id });
-      getInterviewQuestion();
-      getPreQuestion({ levellogId });
-
-      return;
-    }
-
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-    navigate(ROUTES_PATH.ERROR);
-  };
-
-  useEffect(() => {
-    init();
-  }, []);
-
-  useEffect(() => {
-    const preventGoBack = () => {
-      if (confirm(MESSAGE.ESCAPE_NOW_PAGE)) {
-        return history.back();
-      }
-      history.pushState(null, '', location.href);
-    };
-    history.pushState(null, '', location.href);
-    window.addEventListener('popstate', preventGoBack);
-
-    return () => window.removeEventListener('popstate', preventGoBack);
-  }, []);
-
-  if (Object.keys(levellogInfo).length === 0) return <Loading />;
-  if (!feedbackWriterRole) return <Loading />;
-  if (!levellogId || !feedbackId) return <Loading />;
+  const { feedbackWriterRole, authorInfo } = useRole();
 
   return (
     <>
       <ContentHeader
-        imageUrl={levellogInfo.author.profileUrl}
-        title={`${levellogInfo.author.nickname}에 대한 레벨 인터뷰 피드백`}
-      ></ContentHeader>
+        imageUrl={authorInfo?.profileUrl}
+        title={`${authorInfo?.nickname}에 대한 레벨 인터뷰 피드백`}
+      />
       <S.Container>
         <S.Content>
           <S.LeftContent>
@@ -112,8 +34,6 @@ const FeedbackEdit = () => {
               {feedbackWriterRole === 'INTERVIEWEE' && <S.RoleContent>{'인터뷰이'}</S.RoleContent>}
             </FlexBox>
             <WriterDocument
-              levellogInfo={levellogInfo}
-              preQuestionContent={preQuestion.content}
               whichContentShow={whichContentShow}
               handleClickLevellogTag={handleClickLevellogTag}
               handleClickPreQuestionTag={handleClickPreQuestionTag}
@@ -124,28 +44,15 @@ const FeedbackEdit = () => {
               <FlexBox gap={1}>
                 <S.QuestionTitle>{'인터뷰에서 받은 질문'}</S.QuestionTitle>
                 <ToolTip
-                  toolTipText={`질문 텍스트를 클릭하면 수정
-가능합니다.
-질문 수정 후 엔터를 눌러 
-반영해주세요.`}
+                  toolTipText={
+                    '질문 텍스트를 클릭하면 수정가능합니다. 질문 수정 후 엔터를 눌러 반영해주세요.'
+                  }
                 />
               </FlexBox>
-              <InterviewQuestion
-                interviewQuestionInfos={interviewQuestionInfos}
-                interviewQuestionRef={interviewQuestionRef}
-                interviewQuestionContentRef={interviewQuestionContentRef}
-                onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}
-                onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
-                handleSubmitInterviewQuestion={handleSubmitInterviewQuestion}
-              />
+              <InterviewQuestion />
             </S.QuestionContent>
             <S.FeedbackContent>
-              <FeedbackFormat
-                levellogId={levellogId}
-                feedbackId={feedbackId}
-                feedbackRef={feedbackRef}
-                getFeedbackOnRef={getFeedbackOnRef}
-              />
+              <FeedbackFormat feedbackRef={feedbackRef} />
             </S.FeedbackContent>
           </S.RightContent>
         </S.Content>

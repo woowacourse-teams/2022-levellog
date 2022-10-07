@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useFeedbacks from 'hooks/feedback/useFeedbacks';
-import useLevellog from 'hooks/levellog/useLevellog';
+import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
 import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
@@ -24,7 +24,7 @@ import { feedbackAddUriBuilder, teamGetUriBuilder } from 'utils/util';
 
 const Feedbacks = () => {
   const { feedbackError, feedbacks } = useFeedbacks();
-  const { levellogError, levellogInfo } = useLevellog();
+  const { levellogError, levellogInfo } = useLevellogQuery();
   const { team } = useTeam();
   const { loginUserId } = useUser();
   const { teamId, levellogId } = useParams();

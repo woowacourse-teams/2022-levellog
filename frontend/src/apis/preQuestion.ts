@@ -16,12 +16,12 @@ export const requestGetPreQuestion = async ({
 export const requestPostPreQuestion = async ({
   accessToken,
   levellogId,
-  preQuestionResult,
-}: Pick<PreQuestionApiType, 'accessToken' | 'levellogId' | 'preQuestionResult'>) => {
+  preQuestionContent,
+}: Pick<PreQuestionApiType, 'accessToken' | 'levellogId' | 'preQuestionContent'>) => {
   await fetcher.post(
     `/levellogs/${levellogId}/pre-questions`,
     {
-      preQuestionResult,
+      content: preQuestionContent,
     },
     {
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -33,12 +33,12 @@ export const requestEditPreQuestion = async ({
   accessToken,
   levellogId,
   preQuestionId,
-  preQuestionResult,
+  preQuestionContent,
 }: Omit<PreQuestionApiType, 'preQuestion'>) => {
   await fetcher.put(
     `/levellogs/${levellogId}/pre-questions/${preQuestionId}`,
     {
-      preQuestionResult,
+      content: preQuestionContent,
     },
     {
       headers: { Authorization: `Bearer ${accessToken}` },

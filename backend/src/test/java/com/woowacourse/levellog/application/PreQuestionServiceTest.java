@@ -16,7 +16,7 @@ import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionExceptio
 import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -68,8 +68,8 @@ public class PreQuestionServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))
-                    .isInstanceOf(ParticipantNotFoundException.class)
-                    .hasMessageContaining("참가자가 존재하지 않습니다.");
+                    .isInstanceOf(NotParticipantException.class)
+                    .hasMessageContaining("팀 참가자가 아닙니다.");
         }
 
         @Test

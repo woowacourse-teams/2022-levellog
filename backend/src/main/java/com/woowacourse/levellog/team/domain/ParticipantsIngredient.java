@@ -43,7 +43,7 @@ public class ParticipantsIngredient {
 
     private void validateParticipantExistence() {
         if (participantIds.isEmpty()) {
-            throw new InvalidFieldException("참가자가 존재하지 않습니다.", DebugMessage.init()
+            throw new InvalidFieldException("팀 참가자가 아닙니다.", DebugMessage.init()
                     .append("participants", participantIds));
         }
     }

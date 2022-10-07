@@ -12,7 +12,7 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
@@ -878,9 +878,9 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 2L;
             final Long memberId = 5L;
 
-            final String message = "참가자가 존재하지 않습니다.";
+            final String message = "팀 참가자가 아닙니다.";
             given(teamService.findMyRole(teamId, memberId, 1L))
-                    .willThrow(new ParticipantNotFoundException(DebugMessage.init()));
+                    .willThrow(new NotParticipantException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestFindMyRole(teamId, memberId);

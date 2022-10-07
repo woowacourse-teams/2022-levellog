@@ -26,7 +26,7 @@ class ParticipantsIngredientTest {
             // when & then
             assertThatThrownBy(() -> ingredient.validate(1))
                     .isInstanceOf(InvalidFieldException.class)
-                    .hasMessageContaining("참가자가 존재하지 않습니다.");
+                    .hasMessageContaining("팀 참가자가 아닙니다.");
         }
 
         @Test

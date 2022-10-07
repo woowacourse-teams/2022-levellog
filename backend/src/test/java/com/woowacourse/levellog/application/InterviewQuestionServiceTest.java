@@ -24,7 +24,7 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
@@ -134,8 +134,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, otherTeamMemberId))
-                    .isInstanceOf(ParticipantNotFoundException.class)
-                    .hasMessageContainingAll("참가자가 존재하지 않습니다.",
+                    .isInstanceOf(NotParticipantException.class)
+                    .hasMessageContainingAll("팀 참가자가 아닙니다.",
                             String.valueOf(team.getId()), String.valueOf(otherTeamMemberId));
         }
 

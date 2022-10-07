@@ -19,7 +19,7 @@ import com.woowacourse.levellog.team.dto.InterviewRoleDto;
 import com.woowacourse.levellog.team.dto.TeamStatusDto;
 import com.woowacourse.levellog.team.dto.TeamWriteDto;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.util.Collections;
@@ -191,7 +191,7 @@ class TeamServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, requestMemberId))
-                    .isInstanceOf(ParticipantNotFoundException.class);
+                    .isInstanceOf(NotParticipantException.class);
         }
 
         @Test
@@ -210,7 +210,7 @@ class TeamServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, requestMemberId))
-                    .isInstanceOf(ParticipantNotFoundException.class);
+                    .isInstanceOf(NotParticipantException.class);
         }
     }
 

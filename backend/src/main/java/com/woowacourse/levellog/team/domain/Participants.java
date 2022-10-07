@@ -2,7 +2,7 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +54,7 @@ public class Participants {
 
     public void validateIsParticipants(final Long teamId, final Long memberId) {
         if (!isContains(memberId)) {
-            throw new ParticipantNotFoundException(DebugMessage.init()
+            throw new NotParticipantException(DebugMessage.init()
                     .append("teamId", teamId)
                     .append("memberId", memberId));
         }

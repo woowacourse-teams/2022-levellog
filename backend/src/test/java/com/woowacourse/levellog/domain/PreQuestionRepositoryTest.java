@@ -1,12 +1,14 @@
 package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
+import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +34,41 @@ class PreQuestionRepositoryTest extends RepositoryTest {
 
         // then
         assertThat(actual).hasValue(preQuestion);
+    }
+
+    @Nested
+    @DisplayName("getPreQuestion 메서드는")
+    class GetPreQuestion {
+
+        @Test
+        @DisplayName("preQuestionId에 해당하는 레코드가 존재하면 id에 해당하는 PreQuestion 엔티티를 반환한다.")
+        void success() {
+            // given
+            final Member to = saveMember("릭");
+            final Member from = saveMember("로마");
+            final Team team = saveTeam(to, from);
+            final Levellog levellog = saveLevellog(to, team);
+            final Long expected = savePreQuestion(levellog, from)
+                    .getId();
+
+            // when
+            final Long actual = preQuestionRepository.getPreQuestion(expected)
+                    .getId();
+
+            // then
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("preQuestionId에 해당하는 레코드가 존재하지 않으면 예외를 던진다.")
+        void getPreQuestion_notExist_exception() {
+            // given
+            final Long preQuestionId = 999L;
+
+            // when & then
+            assertThatThrownBy(() -> preQuestionRepository.getPreQuestion(preQuestionId))
+                    .isInstanceOf(PreQuestionNotFoundException.class);
+        }
     }
 
     @Nested

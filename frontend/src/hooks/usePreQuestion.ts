@@ -14,7 +14,7 @@ import {
   requestGetPreQuestion,
   requestPostPreQuestion,
 } from 'apis/preQuestion';
-import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
+import { NotCorrectToken } from 'apis/utils';
 import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
 import { teamGetUriBuilder } from 'utils/util';
 
@@ -37,9 +37,7 @@ const usePreQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (
-          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-        ) {
+        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }
@@ -62,9 +60,7 @@ const usePreQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (
-          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-        ) {
+        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }
@@ -82,9 +78,7 @@ const usePreQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (
-          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-        ) {
+        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }
@@ -108,9 +102,7 @@ const usePreQuestion = () => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (
-          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-        ) {
+        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }

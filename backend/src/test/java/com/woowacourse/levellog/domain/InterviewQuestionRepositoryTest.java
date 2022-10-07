@@ -1,13 +1,16 @@
 package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
+import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("InterviewQuestionRepository의")
@@ -46,8 +49,8 @@ class InterviewQuestionRepositoryTest extends RepositoryTest {
         final Team team = saveTeam(pepper, rick, roma);
         final Levellog levellog = saveLevellog(pepper, team);
 
-        final InterviewQuestion InterviewQuestion1 = saveInterviewQuestion("로마가 씀", levellog, roma);
-        final InterviewQuestion InterviewQuestion2 = saveInterviewQuestion("릭이 씀", levellog, rick);
+        final InterviewQuestion interviewQuestion1 = saveInterviewQuestion("로마가 씀", levellog, roma);
+        final InterviewQuestion interviewQuestion2 = saveInterviewQuestion("릭이 씀", levellog, rick);
         final InterviewQuestion interviewQuestion3 = saveInterviewQuestion("로마가 씀 - 꼬리 질문", levellog, roma);
 
         final Levellog rickLevellog = saveLevellog(rick, team);
@@ -60,6 +63,40 @@ class InterviewQuestionRepositoryTest extends RepositoryTest {
 
         // then
         assertThat(actual).hasSize(3)
-                .containsExactly(InterviewQuestion1, InterviewQuestion2, interviewQuestion3);
+                .containsExactly(interviewQuestion1, interviewQuestion2, interviewQuestion3);
+    }
+
+    @Nested
+    @DisplayName("getInterviewQuestion 메서드는")
+    class GetInterviewQuestion {
+
+        @Test
+        @DisplayName("interviewQuestionId에 해당하는 레코드가 존재하면 id에 해당하는 InterviewQuestion 엔티티를 반환한다.")
+        void success() {
+            // given
+            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭");
+
+            final Team team = saveTeam(pepper, rick);
+            final Levellog levellog = saveLevellog(pepper, team);
+            final Long expected = saveInterviewQuestion("릭이 씀", levellog, rick).getId();
+
+            // when
+            final Long actual = interviewQuestionRepository.getInterviewQuestion(expected).getId();
+
+            // then
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("interviewQuestionId에 해당하는 레코드가 존재하지 않으면 예외를 던진다.")
+        void getInterviewQuestion_notExist_exception() {
+            // given
+            final Long interviewQuestionId = 999L;
+
+            // when & then
+            assertThatThrownBy(() -> interviewQuestionRepository.getInterviewQuestion(interviewQuestionId))
+                    .isInstanceOf(InterviewQuestionNotFoundException.class);
+        }
     }
 }

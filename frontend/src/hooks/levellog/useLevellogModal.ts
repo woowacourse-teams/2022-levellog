@@ -1,26 +1,44 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import useLevellog from 'hooks/levellog/useLevellog';
+import { useMutation } from '@tanstack/react-query';
+
 import useModal from 'hooks/useModal';
 
+import { requestGetLevellog } from 'apis/levellog';
 import { LevellogParticipantType } from 'types/levellog';
 import { ParticipantType } from 'types/team';
 
 const useLevellogModal = () => {
   const { isModalOpen, onClickOpenModal, onClickCloseModal } = useModal();
-  const { levellogInfo, getLevellog } = useLevellog();
   const [levellogParticipant, setLevellogParticipant] = useState({} as ParticipantType);
+  const { teamId } = useParams();
 
-  const onClickOpenLevellogModal = async ({ teamId, participant }: LevellogParticipantType) => {
-    await getLevellog({ teamId, levellogId: participant.levellogId });
+  const accessToken = localStorage.getItem('accessToken');
+
+  const {
+    isLoading: levellogModalLoading,
+    mutate: getLevellog,
+    data: levellogInfo,
+  } = useMutation(({ levellogId }: { levellogId: string }) => {
+    return requestGetLevellog({
+      accessToken,
+      teamId,
+      levellogId,
+    });
+  });
+
+  const onClickOpenLevellogModal = ({ participant }: LevellogParticipantType) => {
     onClickOpenModal();
     setLevellogParticipant(participant);
+    getLevellog({ levellogId: participant.levellogId });
   };
 
   return {
-    levellogInfo,
+    levellogModalLoading,
     levellogParticipant,
     isLevellogModalOpen: isModalOpen,
+    levellogInfo,
     onClickOpenLevellogModal,
     handleClickCloseLevellogModal: onClickCloseModal,
   };

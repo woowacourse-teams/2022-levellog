@@ -11,7 +11,6 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.List;
@@ -28,7 +27,6 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final LevellogRepository levellogRepository;
     private final MemberRepository memberRepository;
-    private final ParticipantRepository participantRepository;
     private final TimeStandard timeStandard;
 
     @Transactional

@@ -16,6 +16,7 @@ import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionExceptio
 import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -51,26 +52,25 @@ public class PreQuestionServiceTest extends ServiceTest {
             );
         }
 
-//        FIXME 이것도 고쳐야해.. PreQuestionService.save 고치고와
-//        @Test
-//        @DisplayName("참가자가 아닌 멤버가 사전 질문을 등록하는 경우 예외를 던진다.")
-//        void save_fromNotParticipant_exception() {
-//            // given
-//            final String preQuestion = "로마가 쓴 사전 질문";
-//            final PreQuestionWriteDto preQuestionWriteDto = PreQuestionWriteDto.from(preQuestion);
-//
-//            final Member author = saveMember("알린");
-//            final Member questioner = saveMember("로마");
-//            final Team team = saveTeam(author);
-//            final Levellog levellog = saveLevellog(author, team);
-//
-//            participantRepository.save(new Participant(team, author.getId(), true, false));
-//
-//            // when, then
-//            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))
-//                    .isInstanceOf(ParticipantNotSameTeamException.class)
-//                    .hasMessageContaining("같은 팀에 속해있지 않습니다.");
-//        }
+        @Test
+        @DisplayName("참가자가 아닌 멤버가 사전 질문을 등록하는 경우 예외를 던진다.")
+        void save_fromNotParticipant_exception() {
+            // given
+            final String preQuestion = "로마가 쓴 사전 질문";
+            final PreQuestionWriteDto preQuestionWriteDto = PreQuestionWriteDto.from(preQuestion);
+
+            final Member author = saveMember("알린");
+            final Member teamMember = saveMember("이브");
+            final Team team = saveTeam(author, teamMember);
+
+            final Member questioner = saveMember("로마");
+            final Levellog levellog = saveLevellog(author, team);
+
+            // when, then
+            assertThatThrownBy(() -> preQuestionService.save(preQuestionWriteDto, levellog.getId(), questioner.getId()))
+                    .isInstanceOf(ParticipantNotFoundException.class)
+                    .hasMessageContaining("참가자가 존재하지 않습니다.");
+        }
 
         @Test
         @DisplayName("내 레벨로그에 사전 질문을 등록하는 경우 예외를 던진다.")

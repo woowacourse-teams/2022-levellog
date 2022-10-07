@@ -25,7 +25,6 @@ import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
@@ -304,20 +303,18 @@ class TeamServiceTest extends ServiceTest {
             teamService.update(request, team.getId(), rick.getId());
 
             // then
-            final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
+            final Team actualTeam = teamRepository.getTeamWithParticipants(team.getId());
             final TeamDetail detail = actualTeam.getDetail();
-            final List<Long> actualParticipantsIds = participantRepository.findByTeam(actualTeam)
-                    .stream()
-                    .map(Participant::getMemberId)
-                    .collect(Collectors.toList());
+
+            final List<Participant> values = actualTeam.getParticipants().getValues();
 
             assertAll(
                     () -> assertThat(detail.getTitle()).isEqualTo(request.getTitle()),
                     () -> assertThat(detail.getPlace()).isEqualTo(request.getPlace()),
                     () -> assertThat(detail.getStartAt()).isEqualTo(request.getStartAt()),
                     () -> assertThat(actualTeam.getInterviewerNumber()).isEqualTo(request.getInterviewerNumber()),
-                    () -> assertThat(actualParticipantsIds).isEqualTo(
-                            List.of(rick.getId(), eve.getId(), alien.getId(), roma.getId()))
+                    () -> assertThat(values).extracting("memberId")
+                            .contains(rick.getId(), eve.getId(), alien.getId(), roma.getId())
             );
         }
 
@@ -509,10 +506,11 @@ class TeamServiceTest extends ServiceTest {
             entityManager.clear();
 
             // then
-            final Optional<Team> actualTeam = teamRepository.findById(team.getId());
-            assertThat(actualTeam).isEmpty();
-            final List<Participant> actualParticipants = participantRepository.findByTeam(team);
-            assertThat(actualParticipants).isEmpty();
+            assertAll(() -> {
+                assertThatThrownBy(() -> teamRepository.getTeamWithParticipants(team.getId()))
+                        .isInstanceOf(TeamNotFoundException.class)
+                        .hasMessageContaining("팀이 존재하지 않습니다.");
+            });
         }
 
         @Test

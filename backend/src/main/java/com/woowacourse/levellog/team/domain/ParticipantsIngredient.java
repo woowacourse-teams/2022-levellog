@@ -70,7 +70,7 @@ public class ParticipantsIngredient {
 
         if (notIndependent) {
             throw new InvalidFieldException("참가자와 참관자에 모두 포함된 멤버가 존재합니다.", DebugMessage.init()
-                    .append("particiapnts", participantIds)
+                    .append("participants", participantIds)
                     .append("watchers", watcherIds));
         }
     }

@@ -3,8 +3,6 @@ package com.woowacourse.levellog.team.application;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.InterviewRole;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
-import com.woowacourse.levellog.team.domain.Participants;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import com.woowacourse.levellog.team.domain.TeamStatus;
@@ -22,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamService {
 
     private final TeamRepository teamRepository;
-    private final ParticipantRepository participantRepository;
     private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
 
@@ -45,11 +42,8 @@ public class TeamService {
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
-        // FIXME : 로직 수정 필요 - Team한테만 메시지 던지기
         final Team team = teamRepository.getTeamWithParticipants(teamId);
-        final Participants participants = new Participants(participantRepository.findByTeam(team));
-        final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId, memberId,
-                team.getInterviewerNumber());
+        final InterviewRole interviewRole = team.getInterviewRole(targetMemberId, memberId);
 
         return InterviewRoleDto.from(interviewRole);
     }

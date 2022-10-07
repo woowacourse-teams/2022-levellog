@@ -106,6 +106,10 @@ public class Team extends BaseEntity {
         participants.validateIsParticipants(this.getId(), memberId);
     }
 
+    public InterviewRole getInterviewRole(final Long targetMemberId, final Long sourceMemberId) {
+        return participants.toInterviewRole(getId(), targetMemberId, sourceMemberId, getInterviewerNumber());
+    }
+
     public int getInterviewerNumber() {
         return detail.getInterviewerNumber();
     }

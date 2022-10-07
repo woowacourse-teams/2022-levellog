@@ -11,7 +11,6 @@ import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
 import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,15 +24,15 @@ public class PreQuestionService {
     private final PreQuestionRepository preQuestionRepository;
     private final LevellogRepository levellogRepository;
     private final MemberRepository memberRepository;
-    private final ParticipantRepository participantRepository;
 
     @Transactional
     public Long save(final PreQuestionWriteDto request, final Long levellogId, final Long memberId) {
-        final Levellog levellog = levellogRepository.getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellogWithTeamAndParticipantsById(levellogId);
         final Member questioner = memberRepository.getMember(memberId);
+        final Team team = levellog.getTeam();
+        team.validateIsParticipants(memberId);
 
         validatePreQuestionExistence(levellog, questioner);
-        validateSameTeamMember(levellog.getTeam(), questioner);
 
         return preQuestionRepository.save(request.toEntity(levellog, questioner))
                 .getId();
@@ -73,13 +72,6 @@ public class PreQuestionService {
         validateMyQuestion(preQuestion, questioner);
 
         preQuestionRepository.deleteById(preQuestion.getId());
-    }
-
-    private void validateSameTeamMember(final Team team, final Member member) {
-//        FIXME
-//        final Participants participants = new Participants(participantRepository.findByTeam(team));
-
-//        participants.validateExistsMember(member);
     }
 
     private void validatePreQuestionExistence(final Levellog levellog, final Member questioner) {

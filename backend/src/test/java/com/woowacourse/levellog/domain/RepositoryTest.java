@@ -18,7 +18,6 @@ import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
@@ -63,9 +62,6 @@ abstract class RepositoryTest {
 
     @Autowired
     protected MemberRepository memberRepository;
-
-    @Autowired
-    protected ParticipantRepository participantRepository;
 
     @Autowired
     protected PreQuestionRepository preQuestionRepository;

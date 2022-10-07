@@ -1,25 +1,49 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import useSnackbar from 'hooks/useSnackbar';
-import useTeam from 'hooks/useTeam';
+import { useQuery } from '@tanstack/react-query';
+
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
+import { requestGetTeam } from 'apis/teams';
 import { TeamStatusType } from 'types/team';
 
+const QUERY_KEY = {
+  TEAM: 'team',
+};
+
 const TeamStatus = ({ allowedStatuses, children }: TeamStatusProps) => {
-  const { team } = useTeam();
+  const { teamId } = useParams();
+
+  const accessToken = localStorage.getItem('accessToken');
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (allowedStatuses.some((allowedStatus: any) => allowedStatus === team.status)) {
-      return;
-    }
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-    navigate(ROUTES_PATH.HOME);
-  }, [navigate]);
+  useQuery(
+    [QUERY_KEY.TEAM],
+    () => {
+      return requestGetTeam({ accessToken, teamId });
+    },
+    {
+      onSuccess: (res) => {
+        if (allowedStatuses.some((allowedStatus: any) => allowedStatus === res.data.status)) {
+          return;
+        }
+        showSnackbar({ message: MESSAGE.WRONG_ACCESS });
+        navigate(ROUTES_PATH.HOME);
+      },
+    },
+  );
+  // const { team } = useTeam();
+
+  // useEffect(() => {
+  //   if (allowedStatuses.some((allowedStatus: any) => allowedStatus === team.status)) {
+  //     return;
+  //   }
+  //   showSnackbar({ message: MESSAGE.WRONG_ACCESS });
+  //   // navigate(ROUTES_PATH.HOME);
+  // }, [navigate]);
 
   return children;
 };

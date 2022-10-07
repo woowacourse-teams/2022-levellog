@@ -2,9 +2,10 @@ import { useState } from 'react';
 
 import axios, { AxiosResponse } from 'axios';
 
+import useSnackbar from 'hooks/utils/useSnackbar';
+
 import { TEAMS_CONDITION } from 'constants/constants';
 
-import useSnackbar from './useSnackbar';
 import { requestGetMyTeams } from 'apis/myInfo';
 import { requestGetTeams } from 'apis/teams';
 import { NotCorrectToken } from 'apis/utils';

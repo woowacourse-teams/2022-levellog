@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 
 import styled from 'styled-components';
 
-import useFeedbackAddPage from 'hooks/useFeedbackAddPage';
-
-import { MESSAGE } from 'constants/constants';
+import useFeedbackAdd from 'hooks/feedback/useFeedbackAdd';
+import useRole from 'hooks/useRole';
+import useContentTag from 'hooks/utils/useContentTag';
+import usePreventGoBack from 'hooks/utils/usePreventGoBack';
 
 import BottomBar from 'components/@commons/BottomBar';
 import ContentHeader from 'components/@commons/ContentHeader';
@@ -15,48 +16,18 @@ import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
 
 const FeedbackAdd = () => {
-  const {
-    state: {
-      levellogInfo,
-      feedbackWriterRole,
-      interviewQuestionInfos,
-      preQuestion,
-      whichContentShow,
-    },
-    ref: { feedbackRef, interviewQuestionRef, interviewQuestionContentRef },
-    handler: {
-      onClickDeleteInterviewQuestionButton,
-      onSubmitEditInterviewQuestion,
-      handleClickFeedbackAddButton,
-      handleSubmitInterviewQuestion,
-      handleClickLevellogTag,
-      handleClickPreQuestionTag,
-    },
-  } = useFeedbackAddPage();
+  const { feedbackRef, handleClickFeedbackAddButton } = useFeedbackAdd();
+  const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
+  const { authorInfo, feedbackWriterRole } = useRole();
 
-  useEffect(() => {
-    const preventGoBack = () => {
-      if (confirm(MESSAGE.ESCAPE_NOW_PAGE)) {
-        return history.back();
-      }
-      history.pushState(null, '', location.href);
-    };
-    history.pushState(null, '', location.href);
-    window.addEventListener('popstate', preventGoBack);
-
-    return () => window.removeEventListener('popstate', preventGoBack);
-  }, []);
-
-  if (Object.keys(levellogInfo).length === 0) return <></>;
-  if (!feedbackWriterRole) return <></>;
-  const { author } = levellogInfo;
+  usePreventGoBack(); // 새로 고침할 때마다 쌓인다.
 
   return (
     <>
       <ContentHeader
-        imageUrl={author.profileUrl}
-        title={`${author.nickname}에 대한 레벨 인터뷰 피드백`}
-      ></ContentHeader>
+        imageUrl={authorInfo?.profileUrl}
+        title={`${authorInfo?.nickname}에 대한 레벨 인터뷰 피드백`}
+      />
       <S.Container>
         <S.Content>
           <S.LeftContent>
@@ -68,8 +39,6 @@ const FeedbackAdd = () => {
               {feedbackWriterRole === 'INTERVIEWEE' && <S.RoleContent>{'인터뷰이'}</S.RoleContent>}
             </FlexBox>
             <WriterDocument
-              levellogInfo={levellogInfo}
-              preQuestionContent={preQuestion.content}
               whichContentShow={whichContentShow}
               handleClickLevellogTag={handleClickLevellogTag}
               handleClickPreQuestionTag={handleClickPreQuestionTag}
@@ -80,20 +49,10 @@ const FeedbackAdd = () => {
               <FlexBox gap={1}>
                 <S.QuestionTitle>{'인터뷰에서 받은 질문'}</S.QuestionTitle>
                 <ToolTip
-                  toolTipText={`질문 텍스트를 클릭하면 수정
-가능합니다.
-질문 수정 후 엔터를 눌러 
-반영해주세요.`}
+                  toolTipText={`질문 텍스트를 클릭하면 수정가능합니다. 질문 수정 후 엔터를 눌러 반영해주세요.`}
                 />
               </FlexBox>
-              <InterviewQuestion
-                interviewQuestionInfos={interviewQuestionInfos}
-                interviewQuestionRef={interviewQuestionRef}
-                interviewQuestionContentRef={interviewQuestionContentRef}
-                onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}
-                onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
-                handleSubmitInterviewQuestion={handleSubmitInterviewQuestion}
-              />
+              <InterviewQuestion />
             </S.QuestionContent>
             <S.FeedbackContent>
               <FeedbackFormat feedbackRef={feedbackRef} />

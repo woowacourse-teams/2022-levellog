@@ -1,35 +1,30 @@
 import { useEffect } from 'react';
 
-import useTeamPage from 'hooks/useTeamPage';
+import useTeamEdit from 'hooks/team/useTeamEdit';
 
 import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamEdit = () => {
   const {
-    state: {
-      participantNicknameValue,
-      watcherNicknameValue,
-      watcherMembers,
-      participantMembers,
-      watchers,
-      participants,
-    },
-    ref: { teamInfoRef },
-    handle: {
-      setParticipantNicknameValue,
-      setWatcherNicknameValue,
-      getTeamOnRef,
-      updateMembers,
-      updateWatchers,
-      addToParticipants,
-      addToWatcherParticipants,
-      removeToParticipants,
-      remoteToWatcherParticipants,
-      handleChangeParticipantInput,
-      handleChangeWatcherInput,
-      handleClickTeamEditButton,
-    },
-  } = useTeamPage();
+    participantNicknameValue,
+    watcherNicknameValue,
+    watcherMembers,
+    participantMembers,
+    watchers,
+    participants,
+    teamInfoRef,
+    setParticipantNicknameValue,
+    setWatcherNicknameValue,
+    updateMembers,
+    updateWatchers,
+    addToParticipants,
+    addToWatcherParticipants,
+    removeToParticipants,
+    remoteToWatcherParticipants,
+    handleChangeParticipantInput,
+    handleChangeWatcherInput,
+    handleClickTeamEditButton,
+  } = useTeamEdit();
 
   useEffect(() => {
     updateMembers({ nicknameValue: participantNicknameValue });
@@ -51,7 +46,6 @@ const InterviewTeamEdit = () => {
       teamInfoRef={teamInfoRef}
       setParticipantNicknameValue={setParticipantNicknameValue}
       setWatcherNicknameValue={setWatcherNicknameValue}
-      getTeamOnRef={getTeamOnRef}
       addToParticipants={addToParticipants}
       addToWatcherParticipants={addToWatcherParticipants}
       removeToParticipants={removeToParticipants}

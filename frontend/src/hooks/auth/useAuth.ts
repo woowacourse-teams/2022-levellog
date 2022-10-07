@@ -1,13 +1,32 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import useSnackbar from 'hooks/useSnackbar';
-import useTeam from 'hooks/useTeam';
+import { useQuery } from '@tanstack/react-query';
+
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, REQUIRE_AUTH } from 'constants/constants';
 
+import { requestGetTeam } from 'apis/teams';
+
+const QUERY_KEY = {
+  TEAM: 'team',
+};
 const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
-  const { getTeam } = useTeam();
+  const { teamId } = useParams();
+  const accessToken = localStorage.getItem('accessToken');
+
+  const { data: team } = useQuery(
+    [QUERY_KEY.TEAM],
+    () => {
+      return requestGetTeam({ accessToken, teamId });
+    },
+    {
+      onSuccess: () => {
+        checkAuth();
+      },
+    },
+  );
   const { showSnackbar } = useSnackbar();
   const [isLoad, setIsLoad] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -15,9 +34,7 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
 
   const loginUserId = localStorage.getItem('userId');
 
-  const checkAuth = async () => {
-    const team = await getTeam();
-
+  const checkAuth = () => {
     if (!team) {
       setIsLoad(false);
       setIsError(true);
@@ -26,7 +43,7 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
       return;
     }
 
-    const idsAndLevellogIds = Object.values(team.participants).map((participant) => [
+    const idsAndLevellogIds = Object.values(team.data.participants).map((participant) => [
       participant.memberId,
       participant.levellogId,
     ]);
@@ -34,12 +51,12 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     if (requireAuth === (REQUIRE_AUTH.IN_TEAM || REQUIRE_AUTH.NOT_ME)) {
       if (
         team &&
-        Object.values(team.participants)
+        Object.values(team.data.participants)
           .map((participant) => participant.memberId)
           .every((memberId) => {
             return String(memberId) !== String(loginUserId);
           }) &&
-        Object.values(team.watchers)
+        Object.values(team.data.watchers)
           .map((watcher) => watcher.memberId)
           .every((memberId) => {
             return String(memberId) !== String(loginUserId);
@@ -54,7 +71,7 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     }
 
     if (requireAuth === REQUIRE_AUTH.HOST) {
-      if (String(team.hostId) !== String(loginUserId)) {
+      if (String(team.data.hostId) !== String(loginUserId)) {
         setIsLoad(false);
         setIsError(true);
         showSnackbar({ message: MESSAGE.NEED_HOST });
@@ -88,10 +105,6 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
     }
     setIsLoad(false);
   };
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
 
   return { isLoad, isError };
 };

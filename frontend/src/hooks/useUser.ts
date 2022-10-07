@@ -26,12 +26,12 @@ const useUser = () => {
     target.src = `${profileDefaultImage}`;
   };
 
-  const handleClickLogoutButton = async () => {
+  const handleClickLogoutButton = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userId');
 
-    await userInfoDispatch({ id: '', nickname: '', profileUrl: '' });
-    await setIsShowProfileDropdown(false);
+    userInfoDispatch({ id: '', nickname: '', profileUrl: '' });
+    setIsShowProfileDropdown(false);
     if (location.pathname === ROUTES_PATH.HOME) location.replace(ROUTES_PATH.HOME);
     navigate(ROUTES_PATH.HOME);
   };

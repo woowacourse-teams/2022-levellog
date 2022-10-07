@@ -49,7 +49,7 @@ const usePreQuestion = () => {
       return requestPostPreQuestion({
         accessToken,
         levellogId,
-        preQuestionResult: { content: preQuestionContent },
+        preQuestionContent,
       });
     },
   );
@@ -64,7 +64,7 @@ const usePreQuestion = () => {
         accessToken,
         levellogId,
         preQuestionId,
-        preQuestionResult: { content: preQuestionContent },
+        preQuestionContent,
       });
     },
   );

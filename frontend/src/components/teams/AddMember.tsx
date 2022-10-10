@@ -6,11 +6,11 @@ import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';
 
-const Participant = ({ participant, removeToParticipants }: ParticipantProps) => {
-  const { id, nickname, profileUrl } = participant;
+const AddMember = ({ addMember, removeEvent }: ParticipantProps) => {
+  const { id, nickname, profileUrl } = addMember;
 
   const handleClickDeleteButton = () => {
-    removeToParticipants({ id, nickname, profileUrl });
+    removeEvent({ id, nickname, profileUrl });
   };
 
   return (
@@ -23,8 +23,8 @@ const Participant = ({ participant, removeToParticipants }: ParticipantProps) =>
 };
 
 interface ParticipantProps {
-  participant: MemberType;
-  removeToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  addMember: MemberType;
+  removeEvent: ({ id, nickname, profileUrl }: MemberType) => void;
 }
 
 const S = {
@@ -53,4 +53,4 @@ const S = {
   `,
 };
 
-export default Participant;
+export default AddMember;

@@ -92,7 +92,7 @@ const useTeamEdit = () => {
     },
     {
       onSuccess: (res) => {
-        const membersFilter = res.data.members
+        const membersFilter = res.members
           .filter((member) => participants.every((participant) => participant.id !== member.id))
           .filter((member) => watchers.every((watcher) => watcher.id !== member.id));
         setParticipantMembers(membersFilter);
@@ -114,7 +114,7 @@ const useTeamEdit = () => {
     },
     {
       onSuccess: (res) => {
-        const membersFilter = res.data.members
+        const membersFilter = res.members
           .filter((member) => watchers.every((watcher) => watcher.id !== member.id))
           .filter((member) => participants.every((participant) => participant.id !== member.id));
         setWatcherMembers(membersFilter);
@@ -180,7 +180,7 @@ const useTeamEdit = () => {
     setParticipants(participants.filter((participant) => id !== participant.id));
   };
 
-  const remoteToWatcherParticipants = ({ id }: Pick<MemberType, 'id'>) => {
+  const removeToWatcherParticipants = ({ id }: Pick<MemberType, 'id'>) => {
     setWatchers(watchers.filter((watcher) => id !== watcher.id));
   };
 
@@ -225,7 +225,7 @@ const useTeamEdit = () => {
     addToParticipants,
     addToWatcherParticipants,
     removeToParticipants,
-    remoteToWatcherParticipants,
+    removeToWatcherParticipants,
     handleChangeParticipantInput,
     handleChangeWatcherInput,
     handleClickTeamEditButton,

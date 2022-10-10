@@ -60,7 +60,7 @@ const S = {
   Input: styled.input`
     width: 100%;
     height: 1.875rem;
-    margin-right: 10px;
+    margin-right: 0.625rem;
     border: none;
     border-bottom: 0.0625rem solid ${(props) => props.theme.default.BLACK};
     font-size: 1rem;

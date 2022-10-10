@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useTeams from 'hooks/team/useTeams';
+import useTeamsCondition from 'hooks/team/useTeamsCondition';
 import useUser from 'hooks/useUser';
 
 import Loading from 'pages/status/Loading';
@@ -18,7 +18,7 @@ import FilterButton from 'components/@commons/FilterButton';
 import Image from 'components/@commons/Image';
 
 const InterviewTeams = () => {
-  const { teamsCondition, handleClickFilterButtons } = useTeams();
+  const { teamsCondition, handleClickFilterButtons } = useTeamsCondition();
   const { loginUserId } = useUser();
 
   return (

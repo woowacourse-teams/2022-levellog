@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 
-import { 엑세스토큰이없는경우헤더제거 } from 'apis/utils';
+import { NotAccessTokenRemoveHeader } from 'apis/utils';
 import { TeamApiType, InterviewTeamType, InterviewTeamDetailType } from 'types/team';
 
 export const requestPostTeam = ({
@@ -22,7 +22,7 @@ export const requestGetTeams = ({
   Record<'teams', InterviewTeamType[]>
 > => {
   return axios(
-    엑세스토큰이없는경우헤더제거({
+    NotAccessTokenRemoveHeader({
       accessToken,
       method: 'get',
       url: `${process.env.API_URI}/teams?condition=${teamsCondition}&size=1000`,
@@ -36,7 +36,7 @@ export const requestGetTeam = ({
   accessToken,
 }: Omit<TeamApiType, 'teamInfo'>): AxiosPromise<InterviewTeamDetailType> => {
   return axios(
-    엑세스토큰이없는경우헤더제거({
+    NotAccessTokenRemoveHeader({
       accessToken,
       method: 'get',
       url: `${process.env.API_URI}/teams/${teamId}`,

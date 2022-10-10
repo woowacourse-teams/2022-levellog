@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import styled from 'styled-components';
 
 import useTeamAdd from 'hooks/team/useTeamAdd';
@@ -7,54 +5,13 @@ import useTeamAdd from 'hooks/team/useTeamAdd';
 import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamAdd = () => {
-  const {
-    participantNicknameValue,
-    watcherNicknameValue,
-    watcherMembers,
-    participantMembers,
-    watchers,
-    participants,
-    teamInfoRef,
-    setParticipantNicknameValue,
-    setWatcherNicknameValue,
-    updateMembers,
-    updateWatchers,
-    addToParticipants,
-    addToWatcherParticipants,
-    removeToParticipants,
-    removeToWatcherParticipants,
-    handleChangeParticipantInput,
-    handleChangeWatcherInput,
-    handleClickTeamAddButton,
-  } = useTeamAdd();
-
-  useEffect(() => {
-    updateMembers({ nicknameValue: participantNicknameValue });
-  }, [participantNicknameValue]);
-
-  useEffect(() => {
-    updateWatchers({ nicknameValue: watcherNicknameValue });
-  }, [watcherNicknameValue]);
+  const { teamInfoRef, handleClickTeamAddButton } = useTeamAdd();
 
   return (
     <S.Container>
       <TeamForm
         purpose={'생성하기'}
-        participantNicknameValue={participantNicknameValue}
-        watcherNicknameValue={watcherNicknameValue}
-        participants={participants}
-        participantMembers={participantMembers}
-        watcherMembers={watcherMembers}
-        watchers={watchers}
         teamInfoRef={teamInfoRef}
-        setParticipantNicknameValue={setParticipantNicknameValue}
-        setWatcherNicknameValue={setWatcherNicknameValue}
-        addToParticipants={addToParticipants}
-        addToWatcherParticipants={addToWatcherParticipants}
-        removeToParticipants={removeToParticipants}
-        removeToWatcherParticipants={removeToWatcherParticipants}
-        handleChangeWatcherInput={handleChangeWatcherInput}
-        handleChangeParticipantInput={handleChangeParticipantInput}
         handleClickTeamButton={handleClickTeamAddButton}
       />
     </S.Container>

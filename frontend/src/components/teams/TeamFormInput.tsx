@@ -7,13 +7,12 @@ import Input from 'components/@commons/Input';
 const TeamFormInput = ({
   label,
   type,
+  value,
   errorText,
   validate,
   inputRef,
   onChange,
-  onBlur,
   children,
-  ...props
 }: TeamFormInputProps) => {
   const [isCorrectValue, setIsCorrectValue] = useState(true);
 
@@ -28,7 +27,13 @@ const TeamFormInput = ({
     <S.InputContainer>
       <S.Label>{label}</S.Label>
       {children}
-      <S.Input type={type} inputRef={inputRef} onChange={onChange} onBlur={handleOnBlurInput} />
+      <S.Input
+        type={type}
+        value={value}
+        inputRef={inputRef}
+        onChange={onChange}
+        onBlur={handleOnBlurInput}
+      />
       <S.ErrorBox>{isCorrectValue || <S.ErrorText>{errorText}</S.ErrorText>}</S.ErrorBox>
     </S.InputContainer>
   );
@@ -37,13 +42,12 @@ const TeamFormInput = ({
 interface TeamFormInputProps {
   label: string;
   type?: string;
+  value?: string;
   errorText?: string;
   validate?: ([props]: any) => boolean;
   inputRef?: (el: HTMLInputElement) => HTMLInputElement;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: FocusEvent) => void;
   children?: JSX.Element;
-  [props: string]: any;
 }
 
 const S = {

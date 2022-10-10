@@ -20,7 +20,7 @@ export const requestLikeInterviewQuestion = async ({
   accessToken,
   interviewQuestionId,
 }: Pick<InterviewQuestionApiType, 'accessToken' | 'interviewQuestionId'>): Promise<void> => {
-  await fetcher.post(
+  return await fetcher.post(
     `/interview-questions/${interviewQuestionId}/like`,
     {}, // 지금은 이거 없애면 headers가 전달 안 돼서 에러 뜸
     {
@@ -33,7 +33,7 @@ export const requestLikeCancelInterviewQuestion = async ({
   accessToken,
   interviewQuestionId,
 }: Pick<InterviewQuestionApiType, 'accessToken' | 'interviewQuestionId'>): Promise<void> => {
-  await fetcher.delete(`/interview-questions/${interviewQuestionId}/like`, {
+  return await fetcher.delete(`/interview-questions/${interviewQuestionId}/like`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 };

@@ -18,21 +18,15 @@ const useTeams = (teamsCondition: TeamConditionsType) => {
   const getTeams = async ({ teamsCondition }: Record<'teamsCondition', TeamConditionsType>) => {
     try {
       if (teamsCondition.open) {
-        const res = await requestGetTeams({ accessToken, teamsCondition: TEAMS_CONDITION.OPEN });
-
-        return res.data;
+        return await requestGetTeams({ accessToken, teamsCondition: TEAMS_CONDITION.OPEN });
       }
 
       if (teamsCondition.close) {
-        const res = await requestGetTeams({ accessToken, teamsCondition: TEAMS_CONDITION.CLOSE });
-
-        return res.data;
+        return await requestGetTeams({ accessToken, teamsCondition: TEAMS_CONDITION.CLOSE });
       }
 
       if (teamsCondition.my) {
-        const res = await requestGetMyTeams({ accessToken });
-
-        return res.data;
+        return await requestGetMyTeams({ accessToken });
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {

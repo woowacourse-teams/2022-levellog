@@ -1,3 +1,4 @@
+import { fetcher } from 'apis';
 import axios, { AxiosPromise } from 'axios';
 
 import { NotAccessTokenRemoveHeader } from 'apis/utils';
@@ -15,20 +16,17 @@ export const requestPostTeam = ({
   });
 };
 
-export const requestGetTeams = ({
+export const requestGetTeams = async ({
   accessToken,
   teamsCondition,
-}: Pick<TeamApiType, 'accessToken' | 'teamsCondition'>): AxiosPromise<
+}: Pick<TeamApiType, 'accessToken' | 'teamsCondition'>): Promise<
   Record<'teams', InterviewTeamType[]>
 > => {
-  return axios(
-    NotAccessTokenRemoveHeader({
-      accessToken,
-      method: 'get',
-      url: `${process.env.API_URI}/teams?condition=${teamsCondition}&size=1000`,
-      headers: { Authorization: `Bearer ${accessToken}` },
-    }),
-  );
+  const { data } = await fetcher.get(`/teams?condition=${teamsCondition}&size=1000`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  return data;
 };
 
 export const requestGetTeam = ({

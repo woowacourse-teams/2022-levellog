@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
+import { queryClient } from 'index';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import useTeam from 'hooks/team/useTeam';
 import useSnackbar from 'hooks/utils/useSnackbar';
@@ -87,7 +88,7 @@ const useTeamAdd = () => {
     },
     {
       onSuccess: (res) => {
-        const membersFilter = res.data.members
+        const membersFilter = res.members
           .filter((member) => participants.every((participant) => participant.id !== member.id))
           .filter((member) => watchers.every((watcher) => watcher.id !== member.id));
         setParticipantMembers(membersFilter);
@@ -109,7 +110,7 @@ const useTeamAdd = () => {
     },
     {
       onSuccess: (res) => {
-        const membersFilter = res.data.members
+        const membersFilter = res.members
           .filter((member) => watchers.every((watcher) => watcher.id !== member.id))
           .filter((member) => participants.every((participant) => participant.id !== member.id));
         setWatcherMembers(membersFilter);
@@ -151,7 +152,7 @@ const useTeamAdd = () => {
     setParticipants(participants.filter((participant) => id !== participant.id));
   };
 
-  const remoteToWatcherParticipants = ({ id }: Pick<MemberType, 'id'>) => {
+  const removeToWatcherParticipants = ({ id }: Pick<MemberType, 'id'>) => {
     setWatchers(watchers.filter((watcher) => id !== watcher.id));
   };
 
@@ -196,7 +197,7 @@ const useTeamAdd = () => {
     addToParticipants,
     addToWatcherParticipants,
     removeToParticipants,
-    remoteToWatcherParticipants,
+    removeToWatcherParticipants,
     handleChangeParticipantInput,
     handleChangeWatcherInput,
     handleClickTeamAddButton,

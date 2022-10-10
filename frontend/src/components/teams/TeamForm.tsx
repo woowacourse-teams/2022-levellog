@@ -31,7 +31,7 @@ const TeamForm = ({
   addToParticipants,
   addToWatcherParticipants,
   removeToParticipants,
-  remoteToWatcherParticipants,
+  removeToWatcherParticipants,
   handleChangeParticipantInput,
   handleChangeWatcherInput,
   handleClickTeamButton,
@@ -89,7 +89,7 @@ const TeamForm = ({
               <Participant
                 key={watcher.id}
                 participant={watcher}
-                removeToParticipants={remoteToWatcherParticipants}
+                removeToParticipants={removeToWatcherParticipants}
               />
             ))}
         </S.ParticipantsBox>
@@ -149,7 +149,7 @@ interface TeamFormProps {
   addToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
   addToWatcherParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
   removeToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
-  remoteToWatcherParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  removeToWatcherParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
   handleChangeParticipantInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleChangeWatcherInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleClickTeamButton: (e: React.MouseEvent<HTMLButtonElement>) => void;

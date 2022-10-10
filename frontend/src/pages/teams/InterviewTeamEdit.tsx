@@ -20,7 +20,7 @@ const InterviewTeamEdit = () => {
     addToParticipants,
     addToWatcherParticipants,
     removeToParticipants,
-    remoteToWatcherParticipants,
+    removeToWatcherParticipants,
     handleChangeParticipantInput,
     handleChangeWatcherInput,
     handleClickTeamEditButton,
@@ -49,7 +49,7 @@ const InterviewTeamEdit = () => {
       addToParticipants={addToParticipants}
       addToWatcherParticipants={addToWatcherParticipants}
       removeToParticipants={removeToParticipants}
-      remoteToWatcherParticipants={remoteToWatcherParticipants}
+      removeToWatcherParticipants={removeToWatcherParticipants}
       handleChangeWatcherInput={handleChangeWatcherInput}
       handleChangeParticipantInput={handleChangeParticipantInput}
       handleClickTeamButton={handleClickTeamEditButton}

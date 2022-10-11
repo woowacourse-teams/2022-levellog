@@ -1,4 +1,4 @@
-import useAuth from 'hooks/useAuth';
+import useAuth from 'hooks/auth/useAuth';
 
 import ErrorToHome from 'pages/status/ErrorToHome';
 import Loading from 'pages/status/Loading';

@@ -1,15 +1,10 @@
 import { RequestType } from 'types';
 
-import { ShowSnackbarProps } from 'hooks/useSnackbar';
+import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-export const 엑세스토큰이없는경우헤더제거 = ({
-  accessToken,
-  method,
-  url,
-  headers,
-}: RequestType) => {
+export const NotAccessTokenRemoveHeader = ({ accessToken, method, url, headers }: RequestType) => {
   if (!accessToken) {
     return {
       accessToken,
@@ -21,10 +16,7 @@ export const 엑세스토큰이없는경우헤더제거 = ({
   return { accessToken, method, url, headers };
 };
 
-export const 토큰이올바르지못한경우홈페이지로 = ({
-  message,
-  showSnackbar,
-}: 토큰이올바르지못한경우홈페이지로Props) => {
+export const NotCorrectToken = ({ message, showSnackbar }: NotCorrectTokenProps) => {
   if (message === MESSAGE.WRONG_TOKEN) {
     showSnackbar({ message: MESSAGE.NEED_RE_LOGIN });
     localStorage.removeItem('accessToken');
@@ -37,7 +29,7 @@ export const 토큰이올바르지못한경우홈페이지로 = ({
   return true;
 };
 
-interface 토큰이올바르지못한경우홈페이지로Props {
+interface NotCorrectTokenProps {
   message: string;
   showSnackbar: ({ message }: ShowSnackbarProps) => void;
 }

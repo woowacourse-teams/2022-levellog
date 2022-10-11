@@ -3,15 +3,15 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import useSnackbar from 'hooks/useSnackbar';
 import useUser from 'hooks/useUser';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import Loading from 'pages/status/Loading';
 
 import { ROUTES_PATH } from 'constants/constants';
 
 import { requestGetUserAuthority } from 'apis/login';
-import { 토큰이올바르지못한경우홈페이지로 } from 'apis/utils';
+import { NotCorrectToken } from 'apis/utils';
 
 const AuthLogin = ({ needLogin }: AuthProps) => {
   const { userInfoDispatch } = useUser();
@@ -33,9 +33,7 @@ const AuthLogin = ({ needLogin }: AuthProps) => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (
-          토큰이올바르지못한경우홈페이지로({ message: responseBody.data.message, showSnackbar })
-        ) {
+        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }

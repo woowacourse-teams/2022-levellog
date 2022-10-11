@@ -26,7 +26,10 @@ class OAuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("깃허브 로그인")
     void login() throws Exception {
         // given
-        final String code = objectMapper.writeValueAsString(new GithubProfileResponse("11111", "test", "profile_url"));
+        final String githubId = "11111";
+        final String nickname = "alien";
+        final String profileUrl = "alien.img";
+        final String code = objectMapper.writeValueAsString(new GithubProfileResponse(githubId, nickname, profileUrl));
         final GithubCodeRequest request = new GithubCodeRequest(code);
 
         // when
@@ -41,7 +44,8 @@ class OAuthAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("accessToken", notNullValue())
-                .body("profileUrl", is("profile_url"))
+                .body("profileUrl", is(profileUrl))
+                .body("nickname", is(nickname))
                 .body("id", notNullValue());
     }
 }

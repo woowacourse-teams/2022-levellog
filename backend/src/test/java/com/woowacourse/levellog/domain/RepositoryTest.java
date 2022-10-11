@@ -2,7 +2,6 @@ package com.woowacourse.levellog.domain;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
 import com.woowacourse.levellog.common.dto.LoginStatus;
-import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackQueryRepository;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
@@ -12,8 +11,7 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
-import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
+import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogQueryRepository;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -127,32 +125,22 @@ abstract class RepositoryTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {
-        final Levellog levellog = Levellog.of(author.getId(), team, "levellog content");
+        final Levellog levellog = new Levellog(author.getId(), team, "levellog content");
         return levellogRepository.save(levellog);
     }
 
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
-        final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(content);
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author.getId(), levellog);
+        final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest(content);
+        final InterviewQuestion interviewQuestion = request.toEntity(author.getId(), levellog);
         return interviewQuestionRepository.save(interviewQuestion);
     }
 
     protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
                                                                 final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker.getId());
+        final InterviewQuestionLikes interviewQuestionLikes = new InterviewQuestionLikes(interviewQuestion.getId(),
+                liker.getId());
         return interviewQuestionLikesRepository.save(interviewQuestionLikes);
-    }
-
-    protected void cancelLikeInterviewQuestion(final InterviewQuestion interviewQuestion, final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = interviewQuestionLikesRepository.findByInterviewQuestionIdAndLikerId(
-                        interviewQuestion.getId(), liker.getId())
-                .orElseThrow(() -> new InterviewQuestionLikeNotFoundException(
-                        DebugMessage.init()
-                                .append("interviewQuestionId", interviewQuestion.getId())
-                                .append("likerId", liker.getId())
-                ));
-        interviewQuestionLikesRepository.deleteById(interviewQuestionLikes.getId());
     }
 
     protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {

@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.prequestion.domain;
 
-import com.woowacourse.levellog.member.dto.MemberDto;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.member.dto.response.MemberResponse;
+import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 public class PreQuestionQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMapper<PreQuestionDto> preQuestionRowMapper = (resultSet, rowNum) -> new PreQuestionDto(
-            new MemberDto(
+    private final RowMapper<PreQuestionResponse> preQuestionRowMapper = (resultSet, rowNum) -> new PreQuestionResponse(
+            new MemberResponse(
                     resultSet.getLong("authorId"),
                     resultSet.getString("nickname"),
                     resultSet.getString("profileUrl")
@@ -27,7 +27,7 @@ public class PreQuestionQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<PreQuestionDto> findByLevellogAndAuthor(final Long levellogId, final Long authorId) {
+    public Optional<PreQuestionResponse> findByLevellogAndAuthor(final Long levellogId, final Long authorId) {
         final String sql = "SELECT m.id authorId, m.nickname, m.profile_url profileUrl, pq.content "
                 + "FROM pre_question pq "
                 + "INNER JOIN member m ON pq.author_id = m.id "

@@ -1,11 +1,11 @@
 package com.woowacourse.levellog.interviewquestion.domain;
 
 import com.woowacourse.levellog.common.dto.LoginStatus;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
-import com.woowacourse.levellog.interviewquestion.dto.SimpleInterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponse;
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.member.dto.MemberDto;
+import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,20 +20,20 @@ public class InterviewQuestionQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    private final RowMapper<InterviewQuestionSearchResultDto> searchRowMapper = (resultSet, rowNum) -> new InterviewQuestionSearchResultDto(
+    private final RowMapper<InterviewQuestionSearchQueryResult> searchRowMapper = (resultSet, rowNum) -> new InterviewQuestionSearchQueryResult(
             resultSet.getLong("id"),
             resultSet.getString("content"),
             resultSet.getBoolean("press"),
             resultSet.getInt("likeCount")
     );
 
-    private final RowMapper<SimpleInterviewQuestionDto> interviewQuestionRowMapper = (resultSet, rowNum) -> new SimpleInterviewQuestionDto(
-            new MemberDto(
+    private final RowMapper<InterviewQuestionQueryResult> interviewQuestionRowMapper = (resultSet, rowNum) -> new InterviewQuestionQueryResult(
+            new MemberResponse(
                     resultSet.getLong("authorId"),
                     resultSet.getString("nickname"),
                     resultSet.getString("profileUrl")
             ),
-            new InterviewQuestionContentDto(
+            new InterviewQuestionContentResponse(
                     resultSet.getLong("interviewQuestionId"),
                     resultSet.getString("content")
             )
@@ -43,9 +43,9 @@ public class InterviewQuestionQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<InterviewQuestionSearchResultDto> searchByKeyword(final String keyword, final LoginStatus loginStatus,
-                                                                  final Long size, final Long page,
-                                                                  final InterviewQuestionSort sort) {
+    public List<InterviewQuestionSearchQueryResult> searchByKeyword(final String keyword, final LoginStatus loginStatus,
+                                                                    final Long size, final Long page,
+                                                                    final InterviewQuestionSort sort) {
         final String sql = "SELECT id, content, "
                 + createLikerCondition(loginStatus)
                 + "like_count AS likeCount "
@@ -73,7 +73,7 @@ public class InterviewQuestionQueryRepository {
         return "FALSE AS press, ";
     }
 
-    public List<SimpleInterviewQuestionDto> findAllByLevellog(final Levellog levellog) {
+    public List<InterviewQuestionQueryResult> findAllByLevellog(final Levellog levellog) {
         final String sql = "SELECT m.id authorId, m.nickname, m.profile_url profileUrl, "
                 + "iq.id interviewQuestionId, iq.content "
                 + "FROM interview_question iq "

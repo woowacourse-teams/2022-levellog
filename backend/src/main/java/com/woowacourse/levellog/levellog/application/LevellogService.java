@@ -6,10 +6,10 @@ import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogQueryRepository;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.levellog.dto.LevellogDto;
-import com.woowacourse.levellog.levellog.dto.LevellogWithIdDto;
-import com.woowacourse.levellog.levellog.dto.LevellogWriteDto;
-import com.woowacourse.levellog.levellog.dto.LevellogsDto;
+import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
+import com.woowacourse.levellog.levellog.dto.response.LevellogDetailResponse;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponses;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
@@ -32,7 +32,7 @@ public class LevellogService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final LevellogWriteDto request, @Verified final LoginStatus loginStatus, final Long teamId) {
+    public Long save(final LevellogWriteRequest request, @Verified final LoginStatus loginStatus, final Long teamId) {
         final Team team = teamRepository.getTeam(teamId);
         validateLevellogExistence(loginStatus.getMemberId(), teamId);
         team.validateReady(timeStandard.now());
@@ -42,23 +42,24 @@ public class LevellogService {
         return savedLevellog.getId();
     }
 
-    public LevellogDto findById(final Long levellogId) {
+    public LevellogDetailResponse findById(final Long levellogId) {
         return levellogQueryRepository.findById(levellogId)
                 .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)));
     }
 
-    public LevellogsDto findAllByAuthorId(@Verified final LoginStatus loginStatus) {
+    public LevellogResponses findAllByAuthorId(@Verified final LoginStatus loginStatus) {
         final List<Levellog> levellogs = levellogRepository.findAllByAuthorId(loginStatus.getMemberId());
-        final List<LevellogWithIdDto> levellogWithIdDtos = levellogs.stream()
-                .map(LevellogWithIdDto::from)
+        final List<LevellogResponse> levellogResponses = levellogs.stream()
+                .map(it -> new LevellogResponse(it.getId(), it.getContent()))
                 .collect(Collectors.toList());
 
-        return new LevellogsDto(levellogWithIdDtos);
+        return new LevellogResponses(levellogResponses);
     }
 
     @Transactional
-    public void update(final LevellogWriteDto request, final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public void update(final LevellogWriteRequest request, final Long levellogId,
+                       @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         levellog.getTeam().validateReady(timeStandard.now());
 

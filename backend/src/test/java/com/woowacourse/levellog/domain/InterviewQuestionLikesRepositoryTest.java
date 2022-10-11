@@ -7,7 +7,7 @@ import com.woowacourse.levellog.common.support.StringConverter;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResult;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
@@ -90,7 +90,7 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
             pressLikeInterviewQuestion(savedInterviewQuestion1, eve);
 
             // when
-            final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
+            final List<InterviewQuestionSearchQueryResult> actual = interviewQuestionQueryRepository.searchByKeyword(
                     "스프링을 왜 사용하였나요?", getLoginStatus(eve), 10L, 0L, InterviewQuestionSort.LATEST
             );
 
@@ -119,7 +119,7 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
             pressLikeInterviewQuestion(savedInterviewQuestion1, eve);
 
             // when
-            final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
+            final List<InterviewQuestionSearchQueryResult> actual = interviewQuestionQueryRepository.searchByKeyword(
                     "스프링을 왜 사용하였나요?", LoginStatus.fromNotLogin(), 10L, 0L, InterviewQuestionSort.LATEST
             );
 
@@ -145,7 +145,7 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
             // when
             final String sqlInjectionKeyword = "왜%' or 1=1;--";
             final String safeKeyword = StringConverter.toSafeString(sqlInjectionKeyword);
-            final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
+            final List<InterviewQuestionSearchQueryResult> actual = interviewQuestionQueryRepository.searchByKeyword(
                     safeKeyword, getLoginStatus(eve), 10L, 0L, InterviewQuestionSort.LATEST
             );
 

@@ -4,9 +4,9 @@ import com.woowacourse.levellog.authentication.support.Extracted;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionsDto;
+import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponses;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class InterviewQuestionController {
 
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long levellogId,
-                                     @RequestBody @Valid final InterviewQuestionWriteDto request,
+                                     @RequestBody @Valid final InterviewQuestionWriteRequest request,
                                      @Extracted final LoginStatus loginStatus) {
         final Long interviewQuestionId = interviewQuestionService.save(request, levellogId, loginStatus);
         return ResponseEntity.created(
@@ -38,15 +38,17 @@ public class InterviewQuestionController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<InterviewQuestionsDto> findAllByLevellog(@PathVariable final Long levellogId) {
-        final InterviewQuestionsDto response = interviewQuestionService.findAllByLevellog(levellogId);
+    public ResponseEntity<InterviewQuestionResponses> findAllByLevellog(@PathVariable final Long levellogId) {
+        final InterviewQuestionResponses response = interviewQuestionService.findAllByLevellog(levellogId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<InterviewQuestionContentsDto> findAllMyInterviewQuestion(@PathVariable final Long levellogId,
-                                                                                   @Extracted final LoginStatus loginStatus) {
-        final InterviewQuestionContentsDto response = interviewQuestionService.findAllByLevellogAndAuthor(levellogId,
+    public ResponseEntity<InterviewQuestionContentResponses> findAllMyInterviewQuestion(
+            @PathVariable final Long levellogId,
+            @Extracted final LoginStatus loginStatus) {
+        final InterviewQuestionContentResponses response = interviewQuestionService.findAllByLevellogAndAuthor(
+                levellogId,
                 loginStatus);
         return ResponseEntity.ok(response);
     }
@@ -54,7 +56,7 @@ public class InterviewQuestionController {
     @PutMapping("/{interviewQuestionId}")
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
                                        @PathVariable final Long interviewQuestionId,
-                                       @RequestBody @Valid final InterviewQuestionWriteDto request,
+                                       @RequestBody @Valid final InterviewQuestionWriteRequest request,
                                        @Extracted final LoginStatus loginStatus) {
         interviewQuestionService.update(request, interviewQuestionId, loginStatus);
         return ResponseEntity.noContent().build();

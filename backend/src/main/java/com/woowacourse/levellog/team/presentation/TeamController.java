@@ -6,11 +6,11 @@ import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
-import com.woowacourse.levellog.team.dto.InterviewRoleDto;
-import com.woowacourse.levellog.team.dto.TeamDetailResponse;
-import com.woowacourse.levellog.team.dto.TeamListDto;
-import com.woowacourse.levellog.team.dto.TeamStatusDto;
-import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
+import com.woowacourse.levellog.team.dto.response.InterviewRoleResponse;
+import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
+import com.woowacourse.levellog.team.dto.response.TeamListResponses;
+import com.woowacourse.levellog.team.dto.response.TeamStatusResponse;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,48 +34,48 @@ public class TeamController {
     private final TeamQueryService teamQueryService;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid final TeamWriteDto teamDto,
+    public ResponseEntity<Void> save(@RequestBody @Valid final TeamWriteRequest request,
                                      @Extracted final LoginStatus loginStatus) {
-        final Long teamId = teamService.save(teamDto, loginStatus);
+        final Long teamId = teamService.save(request, loginStatus);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId)).build();
     }
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamListDto> findAll(@RequestParam(defaultValue = "open") final String condition,
-                                               @RequestParam(defaultValue = "0") final int page,
-                                               @RequestParam(defaultValue = "20") final int size) {
+    public ResponseEntity<TeamListResponses> findAll(@RequestParam(defaultValue = "open") final String condition,
+                                                     @RequestParam(defaultValue = "0") final int page,
+                                                     @RequestParam(defaultValue = "20") final int size) {
         final TeamFilterCondition filterCondition = TeamFilterCondition.from(condition);
-        final TeamListDto response = teamQueryService.findAll(filterCondition, page, size);
+        final TeamListResponses response = teamQueryService.findAll(filterCondition, page, size);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{teamId}")
     @PublicAPI
     public ResponseEntity<TeamDetailResponse> findById(@PathVariable final Long teamId,
-                                            @Extracted final LoginStatus loginStatus) {
+                                                       @Extracted final LoginStatus loginStatus) {
         final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(teamId, loginStatus);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{teamId}/status")
     @PublicAPI
-    public ResponseEntity<TeamStatusDto> findStatus(@PathVariable final Long teamId) {
-        final TeamStatusDto response = teamService.findStatus(teamId);
+    public ResponseEntity<TeamStatusResponse> findStatus(@PathVariable final Long teamId) {
+        final TeamStatusResponse response = teamService.findStatus(teamId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{teamId}/members/{targetMemberId}/my-role")
-    public ResponseEntity<InterviewRoleDto> findMyRole(@PathVariable final Long teamId,
-                                                       @PathVariable final Long targetMemberId,
-                                                       @Extracted final LoginStatus loginStatus) {
-        final InterviewRoleDto response = teamService.findMyRole(teamId, targetMemberId, loginStatus);
+    public ResponseEntity<InterviewRoleResponse> findMyRole(@PathVariable final Long teamId,
+                                                            @PathVariable final Long targetMemberId,
+                                                            @Extracted final LoginStatus loginStatus) {
+        final InterviewRoleResponse response = teamService.findMyRole(teamId, targetMemberId, loginStatus);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{teamId}")
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
-                                       @RequestBody @Valid final TeamWriteDto request,
+                                       @RequestBody @Valid final TeamWriteRequest request,
                                        @Extracted final LoginStatus loginStatus) {
         teamService.update(request, teamId, loginStatus);
         return ResponseEntity.noContent().build();

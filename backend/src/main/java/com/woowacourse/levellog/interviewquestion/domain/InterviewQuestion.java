@@ -35,17 +35,12 @@ public class InterviewQuestion extends BaseEntity {
     @Column(nullable = false)
     private int likeCount = 0;
 
-    private InterviewQuestion(final Long authorId, final Levellog levellog, final String content) {
+    public InterviewQuestion(final Long authorId, final Levellog levellog, final String content) {
         validateContent(content);
 
         this.authorId = authorId;
         this.levellog = levellog;
         this.content = content;
-    }
-
-    public static InterviewQuestion of(final Long authorId, final Levellog levellog,
-                                       final String content) {
-        return new InterviewQuestion(authorId, levellog, content);
     }
 
     private void validateContent(final String content) {

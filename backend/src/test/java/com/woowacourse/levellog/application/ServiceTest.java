@@ -14,10 +14,9 @@ import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
-import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
+import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -190,23 +189,15 @@ abstract class ServiceTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team, final String content) {
-        final Levellog levellog = Levellog.of(author.getId(), team, content);
+        final Levellog levellog = new Levellog(author.getId(), team, content);
         return levellogRepository.save(levellog);
     }
 
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
-        final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(content);
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author.getId(), levellog);
+        final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest(content);
+        final InterviewQuestion interviewQuestion = request.toEntity(author.getId(), levellog);
         return interviewQuestionRepository.save(interviewQuestion);
-    }
-
-    @Transactional
-    protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
-                                                                final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker.getId());
-        interviewQuestion.upLike();
-        return interviewQuestionLikesRepository.save(interviewQuestionLikes);
     }
 
     protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {

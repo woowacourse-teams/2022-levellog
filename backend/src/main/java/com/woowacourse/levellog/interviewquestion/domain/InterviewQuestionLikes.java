@@ -21,12 +21,8 @@ public class InterviewQuestionLikes extends BaseEntity {
     private Long interviewQuestionId;
     private Long likerId;
 
-    private InterviewQuestionLikes(final Long interviewQuestionId, final Long likerId) {
+    public InterviewQuestionLikes(final Long interviewQuestionId, final Long likerId) {
         this.interviewQuestionId = interviewQuestionId;
         this.likerId = likerId;
-    }
-
-    public static InterviewQuestionLikes of(final InterviewQuestion interviewQuestion, final Long likerId) {
-        return new InterviewQuestionLikes(interviewQuestion.getId(), likerId);
     }
 }

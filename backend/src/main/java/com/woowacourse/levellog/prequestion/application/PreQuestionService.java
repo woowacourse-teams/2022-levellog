@@ -8,8 +8,8 @@ import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionQueryRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionWriteDto;
+import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
+import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -30,7 +30,8 @@ public class PreQuestionService {
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public Long save(final PreQuestionWriteDto request, final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public Long save(final PreQuestionWriteRequest request, final Long levellogId,
+                     @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 
         validatePreQuestionExistence(levellog, loginStatus.getMemberId());
@@ -40,7 +41,7 @@ public class PreQuestionService {
                 .getId();
     }
 
-    public PreQuestionDto findMy(final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public PreQuestionResponse findMy(final Long levellogId, @Verified final LoginStatus loginStatus) {
         levellogRepository.getLevellog(levellogId);
 
         return preQuestionQueryRepository.findByLevellogAndAuthor(levellogId, loginStatus.getMemberId())
@@ -50,7 +51,7 @@ public class PreQuestionService {
     }
 
     @Transactional
-    public void update(final PreQuestionWriteDto request, final Long preQuestionId, final Long levellogId,
+    public void update(final PreQuestionWriteRequest request, final Long preQuestionId, final Long levellogId,
                        @Verified final LoginStatus loginStatus) {
         final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);

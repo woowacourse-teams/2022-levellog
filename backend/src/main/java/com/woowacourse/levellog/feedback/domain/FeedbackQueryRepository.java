@@ -1,9 +1,9 @@
 package com.woowacourse.levellog.feedback.domain;
 
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
-import com.woowacourse.levellog.feedback.dto.FeedbackDto;
-import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
-import com.woowacourse.levellog.member.dto.MemberDto;
+import com.woowacourse.levellog.feedback.dto.request.FeedbackContentRequest;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
+import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,19 +17,19 @@ import org.springframework.stereotype.Repository;
 public class FeedbackQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMapper<FeedbackDto> feedbackRowMapper = (resultSet, rowNum) -> new FeedbackDto(
+    private final RowMapper<FeedbackResponse> feedbackRowMapper = (resultSet, rowNum) -> new FeedbackResponse(
             resultSet.getLong("feedbackId"),
-            new MemberDto(
+            new MemberResponse(
                     resultSet.getLong("fromId"),
                     resultSet.getString("fromNickname"),
                     resultSet.getString("fromProfileUrl")
             ),
-            new MemberDto(
+            new MemberResponse(
                     resultSet.getLong("toId"),
                     resultSet.getString("toNickname"),
                     resultSet.getString("toProfileUrl")
             ),
-            new FeedbackContentDto(
+            new FeedbackContentRequest(
                     resultSet.getString("study"),
                     resultSet.getString("speak"),
                     resultSet.getString("etc")
@@ -41,7 +41,7 @@ public class FeedbackQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public FeedbacksDto findAllByLevellogId(final Long levellogId) {
+    public FeedbackResponses findAllByLevellogId(final Long levellogId) {
         final String sql = "SELECT f.id feedbackId, f.study, f.speak, f.etc, f.updated_at updatedAt, "
                 + "fm.id fromId, fm.nickname fromNickname, fm.profile_url fromProfileUrl, "
                 + "tm.id toId, tm.nickname toNickname, tm.profile_url toProfileUrl "
@@ -52,11 +52,11 @@ public class FeedbackQueryRepository {
         final SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("levellogId", levellogId);
 
-        final List<FeedbackDto> feedbacks = jdbcTemplate.query(sql, param, feedbackRowMapper);
-        return new FeedbacksDto(feedbacks);
+        final List<FeedbackResponse> feedbacks = jdbcTemplate.query(sql, param, feedbackRowMapper);
+        return new FeedbackResponses(feedbacks);
     }
 
-    public FeedbacksDto findAllByTo(final Long memberId) {
+    public FeedbackResponses findAllByTo(final Long memberId) {
         final String sql = "SELECT f.id feedbackId, f.study, f.speak, f.etc, f.updated_at updatedAt, "
                 + "fm.id fromId, fm.nickname fromNickname, fm.profile_url fromProfileUrl, "
                 + "tm.id toId, tm.nickname toNickname, tm.profile_url toProfileUrl "
@@ -67,11 +67,11 @@ public class FeedbackQueryRepository {
         final SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("memberId", memberId);
 
-        final List<FeedbackDto> feedbacks = jdbcTemplate.query(sql, param, feedbackRowMapper);
-        return new FeedbacksDto(feedbacks);
+        final List<FeedbackResponse> feedbacks = jdbcTemplate.query(sql, param, feedbackRowMapper);
+        return new FeedbackResponses(feedbacks);
     }
 
-    public Optional<FeedbackDto> findById(final Long feedbackId) {
+    public Optional<FeedbackResponse> findById(final Long feedbackId) {
         final String sql = "SELECT f.id feedbackId, f.study, f.speak, f.etc, f.updated_at updatedAt, "
                 + "fm.id fromId, fm.nickname fromNickname, fm.profile_url fromProfileUrl, "
                 + "tm.id toId, tm.nickname toNickname, tm.profile_url toProfileUrl "

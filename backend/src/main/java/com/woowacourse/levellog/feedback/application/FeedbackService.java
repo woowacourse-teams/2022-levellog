@@ -43,8 +43,7 @@ public class FeedbackService {
         validateTeamMember(team, loginStatus.getMemberId());
         team.validateInProgress(timeStandard.now());
 
-        final Feedback feedback = request.getFeedback()
-                .toEntity(loginStatus.getMemberId(), levellog);
+        final Feedback feedback = request.toEntity(loginStatus.getMemberId(), levellog);
 
         return feedbackRepository.save(feedback)
                 .getId();
@@ -57,7 +56,8 @@ public class FeedbackService {
         return feedbackQueryRepository.findAllByLevellogId(levellogId);
     }
 
-    public FeedbackDto findById(final Long levellogId, final Long feedbackId, @Authentic final LoginStatus loginStatus) {
+    public FeedbackDto findById(final Long levellogId, final Long feedbackId,
+                                @Authentic final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 
         validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
@@ -73,7 +73,8 @@ public class FeedbackService {
     }
 
     @Transactional
-    public void update(final FeedbackWriteDto request, final Long feedbackId, @Authentic final LoginStatus loginStatus) {
+    public void update(final FeedbackWriteDto request, final Long feedbackId,
+                       @Authentic final LoginStatus loginStatus) {
         final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
         final Team team = feedback.getLevellog().getTeam();
 

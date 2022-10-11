@@ -33,7 +33,7 @@ class LevellogRepositoryTest extends RepositoryTest {
         saveLevellog(anotherAuthor, team);
 
         // when
-        final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author.getId());
+        final List<Levellog> levellogs = levellogRepository.findAllByAuthorId(author.getId());
 
         // then
         assertAll(

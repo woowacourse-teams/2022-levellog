@@ -49,7 +49,7 @@ public class LevellogService {
     }
 
     public LevellogsDto findAllByAuthorId(@Authentic final LoginStatus loginStatus) {
-        final List<Levellog> levellogs = levellogRepository.findAllByAuthor(loginStatus.getMemberId());
+        final List<Levellog> levellogs = levellogRepository.findAllByAuthorId(loginStatus.getMemberId());
         final List<LevellogWithIdDto> levellogWithIdDtos = levellogs.stream()
                 .map(LevellogWithIdDto::from)
                 .collect(Collectors.toList());

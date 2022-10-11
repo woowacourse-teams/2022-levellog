@@ -23,7 +23,6 @@ const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { showSnackbar } = useSnackbar();
   const { teamId } = useParams();
-  const navigate = useNavigate();
 
   const myInfo = { id: loginUserId, nickname: loginUserNickname, profileUrl: loginUserProfileUrl };
 

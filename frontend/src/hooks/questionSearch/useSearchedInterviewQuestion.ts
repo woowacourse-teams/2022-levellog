@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 
@@ -12,21 +12,13 @@ import {
   requestLikeInterviewQuestion,
   requestSearchedInterviewQuestion,
 } from 'apis/interviewQuestionSearch';
-import {
-  InterviewQuestionApiType,
-  InterviewQuestionSearchApiType,
-  InterviewQuestionSearchResultType,
-  InterviewQuestionSort,
-} from 'types/interviewQuestion';
-import { tryCatch } from 'utils/util';
+import { InterviewQuestionApiType, InterviewQuestionSort } from 'types/interviewQuestion';
 
 const useSearchedInterviewQuestion = () => {
   const { showSnackbar } = useSnackbar();
 
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const [searchText, setSearchText] = useState();
   const [searchFilterActive, setSearchFilterActive] = useState<InterviewQuestionSort>(
     INTERVIEW_QUESTION_FILTER.LATEST,
   );
@@ -37,12 +29,9 @@ const useSearchedInterviewQuestion = () => {
   const params = new URL(window.location.href).searchParams;
   const keyword = params.get('keyword');
 
-  const {
-    data: searchResults,
-    isError: searchResultsError,
-    refetch: searchResultsRefetch,
-  } = useQuery(['searchResults', keyword, searchFilterActive], () =>
-    requestSearchedInterviewQuestion({ accessToken, keyword, sort: searchFilterActive }),
+  const { data: searchResults, refetch: searchResultsRefetch } = useQuery(
+    ['searchResults', keyword, searchFilterActive],
+    () => requestSearchedInterviewQuestion({ accessToken, keyword, sort: searchFilterActive }),
   );
 
   const { mutate: likeInterviewQuestion } = useMutation(

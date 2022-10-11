@@ -70,7 +70,7 @@ const S = {
     margin-bottom: 0.625rem;
     box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.new_default.GRAY};
     border-radius: 0.5rem;
-    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.default.WHITE};
   `,
 

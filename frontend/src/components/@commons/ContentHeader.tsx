@@ -44,7 +44,7 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
 
 interface ContentHeaderProps {
   imageUrl?: string | undefined;
-  title: string;
+  title: string | undefined;
   subTitle?: string;
   children?: JSX.Element[] | JSX.Element;
 }

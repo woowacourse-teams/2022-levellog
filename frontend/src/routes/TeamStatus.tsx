@@ -27,7 +27,7 @@ const TeamStatus = ({ allowedStatuses, children }: TeamStatusProps) => {
     },
     {
       onSuccess: (res) => {
-        if (allowedStatuses.some((allowedStatus: any) => allowedStatus === res.data.status)) {
+        if (allowedStatuses.some((allowedStatus: any) => allowedStatus === res.status)) {
           return;
         }
         showSnackbar({ message: MESSAGE.WRONG_ACCESS });
@@ -35,15 +35,6 @@ const TeamStatus = ({ allowedStatuses, children }: TeamStatusProps) => {
       },
     },
   );
-  // const { team } = useTeam();
-
-  // useEffect(() => {
-  //   if (allowedStatuses.some((allowedStatus: any) => allowedStatus === team.status)) {
-  //     return;
-  //   }
-  //   showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-  //   // navigate(ROUTES_PATH.HOME);
-  // }, [navigate]);
 
   return children;
 };

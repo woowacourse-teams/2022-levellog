@@ -6,11 +6,11 @@ import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';
 
-const Participant = ({ participant, removeToParticipants }: ParticipantProps) => {
-  const { id, nickname, profileUrl } = participant;
+const AddMember = ({ addMember, removeEvent }: ParticipantProps) => {
+  const { id, nickname, profileUrl } = addMember;
 
   const handleClickDeleteButton = () => {
-    removeToParticipants({ id, nickname, profileUrl });
+    removeEvent({ id, nickname, profileUrl });
   };
 
   return (
@@ -23,8 +23,8 @@ const Participant = ({ participant, removeToParticipants }: ParticipantProps) =>
 };
 
 interface ParticipantProps {
-  participant: MemberType;
-  removeToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  addMember: MemberType;
+  removeEvent: ({ id, nickname, profileUrl }: MemberType) => void;
 }
 
 const S = {
@@ -34,7 +34,7 @@ const S = {
     gap: 0.25rem;
     padding: 0.5rem;
     box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.new_default.GRAY};
-    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     border-radius: 1.5625rem;
     background-color: ${(props) => props.theme.new_default.WHITE};
     font-size: 1rem;
@@ -53,4 +53,4 @@ const S = {
   `,
 };
 
-export default Participant;
+export default AddMember;

@@ -44,7 +44,6 @@ const usePreQuestionAdd = () => {
         navigate(teamGetUriBuilder({ teamId }));
       },
       onError: (err) => {
-        console.log('postPreQuestion', preQuestionRef.current?.getInstance().getMarkdown());
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
           if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {

@@ -60,11 +60,11 @@ public class InterviewQuestion extends BaseEntity {
     }
 
     public void validateMemberIsAuthor(final Long memberId) {
-        final boolean isNotAuthor = !getAuthorId().equals(memberId);
+        final boolean isNotAuthor = !authorId.equals(memberId);
         if (isNotAuthor) {
             throw new MemberNotAuthorException(DebugMessage.init()
                     .append("loginMemberId", memberId)
-                    .append("authorMemberId", getAuthorId())
+                    .append("authorMemberId", authorId)
                     .append("interviewQuestionId", getId()));
         }
     }

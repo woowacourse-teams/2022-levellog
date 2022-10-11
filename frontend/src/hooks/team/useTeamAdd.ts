@@ -15,9 +15,9 @@ import {
   interviewDateValidate,
   interviewInterviewerValidate,
   interviewLocationValidate,
-  interviewParticipantValidate,
   interviewTimeValidate,
   interviewTitleValidate,
+  interviewParticipantValidate,
 } from 'utils/validate';
 
 const useTeamAdd = () => {

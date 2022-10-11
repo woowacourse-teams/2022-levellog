@@ -1,7 +1,7 @@
 import { fetcher } from 'apis';
 import axios, { AxiosPromise } from 'axios';
 
-import { 엑세스토큰이없는경우헤더제거 } from 'apis/utils';
+import { NotAccessTokenRemoveHeader } from 'apis/utils';
 import { TeamApiType, InterviewTeamType, InterviewTeamDetailType } from 'types/team';
 
 export const requestPostTeam = async ({ teamInfo, accessToken }: Omit<TeamApiType, 'teamId'>) => {
@@ -10,20 +10,17 @@ export const requestPostTeam = async ({ teamInfo, accessToken }: Omit<TeamApiTyp
   });
 };
 
-export const requestGetTeams = ({
+export const requestGetTeams = async ({
   accessToken,
   teamsCondition,
-}: Pick<TeamApiType, 'accessToken' | 'teamsCondition'>): AxiosPromise<
+}: Pick<TeamApiType, 'accessToken' | 'teamsCondition'>): Promise<
   Record<'teams', InterviewTeamType[]>
 > => {
-  return axios(
-    엑세스토큰이없는경우헤더제거({
-      accessToken,
-      method: 'get',
-      url: `${process.env.API_URI}/teams?condition=${teamsCondition}&size=1000`,
-      headers: { Authorization: `Bearer ${accessToken}` },
-    }),
-  );
+  const { data } = await fetcher.get(`/teams?condition=${teamsCondition}&size=1000`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  return data;
 };
 
 export const requestGetTeam = async ({

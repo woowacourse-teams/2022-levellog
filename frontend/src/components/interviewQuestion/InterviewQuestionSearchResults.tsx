@@ -18,7 +18,7 @@ const InterviewQuestionSearchResults = () => {
     handleClickFilterButton,
   } = useSearchedInterviewQuestion();
 
-  if (!searchResults || searchResults.results.length === 0) {
+  if (searchResults?.results.length === 0) {
     return <EmptySearchResult />;
   }
 
@@ -35,7 +35,7 @@ const InterviewQuestionSearchResults = () => {
       </S.ButtonBox>
       {/* */}
       <S.Content>
-        {searchResults.results.map((result) => (
+        {searchResults?.results.map((result) => (
           <InterviewQuestionSearchResult
             key={result.id}
             interviewQuestion={result}

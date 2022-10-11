@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 class TeamQueryRepositoryTest extends RepositoryTest {
 
     @Nested
-    @DisplayName("findAllParticipants 메서드는")
+    @DisplayName("findAllByTeamId 메서드는")
     class FindAllParticipants {
 
         @Test

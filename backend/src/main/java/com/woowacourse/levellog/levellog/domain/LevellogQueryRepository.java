@@ -16,7 +16,7 @@ public class LevellogQueryRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<LevellogDto> levellogRowMapper = (resultSet, rowNum) -> new LevellogDto(
             new MemberDto(
-                    resultSet.getObject("authorId", Long.class),
+                    resultSet.getLong("authorId"),
                     resultSet.getString("nickname"),
                     resultSet.getString("profileUrl")
             ),

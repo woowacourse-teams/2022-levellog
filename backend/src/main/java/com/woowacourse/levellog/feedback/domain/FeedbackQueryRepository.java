@@ -18,14 +18,14 @@ public class FeedbackQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<FeedbackDto> feedbackRowMapper = (resultSet, rowNum) -> new FeedbackDto(
-            resultSet.getObject("feedbackId", Long.class),
+            resultSet.getLong("feedbackId"),
             new MemberDto(
-                    resultSet.getObject("fromId", Long.class),
+                    resultSet.getLong("fromId"),
                     resultSet.getString("fromNickname"),
                     resultSet.getString("fromProfileUrl")
             ),
             new MemberDto(
-                    resultSet.getObject("toId", Long.class),
+                    resultSet.getLong("toId"),
                     resultSet.getString("toNickname"),
                     resultSet.getString("toProfileUrl")
             ),

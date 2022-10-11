@@ -16,7 +16,7 @@ public class PreQuestionQueryRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<PreQuestionDto> preQuestionRowMapper = (resultSet, rowNum) -> new PreQuestionDto(
             new MemberDto(
-                    resultSet.getObject("authorId", Long.class),
+                    resultSet.getLong("authorId"),
                     resultSet.getString("nickname"),
                     resultSet.getString("profileUrl")
             ),

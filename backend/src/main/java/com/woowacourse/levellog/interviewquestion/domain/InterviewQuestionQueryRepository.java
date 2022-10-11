@@ -21,7 +21,7 @@ public class InterviewQuestionQueryRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     private final RowMapper<InterviewQuestionSearchResultDto> searchRowMapper = (resultSet, rowNum) -> new InterviewQuestionSearchResultDto(
-            resultSet.getObject("id", Long.class),
+            resultSet.getLong("id"),
             resultSet.getString("content"),
             resultSet.getBoolean("press"),
             resultSet.getInt("likeCount")
@@ -29,12 +29,12 @@ public class InterviewQuestionQueryRepository {
 
     private final RowMapper<SimpleInterviewQuestionDto> interviewQuestionRowMapper = (resultSet, rowNum) -> new SimpleInterviewQuestionDto(
             new MemberDto(
-                    resultSet.getObject("authorId", Long.class),
+                    resultSet.getLong("authorId"),
                     resultSet.getString("nickname"),
                     resultSet.getString("profileUrl")
             ),
             new InterviewQuestionContentDto(
-                    resultSet.getObject("interviewQuestionId", Long.class),
+                    resultSet.getLong("interviewQuestionId"),
                     resultSet.getString("content")
             )
     );

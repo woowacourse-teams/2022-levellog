@@ -17,24 +17,24 @@ public class TeamQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<AllSimpleParticipantDto> simpleRowMapper = (resultSet, rowNumber) -> new AllSimpleParticipantDto(
-            resultSet.getObject("teamId", Long.class),
+            resultSet.getLong("teamId"),
             resultSet.getString("title"),
             resultSet.getString("place"),
             resultSet.getTimestamp("start_at").toLocalDateTime(),
             resultSet.getString("teamProfileUrl"),
             resultSet.getBoolean("is_closed"),
-            resultSet.getObject("memberId", Long.class),
+            resultSet.getLong("memberId"),
             resultSet.getString("profile_url")
     );
     private final RowMapper<AllParticipantDto> detailRowMapper = (resultSet, rowNumber) -> new AllParticipantDto(
-            resultSet.getObject("teamId", Long.class),
+            resultSet.getLong("teamId"),
             resultSet.getString("title"),
             resultSet.getString("place"),
             resultSet.getTimestamp("start_at").toLocalDateTime(),
             resultSet.getString("teamProfileUrl"),
             resultSet.getInt("interviewer_number"),
             resultSet.getBoolean("is_closed"),
-            resultSet.getObject("memberId", Long.class),
+            resultSet.getLong("memberId"),
             resultSet.getObject("levellogId", Long.class),
             resultSet.getObject("preQuestionId", Long.class),
             resultSet.getString("nickname"),

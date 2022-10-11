@@ -14,8 +14,8 @@ import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
+import com.woowacourse.levellog.team.dto.response.TeamListDetailResponse;
 import com.woowacourse.levellog.team.dto.response.TeamListResponse;
-import com.woowacourse.levellog.team.dto.response.TeamListResponses;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -45,11 +45,11 @@ public class TeamQueryServiceTest extends ServiceTest {
             entityManager.flush();
 
             //when
-            final TeamListResponses response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
+            final TeamListResponse response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
 
             //then
             assertThat(response.getTeams()).hasSize(2)
-                    .extracting(TeamListResponse::getId, TeamListResponse::getStatus)
+                    .extracting(TeamListDetailResponse::getId, TeamListDetailResponse::getStatus)
                     .containsExactly(
                             tuple(romaTeam.getId(), READY),
                             tuple(pepperTeam.getId(), READY)
@@ -76,11 +76,11 @@ public class TeamQueryServiceTest extends ServiceTest {
             entityManager.flush();
 
             //when
-            final TeamListResponses response = teamQueryService.findAll(TeamFilterCondition.CLOSE, 0, 10);
+            final TeamListResponse response = teamQueryService.findAll(TeamFilterCondition.CLOSE, 0, 10);
 
             //then
             assertThat(response.getTeams()).hasSize(2)
-                    .extracting(TeamListResponse::getId, TeamListResponse::getStatus)
+                    .extracting(TeamListDetailResponse::getId, TeamListDetailResponse::getStatus)
                     .containsExactly(
                             tuple(eveTeam.getId(), CLOSED),
                             tuple(rickTeam.getId(), CLOSED)
@@ -102,7 +102,7 @@ public class TeamQueryServiceTest extends ServiceTest {
             entityManager.flush();
 
             //when
-            final TeamListResponses response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
+            final TeamListResponse response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
 
             //then
             assertThat(response.getTeams()).hasSize(1);
@@ -289,7 +289,7 @@ public class TeamQueryServiceTest extends ServiceTest {
             saveTeam(harry, alien);
 
             // when
-            final List<TeamListResponse> teams = teamQueryService.findAllByMemberId(roma.getId()).getTeams();
+            final List<TeamListDetailResponse> teams = teamQueryService.findAllByMemberId(roma.getId()).getTeams();
 
             // then
             assertThat(teams).hasSize(2);

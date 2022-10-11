@@ -9,11 +9,11 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponse;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponse;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponse;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchListResponses;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchListQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchQueryResult;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
@@ -280,7 +280,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             saveInterviewQuestion("스프링 빈이란?", pepperLevellog, eve);
 
             // when
-            final InterviewQuestionContentListResponses response = interviewQuestionService.findAllByLevellogAndAuthor(
+            final InterviewQuestionContentListResponse response = interviewQuestionService.findAllByLevellogAndAuthor(
                     pepperLevellog.getId(),
                     eve.getId());
 
@@ -356,14 +356,14 @@ class InterviewQuestionServiceTest extends ServiceTest {
             interviewQuestionService.pressLike(question1Id, eve.getId()); // 업데이트를 해도 최신순 정렬이 유지되어야 함
 
             // when
-            final InterviewQuestionSearchListResponses actual = interviewQuestionService.searchByKeyword(
+            final InterviewQuestionSearchListQueryResult actual = interviewQuestionService.searchByKeyword(
                     "스프링", eve.getId(), size, page, sort);
 
             // then
             assertAll(
                     () -> assertThat(actual.getResults()).hasSize(4),
                     () -> Assertions.assertThat(actual.getResults())
-                            .extracting(InterviewQuestionSearchResponse::getId)
+                            .extracting(InterviewQuestionSearchQueryResult::getId)
                             .containsExactly(question4Id, question3Id, question2Id, question1Id)
             );
         }
@@ -393,14 +393,14 @@ class InterviewQuestionServiceTest extends ServiceTest {
             interviewQuestionService.pressLike(question2Id, eve.getId());
 
             // when
-            final InterviewQuestionSearchListResponses actual = interviewQuestionService.searchByKeyword(
+            final InterviewQuestionSearchListQueryResult actual = interviewQuestionService.searchByKeyword(
                     "스프링", eve.getId(), size, page, sort);
 
             // then
             assertAll(
                     () -> assertThat(actual.getResults()).hasSize(4),
                     () -> Assertions.assertThat(actual.getResults())
-                            .extracting(InterviewQuestionSearchResponse::getId)
+                            .extracting(InterviewQuestionSearchQueryResult::getId)
                             .containsExactly(question1Id, question2Id, question3Id, question4Id)
             );
         }

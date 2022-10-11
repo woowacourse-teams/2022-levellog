@@ -8,7 +8,7 @@ import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
 import com.woowacourse.levellog.team.dto.response.InterviewRoleResponse;
 import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
-import com.woowacourse.levellog.team.dto.response.TeamListResponses;
+import com.woowacourse.levellog.team.dto.response.TeamListResponse;
 import com.woowacourse.levellog.team.dto.response.TeamStatusResponse;
 import java.net.URI;
 import javax.validation.Valid;
@@ -41,11 +41,11 @@ public class TeamController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<TeamListResponses> findAll(@RequestParam(defaultValue = "open") final String condition,
-                                                     @RequestParam(defaultValue = "0") final int page,
-                                                     @RequestParam(defaultValue = "20") final int size) {
+    public ResponseEntity<TeamListResponse> findAll(@RequestParam(defaultValue = "open") final String condition,
+                                                    @RequestParam(defaultValue = "0") final int page,
+                                                    @RequestParam(defaultValue = "20") final int size) {
         final TeamFilterCondition filterCondition = TeamFilterCondition.from(condition);
-        final TeamListResponses response = teamQueryService.findAll(filterCondition, page, size);
+        final TeamListResponse response = teamQueryService.findAll(filterCondition, page, size);
         return ResponseEntity.ok(response);
     }
 

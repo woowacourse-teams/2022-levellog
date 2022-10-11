@@ -5,13 +5,12 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
 import com.woowacourse.levellog.team.domain.TeamQueryRepository;
-import com.woowacourse.levellog.team.dto.query.AllTeamDetailQueryResults;
+import com.woowacourse.levellog.team.dto.query.AllTeamDetailListQueryResult;
 import com.woowacourse.levellog.team.dto.query.AllTeamListQueryResult;
 import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
-import com.woowacourse.levellog.team.dto.response.TeamListResponses;
+import com.woowacourse.levellog.team.dto.response.TeamListResponse;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.support.TimeStandard;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,32 +24,32 @@ public class TeamQueryService {
     private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
 
-    public TeamListResponses findAll(final TeamFilterCondition condition, final int page, final int size) {
-        final List<AllTeamListQueryResult> results = teamQueryRepository.findAllList(
-                condition.isClosed(), size, page * size);
+    public TeamListResponse findAll(final TeamFilterCondition condition, final int page, final int size) {
+        final AllTeamListQueryResult results = new AllTeamListQueryResult(
+                teamQueryRepository.findAllList(condition.isClosed(), size, page * size));
 
-        return TeamListResponses.from(results, timeStandard.now());
+        return results.toResponse(timeStandard.now());
     }
 
-    public TeamListResponses findAllByMemberId(final Long memberId) {
+    public TeamListResponse findAllByMemberId(final Long memberId) {
         final Member member = memberRepository.getMember(memberId);
-        final List<AllTeamListQueryResult> results = teamQueryRepository.findMyList(member);
+        final AllTeamListQueryResult results = new AllTeamListQueryResult(teamQueryRepository.findMyList(member));
 
-        return TeamListResponses.from(results, timeStandard.now());
+        return results.toResponse(timeStandard.now());
     }
 
     public TeamDetailResponse findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
-        final AllTeamDetailQueryResults results = new AllTeamDetailQueryResults(
+        final AllTeamDetailListQueryResult results = new AllTeamDetailListQueryResult(
                 teamQueryRepository.findAllByTeamId(teamId, memberId));
 
         validateNotEmpty(results, teamId, memberId);
 
-        return results.toResponses(memberId, timeStandard.now());
+        return results.toResponse(memberId, timeStandard.now());
     }
 
-    private void validateNotEmpty(final AllTeamDetailQueryResults allTeamDetailQueryResults,
+    private void validateNotEmpty(final AllTeamDetailListQueryResult allTeamDetailListQueryResult,
                                   final Long teamId, final Long memberId) {
-        if (allTeamDetailQueryResults.isEmpty()) {
+        if (allTeamDetailListQueryResult.isEmpty()) {
             throw new TeamNotFoundException(DebugMessage.init()
                     .append("teamId", teamId)
                     .append("membmerId", memberId));

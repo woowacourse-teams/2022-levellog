@@ -3,7 +3,7 @@ package com.woowacourse.levellog.feedback.presentation;
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
-import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponses;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponse;
 import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
 import java.net.URI;
 import javax.validation.Valid;
@@ -33,9 +33,9 @@ public class FeedbackController {
     }
 
     @GetMapping
-    public ResponseEntity<FeedbackListResponses> findAll(@PathVariable final Long levellogId,
-                                                         @Authentic final Long memberId) {
-        final FeedbackListResponses response = feedbackService.findAll(levellogId, memberId);
+    public ResponseEntity<FeedbackListResponse> findAll(@PathVariable final Long levellogId,
+                                                        @Authentic final Long memberId) {
+        final FeedbackListResponse response = feedbackService.findAll(levellogId, memberId);
         return ResponseEntity.ok(response);
     }
 

@@ -4,8 +4,8 @@ import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponses;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionListResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionListResponse;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,16 +37,16 @@ public class InterviewQuestionController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<InterviewQuestionListResponses> findAllByLevellog(@PathVariable final Long levellogId) {
-        final InterviewQuestionListResponses response = interviewQuestionService.findAllByLevellog(levellogId);
+    public ResponseEntity<InterviewQuestionListResponse> findAllByLevellog(@PathVariable final Long levellogId) {
+        final InterviewQuestionListResponse response = interviewQuestionService.findAllByLevellog(levellogId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<InterviewQuestionContentListResponses> findAllMyInterviewQuestion(
+    public ResponseEntity<InterviewQuestionContentListResponse> findAllMyInterviewQuestion(
             @PathVariable final Long levellogId,
             @Authentic final Long memberId) {
-        final InterviewQuestionContentListResponses response = interviewQuestionService.findAllByLevellogAndAuthor(
+        final InterviewQuestionContentListResponse response = interviewQuestionService.findAllByLevellogAndAuthor(
                 levellogId,
                 memberId);
         return ResponseEntity.ok(response);

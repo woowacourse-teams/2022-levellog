@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.feedback.dto.response;
+package com.woowacourse.levellog.levellog.dto.response;
 
 import java.util.List;
 import lombok.AccessLevel;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class FeedbackListResponses {
+public class LevellogListResponse {
 
-    private List<FeedbackResponse> feedbacks;
+    private List<LevellogWithIdResponse> levellogs;
 }

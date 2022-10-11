@@ -4,7 +4,7 @@ import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.common.support.StringConverter;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchListResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchListQueryResult;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class InterviewQuestionSearchController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<InterviewQuestionSearchListResponses> searchBy(
+    public ResponseEntity<InterviewQuestionSearchListQueryResult> searchBy(
             @RequestParam(defaultValue = "") final String keyword,
             @RequestParam(defaultValue = "10") final Long size,
             @RequestParam(defaultValue = "0") final Long page,
@@ -33,9 +33,9 @@ public class InterviewQuestionSearchController {
             @Authentic final Long memberId) {
         final String input = StringConverter.toSafeString(keyword);
         if (input.isBlank()) {
-            return ResponseEntity.ok(InterviewQuestionSearchListResponses.of(new ArrayList<>(), 0L));
+            return ResponseEntity.ok(InterviewQuestionSearchListQueryResult.of(new ArrayList<>(), 0L));
         }
-        final InterviewQuestionSearchListResponses response = interviewQuestionService
+        final InterviewQuestionSearchListQueryResult response = interviewQuestionService
                 .searchByKeyword(input, memberId, size, page, sort);
         return ResponseEntity.ok(response);
     }

@@ -4,7 +4,7 @@ import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
-import com.woowacourse.levellog.levellog.dto.response.LevellogListResponses;
+import com.woowacourse.levellog.levellog.dto.response.LevellogListResponse;
 import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
 import com.woowacourse.levellog.levellog.dto.response.LevellogWithIdResponse;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
@@ -48,7 +48,7 @@ public class LevellogService {
         return LevellogResponse.from(levellog);
     }
 
-    public LevellogListResponses findAllByAuthorId(final Long authorId) {
+    public LevellogListResponse findAllByAuthorId(final Long authorId) {
         final Member author = memberRepository.getMember(authorId);
 
         final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author);
@@ -56,7 +56,7 @@ public class LevellogService {
                 .map(LevellogWithIdResponse::from)
                 .collect(Collectors.toList());
 
-        return new LevellogListResponses(levellogWithIdResponses);
+        return new LevellogListResponse(levellogWithIdResponses);
     }
 
     @Transactional

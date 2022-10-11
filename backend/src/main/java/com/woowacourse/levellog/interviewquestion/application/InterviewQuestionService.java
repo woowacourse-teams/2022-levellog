@@ -8,10 +8,10 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryR
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponses;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionListResponses;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchListResponses;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionListResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchListQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchQueryResult;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -56,29 +56,29 @@ public class InterviewQuestionService {
                 .getId();
     }
 
-    public InterviewQuestionListResponses findAllByLevellog(final Long levellogId) {
+    public InterviewQuestionListResponse findAllByLevellog(final Long levellogId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellog(levellog);
 
-        return InterviewQuestionListResponses.from(interviewQuestions);
+        return InterviewQuestionListResponse.from(interviewQuestions);
     }
 
-    public InterviewQuestionContentListResponses findAllByLevellogAndAuthor(final Long levellogId,
-                                                                            final Long fromMemberId) {
+    public InterviewQuestionContentListResponse findAllByLevellogAndAuthor(final Long levellogId,
+                                                                           final Long fromMemberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Member author = memberRepository.getMember(fromMemberId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthor(
                 levellog, author);
 
-        return InterviewQuestionContentListResponses.from(interviewQuestions);
+        return InterviewQuestionContentListResponse.from(interviewQuestions);
     }
 
-    public InterviewQuestionSearchListResponses searchByKeyword(final String keyword, final Long memberId,
-                                                                final Long size, final Long page, final String sort) {
-        final List<InterviewQuestionSearchResponse> results = interviewQuestionQueryRepository
+    public InterviewQuestionSearchListQueryResult searchByKeyword(final String keyword, final Long memberId,
+                                                                  final Long size, final Long page, final String sort) {
+        final List<InterviewQuestionSearchQueryResult> results = interviewQuestionQueryRepository
                 .searchByKeyword(keyword, memberId, size, page, InterviewQuestionSort.valueOf(sort.toUpperCase()));
 
-        return InterviewQuestionSearchListResponses.of(results, page);
+        return InterviewQuestionSearchListQueryResult.of(results, page);
     }
 
     @Transactional

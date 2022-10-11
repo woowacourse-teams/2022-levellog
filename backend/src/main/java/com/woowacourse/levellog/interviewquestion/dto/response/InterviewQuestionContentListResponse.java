@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewQuestionContentListResponses {
+public class InterviewQuestionContentListResponse {
 
     private List<InterviewQuestionContentResponse> interviewQuestions;
 
-    public static InterviewQuestionContentListResponses from(final List<InterviewQuestion> interviewQuestions) {
-        return new InterviewQuestionContentListResponses(interviewQuestions.stream()
+    public static InterviewQuestionContentListResponse from(final List<InterviewQuestion> interviewQuestions) {
+        return new InterviewQuestionContentListResponse(interviewQuestions.stream()
                 .map(InterviewQuestionContentResponse::of)
                 .collect(Collectors.toList()));
     }

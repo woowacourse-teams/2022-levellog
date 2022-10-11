@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.team.dto.response;
 
-import com.woowacourse.levellog.team.dto.query.AllTeamListQueryResult;
+import com.woowacourse.levellog.team.dto.query.AllTeamListDetailQueryResult;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -16,10 +16,10 @@ public class ParticipantInTeamListResponse {
     private Long memberId;
     private String profileUrl;
 
-    public static ParticipantInTeamListResponse from(final AllTeamListQueryResult allTeamListQueryResult) {
+    public static ParticipantInTeamListResponse from(final AllTeamListDetailQueryResult allTeamListDetailQueryResult) {
         return new ParticipantInTeamListResponse(
-                allTeamListQueryResult.getMemberId(),
-                allTeamListQueryResult.getMemberImage()
+                allTeamListDetailQueryResult.getMemberId(),
+                allTeamListDetailQueryResult.getMemberImage()
         );
     }
 }

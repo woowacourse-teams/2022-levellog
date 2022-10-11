@@ -4,7 +4,7 @@ import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
-import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponses;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponse;
 import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -51,13 +51,13 @@ public class FeedbackService {
                 .getId();
     }
 
-    public FeedbackListResponses findAll(final Long levellogId, final Long memberId) {
+    public FeedbackListResponse findAll(final Long levellogId, final Long memberId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         validateTeamMember(levellog.getTeam(), memberRepository.getMember(memberId));
 
         final List<FeedbackResponse> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
 
-        return new FeedbackListResponses(responses);
+        return new FeedbackListResponse(responses);
     }
 
     public FeedbackResponse findById(final Long levellogId, final Long feedbackId, final Long memberId) {
@@ -71,11 +71,11 @@ public class FeedbackService {
         return FeedbackResponse.from(feedback);
     }
 
-    public FeedbackListResponses findAllByTo(final Long memberId) {
+    public FeedbackListResponse findAllByTo(final Long memberId) {
         final Member member = memberRepository.getMember(memberId);
         final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(member);
 
-        return new FeedbackListResponses(getFeedbackResponses(feedbacks));
+        return new FeedbackListResponse(getFeedbackResponses(feedbacks));
     }
 
     @Transactional

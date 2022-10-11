@@ -2,7 +2,7 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.dto.query.AllTeamDetailQueryResult;
-import com.woowacourse.levellog.team.dto.query.AllTeamListQueryResult;
+import com.woowacourse.levellog.team.dto.query.AllTeamListDetailQueryResult;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public class TeamQueryRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<AllTeamListQueryResult> simpleRowMapper = (resultSet, rowNumber) -> new AllTeamListQueryResult(
+    private final RowMapper<AllTeamListDetailQueryResult> simpleRowMapper = (resultSet, rowNumber) -> new AllTeamListDetailQueryResult(
             resultSet.getObject("teamId", Long.class),
             resultSet.getString("title"),
             resultSet.getString("place"),
@@ -43,7 +43,7 @@ public class TeamQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<AllTeamListQueryResult> findAllList(final boolean isClosed, final int limit, final int offset) {
+    public List<AllTeamListDetailQueryResult> findAllList(final boolean isClosed, final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, "
                 + "m.id memberId, m.profile_url "
@@ -75,7 +75,7 @@ public class TeamQueryRepository {
         return jdbcTemplate.query(sql, detailRowMapper, memberId, teamId);
     }
 
-    public List<AllTeamListQueryResult> findMyList(final Member member) {
+    public List<AllTeamListDetailQueryResult> findMyList(final Member member) {
         final String sql = "SELECT "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
                 + "m.id memberId, m.profile_url "

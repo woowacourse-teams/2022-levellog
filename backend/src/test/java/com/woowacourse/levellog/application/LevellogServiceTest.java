@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
-import com.woowacourse.levellog.levellog.dto.response.LevellogListResponses;
+import com.woowacourse.levellog.levellog.dto.response.LevellogListResponse;
 import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -286,10 +286,10 @@ class LevellogServiceTest extends ServiceTest {
             saveLevellog(author, team2);
 
             // when
-            final LevellogListResponses levellogListResponses = levellogService.findAllByAuthorId(author.getId());
+            final LevellogListResponse levellogListResponse = levellogService.findAllByAuthorId(author.getId());
 
             // then
-            assertThat(levellogListResponses.getLevellogs()).hasSize(2);
+            assertThat(levellogListResponse.getLevellogs()).hasSize(2);
         }
 
         @Test

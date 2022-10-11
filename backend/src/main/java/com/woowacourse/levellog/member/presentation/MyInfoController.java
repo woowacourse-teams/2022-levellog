@@ -2,14 +2,14 @@ package com.woowacourse.levellog.member.presentation;
 
 import com.woowacourse.levellog.authentication.support.Authentic;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
-import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponses;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponse;
 import com.woowacourse.levellog.levellog.application.LevellogService;
-import com.woowacourse.levellog.levellog.dto.response.LevellogListResponses;
+import com.woowacourse.levellog.levellog.dto.response.LevellogListResponse;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import com.woowacourse.levellog.team.application.TeamQueryService;
-import com.woowacourse.levellog.team.dto.response.TeamListResponses;
+import com.woowacourse.levellog.team.dto.response.TeamListResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,22 +37,22 @@ public class MyInfoController {
     }
 
     @GetMapping("/feedbacks")
-    public ResponseEntity<FeedbackListResponses> findAllFeedbackToMe(@Authentic final Long memberId) {
-        final FeedbackListResponses feedbackListResponses = feedbackService.findAllByTo(memberId);
+    public ResponseEntity<FeedbackListResponse> findAllFeedbackToMe(@Authentic final Long memberId) {
+        final FeedbackListResponse feedbackListResponse = feedbackService.findAllByTo(memberId);
 
-        return ResponseEntity.ok(feedbackListResponses);
+        return ResponseEntity.ok(feedbackListResponse);
     }
 
     @GetMapping("/levellogs")
-    public ResponseEntity<LevellogListResponses> findAllMyLevellogs(@Authentic final Long memberId) {
-        final LevellogListResponses levellogsResponse = levellogService.findAllByAuthorId(memberId);
+    public ResponseEntity<LevellogListResponse> findAllMyLevellogs(@Authentic final Long memberId) {
+        final LevellogListResponse levellogsResponse = levellogService.findAllByAuthorId(memberId);
 
         return ResponseEntity.ok(levellogsResponse);
     }
 
     @GetMapping("/teams")
-    public ResponseEntity<TeamListResponses> findAllMyTeams(@Authentic final Long memberId) {
-        final TeamListResponses response = teamQueryService.findAllByMemberId(memberId);
+    public ResponseEntity<TeamListResponse> findAllMyTeams(@Authentic final Long memberId) {
+        final TeamListResponse response = teamQueryService.findAllByMemberId(memberId);
 
         return ResponseEntity.ok(response);
     }

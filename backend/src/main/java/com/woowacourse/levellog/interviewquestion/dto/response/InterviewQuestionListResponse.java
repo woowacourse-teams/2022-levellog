@@ -14,18 +14,18 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewQuestionListResponses {
+public class InterviewQuestionListResponse {
 
     private List<InterviewQuestionResponse> interviewQuestions;
 
-    public static InterviewQuestionListResponses from(final List<InterviewQuestion> interviewQuestions) {
+    public static InterviewQuestionListResponse from(final List<InterviewQuestion> interviewQuestions) {
         final List<InterviewQuestionResponse> responses = interviewQuestions.stream()
                 .map(InterviewQuestion::getAuthor)
                 .distinct()
                 .map(it -> InterviewQuestionResponse.of(it, toContents(interviewQuestions, it)))
                 .collect(Collectors.toList());
 
-        return new InterviewQuestionListResponses(responses);
+        return new InterviewQuestionListResponse(responses);
     }
 
     private static List<InterviewQuestionContentResponse> toContents(final List<InterviewQuestion> interviewQuestions,

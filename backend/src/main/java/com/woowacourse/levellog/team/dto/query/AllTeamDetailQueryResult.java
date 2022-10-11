@@ -1,11 +1,15 @@
 package com.woowacourse.levellog.team.dto.query;
 
 import com.woowacourse.levellog.team.domain.SimpleParticipant;
+import com.woowacourse.levellog.team.domain.TeamStatus;
 import com.woowacourse.levellog.team.dto.response.ParticipantResponse;
 import com.woowacourse.levellog.team.dto.response.TeamResponse;
 import com.woowacourse.levellog.team.dto.response.WatcherResponse;
 import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class AllTeamDetailQueryResult {
 
     private final Long id;
@@ -44,23 +48,23 @@ public class AllTeamDetailQueryResult {
         this.isWatcher = isWatcher;
     }
 
-    public AllTeamListQueryResult getAllTeamListQueryResult() {
-        return new AllTeamListQueryResult(id, title, place, startAt, teamProfileUrl, isClosed, memberId, profileUrl);
-    }
-
-    public TeamResponse getTeamResponse() {
+    protected TeamResponse getTeamResponse() {
         return TeamResponse.from(id, title, place, startAt, teamProfileUrl, interviewerNumber, isClosed);
     }
 
-    public SimpleParticipant getSimpleParticipant() {
+    protected SimpleParticipant getSimpleParticipant() {
         return new SimpleParticipant(id, memberId, isHost, isWatcher);
     }
 
-    public ParticipantResponse getParticipantResponse() {
+    protected ParticipantResponse getParticipantResponse() {
         return new ParticipantResponse(memberId, levellogId, preQuestionId, nickname, profileUrl);
     }
 
-    public WatcherResponse getWatcherResponse() {
+    protected WatcherResponse getWatcherResponse() {
         return new WatcherResponse(memberId, nickname, profileUrl);
+    }
+
+    protected TeamStatus getTeamStatus(final LocalDateTime time) {
+        return TeamStatus.of(isClosed, startAt, time);
     }
 }

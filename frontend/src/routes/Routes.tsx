@@ -1,6 +1,7 @@
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 
 import Copyright from 'pages/Copyright';
+import Loading from 'pages/status/Loading';
 
 import { REQUIRE_AUTH, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
@@ -140,7 +141,11 @@ export const routes = [
       },
       {
         path: ROUTES_PATH.INTERVIEW_TEAMS_DETAIL,
-        element: <InterviewDetail />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <InterviewDetail />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES_PATH.ERROR,

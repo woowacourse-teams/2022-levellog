@@ -13,6 +13,7 @@ const SnackbarStyle = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  padding: 0.625rem;
   width: 20rem;
   max-width: 71rem;
   height: 3.75rem;

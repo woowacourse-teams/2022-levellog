@@ -1,39 +1,52 @@
 import { useState } from 'react';
 
+import { useMutation } from '@tanstack/react-query';
+
 import useModal from 'hooks/useModal';
-import usePreQuestion from 'hooks/usePreQuestion';
-import useSnackbar from 'hooks/useSnackbar';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
-
+import { requestGetPreQuestion } from 'apis/preQuestion';
 import { PreQuestionCustomHookType, PreQuestionParticipantType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
 
 const usePreQuestionModal = () => {
   const { isModalOpen, onClickOpenModal, onClickCloseModal } = useModal();
-  const { preQuestion, getPreQuestion, deletePreQuestion } = usePreQuestion();
   const { showSnackbar } = useSnackbar();
   const [preQuestionParticipant, setPreQuestionParticipant] = useState({} as ParticipantType);
 
-  const onClickOpenPreQuestionModal = async ({ participant }: PreQuestionParticipantType) => {
-    await getPreQuestion({ levellogId: participant.levellogId });
+  const accessToken = localStorage.getItem('accessToken');
+
+  const {
+    isLoading: preQuestionModalLoading,
+    mutate: getPreQuestion,
+    data: preQuestion,
+  } = useMutation(({ levellogId }: { levellogId: string }) => {
+    return requestGetPreQuestion({
+      accessToken,
+      levellogId,
+    });
+  });
+
+  const onClickOpenPreQuestionModal = ({ participant }: PreQuestionParticipantType) => {
     onClickOpenModal();
     setPreQuestionParticipant(participant);
+    getPreQuestion({ levellogId: participant.levellogId });
   };
 
   const onClickDeletePreQuestion = async ({
     levellogId,
     preQuestionId,
   }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
-    await deletePreQuestion({
-      levellogId,
-      preQuestionId,
-    });
-    onClickCloseModal();
-    showSnackbar({ message: MESSAGE.PREQUESTION_DELETE });
+    // await deletePreQuestion({
+    //   levellogId,
+    //   preQuestionId,
+    // });
+    // onClickCloseModal();
+    // showSnackbar({ message: MESSAGE.PREQUESTION_DELETE });
   };
 
   return {
+    preQuestionModalLoading,
     preQuestion,
     preQuestionParticipant,
     isPreQuestionModalOpen: isModalOpen,

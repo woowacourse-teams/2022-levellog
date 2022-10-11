@@ -6,6 +6,7 @@ module.exports = {
   importOrder: [
     '^(react)',
     '^((?!/).)*$',
+    '^(@tanstack/*|@toast-ui/*)(.*|$)*$',
     '^((.*)/types)(.*|$)',
     '^((hooks))(.*|$)',
     '^(./@commons)*$',

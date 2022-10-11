@@ -1,11 +1,15 @@
-import axios from 'axios';
+import { fetcher } from 'apis';
 
 import { RoleApiType } from 'types/role';
 
-export const requestGetLoginUserRole = ({ teamId, participantId, accessToken }: RoleApiType) => {
-  return axios({
-    method: 'get',
+export const requestGetLoginUserRole = async ({
+  teamId,
+  participantId,
+  accessToken,
+}: RoleApiType): Promise<Record<'myRole', string>> => {
+  const { data } = await fetcher.get(`/teams/${teamId}/members/${participantId}/my-role`, {
     headers: { Authorization: `Bearer ${accessToken}` },
-    url: `${process.env.API_URI}/teams/${teamId}/members/${participantId}/my-role`,
   });
+
+  return data;
 };

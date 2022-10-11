@@ -1,24 +1,11 @@
-import { useEffect } from 'react';
-
 import styled from 'styled-components';
 
 import { Editor } from '@toast-ui/react-editor';
+
 import { FeedbackTitle } from 'components/@commons/Style';
 import UiEditor from 'components/@commons/markdownEditor/UiEditor';
-import { FeedbackCustomHookType } from 'types/feedback';
 
-const FeedbackFormat = ({
-  levellogId,
-  feedbackId,
-  feedbackRef,
-  getFeedbackOnRef,
-}: FeedbackFormProps) => {
-  useEffect(() => {
-    if (!getFeedbackOnRef || !levellogId || !feedbackId) return;
-
-    getFeedbackOnRef({ levellogId, feedbackId });
-  }, []);
-
+const FeedbackFormat = ({ feedbackRef }: FeedbackFormProps) => {
   return (
     <S.Container>
       <FeedbackTitle>피드백</FeedbackTitle>
@@ -53,13 +40,7 @@ const FeedbackFormat = ({
 };
 
 interface FeedbackFormProps {
-  levellogId?: string;
-  feedbackId?: string;
   feedbackRef: React.MutableRefObject<Editor[]>;
-  getFeedbackOnRef?: ({
-    levellogId,
-    feedbackId,
-  }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId'>) => Promise<void>;
 }
 
 const S = {

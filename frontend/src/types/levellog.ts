@@ -2,14 +2,14 @@ import { ParticipantType } from 'types/team';
 
 export interface LevellogCustomHookType {
   inputValue: string;
-  teamId: string;
-  levellogId: string;
+  teamId: string | undefined;
+  levellogId: string | undefined;
 }
 
 export interface LevellogApiType {
   accessToken: string | null;
-  teamId: string;
-  levellogId: string;
+  teamId: string | undefined;
+  levellogId: string | undefined;
   levellogContent: LevellogFormatType;
 }
 

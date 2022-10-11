@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
-import useTeams from 'hooks/useTeams';
+import { useQuery } from '@tanstack/react-query';
+
+import useTeams from 'hooks/team/useTeams';
 
 import EmptyTeams from 'pages/status/EmptyTeams';
 
-import { useQuery } from '@tanstack/react-query';
 import InterviewTeam from 'components/teams/InterviewTeam';
 import { InterviewTeamType, TeamConditionsType } from 'types/team';
 

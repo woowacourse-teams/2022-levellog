@@ -1,9 +1,9 @@
 import { MemberType } from 'types/member';
 
 export interface TeamApiType {
-  teamId: string;
-  teamInfo: TeamCustomHookType;
   accessToken: string | null;
+  teamId: string | undefined;
+  teamInfo: TeamCustomHookType;
   teamsCondition?: TeamsConditionType;
 }
 

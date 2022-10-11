@@ -3,8 +3,8 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import useSnackbar from 'hooks/useSnackbar';
 import useUser from 'hooks/useUser';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import Loading from 'pages/status/Loading';
 

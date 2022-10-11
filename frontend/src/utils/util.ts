@@ -2,7 +2,7 @@ import { NavigateFunction } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ShowSnackbarProps } from 'hooks/useSnackbar';
+import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
@@ -11,7 +11,7 @@ import { UriCustomHookType } from 'types/uri';
 
 export const debounce: DebounceType = {
   flag: '',
-  action({ func, args, setState, navigate }) {
+  action({ func, args, setState, navigate, timer = 300 }) {
     if (this.flag) {
       clearTimeout(this.flag);
     }
@@ -19,7 +19,7 @@ export const debounce: DebounceType = {
       const res = await func(args && { ...args });
       setState && setState(res.data);
       res && navigate && navigate[0](navigate[1]);
-    }, 300);
+    }, timer);
   },
 };
 
@@ -28,6 +28,7 @@ interface DebounceActionArgsType {
   args?: { [props: string]: any };
   setState?: React.Dispatch<React.SetStateAction<any>>;
   navigate?: [NavigateFunction, string];
+  timer?: number;
 }
 
 interface DebounceType {
@@ -92,7 +93,7 @@ export const feedbackAddUriBuilder = ({
   teamId,
   levellogId,
 }: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`;
+  return `/teams/${teamId}/levellogs/${levellogId}/feedback/add`;
 };
 
 export const feedbackEditUriBuilder = ({
@@ -101,7 +102,7 @@ export const feedbackEditUriBuilder = ({
   feedbackId,
   authorId,
 }: Omit<UriCustomHookType, 'preQuestionId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackId}/author/${authorId}/edit`;
+  return `/teams/${teamId}/levellogs/${levellogId}/feedback/${feedbackId}/author/${authorId}/edit`;
 };
 
 export const feedbacksGetUriBuilder = ({
@@ -116,7 +117,7 @@ export const feedbackGetUriBuilder = ({
   levellogId,
   feedbackId,
 }: Pick<UriCustomHookType, 'teamId' | 'levellogId' | 'feedbackId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackId}`;
+  return `/teams/${teamId}/levellogs/${levellogId}/feedback/${feedbackId}`;
 };
 
 export const levellogAddUriBuilder = ({ teamId }: Pick<UriCustomHookType, 'teamId'>) => {

@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
-import useInterviewQuestionSearchResult from 'hooks/useInterviewQuestionSearchResult';
+import useSearchedInterviewQuestion from 'hooks/questionSearch/useSearchedInterviewQuestion';
 
 import EmptySearchResult from 'pages/status/EmptySearchResult';
+
+import { INTERVIEW_QUESTION_FILTER } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import InterviewQuestionSearchResult from 'components/interviewQuestion/InterviewQuestionSearchResult';
@@ -10,36 +12,33 @@ import InterviewQuestionSearchResult from 'components/interviewQuestion/Intervie
 const InterviewQuestionSearchResults = () => {
   const {
     searchResults,
-    searchSortActive,
+    searchFilterActive,
     onClickLikeButton,
     onClickCancelLikeButton,
-    handleClickSearchSortLike,
-    handleClickSearchSortNew,
-  } = useInterviewQuestionSearchResult();
+    handleClickFilterButton,
+  } = useSearchedInterviewQuestion();
 
-  if (!searchResults || searchResults.length === 0) {
+  if (!searchResults || searchResults.results.length === 0) {
     return <EmptySearchResult />;
   }
 
   return (
     <S.Container>
-      <S.ButtonBox>
-        <S.RangeButton onClick={handleClickSearchSortNew} isActive={searchSortActive === '최신순'}>
+      <S.ButtonBox onClick={handleClickFilterButton}>
+        <S.RangeButton isActive={searchFilterActive === INTERVIEW_QUESTION_FILTER.LATEST}>
           최신순
         </S.RangeButton>
         <S.DivisionLine></S.DivisionLine>
-        <S.RangeButton
-          onClick={handleClickSearchSortLike}
-          isActive={searchSortActive === '좋아요순'}
-        >
+        <S.RangeButton isActive={searchFilterActive === INTERVIEW_QUESTION_FILTER.LIKES}>
           좋아요순
         </S.RangeButton>
       </S.ButtonBox>
+      {/* */}
       <S.Content>
-        {searchResults.map((searchResult) => (
+        {searchResults.results.map((result) => (
           <InterviewQuestionSearchResult
-            key={searchResult.id}
-            interviewQuestion={searchResult}
+            key={result.id}
+            interviewQuestion={result}
             onClickLikeButton={onClickLikeButton}
             onClickCancelLikeButton={onClickCancelLikeButton}
           />

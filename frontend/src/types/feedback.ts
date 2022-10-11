@@ -1,14 +1,14 @@
 export interface FeedbackApiType {
   accessToken: string | null;
-  levellogId: string;
-  feedbackId: string;
+  levellogId: string | undefined;
+  feedbackId: string | undefined;
   feedbackResult: FeedbackFormatType;
 }
 
 export interface FeedbackCustomHookType {
-  teamId: string;
-  levellogId: string;
-  feedbackId: string;
+  teamId: string | undefined;
+  levellogId: string | undefined;
+  feedbackId: string | undefined;
   feedbackInfo: FeedbackType;
   feedbackResult: FeedbackFormatType;
 }

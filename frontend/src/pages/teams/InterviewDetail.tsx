@@ -2,12 +2,11 @@ import { Link, useParams } from 'react-router-dom';
 
 import styled, { CSSProperties } from 'styled-components';
 
-import useLevellogModal from 'hooks/useLevellogModal';
-import usePreQuestionModal from 'hooks/usePreQuestionModal';
-import useTeam from 'hooks/useTeam';
+import useLevellogModal from 'hooks/levellog/useLevellogModal';
+import usePreQuestionModal from 'hooks/preQuestion/usePreQuestionModal';
+import useTeamDetail from 'hooks/team/useTeamDetail';
 import useUser from 'hooks/useUser';
 
-import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
 
 import { TEAM_STATUS } from 'constants/constants';
@@ -23,19 +22,19 @@ import { ParticipantType, WatcherType } from 'types/team';
 import { convertDateAndTime, teamEditUriBuilder } from 'utils/util';
 
 const InterviewDetail = () => {
-  const { teamId } = useParams();
-
   const { loginUserId } = useUser();
   const { team, getTeam, handleClickDeleteTeamButton, handleClickCloseTeamInterviewButton } =
-    useTeam();
+    useTeamDetail();
   const {
-    levellogInfo,
+    levellogModalLoading,
     levellogParticipant,
     isLevellogModalOpen,
+    levellogInfo,
     onClickOpenLevellogModal,
     handleClickCloseLevellogModal,
   } = useLevellogModal();
   const {
+    preQuestionModalLoading,
     preQuestion,
     preQuestionParticipant,
     isPreQuestionModalOpen,
@@ -43,18 +42,17 @@ const InterviewDetail = () => {
     onClickDeletePreQuestion,
     handleClickClosePreQuestionModal,
   } = usePreQuestionModal();
-
-  if (team && Object.keys(team).length === 0) return <Error />;
-  if (!teamId || teamId !== String(team.id)) return <Loading />;
+  const { teamId } = useParams();
 
   return (
     <>
       {isLevellogModalOpen && (
         <LevellogViewModal
           teamId={teamId}
-          levellogInfo={levellogInfo}
           participant={levellogParticipant}
-          userInTeam={team.isParticipant}
+          levellogInfo={levellogInfo}
+          userInTeam={team!.isParticipant}
+          teamStatus={team!.status}
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}
         />
       )}
@@ -70,16 +68,16 @@ const InterviewDetail = () => {
       )}
 
       <ContentHeader
-        imageUrl={team.teamImage}
-        title={team.title}
-        subTitle={`${team.place} | ${convertDateAndTime({
-          startAt: team.startAt,
+        imageUrl={team?.teamImage}
+        title={team?.title}
+        subTitle={`${team?.place} | ${convertDateAndTime({
+          startAt: team!.startAt,
         })}`}
       >
         <>
-          {team.hostId === loginUserId && (
+          {team!.hostId === loginUserId && (
             <S.ButtonBox>
-              {team.status === TEAM_STATUS.READY && (
+              {team!.status === TEAM_STATUS.READY && (
                 <>
                   <Link to={teamEditUriBuilder({ teamId })}>
                     <S.Button>팀 수정하기</S.Button>
@@ -87,7 +85,7 @@ const InterviewDetail = () => {
                   <S.Button onClick={handleClickDeleteTeamButton}>팀 삭제하기</S.Button>
                 </>
               )}
-              {team.status === TEAM_STATUS.IN_PROGRESS && (
+              {team!.status === TEAM_STATUS.IN_PROGRESS && (
                 <S.InterviewCloseButton onClick={handleClickCloseTeamInterviewButton}>
                   인터뷰 종료하기
                 </S.InterviewCloseButton>
@@ -98,11 +96,11 @@ const InterviewDetail = () => {
       </ContentHeader>
       <S.Container>
         <FlexBox flexFlow={'column wrap'} gap={5}>
-          {team.watchers.length !== 0 && (
+          {team!.watchers.length !== 0 && (
             <FlexBox flexFlow={'column wrap'} gap={2}>
               <S.Title>참관자</S.Title>
               <S.WatcherContent>
-                {team.watchers.map(
+                {team!.watchers.map(
                   (watcher: Pick<WatcherType, 'memberId' | 'nickname' | 'profileUrl'>) => (
                     <Watcher key={watcher.memberId} watcher={watcher} />
                   ),
@@ -113,14 +111,14 @@ const InterviewDetail = () => {
           <FlexBox flexFlow={'column wrap'} gap={2}>
             <S.Title>참여자</S.Title>
             <S.Content>
-              {team.participants.map((participant: ParticipantType) => (
+              {team!.participants.map((participant: ParticipantType) => (
                 <Interviewer
                   key={participant.memberId}
                   participant={participant}
-                  interviewees={team.interviewees}
-                  interviewers={team.interviewers}
-                  teamStatus={team.status}
-                  userInTeam={team.isParticipant}
+                  interviewees={team!.interviewees}
+                  interviewers={team!.interviewers}
+                  teamStatus={team!.status}
+                  userInTeam={team!.isParticipant}
                   onClickOpenLevellogModal={onClickOpenLevellogModal}
                   onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}
                 />

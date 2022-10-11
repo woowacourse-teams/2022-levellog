@@ -1,6 +1,6 @@
 import { RequestType } from 'types';
 
-import { ShowSnackbarProps } from 'hooks/useSnackbar';
+import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 

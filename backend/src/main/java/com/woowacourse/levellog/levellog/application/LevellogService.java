@@ -7,9 +7,9 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogQueryRepository;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
-import com.woowacourse.levellog.levellog.dto.response.LevellogListResponse;
+import com.woowacourse.levellog.levellog.dto.response.LevellogDetailResponse;
 import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
-import com.woowacourse.levellog.levellog.dto.response.LevellogWithIdResponse;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponses;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
@@ -42,19 +42,19 @@ public class LevellogService {
         return savedLevellog.getId();
     }
 
-    public LevellogResponse findById(final Long levellogId) {
+    public LevellogDetailResponse findById(final Long levellogId) {
         return levellogQueryRepository.findById(levellogId)
                 .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)));
     }
 
-    public LevellogListResponse findAllByAuthorId(@Verified final LoginStatus loginStatus) {
+    public LevellogResponses findAllByAuthorId(@Verified final LoginStatus loginStatus) {
         final List<Levellog> levellogs = levellogRepository.findAllByAuthorId(loginStatus.getMemberId());
-        final List<LevellogWithIdResponse> levellogWithIdResponses = levellogs.stream()
-                .map(LevellogWithIdResponse::from)
+        final List<LevellogResponse> levellogRespons = levellogs.stream()
+                .map(LevellogResponse::from)
                 .collect(Collectors.toList());
 
-        return new LevellogListResponse(levellogWithIdResponses);
+        return new LevellogResponses(levellogRespons);
     }
 
     @Transactional

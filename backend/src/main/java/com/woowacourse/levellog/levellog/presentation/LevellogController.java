@@ -5,7 +5,7 @@ import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
-import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
+import com.woowacourse.levellog.levellog.dto.response.LevellogDetailResponse;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +35,9 @@ public class LevellogController {
 
     @GetMapping("/{levellogId}")
     @PublicAPI
-    public ResponseEntity<LevellogResponse> find(@PathVariable final Long teamId,
-                                                 @PathVariable final Long levellogId) {
-        final LevellogResponse response = levellogService.findById(levellogId);
+    public ResponseEntity<LevellogDetailResponse> find(@PathVariable final Long teamId,
+                                                       @PathVariable final Long levellogId) {
+        final LevellogDetailResponse response = levellogService.findById(levellogId);
         return ResponseEntity.ok(response);
     }
 

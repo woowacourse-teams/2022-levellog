@@ -3,7 +3,7 @@ package com.woowacourse.levellog.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
+import com.woowacourse.levellog.levellog.dto.response.LevellogDetailResponse;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import org.junit.jupiter.api.DisplayName;
@@ -22,11 +22,11 @@ class LevellogQueryRepositoryTest extends RepositoryTest {
         final Levellog levellog = saveLevellog(author, team);
 
         // when
-        final LevellogResponse actual = levellogQueryRepository.findById(levellog.getId())
+        final LevellogDetailResponse actual = levellogQueryRepository.findById(levellog.getId())
                 .get();
 
         // then
-        assertThat(actual).extracting(LevellogResponse::getContent, it -> it.getAuthor().getId())
+        assertThat(actual).extracting(LevellogDetailResponse::getContent, it -> it.getAuthor().getId())
                 .containsExactly(levellog.getContent(), author.getId());
     }
 }

@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.levellog.dto.response;
 
-import com.woowacourse.levellog.member.dto.response.MemberResponse;
+import com.woowacourse.levellog.levellog.domain.Levellog;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -13,6 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LevellogResponse {
 
-    private MemberResponse author;
+    private Long id;
+
     private String content;
+
+    public static LevellogResponse from(final Levellog levellog) {
+        return new LevellogResponse(levellog.getId(), levellog.getContent());
+    }
 }

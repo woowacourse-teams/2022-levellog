@@ -3,14 +3,14 @@ package com.woowacourse.levellog.member.presentation;
 import com.woowacourse.levellog.authentication.support.Extracted;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
-import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponse;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
 import com.woowacourse.levellog.levellog.application.LevellogService;
-import com.woowacourse.levellog.levellog.dto.response.LevellogListResponse;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponses;
 import com.woowacourse.levellog.member.application.MemberService;
 import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import com.woowacourse.levellog.team.application.TeamQueryService;
-import com.woowacourse.levellog.team.dto.response.TeamListResponse;
+import com.woowacourse.levellog.team.dto.response.TeamListResponses;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,22 +38,22 @@ public class MyInfoController {
     }
 
     @GetMapping("/feedbacks")
-    public ResponseEntity<FeedbackListResponse> findAllFeedbackToMe(@Extracted final LoginStatus loginStatus) {
-        final FeedbackListResponse feedbackListResponse = feedbackService.findAllByTo(loginStatus);
+    public ResponseEntity<FeedbackResponses> findAllFeedbackToMe(@Extracted final LoginStatus loginStatus) {
+        final FeedbackResponses feedbackResponses = feedbackService.findAllByTo(loginStatus);
 
-        return ResponseEntity.ok(feedbackListResponse);
+        return ResponseEntity.ok(feedbackResponses);
     }
 
     @GetMapping("/levellogs")
-    public ResponseEntity<LevellogListResponse> findAllMyLevellogs(@Extracted final LoginStatus loginStatus) {
-        final LevellogListResponse levellogsResponse = levellogService.findAllByAuthorId(loginStatus);
+    public ResponseEntity<LevellogResponses> findAllMyLevellogs(@Extracted final LoginStatus loginStatus) {
+        final LevellogResponses levellogsResponse = levellogService.findAllByAuthorId(loginStatus);
 
         return ResponseEntity.ok(levellogsResponse);
     }
 
     @GetMapping("/teams")
-    public ResponseEntity<TeamListResponse> findAllMyTeams(@Extracted final LoginStatus loginStatus) {
-        final TeamListResponse response = teamQueryService.findAllByMemberId(loginStatus);
+    public ResponseEntity<TeamListResponses> findAllMyTeams(@Extracted final LoginStatus loginStatus) {
+        final TeamListResponses response = teamQueryService.findAllByMemberId(loginStatus);
 
         return ResponseEntity.ok(response);
     }

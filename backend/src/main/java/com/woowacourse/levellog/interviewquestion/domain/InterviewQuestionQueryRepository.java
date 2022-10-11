@@ -2,8 +2,8 @@ package com.woowacourse.levellog.interviewquestion.domain;
 
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResult;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponse;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchQueryResult;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import java.util.HashMap;

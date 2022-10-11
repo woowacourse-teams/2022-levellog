@@ -10,8 +10,8 @@ import com.woowacourse.levellog.member.domain.NicknameMapping;
 import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.member.dto.request.MemberCreateRequest;
 import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
-import com.woowacourse.levellog.member.dto.response.MemberListResponse;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
+import com.woowacourse.levellog.member.dto.response.MemberResponses;
 import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
 import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import java.util.List;
@@ -56,13 +56,13 @@ public class MemberService {
         return MemberResponse.from(member);
     }
 
-    public MemberListResponse searchByNickname(final String nickname) {
+    public MemberResponses searchByNickname(final String nickname) {
         final List<MemberResponse> responses = memberRepository.findAllByNicknameContains(nickname)
                 .stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());
 
-        return new MemberListResponse(responses);
+        return new MemberResponses(responses);
     }
 
     @Transactional

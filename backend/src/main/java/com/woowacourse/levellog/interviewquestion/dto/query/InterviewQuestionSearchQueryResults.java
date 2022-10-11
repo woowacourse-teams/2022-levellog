@@ -1,4 +1,4 @@
-package com.woowacourse.levellog.interviewquestion.dto.response;
+package com.woowacourse.levellog.interviewquestion.dto.query;
 
 import java.util.List;
 import lombok.AccessLevel;
@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewQuestionSearchListQueryResult {
+public class InterviewQuestionSearchQueryResults {
 
     private List<InterviewQuestionSearchQueryResult> results;
     private Long page;
 
-    public static InterviewQuestionSearchListQueryResult of(final List<InterviewQuestionSearchQueryResult> results,
-                                                            final Long page) {
-        return new InterviewQuestionSearchListQueryResult(results, page);
+    public static InterviewQuestionSearchQueryResults of(final List<InterviewQuestionSearchQueryResult> results,
+                                                         final Long page) {
+        return new InterviewQuestionSearchQueryResults(results, page);
     }
 }

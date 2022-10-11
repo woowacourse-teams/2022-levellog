@@ -2,7 +2,6 @@ package com.woowacourse.levellog.domain;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
 import com.woowacourse.levellog.common.dto.LoginStatus;
-import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackQueryRepository;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
@@ -13,7 +12,6 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesR
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
-import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogQueryRepository;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;

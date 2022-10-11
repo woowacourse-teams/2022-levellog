@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
-import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponse;
 import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -75,11 +75,11 @@ class FeedbackServiceTest extends ServiceTest {
             saveFeedback(alien, eve, levellog);
 
             // when
-            final FeedbackListResponse feedbackListResponse = feedbackService.findAll(levellog.getId(),
+            final FeedbackResponses feedbackResponses = feedbackService.findAll(levellog.getId(),
                     getLoginStatus(eve));
 
             // then
-            assertThat(feedbackListResponse.getFeedbacks()).hasSize(2);
+            assertThat(feedbackResponses.getFeedbacks()).hasSize(2);
         }
 
         @Test

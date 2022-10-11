@@ -5,8 +5,8 @@ import com.woowacourse.levellog.authentication.support.PublicAPI;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponse;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionListResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponses;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,16 +38,16 @@ public class InterviewQuestionController {
 
     @GetMapping
     @PublicAPI
-    public ResponseEntity<InterviewQuestionListResponse> findAllByLevellog(@PathVariable final Long levellogId) {
-        final InterviewQuestionListResponse response = interviewQuestionService.findAllByLevellog(levellogId);
+    public ResponseEntity<InterviewQuestionResponses> findAllByLevellog(@PathVariable final Long levellogId) {
+        final InterviewQuestionResponses response = interviewQuestionService.findAllByLevellog(levellogId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<InterviewQuestionContentListResponse> findAllMyInterviewQuestion(
+    public ResponseEntity<InterviewQuestionContentResponses> findAllMyInterviewQuestion(
             @PathVariable final Long levellogId,
             @Extracted final LoginStatus loginStatus) {
-        final InterviewQuestionContentListResponse response = interviewQuestionService.findAllByLevellogAndAuthor(
+        final InterviewQuestionContentResponses response = interviewQuestionService.findAllByLevellogAndAuthor(
                 levellogId,
                 loginStatus);
         return ResponseEntity.ok(response);

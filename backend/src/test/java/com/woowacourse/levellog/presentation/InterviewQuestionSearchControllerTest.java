@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchListQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResults;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ class InterviewQuestionSearchControllerTest extends ControllerTest {
     @Test
     @DisplayName("%를 입력 한 경우 빈 값을 응답한다.")
     void searchBy_wrongInput_exception() throws Exception {
-        willReturn(InterviewQuestionSearchListQueryResult.of(new ArrayList<>(), 0L))
+        willReturn(InterviewQuestionSearchQueryResults.of(new ArrayList<>(), 0L))
                 .given(interviewQuestionService)
                 .searchByKeyword("%", LoginStatus.fromLogin(1L), 10L, 0L, "likes");
 

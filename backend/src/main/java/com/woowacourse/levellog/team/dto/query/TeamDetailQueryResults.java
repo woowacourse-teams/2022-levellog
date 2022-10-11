@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TeamDetailListQueryResult {
+public class TeamDetailQueryResults {
 
     private final List<TeamDetailQueryResult> results;
 
-    public TeamDetailListQueryResult(final List<TeamDetailQueryResult> results) {
+    public TeamDetailQueryResults(final List<TeamDetailQueryResult> results) {
         this.results = results;
     }
 

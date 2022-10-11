@@ -10,12 +10,12 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryR
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
 import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResults;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponse;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionListResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponse;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchListQueryResult;
-import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponses;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -59,7 +59,7 @@ public class InterviewQuestionService {
                 .getId();
     }
 
-    public InterviewQuestionListResponse findAllByLevellog(final Long levellogId) {
+    public InterviewQuestionResponses findAllByLevellog(final Long levellogId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final List<InterviewQuestionResponse> interviewQuestions = interviewQuestionQueryRepository.findAllByLevellog(
                         levellog)
@@ -74,27 +74,27 @@ public class InterviewQuestionService {
                 .map(it -> new InterviewQuestionResponse(it.getKey(), it.getValue()))
                 .collect(Collectors.toList());
 
-        return new InterviewQuestionListResponse(interviewQuestions);
+        return new InterviewQuestionResponses(interviewQuestions);
     }
 
-    public InterviewQuestionContentListResponse findAllByLevellogAndAuthor(final Long levellogId,
-                                                                           @Verified final LoginStatus loginStatus) {
+    public InterviewQuestionContentResponses findAllByLevellogAndAuthor(final Long levellogId,
+                                                                        @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthorId(
                 levellog, loginStatus.getMemberId());
 
-        return InterviewQuestionContentListResponse.from(interviewQuestions);
+        return InterviewQuestionContentResponses.from(interviewQuestions);
     }
 
-    public InterviewQuestionSearchListQueryResult searchByKeyword(final String keyword,
-                                                                  @Verified final LoginStatus loginStatus,
-                                                                  final Long size, final Long page, final String sort) {
+    public InterviewQuestionSearchQueryResults searchByKeyword(final String keyword,
+                                                               @Verified final LoginStatus loginStatus,
+                                                               final Long size, final Long page, final String sort) {
         final InterviewQuestionSort sortCondition = InterviewQuestionSort.valueOf(sort.toUpperCase());
         final List<InterviewQuestionSearchQueryResult> results = interviewQuestionQueryRepository.searchByKeyword(
                 keyword,
                 loginStatus, size, page, sortCondition);
 
-        return InterviewQuestionSearchListQueryResult.of(results, page);
+        return InterviewQuestionSearchQueryResults.of(results, page);
     }
 
     @Transactional

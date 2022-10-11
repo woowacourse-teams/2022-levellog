@@ -1,6 +1,5 @@
-package com.woowacourse.levellog.interviewquestion.dto.response;
+package com.woowacourse.levellog.interviewquestion.dto.query;
 
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,7 +10,10 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class InterviewQuestionListResponse {
+public class InterviewQuestionSearchQueryResult {
 
-    private List<InterviewQuestionResponse> interviewQuestions;
+    private Long id;
+    private String content;
+    private boolean like;
+    private int likeCount;
 }

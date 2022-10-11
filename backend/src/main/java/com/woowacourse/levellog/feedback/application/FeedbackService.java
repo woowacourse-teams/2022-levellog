@@ -7,8 +7,8 @@ import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackQueryRepository;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
-import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponse;
 import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
 import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException;
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -50,7 +50,7 @@ public class FeedbackService {
                 .getId();
     }
 
-    public FeedbackListResponse findAll(final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public FeedbackResponses findAll(final Long levellogId, @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
 
@@ -69,7 +69,7 @@ public class FeedbackService {
                         .append("levellogId", levellogId)));
     }
 
-    public FeedbackListResponse findAllByTo(@Verified final LoginStatus loginStatus) {
+    public FeedbackResponses findAllByTo(@Verified final LoginStatus loginStatus) {
         return feedbackQueryRepository.findAllByTo(loginStatus.getMemberId());
     }
 

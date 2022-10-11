@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.feedback.domain;
 
 import com.woowacourse.levellog.feedback.dto.request.FeedbackContentRequest;
-import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponse;
 import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +41,7 @@ public class FeedbackQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public FeedbackListResponse findAllByLevellogId(final Long levellogId) {
+    public FeedbackResponses findAllByLevellogId(final Long levellogId) {
         final String sql = "SELECT f.id feedbackId, f.study, f.speak, f.etc, f.updated_at updatedAt, "
                 + "fm.id fromId, fm.nickname fromNickname, fm.profile_url fromProfileUrl, "
                 + "tm.id toId, tm.nickname toNickname, tm.profile_url toProfileUrl "
@@ -53,10 +53,10 @@ public class FeedbackQueryRepository {
                 .addValue("levellogId", levellogId);
 
         final List<FeedbackResponse> feedbacks = jdbcTemplate.query(sql, param, feedbackRowMapper);
-        return new FeedbackListResponse(feedbacks);
+        return new FeedbackResponses(feedbacks);
     }
 
-    public FeedbackListResponse findAllByTo(final Long memberId) {
+    public FeedbackResponses findAllByTo(final Long memberId) {
         final String sql = "SELECT f.id feedbackId, f.study, f.speak, f.etc, f.updated_at updatedAt, "
                 + "fm.id fromId, fm.nickname fromNickname, fm.profile_url fromProfileUrl, "
                 + "tm.id toId, tm.nickname toNickname, tm.profile_url toProfileUrl "
@@ -68,7 +68,7 @@ public class FeedbackQueryRepository {
                 .addValue("memberId", memberId);
 
         final List<FeedbackResponse> feedbacks = jdbcTemplate.query(sql, param, feedbackRowMapper);
-        return new FeedbackListResponse(feedbacks);
+        return new FeedbackResponses(feedbacks);
     }
 
     public Optional<FeedbackResponse> findById(final Long feedbackId) {

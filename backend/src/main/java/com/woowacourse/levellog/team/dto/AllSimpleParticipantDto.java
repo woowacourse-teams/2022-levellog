@@ -16,5 +16,4 @@ public class AllSimpleParticipantDto {
     private boolean isClosed;
     private Long memberId;
     private String memberImage;
-    private LocalDateTime createdAt;
 }

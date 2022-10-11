@@ -5,6 +5,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
@@ -59,7 +60,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final String message = "같은 팀에 속해있지 않습니다.";
             willThrow(new ParticipantNotSameTeamException(DebugMessage.init()))
                     .given(preQuestionService)
-                    .save(request, 1L, 1L);
+                    .save(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreatePreQuestion(1L, request);
@@ -82,7 +83,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final String message = "잘못된 사전 질문 요청입니다.";
             willThrow(new InvalidPreQuestionException(DebugMessage.init()))
                     .given(preQuestionService)
-                    .save(request, 1L, 1L);
+                    .save(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreatePreQuestion(1L, request);
@@ -105,7 +106,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final String message = "사전 질문이 이미 존재합니다.";
             willThrow(new PreQuestionAlreadyExistException(DebugMessage.init()))
                     .given(preQuestionService)
-                    .save(request, 1L, 1L);
+                    .save(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreatePreQuestion(1L, request);
@@ -161,7 +162,7 @@ class PreQuestionControllerTest extends ControllerTest {
             willThrow(new InvalidLevellogException(DebugMessage.init()
                     .append("levellogId", 1L)))
                     .given(preQuestionService)
-                    .update(request, 1L, 1L, 1L);
+                    .update(request, 1L, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdatePreQuestion(1L, 1L, request);
@@ -184,7 +185,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final String message = "사전 질문이 존재하지 않습니다.";
             willThrow(new PreQuestionNotFoundException(DebugMessage.init()))
                     .given(preQuestionService)
-                    .update(request, 1L, 1L, 1L);
+                    .update(request, 1L, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdatePreQuestion(1L, 1L, request);
@@ -207,7 +208,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final String message = "작성자가 아닙니다.";
             willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(preQuestionService)
-                    .update(request, 1L, 1L, 1L);
+                    .update(request, 1L, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdatePreQuestion(1L, 1L, request);
@@ -240,7 +241,7 @@ class PreQuestionControllerTest extends ControllerTest {
             willThrow(new LevellogNotFoundException(DebugMessage.init()
                     .append("levellogId", 999L)))
                     .given(preQuestionService)
-                    .findMy(999L, 1L);
+                    .findMy(999L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestFindMyPreQuestion(999L);
@@ -262,7 +263,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final String message = "사전 질문이 존재하지 않습니다.";
             willThrow(new PreQuestionNotFoundException(DebugMessage.init()))
                     .given(preQuestionService)
-                    .findMy(1L, 1L);
+                    .findMy(1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestFindMyPreQuestion(1L);
@@ -296,7 +297,7 @@ class PreQuestionControllerTest extends ControllerTest {
             willThrow(new InvalidLevellogException(DebugMessage.init()
                     .append("levellogId", 1L)))
                     .given(preQuestionService)
-                    .deleteById(1L, 1L, 1L);
+                    .deleteById(1L, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeletePreQuestion(1L, 1L);
@@ -318,7 +319,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final String message = "사전 질문이 존재하지 않습니다.";
             willThrow(new PreQuestionNotFoundException(DebugMessage.init()))
                     .given(preQuestionService)
-                    .deleteById(1L, 1L, 1L);
+                    .deleteById(1L, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeletePreQuestion(1L, 1L);
@@ -340,7 +341,7 @@ class PreQuestionControllerTest extends ControllerTest {
             final String message = "작성자가 아닙니다.";
             willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(preQuestionService)
-                    .deleteById(1L, 1L, 1L);
+                    .deleteById(1L, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeletePreQuestion(1L, 1L);

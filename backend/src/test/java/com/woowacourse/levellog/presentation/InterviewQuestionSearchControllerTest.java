@@ -6,6 +6,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
@@ -25,7 +26,7 @@ class InterviewQuestionSearchControllerTest extends ControllerTest {
     void searchBy_wrongInput_exception() throws Exception {
         willReturn(InterviewQuestionSearchResultsDto.of(new ArrayList<>(), 0L))
                 .given(interviewQuestionService)
-                .searchByKeyword("%", 1L, 10L, 0L, "likes");
+                .searchByKeyword("%", LoginStatus.fromLogin(1L), 10L, 0L, "likes");
 
         // when
         final ResultActions perform = requestGet("/api/interview-questions?keyword=%&size=10&page=0&sort=likes");
@@ -45,7 +46,7 @@ class InterviewQuestionSearchControllerTest extends ControllerTest {
     void pressLike_alreadyLike_exception() throws Exception {
         willThrow(new InterviewQuestionLikesAlreadyExistException(DebugMessage.init()))
                 .given(interviewQuestionService)
-                .pressLike(1L, 1L);
+                .pressLike(1L, LoginStatus.fromLogin(1L));
 
         // when
         final ResultActions perform = requestPost("/api/interview-questions/" + 1L + "/like");
@@ -65,7 +66,7 @@ class InterviewQuestionSearchControllerTest extends ControllerTest {
     void cancelLike_notFoundInterviewQuestion_exception() throws Exception {
         willThrow(new InterviewQuestionLikeNotFoundException(DebugMessage.init()))
                 .given(interviewQuestionService)
-                .cancelLike(1L, 1L);
+                .cancelLike(1L, LoginStatus.fromLogin(1L));
 
         // when
         final ResultActions perform = requestDelete("/api/interview-questions/1/like");

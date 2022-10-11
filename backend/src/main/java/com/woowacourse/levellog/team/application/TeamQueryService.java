@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.team.application;
 
+import com.woowacourse.levellog.authentication.support.Verified;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.SimpleParticipant;
 import com.woowacourse.levellog.team.domain.SimpleParticipants;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamQueryService {
 
     private final TeamQueryRepository teamQueryRepository;
-    private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
 
     public TeamListDto findAll(final TeamFilterCondition condition, final int page, final int size) {
@@ -47,10 +46,8 @@ public class TeamQueryService {
         return new TeamListDto(teamSimpleDtos);
     }
 
-    public TeamListDto findAllByMemberId(final Long memberId) {
-        final Member member = memberRepository.getMember(memberId);
-
-        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findMyList(member);
+    public TeamListDto findAllByMemberId(@Verified final LoginStatus loginStatus) {
+        final List<AllSimpleParticipantDto> allParticipants = teamQueryRepository.findMyList(loginStatus.getMemberId());
         final List<TeamSimpleDto> teamSimpleDtos = allParticipants.stream()
                 .collect(Collectors.groupingBy(AllSimpleParticipantDto::getId, LinkedHashMap::new, Collectors.toList()))
                 .values()
@@ -61,12 +58,12 @@ public class TeamQueryService {
         return new TeamListDto(teamSimpleDtos);
     }
 
-    public TeamDetailResponse findByTeamIdAndMemberId(final Long teamId, final Long memberId) {
-        final List<AllParticipantDto> allParticipants = teamQueryRepository.findAllByTeamId(teamId, memberId);
+    public TeamDetailResponse findByTeamIdAndMemberId(final Long teamId, @Verified final LoginStatus loginStatus) {
+        final List<AllParticipantDto> allParticipants = teamQueryRepository.findAllByTeamId(teamId, loginStatus);
         if (allParticipants.isEmpty()) {
             throw new TeamNotFoundException(DebugMessage.init()
                     .append("teamId", teamId)
-                    .append("membmerId", memberId));
+                    .append("memberId", loginStatus.getMemberId()));
         }
 
         final AllParticipantDto allParticipantDto = allParticipants.get(0);
@@ -75,9 +72,11 @@ public class TeamQueryService {
         final SimpleParticipants participants = toSimpleParticipants(allParticipants);
 
         final TeamStatus status = toTeamStatus(allParticipantDto);
-        final boolean isParticipant = participants.isContains(memberId);
-        final List<Long> interviewers = participants.toInterviewerIds(memberId, teamDto.getInterviewerNumber());
-        final List<Long> interviewees = participants.toIntervieweeIds(memberId, teamDto.getInterviewerNumber());
+        final boolean isParticipant = participants.isContains(loginStatus.getMemberId());
+        final List<Long> interviewers = participants.toInterviewerIds(loginStatus.getMemberId(),
+                teamDto.getInterviewerNumber());
+        final List<Long> interviewees = participants.toIntervieweeIds(loginStatus.getMemberId(),
+                teamDto.getInterviewerNumber());
 
         return TeamDetailResponse.from(teamDto, participants.toHostId(), status, isParticipant, interviewers,
                 interviewees, toParticipantDto(allParticipants), toWatcherDtos(allParticipants));

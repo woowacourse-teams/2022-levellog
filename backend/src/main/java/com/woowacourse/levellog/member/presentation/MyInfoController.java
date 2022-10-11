@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.member.presentation;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Extracted;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
 import com.woowacourse.levellog.levellog.application.LevellogService;
@@ -30,37 +31,37 @@ public class MyInfoController {
     private final MemberService memberService;
 
     @GetMapping
-    public ResponseEntity<MemberDto> myInfo(@Authentic final Long memberId) {
-        final MemberDto memberDto = memberService.findMemberById(memberId);
+    public ResponseEntity<MemberDto> myInfo(@Extracted final LoginStatus loginStatus) {
+        final MemberDto memberDto = memberService.findMemberById(loginStatus);
 
         return ResponseEntity.ok(memberDto);
     }
 
     @GetMapping("/feedbacks")
-    public ResponseEntity<FeedbacksDto> findAllFeedbackToMe(@Authentic final Long memberId) {
-        final FeedbacksDto feedbacksResponse = feedbackService.findAllByTo(memberId);
+    public ResponseEntity<FeedbacksDto> findAllFeedbackToMe(@Extracted final LoginStatus loginStatus) {
+        final FeedbacksDto feedbacksResponse = feedbackService.findAllByTo(loginStatus);
 
         return ResponseEntity.ok(feedbacksResponse);
     }
 
     @GetMapping("/levellogs")
-    public ResponseEntity<LevellogsDto> findAllMyLevellogs(@Authentic final Long memberId) {
-        final LevellogsDto levellogsResponse = levellogService.findAllByAuthorId(memberId);
+    public ResponseEntity<LevellogsDto> findAllMyLevellogs(@Extracted final LoginStatus loginStatus) {
+        final LevellogsDto levellogsResponse = levellogService.findAllByAuthorId(loginStatus);
 
         return ResponseEntity.ok(levellogsResponse);
     }
 
     @GetMapping("/teams")
-    public ResponseEntity<TeamListDto> findAllMyTeams(@Authentic final Long memberId) {
-        final TeamListDto teamsDto = teamQueryService.findAllByMemberId(memberId);
+    public ResponseEntity<TeamListDto> findAllMyTeams(@Extracted final LoginStatus loginStatus) {
+        final TeamListDto teamsDto = teamQueryService.findAllByMemberId(loginStatus);
 
         return ResponseEntity.ok(teamsDto);
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateNickname(@Authentic final Long memberId,
+    public ResponseEntity<Void> updateNickname(@Extracted final LoginStatus loginStatus,
                                                @RequestBody @Valid final NicknameUpdateDto request) {
-        memberService.updateNickname(request, memberId);
+        memberService.updateNickname(request, loginStatus);
 
         return ResponseEntity.noContent().build();
     }

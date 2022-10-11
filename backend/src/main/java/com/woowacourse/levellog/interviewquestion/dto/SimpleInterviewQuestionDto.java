@@ -1,18 +1,15 @@
-package com.woowacourse.levellog.levellog.dto;
+package com.woowacourse.levellog.interviewquestion.dto;
 
 import com.woowacourse.levellog.member.dto.MemberDto;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LevellogDto {
+public class SimpleInterviewQuestionDto {
 
     private MemberDto author;
-    private String content;
+    private InterviewQuestionContentDto content;
 }

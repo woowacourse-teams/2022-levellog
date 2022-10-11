@@ -1,7 +1,8 @@
 package com.woowacourse.levellog.team.presentation;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Extracted;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
@@ -34,8 +35,8 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid final TeamWriteDto teamDto,
-                                     @Authentic final Long memberId) {
-        final Long teamId = teamService.save(teamDto, memberId);
+                                     @Extracted final LoginStatus loginStatus) {
+        final Long teamId = teamService.save(teamDto, loginStatus);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId)).build();
     }
 
@@ -52,8 +53,8 @@ public class TeamController {
     @GetMapping("/{teamId}")
     @PublicAPI
     public ResponseEntity<TeamDetailResponse> findById(@PathVariable final Long teamId,
-                                                       @Authentic final Long memberId) {
-        final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(teamId, memberId);
+                                            @Extracted final LoginStatus loginStatus) {
+        final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(teamId, loginStatus);
         return ResponseEntity.ok(response);
     }
 
@@ -67,29 +68,30 @@ public class TeamController {
     @GetMapping("/{teamId}/members/{targetMemberId}/my-role")
     public ResponseEntity<InterviewRoleDto> findMyRole(@PathVariable final Long teamId,
                                                        @PathVariable final Long targetMemberId,
-                                                       @Authentic final Long memberId) {
-        final InterviewRoleDto response = teamService.findMyRole(teamId, targetMemberId, memberId);
+                                                       @Extracted final LoginStatus loginStatus) {
+        final InterviewRoleDto response = teamService.findMyRole(teamId, targetMemberId, loginStatus);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{teamId}")
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @RequestBody @Valid final TeamWriteDto request,
-                                       @Authentic final Long memberId) {
-        teamService.update(request, teamId, memberId);
+                                       @Extracted final LoginStatus loginStatus) {
+        teamService.update(request, teamId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{teamId}/close")
     public ResponseEntity<Void> close(@PathVariable final Long teamId,
-                                      @Authentic final Long memberId) {
-        teamService.close(teamId, memberId);
+                                      @Extracted final LoginStatus loginStatus) {
+        teamService.close(teamId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{teamId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long teamId, @Authentic final Long memberId) {
-        teamService.deleteById(teamId, memberId);
+    public ResponseEntity<Void> delete(@PathVariable final Long teamId,
+                                       @Extracted final LoginStatus loginStatus) {
+        teamService.deleteById(teamId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 }

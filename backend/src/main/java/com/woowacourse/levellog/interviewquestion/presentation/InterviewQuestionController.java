@@ -1,7 +1,8 @@
 package com.woowacourse.levellog.interviewquestion.presentation;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Extracted;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
 import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
@@ -29,8 +30,8 @@ public class InterviewQuestionController {
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long levellogId,
                                      @RequestBody @Valid final InterviewQuestionWriteDto request,
-                                     @Authentic final Long memberId) {
-        final Long interviewQuestionId = interviewQuestionService.save(request, levellogId, memberId);
+                                     @Extracted final LoginStatus loginStatus) {
+        final Long interviewQuestionId = interviewQuestionService.save(request, levellogId, loginStatus);
         return ResponseEntity.created(
                 URI.create("/api/levellogs/" + levellogId + "/interview-questions/" + interviewQuestionId)).build();
     }
@@ -44,9 +45,9 @@ public class InterviewQuestionController {
 
     @GetMapping("/my")
     public ResponseEntity<InterviewQuestionContentsDto> findAllMyInterviewQuestion(@PathVariable final Long levellogId,
-                                                                                   @Authentic final Long memberId) {
+                                                                                   @Extracted final LoginStatus loginStatus) {
         final InterviewQuestionContentsDto response = interviewQuestionService.findAllByLevellogAndAuthor(levellogId,
-                memberId);
+                loginStatus);
         return ResponseEntity.ok(response);
     }
 
@@ -54,16 +55,16 @@ public class InterviewQuestionController {
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
                                        @PathVariable final Long interviewQuestionId,
                                        @RequestBody @Valid final InterviewQuestionWriteDto request,
-                                       @Authentic final Long memberId) {
-        interviewQuestionService.update(request, interviewQuestionId, memberId);
+                                       @Extracted final LoginStatus loginStatus) {
+        interviewQuestionService.update(request, interviewQuestionId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{interviewQuestionId}")
     public ResponseEntity<Void> deleteById(@PathVariable final Long levellogId,
                                            @PathVariable final Long interviewQuestionId,
-                                           @Authentic final Long memberId) {
-        interviewQuestionService.deleteById(interviewQuestionId, memberId);
+                                           @Extracted final LoginStatus loginStatus) {
+        interviewQuestionService.deleteById(interviewQuestionId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 }

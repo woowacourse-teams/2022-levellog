@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.team.application;
 
+import com.woowacourse.levellog.authentication.support.Verified;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
@@ -36,11 +38,11 @@ public class TeamService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final TeamWriteDto request, final Long hostId) {
-        final Member host = memberRepository.getMember(hostId);
+    public Long save(final TeamWriteDto request, @Verified final LoginStatus loginStatus) {
+        final Member host = memberRepository.getMember(loginStatus.getMemberId());
         final Team team = request.toEntity(host.getProfileUrl());
-        final Participants participants = createParticipants(team, hostId, request.getParticipantIds(),
-                request.getWatcherIds());
+        final Participants participants = createParticipants(team, loginStatus.getMemberId(),
+                request.getParticipantIds(), request.getWatcherIds());
         team.validParticipantNumber(participants.size());
 
         final Team savedTeam = teamRepository.save(team);
@@ -56,40 +58,41 @@ public class TeamService {
         return new TeamStatusDto(status);
     }
 
-    public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId, final Long memberId) {
+    public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId,
+                                       @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
-        final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId, memberId,
-                team.getInterviewerNumber());
+        final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId,
+                loginStatus.getMemberId(), team.getInterviewerNumber());
 
         return InterviewRoleDto.from(interviewRole);
     }
 
     @Transactional
-    public void update(final TeamWriteDto request, final Long teamId, final Long memberId) {
+    public void update(final TeamWriteDto request, final Long teamId, @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeam(teamId);
-        validateHostAuthorization(memberId, team);
+        validateHostAuthorization(loginStatus.getMemberId(), team);
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
 
-        final Participants participants = createParticipants(team, memberId, request.getParticipantIds(),
-                request.getWatcherIds());
+        final Participants participants = createParticipants(team, loginStatus.getMemberId(),
+                request.getParticipantIds(), request.getWatcherIds());
         team.validParticipantNumber(participants.size());
         participantRepository.deleteByTeam(team);
         participantRepository.saveAll(participants.getValues());
     }
 
     @Transactional
-    public void close(final Long teamId, final Long memberId) {
+    public void close(final Long teamId, @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeam(teamId);
-        validateHostAuthorization(memberId, team);
+        validateHostAuthorization(loginStatus.getMemberId(), team);
 
         team.close(timeStandard.now());
     }
 
     @Transactional
-    public void deleteById(final Long teamId, final Long memberId) {
+    public void deleteById(final Long teamId, @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeam(teamId);
-        validateHostAuthorization(memberId, team);
+        validateHostAuthorization(loginStatus.getMemberId(), team);
 
         participantRepository.deleteByTeam(team);
         team.delete(timeStandard.now());

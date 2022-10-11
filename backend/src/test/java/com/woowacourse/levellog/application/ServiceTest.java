@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
@@ -123,6 +124,10 @@ abstract class ServiceTest {
         timeStandard.setBeforeStarted();
     }
 
+    protected LoginStatus getLoginStatus(final Member member) {
+        return LoginStatus.fromLogin(member.getId());
+    }
+
     protected Member saveMember(final String nickname) {
         final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".org");
         return memberRepository.save(member);
@@ -185,27 +190,27 @@ abstract class ServiceTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team, final String content) {
-        final Levellog levellog = Levellog.of(author, team, content);
+        final Levellog levellog = Levellog.of(author.getId(), team, content);
         return levellogRepository.save(levellog);
     }
 
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
         final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(content);
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
+        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author.getId(), levellog);
         return interviewQuestionRepository.save(interviewQuestion);
     }
 
     @Transactional
     protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
                                                                 final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker);
+        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker.getId());
         interviewQuestion.upLike();
         return interviewQuestionLikesRepository.save(interviewQuestionLikes);
     }
 
     protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {
-        final Feedback feedback = new Feedback(from, to, levellog, "study from " + from.getNickname(),
+        final Feedback feedback = new Feedback(from.getId(), levellog, "study from " + from.getNickname(),
                 "speak from " + from.getNickname(), "etc from " + from.getNickname());
         return feedbackRepository.save(feedback);
     }
@@ -215,7 +220,7 @@ abstract class ServiceTest {
     }
 
     protected PreQuestion savePreQuestion(final Levellog levellog, final Member author, final String content) {
-        final PreQuestion preQuestion = new PreQuestion(levellog, author, content);
+        final PreQuestion preQuestion = new PreQuestion(levellog, author.getId(), content);
         return preQuestionRepository.save(preQuestion);
     }
 }

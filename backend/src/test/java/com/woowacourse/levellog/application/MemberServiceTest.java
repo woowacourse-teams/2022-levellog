@@ -12,7 +12,6 @@ import com.woowacourse.levellog.member.dto.MemberDto;
 import com.woowacourse.levellog.member.dto.MembersDto;
 import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
 import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -47,14 +46,14 @@ class MemberServiceTest extends ServiceTest {
     @DisplayName("updateNickname 메서드는 닉네임을 업데이트한다.")
     void updateNickname() {
         // given
-        final Long memberId = saveMember("로마").getId();
+        final Member roma = saveMember("로마");
         final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto("알린");
 
         // when
-        memberService.updateNickname(nicknameUpdateDto, memberId);
+        memberService.updateNickname(nicknameUpdateDto, getLoginStatus(roma));
 
         // then
-        final Member updateMember = memberRepository.findById(memberId)
+        final Member updateMember = memberRepository.findById(roma.getId())
                 .orElseThrow();
         assertThat(updateMember.getNickname()).isEqualTo("알린");
     }
@@ -123,7 +122,7 @@ class MemberServiceTest extends ServiceTest {
             final Member roma = saveMember("로마");
 
             // when
-            final MemberDto memberDto = memberService.findMemberById(roma.getId());
+            final MemberDto memberDto = memberService.findMemberById(getLoginStatus(roma));
 
             // then
             assertAll(
@@ -131,16 +130,6 @@ class MemberServiceTest extends ServiceTest {
                     () -> assertThat(memberDto.getNickname()).isEqualTo("로마")
             );
         }
-
-        @Test
-        @DisplayName("존재하지 않는 Id로 요청을 보낼 경우 예외를 던진다.")
-        void findMemberById_memberNotFound_exception() {
-            // when & then
-            assertThatThrownBy(() -> memberService.findMemberById(1000L))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", "1000");
-        }
-
     }
 
     @Nested

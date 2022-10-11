@@ -4,15 +4,9 @@ import axios, { AxiosPromise } from 'axios';
 import { NotAccessTokenRemoveHeader } from 'apis/utils';
 import { TeamApiType, InterviewTeamType, InterviewTeamDetailType } from 'types/team';
 
-export const requestPostTeam = ({
-  teamInfo,
-  accessToken,
-}: Omit<TeamApiType, 'teamId'>): AxiosPromise<void> => {
-  return axios({
-    method: 'post',
+export const requestPostTeam = async ({ teamInfo, accessToken }: Omit<TeamApiType, 'teamId'>) => {
+  await fetcher.post('/teams', teamInfo, {
     headers: { Authorization: `Bearer ${accessToken}` },
-    url: `${process.env.API_URI}/teams`,
-    data: teamInfo,
   });
 };
 
@@ -29,37 +23,26 @@ export const requestGetTeams = async ({
   return data;
 };
 
-export const requestGetTeam = ({
+export const requestGetTeam = async ({
   teamId,
   accessToken,
-}: Omit<TeamApiType, 'teamInfo'>): AxiosPromise<InterviewTeamDetailType> => {
-  return axios(
-    NotAccessTokenRemoveHeader({
-      accessToken,
-      method: 'get',
-      url: `${process.env.API_URI}/teams/${teamId}`,
-      headers: { Authorization: `Bearer ${accessToken}` },
-    }),
-  );
+}: Omit<TeamApiType, 'teamInfo'>): Promise<InterviewTeamDetailType> => {
+  const { data } = await fetcher.get(`/teams/${teamId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  return data;
 };
 
-export const requestEditTeam = ({ teamId, teamInfo, accessToken }: TeamApiType) => {
-  return axios({
-    method: 'put',
+export const requestEditTeam = async ({ teamId, teamInfo, accessToken }: TeamApiType) => {
+  await fetcher.put(`/teams/${teamId}`, teamInfo, {
     headers: { Authorization: `Bearer ${accessToken}` },
-    url: `${process.env.API_URI}/teams/${teamId}`,
-    data: teamInfo,
   });
 };
 
-export const requestDeleteTeam = ({
-  teamId,
-  accessToken,
-}: Omit<TeamApiType, 'teamInfo'>): AxiosPromise<void> => {
-  return axios({
-    method: 'delete',
+export const requestDeleteTeam = async ({ teamId, accessToken }: Omit<TeamApiType, 'teamInfo'>) => {
+  await fetcher.delete(`/teams/${teamId}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
-    url: `${process.env.API_URI}/teams/${teamId}`,
   });
 };
 

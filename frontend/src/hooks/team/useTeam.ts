@@ -36,17 +36,9 @@ const useTeam = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
-  useQuery(
-    [QUERY_KEY.MEMBERS],
-    () => {
-      return requestGetMembers({ accessToken, nickname: '' });
-    },
-    {
-      onSuccess: (res) => {
-        // setMembers(res.data.members);
-      },
-    },
-  );
+  useQuery([QUERY_KEY.MEMBERS], () => {
+    return requestGetMembers({ accessToken, nickname: '' });
+  });
 
   const { data: teamInfo, mutate: getTeam } = useMutation(
     () => {
@@ -54,9 +46,9 @@ const useTeam = () => {
     },
     {
       onSuccess: (res) => {
-        teamInfoDispatch(res.data);
+        teamInfoDispatch(res);
         setParticipants(
-          res.data.participants.map((participant) => {
+          res.participants.map((participant) => {
             return {
               id: participant.memberId,
               nickname: participant.nickname,
@@ -65,7 +57,7 @@ const useTeam = () => {
           }),
         );
         setWatchers(
-          res.data.watchers.map((watcher) => {
+          res.watchers.map((watcher) => {
             return {
               id: watcher.memberId,
               nickname: watcher.nickname,

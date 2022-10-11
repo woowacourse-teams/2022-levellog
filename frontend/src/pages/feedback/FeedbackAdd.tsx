@@ -7,6 +7,8 @@ import useRole from 'hooks/useRole';
 import useContentTag from 'hooks/utils/useContentTag';
 import usePreventGoBack from 'hooks/utils/usePreventGoBack';
 
+import Loading from 'pages/status/Loading';
+
 import BottomBar from 'components/@commons/BottomBar';
 import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
@@ -38,11 +40,13 @@ const FeedbackAdd = () => {
               {feedbackWriterRole === 'INTERVIEWER' && <S.RoleContent>{'인터뷰어'}</S.RoleContent>}
               {feedbackWriterRole === 'INTERVIEWEE' && <S.RoleContent>{'인터뷰이'}</S.RoleContent>}
             </FlexBox>
-            <WriterDocument
-              whichContentShow={whichContentShow}
-              handleClickLevellogTag={handleClickLevellogTag}
-              handleClickPreQuestionTag={handleClickPreQuestionTag}
-            />
+            <Suspense fallback={<Loading />}>
+              <WriterDocument
+                whichContentShow={whichContentShow}
+                handleClickLevellogTag={handleClickLevellogTag}
+                handleClickPreQuestionTag={handleClickPreQuestionTag}
+              />
+            </Suspense>
           </S.LeftContent>
           <S.RightContent>
             <S.QuestionContent>

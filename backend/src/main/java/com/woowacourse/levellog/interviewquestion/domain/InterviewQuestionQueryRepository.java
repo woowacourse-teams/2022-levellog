@@ -26,6 +26,7 @@ public class InterviewQuestionQueryRepository {
             resultSet.getBoolean("press"),
             resultSet.getInt("likeCount")
     );
+
     private final RowMapper<SimpleInterviewQuestionDto> interviewQuestionRowMapper = (resultSet, rowNum) -> new SimpleInterviewQuestionDto(
             new MemberDto(
                     resultSet.getObject("authorId", Long.class),

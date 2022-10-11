@@ -1,9 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
 
 import { requestGetMembers } from 'apis/member';
-import { MemberDispatchContext } from 'contexts/memberContext';
+import { requestGetTeam } from 'apis/teams';
+import { MemberContext, MemberDispatchContext } from 'contexts/memberContext';
 import { MembersCustomHookType, MemberType } from 'types/member';
 import { debounce } from 'utils/util';
 
@@ -18,6 +20,7 @@ const useMember = () => {
   const [participantNicknameValue, setParticipantNicknameValue] = useState('');
 
   const participantAndWatcherDispatch = useContext(MemberDispatchContext);
+  const { teamId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
 
@@ -27,7 +30,33 @@ const useMember = () => {
       .filter((member) => watchers.every((watcher) => watcher.id !== member.id));
   };
 
-  const { data: members, mutate: getMembers } = useMutation(
+  const { mutateAsync: getTeam } = useMutation(
+    () => {
+      return requestGetTeam({ accessToken, teamId });
+    },
+    {
+      onSuccess: (res) => {
+        const participants = res.participants.map((participant) => {
+          return {
+            id: participant.memberId,
+            nickname: participant.nickname,
+            profileUrl: participant.profileUrl,
+          };
+        });
+        const watchers = res.watchers.map((watcher) => {
+          return {
+            id: watcher.memberId,
+            nickname: watcher.nickname,
+            profileUrl: watcher.profileUrl,
+          };
+        });
+        setWatchers(watchers);
+        setParticipants(participants);
+      },
+    },
+  );
+
+  const { data: members, mutateAsync: getMembers } = useMutation(
     () => {
       return requestGetMembers({ accessToken, nickname: '' });
     },
@@ -105,6 +134,9 @@ const useMember = () => {
   }, [participants, watchers]);
 
   useEffect(() => {
+    if (teamId) {
+      getTeam();
+    }
     getMembers();
   }, []);
 

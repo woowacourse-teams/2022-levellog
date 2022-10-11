@@ -42,17 +42,6 @@ const useTeamAdd = () => {
     },
   );
 
-  const handleClickTeamAddButton = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    if (validateTeamInfo()) {
-      postTeam({ teamInfo: convertTeamInfoFormat() });
-
-      return;
-    }
-    showSnackbar({ message: MESSAGE.INTERVIEW_HOLE_VALUE_VALIDATE });
-  };
-
   const validateTeamInfo = () => {
     const [title, place, date, time, interviewerNumber] = teamInfoRef.current;
 
@@ -84,6 +73,17 @@ const useTeamAdd = () => {
     };
 
     return teamInfo;
+  };
+
+  const handleClickTeamAddButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (validateTeamInfo()) {
+      postTeam({ teamInfo: convertTeamInfoFormat() });
+
+      return;
+    }
+    showSnackbar({ message: MESSAGE.INTERVIEW_HOLE_VALUE_VALIDATE });
   };
 
   return {

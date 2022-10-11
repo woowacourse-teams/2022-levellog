@@ -44,12 +44,12 @@ public class Feedback extends BaseEntity {
     @Column(length = FEEDBACK_CONTENT_MAX_LENGTH)
     private String etc;
 
-    public Feedback(final Long fromId, final Long toId, final Levellog levellog, final String study, final String speak,
+    public Feedback(final Long fromId, final Levellog levellog, final String study, final String speak,
                     final String etc) {
         validateFeedback(study, speak, etc);
 
         this.fromId = fromId;
-        this.toId = toId;
+        this.toId = levellog.getAuthorId();
         this.levellog = levellog;
         this.study = study;
         this.speak = speak;

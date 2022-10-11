@@ -25,7 +25,7 @@ public class FeedbackWriteDto {
     }
 
     public Feedback toEntity(final Long fromId, final Levellog levellog) {
-        return new Feedback(fromId, levellog.getAuthorId(), levellog, feedback.getStudy(), feedback.getSpeak(),
+        return new Feedback(fromId, levellog, feedback.getStudy(), feedback.getSpeak(),
                 feedback.getEtc());
     }
 }

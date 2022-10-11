@@ -1,7 +1,7 @@
 package com.woowacourse.levellog.authentication.config;
 
 import com.woowacourse.levellog.authentication.support.AuthorizationExtractor;
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Extracted;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ public class LoginStatusResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(Authentic.class);
+        return parameter.hasParameterAnnotation(Extracted.class);
     }
 
     @Override

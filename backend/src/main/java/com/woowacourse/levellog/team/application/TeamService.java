@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.team.application;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
@@ -38,7 +38,7 @@ public class TeamService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final TeamWriteDto request, @Authentic final LoginStatus loginStatus) {
+    public Long save(final TeamWriteDto request, @Verified final LoginStatus loginStatus) {
         final Member host = memberRepository.getMember(loginStatus.getMemberId());
         final Team team = request.toEntity(host.getProfileUrl());
         final Participants participants = createParticipants(team, loginStatus.getMemberId(),
@@ -59,7 +59,7 @@ public class TeamService {
     }
 
     public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId,
-                                       @Authentic final LoginStatus loginStatus) {
+                                       @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeam(teamId);
         final Participants participants = new Participants(participantRepository.findByTeam(team));
         final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId,
@@ -69,7 +69,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void update(final TeamWriteDto request, final Long teamId, @Authentic final LoginStatus loginStatus) {
+    public void update(final TeamWriteDto request, final Long teamId, @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeam(teamId);
         validateHostAuthorization(loginStatus.getMemberId(), team);
         team.update(request.toEntity(team.getProfileUrl()), timeStandard.now());
@@ -82,7 +82,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void close(final Long teamId, @Authentic final LoginStatus loginStatus) {
+    public void close(final Long teamId, @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeam(teamId);
         validateHostAuthorization(loginStatus.getMemberId(), team);
 
@@ -90,7 +90,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void deleteById(final Long teamId, @Authentic final LoginStatus loginStatus) {
+    public void deleteById(final Long teamId, @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeam(teamId);
         validateHostAuthorization(loginStatus.getMemberId(), team);
 

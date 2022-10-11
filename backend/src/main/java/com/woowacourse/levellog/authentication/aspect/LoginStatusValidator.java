@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.authentication.aspect;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import java.util.Arrays;
@@ -20,7 +20,7 @@ public class LoginStatusValidator {
     @Before("execution(* com.woowacourse.levellog..*.application..*(..))")
     public void validateMemberId(final JoinPoint joinPoint) {
         Arrays.stream(joinPoint.getArgs())
-                .filter(this::isAuthentic)
+                .filter(this::isVerified)
                 .map(this::castToLoginStatus)
                 .filter(LoginStatus::isLogin)
                 .map(LoginStatus::getMemberId)
@@ -28,8 +28,8 @@ public class LoginStatusValidator {
                 .ifPresent(memberRepository::getMember);
     }
 
-    private boolean isAuthentic(final Object parameter) {
-        return parameter.getClass().isAnnotationPresent(Authentic.class);
+    private boolean isVerified(final Object parameter) {
+        return parameter.getClass().isAnnotationPresent(Verified.class);
     }
 
     private LoginStatus castToLoginStatus(final Object parameter) {

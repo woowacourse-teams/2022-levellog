@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.interviewquestion.application;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
@@ -45,7 +45,7 @@ public class InterviewQuestionService {
 
     @Transactional
     public Long save(final InterviewQuestionWriteDto request, final Long levellogId,
-                     @Authentic final LoginStatus loginStatus) {
+                     @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
@@ -78,7 +78,7 @@ public class InterviewQuestionService {
     }
 
     public InterviewQuestionContentsDto findAllByLevellogAndAuthor(final Long levellogId,
-                                                                   @Authentic final LoginStatus loginStatus) {
+                                                                   @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthorId(
                 levellog, loginStatus.getMemberId());
@@ -87,7 +87,7 @@ public class InterviewQuestionService {
     }
 
     public InterviewQuestionSearchResultsDto searchByKeyword(final String keyword,
-                                                             @Authentic final LoginStatus loginStatus,
+                                                             @Verified final LoginStatus loginStatus,
                                                              final Long size, final Long page, final String sort) {
         final InterviewQuestionSort sortCondition = InterviewQuestionSort.valueOf(sort.toUpperCase());
         final List<InterviewQuestionSearchResultDto> results = interviewQuestionQueryRepository.searchByKeyword(keyword,
@@ -98,7 +98,7 @@ public class InterviewQuestionService {
 
     @Transactional
     public void update(final InterviewQuestionWriteDto request, final Long interviewQuestionId,
-                       @Authentic final LoginStatus loginStatus) {
+                       @Verified final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
 
@@ -110,7 +110,7 @@ public class InterviewQuestionService {
     }
 
     @Transactional
-    public void deleteById(final Long interviewQuestionId, @Authentic final LoginStatus loginStatus) {
+    public void deleteById(final Long interviewQuestionId, @Verified final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
 
@@ -123,7 +123,7 @@ public class InterviewQuestionService {
     }
 
     @Transactional
-    public void pressLike(final Long interviewQuestionId, @Authentic final LoginStatus loginStatus) {
+    public void pressLike(final Long interviewQuestionId, @Verified final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
         validateAlreadyExist(interviewQuestionId, loginStatus.getMemberId());
@@ -133,7 +133,7 @@ public class InterviewQuestionService {
     }
 
     @Transactional
-    public void cancelLike(final Long interviewQuestionId, @Authentic final LoginStatus loginStatus) {
+    public void cancelLike(final Long interviewQuestionId, @Verified final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
         final InterviewQuestionLikes interviewQuestionLikes = getInterviewQuestionLikes(interviewQuestion,

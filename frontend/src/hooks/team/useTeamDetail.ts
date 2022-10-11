@@ -83,7 +83,7 @@ const useTeamDetail = () => {
   };
 
   return {
-    team: team?.data,
+    team,
     getTeam,
     handleClickDeleteTeamButton,
     handleClickCloseTeamInterviewButton,

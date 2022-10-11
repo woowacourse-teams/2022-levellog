@@ -21,8 +21,7 @@ public class TeamQueryRepository {
             resultSet.getString("teamProfileUrl"),
             resultSet.getBoolean("is_closed"),
             resultSet.getObject("memberId", Long.class),
-            resultSet.getString("profile_url"),
-            resultSet.getObject("created_at", LocalDateTime.class)
+            resultSet.getString("profile_url")
     );
     private final RowMapper<AllParticipantDto> detailRowMapper = (resultSet, rowNumber) -> new AllParticipantDto(
             resultSet.getObject("teamId", Long.class),
@@ -47,7 +46,7 @@ public class TeamQueryRepository {
 
     public List<AllSimpleParticipantDto> findAllList(final boolean isClosed, final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
-                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
+                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, "
                 + "m.id memberId, m.profile_url "
                 + "FROM "
                     + "(SELECT * "

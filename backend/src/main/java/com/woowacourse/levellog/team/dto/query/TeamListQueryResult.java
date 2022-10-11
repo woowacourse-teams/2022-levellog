@@ -7,11 +7,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AllTeamListQueryResult {
+public class TeamListQueryResult {
 
-    private final List<AllTeamListDetailQueryResult> results;
+    private final List<TeamListDetailQueryResult> results;
 
-    public AllTeamListQueryResult(final List<AllTeamListDetailQueryResult> results) {
+    public TeamListQueryResult(final List<TeamListDetailQueryResult> results) {
         this.results = results;
     }
 
@@ -19,7 +19,7 @@ public class AllTeamListQueryResult {
     public TeamListResponse toResponse(final LocalDateTime now) {
         return results.stream()
                 .collect(Collectors.groupingBy(
-                        AllTeamListDetailQueryResult::getId,
+                        TeamListDetailQueryResult::getId,
                         LinkedHashMap::new,
                         Collectors.toList()))
                 .values()

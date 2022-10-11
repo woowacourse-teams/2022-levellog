@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.dto.LoginStatus;
-import com.woowacourse.levellog.team.dto.query.AllTeamDetailQueryResult;
-import com.woowacourse.levellog.team.dto.query.AllTeamListDetailQueryResult;
+import com.woowacourse.levellog.team.dto.query.TeamDetailQueryResult;
+import com.woowacourse.levellog.team.dto.query.TeamListDetailQueryResult;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public class TeamQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMapper<AllTeamListDetailQueryResult> simpleRowMapper = (resultSet, rowNumber) -> new AllTeamListDetailQueryResult(
+    private final RowMapper<TeamListDetailQueryResult> simpleRowMapper = (resultSet, rowNumber) -> new TeamListDetailQueryResult(
             resultSet.getLong("teamId"),
             resultSet.getString("title"),
             resultSet.getString("place"),
@@ -26,7 +26,7 @@ public class TeamQueryRepository {
             resultSet.getLong("memberId"),
             resultSet.getString("profile_url")
     );
-    private final RowMapper<AllTeamDetailQueryResult> detailRowMapper = (resultSet, rowNumber) -> new AllTeamDetailQueryResult(
+    private final RowMapper<TeamDetailQueryResult> detailRowMapper = (resultSet, rowNumber) -> new TeamDetailQueryResult(
             resultSet.getLong("teamId"),
             resultSet.getString("title"),
             resultSet.getString("place"),
@@ -47,7 +47,7 @@ public class TeamQueryRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<AllTeamListDetailQueryResult> findAllList(final boolean isClosed, final int limit, final int offset) {
+    public List<TeamListDetailQueryResult> findAllList(final boolean isClosed, final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, "
                 + "m.id memberId, m.profile_url "
@@ -68,7 +68,7 @@ public class TeamQueryRepository {
         return jdbcTemplate.query(sql, param, simpleRowMapper);
     }
 
-    public List<AllTeamDetailQueryResult> findAllByTeamId(final Long teamId, final LoginStatus loginStatus) {
+    public List<TeamDetailQueryResult> findAllByTeamId(final Long teamId, final LoginStatus loginStatus) {
         final String sql = "SELECT "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.interviewer_number, t.is_closed, "
                 + "m.id memberId, l.id levellogId, m.nickname, m.profile_url, p.is_host, p.is_watcher "
@@ -105,7 +105,7 @@ public class TeamQueryRepository {
         return ", NULL preQuestionId ";
     }
 
-    public List<AllTeamListDetailQueryResult> findMyList(final Long memberId) {
+    public List<TeamListDetailQueryResult> findMyList(final Long memberId) {
         final String sql = "SELECT "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
                 + "m.id memberId, m.profile_url "

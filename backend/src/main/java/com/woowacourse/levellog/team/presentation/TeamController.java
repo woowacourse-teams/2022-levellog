@@ -53,7 +53,7 @@ public class TeamController {
     @GetMapping("/{teamId}")
     @PublicAPI
     public ResponseEntity<TeamDetailResponse> findById(@PathVariable final Long teamId,
-                                            @Extracted final LoginStatus loginStatus) {
+                                                       @Extracted final LoginStatus loginStatus) {
         final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(teamId, loginStatus);
         return ResponseEntity.ok(response);
     }

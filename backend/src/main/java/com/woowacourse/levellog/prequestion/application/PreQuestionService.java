@@ -30,7 +30,8 @@ public class PreQuestionService {
     private final ParticipantRepository participantRepository;
 
     @Transactional
-    public Long save(final PreQuestionWriteRequest request, final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public Long save(final PreQuestionWriteRequest request, final Long levellogId,
+                     @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 
         validatePreQuestionExistence(levellog, loginStatus.getMemberId());
@@ -47,8 +48,6 @@ public class PreQuestionService {
                 .orElseThrow(() -> new PreQuestionNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)
                         .append("memberId", loginStatus.getMemberId())));
-
-        return PreQuestionResponse.from(questioner, preQuestion.getContent());
     }
 
     @Transactional

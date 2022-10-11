@@ -31,8 +31,4 @@ public class FeedbackContentRequest {
     public static FeedbackContentRequest from(final Feedback feedback) {
         return new FeedbackContentRequest(feedback.getStudy(), feedback.getSpeak(), feedback.getEtc());
     }
-
-    public Feedback toFeedback(final Member member, final Levellog levellog) {
-        return new Feedback(member, levellog.getAuthor(), levellog, study, speak, etc);
-    }
 }

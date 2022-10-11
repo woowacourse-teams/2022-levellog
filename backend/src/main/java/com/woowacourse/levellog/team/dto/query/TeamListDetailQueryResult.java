@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AllTeamListDetailQueryResult {
+public class TeamListDetailQueryResult {
 
     private Long id;
     private String title;

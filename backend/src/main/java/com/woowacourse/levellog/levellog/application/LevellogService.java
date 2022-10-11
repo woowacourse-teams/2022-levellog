@@ -43,9 +43,9 @@ public class LevellogService {
     }
 
     public LevellogResponse findById(final Long levellogId) {
-        final Levellog levellog = getById(levellogId);
-
-        return LevellogResponse.from(levellog);
+        return levellogQueryRepository.findById(levellogId)
+                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
+                        .append("levellogId", levellogId)));
     }
 
     public LevellogListResponse findAllByAuthorId(@Verified final LoginStatus loginStatus) {
@@ -58,7 +58,8 @@ public class LevellogService {
     }
 
     @Transactional
-    public void update(final LevellogWriteRequest request, final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public void update(final LevellogWriteRequest request, final Long levellogId,
+                       @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         levellog.getTeam().validateReady(timeStandard.now());
 

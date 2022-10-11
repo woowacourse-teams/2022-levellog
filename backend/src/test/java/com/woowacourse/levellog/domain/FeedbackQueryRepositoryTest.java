@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import com.woowacourse.levellog.feedback.domain.Feedback;
-import com.woowacourse.levellog.feedback.dto.FeedbackDto;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
@@ -32,7 +32,7 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
         saveFeedback(rick, toMember, levellog);
 
         // when
-        final List<FeedbackDto> feedbacks = feedbackQueryRepository.findAllByLevellogId(levellog.getId())
+        final List<FeedbackResponse> feedbacks = feedbackQueryRepository.findAllByLevellogId(levellog.getId())
                 .getFeedbacks();
 
         // then
@@ -63,7 +63,7 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
         feedbackRepository.flush();
 
         // when
-        final List<FeedbackDto> feedbacks = feedbackQueryRepository.findAllByTo(toMember.getId())
+        final List<FeedbackResponse> feedbacks = feedbackQueryRepository.findAllByTo(toMember.getId())
                 .getFeedbacks();
 
         // then
@@ -93,7 +93,7 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
             final Feedback feedback = saveFeedback(eve, toMember, levellog);
 
             // when
-            final Optional<FeedbackDto> actual = feedbackQueryRepository.findById(feedback.getId());
+            final Optional<FeedbackResponse> actual = feedbackQueryRepository.findById(feedback.getId());
 
             // then
             assertThat(actual).isNotEmpty()
@@ -109,7 +109,7 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
             final Long feedbackId = 999L;
 
             // when
-            final Optional<FeedbackDto> actual = feedbackQueryRepository.findById(feedbackId);
+            final Optional<FeedbackResponse> actual = feedbackQueryRepository.findById(feedbackId);
 
             // then
             assertThat(actual).isEmpty();

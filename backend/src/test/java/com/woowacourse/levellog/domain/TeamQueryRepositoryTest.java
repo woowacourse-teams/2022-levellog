@@ -9,8 +9,8 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.dto.query.AllTeamDetailQueryResult;
-import com.woowacourse.levellog.team.dto.query.AllTeamListDetailQueryResult;
+import com.woowacourse.levellog.team.dto.query.TeamDetailQueryResult;
+import com.woowacourse.levellog.team.dto.query.TeamListDetailQueryResult;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -44,7 +44,8 @@ class TeamQueryRepositoryTest extends RepositoryTest {
             final LoginStatus loginStatus = LoginStatus.fromLogin(roma.getId());
 
             // when
-            final List<AllTeamDetailQueryResult> actual = teamQueryRepository.findAllByTeamId(team.getId(), loginStatus);
+            final List<TeamDetailQueryResult> actual = teamQueryRepository.findAllByTeamId(team.getId(),
+                    loginStatus);
 
             // then
             assertThat(actual).hasSize(4)
@@ -78,7 +79,8 @@ class TeamQueryRepositoryTest extends RepositoryTest {
             final LoginStatus loginStatus = LoginStatus.fromNotLogin();
 
             // when
-            final List<AllParticipantDto> actual = teamQueryRepository.findAllByTeamId(team.getId(), loginStatus);
+            final List<TeamDetailQueryResult> actual = teamQueryRepository.findAllByTeamId(team.getId(),
+                    loginStatus);
 
             // then
             assertThat(actual).hasSize(4)
@@ -120,7 +122,7 @@ class TeamQueryRepositoryTest extends RepositoryTest {
         teamRepository.flush();
 
         // when
-        final List<AllTeamListDetailQueryResult> actual = teamQueryRepository.findAllList(false, 10, 0);
+        final List<TeamListDetailQueryResult> actual = teamQueryRepository.findAllList(false, 10, 0);
 
         // then
         assertThat(actual).hasSize(4)
@@ -163,7 +165,7 @@ class TeamQueryRepositoryTest extends RepositoryTest {
         teamRepository.flush();
 
         // when
-        final List<AllTeamListDetailQueryResult> actual = teamQueryRepository.findAllList(true, 10, 0);
+        final List<TeamListDetailQueryResult> actual = teamQueryRepository.findAllList(true, 10, 0);
 
         // then
         assertThat(actual).hasSize(4)
@@ -193,7 +195,7 @@ class TeamQueryRepositoryTest extends RepositoryTest {
         final Team team2 = saveTeam(pepper, kyoul);
 
         // when
-        final List<AllTeamListDetailQueryResult> actual = teamQueryRepository.findMyList(pepper.getId());
+        final List<TeamListDetailQueryResult> actual = teamQueryRepository.findMyList(pepper.getId());
 
         // then
         assertThat(actual).hasSize(4)

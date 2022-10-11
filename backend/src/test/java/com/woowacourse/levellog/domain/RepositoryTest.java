@@ -140,19 +140,9 @@ abstract class RepositoryTest {
 
     protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
                                                                 final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker.getId());
+        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion,
+                liker.getId());
         return interviewQuestionLikesRepository.save(interviewQuestionLikes);
-    }
-
-    protected void cancelLikeInterviewQuestion(final InterviewQuestion interviewQuestion, final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = interviewQuestionLikesRepository.findByInterviewQuestionIdAndLikerId(
-                        interviewQuestion.getId(), liker.getId())
-                .orElseThrow(() -> new InterviewQuestionLikeNotFoundException(
-                        DebugMessage.init()
-                                .append("interviewQuestionId", interviewQuestion.getId())
-                                .append("likerId", liker.getId())
-                ));
-        interviewQuestionLikesRepository.deleteById(interviewQuestionLikes.getId());
     }
 
     protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {

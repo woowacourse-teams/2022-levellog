@@ -201,14 +201,6 @@ abstract class ServiceTest {
         return interviewQuestionRepository.save(interviewQuestion);
     }
 
-    @Transactional
-    protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
-                                                                final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker.getId());
-        interviewQuestion.upLike();
-        return interviewQuestionLikesRepository.save(interviewQuestionLikes);
-    }
-
     protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {
         final Feedback feedback = new Feedback(from.getId(), levellog, "study from " + from.getNickname(),
                 "speak from " + from.getNickname(), "etc from " + from.getNickname());

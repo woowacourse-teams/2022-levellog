@@ -3,7 +3,7 @@ package com.woowacourse.levellog.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import com.woowacourse.levellog.interviewquestion.dto.SimpleInterviewQuestionDto;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionQueryResult;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
@@ -32,7 +32,7 @@ class InterviewQuestionQueryRepositoryTest extends RepositoryTest {
         saveInterviewQuestion("로마가 씀 3", levellog, roma);
 
         // when
-        final List<SimpleInterviewQuestionDto> actual = interviewQuestionQueryRepository.findAllByLevellog(levellog);
+        final List<InterviewQuestionQueryResult> actual = interviewQuestionQueryRepository.findAllByLevellog(levellog);
 
         // then
         assertThat(actual).hasSize(4)

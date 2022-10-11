@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
-import com.woowacourse.levellog.prequestion.dto.PreQuestionDto;
+import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
 import com.woowacourse.levellog.team.domain.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,11 +25,11 @@ class PreQuestionQueryRepositoryTest extends RepositoryTest {
         final PreQuestion preQuestion = savePreQuestion(levellog, questioner);
 
         // when
-        final PreQuestionDto actual = preQuestionQueryRepository.findByLevellogAndAuthor(levellog.getId(),
+        final PreQuestionResponse actual = preQuestionQueryRepository.findByLevellogAndAuthor(levellog.getId(),
                 questioner.getId()).get();
 
         // then
-        assertThat(actual).extracting(it -> it.getAuthor().getId(), PreQuestionDto::getContent)
+        assertThat(actual).extracting(it -> it.getAuthor().getId(), PreQuestionResponse::getContent)
                 .containsExactly(questioner.getId(), preQuestion.getContent());
     }
 }

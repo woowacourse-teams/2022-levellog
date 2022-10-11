@@ -75,7 +75,8 @@ class FeedbackServiceTest extends ServiceTest {
             saveFeedback(alien, eve, levellog);
 
             // when
-            final FeedbackListResponse feedbackListResponse = feedbackService.findAll(levellog.getId(), getLoginStatus(eve));
+            final FeedbackListResponse feedbackListResponse = feedbackService.findAll(levellog.getId(),
+                    getLoginStatus(eve));
 
             // then
             assertThat(feedbackListResponse.getFeedbacks()).hasSize(2);

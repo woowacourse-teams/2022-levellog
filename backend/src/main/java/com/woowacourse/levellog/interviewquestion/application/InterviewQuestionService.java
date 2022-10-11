@@ -9,13 +9,13 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesR
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionQueryRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionSort;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionQueryResult;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentListResponse;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionListResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponse;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchListQueryResult;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionSearchQueryResult;
-import com.woowacourse.levellog.interviewquestion.dto.SimpleInterviewQuestionDto;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -61,24 +61,24 @@ public class InterviewQuestionService {
 
     public InterviewQuestionListResponse findAllByLevellog(final Long levellogId) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        final List<InterviewQuestionDto> interviewQuestions = interviewQuestionQueryRepository.findAllByLevellog(
+        final List<InterviewQuestionResponse> interviewQuestions = interviewQuestionQueryRepository.findAllByLevellog(
                         levellog)
                 .stream()
                 .collect(Collectors.groupingBy(
-                                SimpleInterviewQuestionDto::getAuthor,
+                                InterviewQuestionQueryResult::getAuthor,
                                 LinkedHashMap::new,
-                                Collectors.mapping(SimpleInterviewQuestionDto::getContent, Collectors.toList())
+                                Collectors.mapping(InterviewQuestionQueryResult::getContent, Collectors.toList())
                         )
                 ).entrySet()
                 .stream()
-                .map(it -> new InterviewQuestionDto(it.getKey(), it.getValue()))
+                .map(it -> new InterviewQuestionResponse(it.getKey(), it.getValue()))
                 .collect(Collectors.toList());
 
-        return InterviewQuestionListResponse.from(interviewQuestions);
+        return new InterviewQuestionListResponse(interviewQuestions);
     }
 
     public InterviewQuestionContentListResponse findAllByLevellogAndAuthor(final Long levellogId,
-                                                                          @Verified final LoginStatus loginStatus) {
+                                                                           @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthorId(
                 levellog, loginStatus.getMemberId());
@@ -87,10 +87,11 @@ public class InterviewQuestionService {
     }
 
     public InterviewQuestionSearchListQueryResult searchByKeyword(final String keyword,
-                                                             @Verified final LoginStatus loginStatus,
+                                                                  @Verified final LoginStatus loginStatus,
                                                                   final Long size, final Long page, final String sort) {
         final InterviewQuestionSort sortCondition = InterviewQuestionSort.valueOf(sort.toUpperCase());
-        final List<InterviewQuestionSearchQueryResult> results = interviewQuestionQueryRepository.searchByKeyword(keyword,
+        final List<InterviewQuestionSearchQueryResult> results = interviewQuestionQueryRepository.searchByKeyword(
+                keyword,
                 loginStatus, size, page, sortCondition);
 
         return InterviewQuestionSearchListQueryResult.of(results, page);

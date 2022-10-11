@@ -6,11 +6,10 @@ import com.woowacourse.levellog.team.dto.response.ParticipantResponse;
 import com.woowacourse.levellog.team.dto.response.TeamResponse;
 import com.woowacourse.levellog.team.dto.response.WatcherResponse;
 import java.time.LocalDateTime;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class AllTeamDetailQueryResult {
+public class TeamDetailQueryResult {
 
     private final Long id;
     private final String title;
@@ -27,11 +26,11 @@ public class AllTeamDetailQueryResult {
     private final boolean isHost;
     private final boolean isWatcher;
 
-    public AllTeamDetailQueryResult(final Long id, final String title, final String place, final LocalDateTime startAt,
-                                    final String teamProfileUrl, final int interviewerNumber, final boolean isClosed,
-                                    final Long memberId, final Long levellogId, final Long preQuestionId,
-                                    final String nickname, final String profileUrl,
-                                    final boolean isHost, final boolean isWatcher) {
+    public TeamDetailQueryResult(final Long id, final String title, final String place, final LocalDateTime startAt,
+                                 final String teamProfileUrl, final int interviewerNumber, final boolean isClosed,
+                                 final Long memberId, final Long levellogId, final Long preQuestionId,
+                                 final String nickname, final String profileUrl,
+                                 final boolean isHost, final boolean isWatcher) {
         this.id = id;
         this.title = title;
         this.place = place;

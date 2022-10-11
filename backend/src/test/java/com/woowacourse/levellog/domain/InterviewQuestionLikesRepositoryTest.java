@@ -119,7 +119,7 @@ class InterviewQuestionLikesRepositoryTest extends RepositoryTest {
             pressLikeInterviewQuestion(savedInterviewQuestion1, eve);
 
             // when
-            final List<InterviewQuestionSearchResultDto> actual = interviewQuestionQueryRepository.searchByKeyword(
+            final List<InterviewQuestionSearchQueryResult> actual = interviewQuestionQueryRepository.searchByKeyword(
                     "스프링을 왜 사용하였나요?", LoginStatus.fromNotLogin(), 10L, 0L, InterviewQuestionSort.LATEST
             );
 

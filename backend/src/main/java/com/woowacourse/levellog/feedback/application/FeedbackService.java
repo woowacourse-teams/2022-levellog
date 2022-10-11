@@ -33,7 +33,8 @@ public class FeedbackService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final FeedbackWriteRequest request, final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public Long save(final FeedbackWriteRequest request, final Long levellogId,
+                     @Verified final LoginStatus loginStatus) {
         validateExistence(levellogId, loginStatus.getMemberId());
 
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
@@ -53,25 +54,23 @@ public class FeedbackService {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
 
-        final List<FeedbackResponse> responses = getFeedbackResponses(feedbackRepository.findAllByLevellog(levellog));
-
-        return new FeedbackListResponse(responses);
+        return feedbackQueryRepository.findAllByLevellogId(levellogId);
     }
 
     public FeedbackResponse findById(final Long levellogId, final Long feedbackId,
-                                @Verified final LoginStatus loginStatus) {
+                                     @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 
         validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
 
-        return FeedbackResponse.from(feedback);
+        return feedbackQueryRepository.findById(feedbackId)
+                .orElseThrow(() -> new FeedbackNotFoundException(DebugMessage.init()
+                        .append("feedbackId", feedbackId)
+                        .append("levellogId", levellogId)));
     }
 
-    public FeedbackListResponse findAllByTo(final Long memberId) {
-        final Member member = memberRepository.getMember(memberId);
-        final List<Feedback> feedbacks = feedbackRepository.findAllByToOrderByUpdatedAtDesc(member);
-
-        return new FeedbackListResponse(getFeedbackResponses(feedbacks));
+    public FeedbackListResponse findAllByTo(@Verified final LoginStatus loginStatus) {
+        return feedbackQueryRepository.findAllByTo(loginStatus.getMemberId());
     }
 
     @Transactional
@@ -102,11 +101,5 @@ public class FeedbackService {
                     .append("teamId", team.getId())
                     .append("memberId", memberId));
         }
-    }
-
-    private List<FeedbackResponse> getFeedbackResponses(final List<Feedback> feedbacks) {
-        return feedbacks.stream()
-                .map(FeedbackResponse::from)
-                .collect(Collectors.toList());
     }
 }

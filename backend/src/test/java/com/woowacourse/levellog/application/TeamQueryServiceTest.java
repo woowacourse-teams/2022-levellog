@@ -122,7 +122,8 @@ public class TeamQueryServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             //when
-            final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(), getLoginStatus(rick));
+            final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                    getLoginStatus(rick));
 
             //then
             assertAll(
@@ -193,7 +194,8 @@ public class TeamQueryServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma);
 
                 //when
-                final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(), getLoginStatus(pepper));
+                final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                        getLoginStatus(pepper));
 
                 //then
                 assertAll(
@@ -288,7 +290,8 @@ public class TeamQueryServiceTest extends ServiceTest {
             saveTeam(harry, alien);
 
             // when
-            final List<TeamListDetailResponse> teams = teamQueryService.findAllByMemberId(getLoginStatus(roma)).getTeams();
+            final List<TeamListDetailResponse> teams = teamQueryService.findAllByMemberId(getLoginStatus(roma))
+                    .getTeams();
 
             // then
             assertThat(teams).hasSize(2);

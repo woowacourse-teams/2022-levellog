@@ -66,7 +66,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateNickname(final NicknameUpdateRequest request, @Verified LoginStatus loginStatus) {
+    public void updateNickname(final NicknameUpdateRequest request, @Verified final LoginStatus loginStatus) {
         final Member member = memberRepository.getMember(loginStatus.getMemberId());
         member.updateNickname(request.getNickname());
     }

@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AllTeamDetailListQueryResult {
+public class TeamDetailListQueryResult {
 
-    private final List<AllTeamDetailQueryResult> results;
+    private final List<TeamDetailQueryResult> results;
 
-    public AllTeamDetailListQueryResult(final List<AllTeamDetailQueryResult> results) {
+    public TeamDetailListQueryResult(final List<TeamDetailQueryResult> results) {
         this.results = results;
     }
 
@@ -23,7 +23,7 @@ public class AllTeamDetailListQueryResult {
     }
 
     public TeamDetailResponse toResponse(final Long memberId, final LocalDateTime time) {
-        final AllTeamDetailQueryResult result = results.get(0);
+        final TeamDetailQueryResult result = results.get(0);
 
         final TeamResponse teamResponse = result.getTeamResponse();
         final TeamStatus status = toTeamStatus(result, time);
@@ -41,26 +41,26 @@ public class AllTeamDetailListQueryResult {
 
     private SimpleParticipants toSimpleParticipants() {
         return results.stream()
-                .map(AllTeamDetailQueryResult::getSimpleParticipant)
+                .map(TeamDetailQueryResult::getSimpleParticipant)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), SimpleParticipants::new));
     }
 
-    private TeamStatus toTeamStatus(final AllTeamDetailQueryResult result, final LocalDateTime nowTime) {
+    private TeamStatus toTeamStatus(final TeamDetailQueryResult result, final LocalDateTime nowTime) {
         return result.getTeamStatus(nowTime);
     }
 
     private List<ParticipantResponse> toParticipantResponses(
-            final List<AllTeamDetailQueryResult> filteredParticipants) {
+            final List<TeamDetailQueryResult> filteredParticipants) {
         return filteredParticipants.stream()
                 .filter(it -> !it.isWatcher())
-                .map(AllTeamDetailQueryResult::getParticipantResponse)
+                .map(TeamDetailQueryResult::getParticipantResponse)
                 .collect(Collectors.toList());
     }
 
-    private List<WatcherResponse> toWatcherResponses(final List<AllTeamDetailQueryResult> filteredParticipants) {
+    private List<WatcherResponse> toWatcherResponses(final List<TeamDetailQueryResult> filteredParticipants) {
         return filteredParticipants.stream()
-                .filter(AllTeamDetailQueryResult::isWatcher)
-                .map(AllTeamDetailQueryResult::getWatcherResponse)
+                .filter(TeamDetailQueryResult::isWatcher)
+                .map(TeamDetailQueryResult::getWatcherResponse)
                 .collect(Collectors.toList());
     }
 }

@@ -18,7 +18,6 @@ import {
   interviewDateValidate,
   interviewInterviewerValidate,
   interviewLocationValidate,
-  interviewParticipantValidate,
   interviewTimeValidate,
   interviewTitleValidate,
 } from 'utils/validate';

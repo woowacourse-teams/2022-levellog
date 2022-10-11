@@ -1,15 +1,10 @@
 import { RequestType } from 'types';
 
-import { ShowSnackbarProps } from 'hooks/useSnackbar';
+import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-export const 엑세스토큰이없는경우헤더제거 = ({
-  accessToken,
-  method,
-  url,
-  headers,
-}: RequestType) => {
+export const NotAccessTokenRemoveHeader = ({ accessToken, method, url, headers }: RequestType) => {
   if (!accessToken) {
     return {
       accessToken,

@@ -1,14 +1,14 @@
-import axios, { AxiosPromise } from 'axios';
+import { fetcher } from 'apis';
 
 import { MembersApiType, MemberType } from 'types/member';
 
-export const requestGetMembers = ({
+export const requestGetMembers = async ({
   accessToken,
   nickname,
-}: MembersApiType): AxiosPromise<Record<'members', MemberType[]>> => {
-  return axios({
-    method: 'get',
+}: MembersApiType): Promise<Record<'members', MemberType[]>> => {
+  const { data } = await fetcher.get(`/members?nickname=${nickname}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
-    url: `${process.env.API_URI}/members?nickname=${nickname}`,
   });
+
+  return data;
 };

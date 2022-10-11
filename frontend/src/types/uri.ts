@@ -1,7 +1,7 @@
 export interface UriCustomHookType {
-  teamId: string;
-  levellogId: string;
-  feedbackId: string;
-  preQuestionId: string;
-  authorId: string;
+  teamId: string | undefined;
+  levellogId: string | undefined;
+  feedbackId: string | undefined;
+  preQuestionId: string | undefined;
+  authorId: string | undefined;
 }

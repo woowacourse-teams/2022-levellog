@@ -1,49 +1,18 @@
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
 import styled from 'styled-components';
 
-import useLevellog from 'hooks/useLevellog';
-import usePreQuestion from 'hooks/usePreQuestion';
-import useSnackbar from 'hooks/useSnackbar';
-
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import usePreQuestionAdd from 'hooks/preQuestion/usePreQuestionAdd';
 
 import BottomBar from 'components/@commons/BottomBar';
 import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
 const PreQuestionAdd = () => {
-  const { levellogInfo, getLevellog } = useLevellog();
-  const { preQuestionRef, onClickPreQuestionAddButton } = usePreQuestion();
-  const { showSnackbar } = useSnackbar();
-  const { teamId, levellogId } = useParams();
-  const navigate = useNavigate();
-
-  const handleClickPreQuestionAddButton = () => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      onClickPreQuestionAddButton({ teamId, levellogId });
-
-      return;
-    }
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-  };
-
-  useEffect(() => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      getLevellog({ teamId, levellogId });
-
-      return;
-    }
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-    navigate(ROUTES_PATH.ERROR);
-  }, []);
-
+  const { preQuestionRef, handleClickPreQuestionAddButton } = usePreQuestionAdd();
   return (
     <S.Container>
       <S.Content>
         <S.LeftContent>
-          <LevellogReport levellogInfo={levellogInfo} />
+          <LevellogReport />
         </S.LeftContent>
         <S.RightContent>
           <UiEditor

@@ -63,8 +63,8 @@ const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }:
 
 interface FeedbackProps {
   loginUserId: string;
-  teamId: string;
-  levellogId: string;
+  teamId: string | undefined;
+  levellogId: string | undefined;
   feedbackInfo: FeedbackType;
   teamStatus: string;
 }

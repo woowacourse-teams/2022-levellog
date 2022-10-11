@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import useInterviewQuestionEdit from 'hooks/useInterviewQuestionEdit';
+import useInterviewQuestionEdit from 'hooks/interviewQuestion/useInterviewQuestionEdit';
 
 import Button from 'components/@commons/Button';
 import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';
@@ -60,7 +60,7 @@ const S = {
   Input: styled.input`
     width: 100%;
     height: 1.875rem;
-    margin-right: 10px;
+    margin-right: 0.625rem;
     border: none;
     border-bottom: 0.0625rem solid ${(props) => props.theme.default.BLACK};
     font-size: 1rem;

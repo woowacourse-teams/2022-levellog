@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
@@ -40,6 +41,9 @@ const useTeamEdit = () => {
         teamInfoRef.current[3].value = res.startAt.slice(-8);
         teamInfoRef.current[4].value = String(res.interviewers.length);
       },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
+      },
     },
   );
 
@@ -55,6 +59,9 @@ const useTeamEdit = () => {
       onSuccess: () => {
         showSnackbar({ message: MESSAGE.TEAM_EDIT });
         navigate(ROUTES_PATH.HOME);
+      },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
       },
     },
   );

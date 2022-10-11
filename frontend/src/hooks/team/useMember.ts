@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
 
+import errorHandler from 'hooks/utils/errorHandler';
+import useSnackbar from 'hooks/utils/useSnackbar';
+
 import { requestGetMembers } from 'apis/member';
 import { requestGetTeam } from 'apis/teams';
 import { MemberContext, MemberDispatchContext } from 'contexts/memberContext';
@@ -10,6 +13,7 @@ import { MembersCustomHookType, MemberType } from 'types/member';
 import { debounce } from 'utils/util';
 
 const useMember = () => {
+  const { showSnackbar } = useSnackbar();
   const [watchers, setWatchers] = useState<MemberType[]>([]);
   const [participants, setParticipants] = useState<MemberType[]>([]);
 
@@ -53,6 +57,9 @@ const useMember = () => {
         setWatchers(watchers);
         setParticipants(participants);
       },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
+      },
     },
   );
 
@@ -65,6 +72,9 @@ const useMember = () => {
         setWatchersOfMembers(res.members);
         setParticipantsOfMembers(res.members);
       },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
+      },
     },
   );
 
@@ -76,6 +86,9 @@ const useMember = () => {
       onSuccess: (res) => {
         setWatchersOfMembers(memberFilter(res));
       },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
+      },
     },
   );
 
@@ -86,6 +99,9 @@ const useMember = () => {
     {
       onSuccess: (res) => {
         setParticipantsOfMembers(memberFilter(res));
+      },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
       },
     },
   );

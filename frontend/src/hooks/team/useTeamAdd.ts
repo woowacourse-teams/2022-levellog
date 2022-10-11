@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
@@ -38,6 +39,9 @@ const useTeamAdd = () => {
       onSuccess: () => {
         showSnackbar({ message: MESSAGE.TEAM_CREATE });
         navigate(ROUTES_PATH.HOME);
+      },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
       },
     },
   );

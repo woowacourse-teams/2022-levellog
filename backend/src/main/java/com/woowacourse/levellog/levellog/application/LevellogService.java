@@ -50,11 +50,11 @@ public class LevellogService {
 
     public LevellogResponses findAllByAuthorId(@Verified final LoginStatus loginStatus) {
         final List<Levellog> levellogs = levellogRepository.findAllByAuthorId(loginStatus.getMemberId());
-        final List<LevellogResponse> levellogRespons = levellogs.stream()
-                .map(LevellogResponse::from)
+        final List<LevellogResponse> levellogResponses = levellogs.stream()
+                .map(it -> new LevellogResponse(it.getId(), it.getContent()))
                 .collect(Collectors.toList());
 
-        return new LevellogResponses(levellogRespons);
+        return new LevellogResponses(levellogResponses);
     }
 
     @Transactional

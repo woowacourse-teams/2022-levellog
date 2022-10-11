@@ -48,7 +48,7 @@ public class TeamDetailQueryResult {
     }
 
     protected TeamResponse getTeamResponse() {
-        return TeamResponse.from(id, title, place, startAt, teamProfileUrl, interviewerNumber, isClosed);
+        return new TeamResponse(id, title, place, startAt, teamProfileUrl, interviewerNumber, isClosed);
     }
 
     protected SimpleParticipant getSimpleParticipant() {

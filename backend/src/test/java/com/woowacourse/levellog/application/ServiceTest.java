@@ -189,14 +189,14 @@ abstract class ServiceTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team, final String content) {
-        final Levellog levellog = Levellog.of(author.getId(), team, content);
+        final Levellog levellog = new Levellog(author.getId(), team, content);
         return levellogRepository.save(levellog);
     }
 
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
-        final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from(content);
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author.getId(), levellog);
+        final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest(content);
+        final InterviewQuestion interviewQuestion = request.toEntity(author.getId(), levellog);
         return interviewQuestionRepository.save(interviewQuestion);
     }
 

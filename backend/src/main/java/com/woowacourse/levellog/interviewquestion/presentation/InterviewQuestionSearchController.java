@@ -34,7 +34,7 @@ public class InterviewQuestionSearchController {
             @Extracted final LoginStatus loginStatus) {
         final String input = StringConverter.toSafeString(keyword);
         if (input.isBlank()) {
-            return ResponseEntity.ok(InterviewQuestionSearchQueryResults.of(new ArrayList<>(), 0L));
+            return ResponseEntity.ok(new InterviewQuestionSearchQueryResults(new ArrayList<>(), 0L));
         }
         final InterviewQuestionSearchQueryResults response = interviewQuestionService
                 .searchByKeyword(input, loginStatus, size, page, sort);

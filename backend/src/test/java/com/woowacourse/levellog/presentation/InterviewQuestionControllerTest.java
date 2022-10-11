@@ -35,7 +35,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문이 공백인 경우 예외를 던진다.")
         void save_contentBlank_exception() throws Exception {
             // given
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from(" ");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest(" ");
 
             // when
             final ResultActions perform = requestCreateInterviewQuestion(1L, request);
@@ -54,7 +54,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
         void save_interviewQuestionInvalidLength_exception() throws Exception {
             // given
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("a".repeat(256));
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(interviewQuestionService)
@@ -78,7 +78,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_levellogNotFound_exception() throws Exception {
             // given
             final long invalidLevellogId = 20000000L;
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("Spring을 왜 사용했나요?");
 
             final String message = "레벨로그가 존재하지 않습니다.";
             willThrow(new LevellogNotFoundException(DebugMessage.init()
@@ -104,7 +104,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_notInProgress_exception() throws Exception {
             // given
             final long levellogId = 1L;
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("Spring을 왜 사용했나요?");
 
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
@@ -129,7 +129,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_alreadyClosed_exception() throws Exception {
             // given
             final long levellogId = 1L;
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("Spring을 왜 사용했나요?");
 
             final String message = "이미 인터뷰가 종료된 팀입니다.";
             willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
@@ -154,7 +154,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_notMyTeam_exception() throws Exception {
             // given
             final long levellogId = 1L;
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("Spring을 왜 사용했나요?");
 
             final String message = "같은 팀에 속해있지 않습니다.";
             willThrow(new ParticipantNotSameTeamException(DebugMessage.init()))
@@ -179,7 +179,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void save_selfInterviewQuestion_exception() throws Exception {
             // given
             final long levellogId = 1L;
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("Spring을 왜 사용했나요?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("Spring을 왜 사용했나요?");
 
             willThrow(new InvalidInterviewQuestionException(DebugMessage.init()))
                     .given(interviewQuestionService)
@@ -285,7 +285,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문이 공백인 경우 예외를 던진다.")
         void update_contentBlank_exception() throws Exception {
             // given
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from(" ");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest(" ");
 
             // when
             final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
@@ -304,7 +304,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문으로 255자를 초과하는 경우 예외를 던진다.")
         void update_interviewQuestionInvalidLength_exception() throws Exception {
             // given
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("a".repeat(256));
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("a".repeat(256));
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(interviewQuestionService)
@@ -328,7 +328,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         void update_interviewQuestionNotFound_exception() throws Exception {
             // given
             final Long invalidInterviewQuestionId = 1000L;
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("수정된 인터뷰 질문");
 
             final String message = "인터뷰 질문이 존재하지 않습니다.";
             willThrow(new InterviewQuestionNotFoundException(DebugMessage.init()
@@ -353,7 +353,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("인터뷰 질문 작성자가 아닌 경우 권한 없음 예외를 던진다.")
         void update_unauthorized_exception() throws Exception {
             // given
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("수정된 인터뷰 질문");
             final String message = "작성자가 아닙니다.";
             willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(interviewQuestionService)
@@ -376,7 +376,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("진행 중 상태가 아닐 때 예외가 발생한다.")
         void update_notInProgress_exception() throws Exception {
             // given
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("수정된 인터뷰 질문");
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
@@ -399,7 +399,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
         @DisplayName("이미 종료된 상태일 때 예외가 발생한다.")
         void update_alreadyClosed_exception() throws Exception {
             // given
-            final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("수정된 인터뷰 질문");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("수정된 인터뷰 질문");
             final String message = "이미 인터뷰가 종료된 팀입니다.";
             willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(interviewQuestionService)

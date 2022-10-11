@@ -10,13 +10,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class InterviewRoleResponse {
 
     private InterviewRole myRole;
-
-    public static InterviewRoleResponse from(final InterviewRole interviewRole) {
-        return new InterviewRoleResponse(interviewRole);
-    }
 }
 

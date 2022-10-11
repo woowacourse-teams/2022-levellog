@@ -42,7 +42,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
         timeStandard.setInProgress();
 
         // when
-        final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("Spring을 사용하는 이유?");
+        final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("Spring을 사용하는 이유?");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())
@@ -173,7 +173,7 @@ class InterviewQuestionAcceptanceTest extends AcceptanceTest {
                 .getInterviewQuestionId();
 
         // when
-        final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from("수정된 인터뷰 질문");
+        final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("수정된 인터뷰 질문");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())

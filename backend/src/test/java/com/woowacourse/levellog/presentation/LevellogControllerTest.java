@@ -30,7 +30,7 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("팀에서 이미 레벨로그를 작성한 경우 새로운 레벨로그를 작성하면 예외를 던진다.")
         void save_alreadyExists_exception() throws Exception {
             // given
-            final LevellogWriteRequest request = LevellogWriteRequest.from("content");
+            final LevellogWriteRequest request = new LevellogWriteRequest("content");
             final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long teamId = 1L;
 
@@ -59,7 +59,7 @@ class LevellogControllerTest extends ControllerTest {
         void save_nameNullOrEmpty_exception() throws Exception {
             // given
             final Long teamId = 1L;
-            final LevellogWriteRequest request = LevellogWriteRequest.from(" ");
+            final LevellogWriteRequest request = new LevellogWriteRequest(" ");
 
             // when
             final ResultActions perform = requestCreateLevellog(teamId, request);
@@ -78,7 +78,7 @@ class LevellogControllerTest extends ControllerTest {
         @DisplayName("Ready 상태가 아닐 때 레벨로그를 저장하는 경우 예외를 던진다.")
         void save_notReady_exception() throws Exception {
             // given
-            final LevellogWriteRequest request = LevellogWriteRequest.from("content");
+            final LevellogWriteRequest request = new LevellogWriteRequest("content");
             final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long teamId = 1L;
 
@@ -156,7 +156,7 @@ class LevellogControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final LevellogWriteRequest request = LevellogWriteRequest.from(" ");
+            final LevellogWriteRequest request = new LevellogWriteRequest(" ");
 
             // when
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
@@ -178,7 +178,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
-            final LevellogWriteRequest request = LevellogWriteRequest.from("update content");
+            final LevellogWriteRequest request = new LevellogWriteRequest("update content");
 
             final String message = "작성자가 아닙니다.";
             willThrow(new MemberNotAuthorException(DebugMessage.init()))
@@ -205,7 +205,7 @@ class LevellogControllerTest extends ControllerTest {
             final Long teamId = 1L;
             final Long levellogId = 2L;
             final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
-            final LevellogWriteRequest request = LevellogWriteRequest.from("new content");
+            final LevellogWriteRequest request = new LevellogWriteRequest("new content");
 
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))

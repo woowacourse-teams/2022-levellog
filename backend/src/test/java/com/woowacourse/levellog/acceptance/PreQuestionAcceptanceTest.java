@@ -36,7 +36,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final String levellogId = saveLevellog("페퍼의 레벨로그", teamId, PEPPER).getLevellogId();
 
-        final PreQuestionWriteRequest request = PreQuestionWriteRequest.from("이브가 쓴 사전 질문");
+        final PreQuestionWriteRequest request = new PreQuestionWriteRequest("이브가 쓴 사전 질문");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -72,7 +72,7 @@ class PreQuestionAcceptanceTest extends AcceptanceTest {
 
         final String preQuestionId = savePreQuestion("이브가 쓴 사전 질문", levellogId, EVE).getPreQuestionId();
 
-        final PreQuestionWriteRequest request = PreQuestionWriteRequest.from("이브가 수정한 사전 질문");
+        final PreQuestionWriteRequest request = new PreQuestionWriteRequest("이브가 수정한 사전 질문");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

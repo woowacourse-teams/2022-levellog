@@ -24,7 +24,7 @@ class InterviewQuestionSearchControllerTest extends ControllerTest {
     @Test
     @DisplayName("%를 입력 한 경우 빈 값을 응답한다.")
     void searchBy_wrongInput_exception() throws Exception {
-        willReturn(InterviewQuestionSearchQueryResults.of(new ArrayList<>(), 0L))
+        willReturn(new InterviewQuestionSearchQueryResults(new ArrayList<>(), 0L))
                 .given(interviewQuestionService)
                 .searchByKeyword("%", LoginStatus.fromLogin(1L), 10L, 0L, "likes");
 

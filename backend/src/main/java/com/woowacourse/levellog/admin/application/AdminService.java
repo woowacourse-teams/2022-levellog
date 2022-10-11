@@ -58,7 +58,8 @@ public class AdminService {
 
         return teamRepository.findAll()
                 .stream()
-                .map(it -> AdminTeamResponse.of(it, it.status(presentTime)))
+                .map(it -> new AdminTeamResponse(it.getId(), it.getTitle(), it.getPlace(), it.getStartAt(),
+                        it.status(presentTime)))
                 .collect(Collectors.toList());
     }
 

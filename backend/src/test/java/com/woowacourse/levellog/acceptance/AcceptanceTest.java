@@ -150,14 +150,14 @@ abstract class AcceptanceTest {
     }
 
     protected RestAssuredResponse saveLevellog(final String content, final String teamId, final MemberFixture author) {
-        final LevellogWriteRequest request = LevellogWriteRequest.from(content);
+        final LevellogWriteRequest request = new LevellogWriteRequest(content);
 
         return post("/api/teams/" + teamId + "/levellogs", author.getToken(), request);
     }
 
     protected RestAssuredResponse saveFeedback(final String content, final String levellogId,
                                                final MemberFixture author) {
-        final FeedbackWriteRequest request = FeedbackWriteRequest.from(
+        final FeedbackWriteRequest request = new FeedbackWriteRequest(
                 "study " + content, "speak " + content, "etc " + content);
 
         return post("/api/levellogs/" + levellogId + "/feedbacks", author.getToken(), request);
@@ -165,7 +165,7 @@ abstract class AcceptanceTest {
 
     protected RestAssuredResponse savePreQuestion(final String content, final String levellogId,
                                                   final MemberFixture author) {
-        final PreQuestionWriteRequest request = PreQuestionWriteRequest.from(content);
+        final PreQuestionWriteRequest request = new PreQuestionWriteRequest(content);
 
         return post("/api/levellogs/" + levellogId + "/pre-questions/", author.getToken(), request);
     }
@@ -173,6 +173,6 @@ abstract class AcceptanceTest {
     protected RestAssuredResponse saveInterviewQuestion(final String content, final String levellogId,
                                                         final MemberFixture author) {
         return post("/api/levellogs/" + levellogId + "/interview-questions", author.getToken(),
-                InterviewQuestionWriteRequest.from(content));
+                new InterviewQuestionWriteRequest(content));
     }
 }

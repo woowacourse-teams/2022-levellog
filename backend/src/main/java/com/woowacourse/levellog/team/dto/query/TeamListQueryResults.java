@@ -15,7 +15,6 @@ public class TeamListQueryResults {
         this.results = results;
     }
 
-
     public TeamListResponses toResponse(final LocalDateTime now) {
         return results.stream()
                 .collect(Collectors.groupingBy(

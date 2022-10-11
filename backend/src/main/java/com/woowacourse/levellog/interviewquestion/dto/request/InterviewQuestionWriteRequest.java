@@ -11,18 +11,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InterviewQuestionWriteRequest {
 
     @NotBlank
     private String content;
 
-    public static InterviewQuestionWriteRequest from(final String interviewQuestion) {
-        return new InterviewQuestionWriteRequest(interviewQuestion);
-    }
-
-    public InterviewQuestion toInterviewQuestion(final Long fromMemberId, final Levellog levellog) {
-        return InterviewQuestion.of(fromMemberId, levellog, content);
+    public InterviewQuestion toEntity(final Long fromMemberId, final Levellog levellog) {
+        return new InterviewQuestion(fromMemberId, levellog, content);
     }
 }

@@ -53,13 +53,13 @@ public class MemberService {
     public MemberResponse findMemberById(final LoginStatus loginStatus) {
         final Member member = memberRepository.getMember(loginStatus.getMemberId());
 
-        return MemberResponse.from(member);
+        return new MemberResponse(member.getId(), member.getNickname(), member.getProfileUrl());
     }
 
     public MemberResponses searchByNickname(final String nickname) {
         final List<MemberResponse> responses = memberRepository.findAllByNicknameContains(nickname)
                 .stream()
-                .map(MemberResponse::from)
+                .map(member -> new MemberResponse(member.getId(), member.getNickname(), member.getProfileUrl()))
                 .collect(Collectors.toList());
 
         return new MemberResponses(responses);

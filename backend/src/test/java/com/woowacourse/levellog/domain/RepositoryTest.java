@@ -125,20 +125,20 @@ abstract class RepositoryTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {
-        final Levellog levellog = Levellog.of(author.getId(), team, "levellog content");
+        final Levellog levellog = new Levellog(author.getId(), team, "levellog content");
         return levellogRepository.save(levellog);
     }
 
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
-        final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from(content);
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author.getId(), levellog);
+        final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest(content);
+        final InterviewQuestion interviewQuestion = request.toEntity(author.getId(), levellog);
         return interviewQuestionRepository.save(interviewQuestion);
     }
 
     protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
                                                                 final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion,
+        final InterviewQuestionLikes interviewQuestionLikes = new InterviewQuestionLikes(interviewQuestion.getId(),
                 liker.getId());
         return interviewQuestionLikesRepository.save(interviewQuestionLikes);
     }

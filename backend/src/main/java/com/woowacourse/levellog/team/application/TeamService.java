@@ -65,7 +65,7 @@ public class TeamService {
         final InterviewRole interviewRole = participants.toInterviewRole(teamId, targetMemberId,
                 loginStatus.getMemberId(), team.getInterviewerNumber());
 
-        return InterviewRoleResponse.from(interviewRole);
+        return new InterviewRoleResponse(interviewRole);
     }
 
     @Transactional

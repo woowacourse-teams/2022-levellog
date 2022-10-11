@@ -31,7 +31,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         EVE.save();
 
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
-        final LevellogWriteRequest request = LevellogWriteRequest.from("Spring과 React를 학습했습니다.");
+        final LevellogWriteRequest request = new LevellogWriteRequest("Spring과 React를 학습했습니다.");
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -95,7 +95,7 @@ class LevellogAcceptanceTest extends AcceptanceTest {
         final String levellogId = saveLevellog("Spring과 React를 학습했습니다.", teamId, PEPPER).getLevellogId();
 
         final String updateContent = "update content";
-        final LevellogWriteRequest request = LevellogWriteRequest.from(updateContent);
+        final LevellogWriteRequest request = new LevellogWriteRequest(updateContent);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class TeamResponse {
 
     private Long id;
@@ -20,9 +20,4 @@ public class TeamResponse {
     private String profileUrl;
     private int interviewerNumber;
     private boolean isClosed;
-
-    public static TeamResponse from(final Long id, final String title, final String place, final LocalDateTime startAt,
-                                    final String profileUrl, final int interviewerNumber, final boolean isClosed) {
-        return new TeamResponse(id, title, place, startAt, profileUrl, interviewerNumber, isClosed);
-    }
 }

@@ -27,8 +27,4 @@ public class FeedbackContentRequest {
     public Feedback toEntity(final Long fromId, final Levellog levellog) {
         return new Feedback(fromId, levellog, study, speak, etc);
     }
-
-    public static FeedbackContentRequest from(final Feedback feedback) {
-        return new FeedbackContentRequest(feedback.getStudy(), feedback.getSpeak(), feedback.getEtc());
-    }
 }

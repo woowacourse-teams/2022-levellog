@@ -11,18 +11,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LevellogWriteRequest {
 
     @NotBlank
     private String content;
 
-    public static LevellogWriteRequest from(final String content) {
-        return new LevellogWriteRequest(content);
-    }
-
     public Levellog toLevellog(final Long authorId, final Team team) {
-        return Levellog.of(authorId, team, content);
+        return new Levellog(authorId, team, content);
     }
 }

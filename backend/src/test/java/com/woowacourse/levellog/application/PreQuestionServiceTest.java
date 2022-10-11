@@ -34,7 +34,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void success() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionWriteRequest preQuestionWriteRequest = PreQuestionWriteRequest.from(preQuestion);
+            final PreQuestionWriteRequest preQuestionWriteRequest = new PreQuestionWriteRequest(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -59,7 +59,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void save_fromNotParticipant_exception() {
             // given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionWriteRequest preQuestionWriteRequest = PreQuestionWriteRequest.from(preQuestion);
+            final PreQuestionWriteRequest preQuestionWriteRequest = new PreQuestionWriteRequest(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -81,7 +81,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void save_levellogIsMine_exception() {
             // given
             final String preQuestion = "알린이 쓴 사전 질문";
-            final PreQuestionWriteRequest preQuestionWriteRequest = PreQuestionWriteRequest.from(preQuestion);
+            final PreQuestionWriteRequest preQuestionWriteRequest = new PreQuestionWriteRequest(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -100,7 +100,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void save_preQuestionAlreadyExist_exception() {
             // given
             final String preQuestion = "알린이 쓴 사전 질문";
-            final PreQuestionWriteRequest preQuestionWriteRequest = PreQuestionWriteRequest.from(preQuestion);
+            final PreQuestionWriteRequest preQuestionWriteRequest = new PreQuestionWriteRequest(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -197,7 +197,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Long id = savePreQuestion(levellog, questioner).getId();
 
             //when
-            preQuestionService.update(PreQuestionWriteRequest.from("수정된 사전 질문"), id, levellog.getId(),
+            preQuestionService.update(new PreQuestionWriteRequest("수정된 사전 질문"), id, levellog.getId(),
                     getLoginStatus(questioner));
 
             //then
@@ -212,7 +212,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void update_preQuestionNotFound_exception() {
             // given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionWriteRequest preQuestionWriteRequest = PreQuestionWriteRequest.from(preQuestion);
+            final PreQuestionWriteRequest preQuestionWriteRequest = new PreQuestionWriteRequest(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -231,7 +231,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         @DisplayName("타인의 사전 질문을 수정하는 경우 예외를 던진다.")
         void update_fromNotMyPreQuestion_exception() {
             // given
-            final PreQuestionWriteRequest preQuestionWriteRequest = PreQuestionWriteRequest.from("로마가 쓴 사전 질문");
+            final PreQuestionWriteRequest preQuestionWriteRequest = new PreQuestionWriteRequest("로마가 쓴 사전 질문");
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");
@@ -255,7 +255,7 @@ public class PreQuestionServiceTest extends ServiceTest {
         void update_levellogWrongId_exception() {
             //given
             final String preQuestion = "로마가 쓴 사전 질문";
-            final PreQuestionWriteRequest preQuestionWriteRequest = PreQuestionWriteRequest.from(preQuestion);
+            final PreQuestionWriteRequest preQuestionWriteRequest = new PreQuestionWriteRequest(preQuestion);
 
             final Member author = saveMember("알린");
             final Member questioner = saveMember("로마");

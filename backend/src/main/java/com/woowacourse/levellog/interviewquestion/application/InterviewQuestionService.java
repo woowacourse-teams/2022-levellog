@@ -13,6 +13,7 @@ import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionQue
 import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResult;
 import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResults;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponse;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponse;
 import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponses;
@@ -53,7 +54,7 @@ public class InterviewQuestionService {
         validateMemberIsParticipant(loginStatus.getMemberId(), levellog);
         team.validateInProgress(timeStandard.now());
 
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(loginStatus.getMemberId(), levellog);
+        final InterviewQuestion interviewQuestion = request.toEntity(loginStatus.getMemberId(), levellog);
 
         return interviewQuestionRepository.save(interviewQuestion)
                 .getId();
@@ -83,7 +84,9 @@ public class InterviewQuestionService {
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthorId(
                 levellog, loginStatus.getMemberId());
 
-        return InterviewQuestionContentResponses.from(interviewQuestions);
+        return new InterviewQuestionContentResponses(interviewQuestions.stream()
+                .map(it -> new InterviewQuestionContentResponse(it.getId(), it.getContent()))
+                .collect(Collectors.toList()));
     }
 
     public InterviewQuestionSearchQueryResults searchByKeyword(final String keyword,
@@ -94,7 +97,7 @@ public class InterviewQuestionService {
                 keyword,
                 loginStatus, size, page, sortCondition);
 
-        return InterviewQuestionSearchQueryResults.of(results, page);
+        return new InterviewQuestionSearchQueryResults(results, page);
     }
 
     @Transactional
@@ -129,7 +132,8 @@ public class InterviewQuestionService {
                 interviewQuestionId);
         validateAlreadyExist(interviewQuestionId, loginStatus.getMemberId());
 
-        interviewQuestionLikesRepository.save(InterviewQuestionLikes.of(interviewQuestion, loginStatus.getMemberId()));
+        interviewQuestionLikesRepository.save(
+                new InterviewQuestionLikes(interviewQuestion.getId(), loginStatus.getMemberId()));
         interviewQuestion.upLike();
     }
 

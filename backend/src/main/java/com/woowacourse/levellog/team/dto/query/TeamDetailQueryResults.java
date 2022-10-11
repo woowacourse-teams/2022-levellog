@@ -26,14 +26,20 @@ public class TeamDetailQueryResults {
         final TeamDetailQueryResult result = results.get(0);
 
         final TeamResponse teamResponse = result.getTeamResponse();
-        final TeamStatus status = toTeamStatus(result, time);
+        final TeamStatus status = result.getTeamStatus(time);
         final SimpleParticipants participants = toSimpleParticipants();
 
-        return TeamDetailResponse.from(
-                teamResponse,
+        return new TeamDetailResponse(
+                teamResponse.getId(),
+                teamResponse.getTitle(),
+                teamResponse.getPlace(),
+                teamResponse.getStartAt(),
+                teamResponse.getProfileUrl(),
                 status,
-                memberId,
-                participants,
+                participants.toHostId(),
+                participants.isContains(memberId),
+                participants.toInterviewerIds(memberId, teamResponse.getInterviewerNumber()),
+                participants.toIntervieweeIds(memberId, teamResponse.getInterviewerNumber()),
                 toParticipantResponses(results),
                 toWatcherResponses(results)
         );
@@ -43,10 +49,6 @@ public class TeamDetailQueryResults {
         return results.stream()
                 .map(TeamDetailQueryResult::getSimpleParticipant)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), SimpleParticipants::new));
-    }
-
-    private TeamStatus toTeamStatus(final TeamDetailQueryResult result, final LocalDateTime nowTime) {
-        return result.getTeamStatus(nowTime);
     }
 
     private List<ParticipantResponse> toParticipantResponses(

@@ -11,16 +11,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PreQuestionWriteRequest {
 
     @NotBlank
     private String content;
-
-    public static PreQuestionWriteRequest from(final String content) {
-        return new PreQuestionWriteRequest(content);
-    }
 
     public PreQuestion toEntity(final Levellog levellog, final Long fromId) {
         return new PreQuestion(levellog, fromId, content);

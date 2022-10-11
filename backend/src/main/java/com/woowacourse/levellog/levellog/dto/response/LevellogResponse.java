@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.levellog.dto.response;
 
-import com.woowacourse.levellog.levellog.domain.Levellog;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -16,8 +15,4 @@ public class LevellogResponse {
     private Long id;
 
     private String content;
-
-    public static LevellogResponse from(final Levellog levellog) {
-        return new LevellogResponse(levellog.getId(), levellog.getContent());
-    }
 }

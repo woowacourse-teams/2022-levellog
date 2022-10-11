@@ -42,7 +42,7 @@ public class PreQuestionTest {
         void constructor_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
-            final Levellog levellog = Levellog.of(author.getId(), team, "알린의 레벨로그");
+            final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
 
             // when & then
             assertThatThrownBy(() -> new PreQuestion(levellog, from.getId(), preQuestion))
@@ -55,7 +55,7 @@ public class PreQuestionTest {
         void constructor_preQuestionMyLevellog_exception() {
             // given
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
-            final Levellog levellog = Levellog.of(author.getId(), team, "알린의 레벨로그");
+            final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
 
             final String preQuestion = "알린의 사전 질문";
 
@@ -75,7 +75,7 @@ public class PreQuestionTest {
         void success() {
             // given
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
-            final Levellog levellog = Levellog.of(author.getId(), team, "알린의 레벨로그");
+            final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
 
             final PreQuestion preQuestion = new PreQuestion(levellog, from.getId(), "로마가 쓴 사전 질문");
 
@@ -93,7 +93,7 @@ public class PreQuestionTest {
         void update_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
             final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
-            final Levellog levellog = Levellog.of(author.getId(), team, "알린의 레벨로그");
+            final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
 
             // when & then
             assertThatThrownBy(() -> new PreQuestion(levellog, from.getId(), preQuestion))

@@ -5,6 +5,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
 import com.woowacourse.levellog.levellog.exception.LevellogAlreadyExistException;
@@ -30,15 +31,15 @@ class LevellogControllerTest extends ControllerTest {
         void save_alreadyExists_exception() throws Exception {
             // given
             final LevellogWriteRequest request = LevellogWriteRequest.from("content");
-            final Long authorId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long teamId = 1L;
 
             final String message = "레벨로그가 이미 존재합니다.";
             willThrow(new LevellogAlreadyExistException(DebugMessage.init()
-                    .append("authorId", authorId)
+                    .append("authorId", loginStatus.getMemberId())
                     .append("teamId", teamId)))
                     .given(levellogService)
-                    .save(request, authorId, teamId);
+                    .save(request, loginStatus, teamId);
 
             // when
             final ResultActions perform = requestCreateLevellog(teamId, request);
@@ -78,13 +79,13 @@ class LevellogControllerTest extends ControllerTest {
         void save_notReady_exception() throws Exception {
             // given
             final LevellogWriteRequest request = LevellogWriteRequest.from("content");
-            final Long authorId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final Long teamId = 1L;
 
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(levellogService)
-                    .save(request, authorId, teamId);
+                    .save(request, loginStatus, teamId);
 
             // when
             final ResultActions perform = requestCreateLevellog(teamId, request);
@@ -176,13 +177,13 @@ class LevellogControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final Long authorId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final LevellogWriteRequest request = LevellogWriteRequest.from("update content");
 
             final String message = "작성자가 아닙니다.";
             willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(levellogService)
-                    .update(request, levellogId, authorId);
+                    .update(request, levellogId, loginStatus);
 
             // when
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);
@@ -203,13 +204,13 @@ class LevellogControllerTest extends ControllerTest {
             // given
             final Long teamId = 1L;
             final Long levellogId = 2L;
-            final Long authorId = 1L;
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
             final LevellogWriteRequest request = LevellogWriteRequest.from("new content");
 
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(levellogService)
-                    .update(request, levellogId, authorId);
+                    .update(request, levellogId, loginStatus);
 
             // when
             final ResultActions perform = requestUpdateLevellog(teamId, levellogId, request);

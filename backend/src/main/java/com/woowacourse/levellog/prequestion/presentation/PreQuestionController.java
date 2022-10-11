@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.prequestion.presentation;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Extracted;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.prequestion.application.PreQuestionService;
 import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
 import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
@@ -27,16 +28,16 @@ public class PreQuestionController {
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid final PreQuestionWriteRequest request,
                                      @PathVariable final Long levellogId,
-                                     @Authentic final Long memberId) {
-        final Long preQuestionId = preQuestionService.save(request, levellogId, memberId);
+                                     @Extracted final LoginStatus loginStatus) {
+        final Long preQuestionId = preQuestionService.save(request, levellogId, loginStatus);
         return ResponseEntity.created(
                 URI.create("/api/levellogs/" + levellogId + "/pre-questions/" + preQuestionId)).build();
     }
 
     @GetMapping("/my")
     public ResponseEntity<PreQuestionResponse> findMy(@PathVariable final Long levellogId,
-                                                      @Authentic final Long memberId) {
-        final PreQuestionResponse response = preQuestionService.findMy(levellogId, memberId);
+                                                      @Extracted final LoginStatus loginStatus) {
+        final PreQuestionResponse response = preQuestionService.findMy(levellogId, loginStatus);
         return ResponseEntity.ok(response);
     }
 
@@ -44,16 +45,16 @@ public class PreQuestionController {
     public ResponseEntity<Void> update(@RequestBody @Valid final PreQuestionWriteRequest request,
                                        @PathVariable final Long levellogId,
                                        @PathVariable final Long preQuestionId,
-                                       @Authentic final Long memberId) {
-        preQuestionService.update(request, preQuestionId, levellogId, memberId);
+                                       @Extracted final LoginStatus loginStatus) {
+        preQuestionService.update(request, preQuestionId, levellogId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{preQuestionId}")
     public ResponseEntity<Void> delete(@PathVariable final Long levellogId,
                                        @PathVariable final Long preQuestionId,
-                                       @Authentic final Long memberId) {
-        preQuestionService.deleteById(preQuestionId, levellogId, memberId);
+                                       @Extracted final LoginStatus loginStatus) {
+        preQuestionService.deleteById(preQuestionId, levellogId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 }

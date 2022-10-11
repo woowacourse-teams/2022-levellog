@@ -11,31 +11,12 @@ import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("LevellogRepository의")
 class LevellogRepositoryTest extends RepositoryTest {
-
-    @Test
-    @DisplayName("findByAuthorIdAndTeamId 메서드는 memberId와 teamId이 모두 일치하는 레벨로그를 반환한다.")
-    void findByAuthorIdAndTeamId() {
-        // given
-        final Member author = saveMember("pepper");
-        final Team team = saveTeam(author);
-        final Levellog levellog = saveLevellog(author, team);
-
-        final Long authorId = author.getId();
-        final Long teamId = team.getId();
-
-        // when
-        final Optional<Levellog> actual = levellogRepository.findByAuthorIdAndTeamId(authorId, teamId);
-
-        // then
-        assertThat(actual).hasValue(levellog);
-    }
 
     @Test
     @DisplayName("findAllByAuthor 메서드는 주어진 author가 작성한 레벨로그를 모두 반환한다.")
@@ -52,7 +33,7 @@ class LevellogRepositoryTest extends RepositoryTest {
         saveLevellog(anotherAuthor, team);
 
         // when
-        final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author);
+        final List<Levellog> levellogs = levellogRepository.findAllByAuthorId(author.getId());
 
         // then
         assertAll(

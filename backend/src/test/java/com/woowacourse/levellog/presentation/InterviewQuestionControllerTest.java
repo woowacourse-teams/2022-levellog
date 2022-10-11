@@ -5,6 +5,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
@@ -57,7 +58,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .save(request, 1L, 1L);
+                    .save(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateInterviewQuestion(1L, request);
@@ -83,7 +84,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             willThrow(new LevellogNotFoundException(DebugMessage.init()
                     .append("levellogId", invalidLevellogId)))
                     .given(interviewQuestionService)
-                    .save(request, invalidLevellogId, 1L);
+                    .save(request, invalidLevellogId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateInterviewQuestion(invalidLevellogId, request);
@@ -108,7 +109,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .save(request, levellogId, 1L);
+                    .save(request, levellogId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateInterviewQuestion(levellogId, request);
@@ -133,7 +134,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "이미 인터뷰가 종료된 팀입니다.";
             willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .save(request, levellogId, 1L);
+                    .save(request, levellogId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateInterviewQuestion(levellogId, request);
@@ -158,7 +159,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "같은 팀에 속해있지 않습니다.";
             willThrow(new ParticipantNotSameTeamException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .save(request, levellogId, 1L);
+                    .save(request, levellogId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateInterviewQuestion(levellogId, request);
@@ -182,7 +183,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
 
             willThrow(new InvalidInterviewQuestionException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .save(request, levellogId, 1L);
+                    .save(request, levellogId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateInterviewQuestion(1L, request);
@@ -254,7 +255,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             willThrow(new LevellogNotFoundException(DebugMessage.init()
                     .append("levellogId", invalidLevellogId)))
                     .given(interviewQuestionService)
-                    .findAllByLevellogAndAuthor(invalidLevellogId, 1L);
+                    .findAllByLevellogAndAuthor(invalidLevellogId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestFindAllMyInterviewQuestion(invalidLevellogId);
@@ -307,7 +308,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "인터뷰 질문은 255자 이하여야합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
@@ -333,7 +334,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             willThrow(new InterviewQuestionNotFoundException(DebugMessage.init()
                     .append("interviewQuestionId", invalidInterviewQuestionId)))
                     .given(interviewQuestionService)
-                    .update(request, invalidInterviewQuestionId, 1L);
+                    .update(request, invalidInterviewQuestionId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateInterviewQuestion(1L, invalidInterviewQuestionId, request);
@@ -356,7 +357,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "작성자가 아닙니다.";
             willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
@@ -379,7 +380,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
@@ -402,7 +403,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "이미 인터뷰가 종료된 팀입니다.";
             willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateInterviewQuestion(1L, 1L, request);
@@ -440,7 +441,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             willThrow(new InterviewQuestionNotFoundException(DebugMessage.init()
                     .append("interviewQuestionId", invalidInterviewQuestionId)))
                     .given(interviewQuestionService)
-                    .deleteById(invalidInterviewQuestionId, 1L);
+                    .deleteById(invalidInterviewQuestionId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteInterviewQuestion(1L, invalidInterviewQuestionId);
@@ -462,7 +463,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "작성자가 아닙니다.";
             willThrow(new MemberNotAuthorException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .deleteById(1L, 1L);
+                    .deleteById(1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteInterviewQuestion(1L, 1L);
@@ -484,7 +485,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "이미 인터뷰가 종료된 팀입니다.";
             willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .deleteById(1L, 1L);
+                    .deleteById(1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteInterviewQuestion(1L, 1L);
@@ -506,7 +507,7 @@ class InterviewQuestionControllerTest extends ControllerTest {
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(interviewQuestionService)
-                    .deleteById(1L, 1L);
+                    .deleteById(1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteInterviewQuestion(1L, 1L);

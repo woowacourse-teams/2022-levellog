@@ -1,9 +1,6 @@
 package com.woowacourse.levellog.interviewquestion.dto.response;
 
-import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
-import com.woowacourse.levellog.member.domain.Member;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InterviewQuestionListResponse {
 

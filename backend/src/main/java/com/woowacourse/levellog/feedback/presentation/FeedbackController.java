@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.feedback.presentation;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Extracted;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
 import com.woowacourse.levellog.feedback.dto.response.FeedbackListResponse;
@@ -27,23 +28,23 @@ public class FeedbackController {
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long levellogId,
                                      @RequestBody @Valid final FeedbackWriteRequest request,
-                                     @Authentic final Long memberId) {
-        final Long id = feedbackService.save(request, levellogId, memberId);
+                                     @Extracted final LoginStatus loginStatus) {
+        final Long id = feedbackService.save(request, levellogId, loginStatus);
         return ResponseEntity.created(URI.create("/api/levellogs/" + levellogId + "/feedbacks/" + id)).build();
     }
 
     @GetMapping
     public ResponseEntity<FeedbackListResponse> findAll(@PathVariable final Long levellogId,
-                                                        @Authentic final Long memberId) {
-        final FeedbackListResponse response = feedbackService.findAll(levellogId, memberId);
+                                                        @Extracted final LoginStatus loginStatus) {
+        final FeedbackListResponse response = feedbackService.findAll(levellogId, loginStatus);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{feedbackId}")
     public ResponseEntity<FeedbackResponse> findById(@PathVariable final Long levellogId,
                                                      @PathVariable final Long feedbackId,
-                                                     @Authentic final Long memberId) {
-        final FeedbackResponse response = feedbackService.findById(levellogId, feedbackId, memberId);
+                                                     @Extracted final LoginStatus loginStatus) {
+        final FeedbackResponse response = feedbackService.findById(levellogId, feedbackId, loginStatus);
         return ResponseEntity.ok(response);
     }
 
@@ -51,8 +52,8 @@ public class FeedbackController {
     public ResponseEntity<Void> update(@PathVariable final Long levellogId,
                                        @RequestBody @Valid final FeedbackWriteRequest request,
                                        @PathVariable final Long feedbackId,
-                                       @Authentic final Long memberId) {
-        feedbackService.update(request, feedbackId, memberId);
+                                       @Extracted final LoginStatus loginStatus) {
+        feedbackService.update(request, feedbackId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 }

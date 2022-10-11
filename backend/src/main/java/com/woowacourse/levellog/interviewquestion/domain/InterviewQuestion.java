@@ -4,7 +4,6 @@ import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,9 +22,8 @@ public class InterviewQuestion extends BaseEntity {
 
     private static final int DEFAULT_STRING_SIZE = 255;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_interview_question_author_member"))
-    private Member author;
+    @Column(nullable = false)
+    private Long authorId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_interview_question_levellog"))
@@ -37,17 +35,17 @@ public class InterviewQuestion extends BaseEntity {
     @Column(nullable = false)
     private int likeCount = 0;
 
-    private InterviewQuestion(final Member author, final Levellog levellog, final String content) {
+    private InterviewQuestion(final Long authorId, final Levellog levellog, final String content) {
         validateContent(content);
 
-        this.author = author;
+        this.authorId = authorId;
         this.levellog = levellog;
         this.content = content;
     }
 
-    public static InterviewQuestion of(final Member author, final Levellog levellog,
+    public static InterviewQuestion of(final Long authorId, final Levellog levellog,
                                        final String content) {
-        return new InterviewQuestion(author, levellog, content);
+        return new InterviewQuestion(authorId, levellog, content);
     }
 
     private void validateContent(final String content) {
@@ -61,23 +59,19 @@ public class InterviewQuestion extends BaseEntity {
         }
     }
 
-    public void validateMemberIsAuthor(final Member member) {
-        final boolean isNotAuthor = !author.equals(member);
+    public void validateMemberIsAuthor(final Long memberId) {
+        final boolean isNotAuthor = !authorId.equals(memberId);
         if (isNotAuthor) {
             throw new MemberNotAuthorException(DebugMessage.init()
-                    .append("loginMemberId", member.getId())
-                    .append("authorMemberId", author.getId())
+                    .append("loginMemberId", memberId)
+                    .append("authorMemberId", authorId)
                     .append("interviewQuestionId", getId()));
         }
     }
 
-    public boolean isAuthor(final Member member) {
-        return author.equals(member);
-    }
-
-    public void updateContent(final String content, final Member member) {
+    public void updateContent(final String content, final Long memberId) {
         validateContent(content);
-        validateMemberIsAuthor(member);
+        validateMemberIsAuthor(memberId);
 
         this.content = content;
     }

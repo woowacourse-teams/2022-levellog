@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.authentication.dto.request.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.response.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.response.LoginResponse;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,7 +31,7 @@ class OAuthServiceTest extends ServiceTest {
 
             // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
-            final Long savedMemberId = memberService.findMemberById(Long.parseLong(payload))
+            final Long savedMemberId = memberService.findMemberById(LoginStatus.fromLogin(Long.parseLong(payload)))
                     .getId();
             assertAll(
                     () -> assertThat(Long.parseLong(payload)).isEqualTo(savedMemberId),

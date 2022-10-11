@@ -5,7 +5,6 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.exception.InvalidFeedbackException;
 import com.woowacourse.levellog.interviewquestion.exception.InvalidInterviewQuestionException;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.team.domain.Team;
@@ -25,9 +24,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Levellog extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_levellog_author"))
-    private Member author;
+    @Column(nullable = false)
+    private Long authorId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_levellog_team"))
@@ -37,15 +35,15 @@ public class Levellog extends BaseEntity {
     @Lob
     private String content;
 
-    private Levellog(final Member author, final Team team, final String content) {
+    private Levellog(final Long authorId, final Team team, final String content) {
         validateContent(content);
-        this.author = author;
+        this.authorId = authorId;
         this.team = team;
         this.content = content;
     }
 
-    public static Levellog of(final Member author, final Team team, final String content) {
-        return new Levellog(author, team, content);
+    public static Levellog of(final Long authorId, final Team team, final String content) {
+        return new Levellog(authorId, team, content);
     }
 
     private void validateContent(final String content) {
@@ -56,48 +54,47 @@ public class Levellog extends BaseEntity {
         }
     }
 
-    private void validateAuthor(final Member member) {
-        final boolean isNotAuthor = !author.equals(member);
+    private void validateAuthor(final Long memberId) {
+        final boolean isNotAuthor = !authorId.equals(memberId);
         if (isNotAuthor) {
             throw new MemberNotAuthorException(DebugMessage.init()
-                    .append("loginMemberId", member.getId())
-                    .append("authorMemberId", author.getId())
+                    .append("loginMemberId", memberId)
+                    .append("authorMemberId", authorId)
                     .append("levellogId", getId())
             );
         }
-
     }
 
-    public void updateContent(final Member member, final String content) {
-        validateAuthor(member);
+    public void updateContent(final Long memberId, final String content) {
+        validateAuthor(memberId);
         validateContent(content);
         this.content = content;
     }
 
-    public boolean isAuthor(final Member member) {
-        return author.equals(member);
+    public boolean isAuthor(final Long memberId) {
+        return authorId.equals(memberId);
     }
 
-    public void validateSelfFeedback(final Member member) {
-        if (isAuthor(member)) {
+    public void validateSelfFeedback(final Long memberId) {
+        if (isAuthor(memberId)) {
             throw new InvalidFeedbackException(DebugMessage.init()
                     .append("levellogId", getId()));
         }
     }
 
-    public void validateSelfPreQuestion(final Member member) {
-        if (isAuthor(member)) {
+    public void validateSelfPreQuestion(final Long memberId) {
+        if (isAuthor(memberId)) {
             throw new InvalidPreQuestionException(DebugMessage.init()
-                    .append("levellogAuthorId", getAuthor().getId())
-                    .append("preQuestionAuthorId", member.getId()));
+                    .append("levellogAuthorId", authorId)
+                    .append("preQuestionAuthorId", memberId));
         }
     }
 
-    public void validateSelfInterviewQuestion(final Member member) {
-        if (isAuthor(member)) {
+    public void validateSelfInterviewQuestion(final Long memberId) {
+        if (isAuthor(memberId)) {
             throw new InvalidInterviewQuestionException(DebugMessage.init()
                     .append("levellogId", getId())
-                    .append("memberId", member.getId()));
+                    .append("memberId", memberId));
         }
     }
 }

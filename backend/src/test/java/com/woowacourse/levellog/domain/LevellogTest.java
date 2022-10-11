@@ -34,7 +34,7 @@ class LevellogTest {
             final String content = "Spring을 학습하였습니다";
 
             // when & then
-            assertDoesNotThrow(() -> Levellog.of(author, team, content));
+            assertDoesNotThrow(() -> Levellog.of(author.getId(), team, content));
         }
 
         @ParameterizedTest
@@ -47,7 +47,7 @@ class LevellogTest {
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
 
             //  when & then
-            assertThatThrownBy(() -> Levellog.of(author, team, invalidContent))
+            assertThatThrownBy(() -> Levellog.of(author.getId(), team, invalidContent))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
@@ -62,12 +62,13 @@ class LevellogTest {
         void success() {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
+            MockEntityFactory.setId(1L, author);
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
-            final Levellog levellog = Levellog.of(author, team, "content");
+            final Levellog levellog = Levellog.of(author.getId(), team, "content");
             final String updatedContent = "updated content";
 
             // when
-            levellog.updateContent(author, updatedContent);
+            levellog.updateContent(author.getId(), updatedContent);
 
             // then
             assertThat(levellog.getContent()).isEqualTo(updatedContent);
@@ -82,10 +83,10 @@ class LevellogTest {
             MockEntityFactory.setId(1L, author);
             MockEntityFactory.setId(2L, member);
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
-            final Levellog levellog = Levellog.of(author, team, "content");
+            final Levellog levellog = Levellog.of(author.getId(), team, "content");
 
             //  when & then
-            assertThatThrownBy(() -> levellog.updateContent(member, "update content"))
+            assertThatThrownBy(() -> levellog.updateContent(member.getId(), "update content"))
                     .isInstanceOf(MemberNotAuthorException.class)
                     .hasMessageContainingAll("작성자가 아닙니다.", String.valueOf(member.getId()),
                             String.valueOf(levellog.getId()));
@@ -99,11 +100,12 @@ class LevellogTest {
         void updateContent_contentBlank_exception(final String invalidContent) {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
+            MockEntityFactory.setId(1L, author);
             final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
-            final Levellog levellog = Levellog.of(author, team, "content");
+            final Levellog levellog = Levellog.of(author.getId(), team, "content");
 
             //  when & then
-            assertThatThrownBy(() -> levellog.updateContent(author, invalidContent))
+            assertThatThrownBy(() -> levellog.updateContent(author.getId(), invalidContent))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }

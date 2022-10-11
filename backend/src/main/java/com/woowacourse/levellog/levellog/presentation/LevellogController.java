@@ -1,7 +1,8 @@
 package com.woowacourse.levellog.levellog.presentation;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Extracted;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.dto.request.LevellogWriteRequest;
 import com.woowacourse.levellog.levellog.dto.response.LevellogResponse;
@@ -27,8 +28,8 @@ public class LevellogController {
     @PostMapping
     public ResponseEntity<Void> save(@PathVariable final Long teamId,
                                      @RequestBody @Valid final LevellogWriteRequest request,
-                                     @Authentic final Long authorId) {
-        final Long id = levellogService.save(request, authorId, teamId);
+                                     @Extracted LoginStatus loginStatus) {
+        final Long id = levellogService.save(request, loginStatus, teamId);
         return ResponseEntity.created(URI.create("/api/teams/" + teamId + "/levellogs/" + id)).build();
     }
 
@@ -43,9 +44,9 @@ public class LevellogController {
     @PutMapping("/{levellogId}")
     public ResponseEntity<Void> update(@PathVariable final Long teamId,
                                        @PathVariable final Long levellogId,
-                                       @Authentic final Long memberId,
+                                       @Extracted LoginStatus loginStatus,
                                        @RequestBody @Valid final LevellogWriteRequest request) {
-        levellogService.update(request, levellogId, memberId);
+        levellogService.update(request, levellogId, loginStatus);
         return ResponseEntity.noContent().build();
     }
 }

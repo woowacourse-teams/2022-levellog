@@ -1,8 +1,10 @@
 package com.woowacourse.levellog.domain;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
+import com.woowacourse.levellog.feedback.domain.FeedbackQueryRepository;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
 import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
@@ -13,11 +15,13 @@ import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionReposi
 import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.domain.LevellogQueryRepository;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
+import com.woowacourse.levellog.prequestion.domain.PreQuestionQueryRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.ParticipantRepository;
@@ -41,12 +45,18 @@ import org.springframework.test.context.ActiveProfiles;
 @Import({
         JpaConfig.class,
         TeamQueryRepository.class,
-        InterviewQuestionQueryRepository.class
+        FeedbackQueryRepository.class,
+        InterviewQuestionQueryRepository.class,
+        PreQuestionQueryRepository.class,
+        LevellogQueryRepository.class
 })
 abstract class RepositoryTest {
 
     @Autowired
     protected FeedbackRepository feedbackRepository;
+
+    @Autowired
+    protected FeedbackQueryRepository feedbackQueryRepository;
 
     @Autowired
     protected InterviewQuestionRepository interviewQuestionRepository;
@@ -61,6 +71,9 @@ abstract class RepositoryTest {
     protected LevellogRepository levellogRepository;
 
     @Autowired
+    protected LevellogQueryRepository levellogQueryRepository;
+
+    @Autowired
     protected MemberRepository memberRepository;
 
     @Autowired
@@ -70,6 +83,9 @@ abstract class RepositoryTest {
     protected PreQuestionRepository preQuestionRepository;
 
     @Autowired
+    protected PreQuestionQueryRepository preQuestionQueryRepository;
+
+    @Autowired
     protected TeamRepository teamRepository;
 
     @Autowired
@@ -77,6 +93,10 @@ abstract class RepositoryTest {
 
     @Autowired
     protected NicknameMappingRepository nicknameMappingRepository;
+
+    protected LoginStatus getLoginStatus(final Member member) {
+        return LoginStatus.fromLogin(member.getId());
+    }
 
     protected Member saveMember(final String nickname) {
         final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".org");
@@ -107,20 +127,20 @@ abstract class RepositoryTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {
-        final Levellog levellog = Levellog.of(author, team, "levellog content");
+        final Levellog levellog = Levellog.of(author.getId(), team, "levellog content");
         return levellogRepository.save(levellog);
     }
 
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
         final InterviewQuestionWriteRequest request = InterviewQuestionWriteRequest.from(content);
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
+        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author.getId(), levellog);
         return interviewQuestionRepository.save(interviewQuestion);
     }
 
     protected InterviewQuestionLikes pressLikeInterviewQuestion(final InterviewQuestion interviewQuestion,
                                                                 final Member liker) {
-        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker);
+        final InterviewQuestionLikes interviewQuestionLikes = InterviewQuestionLikes.of(interviewQuestion, liker.getId());
         return interviewQuestionLikesRepository.save(interviewQuestionLikes);
     }
 
@@ -136,13 +156,13 @@ abstract class RepositoryTest {
     }
 
     protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {
-        final Feedback feedback = new Feedback(from, to, levellog, "study from " + from.getNickname(),
+        final Feedback feedback = new Feedback(from.getId(), levellog, "study from " + from.getNickname(),
                 "speak from " + from.getNickname(), "etc from " + from.getNickname());
         return feedbackRepository.save(feedback);
     }
 
     protected PreQuestion savePreQuestion(final Levellog levellog, final Member author) {
-        final PreQuestion preQuestion = new PreQuestion(levellog, author,
+        final PreQuestion preQuestion = new PreQuestion(levellog, author.getId(),
                 author.getNickname() + "이 " + levellog.getId() + "에 작성한 사전질문");
         return preQuestionRepository.save(preQuestion);
     }

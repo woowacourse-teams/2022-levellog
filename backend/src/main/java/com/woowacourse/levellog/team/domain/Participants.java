@@ -2,7 +2,6 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import java.util.ArrayList;
@@ -113,16 +112,16 @@ public class Participants {
         }
     }
 
-    public void validateExistsMember(final Member member) {
-        if (!existsParticipantByMember(member)) {
+    public void validateExistsMember(final Long memberId) {
+        if (!existsParticipantByMember(memberId)) {
             throw new ParticipantNotSameTeamException(DebugMessage.init()
-                    .append("memberId", member.getId())
+                    .append("memberId", memberId)
             );
         }
     }
 
-    private boolean existsParticipantByMember(final Member member) {
+    private boolean existsParticipantByMember(final Long memberId) {
         return values.stream()
-                .anyMatch(participant -> participant.getMember().equals(member));
+                .anyMatch(participant -> participant.getMember().getId().equals(memberId));
     }
 }

@@ -7,34 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("PreQuestionRepository의")
 class PreQuestionRepositoryTest extends RepositoryTest {
-
-    @Test
-    @DisplayName("findByLevellogAndAuthor 메서드는 Levellog와 Author가 같은 사전 질문을 반환한다.")
-    void findByLevellogAndAuthor() {
-        // given
-        final Member levellogAuthor = saveMember("알린");
-        final Member questioner = saveMember("로마");
-        final Team team = saveTeam(levellogAuthor, questioner);
-        final Levellog levellog = saveLevellog(levellogAuthor, team);
-
-        final PreQuestion preQuestion = savePreQuestion(levellog, questioner);
-
-        // when
-        final Optional<PreQuestion> actual = preQuestionRepository.findByLevellogAndAuthor(levellog, questioner);
-
-        // then
-        assertThat(actual).hasValue(preQuestion);
-    }
 
     @Nested
     @DisplayName("getPreQuestion 메서드는")
@@ -87,7 +67,7 @@ class PreQuestionRepositoryTest extends RepositoryTest {
             savePreQuestion(levellog, questioner);
 
             // when
-            final boolean actual = preQuestionRepository.existsByLevellogAndAuthor(levellog, questioner);
+            final boolean actual = preQuestionRepository.existsByLevellogAndAuthorId(levellog, questioner.getId());
 
             // then
             assertTrue(actual);
@@ -103,7 +83,7 @@ class PreQuestionRepositoryTest extends RepositoryTest {
             final Levellog levellog = saveLevellog(levellogAuthor, team);
 
             // when
-            final boolean actual = preQuestionRepository.existsByLevellogAndAuthor(levellog, questioner);
+            final boolean actual = preQuestionRepository.existsByLevellogAndAuthorId(levellog, questioner.getId());
 
             // then
             assertFalse(actual);

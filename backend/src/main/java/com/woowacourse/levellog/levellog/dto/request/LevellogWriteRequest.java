@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.levellog.dto.request;
 
 import com.woowacourse.levellog.levellog.domain.Levellog;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -23,7 +22,7 @@ public class LevellogWriteRequest {
         return new LevellogWriteRequest(content);
     }
 
-    public Levellog toLevellog(final Member author, final Team team) {
-        return Levellog.of(author, team, content);
+    public Levellog toLevellog(final Long authorId, final Team team) {
+        return Levellog.of(authorId, team, content);
     }
 }

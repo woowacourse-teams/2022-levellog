@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.team.application;
 
+import com.woowacourse.levellog.authentication.support.Verified;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
@@ -21,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamQueryService {
 
     private final TeamQueryRepository teamQueryRepository;
-    private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
 
     public TeamListResponse findAll(final TeamFilterCondition condition, final int page, final int size) {
@@ -31,9 +32,8 @@ public class TeamQueryService {
         return results.toResponse(timeStandard.now());
     }
 
-    public TeamListResponse findAllByMemberId(final Long memberId) {
-        final Member member = memberRepository.getMember(memberId);
-        final AllTeamListQueryResult results = new AllTeamListQueryResult(teamQueryRepository.findMyList(member));
+    public TeamListResponse findAllByMemberId(@Verified final LoginStatus loginStatus) {
+        final AllTeamListQueryResult results = new AllTeamListQueryResult(teamQueryRepository.findMyList(loginStatus.getMemberId()));
 
         return results.toResponse(timeStandard.now());
     }
@@ -52,7 +52,7 @@ public class TeamQueryService {
         if (allTeamDetailListQueryResult.isEmpty()) {
             throw new TeamNotFoundException(DebugMessage.init()
                     .append("teamId", teamId)
-                    .append("membmerId", memberId));
+                    .append("memberId", loginStatus.getMemberId()));
         }
     }
 }

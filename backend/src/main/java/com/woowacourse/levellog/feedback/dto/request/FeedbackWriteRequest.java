@@ -1,5 +1,7 @@
 package com.woowacourse.levellog.feedback.dto.request;
 
+import com.woowacourse.levellog.feedback.domain.Feedback;
+import com.woowacourse.levellog.levellog.domain.Levellog;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -20,5 +22,10 @@ public class FeedbackWriteRequest {
 
     public static FeedbackWriteRequest from(final String study, final String speak, final String etc) {
         return new FeedbackWriteRequest(new FeedbackContentRequest(study, speak, etc));
+    }
+
+    public Feedback toEntity(final Long fromId, final Levellog levellog) {
+        return new Feedback(fromId, levellog, feedback.getStudy(), feedback.getSpeak(),
+                feedback.getEtc());
     }
 }

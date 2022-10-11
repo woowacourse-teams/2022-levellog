@@ -8,6 +8,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
@@ -91,7 +92,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀 이름은 255 이하여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -139,7 +140,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "장소 이름은 255 이하여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -185,7 +186,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "인터뷰 시작 시간은 현재 시간 이후여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -269,7 +270,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "참가자 수는 인터뷰어 수 보다 많아야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -294,7 +295,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "중복되는 참가자가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -319,7 +320,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "중복되는 참관자가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -344,7 +345,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "참가자와 참관자에 모두 포함된 멤버가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -368,7 +369,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -429,7 +430,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀 이름은 255 이하여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, id, 1L);
+                    .update(request, id, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(id, request);
@@ -479,7 +480,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "장소 이름은 255 이하여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, id, 1L);
+                    .update(request, id, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(id, request);
@@ -526,7 +527,7 @@ class TeamControllerTest extends ControllerTest {
 
             willThrow(new InvalidFieldException("인터뷰 시작 시간은 현재 시간 이후여야 합니다.", DebugMessage.init()))
                     .given(teamService)
-                    .update(request, id, 1L);
+                    .update(request, id, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(id, request);
@@ -551,7 +552,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 10000000L, 1L);
+                    .update(request, 10000000L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(10000000L, request);
@@ -634,7 +635,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "참가자 수는 인터뷰어 수 보다 많아야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -658,7 +659,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "중복되는 참가자가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -682,7 +683,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "중복된 참관자가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -706,7 +707,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "참가자와 참관자에 모두 포함된 멤버가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -730,7 +731,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -755,7 +756,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -788,7 +789,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamQueryService)
-                    .findByTeamIdAndMemberId(10000000L, 1L);
+                    .findByTeamIdAndMemberId(10000000L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestFindTeam(10000000L);
@@ -856,7 +857,7 @@ class TeamControllerTest extends ControllerTest {
             final Long memberId = 5L;
 
             final String message = "같은 팀에 속해있지 않습니다.";
-            given(teamService.findMyRole(teamId, memberId, 1L))
+            given(teamService.findMyRole(teamId, memberId, LoginStatus.fromLogin(1L)))
                     .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
@@ -880,7 +881,7 @@ class TeamControllerTest extends ControllerTest {
             final Long memberId = 5L;
 
             final String message = "참가자가 존재하지 않습니다.";
-            given(teamService.findMyRole(teamId, memberId, 1L))
+            given(teamService.findMyRole(teamId, memberId, LoginStatus.fromLogin(1L)))
                     .willThrow(new ParticipantNotFoundException(DebugMessage.init()));
 
             // when
@@ -916,7 +917,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
-                    .close(teamId, 1L);
+                    .close(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCloseTeam(teamId);
@@ -939,7 +940,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "이미 인터뷰가 종료된 팀입니다.";
             willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(teamService)
-                    .close(teamId, 1L);
+                    .close(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCloseTeam(teamId);
@@ -963,7 +964,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(teamService)
-                    .close(teamId, 1L);
+                    .close(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCloseTeam(teamId);
@@ -987,7 +988,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "호스트 권한이 없습니다.";
             willThrow(new HostUnauthorizedException(DebugMessage.init()))
                     .given(teamService)
-                    .close(teamId, 1L);
+                    .close(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCloseTeam(teamId);
@@ -1020,7 +1021,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
-                    .deleteById(10000000L, 1L);
+                    .deleteById(10000000L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteTeam(10000000L);
@@ -1043,7 +1044,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
-                    .deleteById(teamId, 1L);
+                    .deleteById(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteTeam(teamId);
@@ -1067,7 +1068,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "호스트 권한이 없습니다.";
             willThrow(new HostUnauthorizedException(DebugMessage.init()))
                     .given(teamService)
-                    .deleteById(teamId, 1L);
+                    .deleteById(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteTeam(teamId);

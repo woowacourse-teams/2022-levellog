@@ -5,12 +5,16 @@ import { InterviewQuestionApiType, InterviewQuestionSearchApiType } from 'types/
 
 export const requestSearchedInterviewQuestion = async ({
   keyword,
+  accessToken,
   page = 0,
   size = 2000,
   sort = 'latest',
 }: SearchedInterviewQuestionType): Promise<InterviewQuestionSearchApiType> => {
   const { data } = await fetcher.get(
     `/interview-questions?keyword=${keyword}&page=${page}&size=${size}&sort=${sort}`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
   );
 
   return data;

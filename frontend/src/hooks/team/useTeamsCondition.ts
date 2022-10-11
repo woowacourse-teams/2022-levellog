@@ -7,31 +7,26 @@ const useTeamsCondition = () => {
     my: false,
   });
 
-  const handleClickFilterButtons = (e: React.MouseEvent<HTMLElement>) => {
-    const eventTarget = e.target as HTMLElement;
+  const handleClickOpenTeamsButton = () => {
+    if (teamsCondition.open) return;
+    setTeamsCondition({ open: true, close: false, my: false });
+  };
 
-    switch (eventTarget.innerText) {
-      case '진행중인 인터뷰':
-        if (teamsCondition.open) return;
+  const handleClickCloseTeamsButton = () => {
+    if (teamsCondition.close) return;
+    setTeamsCondition({ open: false, close: true, my: false });
+  };
 
-        setTeamsCondition({ open: true, close: false, my: false });
-        break;
-      case '종료된 인터뷰':
-        if (teamsCondition.close === true) return;
-
-        setTeamsCondition({ open: false, close: true, my: false });
-        break;
-      case '나의 인터뷰':
-        if (teamsCondition.my) return;
-
-        setTeamsCondition({ open: false, close: false, my: true });
-        break;
-    }
+  const handleClickMyTeamsButton = () => {
+    if (teamsCondition.my) return;
+    setTeamsCondition({ open: false, close: false, my: true });
   };
 
   return {
     teamsCondition,
-    handleClickFilterButtons,
+    handleClickOpenTeamsButton,
+    handleClickCloseTeamsButton,
+    handleClickMyTeamsButton,
   };
 };
 

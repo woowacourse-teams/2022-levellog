@@ -18,16 +18,29 @@ import FilterButton from 'components/@commons/FilterButton';
 import Image from 'components/@commons/Image';
 
 const InterviewTeams = () => {
-  const { teamsCondition, handleClickFilterButtons } = useTeamsCondition();
+  const {
+    teamsCondition,
+    handleClickCloseTeamsButton,
+    handleClickMyTeamsButton,
+    handleClickOpenTeamsButton,
+  } = useTeamsCondition();
   const { loginUserId } = useUser();
 
   return (
     <>
       <ContentHeader title={'인터뷰 팀'}>
-        <div onClick={handleClickFilterButtons}>
-          <FilterButton isActive={teamsCondition.open}>진행중인 인터뷰</FilterButton>
-          <FilterButton isActive={teamsCondition.close}>종료된 인터뷰</FilterButton>
-          {loginUserId && <FilterButton isActive={teamsCondition.my}>나의 인터뷰</FilterButton>}
+        <div>
+          <FilterButton onClick={handleClickOpenTeamsButton} isActive={teamsCondition.open}>
+            진행중인 인터뷰
+          </FilterButton>
+          <FilterButton onClick={handleClickCloseTeamsButton} isActive={teamsCondition.close}>
+            종료된 인터뷰
+          </FilterButton>
+          {loginUserId && (
+            <FilterButton onClick={handleClickMyTeamsButton} isActive={teamsCondition.my}>
+              나의 인터뷰
+            </FilterButton>
+          )}
         </div>
         <span />
       </ContentHeader>

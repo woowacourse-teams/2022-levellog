@@ -50,7 +50,7 @@ public class MemberService {
         return save(new MemberCreateDto(request.getNickname(), githubId, request.getProfileUrl()));
     }
 
-    public MemberDto findMemberById(@Authentic final LoginStatus loginStatus) {
+    public MemberDto findMemberById(final LoginStatus loginStatus) {
         final Member member = memberRepository.getMember(loginStatus.getMemberId());
 
         return MemberDto.from(member);

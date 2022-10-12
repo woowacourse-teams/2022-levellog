@@ -71,6 +71,6 @@ public class AdminService {
         final Team team = teamRepository.getTeam(teamId);
         final LocalDateTime presentTime = team.getDetail()
                 .getStartAt();
-        team.close(presentTime.plusDays(1));
+        team.close(presentTime.plusDays(1)); // Team 도메인 정책상 인터뷰 시작 시간 이후에만 종료할 수 있으므로 plusDays(1) 추가
     }
 }

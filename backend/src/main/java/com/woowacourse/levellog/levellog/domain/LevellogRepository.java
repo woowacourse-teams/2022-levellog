@@ -27,11 +27,11 @@ public interface LevellogRepository extends JpaRepository<Levellog, Long> {
     boolean existsByAuthorIdAndTeamId(Long authorId, Long teamId);
 
     @Query("SELECT l FROM Levellog l INNER JOIN FETCH l.team WHERE l.authorId = :authorId")
-    List<Levellog> findAllByAuthorId(@Param("authorId") Long authorId);
+    List<Levellog> findAllByAuthorId(Long authorId);
 
     @Query("SELECT l FROM Levellog l "
             + "INNER JOIN FETCH l.team t "
             + "INNER JOIN FETCH t.participants p "
             + "WHERE l.id = :levellogId")
-    Optional<Levellog> findLevellogWithTeamAndParticipantsById(@Param("levellogId") Long levellogId);
+    Optional<Levellog> findLevellogWithTeamAndParticipantsById(Long levellogId);
 }

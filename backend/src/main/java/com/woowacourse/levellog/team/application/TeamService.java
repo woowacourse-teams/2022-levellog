@@ -28,10 +28,10 @@ public class TeamService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final TeamWriteDto request, @Verified final LoginStatus loginStatus) {
+    public Long save(final TeamWriteRequest request, @Verified final LoginStatus loginStatus) {
         final Member host = memberRepository.getMember(loginStatus.getMemberId());
         final Team team = new Team(request.toTeamDetail(host.getProfileUrl()),
-                request.toParticipantsIngredient(hostId));
+                request.toParticipantsIngredient(loginStatus.getMemberId()));
 
         final Team savedTeam = teamRepository.save(team);
 
@@ -45,7 +45,7 @@ public class TeamService {
         return new TeamStatusResponse(status);
     }
 
-    public InterviewRoleDto findMyRole(final Long teamId, final Long targetMemberId,
+    public InterviewRoleResponse findMyRole(final Long teamId, final Long targetMemberId,
                                        @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeamWithParticipants(teamId);
         final InterviewRole interviewRole = team.getInterviewRole(targetMemberId, loginStatus.getMemberId());
@@ -54,7 +54,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void update(final TeamWriteDto request, final Long teamId, @Verified final LoginStatus loginStatus) {
+    public void update(final TeamWriteRequest request, final Long teamId, @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeamWithParticipants(teamId);
         team.validateHostAuthorization(loginStatus.getMemberId());
 

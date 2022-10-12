@@ -21,9 +21,6 @@ import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLik
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.LinkedHashMap;
@@ -50,8 +47,8 @@ public class InterviewQuestionService {
         final Levellog levellog = levellogRepository.getLevellogWithTeamAndParticipantsById(levellogId);
         final Team team = levellog.getTeam();
 
-        levellog.validateSelfInterviewQuestion(author);
-        team.validateIsParticipants(fromMemberId);
+        levellog.validateSelfInterviewQuestion(loginStatus.getMemberId());
+        team.validateIsParticipants(loginStatus.getMemberId());
         team.validateInProgress(timeStandard.now());
 
         final InterviewQuestion interviewQuestion = request.toEntity(loginStatus.getMemberId(), levellog);

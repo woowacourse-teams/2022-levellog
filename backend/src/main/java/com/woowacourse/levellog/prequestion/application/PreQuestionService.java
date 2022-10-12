@@ -5,6 +5,7 @@ import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
+import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionQueryRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
@@ -25,14 +26,14 @@ public class PreQuestionService {
     private final PreQuestionRepository preQuestionRepository;
     private final PreQuestionQueryRepository preQuestionQueryRepository;
     private final LevellogRepository levellogRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
     public Long save(final PreQuestionWriteRequest request, final Long levellogId,
                      @Verified final LoginStatus loginStatus) {
-        final Levellog levellog = levellogRepository.getLevellog(levellogId);
+        final Levellog levellog = levellogRepository.getLevellogWithTeamAndParticipantsById(levellogId);
+        levellog.getTeam().validateIsParticipants(loginStatus.getMemberId());
 
-        validatePreQuestionExistence(levellog, questioner.getId());
+        validatePreQuestionExistence(levellog, loginStatus.getMemberId());
 
         return preQuestionRepository.save(request.toEntity(levellog, loginStatus.getMemberId()))
                 .getId();
@@ -71,7 +72,7 @@ public class PreQuestionService {
     }
 
     private void validatePreQuestionExistence(final Levellog levellog, final Long questionerId) {
-        final boolean isExists = preQuestionRepository.existsByLevellogAndAuthor(levellog, questionerId);
+        final boolean isExists = preQuestionRepository.existsByLevellogAndAuthorId(levellog, questionerId);
         if (isExists) {
             throw new PreQuestionAlreadyExistException(DebugMessage.init()
                     .append("levellogId", levellog.getId())

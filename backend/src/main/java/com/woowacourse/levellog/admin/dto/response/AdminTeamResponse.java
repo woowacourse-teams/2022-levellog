@@ -22,8 +22,8 @@ public class AdminTeamResponse {
     private LocalDateTime startAt;
     private TeamStatus status;
 
-    public static AdminTeamDto of(final Team team, final TeamStatus status) {
+    public static AdminTeamResponse of(final Team team, final TeamStatus status) {
         final TeamDetail detail = team.getDetail();
-        return new AdminTeamDto(team.getId(), detail.getTitle(), detail.getPlace(), detail.getStartAt(), status);
+        return new AdminTeamResponse(team.getId(), detail.getTitle(), detail.getPlace(), detail.getStartAt(), status);
     }
 }

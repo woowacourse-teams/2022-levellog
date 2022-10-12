@@ -35,4 +35,8 @@ public class Participant extends BaseEntity {
     public boolean isParticipant() {
         return !isWatcher;
     }
+
+    public boolean isSameMemberId(final Long memberId) {
+        return this.memberId.equals(memberId);
+    }
 }

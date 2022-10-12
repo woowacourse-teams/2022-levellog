@@ -103,13 +103,12 @@ public class Participants {
 
     private boolean isContains(final Long memberId) {
         return values.stream()
-                .map(Participant::getMemberId)
-                .anyMatch(it -> it.equals(memberId));
+                .anyMatch(it -> it.isSameMemberId(memberId));
     }
 
     private boolean isWatcher(final Long memberId) {
         return values.stream()
-                .filter(it -> it.getMemberId().equals(memberId))
+                .filter(it -> it.isSameMemberId(memberId))
                 .anyMatch(Participant::isWatcher);
     }
 

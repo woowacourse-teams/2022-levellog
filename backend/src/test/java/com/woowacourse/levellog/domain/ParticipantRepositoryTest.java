@@ -61,8 +61,8 @@ class ParticipantRepositoryTest extends RepositoryTest {
         final Team team = saveTeam(alien);
 
         // when
-        final boolean existsAlien = participantRepository.existsByMemberAndTeam(alien, team);
-        final boolean existsRoma = participantRepository.existsByMemberAndTeam(roma, team);
+        final boolean existsAlien = participantRepository.existsByMemberIdAndTeam(alien.getId(), team);
+        final boolean existsRoma = participantRepository.existsByMemberIdAndTeam(roma.getId(), team);
 
         // then
         assertAll(

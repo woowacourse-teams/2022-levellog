@@ -8,7 +8,7 @@ import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.notNullValue;
 
-import com.woowacourse.levellog.admin.dto.AdminPasswordDto;
+import com.woowacourse.levellog.admin.dto.request.AdminPasswordRequest;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class AdminAcceptanceTest extends AcceptanceTest {
     @DisplayName("관리자 로그인")
     void login() {
         // given
-        final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
+        final AdminPasswordRequest request = new AdminPasswordRequest("levellog1!");
 
         // when
         final ValidatableResponse response = post("/admin/login", request).getResponse();
@@ -95,7 +95,7 @@ class AdminAcceptanceTest extends AcceptanceTest {
     }
 
     private String getAdminToken() {
-        final AdminPasswordDto request = new AdminPasswordDto("levellog1!");
+        final AdminPasswordRequest request = new AdminPasswordRequest("levellog1!");
         return post("/admin/login", request).getAdminToken();
     }
 }

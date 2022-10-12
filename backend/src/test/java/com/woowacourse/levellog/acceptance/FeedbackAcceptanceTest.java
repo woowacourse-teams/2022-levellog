@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.feedback.dto.FeedbackWriteDto;
+import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
@@ -39,7 +39,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         timeStandard.setInProgress();
 
         // when
-        final FeedbackWriteDto request = FeedbackWriteDto.from("Spring에 대한 학습을 충분히 하였습니다.",
+        final FeedbackWriteRequest request = new FeedbackWriteRequest("Spring에 대한 학습을 충분히 하였습니다.",
                 "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -157,7 +157,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         final String feedbackId = saveFeedback("test", levellogId, ROMA).getFeedbackId();
 
         // when
-        final FeedbackWriteDto request = FeedbackWriteDto.from("수정된 Study 피드백", "수정된 Speak 피드백", "수정된 Etc 피드백");
+        final FeedbackWriteRequest request = new FeedbackWriteRequest("수정된 Study 피드백", "수정된 Speak 피드백", "수정된 Etc 피드백");
 
         final ValidatableResponse response = RestAssured.given(specification).log().all()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + ROMA.getToken())

@@ -13,7 +13,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
 
     void deleteByTeam(Team team);
 
-    boolean existsByMemberAndTeam(Member member, Team team);
+    boolean existsByMemberIdAndTeam(Long memberId, Team team);
 
     List<Participant> findAllByMember(Member member);
 }

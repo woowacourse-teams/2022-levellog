@@ -1,9 +1,10 @@
-package com.woowacourse.levellog.team.domain;
+package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
+import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

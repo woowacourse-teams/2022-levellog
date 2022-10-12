@@ -1,9 +1,13 @@
-package com.woowacourse.levellog.team.domain;
+package com.woowacourse.levellog.domain;
 
 import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacourse.levellog.common.domain.MockEntityFactory;
+import com.woowacourse.levellog.team.domain.Participant;
+import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
+import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamDetail;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

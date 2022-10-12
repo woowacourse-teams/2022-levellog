@@ -2,8 +2,6 @@ package com.woowacourse.levellog.team.application;
 
 import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
-import com.woowacourse.levellog.common.exception.InvalidFieldException;
-import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.InterviewRole;
@@ -29,9 +27,9 @@ public class TeamService {
 
     @Transactional
     public Long save(final TeamWriteRequest request, @Verified final LoginStatus loginStatus) {
-        final Member host = memberRepository.getMember(loginStatus.getMemberId());
-        final Team team = new Team(request.toTeamDetail(host.getProfileUrl()),
-                request.toParticipantsIngredient(loginStatus.getMemberId()));
+        final Long hostId = loginStatus.getMemberId();
+        final Member host = memberRepository.getMember(hostId);
+        final Team team = request.toEntity(hostId, host.getProfileUrl());
 
         final Team savedTeam = teamRepository.save(team);
 
@@ -46,7 +44,7 @@ public class TeamService {
     }
 
     public InterviewRoleResponse findMyRole(final Long teamId, final Long targetMemberId,
-                                       @Verified final LoginStatus loginStatus) {
+                                            @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeamWithParticipants(teamId);
         final InterviewRole interviewRole = team.getInterviewRole(targetMemberId, loginStatus.getMemberId());
 
@@ -56,10 +54,11 @@ public class TeamService {
     @Transactional
     public void update(final TeamWriteRequest request, final Long teamId, @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeamWithParticipants(teamId);
-        team.validateHostAuthorization(loginStatus.getMemberId());
+        final Long memberId = loginStatus.getMemberId();
+        team.validateHostAuthorization(memberId);
 
-        team.update(request.toTeamDetail(team.getProfileUrl()), request.toParticipantsIngredient(loginStatus.getMemberId()),
-                timeStandard.now());
+        team.update(request.toTeamDetail(team.getProfileUrl()), memberId, request.getParticipantIds(),
+                request.getWatcherIds(), timeStandard.now());
     }
 
     @Transactional

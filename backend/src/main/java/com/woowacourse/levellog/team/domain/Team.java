@@ -6,6 +6,7 @@ import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -34,18 +35,19 @@ public class Team extends BaseEntity {
     @Embedded
     private Participants participants = new Participants();
 
-    public Team(final TeamDetail teamDetail, final ParticipantsIngredient ingredient) {
+    public Team(final TeamDetail teamDetail, final Long hostId,
+                final List<Long> participantIds, final List<Long> watcherIds) {
         this.detail = teamDetail;
-        this.participants = Participants.of(this, ingredient);
         this.isClosed = false;
         this.deleted = false;
+        this.participants = ParticipantsFactory.createParticipants(this, hostId, participantIds, watcherIds);
     }
 
-    public void update(final TeamDetail detail, final ParticipantsIngredient ingredient,
-                       final LocalDateTime presentTime) {
+    public void update(final TeamDetail detail, final Long hostId, final List<Long> participantsIds,
+                       final List<Long> watcherIds, final LocalDateTime presentTime) {
         validateReady(presentTime);
         this.detail = detail;
-        updateParticipants(ingredient);
+        updateParticipants(ParticipantsFactory.createParticipants(this, hostId, participantsIds, watcherIds));
     }
 
     public void delete(final LocalDateTime presentTime) {
@@ -107,9 +109,7 @@ public class Team extends BaseEntity {
         return detail.getProfileUrl();
     }
 
-    private void updateParticipants(final ParticipantsIngredient ingredient) {
-        final Participants target = Participants.of(this, ingredient);
-
+    private void updateParticipants(final Participants target) {
         participants.update(target);
     }
 }

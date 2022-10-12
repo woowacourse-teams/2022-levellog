@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.team.dto.request;
 
-import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
+import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,7 +43,7 @@ public class TeamWriteRequest {
         return new TeamDetail(title, place, startAt, profileUrl, interviewerNumber);
     }
 
-    public ParticipantsIngredient toParticipantsIngredient(final Long hostId) {
-        return new ParticipantsIngredient(hostId, participantIds, watcherIds);
+    public Team toEntity(final Long hostId, final String profileUrl) {
+        return new Team(toTeamDetail(profileUrl), hostId, participantIds, watcherIds);
     }
 }

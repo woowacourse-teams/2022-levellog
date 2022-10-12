@@ -357,7 +357,7 @@ class TeamServiceTest extends ServiceTest {
 
             final Team team = saveTeam(rick, roma);
             final TeamWriteRequest request = new TeamWriteRequest("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
-                    List.of(rick.getId()), Collections.emptyList());
+                    List.of(rick.getId(), roma.getId()), Collections.emptyList());
             timeStandard.setInProgress();
 
             //when & then
@@ -439,6 +439,25 @@ class TeamServiceTest extends ServiceTest {
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
         }
+
+        @Test
+        @DisplayName("수정하려는 팀의 참가자 수가 인터뷰어 수보다 많지 않으면 예외가 발생한다.")
+        void update_participantsSizeLessThanInterviewerNumber_exception() {
+            //given
+            final Member alien = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+            final Member rick = saveMember("릭");
+
+            final Long teamId = saveTeam(alien, pepper, roma).getId();
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 3, TEAM_START_TIME,
+                    List.of(pepper.getId(), roma.getId()), List.of(alien.getId(), rick.getId()));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.update(request, teamId, getLoginStatus(alien)))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
+        }
     }
 
     @Nested
@@ -496,11 +515,9 @@ class TeamServiceTest extends ServiceTest {
             entityManager.clear();
 
             // then
-            assertAll(() -> {
-                assertThatThrownBy(() -> teamRepository.getTeamWithParticipants(team.getId()))
-                        .isInstanceOf(TeamNotFoundException.class)
-                        .hasMessageContaining("팀이 존재하지 않습니다.");
-            });
+            assertThatThrownBy(() -> teamRepository.getTeamWithParticipants(team.getId()))
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("팀이 존재하지 않습니다.");
         }
 
         @Test

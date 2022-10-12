@@ -2,53 +2,57 @@ package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ParticipantsIngredient {
+public class ParticipantsFactory {
 
-    private final Long hostId;
-    private final List<Long> participantIds;
-    private final List<Long> watcherIds;
+    public static Participants createParticipants(final Team team, final Long hostId,
+                                                  final List<Long> participantIds, final List<Long> watcherIds) {
+        validate(hostId, participantIds, watcherIds, team.getInterviewerNumber());
 
-    public ParticipantsIngredient(final Long hostId, final List<Long> participantIds, final List<Long> watcherIds) {
-        this.hostId = hostId;
-        this.participantIds = participantIds;
-        this.watcherIds = watcherIds;
+        final List<Participant> participants = new ArrayList<>();
+        participants.addAll(toParticipants(team, hostId, participantIds));
+        participants.addAll(toWatchers(team, hostId, watcherIds));
+
+        return new Participants(participants);
     }
 
-    public List<Participant> toParticipants(final Team team) {
+    private static List<Participant> toParticipants(final Team team, final Long hostId,
+                                                   final List<Long> participantIds) {
         return participantIds.stream()
                 .map(it -> new Participant(team, it, Objects.equals(hostId, it), false))
                 .collect(Collectors.toList());
     }
 
-    public List<Participant> toWatchers(final Team team) {
+    private static List<Participant> toWatchers(final Team team, final Long hostId, final List<Long> watcherIds) {
         return watcherIds.stream()
                 .map(it -> new Participant(team, it, Objects.equals(hostId, it), true))
                 .collect(Collectors.toList());
     }
 
-    public void validate(final int interviewerNumber) {
-        validateParticipantExistence();
-        validateDistinctParticipant();
-        validateDistinctWatcher();
-        validateIndependent();
-        validateHostExistence();
+    private static void validate(final Long hostId, final List<Long> participantIds, final List<Long> watcherIds,
+                                final int interviewerNumber) {
+        validateParticipantExistence(participantIds);
+        validateDistinctParticipant(participantIds);
+        validateDistinctWatcher(watcherIds);
+        validateIndependent(participantIds, watcherIds);
+        validateHostExistence(hostId, participantIds, watcherIds);
         validParticipantNumber(participantIds.size(), interviewerNumber);
     }
 
-    private void validateParticipantExistence() {
+    private static void validateParticipantExistence(final List<Long> participantIds) {
         if (participantIds.isEmpty()) {
-            throw new InvalidFieldException("팀 참가자가 아닙니다.", DebugMessage.init()
+            throw new InvalidFieldException("참가자는 1명 이상이어야 합니다.", DebugMessage.init()
                     .append("participants", participantIds));
         }
     }
 
-    private void validateDistinctParticipant() {
+    private static void validateDistinctParticipant(final List<Long> participantIds) {
         final Set<Long> distinct = new HashSet<>(participantIds);
         if (distinct.size() != participantIds.size()) {
             throw new InvalidFieldException("중복된 참가자가 존재합니다.", DebugMessage.init()
@@ -56,7 +60,7 @@ public class ParticipantsIngredient {
         }
     }
 
-    private void validateDistinctWatcher() {
+    private static void validateDistinctWatcher(final List<Long> watcherIds) {
         final Set<Long> distinct = new HashSet<>(watcherIds);
         if (distinct.size() != watcherIds.size()) {
             throw new InvalidFieldException("중복된 참관자가 존재합니다.", DebugMessage.init()
@@ -64,7 +68,7 @@ public class ParticipantsIngredient {
         }
     }
 
-    private void validateIndependent() {
+    private static void validateIndependent(final List<Long> participantIds, final List<Long> watcherIds) {
         final boolean notIndependent = participantIds.stream()
                 .anyMatch(watcherIds::contains);
 
@@ -75,7 +79,8 @@ public class ParticipantsIngredient {
         }
     }
 
-    private void validateHostExistence() {
+    private static void validateHostExistence(final Long hostId, final List<Long> participantIds,
+                                              final List<Long> watcherIds) {
         if (!participantIds.contains(hostId) && !watcherIds.contains(hostId)) {
             throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.", DebugMessage.init()
                     .append("hostId", hostId)
@@ -84,7 +89,7 @@ public class ParticipantsIngredient {
         }
     }
 
-    private void validParticipantNumber(final int participantNumber, final int interviewerNumber) {
+    private static void validParticipantNumber(final int participantNumber, final int interviewerNumber) {
         if (participantNumber <= interviewerNumber) {
             throw new InvalidFieldException("참가자 수는 인터뷰어 수 보다 많아야 합니다.", DebugMessage.init()
                     .append("participantNumber", participantNumber)

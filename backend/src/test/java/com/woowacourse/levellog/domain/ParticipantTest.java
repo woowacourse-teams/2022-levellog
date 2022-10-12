@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woowacourse.levellog.common.domain.MockEntityFactory;
 import com.woowacourse.levellog.team.domain.Participant;
-import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
+import com.woowacourse.levellog.team.domain.ParticipantsFactory;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
 import java.util.List;
@@ -22,8 +22,7 @@ class ParticipantTest {
     void isParticipant(final int index, final boolean expected) {
         // given
         final TeamDetail teamDetail = new TeamDetail("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com", 1);
-        final ParticipantsIngredient ingredient = new ParticipantsIngredient(1L, List.of(1L, 2L), List.of(3L));
-        final Team team = MockEntityFactory.setId(1L, new Team(teamDetail, ingredient));
+        final Team team = MockEntityFactory.setId(1L, new Team(teamDetail, 1L, List.of(1L, 2L), List.of(3L)));
 
         final Participant participant = team.getParticipants().getValues().get(index);
 

@@ -30,7 +30,7 @@ import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
-import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
+import com.woowacourse.levellog.team.domain.ParticipantsFactory;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
 import com.woowacourse.levellog.team.domain.TeamRepository;
@@ -165,9 +165,8 @@ abstract class ServiceTest {
         final List<Long> watcherIds = watchers.stream()
                 .map(BaseEntity::getId)
                 .collect(Collectors.toList());
-        final ParticipantsIngredient ingredient = new ParticipantsIngredient(host.getId(), participantsIds, watcherIds);
 
-        return teamRepository.save(new Team(teamDetail, ingredient));
+        return teamRepository.save(new Team(teamDetail, host.getId(), participantsIds, watcherIds));
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {

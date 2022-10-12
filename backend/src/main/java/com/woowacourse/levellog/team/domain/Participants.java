@@ -24,16 +24,6 @@ public class Participants {
     @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Participant> values = new ArrayList<>();
 
-    public static Participants of(final Team team, final ParticipantsIngredient ingredient) {
-        ingredient.validate(team.getInterviewerNumber());
-        final List<Participant> participants = new ArrayList<>();
-
-        participants.addAll(ingredient.toParticipants(team));
-        participants.addAll(ingredient.toWatchers(team));
-
-        return new Participants(participants);
-    }
-
     public void update(final Participants target) {
         clear();
         values.addAll(target.values);

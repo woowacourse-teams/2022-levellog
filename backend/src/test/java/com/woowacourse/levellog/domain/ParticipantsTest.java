@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.woowacourse.levellog.common.domain.MockEntityFactory;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participants;
-import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
+import com.woowacourse.levellog.team.domain.ParticipantsFactory;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
 import java.util.Collections;
@@ -33,9 +33,8 @@ class ParticipantsTest {
             final TeamDetail teamDetail = new TeamDetail("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
             final List<Long> participantIds = List.of(1L, 2L, 3L, 4L, 5L);
-            final ParticipantsIngredient ingredient = new ParticipantsIngredient(1L, participantIds,
-                    Collections.emptyList());
-            final Team team = MockEntityFactory.setId(1L, new Team(teamDetail, ingredient));
+            final Team team = MockEntityFactory.setId(1L, new Team(teamDetail, 1L, participantIds,
+                    Collections.emptyList()));
 
             final Participants participants = team.getParticipants();
 
@@ -54,9 +53,8 @@ class ParticipantsTest {
             final TeamDetail teamDetail = new TeamDetail("레벨로그팀", "선릉 트랙룸", TEAM_START_TIME, "레벨로그팀.com",
                     interviewerNumber);
             final List<Long> participantIds = List.of(1L, 2L, 3L, 4L, 5L);
-            final ParticipantsIngredient ingredient = new ParticipantsIngredient(1L, participantIds,
-                    Collections.emptyList());
-            final Team team = MockEntityFactory.setId(1L, new Team(teamDetail, ingredient));
+            final Team team = MockEntityFactory.setId(1L, new Team(teamDetail, 1L, participantIds,
+                    Collections.emptyList()));
 
             final Participants participants = team.getParticipants();
 

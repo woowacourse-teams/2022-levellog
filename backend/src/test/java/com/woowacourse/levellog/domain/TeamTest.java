@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.team.domain.ParticipantsIngredient;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
 import com.woowacourse.levellog.team.domain.TeamStatus;
@@ -24,14 +23,8 @@ class TeamTest {
 
     public static Team saveTeam() {
         final TeamDetail teamDetail = new TeamDetail("네오와 함께하는 레벨 인터뷰", "선릉 트랙룸", TEAM_START_TIME, "profileUrl", 2);
-        final ParticipantsIngredient participantsIngredient = getParticipantsIngredient();
 
-        return new Team(teamDetail, participantsIngredient);
-    }
-
-    private static ParticipantsIngredient getParticipantsIngredient() {
-        return new ParticipantsIngredient(1L, List.of(1L, 2L, 3L),
-                List.of(4L, 5L, 6L));
+        return new Team(teamDetail, 1L, List.of(1L, 2L, 3L), List.of(4L, 5L, 6L));
     }
 
     @Nested
@@ -44,11 +37,9 @@ class TeamTest {
             // given
             final Team team = saveTeam();
             final TeamDetail updatedTeam = new TeamDetail("브라운과 카페 투어", "잠실 어드레스룸", TEAM_START_TIME, "profile.img", 2);
-            final ParticipantsIngredient updatedParticipants = new ParticipantsIngredient(1L, List.of(1L, 2L, 3L),
-                    List.of(14L, 15L, 16L));
 
             // when
-            team.update(updatedTeam, updatedParticipants, BEFORE_START_TIME);
+            team.update(updatedTeam, 1L, List.of(1L, 2L, 3L), List.of(14L, 15L, 16L), BEFORE_START_TIME);
 
             // then
             assertAll(
@@ -69,7 +60,8 @@ class TeamTest {
             final TeamDetail updatedTeam = new TeamDetail("브라운과 카페 투어", "잠실 어드레스룸", TEAM_START_TIME, "profile.img", 2);
 
             // when & then
-            assertThatThrownBy(() -> team.update(updatedTeam, getParticipantsIngredient(), AFTER_START_TIME))
+            assertThatThrownBy(
+                    () -> team.update(updatedTeam, 1L, List.of(1L, 2L, 3L), List.of(14L, 15L, 16L), AFTER_START_TIME))
                     .isInstanceOf(TeamNotReadyException.class)
                     .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
         }

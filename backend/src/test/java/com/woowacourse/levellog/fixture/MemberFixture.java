@@ -4,9 +4,9 @@ import static com.woowacourse.levellog.fixture.RestAssuredTemplate.post;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
-import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
-import com.woowacourse.levellog.authentication.dto.LoginDto;
+import com.woowacourse.levellog.authentication.dto.request.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.response.GithubProfileResponse;
+import com.woowacourse.levellog.authentication.dto.response.LoginResponse;
 
 public enum MemberFixture {
 
@@ -35,7 +35,7 @@ public enum MemberFixture {
         return response
                 .getResponse()
                 .extract()
-                .as(LoginDto.class)
+                .as(LoginResponse.class)
                 .getAccessToken();
     }
 
@@ -47,7 +47,7 @@ public enum MemberFixture {
         return response
                 .getResponse()
                 .extract()
-                .as(LoginDto.class)
+                .as(LoginResponse.class)
                 .getId();
     }
 
@@ -58,10 +58,10 @@ public enum MemberFixture {
     public RestAssuredResponse login() {
         try {
             final ObjectMapper objectMapper = new ObjectMapper();
-            final GithubProfileDto response = new GithubProfileDto(githubId, nickname, nickname + ".com");
+            final GithubProfileResponse response = new GithubProfileResponse(githubId, nickname, nickname + ".com");
             final String code = objectMapper.writeValueAsString(response);
 
-            return post("/api/auth/login", new GithubCodeDto(code));
+            return post("/api/auth/login", new GithubCodeRequest(code));
         } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }

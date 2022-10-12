@@ -15,7 +15,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.util.List;
@@ -44,7 +44,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteRequest request = new TeamWriteRequest("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(ROMA.getId()));
 
         // when
@@ -365,7 +365,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
 
-        final TeamWriteDto request = new TeamWriteDto("선릉 브리조", "수성방", 2, TEAM_START_TIME,
+        final TeamWriteRequest request = new TeamWriteRequest("선릉 브리조", "수성방", 2, TEAM_START_TIME,
                 List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(POBI.getId()));
 
         // when

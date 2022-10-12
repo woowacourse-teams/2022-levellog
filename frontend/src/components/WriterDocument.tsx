@@ -31,20 +31,18 @@ const WriterDocument = ({
           사전질문
         </S.PreQuestionButton>
       </S.ButtonBox>
-      <Suspense fallback={<Loading />}>
-        <S.Content>
-          {whichContentShow.levellog && (
-            <UiViewer
-              content={levellogError ? '레벨로그가 존재하지 않습니다.' : levellogInfo!.content}
-            />
-          )}
-          {whichContentShow.preQuestion && (
-            <UiViewer
-              content={preQuestionError ? '사전 질문이 존재하지 않습니다.' : preQuestion!.content}
-            />
-          )}
-        </S.Content>
-      </Suspense>
+      <S.Content>
+        {whichContentShow.levellog && (
+          <UiViewer
+            content={levellogError ? '레벨로그가 존재하지 않습니다.' : levellogInfo!.content}
+          />
+        )}
+        {whichContentShow.preQuestion && (
+          <UiViewer
+            content={preQuestionError ? '사전 질문이 존재하지 않습니다.' : preQuestion!.content}
+          />
+        )}
+      </S.Content>
     </S.Container>
   );
 };

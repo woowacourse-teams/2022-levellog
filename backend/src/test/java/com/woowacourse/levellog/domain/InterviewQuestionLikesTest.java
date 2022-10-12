@@ -20,12 +20,12 @@ class InterviewQuestionLikesTest {
         final Member author = new Member("페퍼", 1111, "pepper.png");
         final Member to = new Member("이브", 123123, "image.png");
         final Team team = TeamTest.saveTeam();
-        final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
+        final Levellog levellog = new Levellog(to.getId(), team, "레벨로그 작성 내용");
         final String content = "스프링이란?";
-        final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, content);
+        final InterviewQuestion interviewQuestion = new InterviewQuestion(author.getId(), levellog, content);
 
         // when & then
         assertDoesNotThrow(
-                () -> InterviewQuestionLikes.of(interviewQuestion, author));
+                () -> new InterviewQuestionLikes(interviewQuestion.getId(), author.getId()));
     }
 }

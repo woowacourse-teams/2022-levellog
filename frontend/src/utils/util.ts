@@ -11,7 +11,7 @@ import { UriCustomHookType } from 'types/uri';
 
 export const debounce: DebounceType = {
   flag: '',
-  action({ func, args, setState, navigate }) {
+  action({ func, args, setState, navigate, timer = 300 }) {
     if (this.flag) {
       clearTimeout(this.flag);
     }
@@ -19,7 +19,7 @@ export const debounce: DebounceType = {
       const res = await func(args && { ...args });
       setState && setState(res.data);
       res && navigate && navigate[0](navigate[1]);
-    }, 300);
+    }, timer);
   },
 };
 
@@ -28,6 +28,7 @@ interface DebounceActionArgsType {
   args?: { [props: string]: any };
   setState?: React.Dispatch<React.SetStateAction<any>>;
   navigate?: [NavigateFunction, string];
+  timer?: number;
 }
 
 interface DebounceType {

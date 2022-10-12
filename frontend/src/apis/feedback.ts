@@ -8,15 +8,9 @@ export const requestPostFeedback = async ({
   levellogId,
   feedbackResult,
 }: Omit<FeedbackApiType, 'feedbackId'>) => {
-  await fetcher.post(
-    `/levellogs/${levellogId}/feedbacks`,
-    {
-      ...feedbackResult,
-    },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
-  );
+  await fetcher.post(`/levellogs/${levellogId}/feedbacks`, feedbackResult, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
 };
 
 export const requestGetFeedbacksInTeam = async ({

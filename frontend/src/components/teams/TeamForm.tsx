@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 
 import styled from 'styled-components';
+
+import Loading from 'pages/status/Loading';
 
 import { MESSAGE } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
-import Member from 'components/teams/Member';
-import Participant from 'components/teams/Participants';
+import SearchMember from 'components/teams/SearchMember';
 import TeamFormInput from 'components/teams/TeamFormInput';
-import { MemberType } from 'types/member';
 import {
   interviewDateValidate,
   interviewInterviewerValidate,
@@ -17,31 +17,7 @@ import {
   interviewTitleValidate,
 } from 'utils/validate';
 
-const TeamForm = ({
-  purpose,
-  participantNicknameValue,
-  watcherNicknameValue,
-  participantMembers,
-  watcherMembers,
-  participants,
-  watchers,
-  teamInfoRef,
-  setParticipantNicknameValue,
-  setWatcherNicknameValue,
-  addToParticipants,
-  addToWatcherParticipants,
-  removeToParticipants,
-  remoteToWatcherParticipants,
-  handleChangeParticipantInput,
-  handleChangeWatcherInput,
-  handleClickTeamButton,
-}: TeamFormProps) => {
-  //   useEffect(() => {
-  //     if (!getTeamOnRef) return;
-  //
-  //     getTeamOnRef();
-  //   }, []);
-
+const TeamForm = ({ purpose, teamInfoRef, handleClickTeamButton }: TeamFormProps) => {
   return (
     <S.Container>
       <S.Title>인터뷰 팀 {purpose}</S.Title>
@@ -78,57 +54,9 @@ const TeamForm = ({
         errorText={MESSAGE.INTERVIEW_INTERVIEWEE_VALIDATE_FAIL}
         validate={interviewInterviewerValidate}
       />
-      <TeamFormInput
-        label={'참관자'}
-        value={watcherNicknameValue}
-        onChange={handleChangeWatcherInput}
-      >
-        <S.ParticipantsBox>
-          {watchers.length !== 0 &&
-            watchers.map((watcher: MemberType) => (
-              <Participant
-                key={watcher.id}
-                participant={watcher}
-                removeToParticipants={remoteToWatcherParticipants}
-              />
-            ))}
-        </S.ParticipantsBox>
-      </TeamFormInput>
-      <S.MembersBox isNoneMember={watcherMembers.length === 0}>
-        {watcherMembers.map((watcherMember: MemberType) => (
-          <Member
-            key={watcherMember.id}
-            member={watcherMember}
-            setNicknameValue={setWatcherNicknameValue}
-            addToParticipants={addToWatcherParticipants}
-          />
-        ))}
-      </S.MembersBox>
-      <TeamFormInput
-        label={'참가자'}
-        value={participantNicknameValue}
-        onChange={handleChangeParticipantInput}
-      >
-        <S.ParticipantsBox>
-          {participants.map((participant: MemberType) => (
-            <Participant
-              key={participant.id}
-              participant={participant}
-              removeToParticipants={removeToParticipants}
-            />
-          ))}
-        </S.ParticipantsBox>
-      </TeamFormInput>
-      <S.MembersBox isNoneMember={participantMembers.length === 0}>
-        {participantMembers.map((participantMember: MemberType) => (
-          <Member
-            key={participantMember.id}
-            member={participantMember}
-            setNicknameValue={setParticipantNicknameValue}
-            addToParticipants={addToParticipants}
-          />
-        ))}
-      </S.MembersBox>
+      <Suspense fallback={<Loading />}>
+        <SearchMember />
+      </Suspense>
       <S.SubmitButton onClick={handleClickTeamButton}>{purpose}</S.SubmitButton>
     </S.Container>
   );
@@ -136,22 +64,7 @@ const TeamForm = ({
 
 interface TeamFormProps {
   purpose: '생성하기' | '수정하기';
-  participantNicknameValue: string;
-  watcherNicknameValue: string;
-  participantMembers: Array<MemberType>;
-  watcherMembers: Array<MemberType>;
-  participants: Array<MemberType>;
-  watchers: Array<MemberType>;
   teamInfoRef: React.MutableRefObject<HTMLInputElement[]>;
-  setParticipantNicknameValue: React.Dispatch<React.SetStateAction<string>>;
-  setWatcherNicknameValue: React.Dispatch<React.SetStateAction<string>>;
-  // getTeamOnRef?: () => Promise<void>;
-  addToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
-  addToWatcherParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
-  removeToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
-  remoteToWatcherParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
-  handleChangeParticipantInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleChangeWatcherInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleClickTeamButton: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -195,20 +108,20 @@ const S = {
 
   ErrorText: styled.p``,
 
-  ParticipantsBox: styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    overflow: auto;
-    gap: 0.5rem;
-    width: 100%;
-    padding-bottom: 1rem;
-    @media (min-width: 560px) and (max-width: 760px) {
-      width: 27.5rem;
-    }
-    @media (max-width: 560px) {
-      width: calc(100vw - 5rem);
-    }
-  `,
+  // ParticipantsBox: styled.div`
+  //   display: flex;
+  //   flex-wrap: wrap;
+  //   overflow: auto;
+  //   gap: 0.5rem;
+  //   width: 100%;
+  //   padding-bottom: 1rem;
+  //   @media (min-width: 560px) and (max-width: 760px) {
+  //     width: 27.5rem;
+  //   }
+  //   @media (max-width: 560px) {
+  //     width: calc(100vw - 5rem);
+  //   }
+  // `,
 
   Notice: styled.p`
     color: ${(props) => props.theme.default.RED};
@@ -216,17 +129,17 @@ const S = {
     margin-bottom: 0.625rem;
   `,
 
-  MembersBox: styled.div<{ isNoneMember: Boolean }>`
-    display: ${(props) => (props.isNoneMember ? 'none' : 'block')};
-    box-sizing: border-box;
-    overflow: auto;
-    width: 100%;
-    height: 10rem;
-    padding: 1rem;
-    border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
-    border-radius: 0.3125rem;
-    background-color: ${(props) => props.theme.default.WHITE};
-  `,
+  // MembersBox: styled.div<{ isNoneMember: Boolean }>`
+  //   display: ${(props) => (props.isNoneMember ? 'none' : 'block')};
+  //   box-sizing: border-box;
+  //   overflow: auto;
+  //   width: 100%;
+  //   height: 10rem;
+  //   padding: 1rem;
+  //   border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
+  //   border-radius: 0.3125rem;
+  //   background-color: ${(props) => props.theme.default.WHITE};
+  // `,
 
   SubmitButton: styled(Button)`
     width: 100%;

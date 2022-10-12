@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class MyInfoControllerTest extends ControllerTest {
                     .updateNickname(any(), any());
             final String invalidNickname = "a".repeat(51);
 
-            final NicknameUpdateDto request = new NicknameUpdateDto(invalidNickname);
+            final NicknameUpdateRequest request = new NicknameUpdateRequest(invalidNickname);
 
             // when
             final ResultActions perform = requestUpdateNickname(request);
@@ -57,7 +57,7 @@ class MyInfoControllerTest extends ControllerTest {
         @DisplayName("닉네임에 null 또는 빈 값이 들어온 경우 예외를 던진다.")
         void updateNickname_nicknameNullAndEmpty_exception(final String invalidNickname) throws Exception {
             // given
-            final NicknameUpdateDto request = new NicknameUpdateDto(invalidNickname);
+            final NicknameUpdateRequest request = new NicknameUpdateRequest(invalidNickname);
 
             // when
             final ResultActions perform = requestUpdateNickname(request);
@@ -71,7 +71,7 @@ class MyInfoControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "nickname-blank"));
         }
 
-        private ResultActions requestUpdateNickname(final NicknameUpdateDto request) throws Exception {
+        private ResultActions requestUpdateNickname(final NicknameUpdateRequest request) throws Exception {
             return requestPut("/api/my-info", request);
         }
     }

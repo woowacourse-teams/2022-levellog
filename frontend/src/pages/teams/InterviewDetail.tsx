@@ -44,14 +44,6 @@ const InterviewDetail = () => {
   } = usePreQuestionModal();
   const { teamId } = useParams();
 
-  if (levellogModalLoading) {
-    return <Loading />;
-  }
-
-  if (preQuestionModalLoading) {
-    return <Loading />;
-  }
-
   return (
     <>
       {isLevellogModalOpen && (
@@ -76,9 +68,9 @@ const InterviewDetail = () => {
       )}
 
       <ContentHeader
-        imageUrl={team!.teamImage}
-        title={team!.title}
-        subTitle={`${team!.place} | ${convertDateAndTime({
+        imageUrl={team?.teamImage}
+        title={team?.title}
+        subTitle={`${team?.place} | ${convertDateAndTime({
           startAt: team!.startAt,
         })}`}
       >

@@ -8,12 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikes;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionContentsDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionSearchResultsDto;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResult;
+import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResults;
+import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponse;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionContentResponses;
+import com.woowacourse.levellog.interviewquestion.dto.response.InterviewQuestionResponse;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikeNotFoundException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionNotFoundException;
@@ -22,7 +22,6 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
@@ -53,12 +52,12 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member eve = saveMember("이브");
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("스프링이란?");
 
             timeStandard.setInProgress();
 
             // when
-            final Long id = interviewQuestionService.save(request, pepperLevellogId, eve.getId());
+            final Long id = interviewQuestionService.save(request, pepperLevellogId, getLoginStatus(eve));
 
             // then
             assertThat(interviewQuestionRepository.findById(id))
@@ -75,33 +74,15 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member eve = saveMember("이브");
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(invalidContent);
-            final Long authorId = eve.getId();
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest(invalidContent);
 
             timeStandard.setInProgress();
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, authorId))
+            assertThatThrownBy(
+                    () -> interviewQuestionService.save(request, pepperLevellogId, getLoginStatus(eve)))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("인터뷰 질문은 공백이나 null일 수 없습니다.");
-        }
-
-        @Test
-        @DisplayName("인터뷰 질문 작성자가 존재하지 않는 경우 예외를 던진다.")
-        void save_memberNotFound_exception() {
-            // given
-            final Member pepper = saveMember("페퍼");
-            final Member eve = saveMember("이브");
-
-            final Team team = saveTeam(pepper, eve);
-            final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
-            final Long invalidMemberId = 1000L;
-
-            // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, invalidMemberId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(invalidMemberId));
         }
 
         @Test
@@ -111,12 +92,11 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member pepper = saveMember("페퍼");
             final Member eve = saveMember("이브");
             saveTeam(pepper, eve);
-            final Long memberId = pepper.getId();
             final Long invalidLevellogId = 1000L;
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("스프링이란?");
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, invalidLevellogId, memberId))
+            assertThatThrownBy(() -> interviewQuestionService.save(request, invalidLevellogId, getLoginStatus(eve)))
                     .isInstanceOf(LevellogNotFoundException.class)
                     .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
         }
@@ -127,16 +107,16 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = saveMember("페퍼");
             final Member eve = saveMember("이브");
-            final Long otherTeamMemberId = saveMember("알린").getId();
+            final Member alien = saveMember("알린");
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("스프링이란?");
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, otherTeamMemberId))
+            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, getLoginStatus(alien)))
                     .isInstanceOf(NotParticipantException.class)
                     .hasMessageContainingAll("팀 참가자가 아닙니다.",
-                            String.valueOf(team.getId()), String.valueOf(otherTeamMemberId));
+                            String.valueOf(team.getId()), String.valueOf(alien.getId()));
         }
 
         @Test
@@ -147,13 +127,13 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member eve = saveMember("이브");
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("스프링이란?");
 
             timeStandard.setInProgress();
             team.close(AFTER_START_TIME);
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
+            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, getLoginStatus(eve)))
                     .isInstanceOf(TeamAlreadyClosedException.class)
                     .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
@@ -166,10 +146,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member eve = saveMember("이브");
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("스프링이란?");
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, eve.getId()))
+            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, getLoginStatus(eve)))
                     .isInstanceOf(TeamNotInProgressException.class)
                     .hasMessageContainingAll("인터뷰 진행중인 상태가 아닙니다.");
         }
@@ -183,10 +163,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
 
             final Team team = saveTeam(pepper, eve);
             final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("스프링이란?");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("스프링이란?");
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, pepper.getId()))
+            assertThatThrownBy(() -> interviewQuestionService.save(request, pepperLevellogId, getLoginStatus(pepper)))
                     .isInstanceOf(InvalidInterviewQuestionException.class)
                     .hasMessageContainingAll("잘못된 인터뷰 질문 요청입니다.", String.valueOf(pepperLevellogId),
                             String.valueOf(pepper.getId()));
@@ -197,10 +177,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
     @DisplayName("findAllByLevellog 메서드는")
     class FindAllByLevellog {
 
-        private List<String> toContents(final InterviewQuestionDto response) {
+        private List<String> toContents(final InterviewQuestionResponse response) {
             return response.getContents()
                     .stream()
-                    .map(InterviewQuestionContentDto::getContent)
+                    .map(InterviewQuestionContentResponse::getContent)
                     .collect(Collectors.toList());
         }
 
@@ -229,13 +209,13 @@ class InterviewQuestionServiceTest extends ServiceTest {
             saveInterviewQuestion("로마 - 2", levellog, roma);
 
             // when
-            final List<InterviewQuestionDto> actual = interviewQuestionService.findAllByLevellog(levellogId)
+            final List<InterviewQuestionResponse> actual = interviewQuestionService.findAllByLevellog(levellogId)
                     .getInterviewQuestions();
 
             // then
-            final InterviewQuestionDto romaResponse = actual.get(0);
-            final InterviewQuestionDto rickResponse = actual.get(1);
-            final InterviewQuestionDto pepperResponse = actual.get(2);
+            final InterviewQuestionResponse romaResponse = actual.get(0);
+            final InterviewQuestionResponse rickResponse = actual.get(1);
+            final InterviewQuestionResponse pepperResponse = actual.get(2);
 
             assertAll(
                     () -> assertThat(actual).hasSize(3),
@@ -280,14 +260,13 @@ class InterviewQuestionServiceTest extends ServiceTest {
             saveInterviewQuestion("스프링 빈이란?", pepperLevellog, eve);
 
             // when
-            final InterviewQuestionContentsDto response = interviewQuestionService.findAllByLevellogAndAuthor(
-                    pepperLevellog.getId(),
-                    eve.getId());
+            final InterviewQuestionContentResponses response = interviewQuestionService.findAllByLevellogAndAuthor(
+                    pepperLevellog.getId(), getLoginStatus(eve));
 
             // then
             final List<String> actualInterviewQuestionContents = response.getInterviewQuestions()
                     .stream()
-                    .map(InterviewQuestionContentDto::getContent)
+                    .map(InterviewQuestionContentResponse::getContent)
                     .collect(Collectors.toList());
 
             assertAll(
@@ -303,31 +282,13 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Member pepper = saveMember("페퍼");
             final Member eve = saveMember("이브");
             saveTeam(pepper, eve);
-            final Long memberId = eve.getId();
             final Long invalidLevellogId = 1000L;
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.findAllByLevellogAndAuthor(invalidLevellogId, memberId))
+            assertThatThrownBy(
+                    () -> interviewQuestionService.findAllByLevellogAndAuthor(invalidLevellogId, getLoginStatus(eve)))
                     .isInstanceOf(LevellogNotFoundException.class)
                     .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
-        }
-
-        @Test
-        @DisplayName("인터뷰 질문 작성자가 존재하지 않는 경우 예외를 던진다.")
-        void findAllByLevellogAndAuthor_memberNotFound_exception() {
-            // given
-            final Member pepper = saveMember("페퍼");
-            final Member alien = saveMember("알린");
-            final Team team = saveTeam(pepper, alien);
-
-            final Long pepperLevellogId = saveLevellog(pepper, team).getId();
-            final Long invalidMemberId = 1000L;
-
-            // when & then
-            assertThatThrownBy(
-                    () -> interviewQuestionService.findAllByLevellogAndAuthor(pepperLevellogId, invalidMemberId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(invalidMemberId));
         }
     }
 
@@ -355,17 +316,17 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long question3Id = saveInterviewQuestion("스프링 C", pepperLevellog, eve).getId();
             final Long question4Id = saveInterviewQuestion("스프링 D", pepperLevellog, eve).getId();
 
-            interviewQuestionService.pressLike(question1Id, eve.getId()); // 업데이트를 해도 최신순 정렬이 유지되어야 함
+            interviewQuestionService.pressLike(question1Id, getLoginStatus(eve)); // 업데이트를 해도 최신순 정렬이 유지되어야 함
 
             // when
-            final InterviewQuestionSearchResultsDto actual = interviewQuestionService.searchByKeyword(
-                    "스프링", eve.getId(), size, page, sort);
+            final InterviewQuestionSearchQueryResults actual = interviewQuestionService.searchByKeyword(
+                    "스프링", getLoginStatus(eve), size, page, sort);
 
             // then
             assertAll(
                     () -> assertThat(actual.getResults()).hasSize(4),
                     () -> Assertions.assertThat(actual.getResults())
-                            .extracting(InterviewQuestionSearchResultDto::getId)
+                            .extracting(InterviewQuestionSearchQueryResult::getId)
                             .containsExactly(question4Id, question3Id, question2Id, question1Id)
             );
         }
@@ -390,19 +351,19 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long question3Id = saveInterviewQuestion("스프링 C", pepperLevellog, eve).getId();
             final Long question4Id = saveInterviewQuestion("스프링 D", pepperLevellog, eve).getId();
 
-            interviewQuestionService.pressLike(question1Id, eve.getId());
-            interviewQuestionService.pressLike(question1Id, pepper.getId());
-            interviewQuestionService.pressLike(question2Id, eve.getId());
+            interviewQuestionService.pressLike(question1Id, getLoginStatus(eve));
+            interviewQuestionService.pressLike(question1Id, getLoginStatus(pepper));
+            interviewQuestionService.pressLike(question2Id, getLoginStatus(eve));
 
             // when
-            final InterviewQuestionSearchResultsDto actual = interviewQuestionService.searchByKeyword(
-                    "스프링", eve.getId(), size, page, sort);
+            final InterviewQuestionSearchQueryResults actual = interviewQuestionService.searchByKeyword(
+                    "스프링", getLoginStatus(eve), size, page, sort);
 
             // then
             assertAll(
                     () -> assertThat(actual.getResults()).hasSize(4),
                     () -> Assertions.assertThat(actual.getResults())
-                            .extracting(InterviewQuestionSearchResultDto::getId)
+                            .extracting(InterviewQuestionSearchQueryResult::getId)
                             .containsExactly(question1Id, question2Id, question3Id, question4Id)
             );
         }
@@ -426,7 +387,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final InterviewQuestion interviewQuestion = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
 
             // when
-            interviewQuestionService.pressLike(interviewQuestion.getId(), eve.getId());
+            interviewQuestionService.pressLike(interviewQuestion.getId(), getLoginStatus(eve));
 
             // then
             final InterviewQuestionLikes interviewQuestionLikes = interviewQuestionLikesRepository
@@ -453,10 +414,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             timeStandard.setInProgress();
 
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
-            interviewQuestionService.pressLike(interviewQuestionId, eve.getId());
+            interviewQuestionService.pressLike(interviewQuestionId, getLoginStatus(eve));
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.pressLike(interviewQuestionId, eve.getId()))
+            assertThatThrownBy(() -> interviewQuestionService.pressLike(interviewQuestionId, getLoginStatus(eve)))
                     .isInstanceOf(InterviewQuestionLikesAlreadyExistException.class)
                     .hasMessageContainingAll("인터뷰 질문에 대한 좋아요가 이미 존재합니다.",
                             String.valueOf(interviewQuestionId),
@@ -480,10 +441,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             timeStandard.setInProgress();
 
             final InterviewQuestion interviewQuestion = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
-            interviewQuestionService.pressLike(interviewQuestion.getId(), eve.getId());
+            interviewQuestionService.pressLike(interviewQuestion.getId(), getLoginStatus(eve));
 
             // when
-            interviewQuestionService.cancelLike(interviewQuestion.getId(), eve.getId());
+            interviewQuestionService.cancelLike(interviewQuestion.getId(), getLoginStatus(eve));
 
             // then
             final Optional<InterviewQuestionLikes> interviewQuestionLikes = interviewQuestionLikesRepository
@@ -509,7 +470,8 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final InterviewQuestion interviewQuestion = saveInterviewQuestion("스프링이란?", pepperLevellog, eve);
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.cancelLike(interviewQuestion.getId(), eve.getId()))
+            assertThatThrownBy(
+                    () -> interviewQuestionService.cancelLike(interviewQuestion.getId(), getLoginStatus(eve)))
                     .isInstanceOf(InterviewQuestionLikeNotFoundException.class)
                     .hasMessageContainingAll("인터뷰 질문을 '좋아요'하지 않았습니다.",
                             String.valueOf(interviewQuestion.getId()),
@@ -530,16 +492,16 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("업데이트된 질문 내용");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("업데이트된 질문 내용");
 
             timeStandard.setInProgress();
 
             // when
-            interviewQuestionService.update(request, interviewQuestionId, eve.getId());
+            interviewQuestionService.update(request, interviewQuestionId, getLoginStatus(eve));
 
             // then
             final List<String> actualInterviewQuestions = interviewQuestionRepository
-                    .findAllByLevellogAndAuthor(pepperLevellog, eve)
+                    .findAllByLevellogAndAuthorId(pepperLevellog, eve.getId())
                     .stream()
                     .map(InterviewQuestion::getContent)
                     .collect(Collectors.toList());
@@ -551,12 +513,12 @@ class InterviewQuestionServiceTest extends ServiceTest {
         void update_interviewQuestionNotFound_exception() {
             // given
             final Member eve = saveMember("이브");
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("업데이트된 질문 내용");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("업데이트된 질문 내용");
             final Long invalidInterviewQuestionId = 1000L;
-            final Long authorId = eve.getId();
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.update(request, invalidInterviewQuestionId, authorId))
+            assertThatThrownBy(
+                    () -> interviewQuestionService.update(request, invalidInterviewQuestionId, getLoginStatus(eve)))
                     .isInstanceOf(InterviewQuestionNotFoundException.class)
                     .hasMessageContainingAll("인터뷰 질문이 존재하지 않습니다.", String.valueOf(invalidInterviewQuestionId));
         }
@@ -567,16 +529,17 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = saveMember("페퍼");
             final Member eve = saveMember("이브");
-            final Long otherMemberId = saveMember("릭").getId();
+            final Member rick = saveMember("릭");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("업데이트된 질문 내용");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("업데이트된 질문 내용");
 
             timeStandard.setInProgress();
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, otherMemberId))
+            assertThatThrownBy(
+                    () -> interviewQuestionService.update(request, interviewQuestionId, getLoginStatus(rick)))
                     .isInstanceOf(MemberNotAuthorException.class)
                     .hasMessageContaining("작성자가 아닙니다.");
         }
@@ -590,13 +553,13 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("업데이트된 질문 내용");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("업데이트된 질문 내용");
 
             timeStandard.setInProgress();
             team.close(AFTER_START_TIME);
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
+            assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, getLoginStatus(eve)))
                     .isInstanceOf(TeamAlreadyClosedException.class)
                     .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
@@ -610,10 +573,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
-            final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from("업데이트된 질문 내용");
+            final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("업데이트된 질문 내용");
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, eve.getId()))
+            assertThatThrownBy(() -> interviewQuestionService.update(request, interviewQuestionId, getLoginStatus(eve)))
                     .isInstanceOf(TeamNotInProgressException.class)
                     .hasMessageContainingAll("인터뷰 진행중인 상태가 아닙니다.");
         }
@@ -636,7 +599,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             timeStandard.setInProgress();
 
             // when
-            interviewQuestionService.deleteById(interviewQuestionId, eve.getId());
+            interviewQuestionService.deleteById(interviewQuestionId, getLoginStatus(eve));
 
             // then
             assertThat(interviewQuestionRepository.findById(interviewQuestionId))
@@ -649,10 +612,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member eve = saveMember("이브");
             final Long invalidInterviewQuestionId = 1000L;
-            final Long authorId = eve.getId();
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.deleteById(invalidInterviewQuestionId, authorId))
+            assertThatThrownBy(
+                    () -> interviewQuestionService.deleteById(invalidInterviewQuestionId, getLoginStatus(eve)))
                     .isInstanceOf(InterviewQuestionNotFoundException.class)
                     .hasMessageContainingAll("인터뷰 질문이 존재하지 않습니다", String.valueOf(invalidInterviewQuestionId));
         }
@@ -663,13 +626,13 @@ class InterviewQuestionServiceTest extends ServiceTest {
             // given
             final Member pepper = saveMember("페퍼");
             final Member eve = saveMember("이브");
-            final Long otherMemberId = saveMember("릭").getId();
+            final Member rick = saveMember("릭");
             final Team team = saveTeam(pepper, eve);
             final Levellog pepperLevellog = saveLevellog(pepper, team);
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, otherMemberId))
+            assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, getLoginStatus(rick)))
                     .isInstanceOf(MemberNotAuthorException.class)
                     .hasMessageContaining("작성자가 아닙니다.");
         }
@@ -688,7 +651,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             team.close(AFTER_START_TIME);
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
+            assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, getLoginStatus(eve)))
                     .isInstanceOf(TeamAlreadyClosedException.class)
                     .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
@@ -704,7 +667,7 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long interviewQuestionId = saveInterviewQuestion("스프링이란?", pepperLevellog, eve).getId();
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, eve.getId()))
+            assertThatThrownBy(() -> interviewQuestionService.deleteById(interviewQuestionId, getLoginStatus(eve)))
                     .isInstanceOf(TeamNotInProgressException.class)
                     .hasMessageContainingAll("인터뷰 진행중인 상태가 아닙니다.");
         }

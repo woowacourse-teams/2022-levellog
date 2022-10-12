@@ -7,6 +7,7 @@ import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.common.domain.BaseEntity;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
@@ -16,7 +17,7 @@ import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionS
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionLikesRepository;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestionRepository;
-import com.woowacourse.levellog.interviewquestion.dto.InterviewQuestionWriteDto;
+import com.woowacourse.levellog.interviewquestion.dto.request.InterviewQuestionWriteRequest;
 import com.woowacourse.levellog.levellog.application.LevellogService;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
@@ -121,6 +122,10 @@ abstract class ServiceTest {
         timeStandard.setBeforeStarted();
     }
 
+    protected LoginStatus getLoginStatus(final Member member) {
+        return LoginStatus.fromLogin(member.getId());
+    }
+
     protected Member saveMember(final String nickname) {
         final Member member = new Member(nickname, ((int) System.nanoTime()), nickname + ".org");
         return memberRepository.save(member);
@@ -170,19 +175,19 @@ abstract class ServiceTest {
     }
 
     protected Levellog saveLevellog(final Member author, final Team team, final String content) {
-        final Levellog levellog = Levellog.of(author, team, content);
+        final Levellog levellog = new Levellog(author.getId(), team, content);
         return levellogRepository.save(levellog);
     }
 
     protected InterviewQuestion saveInterviewQuestion(final String content, final Levellog levellog,
                                                       final Member author) {
-        final InterviewQuestionWriteDto request = InterviewQuestionWriteDto.from(content);
-        final InterviewQuestion interviewQuestion = request.toInterviewQuestion(author, levellog);
+        final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest(content);
+        final InterviewQuestion interviewQuestion = request.toEntity(author.getId(), levellog);
         return interviewQuestionRepository.save(interviewQuestion);
     }
 
     protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {
-        final Feedback feedback = new Feedback(from, to, levellog, "study from " + from.getNickname(),
+        final Feedback feedback = new Feedback(from.getId(), levellog, "study from " + from.getNickname(),
                 "speak from " + from.getNickname(), "etc from " + from.getNickname());
         return feedbackRepository.save(feedback);
     }
@@ -192,7 +197,7 @@ abstract class ServiceTest {
     }
 
     protected PreQuestion savePreQuestion(final Levellog levellog, final Member author, final String content) {
-        final PreQuestion preQuestion = new PreQuestion(levellog, author, content);
+        final PreQuestion preQuestion = new PreQuestion(levellog, author.getId(), content);
         return preQuestionRepository.save(preQuestion);
     }
 }

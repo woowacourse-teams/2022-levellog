@@ -8,9 +8,10 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
 import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
@@ -64,7 +65,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 명으로 null이 들어오면 예외를 던진다.")
         void save_titleNull_exception(final String title) throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             // when
@@ -85,13 +86,13 @@ class TeamControllerTest extends ControllerTest {
         void save_titleInvalidLength_exception() throws Exception {
             // given
             final String title = "네오".repeat(128);
-            final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             final String message = "팀 이름은 255 이하여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -112,7 +113,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("장소로 null이 들어오면 예외를 던진다.")
         void save_placeNull_exception(final String place) throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             // when
@@ -133,13 +134,13 @@ class TeamControllerTest extends ControllerTest {
         void save_placeInvalidLength_exception() throws Exception {
             // given
             final String place = "선릉".repeat(128);
-            final TeamWriteDto request = new TeamWriteDto("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("네오 인터뷰", place, 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             final String message = "장소 이름은 255 이하여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -158,7 +159,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰 시작 시간으로 null이 들어오면 예외를 던진다.")
         void save_startAtNull_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, null, List.of(1L, 5L),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, null, List.of(1L, 5L),
                     Collections.emptyList());
 
             // when
@@ -179,13 +180,13 @@ class TeamControllerTest extends ControllerTest {
         void save_startAtPast_exception() throws Exception {
             // given
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
-            final TeamWriteDto request = new TeamWriteDto("네오 인터뷰", "선릉 트랙룸", 1, startAt, List.of(2L, 3L),
+            final TeamWriteRequest request = new TeamWriteRequest("네오 인터뷰", "선릉 트랙룸", 1, startAt, List.of(2L, 3L),
                     Collections.emptyList());
 
             final String message = "인터뷰 시작 시간은 현재 시간 이후여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -204,7 +205,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
         void save_participantsEmpty_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     Collections.emptyList(), List.of(1L, 2L));
 
             // when
@@ -223,8 +224,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
         void save_participantsNull_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null,
-                    List.of(1L, 2L));
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    null, List.of(1L, 2L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -243,7 +244,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰어가 1명 미만이면 예외를 던진다.")
         void save_notPositiveInterviewerNumber_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             // when
@@ -263,13 +264,13 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰어 수가 참가자 수보다 많거나 같으면 예외를 던진다.")
         void save_interviewerMoreThanParticipant_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 4, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 4, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L, 4L), Collections.emptyList());
 
             final String message = "참가자 수는 인터뷰어 수 보다 많아야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -288,13 +289,13 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 참가자 목록으로 중복된 Id가 들어오면 예외를 던진다.")
         void save_duplicateParticipant_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 2L, 3L), Collections.emptyList());
 
             final String message = "중복되는 참가자가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -313,13 +314,13 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 참관자 목록으로 중복된 Id가 들어오면 예외를 던진다.")
         void save_duplicateWatcher_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(1L, 2L, 3L), List.of(4L, 4L, 5L));
 
             final String message = "중복되는 참관자가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -338,13 +339,13 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 참가자와 참관자 목록에 겹치는 Id가 들어오면 예외를 던진다.")
         void save_notIndependent_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(1L, 2L, 3L, 4L), List.of(4L, 5L));
 
             final String message = "참가자와 참관자에 모두 포함된 멤버가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -363,12 +364,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("호스트가 참가자 또는 참관자에 포함되지 않으면 예외가 던진다.")
         void save_hostExistence_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L, 4L), List.of(5L));
             final String message = "호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .save(request, 1L);
+                    .save(request, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCreateTeam(request);
@@ -383,7 +384,7 @@ class TeamControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "host-existence"));
         }
 
-        private ResultActions requestCreateTeam(final TeamWriteDto request) throws Exception {
+        private ResultActions requestCreateTeam(final TeamWriteRequest request) throws Exception {
             return requestPost("/api/teams", request);
         }
     }
@@ -401,7 +402,7 @@ class TeamControllerTest extends ControllerTest {
         void update_titleNull_exception(final String title) throws Exception {
             // given
             final long id = 1;
-            final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             // when
@@ -423,13 +424,13 @@ class TeamControllerTest extends ControllerTest {
             // given
             final long id = 1;
             final String title = "네오".repeat(128);
-            final TeamWriteDto request = new TeamWriteDto(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest(title, "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             final String message = "팀 이름은 255 이하여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, id, 1L);
+                    .update(request, id, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(id, request);
@@ -451,7 +452,7 @@ class TeamControllerTest extends ControllerTest {
         void update_placeNull_exception(final String place) throws Exception {
             // given
             final long id = 1;
-            final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             // when
@@ -473,13 +474,13 @@ class TeamControllerTest extends ControllerTest {
             // given
             final long id = 1;
             final String place = "거실".repeat(128);
-            final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 제이슨조", place, 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             final String message = "장소 이름은 255 이하여야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, id, 1L);
+                    .update(request, id, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(id, request);
@@ -499,7 +500,7 @@ class TeamControllerTest extends ControllerTest {
         void update_startAtNull_exception() throws Exception {
             // given
             final long id = 1;
-            final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, null, List.of(2L, 3L),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 제이슨조", "트랙룸", 1, null, List.of(2L, 3L),
                     Collections.emptyList());
 
             // when
@@ -521,12 +522,12 @@ class TeamControllerTest extends ControllerTest {
             // given
             final long id = 1;
             final LocalDateTime startAt = LocalDateTime.now().minusDays(3);
-            final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, startAt, List.of(1L, 5L),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 제이슨조", "트랙룸", 1, startAt, List.of(1L, 5L),
                     Collections.emptyList());
 
             willThrow(new InvalidFieldException("인터뷰 시작 시간은 현재 시간 이후여야 합니다.", DebugMessage.init()))
                     .given(teamService)
-                    .update(request, id, 1L);
+                    .update(request, id, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(id, request);
@@ -545,13 +546,13 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("없는 팀을 수정하려고 하면 예외를 던진다.")
         void update_teamNotFound_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(10),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(10),
                     List.of(2L, 3L), Collections.emptyList());
 
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 10000000L, 1L);
+                    .update(request, 10000000L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(10000000L, request);
@@ -570,7 +571,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 빈 리스트가 들어오면 예외를 던진다.")
         void update_participantsEmpty_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 제이슨조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     Collections.emptyList(), List.of(1L, 2L));
 
             // when
@@ -587,7 +588,8 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 null이 들어오면 예외를 던진다.")
         void update_participantsNull_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3), null,
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+                    null,
                     List.of(1L, 2L));
 
             // when
@@ -607,7 +609,7 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰어가 1명 미만이면 예외를 던진다.")
         void update_notPositiveInterviewerNumber_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 0, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L, 4L), Collections.emptyList());
 
             // when
@@ -627,13 +629,13 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰어 수가 참가자 수보다 많거나 같으면 예외를 던진다.")
         void update_interviewerMoreThanParticipant_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             final String message = "참가자 수는 인터뷰어 수 보다 많아야 합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -652,12 +654,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 구성원 목록으로 중복된 Id가 들어오면 예외를 던진다.")
         void update_duplicateParticipant_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 2L, 3L), Collections.emptyList());
             final String message = "중복되는 참가자가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -676,12 +678,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 참관자 목록으로 중복된 Id가 들어오면 예외를 던진다.")
         void update_duplicateWatcher_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(1L, 2L, 3L), List.of(4L, 4L, 5L));
             final String message = "중복된 참관자가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -700,12 +702,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("팀 참가자와 참관자 목록에 겹치는 Id가 들어오면 예외를 던진다.")
         void update_notIndependent_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(1L, 2L, 3L, 4L), List.of(4L, 5L));
             final String message = "참가자와 참관자에 모두 포함된 멤버가 존재합니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -724,12 +726,12 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("호스트가 참가자 또는 참관자에 포함되지 않으면 예외가 던진다.")
         void update_hostExistence_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L, 4L), List.of(5L));
             final String message = "호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.";
             willThrow(new InvalidFieldException(message, DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -748,13 +750,13 @@ class TeamControllerTest extends ControllerTest {
         @DisplayName("인터뷰 시작 이후에 팀을 수정하려고 하면 예외를 던진다.")
         void update_updateAfterStartAt_exception() throws Exception {
             // given
-            final TeamWriteDto request = new TeamWriteDto("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1, LocalDateTime.now().plusDays(3),
                     List.of(2L, 3L), Collections.emptyList());
 
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
-                    .update(request, 1L, 1L);
+                    .update(request, 1L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestUpdateTeam(1L, request);
@@ -769,7 +771,7 @@ class TeamControllerTest extends ControllerTest {
             perform.andDo(document(BASE_SNIPPET_PATH + "after-start-at"));
         }
 
-        private ResultActions requestUpdateTeam(final Long teamId, final TeamWriteDto request) throws Exception {
+        private ResultActions requestUpdateTeam(final Long teamId, final TeamWriteRequest request) throws Exception {
             return requestPut("/api/teams/" + teamId, request);
         }
     }
@@ -787,7 +789,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamQueryService)
-                    .findByTeamIdAndMemberId(10000000L, 1L);
+                    .findByTeamIdAndMemberId(10000000L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestFindTeam(10000000L);
@@ -855,7 +857,7 @@ class TeamControllerTest extends ControllerTest {
             final Long memberId = 5L;
 
             final String message = "같은 팀에 속해있지 않습니다.";
-            given(teamService.findMyRole(teamId, memberId, 1L))
+            given(teamService.findMyRole(teamId, memberId, LoginStatus.fromLogin(1L)))
                     .willThrow(new ParticipantNotSameTeamException(DebugMessage.init()));
 
             // when
@@ -879,7 +881,7 @@ class TeamControllerTest extends ControllerTest {
             final Long memberId = 5L;
 
             final String message = "팀 참가자가 아닙니다.";
-            given(teamService.findMyRole(teamId, memberId, 1L))
+            given(teamService.findMyRole(teamId, memberId, LoginStatus.fromLogin(1L)))
                     .willThrow(new NotParticipantException(DebugMessage.init()));
 
             // when
@@ -915,7 +917,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
-                    .close(teamId, 1L);
+                    .close(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCloseTeam(teamId);
@@ -938,7 +940,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "이미 인터뷰가 종료된 팀입니다.";
             willThrow(new TeamAlreadyClosedException(DebugMessage.init()))
                     .given(teamService)
-                    .close(teamId, 1L);
+                    .close(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCloseTeam(teamId);
@@ -962,7 +964,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "인터뷰 진행중인 상태가 아닙니다.";
             willThrow(new TeamNotInProgressException(DebugMessage.init()))
                     .given(teamService)
-                    .close(teamId, 1L);
+                    .close(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCloseTeam(teamId);
@@ -986,7 +988,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "호스트 권한이 없습니다.";
             willThrow(new HostUnauthorizedException(DebugMessage.init()))
                     .given(teamService)
-                    .close(teamId, 1L);
+                    .close(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestCloseTeam(teamId);
@@ -1019,7 +1021,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
-                    .delete(10000000L, 1L);
+                    .delete(10000000L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteTeam(10000000L);
@@ -1042,7 +1044,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
-                    .delete(teamId, 1L);
+                    .delete(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteTeam(teamId);
@@ -1066,7 +1068,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "호스트 권한이 없습니다.";
             willThrow(new HostUnauthorizedException(DebugMessage.init()))
                     .given(teamService)
-                    .delete(teamId, 1L);
+                    .delete(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteTeam(teamId);

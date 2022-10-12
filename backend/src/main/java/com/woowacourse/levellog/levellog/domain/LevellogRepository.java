@@ -2,9 +2,7 @@ package com.woowacourse.levellog.levellog.domain;
 
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
-import com.woowacourse.levellog.member.domain.Member;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,11 +25,8 @@ public interface LevellogRepository extends JpaRepository<Levellog, Long> {
 
     boolean existsByAuthorIdAndTeamId(Long authorId, Long teamId);
 
-    @Query("SELECT l FROM Levellog l INNER JOIN FETCH l.team WHERE l.author = :author")
-    List<Levellog> findAllByAuthor(@Param("author") Member author);
-
-    @Query("SELECT l FROM Levellog l INNER JOIN FETCH l.author WHERE l.id = :id")
-    Optional<Levellog> findLevellogAndMemberByLevelogId(@Param("id") Long id);
+    @Query("SELECT l FROM Levellog l INNER JOIN FETCH l.team WHERE l.authorId = :authorId")
+    List<Levellog> findAllByAuthorId(@Param("authorId") Long authorId);
 
     @Query("SELECT l FROM Levellog l "
             + "INNER JOIN FETCH l.team t "

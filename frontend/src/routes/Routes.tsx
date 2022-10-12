@@ -1,9 +1,11 @@
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 
 import Copyright from 'pages/Copyright';
+import Loading from 'pages/status/Loading';
 
 import { REQUIRE_AUTH, ROUTES_PATH, TEAM_STATUS } from 'constants/constants';
 
+import { MemberProvider } from 'contexts/memberContext';
 import Auth from 'routes/Auth';
 import AuthLogin from 'routes/AuthLogin';
 import TeamStatus from 'routes/TeamStatus';
@@ -32,30 +34,30 @@ export const routes = [
     element: <AuthLogin needLogin={true} />,
     children: [
       {
+        path: ROUTES_PATH.INTERVIEW_TEAMS_ADD,
+        element: (
+          <MemberProvider>
+            <InterviewTeamAdd />
+          </MemberProvider>
+        ),
+      },
+      {
+        path: ROUTES_PATH.INTERVIEW_TEAMS_EDIT,
+        element: (
+          <MemberProvider>
+            <Auth requireAuth={REQUIRE_AUTH.HOST}>
+              <TeamStatus allowedStatuses={[TEAM_STATUS.READY]}>
+                <InterviewTeamEdit />
+              </TeamStatus>
+            </Auth>
+          </MemberProvider>
+        ),
+      },
+      {
         path: ROUTES_PATH.FEEDBACKS,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
             <Feedbacks />
-          </Auth>
-        ),
-      },
-      {
-        path: ROUTES_PATH.INTERVIEW_TEAMS_ADD,
-        element: <InterviewTeamAdd />,
-      },
-      {
-        path: ROUTES_PATH.PREQUESTION_ADD,
-        element: (
-          <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
-            <PreQuestionAdd />
-          </Auth>
-        ),
-      },
-      {
-        path: ROUTES_PATH.PREQUESTION_EDIT,
-        element: (
-          <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
-            <PreQuestionEdit />
           </Auth>
         ),
       },
@@ -69,6 +71,17 @@ export const routes = [
           </Auth>
         ),
       },
+      {
+        path: ROUTES_PATH.FEEDBACK_EDIT,
+        element: (
+          <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
+            <TeamStatus allowedStatuses={[TEAM_STATUS.IN_PROGRESS]}>
+              <FeedbackEdit />
+            </TeamStatus>
+          </Auth>
+        ),
+      },
+
       {
         path: ROUTES_PATH.LEVELLOG_ADD,
         element: (
@@ -90,22 +103,18 @@ export const routes = [
         ),
       },
       {
-        path: ROUTES_PATH.INTERVIEW_TEAMS_EDIT,
+        path: ROUTES_PATH.PREQUESTION_ADD,
         element: (
-          <Auth requireAuth={REQUIRE_AUTH.HOST}>
-            <TeamStatus allowedStatuses={[TEAM_STATUS.READY]}>
-              <InterviewTeamEdit />
-            </TeamStatus>
+          <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
+            <PreQuestionAdd />
           </Auth>
         ),
       },
       {
-        path: ROUTES_PATH.FEEDBACK_EDIT,
+        path: ROUTES_PATH.PREQUESTION_EDIT,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
-            <TeamStatus allowedStatuses={[TEAM_STATUS.IN_PROGRESS]}>
-              <FeedbackEdit />
-            </TeamStatus>
+            <PreQuestionEdit />
           </Auth>
         ),
       },
@@ -132,7 +141,11 @@ export const routes = [
       },
       {
         path: ROUTES_PATH.INTERVIEW_TEAMS_DETAIL,
-        element: <InterviewDetail />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <InterviewDetail />
+          </Suspense>
+        ),
       },
       {
         path: ROUTES_PATH.ERROR,

@@ -80,7 +80,7 @@ interface CheckFirstWordFinalConsonantType {
   word: string;
 }
 
-export const convertDateAndTime = ({ startAt }: Pick<Team, 'startAt'>) => {
+export const convertDateAndTime = ({ startAt }: any) => {
   const year = startAt.slice(0, 4);
   const month = startAt.slice(5, 7);
   const day = startAt.slice(8, 10);

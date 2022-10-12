@@ -39,22 +39,25 @@ class TeamTest {
     class Update {
 
         @Test
-        @DisplayName("팀 이름, 장소, 시작 시간을 수정한다.")
+        @DisplayName("팀 이름, 장소, 시작 시간, 참가자를 수정한다.")
         void success() {
-            // FIXME : Participants 변경 테스트 추가
-
             // given
             final Team team = saveTeam();
             final TeamDetail updatedTeam = new TeamDetail("브라운과 카페 투어", "잠실 어드레스룸", TEAM_START_TIME, "profile.img", 2);
+            final ParticipantsIngredient updatedParticipants = new ParticipantsIngredient(1L, List.of(1L, 2L, 3L),
+                    List.of(14L, 15L, 16L));
 
             // when
-            team.update(updatedTeam, getParticipantsIngredient(), BEFORE_START_TIME);
+            team.update(updatedTeam, updatedParticipants, BEFORE_START_TIME);
 
             // then
             assertAll(
                     () -> assertThat(team).extracting("detail")
                             .extracting("title", "place", "startAt", "profileUrl", "interviewerNumber")
-                            .containsExactly("브라운과 카페 투어", "잠실 어드레스룸", TEAM_START_TIME, "profile.img", 2)
+                            .containsExactly("브라운과 카페 투어", "잠실 어드레스룸", TEAM_START_TIME, "profile.img", 2),
+                    () -> assertThat(team.getParticipants().getValues())
+                            .extracting("memberId")
+                            .contains(1L, 2L, 3L, 14L, 15L, 16L)
             );
         }
 

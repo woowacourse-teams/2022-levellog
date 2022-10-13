@@ -59,7 +59,6 @@ public class FeedbackService {
 
     public FeedbackResponse findById(final Long levellogId, final Long feedbackId,
                                      @Verified final LoginStatus loginStatus) {
-        final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 

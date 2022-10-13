@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 
 public class ParticipantsFactory {
 
+    private static final String PARTICIPANTS = "participants";
+    private static final String WATCHERS = "watchers";
+
     private ParticipantsFactory() {
     }
 
@@ -26,7 +29,7 @@ public class ParticipantsFactory {
     }
 
     private static List<Participant> toParticipants(final Team team, final Long hostId,
-                                                   final List<Long> participantIds) {
+                                                    final List<Long> participantIds) {
         return participantIds.stream()
                 .map(it -> new Participant(team, it, Objects.equals(hostId, it), false))
                 .collect(Collectors.toList());
@@ -39,7 +42,7 @@ public class ParticipantsFactory {
     }
 
     private static void validate(final Long hostId, final List<Long> participantIds, final List<Long> watcherIds,
-                                final int interviewerNumber) {
+                                 final int interviewerNumber) {
         validateParticipantExistence(participantIds);
         validateDistinctParticipant(participantIds);
         validateDistinctWatcher(watcherIds);
@@ -51,7 +54,7 @@ public class ParticipantsFactory {
     private static void validateParticipantExistence(final List<Long> participantIds) {
         if (participantIds.isEmpty()) {
             throw new InvalidFieldException("참가자는 1명 이상이어야 합니다.", DebugMessage.init()
-                    .append("participants", participantIds));
+                    .append(PARTICIPANTS, participantIds));
         }
     }
 
@@ -59,7 +62,7 @@ public class ParticipantsFactory {
         final Set<Long> distinct = new HashSet<>(participantIds);
         if (distinct.size() != participantIds.size()) {
             throw new InvalidFieldException("중복된 참가자가 존재합니다.", DebugMessage.init()
-                    .append("participants", participantIds));
+                    .append(PARTICIPANTS, participantIds));
         }
     }
 
@@ -67,7 +70,7 @@ public class ParticipantsFactory {
         final Set<Long> distinct = new HashSet<>(watcherIds);
         if (distinct.size() != watcherIds.size()) {
             throw new InvalidFieldException("중복된 참관자가 존재합니다.", DebugMessage.init()
-                    .append("watchers", watcherIds));
+                    .append(WATCHERS, watcherIds));
         }
     }
 
@@ -77,8 +80,8 @@ public class ParticipantsFactory {
 
         if (notIndependent) {
             throw new InvalidFieldException("참가자와 참관자에 모두 포함된 멤버가 존재합니다.", DebugMessage.init()
-                    .append("participants", participantIds)
-                    .append("watchers", watcherIds));
+                    .append(PARTICIPANTS, participantIds)
+                    .append(WATCHERS, watcherIds));
         }
     }
 
@@ -87,8 +90,8 @@ public class ParticipantsFactory {
         if (!participantIds.contains(hostId) && !watcherIds.contains(hostId)) {
             throw new InvalidFieldException("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.", DebugMessage.init()
                     .append("hostId", hostId)
-                    .append("participants", participantIds)
-                    .append("watchers", watcherIds));
+                    .append(PARTICIPANTS, participantIds)
+                    .append(WATCHERS, watcherIds));
         }
     }
 

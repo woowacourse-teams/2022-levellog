@@ -1,10 +1,6 @@
 package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
-import com.woowacourse.levellog.common.support.DebugMessage;
-import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
-import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
-import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
@@ -67,23 +63,11 @@ public class Team extends BaseEntity {
     }
 
     public void validateReady(final LocalDateTime presentTime) {
-        if (status(presentTime) != TeamStatus.READY) {
-            throw new TeamNotReadyException(DebugMessage.init()
-                    .append("presentTime", presentTime));
-        }
+        status(presentTime).validateReady();
     }
 
     public void validateInProgress(final LocalDateTime presentTime) {
-        final TeamStatus status = status(presentTime);
-        if (status == TeamStatus.CLOSED) {
-            throw new TeamAlreadyClosedException(DebugMessage.init()
-                    .append("teamId", getId()));
-        }
-
-        if (status != TeamStatus.IN_PROGRESS) {
-            throw new TeamNotInProgressException(DebugMessage.init()
-                    .append("presentTime", presentTime));
-        }
+        status(presentTime).validateInProgress();
     }
 
     public void validateHostAuthorization(final Long memberId) {

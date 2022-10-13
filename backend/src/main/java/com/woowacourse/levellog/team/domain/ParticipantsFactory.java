@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 
 public class ParticipantsFactory {
 
+    private ParticipantsFactory() {
+    }
+
     public static Participants createParticipants(final Team team, final Long hostId,
                                                   final List<Long> participantIds, final List<Long> watcherIds) {
         validate(hostId, participantIds, watcherIds, team.getInterviewerNumber());

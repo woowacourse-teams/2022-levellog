@@ -59,7 +59,7 @@ public class TeamQueryRepository {
                 + "LIMIT :limit OFFSET :offset) AS t "
                 + "INNER JOIN participant p ON p.team_id = t.id AND p.is_watcher = FALSE "
                 + "INNER JOIN member m ON m.id = p.member_id "
-                + "ORDER BY t.created_at DESC";
+                + "ORDER BY t.created_at DESC, p.created_at ASC";
 
         final SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("isClosed", isClosed)
@@ -79,7 +79,7 @@ public class TeamQueryRepository {
                 + "LEFT OUTER JOIN levellog l ON p.team_id = l.team_id AND l.author_id = m.id "
                 + createPreQuestionJoinSql(loginStatus)
                 + "WHERE t.deleted = false AND t.id = :teamId "
-                + "ORDER BY t.is_closed ASC, t.created_at DESC";
+                + "ORDER BY t.is_closed ASC, t.created_at DESC, p.created_at ASC";
 
         final Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("teamId", teamId);
@@ -118,7 +118,7 @@ public class TeamQueryRepository {
                 + "INNER JOIN member m ON p.member_id = m.id "
                 + "INNER JOIN team t ON p.team_id = t.id "
                 + "WHERE m.id = :memberId AND deleted = FALSE) "
-                + "ORDER BY t.is_closed ASC, t.created_at DESC";
+                + "ORDER BY t.is_closed ASC, t.created_at DESC, p.created_at ASC";
 
         final SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("memberId", memberId);

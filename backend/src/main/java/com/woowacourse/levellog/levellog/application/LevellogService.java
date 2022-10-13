@@ -33,11 +33,14 @@ public class LevellogService {
 
     @Transactional
     public Long save(final LevellogWriteRequest request, @Verified final LoginStatus loginStatus, final Long teamId) {
-        final Team team = teamRepository.getTeam(teamId);
-        validateLevellogExistence(loginStatus.getMemberId(), teamId);
-        team.validateReady(timeStandard.now());
+        final Long authorId = loginStatus.getMemberId();
+        final Team team = teamRepository.getTeamWithParticipants(teamId);
 
-        final Levellog savedLevellog = levellogRepository.save(request.toLevellog(loginStatus.getMemberId(), team));
+        team.validateReady(timeStandard.now());
+        team.validateIsParticipants(authorId);
+        validateLevellogExistence(authorId, teamId);
+
+        final Levellog savedLevellog = levellogRepository.save(request.toLevellog(authorId, team));
 
         return savedLevellog.getId();
     }

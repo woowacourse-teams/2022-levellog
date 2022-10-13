@@ -14,6 +14,7 @@ import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.util.Optional;
@@ -106,16 +107,14 @@ class LevellogServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 반환한다.")
+        @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 던진다.")
         void save_notReady_exception() {
             // given
             final LevellogWriteRequest request = new LevellogWriteRequest("Spring을 학습하였습니다.");
             final Member author = saveMember("알린");
             final Member pepper = saveMember("페퍼");
 
-            final Long authorId = author.getId();
-            final Long teamId = saveTeam(author, pepper)
-                    .getId();
+            final Long teamId = saveTeam(author, pepper).getId();
 
             timeStandard.setInProgress();
 
@@ -123,6 +122,23 @@ class LevellogServiceTest extends ServiceTest {
             assertThatThrownBy(() -> levellogService.save(request, getLoginStatus(author), teamId))
                     .isInstanceOf(TeamNotReadyException.class)
                     .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
+        }
+
+        @Test
+        @DisplayName("작성자가 팀에 속한 멤버가 아닌 경우 예외를 던진다.")
+        void save_notTeamMember_exception() {
+            // given
+            final LevellogWriteRequest request = new LevellogWriteRequest("Spring을 학습하였습니다.");
+            final Member author = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭");
+
+            final Long teamId = saveTeam(pepper, rick).getId();
+
+            // when & then
+            assertThatThrownBy(() -> levellogService.save(request, getLoginStatus(author), teamId))
+                    .isInstanceOf(NotParticipantException.class)
+                    .hasMessageContaining("팀 참가자가 아닙니다.");
         }
     }
 

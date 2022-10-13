@@ -15,7 +15,7 @@ import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotInProgressException;
 import java.util.List;
@@ -97,8 +97,8 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> feedbackService.findAll(levellogId, getLoginStatus(alien)))
-                    .isInstanceOf(ParticipantNotSameTeamException.class)
-                    .hasMessageContainingAll("같은 팀에 속해있지 않습니다.",
+                    .isInstanceOf(NotParticipantException.class)
+                    .hasMessageContainingAll("팀 참가자가 아닙니다.",
                             String.valueOf(team.getId()), String.valueOf(alien.getId()));
         }
     }
@@ -147,8 +147,8 @@ class FeedbackServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> feedbackService.findById(levellogId, feedback.getId(), getLoginStatus(alien)))
-                    .isInstanceOf(ParticipantNotSameTeamException.class)
-                    .hasMessageContainingAll("같은 팀에 속해있지 않습니다.",
+                    .isInstanceOf(NotParticipantException.class)
+                    .hasMessageContainingAll("팀 참가자가 아닙니다.",
                             String.valueOf(team.getId()), String.valueOf(alien.getId()));
         }
     }
@@ -296,7 +296,8 @@ class FeedbackServiceTest extends ServiceTest {
         void save_selfFeedback_exception() {
             // given
             final Member eve = saveMember("이브");
-            final Team team = saveTeam(eve);
+            final Member roma = saveMember("로마");
+            final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
             final FeedbackWriteRequest request = new FeedbackWriteRequest(
@@ -322,8 +323,8 @@ class FeedbackServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> feedbackService.save(new FeedbackWriteRequest("로마 스터디", "로마 말하기", "로마 기타"),
                     levellog.getId(), getLoginStatus(roma)))
-                    .isInstanceOf(ParticipantNotSameTeamException.class)
-                    .hasMessageContaining("같은 팀에 속해있지 않습니다.");
+                    .isInstanceOf(NotParticipantException.class)
+                    .hasMessageContaining("팀 참가자가 아닙니다.");
         }
 
         @Test

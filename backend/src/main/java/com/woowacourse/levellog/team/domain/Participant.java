@@ -1,20 +1,17 @@
 package com.woowacourse.levellog.team.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
-import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 public class Participant extends BaseEntity {
 
@@ -22,15 +19,24 @@ public class Participant extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_participant_team"))
     private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_participant_member"))
-    private Member member;
+    private Long memberId;
 
     private boolean isHost;
 
     private boolean isWatcher;
 
+    public Participant(final Team team, final Long memberId, final boolean isHost, final boolean isWatcher) {
+        this.team = team;
+        this.memberId = memberId;
+        this.isHost = isHost;
+        this.isWatcher = isWatcher;
+    }
+
     public boolean isParticipant() {
         return !isWatcher;
+    }
+
+    public boolean isSameMemberId(final Long memberId) {
+        return this.memberId.equals(memberId);
     }
 }

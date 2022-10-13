@@ -13,9 +13,7 @@ import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,22 +27,23 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final FeedbackQueryRepository feedbackQueryRepository;
     private final LevellogRepository levellogRepository;
-    private final ParticipantRepository participantRepository;
     private final TimeStandard timeStandard;
 
     @Transactional
     public Long save(final FeedbackWriteRequest request, final Long levellogId,
                      @Verified final LoginStatus loginStatus) {
-        validateExistence(levellogId, loginStatus.getMemberId());
+        final Long memberId = loginStatus.getMemberId();
+
+        validateExistence(levellogId, memberId);
 
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
-        levellog.validateSelfFeedback(loginStatus.getMemberId());
-        validateTeamMember(team, loginStatus.getMemberId());
+        levellog.validateSelfFeedback(memberId);
+        team.validateIsParticipants(memberId);
         team.validateInProgress(timeStandard.now());
 
-        final Feedback feedback = request.toEntity(loginStatus.getMemberId(), levellog);
+        final Feedback feedback = request.toEntity(memberId, levellog);
 
         return feedbackRepository.save(feedback)
                 .getId();
@@ -52,7 +51,8 @@ public class FeedbackService {
 
     public FeedbackResponses findAll(final Long levellogId, @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
-        validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
+        final Team team = levellog.getTeam();
+        team.validateIsParticipants(loginStatus.getMemberId());
 
         return feedbackQueryRepository.findAllByLevellogId(levellogId);
     }
@@ -60,8 +60,9 @@ public class FeedbackService {
     public FeedbackResponse findById(final Long levellogId, final Long feedbackId,
                                      @Verified final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
+        final Team team = levellog.getTeam();
 
-        validateTeamMember(levellog.getTeam(), loginStatus.getMemberId());
+        team.validateIsParticipants(loginStatus.getMemberId());
 
         return feedbackQueryRepository.findById(feedbackId)
                 .orElseThrow(() -> new FeedbackNotFoundException(DebugMessage.init()
@@ -92,14 +93,6 @@ public class FeedbackService {
         if (feedbackRepository.existsByLevellogIdAndFromId(levellogId, fromMemberId)) {
             throw new FeedbackAlreadyExistException(DebugMessage.init()
                     .append("levellogId", levellogId));
-        }
-    }
-
-    private void validateTeamMember(final Team team, final Long memberId) {
-        if (!participantRepository.existsByMemberIdAndTeam(memberId, team)) {
-            throw new ParticipantNotSameTeamException(DebugMessage.init()
-                    .append("teamId", team.getId())
-                    .append("memberId", memberId));
         }
     }
 }

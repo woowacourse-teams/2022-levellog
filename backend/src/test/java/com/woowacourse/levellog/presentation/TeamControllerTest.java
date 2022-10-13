@@ -13,7 +13,7 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.exception.TeamAlreadyClosedException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
@@ -880,9 +880,9 @@ class TeamControllerTest extends ControllerTest {
             final Long teamId = 2L;
             final Long memberId = 5L;
 
-            final String message = "참가자가 존재하지 않습니다.";
+            final String message = "팀 참가자가 아닙니다.";
             given(teamService.findMyRole(teamId, memberId, LoginStatus.fromLogin(1L)))
-                    .willThrow(new ParticipantNotFoundException(DebugMessage.init()));
+                    .willThrow(new NotParticipantException(DebugMessage.init()));
 
             // when
             final ResultActions perform = requestFindMyRole(teamId, memberId);
@@ -1021,7 +1021,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "팀이 존재하지 않습니다.";
             willThrow(new TeamNotFoundException(DebugMessage.init()))
                     .given(teamService)
-                    .deleteById(10000000L, LoginStatus.fromLogin(1L));
+                    .delete(10000000L, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteTeam(10000000L);
@@ -1044,7 +1044,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "인터뷰 준비 상태가 아닙니다.";
             willThrow(new TeamNotReadyException(DebugMessage.init()))
                     .given(teamService)
-                    .deleteById(teamId, LoginStatus.fromLogin(1L));
+                    .delete(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteTeam(teamId);
@@ -1068,7 +1068,7 @@ class TeamControllerTest extends ControllerTest {
             final String message = "호스트 권한이 없습니다.";
             willThrow(new HostUnauthorizedException(DebugMessage.init()))
                     .given(teamService)
-                    .deleteById(teamId, LoginStatus.fromLogin(1L));
+                    .delete(teamId, LoginStatus.fromLogin(1L));
 
             // when
             final ResultActions perform = requestDeleteTeam(teamId);

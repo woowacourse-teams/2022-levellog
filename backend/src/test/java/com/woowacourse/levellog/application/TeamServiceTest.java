@@ -15,24 +15,28 @@ import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamDetail;
 import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
 import com.woowacourse.levellog.team.dto.response.InterviewRoleResponse;
 import com.woowacourse.levellog.team.dto.response.TeamStatusResponse;
 import com.woowacourse.levellog.team.exception.HostUnauthorizedException;
-import com.woowacourse.levellog.team.exception.ParticipantNotFoundException;
-import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("TeamService의")
 class TeamServiceTest extends ServiceTest {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Nested
     @DisplayName("save 메서드는")
@@ -185,7 +189,7 @@ class TeamServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, getLoginStatus(alien)))
-                    .isInstanceOf(ParticipantNotSameTeamException.class);
+                    .isInstanceOf(NotParticipantException.class);
         }
 
         @Test
@@ -203,7 +207,7 @@ class TeamServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, getLoginStatus(rick)))
-                    .isInstanceOf(ParticipantNotFoundException.class);
+                    .isInstanceOf(NotParticipantException.class);
         }
     }
 
@@ -290,25 +294,24 @@ class TeamServiceTest extends ServiceTest {
             final List<Long> participantsIds = List.of(rick.getId(), eve.getId(), alien.getId(), roma.getId());
             final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 2, AFTER_START_TIME,
                     participantsIds, Collections.emptyList());
+            entityManager.clear();
 
             // when
             teamService.update(request, team.getId(), getLoginStatus(rick));
 
             // then
-            final Team actualTeam = teamRepository.findById(team.getId()).orElseThrow();
-            final List<Long> actualParticipantsIds = participantRepository.findByTeam(actualTeam)
-                    .stream()
-                    .map(Participant::getMember)
-                    .map(Member::getId)
-                    .collect(Collectors.toList());
+            final Team actualTeam = teamRepository.getTeam(team.getId());
+            final TeamDetail detail = actualTeam.getDetail();
+
+            final List<Participant> values = actualTeam.getParticipants().getValues();
 
             assertAll(
-                    () -> assertThat(actualTeam.getTitle()).isEqualTo(request.getTitle()),
-                    () -> assertThat(actualTeam.getPlace()).isEqualTo(request.getPlace()),
-                    () -> assertThat(actualTeam.getStartAt()).isEqualTo(request.getStartAt()),
+                    () -> assertThat(detail.getTitle()).isEqualTo(request.getTitle()),
+                    () -> assertThat(detail.getPlace()).isEqualTo(request.getPlace()),
+                    () -> assertThat(detail.getStartAt()).isEqualTo(request.getStartAt()),
                     () -> assertThat(actualTeam.getInterviewerNumber()).isEqualTo(request.getInterviewerNumber()),
-                    () -> assertThat(actualParticipantsIds).isEqualTo(
-                            List.of(rick.getId(), eve.getId(), alien.getId(), roma.getId()))
+                    () -> assertThat(values).extracting("memberId")
+                            .contains(rick.getId(), eve.getId(), alien.getId(), roma.getId())
             );
         }
 
@@ -349,17 +352,19 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("Ready 상태가 아닐 때 팀을 수정하려고 하면 예외를 던진다.")
         void update_notReady_exception() {
             //given
-            final Member member = saveMember("릭");
-            final Team team = saveTeam(member);
+            final Member rick = saveMember("릭");
+            final Member roma = saveMember("로마");
+
+            final Team team = saveTeam(rick, roma);
             final TeamWriteRequest request = new TeamWriteRequest("잠실 네오조", "트랙룸", 1, TEAM_START_TIME,
-                    List.of(member.getId()), Collections.emptyList());
+                    List.of(rick.getId(), roma.getId()), Collections.emptyList());
             timeStandard.setInProgress();
 
             //when & then
             final Long teamId = team.getId();
-            assertThatThrownBy(() -> teamService.update(request, teamId, getLoginStatus(member)))
+            assertThatThrownBy(() -> teamService.update(request, teamId, getLoginStatus(rick)))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.", teamId, team.getStartAt());
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.", teamId, team.getDetail().getStartAt());
         }
 
         @Test
@@ -434,6 +439,25 @@ class TeamServiceTest extends ServiceTest {
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
         }
+
+        @Test
+        @DisplayName("수정하려는 팀의 참가자 수가 인터뷰어 수보다 많지 않으면 예외가 발생한다.")
+        void update_participantsSizeLessThanInterviewerNumber_exception() {
+            //given
+            final Member alien = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
+            final Member roma = saveMember("로마");
+            final Member rick = saveMember("릭");
+
+            final Long teamId = saveTeam(alien, pepper, roma).getId();
+            final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 3, TEAM_START_TIME,
+                    List.of(pepper.getId(), roma.getId()), List.of(alien.getId(), rick.getId()));
+
+            //when & then
+            assertThatThrownBy(() -> teamService.update(request, teamId, getLoginStatus(alien)))
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
+        }
     }
 
     @Nested
@@ -445,7 +469,8 @@ class TeamServiceTest extends ServiceTest {
         void success() {
             // given
             final Member rick = saveMember("릭");
-            final Team team = saveTeam(rick);
+            final Member pepper = saveMember("페퍼");
+            final Team team = saveTeam(rick, pepper);
 
             timeStandard.setInProgress();
 
@@ -485,15 +510,14 @@ class TeamServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             // when
-            teamService.deleteById(team.getId(), getLoginStatus(rick));
+            teamService.delete(team.getId(), getLoginStatus(rick));
             entityManager.flush();
             entityManager.clear();
 
             // then
-            final Optional<Team> actualTeam = teamRepository.findById(team.getId());
-            assertThat(actualTeam).isEmpty();
-            final List<Participant> actualParticipants = participantRepository.findByTeam(team);
-            assertThat(actualParticipants).isEmpty();
+            assertThatThrownBy(() -> teamRepository.getTeam(team.getId()))
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("팀이 존재하지 않습니다.");
         }
 
         @Test
@@ -506,7 +530,7 @@ class TeamServiceTest extends ServiceTest {
 
             // when, then
             final Long teamId = team.getId();
-            assertThatThrownBy(() -> teamService.deleteById(teamId, getLoginStatus(pepper)))
+            assertThatThrownBy(() -> teamService.delete(teamId, getLoginStatus(pepper)))
                     .isInstanceOf(HostUnauthorizedException.class)
                     .hasMessageContaining("호스트 권한이 없습니다.");
         }
@@ -518,7 +542,7 @@ class TeamServiceTest extends ServiceTest {
             final Member rick = saveMember("릭");
 
             //when & then
-            assertThatThrownBy(() -> teamService.deleteById(1000L, getLoginStatus(rick)))
+            assertThatThrownBy(() -> teamService.delete(1000L, getLoginStatus(rick)))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다.");
         }
@@ -527,15 +551,17 @@ class TeamServiceTest extends ServiceTest {
         @DisplayName("이미 삭제된 팀을 삭제하는 경우 팀이 존재하지 않는다는 예외를 던진다.")
         void delete_alreadyDeleted_exception() {
             //given
-            final Member member = saveMember("릭");
-            final Team team = saveTeam(member);
+            final Member rick = saveMember("릭");
+            final Member pepper = saveMember("페퍼");
+            final Team team = saveTeam(rick, pepper);
+
             final Long teamId = team.getId();
-            teamService.deleteById(teamId, getLoginStatus(member));
+            teamService.delete(teamId, getLoginStatus(rick));
             entityManager.flush();
             entityManager.clear();
 
             //when & then
-            assertThatThrownBy(() -> teamService.deleteById(teamId, getLoginStatus(member)))
+            assertThatThrownBy(() -> teamService.delete(teamId, getLoginStatus(rick)))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다.");
         }

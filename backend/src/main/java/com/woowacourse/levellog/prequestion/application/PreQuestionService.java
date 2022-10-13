@@ -5,7 +5,6 @@ import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionQueryRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
@@ -13,7 +12,6 @@ import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
 import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
-import com.woowacourse.levellog.team.domain.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +28,7 @@ public class PreQuestionService {
     @Transactional
     public Long save(final PreQuestionWriteRequest request, final Long levellogId,
                      @Verified final LoginStatus loginStatus) {
-        final Levellog levellog = levellogRepository.getLevellogWithTeamAndParticipantsById(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         levellog.getTeam().validateIsParticipants(loginStatus.getMemberId());
 
         validatePreQuestionExistence(levellog, loginStatus.getMemberId());

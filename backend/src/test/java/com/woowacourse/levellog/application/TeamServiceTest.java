@@ -300,7 +300,7 @@ class TeamServiceTest extends ServiceTest {
             teamService.update(request, team.getId(), getLoginStatus(rick));
 
             // then
-            final Team actualTeam = teamRepository.getTeamWithParticipants(team.getId());
+            final Team actualTeam = teamRepository.getTeam(team.getId());
             final TeamDetail detail = actualTeam.getDetail();
 
             final List<Participant> values = actualTeam.getParticipants().getValues();
@@ -515,7 +515,7 @@ class TeamServiceTest extends ServiceTest {
             entityManager.clear();
 
             // then
-            assertThatThrownBy(() -> teamRepository.getTeamWithParticipants(team.getId()))
+            assertThatThrownBy(() -> teamRepository.getTeam(team.getId()))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다.");
         }

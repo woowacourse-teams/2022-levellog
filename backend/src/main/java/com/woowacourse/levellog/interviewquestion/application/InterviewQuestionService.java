@@ -44,7 +44,7 @@ public class InterviewQuestionService {
     @Transactional
     public Long save(final InterviewQuestionWriteRequest request, final Long levellogId,
                      @Verified final LoginStatus loginStatus) {
-        final Levellog levellog = levellogRepository.getLevellogWithTeamAndParticipantsById(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
         levellog.validateSelfInterviewQuestion(loginStatus.getMemberId());

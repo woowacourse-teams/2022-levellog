@@ -6,18 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface LevellogRepository extends JpaRepository<Levellog, Long> {
 
     default Levellog getLevellog(final Long levellogId) {
         return findById(levellogId)
-                .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
-                        .append("levellogId", levellogId)));
-    }
-
-    default Levellog getLevellogWithTeamAndParticipantsById(final Long levellogId) {
-        return findLevellogWithTeamAndParticipantsById(levellogId)
                 .orElseThrow(() -> new LevellogNotFoundException(DebugMessage.init()
                         .append("levellogId", levellogId)));
     }
@@ -28,10 +21,4 @@ public interface LevellogRepository extends JpaRepository<Levellog, Long> {
 
     @Query("SELECT l FROM Levellog l INNER JOIN FETCH l.team WHERE l.authorId = :authorId")
     List<Levellog> findAllByAuthorId(Long authorId);
-
-    @Query("SELECT l FROM Levellog l "
-            + "INNER JOIN FETCH l.team t "
-            + "INNER JOIN FETCH t.participants p "
-            + "WHERE l.id = :levellogId")
-    Optional<Levellog> findLevellogWithTeamAndParticipantsById(Long levellogId);
 }

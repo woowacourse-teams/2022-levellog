@@ -34,7 +34,7 @@ public class LevellogService {
     @Transactional
     public Long save(final LevellogWriteRequest request, @Verified final LoginStatus loginStatus, final Long teamId) {
         final Long authorId = loginStatus.getMemberId();
-        final Team team = teamRepository.getTeamWithParticipants(teamId);
+        final Team team = teamRepository.getTeam(teamId);
 
         team.validateReady(timeStandard.now());
         team.validateIsParticipants(authorId);

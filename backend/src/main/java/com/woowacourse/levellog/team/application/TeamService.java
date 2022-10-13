@@ -45,7 +45,7 @@ public class TeamService {
 
     public InterviewRoleResponse findMyRole(final Long teamId, final Long targetMemberId,
                                             @Verified final LoginStatus loginStatus) {
-        final Team team = teamRepository.getTeamWithParticipants(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         final InterviewRole interviewRole = team.matchInterviewRole(targetMemberId, loginStatus.getMemberId());
 
         return new InterviewRoleResponse(interviewRole);
@@ -53,7 +53,7 @@ public class TeamService {
 
     @Transactional
     public void update(final TeamWriteRequest request, final Long teamId, @Verified final LoginStatus loginStatus) {
-        final Team team = teamRepository.getTeamWithParticipants(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         final Long memberId = loginStatus.getMemberId();
         team.validateHostAuthorization(memberId);
 
@@ -63,7 +63,7 @@ public class TeamService {
 
     @Transactional
     public void close(final Long teamId, @Verified final LoginStatus loginStatus) {
-        final Team team = teamRepository.getTeamWithParticipants(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         team.validateHostAuthorization(loginStatus.getMemberId());
 
         team.close(timeStandard.now());
@@ -71,7 +71,7 @@ public class TeamService {
 
     @Transactional
     public void delete(final Long teamId, @Verified final LoginStatus loginStatus) {
-        final Team team = teamRepository.getTeamWithParticipants(teamId);
+        final Team team = teamRepository.getTeam(teamId);
         team.validateHostAuthorization(loginStatus.getMemberId());
 
         team.delete(timeStandard.now());

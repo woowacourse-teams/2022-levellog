@@ -13,8 +13,6 @@ import com.woowacourse.levellog.feedback.exception.FeedbackAlreadyExistException
 import com.woowacourse.levellog.feedback.exception.FeedbackNotFoundException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.domain.MemberRepository;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +36,7 @@ public class FeedbackService {
 
         validateExistence(levellogId, memberId);
 
-        final Levellog levellog = levellogRepository.getLevellogWithTeamAndParticipantsById(levellogId);
+        final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
         levellog.validateSelfFeedback(memberId);

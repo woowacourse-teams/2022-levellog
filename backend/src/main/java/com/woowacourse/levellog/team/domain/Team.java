@@ -42,8 +42,9 @@ public class Team extends BaseEntity {
     public void update(final TeamDetail detail, final Long hostId, final List<Long> participantsIds,
                        final List<Long> watcherIds, final LocalDateTime presentTime) {
         validateReady(presentTime);
+
         this.detail = detail;
-        updateParticipants(ParticipantsFactory.createParticipants(this, hostId, participantsIds, watcherIds));
+        participants.update(ParticipantsFactory.createParticipants(this, hostId, participantsIds, watcherIds));
     }
 
     public void delete(final LocalDateTime presentTime) {
@@ -78,7 +79,7 @@ public class Team extends BaseEntity {
         participants.validateIsParticipants(this.getId(), memberId);
     }
 
-    public InterviewRole getInterviewRole(final Long targetMemberId, final Long sourceMemberId) {
+    public InterviewRole matchInterviewRole(final Long targetMemberId, final Long sourceMemberId) {
         validateIsParticipants(targetMemberId);
         validateIsParticipants(sourceMemberId);
 
@@ -93,7 +94,4 @@ public class Team extends BaseEntity {
         return detail.getProfileUrl();
     }
 
-    private void updateParticipants(final Participants target) {
-        participants.update(target);
-    }
 }

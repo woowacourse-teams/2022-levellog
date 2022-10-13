@@ -46,7 +46,7 @@ public class TeamService {
     public InterviewRoleResponse findMyRole(final Long teamId, final Long targetMemberId,
                                             @Verified final LoginStatus loginStatus) {
         final Team team = teamRepository.getTeamWithParticipants(teamId);
-        final InterviewRole interviewRole = team.getInterviewRole(targetMemberId, loginStatus.getMemberId());
+        final InterviewRole interviewRole = team.matchInterviewRole(targetMemberId, loginStatus.getMemberId());
 
         return new InterviewRoleResponse(interviewRole);
     }

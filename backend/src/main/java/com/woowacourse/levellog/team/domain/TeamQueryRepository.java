@@ -24,6 +24,7 @@ public class TeamQueryRepository {
             resultSet.getString("teamProfileUrl"),
             resultSet.getBoolean("is_closed"),
             resultSet.getLong("memberId"),
+            resultSet.getString("nickname"),
             resultSet.getString("profile_url")
     );
     private final RowMapper<TeamDetailQueryResult> detailRowMapper = (resultSet, rowNumber) -> new TeamDetailQueryResult(
@@ -50,7 +51,7 @@ public class TeamQueryRepository {
     public List<TeamListQueryResult> findAllList(final boolean isClosed, final int limit, final int offset) {
         final String sql = "SELECT /*! STRAIGHT_JOIN */ "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, "
-                + "m.id memberId, m.profile_url "
+                + "m.id memberId, m.nickname, m.profile_url "
                 + "FROM "
                 + "(SELECT * "
                 + "FROM team "
@@ -108,7 +109,7 @@ public class TeamQueryRepository {
     public List<TeamListQueryResult> findMyList(final Long memberId) {
         final String sql = "SELECT "
                 + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
-                + "m.id memberId, m.profile_url "
+                + "m.id memberId, m.nickname, m.profile_url "
                 + "FROM participant p "
                 + "INNER JOIN member m ON p.member_id = m.id "
                 + "INNER JOIN team t ON p.team_id = t.id "

@@ -16,6 +16,7 @@ public class TeamListQueryResult {
     private String teamImage;
     private boolean isClosed;
     private Long memberId;
+    private String nickname;
     private String memberImage;
 
     public TeamStatus getTeamStatus(final LocalDateTime time) {

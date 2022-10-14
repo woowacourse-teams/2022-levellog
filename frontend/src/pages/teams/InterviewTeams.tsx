@@ -12,9 +12,9 @@ import plusIcon from 'assets/images/plus.svg';
 import { ROUTES_PATH } from 'constants/constants';
 
 import Teams from '../../components/teams/Teams';
+import TeamFilterButtons from './TeamFilterButtons';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
-import FilterButton from 'components/@commons/FilterButton';
 import Image from 'components/@commons/Image';
 
 const InterviewTeams = () => {
@@ -24,45 +24,16 @@ const InterviewTeams = () => {
     handleClickMyTeamsButton,
     handleClickOpenTeamsButton,
   } = useTeamsCondition();
-  const { loginUserId } = useUser();
 
   return (
     <>
       <ContentHeader title={'인터뷰 팀'}>
-        <S.FilterUl>
-          <li>
-            <FilterButton
-              onClick={handleClickOpenTeamsButton}
-              isActive={teamsCondition.open}
-              aria-label={'진행중인 인터뷰 팀으로 필터링'}
-              aria-disabled={teamsCondition.open}
-            >
-              진행중인 인터뷰
-            </FilterButton>
-          </li>
-          <li>
-            <FilterButton
-              onClick={handleClickCloseTeamsButton}
-              isActive={teamsCondition.close}
-              aria-label={'종료된 인터뷰 팀으로 필터링'}
-              aria-disabled={teamsCondition.close}
-            >
-              종료된 인터뷰
-            </FilterButton>
-          </li>
-          {loginUserId && (
-            <li>
-              <FilterButton
-                onClick={handleClickMyTeamsButton}
-                isActive={teamsCondition.my}
-                aria-label={'나의 인터뷰 팀 목록으로 필터링'}
-                aria-disabled={teamsCondition.my}
-              >
-                나의 인터뷰
-              </FilterButton>
-            </li>
-          )}
-        </S.FilterUl>
+        <TeamFilterButtons
+          teamsCondition={teamsCondition}
+          handleClickOpenTeamsButton={handleClickOpenTeamsButton}
+          handleClickCloseTeamsButton={handleClickCloseTeamsButton}
+          handleClickMyTeamsButton={handleClickMyTeamsButton}
+        />
         <span />
       </ContentHeader>
       <S.Container>
@@ -83,12 +54,6 @@ const InterviewTeams = () => {
 };
 
 const S = {
-  FilterUl: styled.ul`
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-  `,
-
   Container: styled.main`
     overflow: auto;
     overflow-x: hidden;

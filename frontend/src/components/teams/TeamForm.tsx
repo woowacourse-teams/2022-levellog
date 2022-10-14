@@ -63,7 +63,7 @@ const TeamForm = ({ purpose, teamInfoRef, handleClickTeamButton }: TeamFormProps
 };
 
 interface TeamFormProps {
-  purpose: '생성하기' | '수정하기';
+  purpose: '추가하기' | '수정하기';
   teamInfoRef: React.MutableRefObject<HTMLInputElement[]>;
   handleClickTeamButton: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }

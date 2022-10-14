@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useTeamsCondition from 'hooks/team/useTeamsCondition';
-import useUser from 'hooks/useUser';
 
 import Loading from 'pages/status/Loading';
 
@@ -40,10 +39,10 @@ const InterviewTeams = () => {
         <Suspense fallback={<Loading />}>
           <Teams teamsCondition={teamsCondition} />
         </Suspense>
-        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
-          <S.TeamAddButton>
+        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD} tabIndex={-1}>
+          <S.TeamAddButton aria-label={'팀 추가하기 페이지로 이동'}>
             {'팀 추가하기'}
-            <S.ImageBox>
+            <S.ImageBox aria-hidden={true}>
               <Image src={plusIcon} sizes={'TINY'} />
             </S.ImageBox>
           </S.TeamAddButton>
@@ -107,7 +106,7 @@ const S = {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 6.875rem;
+    bottom: 5rem;
     z-index: 10;
     width: 8.125rem;
     height: 3.125rem;

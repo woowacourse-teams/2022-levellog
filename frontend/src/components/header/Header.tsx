@@ -29,7 +29,6 @@ const Header = () => {
           <LogoStyle src={levellogLogo} alt={'레벨로그 로고'} />
         </Link>
         <Profile
-          isShowProfileDropdown={isShowProfileDropdown}
           loginUserProfileUrl={loginUserProfileUrl ? loginUserProfileUrl : defaultProfile}
           handleClickProfile={handleClickProfile}
           handleErrorProfile={handleErrorProfile}

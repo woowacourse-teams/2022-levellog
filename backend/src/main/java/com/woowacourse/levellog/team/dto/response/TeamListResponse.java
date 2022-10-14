@@ -36,7 +36,8 @@ public class TeamListResponse {
                 result.getTeamImage(),
                 status,
                 simpleParticipants.stream()
-                        .map(it -> new ParticipantInTeamListResponse(it.getMemberId(), it.getMemberImage()))
+                        .map(it -> new ParticipantInTeamListResponse(it.getMemberId(), it.getNickname(),
+                                it.getMemberImage()))
                         .collect(Collectors.toList())
         );
     }

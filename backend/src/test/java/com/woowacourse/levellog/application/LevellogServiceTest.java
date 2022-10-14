@@ -14,6 +14,7 @@ import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import com.woowacourse.levellog.team.exception.TeamNotReadyException;
 import java.util.Optional;
@@ -37,7 +38,11 @@ class LevellogServiceTest extends ServiceTest {
             // given
             final LevellogWriteRequest request = new LevellogWriteRequest("Spring을 학습하였습니다.");
             final Member author = saveMember("알린");
-            final Long teamId = saveTeam(author).getId();
+            final Member pepper = saveMember("페퍼");
+
+            final Long authorId = author.getId();
+            final Long teamId = saveTeam(author, pepper)
+                    .getId();
 
             // when
             final Long savedLevellogId = levellogService.save(request, getLoginStatus(author), teamId);
@@ -67,7 +72,11 @@ class LevellogServiceTest extends ServiceTest {
             // given
             final LevellogWriteRequest request = new LevellogWriteRequest("굳굳");
             final Member author = saveMember("알린");
-            final Long teamId = saveTeam(author).getId();
+            final Member pepper = saveMember("페퍼");
+
+            final Long authorId = author.getId();
+            final Long teamId = saveTeam(author, pepper)
+                    .getId();
 
             levellogService.save(request, getLoginStatus(author), teamId);
 
@@ -85,7 +94,11 @@ class LevellogServiceTest extends ServiceTest {
             // given
             final LevellogWriteRequest request = new LevellogWriteRequest(invalidContent);
             final Member author = saveMember("알린");
-            final Long teamId = saveTeam(author).getId();
+            final Member pepper = saveMember("페퍼");
+
+            final Long authorId = author.getId();
+            final Long teamId = saveTeam(author, pepper)
+                    .getId();
 
             //  when & then
             assertThatThrownBy(() -> levellogService.save(request, getLoginStatus(author), teamId))
@@ -94,19 +107,38 @@ class LevellogServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 반환한다.")
+        @DisplayName("Ready 상태가 아닐 때 요청한 경우 예외를 던진다.")
         void save_notReady_exception() {
             // given
             final LevellogWriteRequest request = new LevellogWriteRequest("Spring을 학습하였습니다.");
             final Member author = saveMember("알린");
-            final Long teamId = saveTeam(author).getId();
+            final Member pepper = saveMember("페퍼");
+
+            final Long teamId = saveTeam(author, pepper).getId();
 
             timeStandard.setInProgress();
 
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, getLoginStatus(author), teamId))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContainingAll("인터뷰 준비 상태가 아닙니다.", String.valueOf(teamId));
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
+        }
+
+        @Test
+        @DisplayName("작성자가 팀에 속한 멤버가 아닌 경우 예외를 던진다.")
+        void save_notTeamMember_exception() {
+            // given
+            final LevellogWriteRequest request = new LevellogWriteRequest("Spring을 학습하였습니다.");
+            final Member author = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
+            final Member rick = saveMember("릭");
+
+            final Long teamId = saveTeam(pepper, rick).getId();
+
+            // when & then
+            assertThatThrownBy(() -> levellogService.save(request, getLoginStatus(author), teamId))
+                    .isInstanceOf(NotParticipantException.class)
+                    .hasMessageContaining("팀 참가자가 아닙니다.");
         }
     }
 
@@ -119,7 +151,9 @@ class LevellogServiceTest extends ServiceTest {
         void success() {
             // given
             final Member author = saveMember("알린");
-            final Team team = saveTeam(author);
+            final Member pepper = saveMember("페퍼");
+
+            final Team team = saveTeam(author, pepper);
             final String content = "content";
             final Levellog levellog = saveLevellog(author, team, content);
 
@@ -152,7 +186,9 @@ class LevellogServiceTest extends ServiceTest {
         void success() {
             // given
             final Member author = saveMember("알린");
-            final Team team = saveTeam(author);
+            final Member pepper = saveMember("페퍼");
+
+            final Team team = saveTeam(author, pepper);
 
             final Levellog levellog = saveLevellog(author, team);
             final LevellogWriteRequest request = new LevellogWriteRequest("update content");
@@ -184,7 +220,9 @@ class LevellogServiceTest extends ServiceTest {
         void update_unauthorized_exception() {
             // given
             final Member author = saveMember("알린");
-            final Team team = saveTeam(author);
+            final Member pepper = saveMember("페퍼");
+
+            final Team team = saveTeam(author, pepper);
             final Long levellogId = saveLevellog(author, team).getId();
 
             final LevellogWriteRequest request = new LevellogWriteRequest("update content");
@@ -203,7 +241,9 @@ class LevellogServiceTest extends ServiceTest {
             // given
             final LevellogWriteRequest request = new LevellogWriteRequest(invalidContent);
             final Member author = saveMember("알린");
-            final Team team = saveTeam(author);
+            final Member pepper = saveMember("페퍼");
+
+            final Team team = saveTeam(author, pepper);
             final Long levellogId = saveLevellog(author, team).getId();
 
             //  when & then
@@ -218,7 +258,9 @@ class LevellogServiceTest extends ServiceTest {
             // given
             final LevellogWriteRequest request = new LevellogWriteRequest("update content");
             final Member author = saveMember("알린");
-            final Team team = saveTeam(author);
+            final Member pepper = saveMember("페퍼");
+
+            final Team team = saveTeam(author, pepper);
             final Long levellogId = saveLevellog(author, team).getId();
 
             timeStandard.setInProgress();
@@ -226,7 +268,7 @@ class LevellogServiceTest extends ServiceTest {
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, getLoginStatus(author)))
                     .isInstanceOf(TeamNotReadyException.class)
-                    .hasMessageContainingAll("인터뷰 준비 상태가 아닙니다.", String.valueOf(team.getId()));
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.");
         }
     }
 
@@ -239,9 +281,11 @@ class LevellogServiceTest extends ServiceTest {
         void success() {
             // given
             final Member author = saveMember("페퍼");
+            final Member alien = saveMember("알린");
+            final Member roma = saveMember("로마");
 
-            final Team team = saveTeam(author);
-            final Team team2 = saveTeam(author);
+            final Team team = saveTeam(author, alien);
+            final Team team2 = saveTeam(author, roma);
 
             saveLevellog(author, team);
             saveLevellog(author, team2);

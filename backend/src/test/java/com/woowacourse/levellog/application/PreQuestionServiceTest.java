@@ -15,9 +15,8 @@ import com.woowacourse.levellog.prequestion.dto.response.PreQuestionResponse;
 import com.woowacourse.levellog.prequestion.exception.InvalidPreQuestionException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionAlreadyExistException;
 import com.woowacourse.levellog.prequestion.exception.PreQuestionNotFoundException;
-import com.woowacourse.levellog.team.domain.Participant;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
+import com.woowacourse.levellog.team.exception.NotParticipantException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -62,18 +61,18 @@ public class PreQuestionServiceTest extends ServiceTest {
             final PreQuestionWriteRequest preQuestionWriteRequest = new PreQuestionWriteRequest(preQuestion);
 
             final Member author = saveMember("알린");
-            final Member questioner = saveMember("로마");
-            final Team team = saveTeam(author);
-            final Levellog levellog = saveLevellog(author, team);
+            final Member teamMember = saveMember("이브");
+            final Team team = saveTeam(author, teamMember);
 
-            participantRepository.save(new Participant(team, author, true, false));
+            final Member questioner = saveMember("로마");
+            final Levellog levellog = saveLevellog(author, team);
 
             // when, then
             assertThatThrownBy(
                     () -> preQuestionService.save(preQuestionWriteRequest, levellog.getId(),
                             getLoginStatus(questioner)))
-                    .isInstanceOf(ParticipantNotSameTeamException.class)
-                    .hasMessageContaining("같은 팀에 속해있지 않습니다.");
+                    .isInstanceOf(NotParticipantException.class)
+                    .hasMessageContaining("팀 참가자가 아닙니다.");
         }
 
         @Test
@@ -177,7 +176,7 @@ public class PreQuestionServiceTest extends ServiceTest {
             // when, then
             assertThatThrownBy(() -> preQuestionService.findMy(levellog.getId(), getLoginStatus(author)))
                     .isInstanceOf(PreQuestionNotFoundException.class)
-                    .hasMessageContainingAll("사전 질문이 존재하지 않습니다.", "1");
+                    .hasMessageContainingAll("사전 질문이 존재하지 않습니다.", String.valueOf(levellog.getId()));
         }
     }
 
@@ -263,7 +262,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(author, team);
 
             final Member author2 = saveMember("페퍼");
-            final Team team2 = saveTeam(author2);
+            final Member eve = saveMember("이브");
+            final Team team2 = saveTeam(author2, eve);
             final Levellog levellog2 = saveLevellog(author2, team2);
 
             final Long id = preQuestionService.save(preQuestionWriteRequest, levellog.getId(),
@@ -345,7 +345,8 @@ public class PreQuestionServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(author, team);
 
             final Member author2 = saveMember("페퍼");
-            final Team team2 = saveTeam(author2);
+            final Member eve = saveMember("이브");
+            final Team team2 = saveTeam(author2, eve);
             final Levellog levellog2 = saveLevellog(author2, team2);
 
             final Long id = savePreQuestion(levellog, questioner).getId();

@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.domain;
 
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -30,7 +29,7 @@ class LevellogTest {
         void success() {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
+            final Team team = TeamTest.saveTeam();
             final String content = "Spring을 학습하였습니다";
 
             // when & then
@@ -44,7 +43,7 @@ class LevellogTest {
         void newLevellog_contentBlank_exception(final String invalidContent) {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
+            final Team team = TeamTest.saveTeam();
 
             //  when & then
             assertThatThrownBy(() -> new Levellog(author.getId(), team, invalidContent))
@@ -63,7 +62,7 @@ class LevellogTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             MockEntityFactory.setId(1L, author);
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
+            final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(author.getId(), team, "content");
             final String updatedContent = "updated content";
 
@@ -82,7 +81,7 @@ class LevellogTest {
             final Member member = new Member("알린", 2222, "alien.png");
             MockEntityFactory.setId(1L, author);
             MockEntityFactory.setId(2L, member);
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
+            final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(author.getId(), team, "content");
 
             //  when & then
@@ -101,7 +100,7 @@ class LevellogTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             MockEntityFactory.setId(1L, author);
-            final Team team = new Team("잠실 제이슨조,", "트랙룸", TEAM_START_TIME, "jamsil_trackroom.png", 1);
+            final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(author.getId(), team, "content");
 
             //  when & then

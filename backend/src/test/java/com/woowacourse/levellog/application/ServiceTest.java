@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
@@ -29,12 +30,13 @@ import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
-import com.woowacourse.levellog.team.domain.Participant;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
+import com.woowacourse.levellog.team.domain.ParticipantsFactory;
 import com.woowacourse.levellog.team.domain.Team;
+import com.woowacourse.levellog.team.domain.TeamDetail;
 import com.woowacourse.levellog.team.domain.TeamRepository;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
@@ -113,9 +115,6 @@ abstract class ServiceTest {
     protected InterviewQuestionLikesRepository interviewQuestionLikesRepository;
 
     @Autowired
-    protected ParticipantRepository participantRepository;
-
-    @Autowired
     protected PreQuestionRepository preQuestionRepository;
 
     @BeforeEach
@@ -151,37 +150,23 @@ abstract class ServiceTest {
 
     protected Team saveTeam(final LocalDateTime startAt, final int interviewerNumber, final Member host,
                             final Member... members) {
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", startAt, "jamsil.img", interviewerNumber));
-
-        participantRepository.save(new Participant(team, host, true, false));
-
-        final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it, false, false))
-                .collect(Collectors.toList());
-        participantRepository.saveAll(participants);
-
-        return team;
+        return saveTeam(startAt, interviewerNumber, host, Collections.emptyList(), members);
     }
 
     protected Team saveTeam(final LocalDateTime startAt, final int interviewerNumber, final Member host,
                             final List<Member> watchers, final Member... members) {
-        final Team team = teamRepository.save(
-                new Team("잠실 네오조", "트랙룸", startAt, "jamsil.img", interviewerNumber));
+        final TeamDetail teamDetail = new TeamDetail("잠실 네오조", "트랙룸", startAt, "jamsil.img", interviewerNumber);
 
-        participantRepository.save(new Participant(team, host, true, false));
-
-        final List<Participant> watcherList = watchers.stream()
-                .map(it -> new Participant(team, it, false, true))
+        final List<Long> participantsIds = Arrays.stream(members)
+                .map(BaseEntity::getId)
                 .collect(Collectors.toList());
-        participantRepository.saveAll(watcherList);
+        participantsIds.add(host.getId());
 
-        final List<Participant> participants = Arrays.stream(members)
-                .map(it -> new Participant(team, it, false, false))
+        final List<Long> watcherIds = watchers.stream()
+                .map(BaseEntity::getId)
                 .collect(Collectors.toList());
-        participantRepository.saveAll(participants);
 
-        return team;
+        return teamRepository.save(new Team(teamDetail, host.getId(), participantsIds, watcherIds));
     }
 
     protected Levellog saveLevellog(final Member author, final Team team) {

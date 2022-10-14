@@ -21,9 +21,7 @@ import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLik
 import com.woowacourse.levellog.interviewquestion.exception.InterviewQuestionLikesAlreadyExistException;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.domain.LevellogRepository;
-import com.woowacourse.levellog.team.domain.ParticipantRepository;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.exception.ParticipantNotSameTeamException;
 import com.woowacourse.levellog.team.support.TimeStandard;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,7 +39,6 @@ public class InterviewQuestionService {
     private final InterviewQuestionQueryRepository interviewQuestionQueryRepository;
     private final InterviewQuestionLikesRepository interviewQuestionLikesRepository;
     private final LevellogRepository levellogRepository;
-    private final ParticipantRepository participantRepository;
     private final TimeStandard timeStandard;
 
     @Transactional
@@ -51,11 +48,10 @@ public class InterviewQuestionService {
         final Team team = levellog.getTeam();
 
         levellog.validateSelfInterviewQuestion(loginStatus.getMemberId());
-        validateMemberIsParticipant(loginStatus.getMemberId(), levellog);
+        team.validateIsParticipants(loginStatus.getMemberId());
         team.validateInProgress(timeStandard.now());
 
         final InterviewQuestion interviewQuestion = request.toEntity(loginStatus.getMemberId(), levellog);
-
         return interviewQuestionRepository.save(interviewQuestion)
                 .getId();
     }
@@ -157,17 +153,6 @@ public class InterviewQuestionService {
                                 .append("interviewQuestionId", interviewQuestion.getId())
                                 .append("likerId", memberId)
                 ));
-    }
-
-    private void validateMemberIsParticipant(final Long memberId, final Levellog levellog) {
-        final Team team = levellog.getTeam();
-
-        if (!participantRepository.existsByMemberIdAndTeam(memberId, team)) {
-            throw new ParticipantNotSameTeamException(DebugMessage.init()
-                    .append("teamId", team.getId())
-                    .append("memberId", memberId)
-                    .append("levellogId", levellog.getId()));
-        }
     }
 
     private void validateAlreadyExist(final Long interviewQuestionId, final Long memberId) {

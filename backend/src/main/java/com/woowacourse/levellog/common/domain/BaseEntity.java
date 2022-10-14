@@ -23,11 +23,11 @@ public abstract class BaseEntity {
     Long id;
 
     @CreatedDate
-    @Column(updatable = false, nullable = false)
+    @Column(columnDefinition = "DATETIME(6)", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column(columnDefinition = "DATETIME(6)", nullable = false)
     private LocalDateTime updatedAt;
 
     @Override

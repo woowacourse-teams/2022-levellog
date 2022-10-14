@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.domain;
 
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
@@ -30,7 +29,7 @@ class FeedbackTest {
 
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
+            final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
@@ -49,7 +48,7 @@ class FeedbackTest {
 
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
+            final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
@@ -68,7 +67,7 @@ class FeedbackTest {
 
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
+            final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
@@ -90,7 +89,7 @@ class FeedbackTest {
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
+            final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentRequest.toEntity(roma.getId(), levellog);
@@ -111,7 +110,7 @@ class FeedbackTest {
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
+            final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentRequest.toEntity(roma.getId(), levellog);
@@ -132,7 +131,7 @@ class FeedbackTest {
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
+            final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
             final Feedback feedback = feedbackContentRequest.toEntity(roma.getId(), levellog);

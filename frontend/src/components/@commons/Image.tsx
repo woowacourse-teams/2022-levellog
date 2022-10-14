@@ -19,7 +19,7 @@ const Image = ({
 };
 
 interface ImageProps {
-  src: string;
+  src: string | undefined;
   sizes: ImageSizeType;
   boxShadow?: boolean;
   borderRadius?: boolean;

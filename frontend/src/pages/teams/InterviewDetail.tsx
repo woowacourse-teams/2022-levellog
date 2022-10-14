@@ -44,6 +44,14 @@ const InterviewDetail = () => {
   } = usePreQuestionModal();
   const { teamId } = useParams();
 
+  if (levellogModalLoading) {
+    return <Loading />;
+  }
+
+  if (preQuestionModalLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       {isLevellogModalOpen && (
@@ -71,11 +79,11 @@ const InterviewDetail = () => {
         imageUrl={team?.teamImage}
         title={team?.title}
         subTitle={`${team?.place} | ${convertDateAndTime({
-          startAt: team!.startAt,
+          startAt: team?.startAt,
         })}`}
       >
         <>
-          {team!.hostId === loginUserId && (
+          {team?.hostId === loginUserId && (
             <S.ButtonBox>
               {team!.status === TEAM_STATUS.READY && (
                 <>
@@ -96,11 +104,11 @@ const InterviewDetail = () => {
       </ContentHeader>
       <S.Container>
         <FlexBox flexFlow={'column wrap'} gap={5}>
-          {team!.watchers.length !== 0 && (
+          {team?.watchers.length !== 0 && (
             <FlexBox flexFlow={'column wrap'} gap={2}>
               <S.Title>참관자</S.Title>
               <S.WatcherContent>
-                {team!.watchers.map(
+                {team?.watchers.map(
                   (watcher: Pick<WatcherType, 'memberId' | 'nickname' | 'profileUrl'>) => (
                     <Watcher key={watcher.memberId} watcher={watcher} />
                   ),
@@ -111,14 +119,14 @@ const InterviewDetail = () => {
           <FlexBox flexFlow={'column wrap'} gap={2}>
             <S.Title>참여자</S.Title>
             <S.Content>
-              {team!.participants.map((participant: ParticipantType) => (
+              {team?.participants.map((participant: ParticipantType) => (
                 <Interviewer
                   key={participant.memberId}
                   participant={participant}
-                  interviewees={team!.interviewees}
-                  interviewers={team!.interviewers}
-                  teamStatus={team!.status}
-                  userInTeam={team!.isParticipant}
+                  interviewees={team?.interviewees}
+                  interviewers={team?.interviewers}
+                  teamStatus={team?.status}
+                  userInTeam={team?.isParticipant}
                   onClickOpenLevellogModal={onClickOpenLevellogModal}
                   onClickOpenPreQuestionModal={onClickOpenPreQuestionModal}
                 />

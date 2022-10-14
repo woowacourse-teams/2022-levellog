@@ -27,9 +27,15 @@ export const requestGetTeam = async ({
   teamId,
   accessToken,
 }: Omit<TeamApiType, 'teamInfo'>): Promise<InterviewTeamDetailType> => {
-  const { data } = await fetcher.get(`/teams/${teamId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  if (accessToken) {
+    const { data } = await fetcher.get(`/teams/${teamId}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    return data;
+  }
+
+  const { data } = await fetcher.get(`/teams/${teamId}`);
 
   return data;
 };

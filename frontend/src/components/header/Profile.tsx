@@ -17,10 +17,9 @@ const Profile = ({
     <S.Container
       aria-label={
         loginUserProfileUrl.includes('avatars.githubusercontent')
-          ? '로그인'
-          : '로그인한 사용자 정보 드롭다운'
+          ? '로그인한 사용자 정보 드롭다운'
+          : '로그인'
       }
-      isShowProfileDropdown={isShowProfileDropdown}
       onClick={handleClickProfile}
       onError={handleErrorProfile}
     >
@@ -48,7 +47,7 @@ interface ProfileProps {
 }
 
 const S = {
-  Container: styled.button<{ isShowProfileDropdown: boolean }>`
+  Container: styled.button`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -57,11 +56,6 @@ const S = {
     padding-left: 0.75rem;
     border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     border-radius: 2rem;
-    // 왜 안 되는거임?
-    box-shadow: ${(props) =>
-      props.isShowProfileDropdown
-        ? '0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.new_default.GRAY};'
-        : ''};
     background-color: ${(props) => props.theme.new_default.WHITE};
     transition: all 0.2s;
     :hover {

@@ -7,6 +7,7 @@ const Image = ({
   boxShadow = false,
   borderRadius = true,
   githubAvatarSize = 0,
+  ...props
 }: ImageProps) => {
   return (
     <ImageStyle
@@ -14,6 +15,7 @@ const Image = ({
       sizes={sizes}
       boxShadow={boxShadow}
       borderRadius={borderRadius}
+      {...props}
     />
   );
 };
@@ -24,6 +26,7 @@ interface ImageProps {
   boxShadow?: boolean;
   borderRadius?: boolean;
   githubAvatarSize?: number;
+  [props: string]: any;
 }
 
 const ImageStyle = styled.img<{ boxShadow: boolean; borderRadius: boolean }>`

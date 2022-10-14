@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import { useQuery } from '@tanstack/react-query';
-
 import useTeams from 'hooks/team/useTeams';
 
 import EmptyTeams from 'pages/status/EmptyTeams';

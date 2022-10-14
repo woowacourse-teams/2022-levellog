@@ -23,14 +23,15 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
             sizes={'LARGE'}
             boxShadow={true}
             githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.LARGE}
+            alt={`팀 호스트 이미지`}
           />
           <FlexBox flexFlow="column wrap" gap={0.625}>
-            <S.Title>{title}</S.Title>
+            <S.Title aria-label={`팀 이름 ${title}`}>{title}</S.Title>
           </FlexBox>
         </FlexBox>
         <FlexBox flexFlow="column">
           <S.Info>
-            <S.Notice>
+            <S.Notice aria-label={`인터뷰 장소 ${place}`}>
               <S.ImageBox>
                 <Image src={locationIcon} sizes={'TINY'} />
               </S.ImageBox>
@@ -38,7 +39,7 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
             </S.Notice>
           </S.Info>
           <S.Info>
-            <S.Notice>
+            <S.Notice aria-label={`인터뷰 날짜와 시간 ${convertDateAndTime({ startAt })}`}>
               <S.ImageBox>
                 <Image src={checkIcon} sizes={'TINY'} />
               </S.ImageBox>
@@ -46,16 +47,18 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
             </S.Notice>
           </S.Info>
         </FlexBox>
-        <S.ParticipantsBox>
+        <S.ParticipantsUl>
           {participants.map((participant) => (
-            <Image
-              key={participant.memberId}
-              src={participant.profileUrl}
-              sizes={'SMALL'}
-              githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL}
-            />
+            <S.ParticipantsLi key={participant.memberId}>
+              <Image
+                src={participant.profileUrl}
+                sizes={'SMALL'}
+                githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL}
+                alt={`참가자 ${participant.nickname}의 프로필 이미지`}
+              />
+            </S.ParticipantsLi>
           ))}
-        </S.ParticipantsBox>
+        </S.ParticipantsUl>
       </S.Container>
     </Link>
   );
@@ -107,12 +110,13 @@ const S = {
     margin-right: 0.75rem;
   `,
 
-  ParticipantsBox: styled.div`
+  ParticipantsUl: styled.ul`
     display: flex;
     flex-direction: row;
     width: 100%;
     gap: 0.25rem;
     overflow-x: auto;
+    overflow-y: hidden;
     // chrome, Safari, Opera
     ::-webkit-scrollbar {
       display: none;
@@ -121,6 +125,11 @@ const S = {
     -ms-overflow-style: none;
     // Firefox
     scrollbar-width: none;
+  `,
+
+  ParticipantsLi: styled.li`
+    width: 1.875rem;
+    height: 1.875rem;
   `,
 };
 

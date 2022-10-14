@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import { props } from 'cypress/types/bluebird';
-
 import Button from 'components/@commons/Button';
 
 const ProfileDropdown = ({

@@ -29,19 +29,40 @@ const InterviewTeams = () => {
   return (
     <>
       <ContentHeader title={'인터뷰 팀'}>
-        <div>
-          <FilterButton onClick={handleClickOpenTeamsButton} isActive={teamsCondition.open}>
-            진행중인 인터뷰
-          </FilterButton>
-          <FilterButton onClick={handleClickCloseTeamsButton} isActive={teamsCondition.close}>
-            종료된 인터뷰
-          </FilterButton>
-          {loginUserId && (
-            <FilterButton onClick={handleClickMyTeamsButton} isActive={teamsCondition.my}>
-              나의 인터뷰
+        <S.FilterUl>
+          <li>
+            <FilterButton
+              onClick={handleClickOpenTeamsButton}
+              isActive={teamsCondition.open}
+              aria-label={'진행중인 인터뷰 팀으로 필터링'}
+              aria-disabled={teamsCondition.open}
+            >
+              진행중인 인터뷰
             </FilterButton>
+          </li>
+          <li>
+            <FilterButton
+              onClick={handleClickCloseTeamsButton}
+              isActive={teamsCondition.close}
+              aria-label={'종료된 인터뷰 팀으로 필터링'}
+              aria-disabled={teamsCondition.close}
+            >
+              종료된 인터뷰
+            </FilterButton>
+          </li>
+          {loginUserId && (
+            <li>
+              <FilterButton
+                onClick={handleClickMyTeamsButton}
+                isActive={teamsCondition.my}
+                aria-label={'나의 인터뷰 팀 목록으로 필터링'}
+                aria-disabled={teamsCondition.my}
+              >
+                나의 인터뷰
+              </FilterButton>
+            </li>
           )}
-        </div>
+        </S.FilterUl>
         <span />
       </ContentHeader>
       <S.Container>
@@ -62,6 +83,12 @@ const InterviewTeams = () => {
 };
 
 const S = {
+  FilterUl: styled.ul`
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  `,
+
   Container: styled.main`
     overflow: auto;
     overflow-x: hidden;

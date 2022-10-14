@@ -11,8 +11,15 @@ const Profile = ({
   handleClickProfile,
   handleErrorProfile,
 }: ProfileProps) => {
+  console.log(loginUserProfileUrl);
+
   return (
     <S.Container
+      aria-label={
+        loginUserProfileUrl.includes('avatars.githubusercontent')
+          ? '로그인'
+          : '로그인한 사용자 정보 드롭다운'
+      }
       isShowProfileDropdown={isShowProfileDropdown}
       onClick={handleClickProfile}
       onError={handleErrorProfile}

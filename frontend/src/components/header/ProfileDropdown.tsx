@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+import { props } from 'cypress/types/bluebird';
+
+import Button from 'components/@commons/Button';
+
 const ProfileDropdown = ({
   isShowProfileDropdown,
   loginUserNickname,
@@ -56,10 +60,14 @@ const S = {
     border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   `,
 
-  Content: styled.div`
+  Content: styled(Button)`
     width: 6.625rem;
     margin-top: 0.625rem;
+    padding: 0;
+    background-color: ${(props) => props.theme.default.WHITE};
     color: ${(props) => props.theme.default.BLACK};
+    text-align: left;
+    font-size: 1rem;
     font-weight: 400;
     cursor: pointer;
   `,

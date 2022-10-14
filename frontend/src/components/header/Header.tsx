@@ -25,7 +25,7 @@ const Header = () => {
   return (
     <>
       <S.Container>
-        <Link to={ROUTES_PATH.HOME}>
+        <Link to={ROUTES_PATH.HOME} aria-label={'메인 페이지로 이동'}>
           <LogoStyle src={levellogLogo} alt={'레벨로그 로고'} />
         </Link>
         <Profile

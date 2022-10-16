@@ -1,5 +1,3 @@
-import { MutableRefObject, useRef } from 'react';
-
 import styled from 'styled-components';
 
 import goodActiveIcon from 'assets/images/good-active.svg';
@@ -25,12 +23,26 @@ const InterviewQuestionSearchResult = ({
   };
 
   return (
-    <S.Container>
-      <S.ResultText>{content}</S.ResultText>
+    <S.Container role={'listitem'}>
+      <S.ResultText tabIndex={0}>{content}</S.ResultText>
       <FlexBox flexFlow={'row'} alignItems={'center'}>
-        <S.LikeCountText>{likeCount}</S.LikeCountText>
-        <S.LikeButton onClick={like ? handleClickCancelLikeButton : handleClickLikeButton}>
-          <Image src={like ? goodActiveIcon : goodIcon} sizes={'SMALL'} />
+        <S.LikeCountText
+          aria-live={'polite'}
+          aria-atomic={'true'}
+          aria-label={`현재 좋아요 개수 ${likeCount}개`}
+          tabIndex={0}
+        >
+          {likeCount}
+        </S.LikeCountText>
+        <S.LikeButton
+          type={'button'}
+          onClick={like ? handleClickCancelLikeButton : handleClickLikeButton}
+        >
+          <Image
+            src={like ? goodActiveIcon : goodIcon}
+            alt={like ? '이미 누른 좋아요' : '누르지 않은 좋아요'}
+            sizes={'SMALL'}
+          />
         </S.LikeButton>
       </FlexBox>
     </S.Container>

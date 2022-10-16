@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -19,5 +20,6 @@ module.exports = merge(common, {
       API_URI: 'https://dev.levellog.app/api',
       CLIENT_ID: '00230a7d7fa77d726d7e',
     }),
+    new ForkTsCheckerWebpackPlugin(),
   ],
 });

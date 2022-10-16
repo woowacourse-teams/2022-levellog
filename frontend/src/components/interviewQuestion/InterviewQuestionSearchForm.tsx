@@ -20,19 +20,19 @@ const InterviewQuestionSearchForm = () => {
     <S.Container onSubmit={handleSubmitInterviewQuestion}>
       <S.Title>인터뷰 질문 검색</S.Title>
       <S.InputBox>
-        <S.Button type={'submit'}>
-          <Image src={searchIcon} sizes={'SMALL'} />
-        </S.Button>
         <S.SearchInput
           placeholder={'검색어를 입력하세요'}
           value={searchText}
           onChange={handleChangeSearchInput}
         />
         {searchText && (
-          <S.Button onClick={handleClickRemoveSearchTextButton}>
-            <Image src={deleteIcon} sizes={'TINY'} />
+          <S.Button type={'button'} onClick={handleClickRemoveSearchTextButton}>
+            <Image src={deleteIcon} alt={'인터뷰 질문 검색 텍스트 삭제'} sizes={'TINY'} />
           </S.Button>
         )}
+        <S.Button type={'submit'}>
+          <Image src={searchIcon} alt={'인터뷰 질문 검색하기'} sizes={'SMALL'} />
+        </S.Button>
       </S.InputBox>
     </S.Container>
   );

@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -9,11 +10,14 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        loader: 'esbuild-loader',
-        options: {
-          loader: 'tsx',
-          target: 'es2015',
-        },
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              plugins: [require.resolve('react-refresh/babel')],
+            },
+          },
+        ],
       },
     ],
   },
@@ -21,7 +25,6 @@ module.exports = merge(common, {
     static: {
       directory: '../dist',
     },
-    hot: true,
     compress: true,
     port: 3000,
     historyApiFallback: true,
@@ -32,5 +35,6 @@ module.exports = merge(common, {
       API_URI: 'https://local.levellog.app/api',
       CLIENT_ID: '7a432a0c919a356b4efa',
     }),
+    new ReactRefreshWebpackPlugin(),
   ],
 });

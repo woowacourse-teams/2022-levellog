@@ -30,6 +30,7 @@ const Header = () => {
         </Link>
         <Profile
           loginUserProfileUrl={loginUserProfileUrl ? loginUserProfileUrl : defaultProfile}
+          loginUserNickname={loginUserNickname}
           handleClickProfile={handleClickProfile}
           handleErrorProfile={handleErrorProfile}
         />

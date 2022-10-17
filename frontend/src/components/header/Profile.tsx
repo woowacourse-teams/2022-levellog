@@ -5,12 +5,17 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import Image from 'components/@commons/Image';
 
-const Profile = ({ loginUserProfileUrl, handleClickProfile, handleErrorProfile }: ProfileProps) => {
+const Profile = ({
+  loginUserProfileUrl,
+  loginUserNickname,
+  handleClickProfile,
+  handleErrorProfile,
+}: ProfileProps) => {
   return (
     <S.Container
       aria-label={
         loginUserProfileUrl.includes('avatars.githubusercontent')
-          ? '로그인한 사용자 정보 드롭다운'
+          ? `${loginUserNickname}의 정보 드롭다운`
           : '로그인'
       }
       onClick={handleClickProfile}
@@ -34,6 +39,7 @@ export default Profile;
 
 interface ProfileProps {
   loginUserProfileUrl: string;
+  loginUserNickname: string;
   handleClickProfile: (e: React.SyntheticEvent<EventTarget>) => void;
   handleErrorProfile: (e: React.SyntheticEvent<EventTarget>) => void;
 }

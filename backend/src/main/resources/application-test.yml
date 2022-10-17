@@ -15,3 +15,19 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect
         format_sql: true
+
+  mail:
+    host: smtp.gmail.com
+    username: test@gmail.com
+    password: testtesttest
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+jasypt:
+  encryptor:
+    password: test

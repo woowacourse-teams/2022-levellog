@@ -1,0 +1,13 @@
+spring:
+  # mail
+  mail:
+    host: smtp.gmail.com
+    username: ENC(Srmn7uvPPJ4Hu4wkajbhBDPJtzHxpJvyJUPa004Azx4=)
+    password: ENC(ReOPrPHNcWLgua5k603BtqhKnYmFTaWBHkPzt+HJl1E=)
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

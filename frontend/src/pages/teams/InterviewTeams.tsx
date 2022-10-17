@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import useTeamsCondition from 'hooks/team/useTeamsCondition';
-import useUser from 'hooks/useUser';
 
 import Loading from 'pages/status/Loading';
 
@@ -12,9 +11,9 @@ import plusIcon from 'assets/images/plus.svg';
 import { ROUTES_PATH } from 'constants/constants';
 
 import Teams from '../../components/teams/Teams';
+import TeamFilterButtons from './TeamFilterButtons';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
-import FilterButton from 'components/@commons/FilterButton';
 import Image from 'components/@commons/Image';
 
 const InterviewTeams = () => {
@@ -24,34 +23,26 @@ const InterviewTeams = () => {
     handleClickMyTeamsButton,
     handleClickOpenTeamsButton,
   } = useTeamsCondition();
-  const { loginUserId } = useUser();
 
   return (
     <>
       <ContentHeader title={'인터뷰 팀'}>
-        <div>
-          <FilterButton onClick={handleClickOpenTeamsButton} isActive={teamsCondition.open}>
-            진행중인 인터뷰
-          </FilterButton>
-          <FilterButton onClick={handleClickCloseTeamsButton} isActive={teamsCondition.close}>
-            종료된 인터뷰
-          </FilterButton>
-          {loginUserId && (
-            <FilterButton onClick={handleClickMyTeamsButton} isActive={teamsCondition.my}>
-              나의 인터뷰
-            </FilterButton>
-          )}
-        </div>
+        <TeamFilterButtons
+          teamsCondition={teamsCondition}
+          handleClickOpenTeamsButton={handleClickOpenTeamsButton}
+          handleClickCloseTeamsButton={handleClickCloseTeamsButton}
+          handleClickMyTeamsButton={handleClickMyTeamsButton}
+        />
         <span />
       </ContentHeader>
       <S.Container>
         <Suspense fallback={<Loading />}>
           <Teams teamsCondition={teamsCondition} />
         </Suspense>
-        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
-          <S.TeamAddButton>
+        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD} tabIndex={-1}>
+          <S.TeamAddButton aria-label={'팀 추가하기 페이지로 이동'}>
             {'팀 추가하기'}
-            <S.ImageBox>
+            <S.ImageBox aria-hidden={true}>
               <Image src={plusIcon} sizes={'TINY'} />
             </S.ImageBox>
           </S.TeamAddButton>
@@ -115,7 +106,7 @@ const S = {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 6.875rem;
+    bottom: 5rem;
     z-index: 10;
     width: 8.125rem;
     height: 3.125rem;

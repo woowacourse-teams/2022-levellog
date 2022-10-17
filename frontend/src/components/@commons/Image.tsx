@@ -22,7 +22,9 @@ const Image = ({
   );
 };
 
-export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+export interface ImageProps {
+  src: string | undefined;
+  alt?: string;
   sizes: ImageSizeType;
   boxShadow?: boolean;
   borderRadius?: boolean;

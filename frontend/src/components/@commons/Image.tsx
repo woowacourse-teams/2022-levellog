@@ -3,6 +3,7 @@ import { ImageSizeType } from 'types';
 
 const Image = ({
   src,
+  alt,
   sizes = 'LARGE',
   boxShadow = false,
   borderRadius = true,
@@ -12,6 +13,7 @@ const Image = ({
   return (
     <ImageStyle
       src={githubAvatarSize ? `${src}&s=${githubAvatarSize}` : src}
+      alt={alt}
       sizes={sizes}
       boxShadow={boxShadow}
       borderRadius={borderRadius}
@@ -21,7 +23,6 @@ const Image = ({
 };
 
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  src: string | undefined;
   sizes: ImageSizeType;
   boxShadow?: boolean;
   borderRadius?: boolean;

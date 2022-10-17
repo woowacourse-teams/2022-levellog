@@ -64,15 +64,19 @@ interface TryCatchProps {
   snackbar: ({ message }: ShowSnackbarProps) => any;
 }
 
+const HangeulFirstTextUnicode = 44032;
+const HangeulLastTextUnicode = 55203;
+const finalConsonantNumber = 28;
+
 export const convertFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConsonantType) => {
   if (typeof word !== 'string') return;
 
   let lastWord = word[word.length - 1];
   let uniCode = lastWord.charCodeAt(0);
 
-  if (uniCode < 44032 || uniCode > 55203) return;
+  if (uniCode < HangeulFirstTextUnicode || uniCode > HangeulLastTextUnicode) return;
 
-  if ((uniCode - 44032) % 28 !== 0) {
+  if ((uniCode - HangeulFirstTextUnicode) % finalConsonantNumber !== 0) {
     return `${word}이`;
   } else {
     return `${word}가`;

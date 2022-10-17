@@ -83,7 +83,6 @@ interface CheckFirstWordFinalConsonantType {
 }
 
 export const convertDateAndTime = ({ startAt }: any) => {
-  console.log('startAt', startAt);
   const year = startAt.slice(0, 4);
   const month = startAt.slice(5, 7);
   const day = startAt.slice(8, 10);

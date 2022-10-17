@@ -23,7 +23,7 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
             sizes={'LARGE'}
             boxShadow={true}
             githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.LARGE}
-            alt={`팀 호스트 이미지`}
+            aria-hidden={true}
           />
           <FlexBox flexFlow="column wrap" gap={0.625}>
             <S.Title aria-label={`팀 이름 ${title}`}>{title}</S.Title>
@@ -47,18 +47,18 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
             </S.Notice>
           </S.Info>
         </FlexBox>
-        <S.ParticipantsUl>
+        <S.ParticipantsBox>
           {participants.map((participant) => (
-            <S.ParticipantsLi key={participant.memberId}>
+            <S.Participants key={participant.memberId}>
               <Image
                 src={participant.profileUrl}
                 sizes={'SMALL'}
                 githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL}
                 alt={`참가자 ${participant.nickname}의 프로필 이미지`}
               />
-            </S.ParticipantsLi>
+            </S.Participants>
           ))}
-        </S.ParticipantsUl>
+        </S.ParticipantsBox>
       </S.Container>
     </Link>
   );
@@ -110,7 +110,7 @@ const S = {
     margin-right: 0.75rem;
   `,
 
-  ParticipantsUl: styled.ul`
+  ParticipantsBox: styled.ul`
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -127,7 +127,7 @@ const S = {
     scrollbar-width: none;
   `,
 
-  ParticipantsLi: styled.li`
+  Participants: styled.li`
     width: 1.875rem;
     height: 1.875rem;
   `,

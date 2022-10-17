@@ -14,7 +14,7 @@ const TeamFilterButtons = ({
   const { loginUserId } = useUser();
 
   return (
-    <S.FilterUl>
+    <S.Container>
       <li>
         <FilterButton
           onClick={handleClickOpenTeamsButton}
@@ -47,7 +47,7 @@ const TeamFilterButtons = ({
           </FilterButton>
         </li>
       )}
-    </S.FilterUl>
+    </S.Container>
   );
 };
 
@@ -59,7 +59,7 @@ interface TeamFilterButtonsProps {
 }
 
 const S = {
-  FilterUl: styled.ul`
+  Container: styled.ul`
     display: flex;
     align-items: center;
     gap: 0.625rem;

@@ -20,13 +20,12 @@ const Image = ({
   );
 };
 
-interface ImageProps {
+export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string | undefined;
   sizes: ImageSizeType;
   boxShadow?: boolean;
   borderRadius?: boolean;
   githubAvatarSize?: number;
-  [props: string]: any;
 }
 
 const ImageStyle = styled.img<{ boxShadow: boolean; borderRadius: boolean }>`

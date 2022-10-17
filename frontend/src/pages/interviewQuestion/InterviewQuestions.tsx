@@ -19,7 +19,7 @@ import {
   InterviewQuestionsInLevellogType,
   InterviewQuestionInfoType,
 } from 'types/interviewQuestion';
-import { checkFirstWordFinalConsonant, feedbackAddUriBuilder } from 'utils/util';
+import { convertFirstWordFinalConsonant, feedbackAddUriBuilder } from 'utils/util';
 
 const InterviewQuestions = () => {
   const { levellogInfo } = useLevellogQuery();
@@ -42,13 +42,9 @@ const InterviewQuestions = () => {
     <>
       <ContentHeader
         imageUrl={loginUserProfileUrl}
-        title={`${
-          checkFirstWordFinalConsonant({
-            word: loginUserNickname,
-          })
-            ? `${loginUserNickname}이 `
-            : `${loginUserNickname}가 `
-        }
+        title={`${convertFirstWordFinalConsonant({
+          word: loginUserNickname,
+        })}
         받은 인터뷰 질문들`}
       />
       <S.Container>
@@ -68,11 +64,9 @@ const InterviewQuestions = () => {
                   githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
                 />
                 <S.AuthorText>
-                  {checkFirstWordFinalConsonant({
+                  {convertFirstWordFinalConsonant({
                     word: interviewQuestionInfoInLevellog.author.nickname,
-                  })
-                    ? `${interviewQuestionInfoInLevellog.author.nickname}이 `
-                    : `${interviewQuestionInfoInLevellog.author.nickname}가 `}
+                  })}
                   기록해준 질문들
                 </S.AuthorText>
               </S.AuthorBox>

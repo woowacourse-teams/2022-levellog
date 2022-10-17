@@ -4,9 +4,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
-
-import { Team } from 'types/team';
+import { MESSAGE } from '../constants/constants';
 import { UriCustomHookType } from 'types/uri';
 
 export const debounce: DebounceType = {
@@ -25,7 +23,7 @@ export const debounce: DebounceType = {
 
 interface DebounceActionArgsType {
   func: Function;
-  args?: { [props: string]: any };
+  args?: Record<string, any>;
   setState?: React.Dispatch<React.SetStateAction<any>>;
   navigate?: [NavigateFunction, string];
   timer?: number;
@@ -66,21 +64,26 @@ interface TryCatchProps {
   snackbar: ({ message }: ShowSnackbarProps) => any;
 }
 
-export const checkFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConsonantType) => {
+export const convertFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConsonantType) => {
   if (typeof word !== 'string') return;
 
-  let lastLetter = word[word.length - 1];
-  let uniCode = lastLetter.charCodeAt(0);
+  let lastWord = word[word.length - 1];
+  let uniCode = lastWord.charCodeAt(0);
 
   if (uniCode < 44032 || uniCode > 55203) return;
 
-  return (uniCode - 44032) % 28 != 0;
+  if ((uniCode - 44032) % 28 !== 0) {
+    return `${word}이`;
+  } else {
+    return `${word}가`;
+  }
 };
 interface CheckFirstWordFinalConsonantType {
   word: string;
 }
 
 export const convertDateAndTime = ({ startAt }: any) => {
+  console.log('startAt', startAt);
   const year = startAt.slice(0, 4);
   const month = startAt.slice(5, 7);
   const day = startAt.slice(8, 10);

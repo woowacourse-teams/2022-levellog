@@ -64,8 +64,8 @@ interface TryCatchProps {
   snackbar: ({ message }: ShowSnackbarProps) => any;
 }
 
-const HangeulFirstTextUnicode = 44032;
-const HangeulLastTextUnicode = 55203;
+const hangeulFirstTextUnicode = 44032;
+const hangeulLastTextUnicode = 55203;
 const finalConsonantNumber = 28;
 
 export const convertFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConsonantType) => {
@@ -74,9 +74,9 @@ export const convertFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalCons
   let lastWord = word[word.length - 1];
   let uniCode = lastWord.charCodeAt(0);
 
-  if (uniCode < HangeulFirstTextUnicode || uniCode > HangeulLastTextUnicode) return;
+  if (uniCode < hangeulFirstTextUnicode || uniCode > hangeulLastTextUnicode) return;
 
-  if ((uniCode - HangeulFirstTextUnicode) % finalConsonantNumber !== 0) {
+  if ((uniCode - hangeulFirstTextUnicode) % finalConsonantNumber !== 0) {
     return `${word}이`;
   } else {
     return `${word}가`;

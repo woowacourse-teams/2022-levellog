@@ -1,6 +1,7 @@
 package com.woowacourse.levellog.team.application;
 
 import com.woowacourse.levellog.authentication.support.Verified;
+import com.woowacourse.levellog.common.application.EmailService;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
@@ -24,6 +25,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
     private final TimeStandard timeStandard;
+    private final EmailService emailService;
 
     @Transactional
     public Long save(final TeamWriteRequest request, @Verified final LoginStatus loginStatus) {
@@ -33,6 +35,7 @@ public class TeamService {
 
         final Team savedTeam = teamRepository.save(team);
 
+        emailService.sendByCreateTeam(team);
         return savedTeam.getId();
     }
 
@@ -57,7 +60,8 @@ public class TeamService {
         final Long memberId = loginStatus.getMemberId();
         team.validateHostAuthorization(memberId);
 
-        team.update(request.toTeamDetail(team.getProfileUrl()), memberId, request.getParticipantIds(),
+        team.update(request.toTeamDetail(team.getProfileUrl()),
+               memberId, request.getParticipantIds(),
                 request.getWatcherIds(), timeStandard.now());
     }
 

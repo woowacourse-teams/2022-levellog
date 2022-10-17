@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.common.application.EmailService;
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.dto.LoginStatus;
+import com.woowacourse.levellog.common.support.EmailUtil;
 import com.woowacourse.levellog.config.FakeTimeStandard;
 import com.woowacourse.levellog.config.TestConfig;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
@@ -94,6 +96,9 @@ abstract class ServiceTest {
     protected AdminService adminService;
 
     @Autowired
+    protected EmailService emailService;
+
+    @Autowired
     protected MemberRepository memberRepository;
 
     @Autowired
@@ -116,6 +121,9 @@ abstract class ServiceTest {
 
     @Autowired
     protected PreQuestionRepository preQuestionRepository;
+
+    @Autowired
+    protected EmailUtil emailUtil;
 
     @BeforeEach
     void setUp() {

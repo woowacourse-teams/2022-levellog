@@ -7,9 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Embeddable
 @Getter
+@ToString
 @NoArgsConstructor
 public class TeamDetail {
 

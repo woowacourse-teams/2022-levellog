@@ -19,6 +19,7 @@ import com.woowacourse.levellog.admin.presentation.AdminController;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.presentation.OAuthController;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
+import com.woowacourse.levellog.common.application.EmailService;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
 import com.woowacourse.levellog.feedback.presentation.FeedbackController;
 import com.woowacourse.levellog.interviewquestion.application.InterviewQuestionService;
@@ -95,6 +96,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected AdminService adminService;
+
+    @MockBean
+    protected EmailService emailService;
 
     @MockBean
     protected JwtTokenProvider jwtTokenProvider;

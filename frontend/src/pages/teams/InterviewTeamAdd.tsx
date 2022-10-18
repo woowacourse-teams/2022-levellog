@@ -10,7 +10,7 @@ const InterviewTeamAdd = () => {
   return (
     <S.Container>
       <TeamForm
-        purpose={'생성하기'}
+        purpose={'추가하기'}
         teamInfoRef={teamInfoRef}
         handleClickTeamButton={handleClickTeamAddButton}
       />

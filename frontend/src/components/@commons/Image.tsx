@@ -8,6 +8,7 @@ const Image = ({
   boxShadow = false,
   borderRadius = true,
   githubAvatarSize = 0,
+  ...props
 }: ImageProps) => {
   return (
     <ImageStyle
@@ -16,11 +17,12 @@ const Image = ({
       sizes={sizes}
       boxShadow={boxShadow}
       borderRadius={borderRadius}
+      {...props}
     />
   );
 };
 
-interface ImageProps {
+export interface ImageProps {
   src: string | undefined;
   alt?: string;
   sizes: ImageSizeType;

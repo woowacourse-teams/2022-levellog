@@ -126,13 +126,13 @@ class TeamQueryRepositoryTest extends RepositoryTest {
 
         // then
         assertThat(actual).hasSize(4)
-                .extracting("id", "memberId")
+                .extracting("id", "memberId", "nickname")
                 .containsExactly(
-                        tuple(team3.getId(), harry.getId()),
-                        tuple(team3.getId(), kyoul.getId()),
+                        tuple(team3.getId(), harry.getId(), harry.getNickname()),
+                        tuple(team3.getId(), kyoul.getId(), kyoul.getNickname()),
 
-                        tuple(team2.getId(), eve.getId()),
-                        tuple(team2.getId(), alien.getId())
+                        tuple(team2.getId(), eve.getId(), eve.getNickname()),
+                        tuple(team2.getId(), alien.getId(), alien.getNickname())
                 );
     }
 

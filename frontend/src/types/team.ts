@@ -34,7 +34,7 @@ export interface InterviewTeamType {
   startAt: string;
   teamImage: string;
   status: TeamStatusType;
-  participants: Pick<ParticipantType, 'memberId' | 'profileUrl'>[];
+  participants: Pick<ParticipantType, 'memberId' | 'profileUrl' | 'nickname'>[];
 }
 
 export interface InterviewTeamDetailType {

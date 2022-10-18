@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
 
+import { TeamCustomHookType } from 'hooks/team/types/index';
+
 import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
@@ -10,7 +12,6 @@ import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { requestEditTeam, requestGetTeam } from 'apis/teams';
 import { MemberContext } from 'contexts/memberContext';
-import { TeamCustomHookType } from 'types/team';
 import {
   interviewDateValidate,
   interviewInterviewerValidate,

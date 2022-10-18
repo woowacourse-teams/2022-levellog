@@ -1,7 +1,6 @@
 import { fetcher } from 'apis';
 
 import {
-  InterviewQuestionApiType,
   InterviewQuestionsInLevellogType,
   InterviewQuestionInfoType,
 } from 'types/interviewQuestion';
@@ -74,3 +73,10 @@ export const requestEditInterviewQuestion = async ({
     },
   );
 };
+
+export interface InterviewQuestionApiType {
+  accessToken: string | null;
+  levellogId: string | undefined;
+  interviewQuestionId: string;
+  interviewQuestion: string;
+}

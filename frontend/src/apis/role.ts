@@ -1,7 +1,5 @@
 import { fetcher } from 'apis';
 
-import { RoleApiType } from 'types/role';
-
 export const requestGetLoginUserRole = async ({
   teamId,
   participantId,
@@ -13,3 +11,9 @@ export const requestGetLoginUserRole = async ({
 
   return data;
 };
+
+export interface RoleApiType {
+  accessToken: string | null;
+  teamId: string | undefined;
+  participantId: string | undefined;
+}

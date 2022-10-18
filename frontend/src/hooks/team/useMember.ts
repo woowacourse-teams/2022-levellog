@@ -3,13 +3,15 @@ import { useParams } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
 
+import { MembersCustomHookType } from 'hooks/team/types';
+
 import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { requestGetMembers } from 'apis/member';
 import { requestGetTeam } from 'apis/teams';
-import { MemberContext, MemberDispatchContext } from 'contexts/memberContext';
-import { MembersCustomHookType, MemberType } from 'types/member';
+import { MemberDispatchContext } from 'contexts/memberContext';
+import { MemberType } from 'types/member';
 import { debounce } from 'utils/util';
 
 const useMember = () => {

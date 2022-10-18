@@ -16,8 +16,8 @@ import {
   requestGetInterviewQuestion,
   requestPostInterviewQuestion,
 } from 'apis/interviewQuestion';
+import { InterviewQuestionApiType } from 'apis/interviewQuestion';
 import { NotCorrectToken } from 'apis/utils';
-import { InterviewQuestionApiType } from 'types/interviewQuestion';
 
 const QUERY_KEY = {
   INTERVIEW_QUESTION: 'interviewQuestion',

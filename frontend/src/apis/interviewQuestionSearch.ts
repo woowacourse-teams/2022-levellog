@@ -1,7 +1,9 @@
 import { fetcher } from 'apis';
 
+import { InterviewQuestionSearchResultType } from './../types/interviewQuestion';
+
+import { InterviewQuestionApiType } from 'apis/interviewQuestion';
 import { InterviewQuestionSort } from 'types/interviewQuestion';
-import { InterviewQuestionApiType, InterviewQuestionSearchApiType } from 'types/interviewQuestion';
 
 export const requestSearchedInterviewQuestion = async ({
   keyword,
@@ -55,4 +57,9 @@ interface SearchedInterviewQuestionType {
   page?: number;
   size?: number;
   sort: InterviewQuestionSort;
+}
+
+export interface InterviewQuestionSearchApiType {
+  results: InterviewQuestionSearchResultType[];
+  page: number;
 }

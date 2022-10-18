@@ -1,18 +1,3 @@
-export interface FeedbackApiType {
-  accessToken: string | null;
-  levellogId: string | undefined;
-  feedbackId: string | undefined;
-  feedbackResult: FeedbackFormatType;
-}
-
-export interface FeedbackCustomHookType {
-  teamId: string | undefined;
-  levellogId: string | undefined;
-  feedbackId: string | undefined;
-  feedbackInfo: FeedbackType;
-  feedbackResult: FeedbackFormatType;
-}
-
 export interface FeedbackType {
   id: number;
   updatedAt: string;

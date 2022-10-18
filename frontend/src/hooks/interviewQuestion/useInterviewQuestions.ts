@@ -13,7 +13,7 @@ const useInterviewQuestions = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const { isError: interviewQuestionsError, data: interviewQuestions } = useQuery(
+  const { data: interviewQuestions } = useQuery(
     [QUERY_KEY.INTERVIEW_QUESTIONS, accessToken, levellogId],
     () =>
       requestGetInterviewQuestionsInLevellog({

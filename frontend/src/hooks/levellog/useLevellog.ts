@@ -4,13 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import { LevellogCustomHookType } from 'hooks/levellog/types';
+
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
-import { NotCorrectToken } from 'apis/utils';
-import { LevellogCustomHookType, LevellogInfoType } from 'types/levellog';
 import { teamGetUriBuilder } from 'utils/util';
 
 const QUERY_KEY = {

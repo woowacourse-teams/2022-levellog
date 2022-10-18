@@ -1,7 +1,8 @@
 import { fetcher } from 'apis';
-import axios from 'axios';
 
-import { FeedbackApiType, FeedbackType } from 'types/feedback';
+import { FeedbackFormatType } from './../types/feedback';
+
+import { FeedbackType } from 'types/feedback';
 
 export const requestPostFeedback = async ({
   accessToken,
@@ -54,3 +55,10 @@ export const requestEditFeedback = async ({
     },
   );
 };
+
+export interface FeedbackApiType {
+  accessToken: string | null;
+  levellogId: string | undefined;
+  feedbackId: string | undefined;
+  feedbackResult: FeedbackFormatType;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';
+import { InterviewQuestionApiType } from 'apis/interviewQuestion';
+import { InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const useInterviewQuestionEdit = ({
   interviewQuestionInfo,

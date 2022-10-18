@@ -1,6 +1,6 @@
 import { fetcher } from 'apis';
 
-import { MembersApiType, MemberType } from 'types/member';
+import { MemberType } from 'types/member';
 
 export const requestGetMembers = async ({
   accessToken,
@@ -12,3 +12,8 @@ export const requestGetMembers = async ({
 
   return data;
 };
+
+export interface MembersApiType {
+  accessToken: string | null;
+  nickname: string;
+}

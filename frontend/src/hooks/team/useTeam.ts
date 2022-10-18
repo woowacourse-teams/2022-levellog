@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext, useRef } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
@@ -29,7 +29,6 @@ const useTeam = () => {
   const [participants, setParticipants] = useState<MemberType[]>([myInfo]);
   const [watchers, setWatchers] = useState<MemberType[]>([]);
   const [nicknameValue, setNicknameValue] = useState('');
-  const [members, setMembers] = useState<MemberType[]>([]);
 
   const teamInfoDispatch = useContext(TeamDispatchContext);
   const team = useContext(TeamContext);
@@ -83,7 +82,6 @@ const useTeam = () => {
     watchers,
     team,
     teamInfo,
-    members,
     setNicknameValue,
     setParticipants,
     setWatchers,

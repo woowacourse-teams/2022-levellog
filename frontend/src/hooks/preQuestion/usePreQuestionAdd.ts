@@ -6,18 +6,15 @@ import axios, { AxiosResponse } from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import { PreQuestionCustomHookType } from 'hooks/preQuestion/types/index';
+
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
 import { requestDeletePreQuestion, requestPostPreQuestion } from 'apis/preQuestion';
 import { NotCorrectToken } from 'apis/utils';
-import { PreQuestionCustomHookType } from 'types/preQuestion';
 import { teamGetUriBuilder } from 'utils/util';
-
-const QUERY_KEY = {
-  PREQUESTION: 'preQuestion',
-};
 
 const usePreQuestionAdd = () => {
   const { showSnackbar } = useSnackbar();

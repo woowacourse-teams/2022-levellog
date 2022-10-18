@@ -1,6 +1,6 @@
 import { fetcher } from 'apis';
 
-import { PreQuestionApiType, PreQuestionFormatType } from 'types/preQuestion';
+import { PreQuestionFormatType } from 'types/preQuestion';
 
 export const requestGetPreQuestion = async ({
   accessToken,
@@ -55,3 +55,11 @@ export const requestDeletePreQuestion = async ({
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 };
+
+export interface PreQuestionApiType {
+  accessToken: string | null;
+  levellogId: string | undefined;
+  preQuestionId: string | undefined;
+  preQuestion: PreQuestionFormatType;
+  preQuestionContent: string;
+}

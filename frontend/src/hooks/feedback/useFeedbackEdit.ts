@@ -4,12 +4,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import { FeedbackCustomHookType } from './types';
+
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { requestEditFeedback, requestGetFeedback } from 'apis/feedback';
-import { FeedbackCustomHookType, FeedbackFormatType } from 'types/feedback';
+import { FeedbackFormatType } from 'types/feedback';
 import { feedbacksGetUriBuilder } from 'utils/util';
 
 const QUERY_KEY = {

@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-import { LoginApiType } from 'types/login';
-
 export const requestGetUserLogin = ({ code }: Pick<LoginApiType, 'code'>) => {
   return axios({
     method: 'post',
@@ -22,3 +20,8 @@ export const requestGetUserAuthority = ({ accessToken }: Pick<LoginApiType, 'acc
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 };
+
+export interface LoginApiType {
+  code: string;
+  accessToken: string;
+}

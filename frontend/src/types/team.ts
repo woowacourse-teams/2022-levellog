@@ -1,24 +1,8 @@
 import { MemberType } from 'types/member';
 
-export interface TeamApiType {
-  accessToken: string | null;
-  teamId: string | undefined;
-  teamInfo: TeamCustomHookType;
-  teamsCondition?: TeamsConditionType;
-}
-
 export interface TeamSubmitType {
   watchers: MemberType[];
   participants: MemberType[];
-}
-
-export interface TeamCustomHookType {
-  title: string;
-  place: string;
-  startAt: string;
-  interviewerNumber: number;
-  watcherIds: string[];
-  participantIds: string[];
 }
 
 export interface Team {

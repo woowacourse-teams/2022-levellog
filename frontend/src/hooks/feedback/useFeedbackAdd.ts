@@ -8,8 +8,8 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { requestPostFeedback } from 'apis/feedback';
-import { FeedbackFormatType, FeedbackApiType } from 'types/feedback';
+import { requestPostFeedback, FeedbackApiType } from 'apis/feedback';
+import { FeedbackFormatType } from 'types/feedback';
 import { feedbacksGetUriBuilder } from 'utils/util';
 
 const useFeedbackAdd = () => {

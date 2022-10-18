@@ -1,8 +1,9 @@
 import { fetcher } from 'apis';
 import axios, { AxiosPromise } from 'axios';
 
-import { NotAccessTokenRemoveHeader } from 'apis/utils';
-import { TeamApiType, InterviewTeamType, InterviewTeamDetailType } from 'types/team';
+import { TeamCustomHookType } from 'hooks/team/types';
+
+import { InterviewTeamType, InterviewTeamDetailType, TeamsConditionType } from 'types/team';
 
 export const requestPostTeam = async ({ teamInfo, accessToken }: Omit<TeamApiType, 'teamId'>) => {
   await fetcher.post('/teams', teamInfo, {
@@ -62,3 +63,10 @@ export const requestCloseTeamInterview = ({
     url: `${process.env.API_URI}/teams/${teamId}/close`,
   });
 };
+
+export interface TeamApiType {
+  accessToken: string | null;
+  teamId: string | undefined;
+  teamInfo: TeamCustomHookType;
+  teamsCondition?: TeamsConditionType;
+}

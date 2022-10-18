@@ -2,11 +2,13 @@ import { useState } from 'react';
 
 import { useMutation } from '@tanstack/react-query';
 
+import { PreQuestionCustomHookType } from 'hooks/preQuestion/types/index';
+
 import useModal from 'hooks/useModal';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { requestGetPreQuestion } from 'apis/preQuestion';
-import { PreQuestionCustomHookType, PreQuestionParticipantType } from 'types/preQuestion';
+import { PreQuestionParticipantType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
 
 const usePreQuestionModal = () => {

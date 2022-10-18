@@ -4,13 +4,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import { PreQuestionCustomHookType } from 'hooks/preQuestion/types/index';
+
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
 import usePreQuestionQuery from './usePreQuestionQuery';
 import { requestEditPreQuestion, requestGetPreQuestion } from 'apis/preQuestion';
-import { PreQuestionCustomHookType } from 'types/preQuestion';
 import { teamGetUriBuilder } from 'utils/util';
 
 const usePreQuestionEdit = () => {

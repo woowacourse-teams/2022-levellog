@@ -1,17 +1,6 @@
+import { LevellogCustomHookType } from 'hooks/levellog/types';
+
 import { ParticipantType } from 'types/team';
-
-export interface LevellogCustomHookType {
-  inputValue: string;
-  teamId: string | undefined;
-  levellogId: string | undefined;
-}
-
-export interface LevellogApiType {
-  accessToken: string | null;
-  teamId: string | undefined;
-  levellogId: string | undefined;
-  levellogContent: LevellogFormatType;
-}
 
 export interface LevellogFormatType {
   content: string;

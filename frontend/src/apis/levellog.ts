@@ -1,6 +1,8 @@
 import { fetcher } from 'apis';
 
-import { LevellogApiType, LevellogInfoType } from 'types/levellog';
+import { LevellogFormatType } from './../types/levellog';
+
+import { LevellogInfoType } from 'types/levellog';
 
 export const requestPostLevellog = async ({
   accessToken,
@@ -34,3 +36,10 @@ export const requestEditLevellog = async ({
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 };
+
+export interface LevellogApiType {
+  accessToken: string | null;
+  teamId: string | undefined;
+  levellogId: string | undefined;
+  levellogContent: LevellogFormatType;
+}

@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import axios, { AxiosError, AxiosResponse } from 'axios';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
+
+import { PreQuestionCustomHookType } from 'hooks/preQuestion/types/index';
 
 import useSnackbar from 'hooks/utils/useSnackbar';
 
@@ -16,8 +16,6 @@ import {
   requestGetPreQuestion,
   requestPostPreQuestion,
 } from 'apis/preQuestion';
-import { NotCorrectToken } from 'apis/utils';
-import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
 import { teamGetUriBuilder } from 'utils/util';
 
 const QUERY_KEY = {

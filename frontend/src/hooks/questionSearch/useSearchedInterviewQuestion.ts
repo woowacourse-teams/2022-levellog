@@ -7,12 +7,13 @@ import useSnackbar from 'hooks//utils/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH, INTERVIEW_QUESTION_FILTER } from 'constants/constants';
 
+import { InterviewQuestionApiType } from 'apis/interviewQuestion';
 import {
   requestLikeCancelInterviewQuestion,
   requestLikeInterviewQuestion,
   requestSearchedInterviewQuestion,
 } from 'apis/interviewQuestionSearch';
-import { InterviewQuestionApiType, InterviewQuestionSort } from 'types/interviewQuestion';
+import { InterviewQuestionSort } from 'types/interviewQuestion';
 
 const useSearchedInterviewQuestion = () => {
   const { showSnackbar } = useSnackbar();

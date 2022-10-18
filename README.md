@@ -15,7 +15,7 @@
 ## 핵심가치 💎
 
 <p align="center">
-    <img width="800" alt="core-value" src="https://user-images.githubusercontent.com/76840965/187828194-52ea0a32-40d5-412a-8814-3017955c13bc.png">
+    <img width="1000" alt="core-value" src="https://user-images.githubusercontent.com/76840965/187828194-52ea0a32-40d5-412a-8814-3017955c13bc.png">
 </p>
 
 ## 팀문화 📚

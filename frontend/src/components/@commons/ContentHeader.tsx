@@ -10,35 +10,29 @@ const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderPro
   const childrenArray = children ? React.Children.toArray(children) : null;
 
   return (
-    <>
-      <ContentHeaderStyle>
-        <LeftBox>
-          <FlexBox>
-            {imageUrl && (
-              <ImageBox>
-                <Image
-                  src={imageUrl}
-                  sizes={'MEDIUM'}
-                  githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
-                />
-              </ImageBox>
-            )}
-            <TitleBox>
-              <Title>{title}</Title>
-              {subTitle && <SubTitle>{subTitle}</SubTitle>}
-            </TitleBox>
-          </FlexBox>
-          {childrenArray && (
-            <FilterButtonBox onClick={(childrenArray[0] as JSX.Element).props.onClick}>
-              {childrenArray.length === 2 && (childrenArray[0] as JSX.Element).props.children}
-            </FilterButtonBox>
+    <ContentHeaderStyle>
+      <LeftSectionBox>
+        <FlexBox>
+          {imageUrl && (
+            <ImageBox>
+              <Image
+                src={imageUrl}
+                sizes={'MEDIUM'}
+                githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
+              />
+            </ImageBox>
           )}
-        </LeftBox>
-        <ButtonBox>
-          {childrenArray && (childrenArray.length === 2 ? childrenArray[1] : childrenArray[0])}
-        </ButtonBox>
-      </ContentHeaderStyle>
-    </>
+          <TitleBox>
+            <Title>{title}</Title>
+            {subTitle && <SubTitle>{subTitle}</SubTitle>}
+          </TitleBox>
+          {childrenArray && childrenArray.length === 2 && (childrenArray[0] as JSX.Element)}
+        </FlexBox>
+      </LeftSectionBox>
+      <RightSectionBox>
+        {childrenArray && (childrenArray.length === 2 ? childrenArray[1] : childrenArray[0])}
+      </RightSectionBox>
+    </ContentHeaderStyle>
   );
 };
 
@@ -49,7 +43,7 @@ interface ContentHeaderProps {
   children?: JSX.Element[] | JSX.Element;
 }
 
-const ContentHeaderStyle = styled.div`
+const ContentHeaderStyle = styled.nav`
   display: flex;
   position: relative;
   justify-content: space-between;
@@ -72,7 +66,7 @@ const ContentHeaderStyle = styled.div`
   }
 `;
 
-const LeftBox = styled.div`
+const LeftSectionBox = styled.div`
   display: flex;
   @media (max-width: 800px) {
     flex-direction: column;
@@ -111,12 +105,6 @@ const SubTitle = styled.p`
   font-weight: 500;
 `;
 
-const FilterButtonBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-`;
-
-const ButtonBox = styled.div``;
+const RightSectionBox = styled.div``;
 
 export default ContentHeader;

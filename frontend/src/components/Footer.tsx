@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <S.Container>
       <S.Title>@ 2022 LevelLog</S.Title>
-      <Link to={ROUTES_PATH.COPYRIGHT}>
+      <Link to={ROUTES_PATH.COPYRIGHT} aria-label={'저작권 정보 페이지로 이동'}>
         <S.Content>저작권</S.Content>
       </Link>
     </S.Container>

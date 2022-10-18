@@ -19,22 +19,35 @@ const InterviewQuestionSearchResults = () => {
   } = useSearchedInterviewQuestion();
 
   if (searchResults?.results.length === 0) {
-    return <EmptySearchResult />;
+    return (
+      <>
+        <S.SearchResultAriaText role={'status'}>검색 결과가 없습니다.</S.SearchResultAriaText>
+        <EmptySearchResult />
+      </>
+    );
   }
 
   return (
     <S.Container>
+      <S.SearchResultAriaText
+        role={'status'}
+      >{`총 ${searchResults?.results.length}개의 검색 결과가 있습니다.`}</S.SearchResultAriaText>
       <S.ButtonBox onClick={handleClickFilterButton}>
-        <S.RangeButton isActive={searchFilterActive === INTERVIEW_QUESTION_FILTER.LATEST}>
+        <S.RangeButton
+          isActive={searchFilterActive === INTERVIEW_QUESTION_FILTER.LATEST}
+          aria-label={'인터뷰 질문 검색 최신순 정렬'}
+        >
           최신순
         </S.RangeButton>
         <S.DivisionLine></S.DivisionLine>
-        <S.RangeButton isActive={searchFilterActive === INTERVIEW_QUESTION_FILTER.LIKES}>
+        <S.RangeButton
+          isActive={searchFilterActive === INTERVIEW_QUESTION_FILTER.LIKES}
+          aria-label={'인터뷰 질문 검색 좋아요순 정렬'}
+        >
           좋아요순
         </S.RangeButton>
       </S.ButtonBox>
-      {/* */}
-      <S.Content>
+      <S.Content role={'list'}>
         {searchResults?.results.map((result) => (
           <InterviewQuestionSearchResult
             key={result.id}
@@ -111,6 +124,10 @@ const S = {
   GoodButton: styled.button`
     border: none;
     background-color: ${(props) => props.theme.new_default.WHITE};
+  `,
+
+  SearchResultAriaText: styled.p`
+    font-size: 0;
   `,
 };
 

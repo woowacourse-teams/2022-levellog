@@ -1,5 +1,5 @@
 <p align="center">
-    <img width="300" alt="levellog-logo" src="https://user-images.githubusercontent.com/28749734/196344515-8fde3e3c-e50c-47a5-8f9a-9c5479f898d7.png">
+    <img width="150" alt="levellog-logo" src="https://user-images.githubusercontent.com/28749734/196344515-8fde3e3c-e50c-47a5-8f9a-9c5479f898d7.png">
 </p>
 <div align="center">
 	우아한테크코스에서 진행되는 레벨로그(모의 인터뷰)의 준비부터 회고까지 모든 과정을 관리한다.

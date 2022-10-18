@@ -18,9 +18,42 @@
     <img width="800" alt="core-value" src="https://user-images.githubusercontent.com/76840965/187828194-52ea0a32-40d5-412a-8814-3017955c13bc.png">
 </p>
 
-
 ## 팀문화 📚
 
-<p>
+<p align="center">
     <img alt="culture" src="https://user-images.githubusercontent.com/76840965/187828413-4087b6c0-58a7-4b0c-b99c-8e7a7468d43e.png" width="700"/>
+</p>
+
+## 기술스택 🥞
+
+### 💅 Frontend
+
+<p align="center">
+    <img alter="frontend-teck-stack" src="https://user-images.githubusercontent.com/68512686/196427007-3255aef4-4ca7-4930-9883-1ea68c43bcb3.png" width="600"/>
+</p>
+<br/>
+
+### ⚙️ Backend
+
+<p align="center">
+    <img alter="backend-teck-stack" src="https://user-images.githubusercontent.com/68512686/196427016-b39d72c3-c566-41dc-abd2-1981164f4830.png" width="600"/>
+</p>
+<br/>
+
+### 🧬 Infrastructure
+
+<p align="center">    
+    <img alter="infla-teck-stack" src="https://user-images.githubusercontent.com/68512686/196427033-086ce534-3839-4768-a752-a8b55cf40955.png" width="600"/>
+</p>
+
+## 인프라 구조 ⛑
+
+<p align="center">
+    <img alter="ci-cd-process" src="https://user-images.githubusercontent.com/68512686/196427044-38c9de48-912a-43f4-bc3f-05103a42bfd4.png" width="800"/>
+</p>
+
+## CI/CD Process 🏗
+
+<p align="center">
+    <img alter="infra-structure" src="https://user-images.githubusercontent.com/68512686/196427054-8ba28cfc-f340-4add-aad3-a733d09e5af4.png" width="800"/>
 </p>

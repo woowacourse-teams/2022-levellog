@@ -21,7 +21,7 @@
 ## 팀문화 📚
 
 <p align="center">
-    <img alt="culture" src="https://user-images.githubusercontent.com/68512686/196428533-74ef7a06-71d6-41e7-ba1a-0ba0028a6be9.png" width="1000"/>
+    <img alt="culture" src="https://user-images.githubusercontent.com/68512686/196430596-72888c0b-b742-4c20-a228-d059a63c97fd.png" width="1000"/>
 </p>
 
 ## 기술스택 🥞
@@ -29,31 +29,31 @@
 ### 💅 Frontend
 
 <p align="center">
-    <img alter="frontend-teck-stack" src="https://user-images.githubusercontent.com/68512686/196427007-3255aef4-4ca7-4930-9883-1ea68c43bcb3.png" width="600"/>
+    <img alter="frontend-teck-stack" src="https://user-images.githubusercontent.com/68512686/196430635-934e927b-cb00-42ce-a4fc-1abcff33b658.png" width="600"/>
 </p>
 <br/>
 
 ### ⚙️ Backend
 
 <p align="center">
-    <img alter="backend-teck-stack" src="https://user-images.githubusercontent.com/68512686/196427016-b39d72c3-c566-41dc-abd2-1981164f4830.png" width="600"/>
+    <img alter="backend-teck-stack" src="https://user-images.githubusercontent.com/68512686/196430649-f1374247-9fe4-44ed-8ce6-4a7a7eb67109.png" width="600"/>
 </p>
 <br/>
 
 ### 🧬 Infrastructure
 
 <p align="center">    
-    <img alter="infla-teck-stack" src="https://user-images.githubusercontent.com/68512686/196427033-086ce534-3839-4768-a752-a8b55cf40955.png" width="600"/>
+    <img alter="infla-teck-stack" src="https://user-images.githubusercontent.com/68512686/196430664-0f814761-db5e-4459-9893-bff9189d0b60.png" width="600"/>
 </p>
 
 ## 인프라 구조 ⛑
 
 <p align="center">
-    <img alter="ci-cd-process" src="https://user-images.githubusercontent.com/68512686/196427044-38c9de48-912a-43f4-bc3f-05103a42bfd4.png" width="800"/>
+    <img alter="ci-cd-process" src="https://user-images.githubusercontent.com/68512686/196430680-a64dd77f-731b-468f-b50d-debdee833c0b.png" width="800"/>
 </p>
 
 ## CI/CD Process 🏗
 
 <p align="center">
-    <img alter="infra-structure" src="https://user-images.githubusercontent.com/68512686/196427054-8ba28cfc-f340-4add-aad3-a733d09e5af4.png" width="800"/>
+    <img alter="infra-structure" src="https://user-images.githubusercontent.com/68512686/196430698-916d28ad-16c2-4778-8622-515ce277d90c.png" width="800"/>
 </p>

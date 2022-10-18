@@ -3,7 +3,9 @@ import styled from 'styled-components';
 const Snackbar = ({ children }: SnackbarProps) => {
   return (
     <SnackbarStyle>
-      <SnackbarText>{children}</SnackbarText>
+      <SnackbarText aria-live={'polite'} aria-atomic={'true'} aria-label={children}>
+        {children}
+      </SnackbarText>
     </SnackbarStyle>
   );
 };

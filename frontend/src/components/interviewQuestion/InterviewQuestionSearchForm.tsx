@@ -5,6 +5,7 @@ import useInterviewQuestionSearch from 'hooks/questionSearch/useInterviewQuestio
 import deleteIcon from 'assets/images/close.svg';
 import searchIcon from 'assets/images/search.svg';
 
+import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import Input from 'components/@commons/Input';
 
@@ -20,9 +21,12 @@ const InterviewQuestionSearchForm = () => {
     <S.Container onSubmit={handleSubmitInterviewQuestion}>
       <S.Title>인터뷰 질문 검색</S.Title>
       <S.InputBox>
-        <S.Button type={'submit'}>
-          <Image src={searchIcon} sizes={'SMALL'} />
-        </S.Button>
+        <Image
+          src={searchIcon}
+          alt={'인터뷰 질문 검색하기'}
+          sizes={'SMALL'}
+          aria-aria-hidden="true"
+        />
         <S.SearchInput
           placeholder={'검색어를 입력하세요'}
           value={searchText}
@@ -30,7 +34,7 @@ const InterviewQuestionSearchForm = () => {
         />
         {searchText && (
           <S.Button onClick={handleClickRemoveSearchTextButton}>
-            <Image src={deleteIcon} sizes={'TINY'} />
+            <Image src={deleteIcon} alt={'인터뷰 질문 검색 텍스트 삭제'} sizes={'TINY'} />
           </S.Button>
         )}
       </S.InputBox>
@@ -86,7 +90,8 @@ const S = {
     }
   `,
 
-  Button: styled.button`
+  Button: styled(Button)`
+    padding: 0;
     border: none;
     background-color: ${(props) => props.theme.new_default.WHITE};
   `,

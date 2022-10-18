@@ -3,23 +3,28 @@ import { ImageSizeType } from 'types';
 
 const Image = ({
   src,
+  alt,
   sizes = 'LARGE',
   boxShadow = false,
   borderRadius = true,
   githubAvatarSize = 0,
+  ...props
 }: ImageProps) => {
   return (
     <ImageStyle
       src={githubAvatarSize ? `${src}&s=${githubAvatarSize}` : src}
+      alt={alt}
       sizes={sizes}
       boxShadow={boxShadow}
       borderRadius={borderRadius}
+      {...props}
     />
   );
 };
 
-interface ImageProps {
+export interface ImageProps {
   src: string | undefined;
+  alt?: string;
   sizes: ImageSizeType;
   boxShadow?: boolean;
   borderRadius?: boolean;

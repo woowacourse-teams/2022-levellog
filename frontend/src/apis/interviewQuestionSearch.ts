@@ -10,11 +10,18 @@ export const requestSearchedInterviewQuestion = async ({
   size = 2000,
   sort = 'latest',
 }: SearchedInterviewQuestionType): Promise<InterviewQuestionSearchApiType> => {
+  if (accessToken) {
+    const { data } = await fetcher.get(
+      `/interview-questions?keyword=${keyword}&page=${page}&size=${size}&sort=${sort}`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      },
+    );
+
+    return data;
+  }
   const { data } = await fetcher.get(
     `/interview-questions?keyword=${keyword}&page=${page}&size=${size}&sort=${sort}`,
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
   );
 
   return data;

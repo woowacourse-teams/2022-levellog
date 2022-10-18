@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 public class ParticipantInTeamListResponse {
 
     private Long memberId;
+    private String nickname;
     private String profileUrl;
 }

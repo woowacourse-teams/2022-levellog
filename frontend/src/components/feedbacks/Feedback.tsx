@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import { TEAM_STATUS } from 'constants/constants';
-import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
+import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';

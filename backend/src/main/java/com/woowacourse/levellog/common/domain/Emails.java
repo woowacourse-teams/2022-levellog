@@ -1,17 +1,15 @@
 package com.woowacourse.levellog.common.domain;
 
+import com.woowacourse.levellog.common.support.EnvironmentFactory;
 import java.util.Arrays;
 import java.util.Set;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.StandardEnvironment;
 
 public enum Emails {
 
     ADMIN(Set.of("ozragwort@gmail.com", "ilseongdev@gmail.com")),
 
     EMPTY(Set.of());
-
-    private static final Environment environment = new StandardEnvironment();
 
     private final Set<String> emails;
 
@@ -27,6 +25,7 @@ public enum Emails {
     }
 
     private static boolean isProd() {
+        final Environment environment = EnvironmentFactory.get();
         return Arrays.asList(environment.getActiveProfiles())
                 .contains("prod");
     }

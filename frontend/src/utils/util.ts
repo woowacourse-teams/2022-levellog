@@ -6,9 +6,6 @@ import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { Team } from 'types/team';
-import { UriCustomHookType } from 'types/uri';
-
 export const debounce: DebounceType = {
   flag: '',
   action({ func, args, setState, navigate, timer = 300 }) {
@@ -22,19 +19,6 @@ export const debounce: DebounceType = {
     }, timer);
   },
 };
-
-interface DebounceActionArgsType {
-  func: Function;
-  args?: { [props: string]: any };
-  setState?: React.Dispatch<React.SetStateAction<any>>;
-  navigate?: [NavigateFunction, string];
-  timer?: number;
-}
-
-interface DebounceType {
-  flag: '' | ReturnType<typeof setTimeout>;
-  action: ({ func, args }: DebounceActionArgsType) => any;
-}
 
 export const tryCatch = async <T>({
   func,
@@ -60,12 +44,6 @@ export const tryCatch = async <T>({
   }
 };
 
-interface TryCatchProps {
-  func: Function;
-  args?: { [props: string]: any };
-  snackbar: ({ message }: ShowSnackbarProps) => any;
-}
-
 export const checkFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConsonantType) => {
   if (typeof word !== 'string') return;
 
@@ -76,9 +54,6 @@ export const checkFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConson
 
   return (uniCode - 44032) % 28 != 0;
 };
-interface CheckFirstWordFinalConsonantType {
-  word: string;
-}
 
 export const convertDateAndTime = ({ startAt }: any) => {
   const year = startAt.slice(0, 4);
@@ -89,76 +64,24 @@ export const convertDateAndTime = ({ startAt }: any) => {
   return `${year}년 ${month}월 ${day}일 ${time}`;
 };
 
-export const feedbackAddUriBuilder = ({
-  teamId,
-  levellogId,
-}: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedback/add`;
-};
+interface DebounceActionArgsType {
+  func: Function;
+  args?: { [props: string]: any };
+  setState?: React.Dispatch<React.SetStateAction<any>>;
+  navigate?: [NavigateFunction, string];
+  timer?: number;
+}
 
-export const feedbackEditUriBuilder = ({
-  teamId,
-  levellogId,
-  feedbackId,
-  authorId,
-}: Omit<UriCustomHookType, 'preQuestionId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedback/${feedbackId}/author/${authorId}/edit`;
-};
+interface DebounceType {
+  flag: '' | ReturnType<typeof setTimeout>;
+  action: ({ func, args }: DebounceActionArgsType) => any;
+}
 
-export const feedbacksGetUriBuilder = ({
-  teamId,
-  levellogId,
-}: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks`;
-};
-
-export const feedbackGetUriBuilder = ({
-  teamId,
-  levellogId,
-  feedbackId,
-}: Pick<UriCustomHookType, 'teamId' | 'levellogId' | 'feedbackId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedback/${feedbackId}`;
-};
-
-export const levellogAddUriBuilder = ({ teamId }: Pick<UriCustomHookType, 'teamId'>) => {
-  return `/teams/${teamId}/levellogs/add`;
-};
-
-export const levellogEditUriBuilder = ({
-  teamId,
-  levellogId,
-  authorId,
-}: Pick<UriCustomHookType, 'teamId' | 'levellogId' | 'authorId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/author/${authorId}/edit`;
-};
-
-export const teamEditUriBuilder = ({ teamId }: Pick<UriCustomHookType, 'teamId'>) => {
-  return `/teams/${teamId}/edit`;
-};
-
-export const teamGetUriBuilder = ({ teamId }: Pick<UriCustomHookType, 'teamId'>) => {
-  return `/teams/${teamId}`;
-};
-
-export const preQuestionAddUriBuilder = ({
-  teamId,
-  levellogId,
-}: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/pre-questions/add`;
-};
-
-export const preQuestionEditUriBuilder = ({
-  teamId,
-  levellogId,
-  preQuestionId,
-  authorId,
-}: Omit<UriCustomHookType, 'feedbackId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/pre-questions/${preQuestionId}/author/${authorId}/edit`;
-};
-
-export const interviewQuestionsGetUriBuilder = ({
-  teamId,
-  levellogId,
-}: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/interview-questions`;
-};
+interface TryCatchProps {
+  func: Function;
+  args?: { [props: string]: any };
+  snackbar: ({ message }: ShowSnackbarProps) => any;
+}
+interface CheckFirstWordFinalConsonantType {
+  word: string;
+}

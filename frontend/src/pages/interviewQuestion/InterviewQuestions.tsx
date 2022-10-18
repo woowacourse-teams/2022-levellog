@@ -19,7 +19,8 @@ import {
   InterviewQuestionsInLevellogType,
   InterviewQuestionInfoType,
 } from 'types/interviewQuestion';
-import { checkFirstWordFinalConsonant, feedbackAddUriBuilder } from 'utils/util';
+import { feedbackAddUriBuilder } from 'utils/uri';
+import { checkFirstWordFinalConsonant } from 'utils/util';
 
 const InterviewQuestions = () => {
   const { levellogInfo } = useLevellogQuery();

@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
+import { PreQuestionCustomHookType } from 'hooks/preQuestion/types/index';
+
 import closeIcon from 'assets/images/close.svg';
 
 import Button from 'components/@commons/Button';
@@ -9,9 +11,9 @@ import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import ModalPortal from 'portal/ModalPortal';
-import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
+import { PreQuestionFormatType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
-import { preQuestionEditUriBuilder } from 'utils/util';
+import { preQuestionEditUriBuilder } from 'utils/uri';
 
 const PreQuestionViewModal = ({
   teamId,

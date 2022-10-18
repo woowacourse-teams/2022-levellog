@@ -10,7 +10,7 @@ import { MESSAGE } from 'constants/constants';
 
 import { requestPostFeedback, FeedbackApiType } from 'apis/feedback';
 import { FeedbackFormatType } from 'types/feedback';
-import { feedbacksGetUriBuilder } from 'utils/util';
+import { feedbacksGetUriBuilder } from 'utils/uri';
 
 const useFeedbackAdd = () => {
   const { showSnackbar } = useSnackbar();

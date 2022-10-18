@@ -12,7 +12,7 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 import { MESSAGE } from 'constants/constants';
 
 import { requestEditLevellog } from 'apis/levellog';
-import { teamGetUriBuilder } from 'utils/util';
+import { teamGetUriBuilder } from 'utils/uri';
 
 const useLevellogEdit = () => {
   const { levellogRefetch, levellogInfo } = useLevellogQuery();

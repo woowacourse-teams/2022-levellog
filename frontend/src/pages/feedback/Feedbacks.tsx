@@ -20,7 +20,7 @@ import ContentHeader from 'components/@commons/ContentHeader';
 import Image from 'components/@commons/Image';
 import Feedback from 'components/feedbacks/Feedback';
 import { FeedbackType } from 'types/feedback';
-import { feedbackAddUriBuilder, teamGetUriBuilder } from 'utils/util';
+import { feedbackAddUriBuilder, teamGetUriBuilder } from 'utils/uri';
 
 const Feedbacks = () => {
   const { feedbackError, feedbacks } = useFeedbacks();

@@ -11,8 +11,8 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 import { MESSAGE } from 'constants/constants';
 
 import usePreQuestionQuery from './usePreQuestionQuery';
-import { requestEditPreQuestion, requestGetPreQuestion } from 'apis/preQuestion';
-import { teamGetUriBuilder } from 'utils/util';
+import { requestEditPreQuestion } from 'apis/preQuestion';
+import { teamGetUriBuilder } from 'utils/uri';
 
 const usePreQuestionEdit = () => {
   const { preQuestionError, preQuestionSuccess, preQuestion } = usePreQuestionQuery();

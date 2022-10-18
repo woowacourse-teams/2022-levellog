@@ -23,7 +23,7 @@ import {
   interviewQuestionsGetUriBuilder,
   levellogAddUriBuilder,
   preQuestionAddUriBuilder,
-} from 'utils/util';
+} from 'utils/uri';
 
 const Interviewer = ({
   participant,

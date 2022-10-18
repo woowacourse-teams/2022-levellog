@@ -9,7 +9,8 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import { InterviewTeamType } from 'types/team';
-import { convertDateAndTime, teamGetUriBuilder } from 'utils/util';
+import { teamGetUriBuilder } from 'utils/uri';
+import { convertDateAndTime } from 'utils/util';
 
 const InterviewTeam = ({ team }: InterviewTeamsProp) => {
   const { id, teamImage, title, status, place, startAt, participants } = team;
@@ -82,11 +83,13 @@ const S = {
     cursor: pointer;
   `,
 
-  Title: styled.h3`
+  Title: styled.p`
     width: 11.5rem;
     margin-top: 0.3125rem;
     line-height: 1.5625rem;
     word-break: break-all;
+    font-size: 1.125rem;
+    font-weight: 700;
   `,
 
   Info: styled.div`

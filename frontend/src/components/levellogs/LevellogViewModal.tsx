@@ -17,7 +17,7 @@ import {
   levellogEditUriBuilder,
   preQuestionEditUriBuilder,
   preQuestionAddUriBuilder,
-} from 'utils/util';
+} from 'utils/uri';
 
 const LevellogViewModal = ({
   teamId,

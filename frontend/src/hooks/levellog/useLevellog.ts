@@ -11,7 +11,7 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 import { MESSAGE } from 'constants/constants';
 
 import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
-import { teamGetUriBuilder } from 'utils/util';
+import { teamGetUriBuilder } from 'utils/uri';
 
 const QUERY_KEY = {
   LEVELLOG: 'levellog',

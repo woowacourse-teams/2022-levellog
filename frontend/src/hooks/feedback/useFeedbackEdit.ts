@@ -12,7 +12,7 @@ import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { requestEditFeedback, requestGetFeedback } from 'apis/feedback';
 import { FeedbackFormatType } from 'types/feedback';
-import { feedbacksGetUriBuilder } from 'utils/util';
+import { feedbacksGetUriBuilder } from 'utils/uri';
 
 const QUERY_KEY = {
   FEEDBACK: 'feedback',

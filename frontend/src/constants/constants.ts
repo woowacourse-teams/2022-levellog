@@ -99,8 +99,6 @@ export const GITHUB_AVATAR_SIZE_LIST = {
   SMALL: 30,
 };
 
-export const NOT_YET_HTTP_STATUS = 0;
-
 export const INTERVIEW_QUESTION_FILTER = Object.freeze({
   LATEST: 'latest',
   OLDEST: 'oldest',

@@ -14,7 +14,7 @@ import { MESSAGE } from 'constants/constants';
 
 import { requestDeletePreQuestion, requestPostPreQuestion } from 'apis/preQuestion';
 import { NotCorrectToken } from 'apis/utils';
-import { teamGetUriBuilder } from 'utils/util';
+import { teamGetUriBuilder } from 'utils/uri';
 
 const usePreQuestionAdd = () => {
   const { showSnackbar } = useSnackbar();

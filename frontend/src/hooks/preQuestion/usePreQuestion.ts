@@ -16,7 +16,7 @@ import {
   requestGetPreQuestion,
   requestPostPreQuestion,
 } from 'apis/preQuestion';
-import { teamGetUriBuilder } from 'utils/util';
+import { teamGetUriBuilder } from 'utils/uri';
 
 const QUERY_KEY = {
   PREQUESTION: 'preQuestion',

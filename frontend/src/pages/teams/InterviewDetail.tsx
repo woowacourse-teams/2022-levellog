@@ -19,7 +19,8 @@ import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
 import Watcher from 'components/teams/Watcher';
 import { ParticipantType, WatcherType } from 'types/team';
-import { convertDateAndTime, teamEditUriBuilder } from 'utils/util';
+import { teamEditUriBuilder } from 'utils/uri';
+import { convertDateAndTime } from 'utils/util';
 
 const InterviewDetail = () => {
   const { loginUserId } = useUser();

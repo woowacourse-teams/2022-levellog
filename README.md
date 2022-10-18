@@ -21,7 +21,7 @@
 ## 팀문화 📚
 
 <p align="center">
-    <img alt="culture" src="https://user-images.githubusercontent.com/76840965/187828413-4087b6c0-58a7-4b0c-b99c-8e7a7468d43e.png" width="700"/>
+    <img alt="culture" src="https://user-images.githubusercontent.com/68512686/196428533-74ef7a06-71d6-41e7-ba1a-0ba0028a6be9.png" width="1000"/>
 </p>
 
 ## 기술스택 🥞

@@ -82,11 +82,13 @@ const S = {
     cursor: pointer;
   `,
 
-  Title: styled.h3`
+  Title: styled.p`
     width: 11.5rem;
     margin-top: 0.3125rem;
     line-height: 1.5625rem;
     word-break: break-all;
+    font-size: 1.125rem;
+    font-weight: 700;
   `,
 
   Info: styled.div`

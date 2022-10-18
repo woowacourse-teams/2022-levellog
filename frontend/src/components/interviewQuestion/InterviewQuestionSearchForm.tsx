@@ -21,12 +21,7 @@ const InterviewQuestionSearchForm = () => {
     <S.Container onSubmit={handleSubmitInterviewQuestion}>
       <S.Title>인터뷰 질문 검색</S.Title>
       <S.InputBox>
-        <Image
-          src={searchIcon}
-          alt={'인터뷰 질문 검색하기'}
-          sizes={'SMALL'}
-          aria-aria-hidden="true"
-        />
+        <Image src={searchIcon} alt={'인터뷰 질문 검색하기'} sizes={'SMALL'} aria-hidden="true" />
         <S.SearchInput
           placeholder={'검색어를 입력하세요'}
           value={searchText}

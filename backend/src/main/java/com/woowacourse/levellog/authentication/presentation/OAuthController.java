@@ -1,6 +1,6 @@
 package com.woowacourse.levellog.authentication.presentation;
 
-import com.woowacourse.levellog.authentication.application.OAuthService;
+import com.woowacourse.levellog.authentication.application.MemberLogin;
 import com.woowacourse.levellog.authentication.dto.request.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.response.LoginResponse;
 import com.woowacourse.levellog.authentication.support.PublicAPI;
@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @PublicAPI
 public class OAuthController {
 
-    private final OAuthService oAuthService;
+    private final MemberLogin memberLogin;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid final GithubCodeRequest request) {
-        return ResponseEntity.ok(oAuthService.login(request));
+        return ResponseEntity.ok(memberLogin.login(request));
     }
 }

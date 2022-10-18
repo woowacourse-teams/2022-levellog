@@ -3,7 +3,6 @@ package com.woowacourse.levellog.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.authentication.dto.request.GithubCodeRequest;
 import com.woowacourse.levellog.authentication.dto.response.GithubProfileResponse;
 import com.woowacourse.levellog.authentication.dto.response.LoginResponse;
 import com.woowacourse.levellog.common.dto.LoginStatus;
@@ -21,13 +20,12 @@ class OAuthServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("첫 로그인 시 회원가입하고 id, 토큰, 이미지 URL를 반환한다.")
-        void login_ifFirst_success() throws Exception {
+        void login_ifFirst_success() {
             // given
             final GithubProfileResponse request = new GithubProfileResponse("1234", "릭", "rick.org");
 
             // when
-            final LoginResponse tokenResponse = oAuthService.login(
-                    new GithubCodeRequest(objectMapper.writeValueAsString(request)));
+            final LoginResponse tokenResponse = oAuthService.login(request);
 
             // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
@@ -43,7 +41,7 @@ class OAuthServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("첫 로그인이 아닌 경우 회원가입 하지 않고 토큰과 이미지 URL를 반환한다.")
-        void login_ifNotFirst_success() throws Exception {
+        void login_ifNotFirst_success() {
             // given
             final Member member = saveMember("로마");
 
@@ -52,8 +50,7 @@ class OAuthServiceTest extends ServiceTest {
                     member.getProfileUrl());
 
             // when
-            final LoginResponse tokenResponse = oAuthService.login(
-                    new GithubCodeRequest(objectMapper.writeValueAsString(request)));
+            final LoginResponse tokenResponse = oAuthService.login(request);
 
             // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());

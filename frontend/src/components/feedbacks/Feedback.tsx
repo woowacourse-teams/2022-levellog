@@ -10,9 +10,13 @@ import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import { FeedbackType } from 'types/feedback';
-import { feedbackEditUriBuilder } from 'utils/util';
+import { feedbackEditUriBuilder } from 'utils/uri';
 
 const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
+  console.log(teamStatus === TEAM_STATUS.IN_PROGRESS && feedbackInfo.from.id === loginUserId);
+  console.log('teamStatus: ', teamStatus);
+  console.log(' feedbackInfo.from.id, loginUserId: ', feedbackInfo.from.id, loginUserId);
+
   return (
     <S.Container>
       <S.Header>
@@ -24,7 +28,8 @@ const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }:
           />
           <S.AuthorText>{feedbackInfo.from.nickname}의 피드백</S.AuthorText>
         </FlexBox>
-        {teamStatus === TEAM_STATUS.IN_PROGRESS && feedbackInfo.from.id === loginUserId && (
+        {/* team을 불러오지 못해서 일단 해결 전까지 team.status 제거 */}
+        {feedbackInfo.from.id === loginUserId && (
           <Link
             to={feedbackEditUriBuilder({
               teamId,

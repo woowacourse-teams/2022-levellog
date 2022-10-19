@@ -8,8 +8,8 @@ import closeIcon from 'assets/images/close.svg';
 import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
 import FlexBox from 'components/@commons/FlexBox';
-import Image from 'components/@commons/Image';
 import Button from 'components/@commons/button/Button';
+import Image from 'components/@commons/image/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import ModalPortal from 'portal/ModalPortal';
 import { ParticipantType, TeamStatusType } from 'types/team';

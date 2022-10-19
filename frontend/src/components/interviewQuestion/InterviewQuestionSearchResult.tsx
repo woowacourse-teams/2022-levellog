@@ -4,7 +4,7 @@ import goodActiveIcon from 'assets/images/good-active.svg';
 import goodIcon from 'assets/images/good.svg';
 
 import FlexBox from 'components/@commons/FlexBox';
-import Image from 'components/@commons/Image';
+import Image from 'components/@commons/image/Image';
 import { InterviewQuestionApiType } from 'types/interviewQuestion';
 
 const InterviewQuestionSearchResult = ({

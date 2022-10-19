@@ -14,7 +14,7 @@ import { TEAM_STATUS } from 'constants/constants';
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
-import Image from 'components/@commons/images/Image';
+import Image from 'components/@commons/image/Image';
 import {
   InterviewQuestionsInLevellogType,
   InterviewQuestionInfoType,

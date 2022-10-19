@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import Image from 'components/@commons/images/Image';
+import Image from 'components/@commons/image/Image';
 
 export default {
   title: 'Image',

@@ -6,7 +6,7 @@ import deleteIcon from 'assets/images/close.svg';
 import searchIcon from 'assets/images/search.svg';
 
 import Button from 'components/@commons/button/Button';
-import Image from 'components/@commons/images/Image';
+import Image from 'components/@commons/image/Image';
 import Input from 'components/@commons/input/Input';
 
 const InterviewQuestionSearchForm = () => {

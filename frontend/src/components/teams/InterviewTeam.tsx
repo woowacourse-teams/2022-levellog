@@ -7,7 +7,7 @@ import locationIcon from 'assets/images/location.svg';
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import FlexBox from 'components/@commons/FlexBox';
-import Image from 'components/@commons/images/Image';
+import Image from 'components/@commons/image/Image';
 import { InterviewTeamType } from 'types/team';
 import { convertDateAndTime, teamGetUriBuilder } from 'utils/util';
 

@@ -5,5 +5,5 @@ export const IMAGE_SIZE_LIST = {
   LARGE: { width: '3.75rem', height: '3.75rem' },
   MEDIUM: { width: '2.75rem', height: '2.75rem' },
   SMALL: { width: '1.875rem', height: '1.875rem' },
-  TINY: { width: '9375rem', height: '0.9375rem' },
+  TINY: { width: '0.9375rem', height: '0.9375rem' },
 };

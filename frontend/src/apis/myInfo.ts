@@ -2,24 +2,21 @@ import { fetcher } from 'apis';
 
 import { TeamCustomHookType } from 'hooks/team/types/index';
 
+import { AuthorizationHeader } from 'apis/index';
 import { TeamsConditionType } from 'types/team';
 import { InterviewTeamType } from 'types/team';
 
 export const requestGetMyTeams = async ({
   accessToken,
-}: Pick<TeamApiType, 'accessToken' | 'teamsCondition'>): Promise<
-  Record<'teams', InterviewTeamType[]>
-> => {
-  const { data } = await fetcher.get(`/my-info/teams`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: MyTeamGetRequestType): Promise<Record<'teams', InterviewTeamType[]>> => {
+  const teamGetUri = `/my-info/teams`;
+
+  const { data } = await fetcher.get(teamGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };
 
-export interface TeamApiType {
+interface MyTeamGetRequestType {
   accessToken: string | null;
-  teamId: string | undefined;
-  teamInfo: TeamCustomHookType;
   teamsCondition?: TeamsConditionType;
 }

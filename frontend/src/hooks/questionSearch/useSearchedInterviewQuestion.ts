@@ -7,7 +7,6 @@ import useSnackbar from 'hooks//utils/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH, INTERVIEW_QUESTION_FILTER } from 'constants/constants';
 
-import { InterviewQuestionApiType } from 'apis/interviewQuestion';
 import {
   requestLikeCancelInterviewQuestion,
   requestLikeInterviewQuestion,
@@ -36,7 +35,7 @@ const useSearchedInterviewQuestion = () => {
   );
 
   const { mutate: likeInterviewQuestion } = useMutation(
-    ({ interviewQuestionId }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => {
+    ({ interviewQuestionId }: QuestionId) => {
       return requestLikeInterviewQuestion({ accessToken, interviewQuestionId });
     },
     {
@@ -55,7 +54,7 @@ const useSearchedInterviewQuestion = () => {
   );
 
   const { mutate: likeCancelInterviewQuestion } = useMutation(
-    ({ interviewQuestionId }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => {
+    ({ interviewQuestionId }: QuestionId) => {
       return requestLikeCancelInterviewQuestion({ accessToken, interviewQuestionId });
     },
     {
@@ -73,15 +72,11 @@ const useSearchedInterviewQuestion = () => {
     },
   );
 
-  const onClickLikeButton = async ({
-    interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => {
+  const onClickLikeButton = async ({ interviewQuestionId }: QuestionId) => {
     likeInterviewQuestion({ interviewQuestionId });
   };
 
-  const onClickCancelLikeButton = async ({
-    interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => {
+  const onClickCancelLikeButton = async ({ interviewQuestionId }: QuestionId) => {
     likeCancelInterviewQuestion({ interviewQuestionId });
   };
 
@@ -110,5 +105,9 @@ const useSearchedInterviewQuestion = () => {
     handleClickFilterButton,
   };
 };
+
+interface QuestionId {
+  interviewQuestionId: string;
+}
 
 export default useSearchedInterviewQuestion;

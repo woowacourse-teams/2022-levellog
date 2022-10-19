@@ -1,13 +1,13 @@
-import { fetcher } from 'apis';
+import { AuthorizationHeader, fetcher } from 'apis';
 
 export const requestGetLoginUserRole = async ({
   teamId,
   participantId,
   accessToken,
 }: RoleApiType): Promise<Record<'myRole', string>> => {
-  const { data } = await fetcher.get(`/teams/${teamId}/members/${participantId}/my-role`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  const myRoleGetUri = `/teams/${teamId}/members/${participantId}/my-role`;
+
+  const { data } = await fetcher.get(myRoleGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };

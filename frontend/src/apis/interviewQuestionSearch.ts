@@ -2,7 +2,7 @@ import { fetcher } from 'apis';
 
 import { InterviewQuestionSearchResultType } from './../types/interviewQuestion';
 
-import { InterviewQuestionApiType } from 'apis/interviewQuestion';
+import { AuthorizationHeader } from 'apis/index';
 import { InterviewQuestionSort } from 'types/interviewQuestion';
 
 export const requestSearchedInterviewQuestion = async ({
@@ -11,19 +11,12 @@ export const requestSearchedInterviewQuestion = async ({
   page = 0,
   size = 2000,
   sort = 'latest',
-}: SearchedInterviewQuestionType): Promise<InterviewQuestionSearchApiType> => {
-  if (accessToken) {
-    const { data } = await fetcher.get(
-      `/interview-questions?keyword=${keyword}&page=${page}&size=${size}&sort=${sort}`,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      },
-    );
+}: QuestionSearchRequestType): Promise<QuestionSearchResponseType> => {
+  const searchQuestionGetUri = `/interview-questions?keyword=${keyword}&page=${page}&size=${size}&sort=${sort}`;
 
-    return data;
-  }
   const { data } = await fetcher.get(
-    `/interview-questions?keyword=${keyword}&page=${page}&size=${size}&sort=${sort}`,
+    searchQuestionGetUri,
+    accessToken ? AuthorizationHeader(accessToken) : {},
   );
 
   return data;
@@ -32,26 +25,22 @@ export const requestSearchedInterviewQuestion = async ({
 export const requestLikeInterviewQuestion = async ({
   accessToken,
   interviewQuestionId,
-}: Pick<InterviewQuestionApiType, 'accessToken' | 'interviewQuestionId'>): Promise<void> => {
-  await fetcher.post(
-    `/interview-questions/${interviewQuestionId}/like`,
-    {}, // 지금은 이거 없애면 headers가 전달 안 돼서 에러 뜸
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
-  );
+}: QuestionLikeRequestType) => {
+  const QuestionLikePostUri = `/interview-questions/${interviewQuestionId}/like`;
+
+  await fetcher.post(QuestionLikePostUri, {}, AuthorizationHeader(accessToken));
 };
 
 export const requestLikeCancelInterviewQuestion = async ({
   accessToken,
   interviewQuestionId,
-}: Pick<InterviewQuestionApiType, 'accessToken' | 'interviewQuestionId'>): Promise<void> => {
-  await fetcher.delete(`/interview-questions/${interviewQuestionId}/like`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: QuestionLikeRequestType) => {
+  const QuestionLikeDeleteUri = `/interview-questions/${interviewQuestionId}/like`;
+
+  await fetcher.delete(QuestionLikeDeleteUri, AuthorizationHeader(accessToken));
 };
 
-interface SearchedInterviewQuestionType {
+interface QuestionSearchRequestType {
   accessToken: string | null;
   keyword: string | number | null;
   page?: number;
@@ -59,7 +48,12 @@ interface SearchedInterviewQuestionType {
   sort: InterviewQuestionSort;
 }
 
-export interface InterviewQuestionSearchApiType {
+interface QuestionSearchResponseType {
   results: InterviewQuestionSearchResultType[];
   page: number;
+}
+
+interface QuestionLikeRequestType {
+  accessToken: string | null;
+  interviewQuestionId: string;
 }

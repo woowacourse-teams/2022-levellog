@@ -1,4 +1,4 @@
-import { fetcher } from 'apis';
+import { AuthorizationHeader, fetcher } from 'apis';
 
 import { FeedbackFormatType } from './../types/feedback';
 
@@ -8,21 +8,19 @@ export const requestPostFeedback = async ({
   accessToken,
   levellogId,
   feedbackResult,
-}: Omit<FeedbackApiType, 'feedbackId'>) => {
-  await fetcher.post(`/levellogs/${levellogId}/feedbacks`, feedbackResult, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: FeedbackPostOrEditApiType) => {
+  const feedbackPostUri = `/levellogs/${levellogId}/feedbacks`;
+
+  await fetcher.post(feedbackPostUri, feedbackResult, AuthorizationHeader(accessToken));
 };
 
 export const requestGetFeedbacksInTeam = async ({
   accessToken,
   levellogId,
-}: Pick<FeedbackApiType, 'accessToken' | 'levellogId'>): Promise<
-  Record<'feedbacks', FeedbackType[]>
-> => {
-  const { data } = await fetcher.get(`/levellogs/${levellogId}/feedbacks`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: FeedbacksGetApiType): Promise<Record<'feedbacks', FeedbackType[]>> => {
+  const feedbacksGetUri = `/levellogs/${levellogId}/feedbacks`;
+
+  const { data } = await fetcher.get(feedbacksGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };
@@ -31,10 +29,10 @@ export const requestGetFeedback = async ({
   accessToken,
   levellogId,
   feedbackId,
-}: Omit<FeedbackApiType, 'feedbackResult'>): Promise<FeedbackType> => {
-  const { data } = await fetcher.get(`/levellogs/${levellogId}/feedbacks/${feedbackId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: FeedbackGetApiType): Promise<FeedbackType> => {
+  const feedbackGetUri = `/levellogs/${levellogId}/feedbacks/${feedbackId}`;
+
+  const { data } = await fetcher.get(feedbackGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };
@@ -44,21 +42,21 @@ export const requestEditFeedback = async ({
   levellogId,
   feedbackId,
   feedbackResult,
-}: FeedbackApiType) => {
-  await fetcher.put(
-    `/levellogs/${levellogId}/feedbacks/${feedbackId}`,
-    {
-      ...feedbackResult,
-    },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
-  );
+}: FeedbackPostOrEditApiType) => {
+  const feedbackPutUri = `/levellogs/${levellogId}/feedbacks/${feedbackId}`;
+
+  await fetcher.put(feedbackPutUri, feedbackResult, AuthorizationHeader(accessToken));
 };
 
-export interface FeedbackApiType {
+interface FeedbacksGetApiType {
   accessToken: string | null;
   levellogId: string | undefined;
+}
+
+interface FeedbackGetApiType extends FeedbacksGetApiType {
   feedbackId: string | undefined;
+}
+
+interface FeedbackPostOrEditApiType extends FeedbackGetApiType {
   feedbackResult: FeedbackFormatType;
 }

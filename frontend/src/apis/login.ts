@@ -1,27 +1,24 @@
-import axios from 'axios';
+import { fetcher } from './index';
+import { AuthorizationHeader } from 'apis/index';
 
-export const requestGetUserLogin = ({ code }: Pick<LoginApiType, 'code'>) => {
-  return axios({
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-    },
-    url: `${process.env.API_URI}/auth/login`,
-    data: {
-      authorizationCode: code,
-    },
-  });
+export const requestPostUserLogin = ({ code }: UserLoginPostRequestType) => {
+  const LOGIN_POST_URI = '/auth/login';
+  const HEADER = { headers: { 'Content-Type': 'application/json;charset=UTF-8' } };
+  const data = { authorizationCode: code };
+
+  return fetcher.post(LOGIN_POST_URI, data, HEADER);
 };
 
-export const requestGetUserAuthority = ({ accessToken }: Pick<LoginApiType, 'accessToken'>) => {
-  return axios({
-    method: 'get',
-    url: `${process.env.API_URI}/my-info`,
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+export const requestGetUserAuthority = ({ accessToken }: UserAuthorityGetRequestType) => {
+  const MY_INFO_GET_URI = '/my-info';
+
+  return fetcher.get(MY_INFO_GET_URI, AuthorizationHeader(accessToken));
 };
 
-export interface LoginApiType {
+interface UserLoginPostRequestType {
   code: string;
-  accessToken: string;
+}
+
+interface UserAuthorityGetRequestType {
+  accessToken: string | null;
 }

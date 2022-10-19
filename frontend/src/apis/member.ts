@@ -1,19 +1,19 @@
-import { fetcher } from 'apis';
+import { AuthorizationHeader, fetcher } from 'apis';
 
 import { MemberType } from 'types/member';
 
 export const requestGetMembers = async ({
   accessToken,
   nickname,
-}: MembersApiType): Promise<Record<'members', MemberType[]>> => {
-  const { data } = await fetcher.get(`/members?nickname=${nickname}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: MembersGetRequestType): Promise<Record<'members', MemberType[]>> => {
+  const membersGetUri = `/members?nickname=${nickname}`;
+
+  const { data } = await fetcher.get(membersGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };
 
-export interface MembersApiType {
+interface MembersGetRequestType {
   accessToken: string | null;
   nickname: string;
 }

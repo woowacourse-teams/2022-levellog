@@ -1,4 +1,4 @@
-import { fetcher } from 'apis';
+import { AuthorizationHeader, fetcher } from 'apis';
 
 import { LevellogFormatType } from './../types/levellog';
 
@@ -8,20 +8,20 @@ export const requestPostLevellog = async ({
   accessToken,
   teamId,
   levellogContent,
-}: Omit<LevellogApiType, 'levellogId'>) => {
-  await fetcher.post(`/teams/${teamId}/levellogs`, levellogContent, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: Omit<LevellogRequestType, 'levellogId'>) => {
+  const levellogPostUri = `/teams/${teamId}/levellogs`;
+
+  await fetcher.post(levellogPostUri, levellogContent, AuthorizationHeader(accessToken));
 };
 
 export const requestGetLevellog = async ({
   accessToken,
   teamId,
   levellogId,
-}: Omit<LevellogApiType, 'levellogContent'>): Promise<LevellogInfoType> => {
-  const { data } = await fetcher.get(`/teams/${teamId}/levellogs/${levellogId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: Omit<LevellogRequestType, 'levellogContent'>): Promise<LevellogInfoType> => {
+  const levellogGetUri = `/teams/${teamId}/levellogs/${levellogId}`;
+
+  const { data } = await fetcher.get(levellogGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };
@@ -31,13 +31,13 @@ export const requestEditLevellog = async ({
   teamId,
   levellogId,
   levellogContent,
-}: LevellogApiType) => {
-  await fetcher.put(`/teams/${teamId}/levellogs/${levellogId}`, levellogContent, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: LevellogRequestType) => {
+  const levellogPutUri = `/teams/${teamId}/levellogs/${levellogId}`;
+
+  await fetcher.put(levellogPutUri, levellogContent, AuthorizationHeader(accessToken));
 };
 
-export interface LevellogApiType {
+interface LevellogRequestType {
   accessToken: string | null;
   teamId: string | undefined;
   levellogId: string | undefined;

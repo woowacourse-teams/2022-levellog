@@ -1,25 +1,23 @@
 import { fetcher } from 'apis';
-import axios, { AxiosPromise } from 'axios';
 
 import { TeamCustomHookType } from 'hooks/team/types';
 
+import { AuthorizationHeader } from 'apis/index';
 import { InterviewTeamType, InterviewTeamDetailType, TeamsConditionType } from 'types/team';
 
-export const requestPostTeam = async ({ teamInfo, accessToken }: Omit<TeamApiType, 'teamId'>) => {
-  await fetcher.post('/teams', teamInfo, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+export const requestPostTeam = async ({ teamInfo, accessToken }: TeamPostRequestType) => {
+  const TEAM_POST_URI = '/teams';
+
+  await fetcher.post(TEAM_POST_URI, teamInfo, AuthorizationHeader(accessToken));
 };
 
 export const requestGetTeams = async ({
   accessToken,
   teamsCondition,
-}: Pick<TeamApiType, 'accessToken' | 'teamsCondition'>): Promise<
-  Record<'teams', InterviewTeamType[]>
-> => {
-  const { data } = await fetcher.get(`/teams?condition=${teamsCondition}&size=1000`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: TeamsGetRequestType): Promise<Record<'teams', InterviewTeamType[]>> => {
+  const teamsGetUri = `/teams?condition=${teamsCondition}&size=1000`;
+
+  const { data } = await fetcher.get(teamsGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };
@@ -27,46 +25,50 @@ export const requestGetTeams = async ({
 export const requestGetTeam = async ({
   teamId,
   accessToken,
-}: Omit<TeamApiType, 'teamInfo'>): Promise<InterviewTeamDetailType> => {
-  if (accessToken) {
-    const { data } = await fetcher.get(`/teams/${teamId}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+}: TeamRequestCommonType): Promise<InterviewTeamDetailType> => {
+  const teamGetUri = `/teams/${teamId}`;
 
-    return data;
-  }
-
-  const { data } = await fetcher.get(`/teams/${teamId}`);
+  const { data } = await fetcher.get(
+    teamGetUri,
+    accessToken ? AuthorizationHeader(accessToken) : {},
+  );
 
   return data;
 };
 
-export const requestEditTeam = async ({ teamId, teamInfo, accessToken }: TeamApiType) => {
-  await fetcher.put(`/teams/${teamId}`, teamInfo, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+export const requestEditTeam = async ({ teamId, teamInfo, accessToken }: TeamEditRequestType) => {
+  const teamPutUri = `/teams/${teamId}`;
+
+  await fetcher.put(teamPutUri, teamInfo, AuthorizationHeader(accessToken));
 };
 
-export const requestDeleteTeam = async ({ teamId, accessToken }: Omit<TeamApiType, 'teamInfo'>) => {
-  await fetcher.delete(`/teams/${teamId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+export const requestDeleteTeam = async ({ teamId, accessToken }: TeamRequestCommonType) => {
+  const teamDeleteUri = `/teams/${teamId}`;
+
+  await fetcher.delete(teamDeleteUri, AuthorizationHeader(accessToken));
 };
 
-export const requestCloseTeamInterview = ({
-  teamId,
-  accessToken,
-}: Omit<TeamApiType, 'teamInfo'>): AxiosPromise<void> => {
-  return axios({
-    method: 'post',
-    headers: { Authorization: `Bearer ${accessToken}` },
-    url: `${process.env.API_URI}/teams/${teamId}/close`,
-  });
+export const requestCloseTeamInterview = async ({ teamId, accessToken }: TeamRequestCommonType) => {
+  const interviewClosePostUri = `/teams/${teamId}/close`;
+
+  await fetcher.post(interviewClosePostUri, {}, AuthorizationHeader(accessToken));
 };
 
-export interface TeamApiType {
+interface TeamRequestCommonType {
   accessToken: string | null;
   teamId: string | undefined;
+}
+
+interface TeamPostRequestType {
   teamInfo: TeamCustomHookType;
-  teamsCondition?: TeamsConditionType;
+  accessToken: string | null;
+}
+
+interface TeamsGetRequestType {
+  accessToken: string | null;
+  teamsCondition: TeamsConditionType;
+}
+
+interface TeamEditRequestType extends TeamRequestCommonType {
+  teamInfo: TeamCustomHookType;
 }

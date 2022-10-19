@@ -1,11 +1,11 @@
 import { fetcher } from 'apis';
 
-import { InterviewQuestionSearchResultType } from './../types/interviewQuestion';
+import { SearchedQuestionInfoType } from '../types/question';
 
 import { AuthorizationHeader } from 'apis/index';
-import { InterviewQuestionSort } from 'types/interviewQuestion';
+import { QuestionSort } from 'types/question';
 
-export const requestSearchedInterviewQuestion = async ({
+export const requestSearchedQuestion = async ({
   keyword,
   accessToken,
   page = 0,
@@ -22,20 +22,17 @@ export const requestSearchedInterviewQuestion = async ({
   return data;
 };
 
-export const requestLikeInterviewQuestion = async ({
-  accessToken,
-  interviewQuestionId,
-}: QuestionLikeRequestType) => {
-  const QuestionLikePostUri = `/interview-questions/${interviewQuestionId}/like`;
+export const requestLikeQuestion = async ({ accessToken, QuestionId }: QuestionLikeRequestType) => {
+  const QuestionLikePostUri = `/interview-questions/${QuestionId}/like`;
 
   await fetcher.post(QuestionLikePostUri, {}, AuthorizationHeader(accessToken));
 };
 
-export const requestLikeCancelInterviewQuestion = async ({
+export const requestLikeCancelQuestion = async ({
   accessToken,
-  interviewQuestionId,
+  QuestionId,
 }: QuestionLikeRequestType) => {
-  const QuestionLikeDeleteUri = `/interview-questions/${interviewQuestionId}/like`;
+  const QuestionLikeDeleteUri = `/interview-questions/${QuestionId}/like`;
 
   await fetcher.delete(QuestionLikeDeleteUri, AuthorizationHeader(accessToken));
 };
@@ -45,15 +42,15 @@ interface QuestionSearchRequestType {
   keyword: string | number | null;
   page?: number;
   size?: number;
-  sort: InterviewQuestionSort;
+  sort: QuestionSort;
 }
 
 interface QuestionSearchResponseType {
-  results: InterviewQuestionSearchResultType[];
+  results: SearchedQuestionInfoType[];
   page: number;
 }
 
 interface QuestionLikeRequestType {
   accessToken: string | null;
-  interviewQuestionId: string;
+  QuestionId: string;
 }

@@ -1,23 +1,21 @@
 import { AuthorizationHeader, fetcher } from 'apis';
 
-import { FeedbackFormatType } from './../types/feedback';
-
-import { FeedbackType } from 'types/feedback';
+import { FeedbackInfoType, FeedbackType } from 'types/feedback';
 
 export const requestPostFeedback = async ({
   accessToken,
   levellogId,
-  feedbackResult,
-}: FeedbackPostOrEditApiType) => {
+  feedback,
+}: FeedbackPostRequestType) => {
   const feedbackPostUri = `/levellogs/${levellogId}/feedbacks`;
 
-  await fetcher.post(feedbackPostUri, feedbackResult, AuthorizationHeader(accessToken));
+  await fetcher.post(feedbackPostUri, feedback, AuthorizationHeader(accessToken));
 };
 
 export const requestGetFeedbacksInTeam = async ({
   accessToken,
   levellogId,
-}: FeedbacksGetApiType): Promise<Record<'feedbacks', FeedbackType[]>> => {
+}: FeedbacksRequestCommonType): Promise<Record<'feedbacks', FeedbackInfoType[]>> => {
   const feedbacksGetUri = `/levellogs/${levellogId}/feedbacks`;
 
   const { data } = await fetcher.get(feedbacksGetUri, AuthorizationHeader(accessToken));
@@ -29,7 +27,7 @@ export const requestGetFeedback = async ({
   accessToken,
   levellogId,
   feedbackId,
-}: FeedbackGetApiType): Promise<FeedbackType> => {
+}: FeedbackGetRequestType): Promise<FeedbackInfoType> => {
   const feedbackGetUri = `/levellogs/${levellogId}/feedbacks/${feedbackId}`;
 
   const { data } = await fetcher.get(feedbackGetUri, AuthorizationHeader(accessToken));
@@ -41,22 +39,27 @@ export const requestEditFeedback = async ({
   accessToken,
   levellogId,
   feedbackId,
-  feedbackResult,
-}: FeedbackPostOrEditApiType) => {
+  feedback,
+}: FeedbackEditRequestType) => {
   const feedbackPutUri = `/levellogs/${levellogId}/feedbacks/${feedbackId}`;
 
-  await fetcher.put(feedbackPutUri, feedbackResult, AuthorizationHeader(accessToken));
+  await fetcher.put(feedbackPutUri, feedback, AuthorizationHeader(accessToken));
 };
 
-interface FeedbacksGetApiType {
+interface FeedbacksRequestCommonType {
   accessToken: string | null;
   levellogId: string | undefined;
 }
 
-interface FeedbackGetApiType extends FeedbacksGetApiType {
+interface FeedbackGetRequestType extends FeedbacksRequestCommonType {
   feedbackId: string | undefined;
 }
 
-interface FeedbackPostOrEditApiType extends FeedbackGetApiType {
-  feedbackResult: FeedbackFormatType;
+export interface FeedbackPostRequestType extends FeedbacksRequestCommonType {
+  feedback: FeedbackType;
+}
+
+export interface FeedbackEditRequestType extends FeedbacksRequestCommonType {
+  feedbackId: string | undefined;
+  feedback: FeedbackType;
 }

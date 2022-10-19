@@ -1,9 +1,6 @@
 import { fetcher } from 'apis';
 
-import { TeamCustomHookType } from 'hooks/team/types/index';
-
 import { AuthorizationHeader } from 'apis/index';
-import { TeamsConditionType } from 'types/team';
 import { InterviewTeamType } from 'types/team';
 
 export const requestGetMyTeams = async ({
@@ -18,5 +15,4 @@ export const requestGetMyTeams = async ({
 
 interface MyTeamGetRequestType {
   accessToken: string | null;
-  teamsCondition?: TeamsConditionType;
 }

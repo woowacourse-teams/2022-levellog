@@ -1,22 +1,8 @@
-import { RequestType } from 'types';
-
 import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-export const NotAccessTokenRemoveHeader = ({ accessToken, method, url, headers }: RequestType) => {
-  if (!accessToken) {
-    return {
-      accessToken,
-      method,
-      url,
-    };
-  }
-
-  return { accessToken, method, url, headers };
-};
-
-export const NotCorrectToken = ({ message, showSnackbar }: NotCorrectTokenProps) => {
+export const WrongAccessToken = ({ message, showSnackbar }: WrongAccessTokenProps) => {
   if (message === MESSAGE.WRONG_TOKEN) {
     showSnackbar({ message: MESSAGE.NEED_RE_LOGIN });
     localStorage.removeItem('accessToken');
@@ -29,7 +15,7 @@ export const NotCorrectToken = ({ message, showSnackbar }: NotCorrectTokenProps)
   return true;
 };
 
-interface NotCorrectTokenProps {
+interface WrongAccessTokenProps {
   message: string;
   showSnackbar: ({ message }: ShowSnackbarProps) => void;
 }

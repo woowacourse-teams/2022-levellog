@@ -1,24 +1,22 @@
 import { AuthorizationHeader, fetcher } from 'apis';
 
-import { LevellogFormatType } from './../types/levellog';
-
-import { LevellogInfoType } from 'types/levellog';
+import { LevellogInfoType, LevellogType } from 'types/levellog';
 
 export const requestPostLevellog = async ({
   accessToken,
   teamId,
-  levellogContent,
-}: Omit<LevellogRequestType, 'levellogId'>) => {
+  levellog,
+}: LevellogPostRequestType) => {
   const levellogPostUri = `/teams/${teamId}/levellogs`;
 
-  await fetcher.post(levellogPostUri, levellogContent, AuthorizationHeader(accessToken));
+  await fetcher.post(levellogPostUri, levellog, AuthorizationHeader(accessToken));
 };
 
 export const requestGetLevellog = async ({
   accessToken,
   teamId,
   levellogId,
-}: Omit<LevellogRequestType, 'levellogContent'>): Promise<LevellogInfoType> => {
+}: LevellogGetRequestType): Promise<LevellogInfoType> => {
   const levellogGetUri = `/teams/${teamId}/levellogs/${levellogId}`;
 
   const { data } = await fetcher.get(levellogGetUri, AuthorizationHeader(accessToken));
@@ -30,16 +28,26 @@ export const requestEditLevellog = async ({
   accessToken,
   teamId,
   levellogId,
-  levellogContent,
-}: LevellogRequestType) => {
+  levellog,
+}: LevellogEditRequestType) => {
   const levellogPutUri = `/teams/${teamId}/levellogs/${levellogId}`;
 
-  await fetcher.put(levellogPutUri, levellogContent, AuthorizationHeader(accessToken));
+  await fetcher.put(levellogPutUri, levellog, AuthorizationHeader(accessToken));
 };
 
-interface LevellogRequestType {
+export interface LevellogRequestCommonType {
   accessToken: string | null;
   teamId: string | undefined;
+}
+export interface LevellogGetRequestType extends LevellogRequestCommonType {
   levellogId: string | undefined;
-  levellogContent: LevellogFormatType;
+}
+
+export interface LevellogPostRequestType extends LevellogRequestCommonType {
+  levellog: LevellogType;
+}
+
+export interface LevellogEditRequestType extends LevellogRequestCommonType {
+  levellogId: string | undefined;
+  levellog: LevellogType;
 }

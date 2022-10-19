@@ -1,12 +1,12 @@
 import { fetcher } from 'apis';
 
 import { AuthorizationHeader } from 'apis/index';
-import { PreQuestionFormatType } from 'types/preQuestion';
+import { PreQuestionType } from 'types/preQuestion';
 
 export const requestGetPreQuestion = async ({
   accessToken,
   levellogId,
-}: PreQuestionGetRequestType): Promise<PreQuestionFormatType> => {
+}: PreQuestionRequestCommonType): Promise<PreQuestionType> => {
   const preQuestionGetUri = `/levellogs/${levellogId}/pre-questions/my`;
 
   const { data } = await fetcher.get(preQuestionGetUri, AuthorizationHeader(accessToken));
@@ -47,20 +47,19 @@ export const requestDeletePreQuestion = async ({
   await fetcher.delete(preQuestionDeleteUri, AuthorizationHeader(accessToken));
 };
 
-interface PreQuestionGetRequestType {
+interface PreQuestionRequestCommonType {
   accessToken: string | null;
   levellogId: string | undefined;
 }
 
-interface PreQuestionDeleteRequestType extends PreQuestionGetRequestType {
+export interface PreQuestionDeleteRequestType extends PreQuestionRequestCommonType {
   preQuestionId: string | undefined;
 }
 
-interface PreQuestionPostRequestType extends PreQuestionGetRequestType {
+export interface PreQuestionPostRequestType extends PreQuestionRequestCommonType {
   preQuestionContent: string;
 }
 
-interface PreQuestionEditRequestType extends PreQuestionGetRequestType {
+export interface PreQuestionEditRequestType extends PreQuestionPostRequestType {
   preQuestionId: string | undefined;
-  preQuestionContent: string;
 }

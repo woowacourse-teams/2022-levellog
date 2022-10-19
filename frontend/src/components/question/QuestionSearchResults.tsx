@@ -89,7 +89,8 @@ const S = {
   `,
 
   RangeButton: styled(FilterButton)<{ isActive: boolean }>`
-    padding: 0;
+    padding: 0.3125rem;
+    border: 0;
     background-color: ${(props) => props.theme.new_default.WHITE};
     color: ${(props) =>
       props.isActive ? props.theme.new_default.BLUE : props.theme.new_default.BLACK};

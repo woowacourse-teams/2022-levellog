@@ -8,6 +8,3 @@ export interface PreQuestionType {
 export interface PreQuestionInfoType extends PreQuestionType {
   author: UserType;
 }
-export interface PreQuestionParticipantType {
-  participant: ParticipantType;
-}

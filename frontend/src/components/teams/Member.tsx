@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from 'react';
 
 import styled from 'styled-components';
+import { UserType } from 'types';
 
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import Image from 'components/@commons/Image';
-import { MemberType } from 'types/member';
 
 const Member = ({ member, addEvent }: MemberProps) => {
   const { id, nickname, profileUrl } = member;
@@ -23,8 +23,8 @@ const Member = ({ member, addEvent }: MemberProps) => {
 };
 
 interface MemberProps {
-  member: MemberType;
-  addEvent: ({ id, nickname, profileUrl }: MemberType) => void;
+  member: UserType;
+  addEvent: ({ id, nickname, profileUrl }: UserType) => void;
 }
 
 const S = {

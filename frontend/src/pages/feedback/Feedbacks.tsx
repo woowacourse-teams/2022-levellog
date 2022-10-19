@@ -19,7 +19,7 @@ import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import Image from 'components/@commons/Image';
 import Feedback from 'components/feedbacks/Feedback';
-import { FeedbackType } from 'types/feedback';
+import { FeedbackInfoType } from 'types/feedback';
 import { feedbackAddUriBuilder, teamGetUriBuilder } from 'utils/uri';
 
 const Feedbacks = () => {
@@ -79,7 +79,7 @@ const Feedbacks = () => {
         </>
       </ContentHeader>
       <S.Container>
-        {feedbacks?.feedbacks.map((feedbackInfo: FeedbackType) => (
+        {feedbacks?.feedbacks.map((feedbackInfo: FeedbackInfoType) => (
           <Feedback
             key={feedbackInfo.id}
             loginUserId={loginUserId}

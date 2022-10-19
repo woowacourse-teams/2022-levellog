@@ -9,7 +9,7 @@ import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
-import { FeedbackType } from 'types/feedback';
+import { FeedbackInfoType } from 'types/feedback';
 import { feedbackEditUriBuilder } from 'utils/uri';
 
 const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
@@ -70,7 +70,7 @@ interface FeedbackProps {
   loginUserId: string;
   teamId: string | undefined;
   levellogId: string | undefined;
-  feedbackInfo: FeedbackType;
+  feedbackInfo: FeedbackInfoType;
   teamStatus: string;
 }
 

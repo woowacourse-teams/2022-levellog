@@ -4,14 +4,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
-import { FeedbackCustomHookType } from './types';
-
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
-import { requestEditFeedback, requestGetFeedback } from 'apis/feedback';
-import { FeedbackFormatType } from 'types/feedback';
+import { FeedbackEditRequestType, requestEditFeedback, requestGetFeedback } from 'apis/feedback';
+import { FeedbackType } from 'types/feedback';
 import { feedbacksGetUriBuilder } from 'utils/uri';
 
 const QUERY_KEY = {
@@ -48,12 +46,8 @@ const useFeedbackEdit = () => {
   );
 
   const editFeedback = useMutation(
-    ({
-      levellogId,
-      feedbackId,
-      feedbackResult,
-    }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId' | 'feedbackResult'>) => {
-      return requestEditFeedback({ accessToken, levellogId, feedbackId, feedbackResult });
+    ({ levellogId, feedbackId, feedback }: Omit<FeedbackEditRequestType, 'accessToken'>) => {
+      return requestEditFeedback({ accessToken, levellogId, feedbackId, feedback });
     },
     {
       onSuccess: () => {
@@ -70,7 +64,7 @@ const useFeedbackEdit = () => {
 
   const handleClickFeedbackEditButton = () => {
     const [study, speak, etc] = feedbackRef.current;
-    const feedbackResult: FeedbackFormatType = {
+    const feedback: FeedbackType = {
       feedback: {
         study: study.getInstance().getEditorElements().mdEditor.innerText,
         speak: speak.getInstance().getEditorElements().mdEditor.innerText,
@@ -81,7 +75,7 @@ const useFeedbackEdit = () => {
     editFeedback.mutate({
       levellogId,
       feedbackId,
-      feedbackResult,
+      feedback,
     });
   };
 

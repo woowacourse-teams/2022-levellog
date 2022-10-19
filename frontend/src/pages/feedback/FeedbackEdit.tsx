@@ -10,7 +10,7 @@ import FlexBox from 'components/@commons/FlexBox';
 import ToolTip from 'components/@commons/ToolTip';
 import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
-import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
+import Question from 'components/question/Question';
 
 const FeedbackEdit = () => {
   const { feedbackRef, handleClickFeedbackEditButton } = useFeedbackEdit();
@@ -49,7 +49,7 @@ const FeedbackEdit = () => {
                   }
                 />
               </FlexBox>
-              <InterviewQuestion />
+              <Question />
             </S.QuestionContent>
             <S.FeedbackContent>
               <FeedbackFormat feedbackRef={feedbackRef} />

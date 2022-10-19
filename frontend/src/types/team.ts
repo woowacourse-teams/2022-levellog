@@ -1,16 +1,4 @@
-import { MemberType } from 'types/member';
-
-export interface TeamSubmitType {
-  watchers: MemberType[];
-  participants: MemberType[];
-}
-
-// 도대체 어디서 씀?
-// export interface Team {
-//   title: string;
-//   place: string;
-//   startAt: string;
-// }
+import { ParticipantType } from 'types';
 
 export interface InterviewTeamType {
   id: string;
@@ -24,20 +12,12 @@ export interface InterviewTeamType {
 
 export interface InterviewTeamDetailType extends InterviewTeamType {
   hostId: string;
-  isParticipant: Boolean;
+  isParticipant: boolean;
   interviewerNumber: number;
   interviewers: Array<number | null>;
   interviewees: Array<number | null>;
   watchers: ParticipantType[];
   participants: ParticipantType[];
-}
-
-export interface ParticipantType {
-  memberId: string;
-  levellogId: string;
-  preQuestionId: string;
-  nickname: string;
-  profileUrl: string;
 }
 
 export interface TeamConditionsType {

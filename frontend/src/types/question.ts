@@ -1,22 +1,20 @@
-export interface QuestionType {
+import { UserType } from 'types';
+
+export interface QuestionInfoType {
   id: string;
   content: string;
 }
 
-export interface QuestionsInLevellogType {
-  author: {
-    id: string;
-    nickname: string;
-    profileUrl: string;
-  };
-  contents: QuestionType[];
+export interface QuestionsInLevellogInfoType {
+  author: UserType;
+  contents: QuestionInfoType[];
 }
 
 export interface QuestionSearchKeywordType {
   keyword: string | null;
 }
 
-export interface SearchedQuestionType extends QuestionType {
+export interface SearchedQuestionInfoType extends QuestionInfoType {
   like: boolean;
   likeCount: number;
 }

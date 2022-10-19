@@ -1,15 +1,12 @@
-import { ParticipantType } from 'types/team';
+import { UserType } from 'types/index';
+import { ParticipantType } from 'types/index';
 
 export interface PreQuestionType {
   content: string;
 }
 
 export interface PreQuestionInfoType extends PreQuestionType {
-  author: {
-    id: string;
-    nickname: string;
-    profileUrl: string;
-  };
+  author: UserType;
 }
 export interface PreQuestionParticipantType {
   participant: ParticipantType;

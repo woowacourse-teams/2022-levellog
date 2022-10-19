@@ -1,3 +1,5 @@
+import { UserType } from 'types/index';
+
 export interface FeedbackType {
   feedback: {
     study: string;
@@ -9,9 +11,5 @@ export interface FeedbackType {
 export interface FeedbackInfoType extends FeedbackType {
   id: number;
   updatedAt: string;
-  from: {
-    id: string;
-    nickname: string;
-    profileUrl: string;
-  };
+  from: UserType;
 }

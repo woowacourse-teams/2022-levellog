@@ -1,8 +1,6 @@
 import { useState, createContext, Dispatch, SetStateAction } from 'react';
 
-import { UserInfoType } from 'types';
-
-type UserDispatchType = Dispatch<SetStateAction<UserInfoType>>;
+import { UserType } from 'types';
 
 const userInfo = {
   id: '',
@@ -10,11 +8,11 @@ const userInfo = {
   profileUrl: '',
 };
 
-export const UserContext = createContext<UserInfoType>(userInfo);
+export const UserContext = createContext<UserType>(userInfo);
 export const UserDispatchContext = createContext<UserDispatchType>(() => {});
 
 export const UserProvider = ({ children }: { children: JSX.Element }) => {
-  const [userState, setUserState] = useState<UserInfoType>(userInfo);
+  const [userState, setUserState] = useState<UserType>(userInfo);
 
   return (
     <UserContext.Provider value={userState}>
@@ -22,3 +20,5 @@ export const UserProvider = ({ children }: { children: JSX.Element }) => {
     </UserContext.Provider>
   );
 };
+
+type UserDispatchType = Dispatch<SetStateAction<UserType>>;

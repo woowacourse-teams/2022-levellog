@@ -4,7 +4,7 @@ import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
 
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 
-const LevellogReport = () => {
+const LevellogContent = () => {
   const { levellogInfo } = useLevellogQuery();
 
   return (
@@ -29,4 +29,4 @@ const S = {
   `,
 };
 
-export default LevellogReport;
+export default LevellogContent;

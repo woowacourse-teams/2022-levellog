@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import useSnackbar from 'hooks/utils/useSnackbar';
 
@@ -9,7 +9,7 @@ import { MESSAGE, REQUIRE_AUTH } from 'constants/constants';
 
 import { requestGetTeam } from 'apis/teams';
 
-const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
+const useAuth = ({ requireAuth }: useAuthProps) => {
   const { showSnackbar } = useSnackbar();
   const [isLoad, setIsLoad] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -106,7 +106,7 @@ const useAuth = ({ requireAuth }: AuthCustomHookProps) => {
   return { isLoad, isError };
 };
 
-interface AuthCustomHookProps {
+interface useAuthProps {
   requireAuth: string;
 }
 

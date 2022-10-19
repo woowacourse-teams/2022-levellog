@@ -7,7 +7,7 @@ import QuestionImage from 'assets/images/interviewQuestion.webp';
 const EmptyQuestion = ({ isShow, path }: EmptyQuestionProps) => {
   return (
     <Exception>
-      <Exception.Image>{QuestionImage}</Exception.Image>
+      <Exception.Image sizes={'EXCEPTION'}>{QuestionImage}</Exception.Image>
       <Exception.Title>작성된 인터뷰 질문이 없습니다.</Exception.Title>
       {isShow && (
         <Link to={path}>

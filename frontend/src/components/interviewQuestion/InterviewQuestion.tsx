@@ -7,8 +7,8 @@ import useInterviewQuestion from 'hooks/interviewQuestion/useInterviewQuestion';
 import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
 
-import Input from 'components/@commons/Input';
 import Button from 'components/@commons/button/Button';
+import Input from 'components/@commons/input/Input';
 import InterviewQuestionContent from 'components/interviewQuestion/InterviewQuestionContent';
 
 const InterviewQuestion = () => {

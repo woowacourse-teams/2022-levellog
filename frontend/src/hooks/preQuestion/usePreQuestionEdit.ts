@@ -1,17 +1,15 @@
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
-
-import { PreQuestionCustomHookType } from 'hooks/preQuestion/types/index';
 
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
 import usePreQuestionQuery from './usePreQuestionQuery';
-import { requestEditPreQuestion } from 'apis/preQuestion';
+import { PreQuestionEditRequestType, requestEditPreQuestion } from 'apis/preQuestion';
 import { teamGetUriBuilder } from 'utils/uri';
 
 const usePreQuestionEdit = () => {
@@ -36,7 +34,7 @@ const usePreQuestionEdit = () => {
       levellogId,
       preQuestionId,
       preQuestionContent,
-    }: Omit<PreQuestionCustomHookType, 'teamId' | 'preQuestion'>) => {
+    }: Omit<PreQuestionEditRequestType, 'accessToken'>) => {
       return requestEditPreQuestion({
         accessToken,
         levellogId,

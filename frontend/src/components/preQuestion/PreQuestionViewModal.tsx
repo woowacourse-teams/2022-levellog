@@ -2,17 +2,16 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import { PreQuestionCustomHookType } from 'hooks/preQuestion/types/index';
-
 import closeIcon from 'assets/images/close.svg';
 
+import { PreQuestionDeleteRequestType } from 'apis/preQuestion';
 import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import ModalPortal from 'portal/ModalPortal';
-import { PreQuestionFormatType } from 'types/preQuestion';
-import { ParticipantType } from 'types/team';
+import { ParticipantType } from 'types/index';
+import { PreQuestionInfoType } from 'types/preQuestion';
 import { preQuestionEditUriBuilder } from 'utils/uri';
 
 const PreQuestionViewModal = ({
@@ -27,7 +26,7 @@ const PreQuestionViewModal = ({
 
   const handleClickDeleteLevellog = async () => {
     if (levellogId && preQuestionId) {
-      await onClickDeletePreQuestion({ levellogId, preQuestionId });
+      // await onClickDeletePreQuestion({ levellogId, preQuestionId });
       getTeam();
     }
   };
@@ -68,13 +67,13 @@ const PreQuestionViewModal = ({
 
 interface PreQuestionViewModalProps {
   teamId: string | undefined;
-  preQuestion: PreQuestionFormatType | undefined;
+  preQuestion: PreQuestionInfoType | undefined;
   participant: ParticipantType;
   getTeam: () => void;
   onClickDeletePreQuestion: ({
     levellogId,
     preQuestionId,
-  }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => Promise<void>;
+  }: Omit<PreQuestionDeleteRequestType, 'accessTokens'>) => Promise<void>;
   handleClickClosePreQuestionModal: (e: React.MouseEvent<HTMLElement>) => void;
 }
 

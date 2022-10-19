@@ -29,7 +29,7 @@
 ### 💅 Frontend
 
 <p align="center">
-    <img alter="frontend-teck-stack" src="https://user-images.githubusercontent.com/68512686/196430635-934e927b-cb00-42ce-a4fc-1abcff33b658.png" width="600"/>
+    <img alter="frontend-teck-stack" src="https://user-images.githubusercontent.com/68512686/196576181-7b0016ec-2d77-4181-863e-89f300be87be.png" width="600"/>
 </p>
 <br/>
 

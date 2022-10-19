@@ -113,7 +113,7 @@ public class TeamQueryRepository {
                 + "FROM participant p "
                 + "INNER JOIN member m ON p.member_id = m.id "
                 + "INNER JOIN team t ON p.team_id = t.id "
-                + "WHERE t.id IN ( "
+                + "WHERE p.is_watcher = FALSE AND t.id IN ( "
                 + "SELECT "
                 + "t.id FROM participant p "
                 + "INNER JOIN member m ON p.member_id = m.id "

@@ -1,13 +1,13 @@
 import { Exception } from 'pages/status';
 
-import levellogLogoLeft from 'assets/images/levellogLogoLeft.webp';
+import levellogLogoCenter from 'assets/images/levellogLogoCenter.webp';
 
 import FlexBox from 'components/@commons/FlexBox';
 
 const NotFound = () => {
   return (
     <Exception>
-      <Exception.Image borderRadius={false}>{levellogLogoLeft}</Exception.Image>
+      <Exception.Image borderRadius={false}>{levellogLogoCenter}</Exception.Image>
       <FlexBox flexFlow={'column'} alignItems={'center'} gap={0.5}>
         <Exception.Title>원하시는 페이지를 찾을 수 없습니다.</Exception.Title>
         <Exception.Text>요청하신 페이지가 사라졌거나, 잘못된 주소로 접근하였습니다.</Exception.Text>

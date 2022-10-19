@@ -8,7 +8,6 @@ import defaultProfile from 'assets/images/defaultProfile.webp';
 import levellogLogo from 'assets/images/levellogLogo.webp';
 import { ROUTES_PATH } from 'constants/constants';
 
-import { LogoStyle } from 'components/@commons/Style';
 import Profile from 'components/header/Profile';
 import ProfileDropdown from 'components/header/ProfileDropdown';
 
@@ -26,7 +25,7 @@ const Header = () => {
     <>
       <S.Container>
         <Link to={ROUTES_PATH.HOME} aria-label={'메인 페이지로 이동'}>
-          <LogoStyle src={levellogLogo} alt={'레벨로그 로고'} />
+          <S.Logo src={levellogLogo} sizes={'MEDIUM'} alt={'레벨로그 로고'} />
         </Link>
         <Profile
           loginUserProfileUrl={loginUserProfileUrl ? loginUserProfileUrl : defaultProfile}
@@ -59,6 +58,10 @@ const S = {
     @media (max-width: 1620px) {
       margin: 0 1.25rem;
     }
+  `,
+
+  Logo: styled.img`
+    height: 34px;
   `,
 
   ProfileImage: styled.img`

@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 
 import { Exception } from 'pages/status';
 
-import feedbackImage from 'assets/images/feedback.webp';
+import emptyImage from 'assets/images/empty.webp';
 
 const EmptyFeedback = ({ isShow, path }: EmptyFeedbackProps) => {
   return (
     <Exception>
-      <Exception.Image sizes={'EXTRA_HUGE'}>{feedbackImage}</Exception.Image>
+      <Exception.Image sizes={'EXCEPTION'}>{emptyImage}</Exception.Image>
       <Exception.Title>작성된 피드백이 없습니다.</Exception.Title>
       {isShow && (
         <Link to={path}>

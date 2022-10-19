@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ImageSizeType } from 'types';
 
 import Button from 'components/@commons/button/Button';
 import Image from 'components/@commons/image/Image';
@@ -15,8 +16,8 @@ const ExceptionErrorText = ({ children }: ExceptionTextProps) => {
   return <S.Text>{children}</S.Text>;
 };
 
-const ExceptionImage = ({ borderRadius = false, children }: ExceptionImage) => {
-  return <Image src={children} sizes={'EXTRA_HUGE'} borderRadius={borderRadius} />;
+const ExceptionImage = ({ sizes, borderRadius = false, children }: ExceptionImage) => {
+  return <Image src={children} sizes={sizes} borderRadius={borderRadius} />;
 };
 
 const ExceptionButton = ({ children }: ExceptionButtonProps) => {
@@ -40,6 +41,7 @@ interface ExceptionTextProps {
 }
 
 interface ExceptionImage {
+  sizes: ImageSizeType;
   borderRadius?: boolean;
   children: string;
 }

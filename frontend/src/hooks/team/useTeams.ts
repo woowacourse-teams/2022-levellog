@@ -8,7 +8,7 @@ import { TEAMS_CONDITION } from 'constants/constants';
 
 import { requestGetMyTeams } from 'apis/myInfo';
 import { requestGetTeams } from 'apis/teams';
-import { NotCorrectToken } from 'apis/utils';
+import { WrongAccessToken } from 'apis/utils';
 import { TeamConditionsType } from 'types/team';
 
 const useTeams = (teamsCondition: TeamConditionsType) => {
@@ -31,7 +31,7 @@ const useTeams = (teamsCondition: TeamConditionsType) => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
+        if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }

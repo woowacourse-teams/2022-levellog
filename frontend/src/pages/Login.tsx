@@ -9,8 +9,8 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 import { ROUTES_PATH } from 'constants/constants';
 
 import Loading from './status/Loading';
-import { requestGetUserAuthority, requestGetUserLogin } from 'apis/login';
-import { NotCorrectToken } from 'apis/utils';
+import { requestGetUserAuthority, requestPostUserLogin } from 'apis/login';
+import { WrongAccessToken } from 'apis/utils';
 
 const Login = () => {
   const { loginUserId } = useUser();
@@ -27,8 +27,9 @@ const Login = () => {
       if (accessToken && loginUserId) {
         window.location.replace('/');
       }
+
       if (code) {
-        const res = await requestGetUserLogin({ code });
+        const res = await requestPostUserLogin({ code });
         const resLogin = await requestGetUserAuthority({ accessToken: res.data.accessToken });
 
         localStorage.setItem('accessToken', res.data.accessToken);
@@ -39,11 +40,12 @@ const Login = () => {
           profileUrl: resLogin.data.profileUrl,
         });
       }
+
       navigate(ROUTES_PATH.HOME, { replace: true });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
+        if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }

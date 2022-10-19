@@ -9,7 +9,7 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { requestCloseTeamInterview, requestDeleteTeam, requestGetTeam } from 'apis/teams';
-import { NotCorrectToken } from 'apis/utils';
+import { WrongAccessToken } from 'apis/utils';
 
 const QUERY_KEY = {
   TEAM: 'team',
@@ -41,7 +41,7 @@ const useTeamDetail = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
+          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }

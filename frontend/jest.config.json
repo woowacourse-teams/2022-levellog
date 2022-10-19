@@ -1,0 +1,5 @@
+{
+  "preset": "ts-jest",
+  "moduleFileExtensions": ["js", "ts"],
+  "testEnvironment": "jsdom"
+}

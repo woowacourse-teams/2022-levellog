@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 
 const FilterButton = ({ children, isActive, ...props }: FilterButtonProps) => {
   return (

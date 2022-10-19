@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
-
 import styled from 'styled-components';
 
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';

@@ -2,10 +2,10 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
 import Input from 'components/@commons/Input';
 import SubTitleLabel from 'components/@commons/Label';
+import Button from 'components/@commons/button/Button';
 
 const LevellogForm = ({
   handleSubmitLevellogForm,

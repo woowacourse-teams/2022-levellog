@@ -6,7 +6,7 @@ import EmptySearchResult from 'pages/status/EmptySearchResult';
 
 import { INTERVIEW_QUESTION_FILTER } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 import InterviewQuestionSearchResult from 'components/interviewQuestion/InterviewQuestionSearchResult';
 
 const InterviewQuestionSearchResults = () => {

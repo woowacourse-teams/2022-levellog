@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
+import Button from 'components/@commons/button/Button';
 
 const ExceptionContainer = ({ children }: ExceptionContainerProps) => {
   return <S.Container>{children}</S.Container>;

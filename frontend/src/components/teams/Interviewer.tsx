@@ -10,10 +10,10 @@ import levellogIcon from 'assets/images/levellogIcon.svg';
 import preQuestionIcon from 'assets/images/preQuestionIcon.svg';
 import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
 import CustomLink from 'components/@commons/CustomLink';
 import Image from 'components/@commons/Image';
 import Role from 'components/@commons/Role';
+import Button from 'components/@commons/button/Button';
 import VisibleButtonList from 'components/VisibleButtonList';
 import { LevellogParticipantType } from 'types/levellog';
 import { PreQuestionParticipantType } from 'types/preQuestion';

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 
 const BottomBar = ({ buttonText, handleClickRightButton }: BottomBarProps) => {
   return (

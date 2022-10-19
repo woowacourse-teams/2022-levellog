@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
+import Button from 'components/@commons/button/Button';
 import { MemberType } from 'types/member';
 
 const AddMember = ({ addMember, removeEvent }: ParticipantProps) => {

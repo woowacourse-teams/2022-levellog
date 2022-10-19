@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import closeIcon from 'assets/images/close.svg';
 
 import FlexBox from 'components/@commons/FlexBox';
+import Image from 'components/@commons/Image';
 import Button from 'components/@commons/button/Button';
-import Image from 'components/@commons/image/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import ModalPortal from 'portal/ModalPortal';
 import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';

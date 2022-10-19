@@ -9,7 +9,7 @@ import Interviewee from 'assets/images/interviewee.webp';
 import Interviewer from 'assets/images/interviewer.webp';
 import SearchFail from 'assets/images/searchFail.webp';
 
-import Image from 'components/@commons/image/Image';
+import Image from 'components/@commons/Image';
 
 const Copyright = () => {
   return (

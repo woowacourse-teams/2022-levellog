@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
-import Image from 'components/@commons/image/Image';
+import Image from 'components/@commons/Image';
 
 const ContentHeader = ({ imageUrl, title, subTitle, children }: ContentHeaderProps) => {
   const childrenArray = children ? React.Children.toArray(children) : null;

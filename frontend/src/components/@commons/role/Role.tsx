@@ -4,7 +4,7 @@ import interviewboth from 'assets/images/interviewboth.webp';
 import intervieweeImage from 'assets/images/interviewee.webp';
 import InterviewerImage from 'assets/images/interviewer.webp';
 
-import Image from 'components/@commons/image/Image';
+import Image from 'components/@commons/Image';
 
 const Role = ({ role }: RoleProp) => {
   return (

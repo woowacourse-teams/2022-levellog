@@ -12,9 +12,9 @@ import { ROUTES_PATH } from 'constants/constants';
 
 import Teams from '../../components/teams/Teams';
 import TeamFilterButtons from './TeamFilterButtons';
+import Image from 'components/@commons/Image';
 import Button from 'components/@commons/button/Button';
 import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
-import Image from 'components/@commons/image/Image';
 
 const InterviewTeams = () => {
   const {

@@ -16,7 +16,7 @@ const TeamFormInput = ({
 }: TeamFormInputProps) => {
   const [isCorrectValue, setIsCorrectValue] = useState(true);
 
-  const handleOnBlurInput = (e: FocusEvent) => {
+  const handleOnBlurInput = (e: React.FocusEvent) => {
     const input = e.target as HTMLInputElement;
     if (validate) {
       setIsCorrectValue(validate({ value: input.value }));

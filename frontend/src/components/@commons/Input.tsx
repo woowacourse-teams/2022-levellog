@@ -4,11 +4,8 @@ const Input = ({ width = '18.75rem', height = '2.5rem', inputRef, ...props }: In
   return <InputStyle width={width} height={height} ref={inputRef} {...props} />;
 };
 
-interface InputProps {
-  width?: string;
-  height?: string;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputRef?: React.Ref<HTMLInputElement>;
-  [props: string]: any;
 }
 
 export const InputStyle = styled.input`

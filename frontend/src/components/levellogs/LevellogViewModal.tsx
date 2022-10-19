@@ -12,7 +12,8 @@ import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import ModalPortal from 'portal/ModalPortal';
-import { ParticipantType, TeamStatusType } from 'types/team';
+import { ParticipantType } from 'types/index';
+import { TeamStatusType } from 'types/team';
 import {
   levellogEditUriBuilder,
   preQuestionEditUriBuilder,

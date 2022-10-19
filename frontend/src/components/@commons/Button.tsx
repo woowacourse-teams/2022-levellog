@@ -15,13 +15,8 @@ const Button = ({
   );
 };
 
-interface ButtonProps {
-  children: string;
-  type?: string;
-  disabled?: boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?: string;
-  [props: string]: any;
 }
 
 export const ButtonStyle = styled.button`

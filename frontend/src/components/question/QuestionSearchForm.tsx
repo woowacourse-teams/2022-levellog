@@ -28,8 +28,7 @@ const QuestionSearchForm = () => {
           onChange={handleChangeSearchInput}
         />
         {searchText && (
-          // 임시로 handleSubmit 달아놓음
-          <S.Button onClick={handleSubmitQuestion}>
+          <S.Button>
             <Image src={deleteIcon} alt={'인터뷰 질문 검색 텍스트 삭제'} sizes={'TINY'} />
           </S.Button>
         )}

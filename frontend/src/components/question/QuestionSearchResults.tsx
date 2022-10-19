@@ -6,7 +6,7 @@ import EmptySearchResult from 'pages/status/EmptySearchResult';
 
 import { INTERVIEW_QUESTION_FILTER } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
+import FilterButton from 'components/@commons/FilterButton';
 import QuestionSearchResult from 'components/question/QuestionSearchResult';
 
 const QuestionSearchResults = () => {
@@ -88,7 +88,7 @@ const S = {
     height: 3.625rem;
   `,
 
-  RangeButton: styled(Button)`
+  RangeButton: styled(FilterButton)<{ isActive: boolean }>`
     padding: 0;
     background-color: ${(props) => props.theme.new_default.WHITE};
     color: ${(props) =>

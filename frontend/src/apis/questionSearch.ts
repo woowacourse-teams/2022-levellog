@@ -50,7 +50,7 @@ interface QuestionSearchResponseType {
   page: number;
 }
 
-interface QuestionLikeRequestType {
+export interface QuestionLikeRequestType {
   accessToken: string | null;
   QuestionId: string;
 }

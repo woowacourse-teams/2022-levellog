@@ -1,6 +1,6 @@
-import ContentHeader from './ContentHeader';
-import Button from './button/Button';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
+import Button from 'components/@commons/button/Button';
+import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
 
 export default {
   title: 'ContentHeader',

@@ -18,7 +18,7 @@ const Role = ({ role }: RoleProp) => {
 };
 
 interface RoleProp {
-  role: string;
+  role: '인터뷰어' | '인터뷰이' | '상호 인터뷰';
 }
 
 const RoleStyle = styled.div`

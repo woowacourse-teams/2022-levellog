@@ -11,9 +11,9 @@ import preQuestionIcon from 'assets/images/preQuestionIcon.svg';
 import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
 import CustomLink from 'components/@commons/CustomLink';
-import Role from 'components/@commons/Role';
 import Button from 'components/@commons/button/Button';
 import Image from 'components/@commons/image/Image';
+import Role from 'components/@commons/role/Role';
 import VisibleButtonList from 'components/VisibleButtonList';
 import { LevellogParticipantType } from 'types/levellog';
 import { PreQuestionParticipantType } from 'types/preQuestion';

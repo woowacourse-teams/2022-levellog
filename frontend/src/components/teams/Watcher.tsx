@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
-import Image from 'components/@commons/image/Image';
+import Image from 'components/@commons/images/Image';
 import { WatcherType } from 'types/team';
 
 const Watcher = ({ watcher }: WatcherProps) => {

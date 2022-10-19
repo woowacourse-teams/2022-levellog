@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import Button from 'components/@commons/button/Button';
-import Image from 'components/@commons/image/Image';
+import Image from 'components/@commons/images/Image';
 import { MemberType } from 'types/member';
 
 const AddMember = ({ addMember, removeEvent }: ParticipantProps) => {

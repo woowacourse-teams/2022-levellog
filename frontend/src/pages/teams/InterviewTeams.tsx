@@ -14,7 +14,7 @@ import Teams from '../../components/teams/Teams';
 import TeamFilterButtons from './TeamFilterButtons';
 import Button from 'components/@commons/button/Button';
 import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
-import Image from 'components/@commons/image/Image';
+import Image from 'components/@commons/images/Image';
 
 const InterviewTeams = () => {
   const {

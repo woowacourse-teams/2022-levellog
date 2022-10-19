@@ -12,7 +12,7 @@ import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
 import CustomLink from 'components/@commons/CustomLink';
 import Button from 'components/@commons/button/Button';
-import Image from 'components/@commons/image/Image';
+import Image from 'components/@commons/images/Image';
 import Role from 'components/@commons/role/Role';
 import VisibleButtonList from 'components/VisibleButtonList';
 import { LevellogParticipantType } from 'types/levellog';

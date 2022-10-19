@@ -7,7 +7,7 @@ import FlexBox from 'components/@commons/FlexBox';
 const EmptySearchResult = () => {
   return (
     <Exception>
-      <Exception.Image>{searchFailImage}</Exception.Image>
+      <Exception.Image sizes={'EXTRA_HUGE'}>{searchFailImage}</Exception.Image>
       <Exception.Title>일치하는 검색결과가 없습니다.</Exception.Title>
       <FlexBox flexFlow={'column'} alignContent={'center'} gap={0.5}>
         <Exception.Text>모든 단어의 철자가 정확한지 확인하세요.</Exception.Text>

@@ -7,7 +7,7 @@ import feedbackImage from 'assets/images/feedback.webp';
 const EmptyFeedback = ({ isShow, path }: EmptyFeedbackProps) => {
   return (
     <Exception>
-      <Exception.Image>{feedbackImage}</Exception.Image>
+      <Exception.Image sizes={'EXTRA_HUGE'}>{feedbackImage}</Exception.Image>
       <Exception.Title>작성된 피드백이 없습니다.</Exception.Title>
       {isShow && (
         <Link to={path}>

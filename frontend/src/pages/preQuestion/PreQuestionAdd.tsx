@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import usePreQuestionAdd from 'hooks/preQuestion/usePreQuestionAdd';
 
-import BottomBar from 'components/@commons/BottomBar';
+import BottomBar from 'components/@commons/bottomBar/BottomBar';
 import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 import LevellogReport from 'components/levellogs/LevellogReport';
 
@@ -23,10 +23,7 @@ const PreQuestionAdd = () => {
           />
         </S.RightContent>
       </S.Content>
-      <BottomBar
-        buttonText={'작성하기'}
-        handleClickRightButton={handleClickPreQuestionAddButton}
-      ></BottomBar>
+      <BottomBar buttonText={'작성하기'} handleClickRightButton={handleClickPreQuestionAddButton} />
     </S.Container>
   );
 };

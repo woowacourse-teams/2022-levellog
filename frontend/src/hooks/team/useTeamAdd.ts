@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
 
-import { TeamCustomHookType } from 'hooks/team/types/index';
-
 import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
@@ -12,6 +10,7 @@ import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { requestPostTeam } from 'apis/teams';
 import { MemberContext } from 'contexts/memberContext';
+import { TeamRequestType } from 'types/team';
 import {
   interviewDateValidate,
   interviewInterviewerValidate,
@@ -30,7 +29,7 @@ const useTeamAdd = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const { mutate: postTeam } = useMutation(
-    ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
+    ({ teamInfo }: Record<'teamInfo', TeamRequestType>) => {
       return requestPostTeam({
         teamInfo,
         accessToken,

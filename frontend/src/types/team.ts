@@ -20,6 +20,15 @@ export interface InterviewTeamDetailType extends InterviewTeamType {
   participants: ParticipantType[];
 }
 
+export interface TeamRequestType {
+  title: string;
+  place: string;
+  startAt: string;
+  interviewerNumber: number;
+  watcherIds: string[];
+  participantIds: string[];
+}
+
 export interface TeamConditionsType {
   open: boolean;
   close: boolean;

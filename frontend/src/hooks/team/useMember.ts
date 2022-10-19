@@ -5,8 +5,6 @@ import { UserType } from 'types';
 
 import { useMutation } from '@tanstack/react-query';
 
-import { MembersCustomHookType } from 'hooks/team/types';
-
 import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
@@ -82,8 +80,8 @@ const useMember = () => {
   );
 
   const { mutate: getMembersForWatchers } = useMutation(
-    ({ nicknameValue = '' }: MembersCustomHookType) => {
-      return requestGetMembers({ accessToken, nickname: nicknameValue });
+    ({ nickname }: Pick<UserType, 'nickname'>) => {
+      return requestGetMembers({ accessToken, nickname });
     },
     {
       onSuccess: (res) => {
@@ -96,8 +94,8 @@ const useMember = () => {
   );
 
   const { mutate: getMembersForParticipants } = useMutation(
-    ({ nicknameValue = '' }: MembersCustomHookType) => {
-      return requestGetMembers({ accessToken, nickname: nicknameValue });
+    ({ nickname }: Pick<UserType, 'nickname'>) => {
+      return requestGetMembers({ accessToken, nickname });
     },
     {
       onSuccess: (res) => {

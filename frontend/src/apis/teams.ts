@@ -1,9 +1,12 @@
 import { fetcher } from 'apis';
 
-import { TeamCustomHookType } from 'hooks/team/types';
-
 import { AuthorizationHeader } from 'apis/index';
-import { InterviewTeamType, InterviewTeamDetailType, TeamsConditionType } from 'types/team';
+import {
+  InterviewTeamType,
+  InterviewTeamDetailType,
+  TeamsConditionType,
+  TeamRequestType,
+} from 'types/team';
 
 export const requestPostTeam = async ({ teamInfo, accessToken }: TeamPostRequestType) => {
   const TEAM_POST_URI = '/teams';
@@ -60,7 +63,7 @@ interface TeamRequestCommonType {
 }
 
 interface TeamPostRequestType {
-  teamInfo: TeamCustomHookType;
+  teamInfo: TeamRequestType;
   accessToken: string | null;
 }
 
@@ -70,5 +73,5 @@ interface TeamsGetRequestType {
 }
 
 interface TeamEditRequestType extends TeamRequestCommonType {
-  teamInfo: TeamCustomHookType;
+  teamInfo: TeamRequestType;
 }

@@ -10,9 +10,9 @@ import usePreventGoBack from 'hooks/utils/usePreventGoBack';
 import Loading from 'pages/status/Loading';
 
 import FlexBox from 'components/@commons/FlexBox';
-import ToolTip from 'components/@commons/ToolTip';
 import BottomBar from 'components/@commons/bottomBar/BottomBar';
 import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
+import ToolTip from 'components/@commons/toolTip/ToolTip';
 import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';

@@ -5,9 +5,9 @@ import useRole from 'hooks/useRole';
 import useContentTag from 'hooks/utils/useContentTag';
 
 import FlexBox from 'components/@commons/FlexBox';
-import ToolTip from 'components/@commons/ToolTip';
 import BottomBar from 'components/@commons/bottomBar/BottomBar';
 import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
+import ToolTip from 'components/@commons/toolTip/ToolTip';
 import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
 import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';

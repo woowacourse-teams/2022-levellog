@@ -1,12 +1,12 @@
 import { fetcher } from 'apis';
 
 import { AuthorizationHeader } from 'apis/index';
-import { PreQuestionType } from 'types/preQuestion';
+import { PreQuestionInfoType } from 'types/preQuestion';
 
 export const requestGetPreQuestion = async ({
   accessToken,
   levellogId,
-}: PreQuestionRequestCommonType): Promise<PreQuestionType> => {
+}: PreQuestionRequestCommonType): Promise<PreQuestionInfoType> => {
   const preQuestionGetUri = `/levellogs/${levellogId}/pre-questions/my`;
 
   const { data } = await fetcher.get(preQuestionGetUri, AuthorizationHeader(accessToken));

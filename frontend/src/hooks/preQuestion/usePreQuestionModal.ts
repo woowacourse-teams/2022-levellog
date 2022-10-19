@@ -13,7 +13,6 @@ import {
   requestGetPreQuestion,
 } from 'apis/preQuestion';
 import { ParticipantType } from 'types/index';
-import { PreQuestionParticipantType } from 'types/preQuestion';
 
 const usePreQuestionModal = () => {
   const { isModalOpen, onClickOpenModal, onClickCloseModal } = useModal();
@@ -33,7 +32,7 @@ const usePreQuestionModal = () => {
     });
   });
 
-  const onClickOpenPreQuestionModal = ({ participant }: PreQuestionParticipantType) => {
+  const onClickOpenPreQuestionModal = ({ participant }: Record<'participant', ParticipantType>) => {
     onClickOpenModal();
     setPreQuestionParticipant(participant);
     getPreQuestion({ levellogId: participant.levellogId });

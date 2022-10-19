@@ -18,7 +18,7 @@ import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
 import Watcher from 'components/teams/Watcher';
-import { ParticipantType, WatcherType } from 'types/team';
+import { ParticipantType } from 'types/index';
 import { teamEditUriBuilder } from 'utils/uri';
 import { convertDateAndTime } from 'utils/util';
 
@@ -110,11 +110,12 @@ const InterviewDetail = () => {
               <S.Title>참관자</S.Title>
               <S.WatcherContent>
                 {team?.watchers.map(
-                  (watcher: Pick<WatcherType, 'memberId' | 'nickname' | 'profileUrl'>) => (
+                  (watcher: Pick<ParticipantType, 'memberId' | 'nickname' | 'profileUrl'>) => (
                     <Watcher key={watcher.memberId} watcher={watcher} />
                   ),
                 )}
               </S.WatcherContent>
+              ``
             </FlexBox>
           )}
           <FlexBox flexFlow={'column wrap'} gap={2}>

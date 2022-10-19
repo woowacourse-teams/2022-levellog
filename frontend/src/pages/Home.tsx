@@ -1,11 +1,11 @@
 import InterviewTeams from 'pages/teams/InterviewTeams';
 
-import InterviewQuestionSearchForm from 'components/interviewQuestion/InterviewQuestionSearchForm';
+import QuestionSearchForm from 'components/question/QuestionSearchForm';
 
 const Home = () => {
   return (
     <>
-      <InterviewQuestionSearchForm />
+      <QuestionSearchForm />
       <InterviewTeams />
     </>
   );

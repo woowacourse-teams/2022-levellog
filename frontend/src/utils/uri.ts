@@ -65,7 +65,7 @@ export const preQuestionEditUriBuilder = ({
   return `/teams/${teamId}/levellogs/${levellogId}/pre-questions/${preQuestionId}/author/${authorId}/edit`;
 };
 
-export const interviewQuestionsGetUriBuilder = ({
+export const QuestionsGetUriBuilder = ({
   teamId,
   levellogId,
 }: Pick<UriType, 'teamId' | 'levellogId'>) => {

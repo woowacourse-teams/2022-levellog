@@ -4,13 +4,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
-import { LevellogCustomHookType } from 'hooks/levellog/types';
-
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { requestEditLevellog, requestGetLevellog, requestPostLevellog } from 'apis/levellog';
+import {
+  requestEditLevellog,
+  requestGetLevellog,
+  requestPostLevellog,
+  LevellogRequestCommonType,
+  LevellogPostRequestType,
+  LevellogEditRequestType,
+} from 'apis/levellog';
 import { teamGetUriBuilder } from 'utils/uri';
 
 const QUERY_KEY = {
@@ -43,8 +48,8 @@ const useLevellog = () => {
   );
 
   const { mutate: postLevellog } = useMutation(
-    ({ teamId, inputValue }: Omit<LevellogCustomHookType, 'levellogId'>) => {
-      return requestPostLevellog({ accessToken, teamId, levellogContent: { content: inputValue } });
+    ({ teamId, levellog }: Omit<LevellogPostRequestType, 'accessToken'>) => {
+      return requestPostLevellog({ accessToken, teamId, levellog });
     },
     {
       onSuccess: () => {
@@ -55,12 +60,12 @@ const useLevellog = () => {
   );
 
   const { mutate: editLevellog } = useMutation(
-    ({ teamId, levellogId, inputValue }: LevellogCustomHookType) => {
+    ({ teamId, levellogId, levellog }: Omit<LevellogEditRequestType, 'accessToken'>) => {
       return requestEditLevellog({
         accessToken,
         teamId,
         levellogId,
-        levellogContent: { content: inputValue },
+        levellog,
       });
     },
     {
@@ -71,20 +76,25 @@ const useLevellog = () => {
     },
   );
 
-  const onClickLevellogAddButton = async ({ teamId }: Pick<LevellogCustomHookType, 'teamId'>) => {
+  const onClickLevellogAddButton = async ({
+    teamId,
+  }: Omit<LevellogRequestCommonType, 'accessToken'>) => {
     if (!levellogRef.current) return;
-    postLevellog({ teamId, inputValue: levellogRef.current.getInstance().getMarkdown() });
+    postLevellog({
+      teamId,
+      levellog: { content: levellogRef.current.getInstance().getMarkdown() },
+    });
   };
 
   const onClickLevellogEditButton = async ({
     teamId,
     levellogId,
-  }: Omit<LevellogCustomHookType, 'inputValue'>) => {
+  }: Omit<LevellogEditRequestType, 'accessToken' | 'levellog'>) => {
     if (!levellogRef.current) return;
     editLevellog({
       teamId,
       levellogId,
-      inputValue: levellogRef.current.getInstance().getMarkdown(),
+      levellog: { content: levellogRef.current.getInstance().getMarkdown() },
     });
   };
 

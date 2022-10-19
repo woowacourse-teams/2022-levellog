@@ -4,14 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
-import { LevellogCustomHookType } from 'hooks/levellog/types';
-
 import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { requestEditLevellog } from 'apis/levellog';
+import { LevellogEditRequestType, requestEditLevellog } from 'apis/levellog';
 import { teamGetUriBuilder } from 'utils/uri';
 
 const useLevellogEdit = () => {
@@ -24,12 +22,12 @@ const useLevellogEdit = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const { mutate: editLevellog } = useMutation(
-    ({ teamId, levellogId, inputValue }: LevellogCustomHookType) => {
+    ({ teamId, levellogId, levellog }: Omit<LevellogEditRequestType, 'accessToken'>) => {
       return requestEditLevellog({
         accessToken,
         teamId,
         levellogId,
-        levellogContent: { content: inputValue },
+        levellog,
       });
     },
     {
@@ -49,7 +47,7 @@ const useLevellogEdit = () => {
     editLevellog({
       teamId,
       levellogId,
-      inputValue: levellogRef.current.getInstance().getMarkdown(),
+      levellog: { content: levellogRef.current.getInstance().getMarkdown() },
     });
   };
 

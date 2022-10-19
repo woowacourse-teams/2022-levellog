@@ -5,7 +5,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 
 import useSnackbar from 'hooks//utils/useSnackbar';
 
-import { MESSAGE, ROUTES_PATH, INTERVIEW_QUESTION_FILTER } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH, INTERVIEW_QUESTION_FILTER, QUERY_KEY } from 'constants/constants';
 
 import {
   requestLikeCancelQuestion,
@@ -30,7 +30,7 @@ const useSearchedQuestion = () => {
   const keyword = params.get('keyword');
 
   const { data: searchResults, refetch: searchResultsRefetch } = useQuery(
-    ['searchResults', keyword, searchFilterActive],
+    [QUERY_KEY.SEARCH_RESULTS, keyword, searchFilterActive],
     () => requestSearchedQuestion({ accessToken, keyword, sort: searchFilterActive }),
   );
 

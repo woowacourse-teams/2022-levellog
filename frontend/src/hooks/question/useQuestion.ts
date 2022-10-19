@@ -8,7 +8,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import useScrollDown from 'hooks/utils/useScrollDown';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
+import { MESSAGE, QUERY_KEY } from 'constants/constants';
 
 import {
   requestDeleteQuestion,
@@ -20,10 +20,6 @@ import {
   QuestionPostRequestType,
 } from 'apis/question';
 import { WrongAccessToken } from 'apis/utils';
-
-const QUERY_KEY = {
-  INTERVIEW_QUESTION: 'Question',
-};
 
 const useQuestion = () => {
   const { scrollRef: QuestionContentRef, afterRequestScrollDown } =
@@ -39,7 +35,7 @@ const useQuestion = () => {
     data: QuestionInfos,
     refetch: QuestionRefetch,
   } = useQuery(
-    [QUERY_KEY.INTERVIEW_QUESTION, accessToken, levellogId],
+    [QUERY_KEY.QUESTION, accessToken, levellogId],
     () => {
       return requestGetQuestion({
         accessToken,

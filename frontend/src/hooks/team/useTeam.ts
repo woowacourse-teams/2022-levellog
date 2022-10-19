@@ -9,15 +9,12 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import useUser from 'hooks/useUser';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
+import { QUERY_KEY } from 'constants/constants';
+
 import { requestGetMembers } from 'apis/member';
 import { requestGetTeam } from 'apis/teams';
 import { WrongAccessToken } from 'apis/utils';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
-
-const QUERY_KEY = {
-  TEAM: 'team',
-  MEMBERS: 'members',
-};
 
 const useTeam = () => {
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();

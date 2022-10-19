@@ -2,13 +2,10 @@ import { useParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 
+import { QUERY_KEY } from 'constants/constants';
+
 import { requestGetLevellog } from 'apis/levellog';
 import { requestGetLoginUserRole } from 'apis/role';
-
-const QUERY_KEY = {
-  ROLE: 'role',
-  LEVELLOG: 'levellog',
-};
 
 const useRole = () => {
   const { teamId, levellogId } = useParams();

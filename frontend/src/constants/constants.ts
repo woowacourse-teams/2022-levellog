@@ -104,3 +104,21 @@ export const INTERVIEW_QUESTION_FILTER = Object.freeze({
   OLDEST: 'oldest',
   LIKES: 'likes',
 });
+
+export const QUERY_KEY = Object.freeze({
+  FEEDBACK: 'feedback',
+  FEEDBACKS: 'feedbacks',
+
+  LEVELLOG: 'levellog',
+
+  PRE_QUESTION: 'preQuestion',
+
+  QUESTION: 'Question',
+  QUESTIONS: 'Questions',
+
+  SEARCH_RESULTS: 'searchResults',
+
+  TEAM: 'team',
+  MEMBERS: 'members',
+  ROLE: 'role',
+});

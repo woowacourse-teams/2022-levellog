@@ -5,11 +5,12 @@ export interface TeamSubmitType {
   participants: MemberType[];
 }
 
-export interface Team {
-  title: string;
-  place: string;
-  startAt: string;
-}
+// 도대체 어디서 씀?
+// export interface Team {
+//   title: string;
+//   place: string;
+//   startAt: string;
+// }
 
 export interface InterviewTeamType {
   id: string;
@@ -21,31 +22,17 @@ export interface InterviewTeamType {
   participants: Pick<ParticipantType, 'memberId' | 'profileUrl' | 'nickname'>[];
 }
 
-export interface InterviewTeamDetailType {
-  id: string;
-  title: string;
-  place: string;
-  startAt: string;
-  teamImage: string;
+export interface InterviewTeamDetailType extends InterviewTeamType {
   hostId: string;
-  status: TeamStatusType;
   isParticipant: Boolean;
   interviewerNumber: number;
   interviewers: Array<number | null>;
   interviewees: Array<number | null>;
-  watchers: WatcherType[];
+  watchers: ParticipantType[];
   participants: ParticipantType[];
 }
 
 export interface ParticipantType {
-  memberId: string;
-  levellogId: string;
-  preQuestionId: string;
-  nickname: string;
-  profileUrl: string;
-}
-
-export interface WatcherType {
   memberId: string;
   levellogId: string;
   preQuestionId: string;

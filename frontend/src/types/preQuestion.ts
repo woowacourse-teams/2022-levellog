@@ -1,16 +1,15 @@
 import { ParticipantType } from 'types/team';
 
-export interface PreQuestionResultType {
+export interface PreQuestionType {
   content: string;
 }
 
-export interface PreQuestionFormatType {
+export interface PreQuestionInfoType extends PreQuestionType {
   author: {
     id: string;
     nickname: string;
     profileUrl: string;
   };
-  content: string;
 }
 export interface PreQuestionParticipantType {
   participant: ParticipantType;

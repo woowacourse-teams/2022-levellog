@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 
 import { Exception } from 'pages/status';
 
-import interviewQuestionImage from 'assets/images/interviewQuestion.webp';
+import QuestionImage from 'assets/images/interviewQuestion.webp';
 
-const EmptyInterviewQuestion = ({ isShow, path }: EmptyInterviewQuestionProps) => {
+const EmptyQuestion = ({ isShow, path }: EmptyQuestionProps) => {
   return (
     <Exception>
-      <Exception.Image>{interviewQuestionImage}</Exception.Image>
+      <Exception.Image>{QuestionImage}</Exception.Image>
       <Exception.Title>작성된 인터뷰 질문이 없습니다.</Exception.Title>
       {isShow && (
         <Link to={path}>
@@ -18,9 +18,9 @@ const EmptyInterviewQuestion = ({ isShow, path }: EmptyInterviewQuestionProps) =
   );
 };
 
-export default EmptyInterviewQuestion;
+export default EmptyQuestion;
 
-interface EmptyInterviewQuestionProps {
+interface EmptyQuestionProps {
   isShow: Boolean;
   path: string;
 }

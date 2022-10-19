@@ -2,12 +2,12 @@ import { useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useInterviewQuestions from 'hooks/interviewQuestion/useInterviewQuestions';
 import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
+import useQuestions from 'hooks/question/useQuestions';
 import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
-import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';
+import EmptyQuestion from 'pages/status/EmptyQuestion';
 import Loading from 'pages/status/Loading';
 
 import { TEAM_STATUS } from 'constants/constants';
@@ -15,16 +15,13 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import ContentHeader from 'components/@commons/ContentHeader';
 import Image from 'components/@commons/Image';
-import {
-  InterviewQuestionsInLevellogType,
-  InterviewQuestionInfoType,
-} from 'types/interviewQuestion';
+import { QuestionsInLevellogInfoType, QuestionInfoType } from 'types/question';
 import { feedbackAddUriBuilder } from 'utils/uri';
 import { checkFirstWordFinalConsonant } from 'utils/util';
 
-const InterviewQuestions = () => {
+const Questions = () => {
   const { levellogInfo } = useLevellogQuery();
-  const { interviewQuestions } = useInterviewQuestions();
+  const { Questions } = useQuestions();
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { team } = useTeam();
   const { teamId, levellogId } = useParams();
@@ -53,45 +50,41 @@ const InterviewQuestions = () => {
         받은 인터뷰 질문들`}
       />
       <S.Container>
-        {interviewQuestions?.length === 0 && (
-          <EmptyInterviewQuestion
+        {Questions?.length === 0 && (
+          <EmptyQuestion
             isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
             path={feedbackAddUriBuilder({ teamId, levellogId })}
           />
         )}
-        {interviewQuestions?.map(
-          (interviewQuestionInfoInLevellog: InterviewQuestionsInLevellogType) => (
-            <S.Box key={interviewQuestionInfoInLevellog.author.id}>
-              <S.AuthorBox>
-                <Image
-                  src={interviewQuestionInfoInLevellog.author.profileUrl}
-                  sizes={'MEDIUM'}
-                  githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
-                />
-                <S.AuthorText>
-                  {checkFirstWordFinalConsonant({
-                    word: interviewQuestionInfoInLevellog.author.nickname,
-                  })
-                    ? `${interviewQuestionInfoInLevellog.author.nickname}이 `
-                    : `${interviewQuestionInfoInLevellog.author.nickname}가 `}
-                  기록해준 질문들
-                </S.AuthorText>
-              </S.AuthorBox>
-              <S.Content>
-                <ul>
-                  {interviewQuestionInfoInLevellog.contents.length !== 0 &&
-                    interviewQuestionInfoInLevellog.contents.map(
-                      (interviewQuestionContent: InterviewQuestionInfoType) => (
-                        <S.Text key={interviewQuestionContent.id}>
-                          <p>{interviewQuestionContent.content}</p>
-                        </S.Text>
-                      ),
-                    )}
-                </ul>
-              </S.Content>
-            </S.Box>
-          ),
-        )}
+        {Questions?.map((QuestionInLevellogInfo: QuestionsInLevellogInfoType) => (
+          <S.Box key={QuestionInLevellogInfo.author.id}>
+            <S.AuthorBox>
+              <Image
+                src={QuestionInLevellogInfo.author.profileUrl}
+                sizes={'MEDIUM'}
+                githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
+              />
+              <S.AuthorText>
+                {checkFirstWordFinalConsonant({
+                  word: QuestionInLevellogInfo.author.nickname,
+                })
+                  ? `${QuestionInLevellogInfo.author.nickname}이 `
+                  : `${QuestionInLevellogInfo.author.nickname}가 `}
+                기록해준 질문들
+              </S.AuthorText>
+            </S.AuthorBox>
+            <S.Content>
+              <ul>
+                {QuestionInLevellogInfo.contents.length !== 0 &&
+                  QuestionInLevellogInfo.contents.map((QuestionContent: QuestionInfoType) => (
+                    <S.Text key={QuestionContent.id}>
+                      <p>{QuestionContent.content}</p>
+                    </S.Text>
+                  ))}
+              </ul>
+            </S.Content>
+          </S.Box>
+        ))}
       </S.Container>
     </>
   );
@@ -142,4 +135,4 @@ const S = {
   `,
 };
 
-export default InterviewQuestions;
+export default Questions;

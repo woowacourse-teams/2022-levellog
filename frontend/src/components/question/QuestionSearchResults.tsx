@@ -1,22 +1,22 @@
 import styled from 'styled-components';
 
-import useSearchedInterviewQuestion from 'hooks/questionSearch/useSearchedInterviewQuestion';
+import useSearchedQuestion from 'hooks/questionSearch/useSearchedQuestion';
 
 import EmptySearchResult from 'pages/status/EmptySearchResult';
 
 import { INTERVIEW_QUESTION_FILTER } from 'constants/constants';
 
 import Button from 'components/@commons/Button';
-import InterviewQuestionSearchResult from 'components/interviewQuestion/InterviewQuestionSearchResult';
+import QuestionSearchResult from 'components/question/QuestionSearchResult';
 
-const InterviewQuestionSearchResults = () => {
+const QuestionSearchResults = () => {
   const {
     searchResults,
     searchFilterActive,
     onClickLikeButton,
     onClickCancelLikeButton,
     handleClickFilterButton,
-  } = useSearchedInterviewQuestion();
+  } = useSearchedQuestion();
 
   if (searchResults?.results.length === 0) {
     return (
@@ -49,9 +49,9 @@ const InterviewQuestionSearchResults = () => {
       </S.ButtonBox>
       <S.Content role={'list'}>
         {searchResults?.results.map((result) => (
-          <InterviewQuestionSearchResult
+          <QuestionSearchResult
             key={result.id}
-            interviewQuestion={result}
+            Question={result}
             onClickLikeButton={onClickLikeButton}
             onClickCancelLikeButton={onClickCancelLikeButton}
           />
@@ -131,4 +131,4 @@ const S = {
   `,
 };
 
-export default InterviewQuestionSearchResults;
+export default QuestionSearchResults;

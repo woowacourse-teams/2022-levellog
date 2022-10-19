@@ -3,23 +3,23 @@ import styled from 'styled-components';
 import goodActiveIcon from 'assets/images/good-active.svg';
 import goodIcon from 'assets/images/good.svg';
 
+import { QuestionLikeRequestType } from 'apis/questionSearch';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
-import { InterviewQuestionApiType } from 'types/interviewQuestion';
 
-const InterviewQuestionSearchResult = ({
-  interviewQuestion,
+const QuestionSearchResult = ({
+  Question,
   onClickLikeButton,
   onClickCancelLikeButton,
-}: InterviewQuestionSearchResultProps) => {
-  const { id, content, like, likeCount } = interviewQuestion;
+}: QuestionSearchResultProps) => {
+  const { id, content, like, likeCount } = Question;
 
   const handleClickLikeButton = () => {
-    onClickLikeButton({ interviewQuestionId: id });
+    onClickLikeButton({ QuestionId: id });
   };
 
   const handleClickCancelLikeButton = () => {
-    onClickCancelLikeButton({ interviewQuestionId: id });
+    onClickCancelLikeButton({ QuestionId: id });
   };
 
   return (
@@ -49,14 +49,10 @@ const InterviewQuestionSearchResult = ({
   );
 };
 
-interface InterviewQuestionSearchResultProps {
-  interviewQuestion: any;
-  onClickLikeButton: ({
-    interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => void;
-  onClickCancelLikeButton: ({
-    interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => void;
+interface QuestionSearchResultProps {
+  Question: any;
+  onClickLikeButton: ({ QuestionId }: Pick<QuestionLikeRequestType, 'QuestionId'>) => void;
+  onClickCancelLikeButton: ({ QuestionId }: Pick<QuestionLikeRequestType, 'QuestionId'>) => void;
 }
 
 const S = {
@@ -91,4 +87,4 @@ const S = {
   `,
 };
 
-export default InterviewQuestionSearchResult;
+export default QuestionSearchResult;

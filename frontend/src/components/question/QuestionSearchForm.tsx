@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import useInterviewQuestionSearch from 'hooks/questionSearch/useInterviewQuestionSearch';
+import useQuestionSearch from 'hooks/questionSearch/useQuestionSearch';
 
 import deleteIcon from 'assets/images/close.svg';
 import searchIcon from 'assets/images/search.svg';
@@ -9,16 +9,16 @@ import Button from 'components/@commons/Button';
 import Image from 'components/@commons/Image';
 import Input from 'components/@commons/Input';
 
-const InterviewQuestionSearchForm = () => {
+const QuestionSearchForm = () => {
   const {
     searchText,
     handleClickRemoveSearchTextButton,
     handleChangeSearchInput,
-    handleSubmitInterviewQuestion,
-  } = useInterviewQuestionSearch();
+    handleSubmitQuestion,
+  } = useQuestionSearch();
 
   return (
-    <S.Container onSubmit={handleSubmitInterviewQuestion}>
+    <S.Container onSubmit={handleSubmitQuestion}>
       <S.Title>인터뷰 질문 검색</S.Title>
       <S.InputBox>
         <Image src={searchIcon} alt={'인터뷰 질문 검색하기'} sizes={'SMALL'} aria-hidden="true" />
@@ -29,7 +29,7 @@ const InterviewQuestionSearchForm = () => {
         />
         {searchText && (
           // 임시로 handleSubmit 달아놓음
-          <S.Button onClick={handleSubmitInterviewQuestion}>
+          <S.Button onClick={handleSubmitQuestion}>
             <Image src={deleteIcon} alt={'인터뷰 질문 검색 텍스트 삭제'} sizes={'TINY'} />
           </S.Button>
         )}
@@ -93,4 +93,4 @@ const S = {
   `,
 };
 
-export default InterviewQuestionSearchForm;
+export default QuestionSearchForm;

@@ -17,8 +17,16 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       suspense: true,
-      retry: false,
+      retry: 1,
+      retryDelay: 0,
       useErrorBoundary: false,
+      staleTime: 0,
+      cacheTime: 0,
+    },
+    mutations: {
+      retry: 1,
+      retryDelay: 0,
+      cacheTime: 0,
     },
   },
 });

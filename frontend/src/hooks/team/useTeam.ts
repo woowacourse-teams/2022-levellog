@@ -29,7 +29,6 @@ const useTeam = () => {
   const [participants, setParticipants] = useState<MemberType[]>([myInfo]);
   const [watchers, setWatchers] = useState<MemberType[]>([]);
   const [nicknameValue, setNicknameValue] = useState('');
-  const [members, setMembers] = useState<MemberType[]>([]);
 
   const teamInfoDispatch = useContext(TeamDispatchContext);
   const team = useContext(TeamContext);
@@ -77,13 +76,16 @@ const useTeam = () => {
     },
   );
 
+  useEffect(() => {
+    getTeam();
+  }, []);
+
   return {
     nicknameValue,
     participants,
     watchers,
     team,
     teamInfo,
-    members,
     setNicknameValue,
     setParticipants,
     setWatchers,

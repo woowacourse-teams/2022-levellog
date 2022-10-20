@@ -184,7 +184,7 @@ abstract class ServiceTest {
         return interviewQuestionRepository.save(interviewQuestion);
     }
 
-    protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {
+    protected Feedback saveFeedback(final Member from, final Levellog levellog) {
         final Feedback feedback = new Feedback(from.getId(), levellog, "study from " + from.getNickname(),
                 "speak from " + from.getNickname(), "etc from " + from.getNickname());
         return feedbackRepository.save(feedback);

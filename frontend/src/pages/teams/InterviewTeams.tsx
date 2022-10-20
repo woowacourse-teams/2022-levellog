@@ -1,14 +1,15 @@
 import { Suspense } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 
 import useTeamsCondition from 'hooks/team/useTeamsCondition';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
 import Loading from 'pages/status/Loading';
 
 import plusIcon from 'assets/images/plus.svg';
-import { ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import Teams from '../../components/teams/Teams';
 import TeamFilterButtons from './TeamFilterButtons';
@@ -23,6 +24,19 @@ const InterviewTeams = () => {
     handleClickMyTeamsButton,
     handleClickOpenTeamsButton,
   } = useTeamsCondition();
+  const { showSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+
+  const accessToken = localStorage.getItem('accessToken');
+
+  const handleClickTeamAddButton = () => {
+    if (accessToken) {
+      navigate(ROUTES_PATH.INTERVIEW_TEAMS_ADD);
+      return;
+    }
+
+    showSnackbar({ message: MESSAGE.NEED_LOGIN_SERVICE });
+  };
 
   return (
     <>
@@ -39,14 +53,15 @@ const InterviewTeams = () => {
         <Suspense fallback={<Loading />}>
           <Teams teamsCondition={teamsCondition} />
         </Suspense>
-        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD} tabIndex={-1}>
-          <S.TeamAddButton aria-label={'팀 추가하기 페이지로 이동'}>
-            {'팀 추가하기'}
-            <S.ImageBox aria-hidden={true}>
-              <Image src={plusIcon} sizes={'TINY'} />
-            </S.ImageBox>
-          </S.TeamAddButton>
-        </Link>
+        <S.TeamAddButton
+          aria-label={'팀 추가하기 페이지로 이동'}
+          onClick={handleClickTeamAddButton}
+        >
+          {'팀 추가하기'}
+          <S.ImageBox aria-hidden={true}>
+            <Image src={plusIcon} sizes={'TINY'} />
+          </S.ImageBox>
+        </S.TeamAddButton>
       </S.Container>
     </>
   );

@@ -12,7 +12,6 @@ const QUERY_KEY = {
 };
 
 const usePreQuestionQuery = () => {
-  const { showSnackbar } = useSnackbar();
   const { levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
@@ -34,9 +33,6 @@ const usePreQuestionQuery = () => {
       refetchOnWindowFocus: false,
       retry: 0,
       retryOnMount: false,
-      onError: (err) => {
-        errorHandler({ err, showSnackbar });
-      },
     },
   );
 

@@ -1,12 +1,8 @@
-import { Suspense } from 'react';
-
 import styled from 'styled-components';
 
 import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
+import usePreQuestionQuery from 'hooks/preQuestion/usePreQuestionQuery';
 
-import Loading from 'pages/status/Loading';
-
-import PreQuestionUiViewer from './preQuestion/PreQuestionUiViewer';
 import Button from 'components/@commons/Button';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 
@@ -16,6 +12,7 @@ const WriterDocument = ({
   handleClickPreQuestionTag,
 }: LevellogReportProps) => {
   const { levellogError, levellogInfo } = useLevellogQuery();
+  const { preQuestionError, preQuestion } = usePreQuestionQuery();
 
   return (
     <S.Container>
@@ -36,9 +33,11 @@ const WriterDocument = ({
             content={levellogError ? '레벨로그가 존재하지 않습니다.' : levellogInfo!.content}
           />
         )}
-        <Suspense fallback={<Loading />}>
-          {whichContentShow.preQuestion && <PreQuestionUiViewer />}
-        </Suspense>
+        {whichContentShow.preQuestion && (
+          <UiViewer
+            content={preQuestionError ? '사전 질문이 존재하지 않습니다.' : preQuestion!.content}
+          />
+        )}
       </S.Content>
     </S.Container>
   );

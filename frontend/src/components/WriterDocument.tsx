@@ -1,11 +1,7 @@
-import { Suspense } from 'react';
-
 import styled from 'styled-components';
 
 import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
 import usePreQuestionQuery from 'hooks/preQuestion/usePreQuestionQuery';
-
-import Loading from 'pages/status/Loading';
 
 import Button from 'components/@commons/Button';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';

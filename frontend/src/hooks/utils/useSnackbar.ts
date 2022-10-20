@@ -5,9 +5,9 @@ import { SnackbarDispatchContext } from 'contexts/snackbarContext';
 const useSnackbar = () => {
   const dispatch = useContext(SnackbarDispatchContext);
 
-  const showSnackbar = async ({ message }: ShowSnackbarProps) => {
-    await dispatch({ type: 'delete' });
-    await dispatch({ type: 'add', message });
+  const showSnackbar = ({ message }: ShowSnackbarProps) => {
+    dispatch({ type: 'delete' });
+    dispatch({ type: 'add', message });
     removeSnackbar();
   };
 

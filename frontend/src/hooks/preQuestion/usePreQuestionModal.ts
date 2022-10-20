@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 
 import useModal from 'hooks/useModal';
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
@@ -32,6 +33,25 @@ const usePreQuestionModal = () => {
     });
   });
 
+  const { mutateAsync: deletePreQuestion } = useMutation(
+    ({ levellogId, preQuestionId }: Omit<PreQuestionDeleteRequestType, 'accessToken'>) => {
+      return requestDeletePreQuestion({
+        accessToken,
+        levellogId,
+        preQuestionId,
+      });
+    },
+    {
+      onSuccess: () => {
+        onClickCloseModal();
+        showSnackbar({ message: MESSAGE.PREQUESTION_DELETE });
+      },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
+      },
+    },
+  );
+
   const onClickOpenPreQuestionModal = ({ participant }: Record<'participant', ParticipantType>) => {
     onClickOpenModal();
     setPreQuestionParticipant(participant);
@@ -42,12 +62,10 @@ const usePreQuestionModal = () => {
     levellogId,
     preQuestionId,
   }: Omit<PreQuestionDeleteRequestType, 'accessToken'>) => {
-    // await deletePreQuestion({
-    //   levellogId,
-    //   preQuestionId,
-    // });
-    onClickCloseModal();
-    showSnackbar({ message: MESSAGE.PREQUESTION_DELETE });
+    await deletePreQuestion({
+      levellogId,
+      preQuestionId,
+    });
   };
 
   return {

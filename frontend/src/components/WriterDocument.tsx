@@ -1,6 +1,10 @@
+import { Suspense } from 'react';
+
 import styled from 'styled-components';
 
 import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
+
+import Loading from 'pages/status/Loading';
 
 import PreQuestionUiViewer from './preQuestion/PreQuestionUiViewer';
 import Button from 'components/@commons/Button';
@@ -32,7 +36,9 @@ const WriterDocument = ({
             content={levellogError ? '레벨로그가 존재하지 않습니다.' : levellogInfo!.content}
           />
         )}
-        {whichContentShow.preQuestion && <PreQuestionUiViewer />}
+        <Suspense fallback={<Loading />}>
+          {whichContentShow.preQuestion && <PreQuestionUiViewer />}
+        </Suspense>
       </S.Content>
     </S.Container>
   );

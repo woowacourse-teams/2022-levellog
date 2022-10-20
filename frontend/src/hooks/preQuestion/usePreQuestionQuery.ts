@@ -29,6 +29,11 @@ const usePreQuestionQuery = () => {
         levellogId,
       }),
     {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      retryOnMount: false,
       onError: (err) => {
         errorHandler({ err, showSnackbar });
       },

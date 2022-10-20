@@ -10,7 +10,6 @@ import { QUERY_KEY } from 'constants/constants';
 import { requestGetPreQuestion } from 'apis/preQuestion';
 
 const usePreQuestionQuery = () => {
-  const { showSnackbar } = useSnackbar();
   const { levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
@@ -27,9 +26,11 @@ const usePreQuestionQuery = () => {
         levellogId,
       }),
     {
-      onError: (err) => {
-        errorHandler({ err, showSnackbar });
-      },
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      retryOnMount: false,
     },
   );
 

@@ -171,10 +171,10 @@ class MyInfoAcceptanceTest extends AcceptanceTest {
         saveTeam("잠실 제이슨조", RICK, 1, RICK, ROMA, PEPPER);
         saveTeam("잠실 브리조", RICK, 1, RICK, ROMA, ALIEN);
         saveTeam("잠실 브라운조", RICK, 1, RICK, ALIEN);
-        final String teamId = saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER, ROMA).getTeamId();
+        final String closeNeoTeam = saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER, ROMA).getTeamId();
 
         timeStandard.setInProgress();
-        RestAssuredTemplate.post("/api/teams/" + teamId + "/close", RICK.getToken());
+        RestAssuredTemplate.post("/api/teams/" + closeNeoTeam + "/close", RICK.getToken());
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()

@@ -5,6 +5,8 @@ spring:
     url: jdbc:mariadb://localhost:13306/levellog
     username: root
     password: root
+    hikari:
+      maximum-pool-size: 6
 
 # JPA
   jpa:

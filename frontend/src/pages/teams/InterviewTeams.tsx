@@ -1,69 +1,67 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useTeams from 'hooks/useTeams';
-import useUser from 'hooks/useUser';
+import useTeamsCondition from 'hooks/team/useTeamsCondition';
+import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { Exception } from 'pages/status';
 import Loading from 'pages/status/Loading';
 
-import error from 'assets/images/error.webp';
 import plusIcon from 'assets/images/plus.svg';
-import { NOT_YET_HTTP_STATUS, ROUTES_PATH, TEAMS_CONDITION } from 'constants/constants';
+import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
+import Teams from '../../components/teams/Teams';
+import TeamFilterButtons from './TeamFilterButtons';
 import Button from 'components/@commons/Button';
 import ContentHeader from 'components/@commons/ContentHeader';
-import FilterButton from 'components/@commons/FilterButton';
 import Image from 'components/@commons/Image';
-import InterviewTeam from 'components/teams/InterviewTeam';
-import { InterviewTeamType } from 'types/team';
 
 const InterviewTeams = () => {
-  const { teams, isActive, getTeams, handleClickFilterButtons } = useTeams();
-  const { loginUserId } = useUser();
+  const {
+    teamsCondition,
+    handleClickCloseTeamsButton,
+    handleClickMyTeamsButton,
+    handleClickOpenTeamsButton,
+  } = useTeamsCondition();
+  const { showSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    getTeams({ teamsCondition: TEAMS_CONDITION.OPEN });
-  }, []);
+  const accessToken = localStorage.getItem('accessToken');
 
-  if (isActive.status === NOT_YET_HTTP_STATUS) return <Loading />;
+  const handleClickTeamAddButton = () => {
+    if (accessToken) {
+      navigate(ROUTES_PATH.INTERVIEW_TEAMS_ADD);
+      return;
+    }
+
+    showSnackbar({ message: MESSAGE.NEED_LOGIN_SERVICE });
+  };
 
   return (
     <>
       <ContentHeader title={'인터뷰 팀'}>
-        <div onClick={handleClickFilterButtons}>
-          <FilterButton isActive={isActive.open}>진행중인 인터뷰</FilterButton>
-          <FilterButton isActive={isActive.close}>종료된 인터뷰</FilterButton>
-          {loginUserId && <FilterButton isActive={isActive.my}>나의 인터뷰</FilterButton>}
-        </div>
+        <TeamFilterButtons
+          teamsCondition={teamsCondition}
+          handleClickOpenTeamsButton={handleClickOpenTeamsButton}
+          handleClickCloseTeamsButton={handleClickCloseTeamsButton}
+          handleClickMyTeamsButton={handleClickMyTeamsButton}
+        />
         <span />
       </ContentHeader>
       <S.Container>
-        {teams.length === 0 && (
-          <S.Empty>
-            <Exception>
-              <Exception.Image>{error}</Exception.Image>
-              <Exception.Title>조건에 해당하는 팀이 없습니다.</Exception.Title>
-            </Exception>
-          </S.Empty>
-        )}
-        {teams.length > 0 && (
-          <S.Content>
-            {teams.map((team: InterviewTeamType) => (
-              <InterviewTeam key={team.id} team={team} />
-            ))}
-          </S.Content>
-        )}
-        <Link to={ROUTES_PATH.INTERVIEW_TEAMS_ADD}>
-          <S.TeamAddButton>
-            {'팀 추가하기'}
-            <S.ImageBox>
-              <Image src={plusIcon} sizes={'TINY'} />
-            </S.ImageBox>
-          </S.TeamAddButton>
-        </Link>
+        <Suspense fallback={<Loading />}>
+          <Teams teamsCondition={teamsCondition} />
+        </Suspense>
+        <S.TeamAddButton
+          aria-label={'팀 추가하기 페이지로 이동'}
+          onClick={handleClickTeamAddButton}
+        >
+          {'팀 추가하기'}
+          <S.ImageBox aria-hidden={true}>
+            <Image src={plusIcon} sizes={'TINY'} />
+          </S.ImageBox>
+        </S.TeamAddButton>
       </S.Container>
     </>
   );
@@ -123,7 +121,7 @@ const S = {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 6.875rem;
+    bottom: 5rem;
     z-index: 10;
     width: 8.125rem;
     height: 3.125rem;

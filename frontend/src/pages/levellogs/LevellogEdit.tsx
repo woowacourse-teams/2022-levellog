@@ -1,40 +1,12 @@
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
 import styled from 'styled-components';
 
-import useLevellog from 'hooks/useLevellog';
-import useSnackbar from 'hooks/useSnackbar';
-
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import useLevellogEdit from 'hooks/levellog/useLevellogEdit';
 
 import BottomBar from 'components/@commons/BottomBar';
 import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 
 const LevellogEdit = () => {
-  const { levellogRef, getLevellogOnRef, onClickLevellogEditButton } = useLevellog();
-  const { showSnackbar } = useSnackbar();
-  const { teamId, levellogId } = useParams();
-  const navigate = useNavigate();
-
-  const handleClickLevellogEditButton = () => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      onClickLevellogEditButton({ teamId, levellogId });
-
-      return;
-    }
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-  };
-
-  useEffect(() => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      getLevellogOnRef({ teamId, levellogId });
-
-      return;
-    }
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-    navigate(ROUTES_PATH.ERROR);
-  }, []);
+  const { levellogRef, handleClickLevellogEditButton } = useLevellogEdit();
 
   return (
     <S.Container>

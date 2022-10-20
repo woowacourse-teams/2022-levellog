@@ -2,16 +2,14 @@ import { NavigateFunction } from 'react-router-dom';
 
 import axios, { AxiosResponse } from 'axios';
 
-import { ShowSnackbarProps } from 'hooks/useSnackbar';
+import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
-
-import { Team } from 'types/team';
+import { MESSAGE } from '../constants/constants';
 import { UriCustomHookType } from 'types/uri';
 
 export const debounce: DebounceType = {
   flag: '',
-  action({ func, args, setState, navigate }) {
+  action({ func, args, setState, navigate, timer = 300 }) {
     if (this.flag) {
       clearTimeout(this.flag);
     }
@@ -19,15 +17,16 @@ export const debounce: DebounceType = {
       const res = await func(args && { ...args });
       setState && setState(res.data);
       res && navigate && navigate[0](navigate[1]);
-    }, 300);
+    }, timer);
   },
 };
 
 interface DebounceActionArgsType {
   func: Function;
-  args?: { [props: string]: any };
+  args?: Record<string, any>;
   setState?: React.Dispatch<React.SetStateAction<any>>;
   navigate?: [NavigateFunction, string];
+  timer?: number;
 }
 
 interface DebounceType {
@@ -65,21 +64,29 @@ interface TryCatchProps {
   snackbar: ({ message }: ShowSnackbarProps) => any;
 }
 
-export const checkFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConsonantType) => {
+const hangeulFirstTextUnicode = 44032;
+const hangeulLastTextUnicode = 55203;
+const finalConsonantNumber = 28;
+
+export const convertFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConsonantType) => {
   if (typeof word !== 'string') return;
 
-  let lastLetter = word[word.length - 1];
-  let uniCode = lastLetter.charCodeAt(0);
+  let lastWord = word[word.length - 1];
+  let uniCode = lastWord.charCodeAt(0);
 
-  if (uniCode < 44032 || uniCode > 55203) return;
+  if (uniCode < hangeulFirstTextUnicode || uniCode > hangeulLastTextUnicode) return;
 
-  return (uniCode - 44032) % 28 != 0;
+  if ((uniCode - hangeulFirstTextUnicode) % finalConsonantNumber !== 0) {
+    return `${word}이 `;
+  } else {
+    return `${word}가 `;
+  }
 };
 interface CheckFirstWordFinalConsonantType {
   word: string;
 }
 
-export const convertDateAndTime = ({ startAt }: Pick<Team, 'startAt'>) => {
+export const convertDateAndTime = ({ startAt }: any) => {
   const year = startAt.slice(0, 4);
   const month = startAt.slice(5, 7);
   const day = startAt.slice(8, 10);
@@ -92,7 +99,7 @@ export const feedbackAddUriBuilder = ({
   teamId,
   levellogId,
 }: Pick<UriCustomHookType, 'teamId' | 'levellogId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks/add`;
+  return `/teams/${teamId}/levellogs/${levellogId}/feedback/add`;
 };
 
 export const feedbackEditUriBuilder = ({
@@ -101,7 +108,7 @@ export const feedbackEditUriBuilder = ({
   feedbackId,
   authorId,
 }: Omit<UriCustomHookType, 'preQuestionId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackId}/author/${authorId}/edit`;
+  return `/teams/${teamId}/levellogs/${levellogId}/feedback/${feedbackId}/author/${authorId}/edit`;
 };
 
 export const feedbacksGetUriBuilder = ({
@@ -116,7 +123,7 @@ export const feedbackGetUriBuilder = ({
   levellogId,
   feedbackId,
 }: Pick<UriCustomHookType, 'teamId' | 'levellogId' | 'feedbackId'>) => {
-  return `/teams/${teamId}/levellogs/${levellogId}/feedbacks/${feedbackId}`;
+  return `/teams/${teamId}/levellogs/${levellogId}/feedback/${feedbackId}`;
 };
 
 export const levellogAddUriBuilder = ({ teamId }: Pick<UriCustomHookType, 'teamId'>) => {

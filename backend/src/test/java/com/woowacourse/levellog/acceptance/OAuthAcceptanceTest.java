@@ -4,8 +4,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.woowacourse.levellog.authentication.dto.GithubCodeDto;
-import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
+import com.woowacourse.levellog.authentication.dto.request.GithubCodeRequest;
+import com.woowacourse.levellog.authentication.dto.response.GithubProfileResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -26,8 +26,11 @@ class OAuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("깃허브 로그인")
     void login() throws Exception {
         // given
-        final String code = objectMapper.writeValueAsString(new GithubProfileDto("11111", "test", "profile_url"));
-        final GithubCodeDto request = new GithubCodeDto(code);
+        final String githubId = "11111";
+        final String nickname = "alien";
+        final String profileUrl = "alien.img";
+        final String code = objectMapper.writeValueAsString(new GithubProfileResponse(githubId, nickname, profileUrl));
+        final GithubCodeRequest request = new GithubCodeRequest(code);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -41,7 +44,8 @@ class OAuthAcceptanceTest extends AcceptanceTest {
         // then
         response.statusCode(HttpStatus.OK.value())
                 .body("accessToken", notNullValue())
-                .body("profileUrl", is("profile_url"))
+                .body("profileUrl", is(profileUrl))
+                .body("nickname", is(nickname))
                 .body("id", notNullValue());
     }
 }

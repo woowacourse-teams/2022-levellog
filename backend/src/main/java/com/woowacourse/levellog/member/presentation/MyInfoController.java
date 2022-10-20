@@ -1,15 +1,16 @@
 package com.woowacourse.levellog.member.presentation;
 
-import com.woowacourse.levellog.authentication.support.Authentic;
+import com.woowacourse.levellog.authentication.support.Extracted;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.feedback.application.FeedbackService;
-import com.woowacourse.levellog.feedback.dto.FeedbacksDto;
+import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
 import com.woowacourse.levellog.levellog.application.LevellogService;
-import com.woowacourse.levellog.levellog.dto.LevellogsDto;
+import com.woowacourse.levellog.levellog.dto.response.LevellogResponses;
 import com.woowacourse.levellog.member.application.MemberService;
-import com.woowacourse.levellog.member.dto.MemberDto;
-import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
+import com.woowacourse.levellog.member.dto.response.MemberResponse;
 import com.woowacourse.levellog.team.application.TeamQueryService;
-import com.woowacourse.levellog.team.dto.TeamListDto;
+import com.woowacourse.levellog.team.dto.response.TeamListResponses;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,37 +31,37 @@ public class MyInfoController {
     private final MemberService memberService;
 
     @GetMapping
-    public ResponseEntity<MemberDto> myInfo(@Authentic final Long memberId) {
-        final MemberDto memberDto = memberService.findMemberById(memberId);
+    public ResponseEntity<MemberResponse> myInfo(@Extracted final LoginStatus loginStatus) {
+        final MemberResponse memberResponse = memberService.findMemberById(loginStatus);
 
-        return ResponseEntity.ok(memberDto);
+        return ResponseEntity.ok(memberResponse);
     }
 
     @GetMapping("/feedbacks")
-    public ResponseEntity<FeedbacksDto> findAllFeedbackToMe(@Authentic final Long memberId) {
-        final FeedbacksDto feedbacksResponse = feedbackService.findAllByTo(memberId);
+    public ResponseEntity<FeedbackResponses> findAllFeedbackToMe(@Extracted final LoginStatus loginStatus) {
+        final FeedbackResponses feedbackResponses = feedbackService.findAllByTo(loginStatus);
 
-        return ResponseEntity.ok(feedbacksResponse);
+        return ResponseEntity.ok(feedbackResponses);
     }
 
     @GetMapping("/levellogs")
-    public ResponseEntity<LevellogsDto> findAllMyLevellogs(@Authentic final Long memberId) {
-        final LevellogsDto levellogsResponse = levellogService.findAllByAuthorId(memberId);
+    public ResponseEntity<LevellogResponses> findAllMyLevellogs(@Extracted final LoginStatus loginStatus) {
+        final LevellogResponses levellogsResponse = levellogService.findAllByAuthorId(loginStatus);
 
         return ResponseEntity.ok(levellogsResponse);
     }
 
     @GetMapping("/teams")
-    public ResponseEntity<TeamListDto> findAllMyTeams(@Authentic final Long memberId) {
-        final TeamListDto teamsDto = teamQueryService.findAllByMemberId(memberId);
+    public ResponseEntity<TeamListResponses> findAllMyTeams(@Extracted final LoginStatus loginStatus) {
+        final TeamListResponses response = teamQueryService.findAllByMemberId(loginStatus);
 
-        return ResponseEntity.ok(teamsDto);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateNickname(@Authentic final Long memberId,
-                                               @RequestBody @Valid final NicknameUpdateDto request) {
-        memberService.updateNickname(request, memberId);
+    public ResponseEntity<Void> updateNickname(@Extracted final LoginStatus loginStatus,
+                                               @RequestBody @Valid final NicknameUpdateRequest request) {
+        memberService.updateNickname(request, loginStatus);
 
         return ResponseEntity.noContent().build();
     }

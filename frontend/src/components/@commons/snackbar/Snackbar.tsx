@@ -3,7 +3,9 @@ import styled from 'styled-components';
 const Snackbar = ({ children }: SnackbarProps) => {
   return (
     <SnackbarStyle>
-      <SnackbarText>{children}</SnackbarText>
+      <SnackbarText aria-live={'polite'} aria-atomic={'true'} aria-label={children}>
+        {children}
+      </SnackbarText>
     </SnackbarStyle>
   );
 };
@@ -13,6 +15,7 @@ const SnackbarStyle = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  padding: 0.625rem;
   width: 20rem;
   max-width: 71rem;
   height: 3.75rem;

@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.interviewquestion.domain;
 
 import com.woowacourse.levellog.common.domain.BaseEntity;
-import com.woowacourse.levellog.member.domain.Member;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -22,12 +21,8 @@ public class InterviewQuestionLikes extends BaseEntity {
     private Long interviewQuestionId;
     private Long likerId;
 
-    private InterviewQuestionLikes(final Long interviewQuestionId, final Long likerId) {
+    public InterviewQuestionLikes(final Long interviewQuestionId, final Long likerId) {
         this.interviewQuestionId = interviewQuestionId;
         this.likerId = likerId;
-    }
-
-    public static InterviewQuestionLikes of(final InterviewQuestion interviewQuestion, final Member liker) {
-        return new InterviewQuestionLikes(interviewQuestion.getId(), liker.getId());
     }
 }

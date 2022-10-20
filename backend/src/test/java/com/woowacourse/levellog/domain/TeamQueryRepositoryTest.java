@@ -3,51 +3,95 @@ package com.woowacourse.levellog.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.fixture.TimeFixture;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.team.domain.Team;
-import com.woowacourse.levellog.team.dto.AllParticipantDto;
-import com.woowacourse.levellog.team.dto.AllSimpleParticipantDto;
+import com.woowacourse.levellog.team.dto.query.TeamDetailQueryResult;
+import com.woowacourse.levellog.team.dto.query.TeamListQueryResult;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("TeamQueryRepository의")
 class TeamQueryRepositoryTest extends RepositoryTest {
 
-    @Test
-    @DisplayName("findAllParticipants 메서드는 참관자를 포함한 팀 참가자들의 상세 정보를 조회한다.")
-    void findAllParticipants() {
-        // given
-        final Member roma = saveMember("로마");
-        final Member pep = saveMember("페퍼");
-        final Member rick = saveMember("릭");
-        final Member jun = saveMember("준");
+    @Nested
+    @DisplayName("findAllByTeamId 메서드는")
+    class FindAllByTeamId {
 
-        final Team team = saveTeam(roma, List.of(jun), pep, rick);
+        @Test
+        @DisplayName("참관자를 포함한 팀 참가자들의 상세 정보를 조회한다.")
+        void success() {
+            // given
+            final Member roma = saveMember("로마");
+            final Member pep = saveMember("페퍼");
+            final Member rick = saveMember("릭");
+            final Member jun = saveMember("준");
 
-        final Levellog romaLevellog = saveLevellog(roma, team);
-        final Levellog pepLevellog = saveLevellog(pep, team);
-        final Levellog rickLevellog = saveLevellog(rick, team);
+            final Team team = saveTeam(roma, List.of(jun), pep, rick);
 
-        final PreQuestion pepPreQuestion = savePreQuestion(pepLevellog, roma);
-        final PreQuestion rickPreQuestion = savePreQuestion(rickLevellog, roma);
+            final Levellog romaLevellog = saveLevellog(roma, team);
+            final Levellog pepLevellog = saveLevellog(pep, team);
+            final Levellog rickLevellog = saveLevellog(rick, team);
 
-        // when
-        final List<AllParticipantDto> actual = teamQueryRepository.findAllByTeamId(team.getId(), roma.getId());
+            final PreQuestion pepPreQuestion = savePreQuestion(pepLevellog, roma);
+            final PreQuestion rickPreQuestion = savePreQuestion(rickLevellog, roma);
 
-        // then
-        assertThat(actual).hasSize(4)
-                .extracting("memberId", "levellogId", "preQuestionId", "nickname", "isWatcher", "isHost")
-                .containsExactly(
-                        tuple(roma.getId(), romaLevellog.getId(), null, "로마", false, true),
-                        tuple(pep.getId(), pepLevellog.getId(), pepPreQuestion.getId(), "페퍼", false, false),
-                        tuple(rick.getId(), rickLevellog.getId(), rickPreQuestion.getId(), "릭", false, false),
-                        tuple(jun.getId(), null, null, "준", true, false)
-                );
+            final LoginStatus loginStatus = LoginStatus.fromLogin(roma.getId());
 
+            // when
+            final List<TeamDetailQueryResult> actual = teamQueryRepository.findAllByTeamId(team.getId(),
+                    loginStatus);
+
+            // then
+            assertThat(actual).hasSize(4)
+                    .extracting("memberId", "levellogId", "preQuestionId", "nickname", "isWatcher", "isHost")
+                    .containsExactly(
+                            tuple(roma.getId(), romaLevellog.getId(), null, "로마", false, true),
+                            tuple(pep.getId(), pepLevellog.getId(), pepPreQuestion.getId(), "페퍼", false, false),
+                            tuple(rick.getId(), rickLevellog.getId(), rickPreQuestion.getId(), "릭", false, false),
+                            tuple(jun.getId(), null, null, "준", true, false)
+                    );
+        }
+
+        @Test
+        @DisplayName("비로그인 요청이면 간결한 쿼리를 날린다.")
+        void success_notLogin() {
+            // given
+            final Member roma = saveMember("로마");
+            final Member pep = saveMember("페퍼");
+            final Member rick = saveMember("릭");
+            final Member jun = saveMember("준");
+
+            final Team team = saveTeam(roma, List.of(jun), pep, rick);
+
+            final Levellog romaLevellog = saveLevellog(roma, team);
+            final Levellog pepLevellog = saveLevellog(pep, team);
+            final Levellog rickLevellog = saveLevellog(rick, team);
+
+            savePreQuestion(pepLevellog, roma);
+            savePreQuestion(rickLevellog, roma);
+
+            final LoginStatus loginStatus = LoginStatus.fromNotLogin();
+
+            // when
+            final List<TeamDetailQueryResult> actual = teamQueryRepository.findAllByTeamId(team.getId(),
+                    loginStatus);
+
+            // then
+            assertThat(actual).hasSize(4)
+                    .extracting("memberId", "levellogId", "preQuestionId", "nickname", "isWatcher", "isHost")
+                    .containsExactly(
+                            tuple(roma.getId(), romaLevellog.getId(), null, "로마", false, true),
+                            tuple(pep.getId(), pepLevellog.getId(), null, "페퍼", false, false),
+                            tuple(rick.getId(), rickLevellog.getId(), null, "릭", false, false),
+                            tuple(jun.getId(), null, null, "준", true, false)
+                    );
+        }
     }
 
     @Test
@@ -78,17 +122,17 @@ class TeamQueryRepositoryTest extends RepositoryTest {
         teamRepository.flush();
 
         // when
-        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findAllList(false, 10, 0);
+        final List<TeamListQueryResult> actual = teamQueryRepository.findAllList(false, 10, 0);
 
         // then
         assertThat(actual).hasSize(4)
-                .extracting("id", "memberId")
+                .extracting("id", "memberId", "nickname")
                 .containsExactly(
-                        tuple(team3.getId(), harry.getId()),
-                        tuple(team3.getId(), kyoul.getId()),
+                        tuple(team3.getId(), harry.getId(), harry.getNickname()),
+                        tuple(team3.getId(), kyoul.getId(), kyoul.getNickname()),
 
-                        tuple(team2.getId(), eve.getId()),
-                        tuple(team2.getId(), alien.getId())
+                        tuple(team2.getId(), eve.getId(), eve.getNickname()),
+                        tuple(team2.getId(), alien.getId(), alien.getNickname())
                 );
     }
 
@@ -121,7 +165,7 @@ class TeamQueryRepositoryTest extends RepositoryTest {
         teamRepository.flush();
 
         // when
-        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findAllList(true, 10, 0);
+        final List<TeamListQueryResult> actual = teamQueryRepository.findAllList(true, 10, 0);
 
         // then
         assertThat(actual).hasSize(4)
@@ -140,18 +184,19 @@ class TeamQueryRepositoryTest extends RepositoryTest {
     void findMyList() {
         // given
         // 팀 1
+        final Member watcher = saveMember("참관자");
         final Member pepper = saveMember("페퍼");
         final Member alien = saveMember("알린");
 
-        final Team team1 = saveTeam(pepper, alien);
+        final Team team1 = saveTeam(pepper, List.of(watcher), alien);
 
         // 팀 2
         final Member kyoul = saveMember("결");
 
-        final Team team2 = saveTeam(pepper, kyoul);
+        final Team team2 = saveTeam(pepper, List.of(watcher), kyoul);
 
         // when
-        final List<AllSimpleParticipantDto> actual = teamQueryRepository.findMyList(pepper);
+        final List<TeamListQueryResult> actual = teamQueryRepository.findMyList(pepper.getId());
 
         // then
         assertThat(actual).hasSize(4)

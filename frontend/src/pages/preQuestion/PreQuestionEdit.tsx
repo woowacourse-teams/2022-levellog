@@ -1,54 +1,25 @@
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Suspense } from 'react';
 
 import styled from 'styled-components';
 
-import useLevellog from 'hooks/useLevellog';
-import usePreQuestion from 'hooks/usePreQuestion';
-import useSnackbar from 'hooks/useSnackbar';
+import usePreQuestionEdit from 'hooks/preQuestion/usePreQuestionEdit';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import Loading from 'pages/status/Loading';
 
 import BottomBar from 'components/@commons/BottomBar';
 import UiEditor from 'components/@commons/markdownEditor/UiEditor';
-import LevellogReport from 'components/levellogs/LevellogReport';
+import LevellogContent from 'components/levellogs/LevellogContent';
 
 const PreQuestionEdit = () => {
-  const { levellogInfo, getLevellog } = useLevellog();
-  const { preQuestionRef, getPreQuestionOnRef, onClickPreQuestionEditButton } = usePreQuestion();
-  const { showSnackbar } = useSnackbar();
-  const { teamId, levellogId, preQuestionId } = useParams();
-  const navigate = useNavigate();
-
-  const handleClickPreQuestionEditButton = () => {
-    if (
-      typeof teamId === 'string' &&
-      typeof levellogId === 'string' &&
-      typeof preQuestionId === 'string'
-    ) {
-      onClickPreQuestionEditButton({ teamId, levellogId, preQuestionId });
-
-      return;
-    }
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-  };
-
-  useEffect(() => {
-    if (typeof teamId === 'string' && typeof levellogId === 'string') {
-      getLevellog({ teamId, levellogId });
-      getPreQuestionOnRef({ levellogId });
-
-      return;
-    }
-    showSnackbar({ message: MESSAGE.WRONG_ACCESS });
-    navigate(ROUTES_PATH.ERROR);
-  }, []);
+  const { preQuestionRef, handleClickPreQuestionEditButton } = usePreQuestionEdit();
 
   return (
     <S.Container>
       <S.Content>
         <S.LeftContent>
-          <LevellogReport levellogInfo={levellogInfo} />
+          <Suspense fallback={<Loading />}>
+            <LevellogContent />
+          </Suspense>
         </S.LeftContent>
         <S.RightContent>
           <UiEditor

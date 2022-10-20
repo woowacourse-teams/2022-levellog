@@ -15,7 +15,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 
 import com.woowacourse.levellog.fixture.RestAssuredTemplate;
 import com.woowacourse.levellog.team.domain.TeamStatus;
-import com.woowacourse.levellog.team.dto.TeamWriteDto;
+import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import java.util.List;
@@ -44,7 +44,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         RICK.save();
         ROMA.save();
 
-        final TeamWriteDto request = new TeamWriteDto("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
+        final TeamWriteRequest request = new TeamWriteRequest("잠실 제이슨조", "트랙룸", 1, TEAM_START_TIME,
                 List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(ROMA.getId()));
 
         // when
@@ -80,7 +80,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
         saveTeam("잠실 브리조", EVE, 1, EVE, RICK);
         final String teamId = saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER).getTeamId();
-        saveTeam("잠실 포비조", POBI, 1, AFTER_IN_PROGRESS_START_TIME, List.of(POBI), RICK);
+        saveTeam("잠실 포비조", POBI, 1, AFTER_IN_PROGRESS_START_TIME, List.of(POBI), RICK, EVE);
 
         timeStandard.setInProgress();
         RestAssuredTemplate.post("/api/teams/" + teamId + "/close", RICK.getToken());
@@ -98,7 +98,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .body("teams.title", contains("잠실 포비조", "잠실 브리조"),
                         "teams.status", contains("READY", "IN_PROGRESS"),
                         "teams.participants.memberId", contains(
-                                List.of(RICK.getId().intValue()),
+                                List.of(RICK.getId().intValue(), EVE.getId().intValue()),
                                 List.of(EVE.getId().intValue(), RICK.getId().intValue())
                         )
                 );
@@ -122,7 +122,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
         saveTeam("잠실 제이슨조", PEPPER, 1, List.of(POBI), PEPPER, EVE);
         saveTeam("잠실 네오조", RICK, 1, RICK, PEPPER);
         final String teamId = saveTeam("잠실 브리조", EVE, 1, List.of(POBI), EVE, RICK).getTeamId();
-        final String teamId2 = saveTeam("잠실 포비조", POBI, 1, List.of(POBI), RICK).getTeamId();
+        final String teamId2 = saveTeam("잠실 포비조", POBI, 1, List.of(POBI), RICK, EVE).getTeamId();
 
         timeStandard.setInProgress();
         RestAssuredTemplate.post("/api/teams/" + teamId + "/close", EVE.getToken());
@@ -142,7 +142,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
                 .body("teams.title", contains("잠실 포비조", "잠실 브리조"),
                         "teams.status", contains("CLOSED", "CLOSED"),
                         "teams.participants.memberId", contains(
-                                List.of(RICK.getId().intValue()),
+                                List.of(RICK.getId().intValue(), EVE.getId().intValue()),
                                 List.of(EVE.getId().intValue(), RICK.getId().intValue())
                         )
                 );
@@ -365,7 +365,7 @@ class TeamAcceptanceTest extends AcceptanceTest {
 
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
 
-        final TeamWriteDto request = new TeamWriteDto("선릉 브리조", "수성방", 2, TEAM_START_TIME,
+        final TeamWriteRequest request = new TeamWriteRequest("선릉 브리조", "수성방", 2, TEAM_START_TIME,
                 List.of(PEPPER.getId(), EVE.getId(), RICK.getId()), List.of(POBI.getId()));
 
         // when

@@ -6,7 +6,7 @@ const UiViewer = ({ content }: UiViewerProps) => {
 };
 
 interface UiViewerProps {
-  content: string;
+  content: string | undefined;
 }
 
 export default UiViewer;

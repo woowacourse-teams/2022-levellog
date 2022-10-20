@@ -1,16 +1,19 @@
 import styled from 'styled-components';
 
+import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
+import usePreQuestionQuery from 'hooks/preQuestion/usePreQuestionQuery';
+
 import Button from 'components/@commons/Button';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
-import { LevellogInfoType } from 'types/levellog';
 
 const WriterDocument = ({
-  levellogInfo,
-  preQuestionContent,
   whichContentShow,
   handleClickLevellogTag,
   handleClickPreQuestionTag,
 }: LevellogReportProps) => {
+  const { levellogError, levellogInfo } = useLevellogQuery();
+  const { preQuestionError, preQuestion } = usePreQuestionQuery();
+
   return (
     <S.Container>
       <S.ButtonBox>
@@ -25,16 +28,22 @@ const WriterDocument = ({
         </S.PreQuestionButton>
       </S.ButtonBox>
       <S.Content>
-        {whichContentShow.levellog && <UiViewer content={levellogInfo.content} />}
-        {whichContentShow.preQuestion && <UiViewer content={preQuestionContent} />}
+        {whichContentShow.levellog && (
+          <UiViewer
+            content={levellogError ? '레벨로그가 존재하지 않습니다.' : levellogInfo!.content}
+          />
+        )}
+        {whichContentShow.preQuestion && (
+          <UiViewer
+            content={preQuestionError ? '사전 질문이 존재하지 않습니다.' : preQuestion!.content}
+          />
+        )}
       </S.Content>
     </S.Container>
   );
 };
 
 interface LevellogReportProps {
-  levellogInfo: LevellogInfoType;
-  preQuestionContent: string;
   whichContentShow: {
     levellog: boolean;
     preQuestion: boolean;

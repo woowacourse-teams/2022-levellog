@@ -1,11 +1,13 @@
 package com.woowacourse.levellog.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.woowacourse.levellog.levellog.domain.Levellog;
+import com.woowacourse.levellog.levellog.exception.LevellogNotFoundException;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
 import java.util.List;
@@ -22,7 +24,9 @@ class LevellogRepositoryTest extends RepositoryTest {
     void findByAuthorIdAndTeamId() {
         // given
         final Member author = saveMember("pepper");
-        final Team team = saveTeam(author);
+        final Member teamMember = saveMember("roma");
+
+        final Team team = saveTeam(author, teamMember);
         final Levellog levellog = saveLevellog(author, team);
 
         final Long authorId = author.getId();
@@ -40,9 +44,11 @@ class LevellogRepositoryTest extends RepositoryTest {
     void findAllByAuthor() {
         // given
         final Member author = saveMember("pepper");
+        final Member authorTeamMember = saveMember("pepper");
+
         final Member anotherAuthor = saveMember("roma");
 
-        final Team team = saveTeam(author);
+        final Team team = saveTeam(author, authorTeamMember);
         final Team team2 = saveTeam(anotherAuthor, author);
 
         final Levellog authorLevellog1 = saveLevellog(author, team);
@@ -50,13 +56,48 @@ class LevellogRepositoryTest extends RepositoryTest {
         saveLevellog(anotherAuthor, team);
 
         // when
-        final List<Levellog> levellogs = levellogRepository.findAllByAuthor(author);
+        final List<Levellog> levellogs = levellogRepository.findAllByAuthorId(author.getId());
 
         // then
         assertAll(
                 () -> assertThat(levellogs).hasSize(2),
                 () -> assertThat(levellogs).contains(authorLevellog1, authorLevellog2)
         );
+    }
+
+    @Nested
+    @DisplayName("getLevellog 메서드는")
+    class GetLevellog {
+
+        @Test
+        @DisplayName("levellogId에 해당하는 레코드가 존재하면 id에 해당하는 Levellog 엔티티를 반환한다.")
+        void success() {
+            // given
+            final Member member = saveMember("릭");
+            final Member teamMember = saveMember("roma");
+
+            final Team team = saveTeam(member, teamMember);
+            final Long expected = saveLevellog(member, team)
+                    .getId();
+
+            // when
+            final Long actual = levellogRepository.getLevellog(expected)
+                    .getId();
+
+            // then
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("levellogId에 해당하는 레코드가 존재하지 않으면 예외를 던진다.")
+        void getLevellog_notExist_exception() {
+            // given
+            final Long levellogId = 999L;
+
+            // when & then
+            assertThatThrownBy(() -> levellogRepository.getLevellog(levellogId))
+                    .isInstanceOf(LevellogNotFoundException.class);
+        }
     }
 
     @Nested
@@ -68,7 +109,9 @@ class LevellogRepositoryTest extends RepositoryTest {
         void existsByAuthorIdAndTeamId_exists_success() {
             // given
             final Member author = saveMember("pepper");
-            final Team team = saveTeam(author);
+            final Member teamMember = saveMember("roma");
+
+            final Team team = saveTeam(author, teamMember);
             saveLevellog(author, team);
 
             final Long authorId = author.getId();
@@ -86,7 +129,9 @@ class LevellogRepositoryTest extends RepositoryTest {
         void existsByAuthorIdAndTeamId_notExists_success() {
             // given
             final Member author = saveMember("pepper");
-            final Team team = saveTeam(author);
+            final Member teamMember = saveMember("roma");
+
+            final Team team = saveTeam(author, teamMember);
             saveLevellog(author, team);
 
             final Long anotherAuthorId = author.getId() + 1;

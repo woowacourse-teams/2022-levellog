@@ -7,12 +7,11 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 import Image from 'components/@commons/Image';
 import { MemberType } from 'types/member';
 
-const Member = ({ member, setNicknameValue, addToParticipants }: MemberProps) => {
+const Member = ({ member, addEvent }: MemberProps) => {
   const { id, nickname, profileUrl } = member;
 
   const handleClickMember = () => {
-    setNicknameValue('');
-    addToParticipants({ id, nickname, profileUrl });
+    addEvent({ id, nickname, profileUrl });
   };
 
   return (
@@ -25,8 +24,7 @@ const Member = ({ member, setNicknameValue, addToParticipants }: MemberProps) =>
 
 interface MemberProps {
   member: MemberType;
-  setNicknameValue: Dispatch<SetStateAction<string>>;
-  addToParticipants: ({ id, nickname, profileUrl }: MemberType) => void;
+  addEvent: ({ id, nickname, profileUrl }: MemberType) => void;
 }
 
 const S = {

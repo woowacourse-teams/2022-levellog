@@ -1,11 +1,10 @@
 package com.woowacourse.levellog.domain;
 
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.feedback.domain.Feedback;
-import com.woowacourse.levellog.feedback.dto.FeedbackContentDto;
+import com.woowacourse.levellog.feedback.dto.request.FeedbackContentRequest;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.team.domain.Team;
@@ -25,16 +24,16 @@ class FeedbackTest {
         void create_feedbackStudyLength_exception() {
             // given
             final String feedback = "f".repeat(1001);
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackContentRequest feedbackContentRequest = new FeedbackContentRequest(
                     feedback, "Speak 피드백", "Etc 피드백");
 
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
-            assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma, levellog))
+            assertThatThrownBy(() -> feedbackContentRequest.toEntity(roma.getId(), levellog))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("피드백은 1000자 이하여야 합니다.");
         }
@@ -44,16 +43,16 @@ class FeedbackTest {
         void create_feedbackSpeakLength_exception() {
             // given
             final String feedback = "f".repeat(1001);
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackContentRequest feedbackContentRequest = new FeedbackContentRequest(
                     "Study 피드백", feedback, "Etc 피드백");
 
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
-            assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma, levellog))
+            assertThatThrownBy(() -> feedbackContentRequest.toEntity(roma.getId(), levellog))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("피드백은 1000자 이하여야 합니다.");
         }
@@ -63,16 +62,16 @@ class FeedbackTest {
         void create_feedbackEtcLength_exception() {
             // given
             final String feedback = "f".repeat(1001);
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackContentRequest feedbackContentRequest = new FeedbackContentRequest(
                     "Study 피드백", "Speak 피드백", feedback);
 
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
             // when & then
-            assertThatThrownBy(() -> feedbackContentDto.toFeedback(roma, levellog))
+            assertThatThrownBy(() -> feedbackContentRequest.toEntity(roma.getId(), levellog))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("피드백은 1000자 이하여야 합니다.");
         }
@@ -86,14 +85,14 @@ class FeedbackTest {
         @DisplayName("Study 피드백의 길이가 1000자 초과일 경우 예외를 발생시킨다.")
         void update_studyLength_exception() {
             // given
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackContentRequest feedbackContentRequest = new FeedbackContentRequest(
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
-            final Feedback feedback = feedbackContentDto.toFeedback(roma, levellog);
+            final Feedback feedback = feedbackContentRequest.toEntity(roma.getId(), levellog);
 
             final String studyFeedback = "f".repeat(1001);
 
@@ -107,14 +106,14 @@ class FeedbackTest {
         @DisplayName("Speak 피드백의 길이가 1000자 초과일 경우 예외를 발생시킨다.")
         void update_speakLength_exception() {
             // given
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackContentRequest feedbackContentRequest = new FeedbackContentRequest(
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
-            final Feedback feedback = feedbackContentDto.toFeedback(roma, levellog);
+            final Feedback feedback = feedbackContentRequest.toEntity(roma.getId(), levellog);
 
             final String speakFeedback = "f".repeat(1001);
 
@@ -128,14 +127,14 @@ class FeedbackTest {
         @DisplayName("Etc 피드백의 길이가 1000자 초과일 경우 예외를 발생시킨다.")
         void update_etcLength_exception() {
             // given
-            final FeedbackContentDto feedbackContentDto = new FeedbackContentDto(
+            final FeedbackContentRequest feedbackContentRequest = new FeedbackContentRequest(
                     "Study 피드백", "Speak 피드백", "Etc 피드백");
             final Member roma = new Member("로마", 123456, "image.png");
             final Member eve = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "progile.img", 1);
-            final Levellog levellog = Levellog.of(eve, team, "레벨로그 작성 내용");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(eve.getId(), team, "레벨로그 작성 내용");
 
-            final Feedback feedback = feedbackContentDto.toFeedback(roma, levellog);
+            final Feedback feedback = feedbackContentRequest.toEntity(roma.getId(), levellog);
 
             final String etcFeedback = "f".repeat(1001);
 

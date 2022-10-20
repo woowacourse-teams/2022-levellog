@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.domain;
 
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -41,11 +40,11 @@ public class PreQuestionTest {
         @DisplayName("사전 질문이 null 또는 공백이 들어오면 예외를 던진다.")
         void constructor_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
-            final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
-            final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
 
             // when & then
-            assertThatThrownBy(() -> new PreQuestion(levellog, from, preQuestion))
+            assertThatThrownBy(() -> new PreQuestion(levellog, from.getId(), preQuestion))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("사전 내용은 공백이나 null일 수 없습니다.");
         }
@@ -54,18 +53,18 @@ public class PreQuestionTest {
         @DisplayName("내가 쓴 레벨로그의 사전 질문을 작성하면 예외를 던진다.")
         void constructor_preQuestionMyLevellog_exception() {
             // given
-            final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
-            final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
 
             final String preQuestion = "알린의 사전 질문";
 
             // when & then
-            assertThatThrownBy(() -> new PreQuestion(levellog, author, preQuestion))
+            assertThatThrownBy(() -> new PreQuestion(levellog, author.getId(), preQuestion))
                     .isInstanceOf(InvalidPreQuestionException.class)
                     .hasMessageContaining("잘못된 사전 질문 요청입니다.");
         }
-    }
 
+    }
     @Nested
     @DisplayName("update 메서드는")
     class Update {
@@ -74,10 +73,10 @@ public class PreQuestionTest {
         @DisplayName("사전 질문을 수정한다.")
         void success() {
             // given
-            final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
-            final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
 
-            final PreQuestion preQuestion = new PreQuestion(levellog, from, "로마가 쓴 사전 질문");
+            final PreQuestion preQuestion = new PreQuestion(levellog, from.getId(), "로마가 쓴 사전 질문");
 
             // when
             preQuestion.update("수정된 사전 질문");
@@ -92,11 +91,11 @@ public class PreQuestionTest {
         @DisplayName("사전 질문이 null 또는 공백이 들어오면 예외를 던진다.")
         void update_preQuestionNullOrBlank_exception(final String preQuestion) {
             // given
-            final Team team = new Team("선릉 네오조", "목성방", TEAM_START_TIME, "네오조.img", 1);
-            final Levellog levellog = Levellog.of(author, team, "알린의 레벨로그");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
 
             // when & then
-            assertThatThrownBy(() -> new PreQuestion(levellog, from, preQuestion))
+            assertThatThrownBy(() -> new PreQuestion(levellog, from.getId(), preQuestion))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("사전 내용은 공백이나 null일 수 없습니다.");
         }

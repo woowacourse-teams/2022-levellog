@@ -1,11 +1,10 @@
-import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import useInterviewQuestion from 'hooks/useInterviewQuestion';
-import useLevellog from 'hooks/useLevellog';
-import useTeam from 'hooks/useTeam';
+import useInterviewQuestions from 'hooks/interviewQuestion/useInterviewQuestions';
+import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
+import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
 import EmptyInterviewQuestion from 'pages/status/EmptyInterviewQuestion';
@@ -20,69 +19,43 @@ import {
   InterviewQuestionsInLevellogType,
   InterviewQuestionInfoType,
 } from 'types/interviewQuestion';
-import { checkFirstWordFinalConsonant, feedbackAddUriBuilder } from 'utils/util';
+import { convertFirstWordFinalConsonant, feedbackAddUriBuilder } from 'utils/util';
 
 const InterviewQuestions = () => {
-  const { levellogInfo, getLevellog } = useLevellog();
-  const { interviewQuestionInfosInLevellog } = useInterviewQuestion();
+  const { levellogInfo } = useLevellogQuery();
+  const { interviewQuestions } = useInterviewQuestions();
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { team } = useTeam();
   const { teamId, levellogId } = useParams();
-
-  if (typeof levellogId !== 'string' || typeof teamId !== 'string') {
-    return <Loading />;
-  }
-
-  useEffect(() => {
-    getLevellog({ teamId, levellogId });
-  }, []);
 
   if (
     !loginUserId ||
     !loginUserNickname ||
     !loginUserProfileUrl ||
+    !levellogInfo ||
+    !team ||
     Object.keys(levellogInfo).length === 0
   ) {
     return <Loading />;
-  }
-
-  if (interviewQuestionInfosInLevellog.length === 0) {
-    return (
-      <>
-        <ContentHeader
-          imageUrl={loginUserProfileUrl}
-          title={`${
-            checkFirstWordFinalConsonant({
-              word: loginUserNickname,
-            })
-              ? `${loginUserNickname}이 `
-              : `${loginUserNickname}가 `
-          }
-        받은 인터뷰 질문들`}
-        ></ContentHeader>
-        <EmptyInterviewQuestion
-          isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
-          path={feedbackAddUriBuilder({ teamId, levellogId })}
-        />
-      </>
-    );
   }
 
   return (
     <>
       <ContentHeader
         imageUrl={loginUserProfileUrl}
-        title={`${
-          checkFirstWordFinalConsonant({
-            word: loginUserNickname,
-          })
-            ? `${loginUserNickname}이 `
-            : `${loginUserNickname}가 `
-        }
+        title={`${convertFirstWordFinalConsonant({
+          word: loginUserNickname,
+        })}
         받은 인터뷰 질문들`}
-      ></ContentHeader>
+      />
       <S.Container>
-        {interviewQuestionInfosInLevellog.map(
+        {interviewQuestions?.length === 0 && (
+          <EmptyInterviewQuestion
+            isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
+            path={feedbackAddUriBuilder({ teamId, levellogId })}
+          />
+        )}
+        {interviewQuestions?.map(
           (interviewQuestionInfoInLevellog: InterviewQuestionsInLevellogType) => (
             <S.Box key={interviewQuestionInfoInLevellog.author.id}>
               <S.AuthorBox>
@@ -92,11 +65,9 @@ const InterviewQuestions = () => {
                   githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
                 />
                 <S.AuthorText>
-                  {checkFirstWordFinalConsonant({
+                  {convertFirstWordFinalConsonant({
                     word: interviewQuestionInfoInLevellog.author.nickname,
-                  })
-                    ? `${interviewQuestionInfoInLevellog.author.nickname}이 `
-                    : `${interviewQuestionInfoInLevellog.author.nickname}가 `}
+                  })}
                   기록해준 질문들
                 </S.AuthorText>
               </S.AuthorBox>

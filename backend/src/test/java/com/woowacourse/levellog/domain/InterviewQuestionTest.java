@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.domain;
 
-import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -29,12 +28,12 @@ class InterviewQuestionTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(to.getId(), team, "레벨로그 작성 내용");
             final String content = "스프링이란?";
 
             // when & then
-            assertDoesNotThrow(() -> InterviewQuestion.of(author, levellog, content));
+            assertDoesNotThrow(() -> new InterviewQuestion(author.getId(), levellog, content));
         }
 
         @Test
@@ -43,12 +42,12 @@ class InterviewQuestionTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "스프링을 공부하였습니다.");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(to.getId(), team, "스프링을 공부하였습니다.");
             final String content = "a".repeat(256);
 
             // when & then
-            assertThatThrownBy(() -> InterviewQuestion.of(author, levellog, content))
+            assertThatThrownBy(() -> new InterviewQuestion(author.getId(), levellog, content))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContainingAll("인터뷰 질문은 255자 이하여야합니다.", String.valueOf(content.length()));
         }
@@ -63,14 +62,15 @@ class InterviewQuestionTest {
         void success() {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
+            MockEntityFactory.setId(1L, author);
             final Member to = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
-            final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(to.getId(), team, "레벨로그 작성 내용");
+            final InterviewQuestion interviewQuestion = new InterviewQuestion(author.getId(), levellog, "스프링이란?");
 
             // when
             final String updatedContent = "스프링 빈이란?";
-            interviewQuestion.updateContent(updatedContent, author);
+            interviewQuestion.updateContent(updatedContent, author.getId());
 
             // then
             assertThat(interviewQuestion.getContent())
@@ -83,13 +83,13 @@ class InterviewQuestionTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Member to = new Member("이브", 123123, "image.png");
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
-            final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(to.getId(), team, "레벨로그 작성 내용");
+            final InterviewQuestion interviewQuestion = new InterviewQuestion(author.getId(), levellog, "스프링이란?");
 
             // when & then
             final String updatedContent = "a".repeat(256);
-            assertThatThrownBy(() -> interviewQuestion.updateContent(updatedContent, author))
+            assertThatThrownBy(() -> interviewQuestion.updateContent(updatedContent, author.getId()))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContainingAll("인터뷰 질문은 255자 이하여야합니다.", String.valueOf(updatedContent.length()));
         }
@@ -105,12 +105,12 @@ class InterviewQuestionTest {
             MockEntityFactory.setId(1L, author);
             MockEntityFactory.setId(2L, otherMember);
 
-            final Team team = new Team("잠실 네오조", "트랙룸", TEAM_START_TIME, "jamsil.img", 1);
-            final Levellog levellog = Levellog.of(to, team, "레벨로그 작성 내용");
-            final InterviewQuestion interviewQuestion = InterviewQuestion.of(author, levellog, "스프링이란?");
+            final Team team = TeamTest.saveTeam();
+            final Levellog levellog = new Levellog(to.getId(), team, "레벨로그 작성 내용");
+            final InterviewQuestion interviewQuestion = new InterviewQuestion(author.getId(), levellog, "스프링이란?");
 
             // when & then
-            assertThatThrownBy(() -> interviewQuestion.updateContent("스프링 빈이란?", otherMember))
+            assertThatThrownBy(() -> interviewQuestion.updateContent("스프링 빈이란?", otherMember.getId()))
                     .isInstanceOf(MemberNotAuthorException.class)
                     .hasMessageContainingAll("작성자가 아닙니다.", String.valueOf(otherMember.getId()),
                             String.valueOf(author.getId()), String.valueOf(levellog.getId()));

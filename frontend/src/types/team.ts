@@ -1,10 +1,10 @@
 import { MemberType } from 'types/member';
 
 export interface TeamApiType {
-  teamId: string;
-  teamInfo: TeamCustomHookType;
   accessToken: string | null;
-  teamsCondition?: teamsConditionType;
+  teamId: string | undefined;
+  teamInfo: TeamCustomHookType;
+  teamsCondition?: TeamsConditionType;
 }
 
 export interface TeamSubmitType {
@@ -34,7 +34,7 @@ export interface InterviewTeamType {
   startAt: string;
   teamImage: string;
   status: TeamStatusType;
-  participants: Pick<ParticipantType, 'memberId' | 'profileUrl'>[];
+  participants: Pick<ParticipantType, 'memberId' | 'profileUrl' | 'nickname'>[];
 }
 
 export interface InterviewTeamDetailType {
@@ -69,5 +69,11 @@ export interface WatcherType {
   profileUrl: string;
 }
 
+export interface TeamConditionsType {
+  open: boolean;
+  close: boolean;
+  my: boolean;
+}
+
 export type TeamStatusType = 'READY' | 'IN_PROGRESS' | 'CLOSED' | '';
-export type teamsConditionType = 'open' | 'close';
+export type TeamsConditionType = 'open' | 'close' | 'my';

@@ -5,7 +5,6 @@ import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
 import com.woowacourse.levellog.levellog.exception.InvalidLevellogException;
-import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.exception.MemberNotAuthorException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,25 +26,24 @@ public class PreQuestion extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_pre_question_levellog"))
     private Levellog levellog;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_pre_question_from_member"))
-    private Member author;
+    @Column(nullable = false)
+    private Long authorId;
 
     @Column(nullable = false)
     @Lob
     private String content;
 
-    public PreQuestion(final Levellog levellog, final Member author, final String content) {
-        validateSelfPreQuestion(levellog, author);
+    public PreQuestion(final Levellog levellog, final Long authorId, final String content) {
+        validateSelfPreQuestion(levellog, authorId);
         validateContent(content);
 
         this.levellog = levellog;
-        this.author = author;
+        this.authorId = authorId;
         this.content = content;
     }
 
-    private void validateSelfPreQuestion(final Levellog levellog, final Member member) {
-        levellog.validateSelfPreQuestion(member);
+    private void validateSelfPreQuestion(final Levellog levellog, final Long memberId) {
+        levellog.validateSelfPreQuestion(memberId);
     }
 
     private void validateContent(final String content) {
@@ -65,8 +63,8 @@ public class PreQuestion extends BaseEntity {
         return this.levellog.equals(levellog);
     }
 
-    public boolean isSameAuthor(final Member member) {
-        return author.equals(member);
+    public boolean isSameAuthor(final Long memberId) {
+        return authorId.equals(memberId);
     }
 
     public void validateLevellog(final Levellog levellog) {
@@ -77,11 +75,11 @@ public class PreQuestion extends BaseEntity {
         }
     }
 
-    public void validateMyQuestion(final Member member) {
-        if (!isSameAuthor(member)) {
+    public void validateMyQuestion(final Long memberId) {
+        if (!isSameAuthor(memberId)) {
             throw new MemberNotAuthorException(DebugMessage.init()
-                    .append("loginMemberId", member.getId())
-                    .append("authorMemberId", author.getId())
+                    .append("loginMemberId", memberId)
+                    .append("authorMemberId", authorId)
                     .append("preQuestionId", getId()));
         }
     }

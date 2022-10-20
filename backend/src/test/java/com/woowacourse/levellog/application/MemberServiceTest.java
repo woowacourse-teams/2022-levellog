@@ -4,15 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.woowacourse.levellog.authentication.dto.GithubProfileDto;
+import com.woowacourse.levellog.authentication.dto.response.GithubProfileResponse;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.NicknameMapping;
-import com.woowacourse.levellog.member.dto.MemberCreateDto;
-import com.woowacourse.levellog.member.dto.MemberDto;
-import com.woowacourse.levellog.member.dto.MembersDto;
-import com.woowacourse.levellog.member.dto.NicknameUpdateDto;
+import com.woowacourse.levellog.member.dto.request.MemberCreateRequest;
+import com.woowacourse.levellog.member.dto.request.NicknameUpdateRequest;
+import com.woowacourse.levellog.member.dto.response.MemberResponse;
+import com.woowacourse.levellog.member.dto.response.MemberResponses;
 import com.woowacourse.levellog.member.exception.MemberAlreadyExistException;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,7 @@ class MemberServiceTest extends ServiceTest {
         final Member alien = saveMember("alien");
 
         // when
-        final MembersDto members = memberService.searchByNickname("ali");
+        final MemberResponses members = memberService.searchByNickname("ali");
 
         // then
         assertAll(
@@ -47,14 +46,14 @@ class MemberServiceTest extends ServiceTest {
     @DisplayName("updateNickname 메서드는 닉네임을 업데이트한다.")
     void updateNickname() {
         // given
-        final Long memberId = saveMember("로마").getId();
-        final NicknameUpdateDto nicknameUpdateDto = new NicknameUpdateDto("알린");
+        final Member roma = saveMember("로마");
+        final NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("알린");
 
         // when
-        memberService.updateNickname(nicknameUpdateDto, memberId);
+        memberService.updateNickname(nicknameUpdateRequest, getLoginStatus(roma));
 
         // then
-        final Member updateMember = memberRepository.findById(memberId)
+        final Member updateMember = memberRepository.findById(roma.getId())
                 .orElseThrow();
         assertThat(updateMember.getNickname()).isEqualTo("알린");
     }
@@ -67,10 +66,10 @@ class MemberServiceTest extends ServiceTest {
         @DisplayName("사전에 깃허브 닉네임을 등록하지 않은 새로운 멤버를 저장한다.")
         void save_notRegistered_success() {
             // given
-            final MemberCreateDto memberCreateDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
+            final MemberCreateRequest memberCreateRequest = new MemberCreateRequest("로마", 12345678, "profileUrl.image");
 
             // when
-            final Long id = memberService.save(memberCreateDto);
+            final Long id = memberService.save(memberCreateRequest);
 
             // then
             assertAll(
@@ -84,10 +83,11 @@ class MemberServiceTest extends ServiceTest {
         void save_nicknameMapping_success() {
             // given
             nicknameMappingRepository.save(new NicknameMapping("깃허브로마", "우테코로마"));
-            final MemberCreateDto memberCreateDto = new MemberCreateDto("깃허브로마", 12345678, "profileUrl.image");
+            final MemberCreateRequest memberCreateRequest = new MemberCreateRequest("깃허브로마", 12345678,
+                    "profileUrl.image");
 
             // when
-            final Long id = memberService.save(memberCreateDto);
+            final Long id = memberService.save(memberCreateRequest);
 
             // then
             assertAll(
@@ -100,15 +100,15 @@ class MemberServiceTest extends ServiceTest {
         @DisplayName("동일한 깃허브로 가입한 멤버가 존재하면 예외를 던진다.")
         void save_memberAlreadyExist_exception() {
             // given
-            final MemberCreateDto beforeSavedDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
-            memberService.save(beforeSavedDto);
+            final MemberCreateRequest beforeSavedRequest = new MemberCreateRequest("로마", 12345678, "profileUrl.image");
+            memberService.save(beforeSavedRequest);
 
-            final MemberCreateDto newSaveDto = new MemberCreateDto("로마", 12345678, "profileUrl.image");
+            final MemberCreateRequest newSaveRequest = new MemberCreateRequest("로마", 12345678, "profileUrl.image");
 
             // when & then
-            assertThatThrownBy(() -> memberService.save(newSaveDto))
+            assertThatThrownBy(() -> memberService.save(newSaveRequest))
                     .isInstanceOf(MemberAlreadyExistException.class)
-                    .hasMessageContainingAll("멤버가 이미 존재합니다.", String.valueOf(newSaveDto.getGithubId()));
+                    .hasMessageContainingAll("멤버가 이미 존재합니다.", String.valueOf(newSaveRequest.getGithubId()));
         }
     }
 
@@ -123,24 +123,14 @@ class MemberServiceTest extends ServiceTest {
             final Member roma = saveMember("로마");
 
             // when
-            final MemberDto memberDto = memberService.findMemberById(roma.getId());
+            final MemberResponse memberResponse = memberService.findMemberById(getLoginStatus(roma));
 
             // then
             assertAll(
-                    () -> assertThat(memberDto.getId()).isEqualTo(roma.getId()),
-                    () -> assertThat(memberDto.getNickname()).isEqualTo("로마")
+                    () -> assertThat(memberResponse.getId()).isEqualTo(roma.getId()),
+                    () -> assertThat(memberResponse.getNickname()).isEqualTo("로마")
             );
         }
-
-        @Test
-        @DisplayName("존재하지 않는 Id로 요청을 보낼 경우 예외를 던진다.")
-        void findMemberById_memberNotFound_exception() {
-            // when & then
-            assertThatThrownBy(() -> memberService.findMemberById(1000L))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", "1000");
-        }
-
     }
 
     @Nested
@@ -154,10 +144,11 @@ class MemberServiceTest extends ServiceTest {
             final Member savedMember = saveMember("로마");
             final Integer githubId = savedMember.getGithubId();
 
-            final GithubProfileDto githubProfileDto = new GithubProfileDto(githubId.toString(), "test", "test.image");
+            final GithubProfileResponse githubProfileResponse = new GithubProfileResponse(githubId.toString(), "test",
+                    "test.image");
 
             // when
-            final Long id = memberService.saveIfNotExist(githubProfileDto, githubId);
+            final Long id = memberService.saveIfNotExist(githubProfileResponse, githubId);
 
             // then
             assertThat(savedMember.getId()).isEqualTo(id);
@@ -170,11 +161,12 @@ class MemberServiceTest extends ServiceTest {
             final Member savedMember = saveMember("로마");
             final int githubId = savedMember.getGithubId() + 999;
 
-            final GithubProfileDto githubProfileDto = new GithubProfileDto(Integer.toString(githubId), "test",
+            final GithubProfileResponse githubProfileResponse = new GithubProfileResponse(Integer.toString(githubId),
+                    "test",
                     "test.image");
 
             // when
-            final Long id = memberService.saveIfNotExist(githubProfileDto, githubId);
+            final Long id = memberService.saveIfNotExist(githubProfileResponse, githubId);
 
             // then
             assertThat(id).isEqualTo(savedMember.getId() + 1);

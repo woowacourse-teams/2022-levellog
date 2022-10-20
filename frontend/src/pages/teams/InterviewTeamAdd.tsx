@@ -1,64 +1,17 @@
-import { useEffect } from 'react';
-
 import styled from 'styled-components';
 
-import useTeamPage from 'hooks/useTeamPage';
+import useTeamAdd from 'hooks/team/useTeamAdd';
 
 import TeamForm from 'components/teams/TeamForm';
 
 const InterviewTeamAdd = () => {
-  const {
-    state: {
-      participantNicknameValue,
-      watcherNicknameValue,
-      watcherMembers,
-      participantMembers,
-      watchers,
-      participants,
-    },
-    ref: { teamInfoRef },
-    handle: {
-      setParticipantNicknameValue,
-      setWatcherNicknameValue,
-      updateMembers,
-      updateWatchers,
-      addToParticipants,
-      addToWatcherParticipants,
-      removeToParticipants,
-      remoteToWatcherParticipants,
-      handleChangeParticipantInput,
-      handleChangeWatcherInput,
-      handleClickTeamAddButton,
-    },
-  } = useTeamPage();
-
-  useEffect(() => {
-    updateMembers({ nicknameValue: participantNicknameValue });
-  }, [participantNicknameValue]);
-
-  useEffect(() => {
-    updateWatchers({ nicknameValue: watcherNicknameValue });
-  }, [watcherNicknameValue]);
+  const { teamInfoRef, handleClickTeamAddButton } = useTeamAdd();
 
   return (
     <S.Container>
       <TeamForm
-        purpose={'생성하기'}
-        participantNicknameValue={participantNicknameValue}
-        watcherNicknameValue={watcherNicknameValue}
-        participants={participants}
-        participantMembers={participantMembers}
-        watcherMembers={watcherMembers}
-        watchers={watchers}
+        purpose={'추가하기'}
         teamInfoRef={teamInfoRef}
-        setParticipantNicknameValue={setParticipantNicknameValue}
-        setWatcherNicknameValue={setWatcherNicknameValue}
-        addToParticipants={addToParticipants}
-        addToWatcherParticipants={addToWatcherParticipants}
-        removeToParticipants={removeToParticipants}
-        remoteToWatcherParticipants={remoteToWatcherParticipants}
-        handleChangeWatcherInput={handleChangeWatcherInput}
-        handleChangeParticipantInput={handleChangeParticipantInput}
         handleClickTeamButton={handleClickTeamAddButton}
       />
     </S.Container>

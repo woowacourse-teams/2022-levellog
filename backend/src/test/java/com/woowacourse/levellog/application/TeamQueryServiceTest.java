@@ -9,13 +9,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.member.domain.Member;
-import com.woowacourse.levellog.member.exception.MemberNotFoundException;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
-import com.woowacourse.levellog.team.dto.TeamDto;
-import com.woowacourse.levellog.team.dto.TeamListDto;
-import com.woowacourse.levellog.team.dto.TeamSimpleDto;
+import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
+import com.woowacourse.levellog.team.dto.response.TeamListResponse;
+import com.woowacourse.levellog.team.dto.response.TeamListResponses;
 import com.woowacourse.levellog.team.exception.TeamNotFoundException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -45,11 +45,11 @@ public class TeamQueryServiceTest extends ServiceTest {
             entityManager.flush();
 
             //when
-            final TeamListDto response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
+            final TeamListResponses response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
 
             //then
             assertThat(response.getTeams()).hasSize(2)
-                    .extracting(TeamSimpleDto::getId, TeamSimpleDto::getStatus)
+                    .extracting(TeamListResponse::getId, TeamListResponse::getStatus)
                     .containsExactly(
                             tuple(romaTeam.getId(), READY),
                             tuple(pepperTeam.getId(), READY)
@@ -76,11 +76,11 @@ public class TeamQueryServiceTest extends ServiceTest {
             entityManager.flush();
 
             //when
-            final TeamListDto response = teamQueryService.findAll(TeamFilterCondition.CLOSE, 0, 10);
+            final TeamListResponses response = teamQueryService.findAll(TeamFilterCondition.CLOSE, 0, 10);
 
             //then
             assertThat(response.getTeams()).hasSize(2)
-                    .extracting(TeamSimpleDto::getId, TeamSimpleDto::getStatus)
+                    .extracting(TeamListResponse::getId, TeamListResponse::getStatus)
                     .containsExactly(
                             tuple(eveTeam.getId(), CLOSED),
                             tuple(rickTeam.getId(), CLOSED)
@@ -102,7 +102,7 @@ public class TeamQueryServiceTest extends ServiceTest {
             entityManager.flush();
 
             //when
-            final TeamListDto response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
+            final TeamListResponses response = teamQueryService.findAll(TeamFilterCondition.OPEN, 0, 10);
 
             //then
             assertThat(response.getTeams()).hasSize(1);
@@ -122,11 +122,12 @@ public class TeamQueryServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             //when
-            final TeamDto response = teamQueryService.findByTeamIdAndMemberId(team.getId(), rick.getId());
+            final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                    getLoginStatus(rick));
 
             //then
             assertAll(
-                    () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                    () -> assertThat(response.getTitle()).isEqualTo(team.getDetail().getTitle()),
                     () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                     () -> assertThat(response.getStatus()).isEqualTo(READY),
                     () -> assertThat(response.getParticipants()).hasSize(2)
@@ -137,7 +138,7 @@ public class TeamQueryServiceTest extends ServiceTest {
         @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
         void findByTeamIdAndMemberId_notFound_exception() {
             // when & then
-            assertThatThrownBy(() -> teamQueryService.findByTeamIdAndMemberId(1000L, 1L))
+            assertThatThrownBy(() -> teamQueryService.findByTeamIdAndMemberId(1000L, LoginStatus.fromLogin(1L)))
                     .isInstanceOf(TeamNotFoundException.class)
                     .hasMessageContaining("팀이 존재하지 않습니다.");
         }
@@ -159,14 +160,14 @@ public class TeamQueryServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma, alien, eve);
 
                 //when
-                final TeamDto responseOfPepper = teamQueryService.findByTeamIdAndMemberId(team.getId(),
-                        pepper.getId());
-                final TeamDto responseOfEve = teamQueryService.findByTeamIdAndMemberId(team.getId(),
-                        eve.getId());
+                final TeamDetailResponse responseOfPepper = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                        getLoginStatus(pepper));
+                final TeamDetailResponse responseOfEve = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                        getLoginStatus(eve));
 
                 //then
                 assertAll(
-                        () -> assertThat(responseOfPepper.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(responseOfPepper.getTitle()).isEqualTo(team.getDetail().getTitle()),
                         () -> assertThat(responseOfPepper.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(responseOfPepper.getParticipants()).hasSize(5),
                         () -> assertThat(responseOfPepper.getIsParticipant()).isTrue(),
@@ -193,11 +194,12 @@ public class TeamQueryServiceTest extends ServiceTest {
                 final Team team = saveTeam(2, rick, pepper, roma);
 
                 //when
-                final TeamDto response = teamQueryService.findByTeamIdAndMemberId(team.getId(), pepper.getId());
+                final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                        getLoginStatus(pepper));
 
                 //then
                 assertAll(
-                        () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(response.getTitle()).isEqualTo(team.getDetail().getTitle()),
                         () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(response.getParticipants()).hasSize(3),
 
@@ -223,11 +225,12 @@ public class TeamQueryServiceTest extends ServiceTest {
                 final Team team = saveTeam(1, rick, List.of(pobi), pepper);
 
                 //when
-                final TeamDto response = teamQueryService.findByTeamIdAndMemberId(team.getId(), pobi.getId());
+                final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                        getLoginStatus(pobi));
 
                 //then
                 assertAll(
-                        () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(response.getTitle()).isEqualTo(team.getDetail().getTitle()),
                         () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(response.getParticipants()).hasSize(2),
                         () -> assertThat(response.getWatchers()).hasSize(1),
@@ -254,11 +257,12 @@ public class TeamQueryServiceTest extends ServiceTest {
                 final Team team = saveTeam(rick, pepper, roma);
 
                 //when
-                final TeamDto response = teamQueryService.findByTeamIdAndMemberId(team.getId(), alien.getId());
+                final TeamDetailResponse response = teamQueryService.findByTeamIdAndMemberId(team.getId(),
+                        getLoginStatus(alien));
 
                 //then
                 assertAll(
-                        () -> assertThat(response.getTitle()).isEqualTo(team.getTitle()),
+                        () -> assertThat(response.getTitle()).isEqualTo(team.getDetail().getTitle()),
                         () -> assertThat(response.getHostId()).isEqualTo(rick.getId()),
                         () -> assertThat(response.getParticipants()).hasSize(3),
                         () -> assertThat(response.getInterviewers()).isEmpty(),
@@ -286,19 +290,11 @@ public class TeamQueryServiceTest extends ServiceTest {
             saveTeam(harry, alien);
 
             // when
-            final List<TeamSimpleDto> teams = teamQueryService.findAllByMemberId(roma.getId()).getTeams();
+            final List<TeamListResponse> teams = teamQueryService.findAllByMemberId(getLoginStatus(roma))
+                    .getTeams();
 
             // then
             assertThat(teams).hasSize(2);
-        }
-
-        @Test
-        @DisplayName("주어진 memberId의 멤버가 존재하지 않을 때 예외를 던진다.")
-        void findAllByMemberId_memberNotFound_exception() {
-            // when & then
-            assertThatThrownBy(() -> teamQueryService.findAllByMemberId(100_000L))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessageContainingAll("멤버가 존재하지 않습니다.", String.valueOf(100_000L));
         }
     }
 }

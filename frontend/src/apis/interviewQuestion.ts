@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from 'axios';
+import { fetcher } from 'apis';
 
 import {
   InterviewQuestionApiType,
@@ -6,68 +6,71 @@ import {
   InterviewQuestionInfoType,
 } from 'types/interviewQuestion';
 
-export const requestGetInterviewQuestion = ({
+export const requestGetInterviewQuestion = async ({
   accessToken,
   levellogId,
-}: Pick<InterviewQuestionApiType, 'accessToken' | 'levellogId'>): AxiosPromise<
+}: Pick<InterviewQuestionApiType, 'accessToken' | 'levellogId'>): Promise<
   Record<'interviewQuestions', InterviewQuestionInfoType[]>
 > => {
-  return axios({
-    method: 'get',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/interview-questions/my`,
+  const { data } = await fetcher.get(`/levellogs/${levellogId}/interview-questions/my`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
+
+  return data;
 };
 
-export const requestGetInterviewQuestionsInLevellog = ({
+export const requestGetInterviewQuestionsInLevellog = async ({
   accessToken,
   levellogId,
-}: Pick<InterviewQuestionApiType, 'accessToken' | 'levellogId'>): AxiosPromise<
+}: Pick<InterviewQuestionApiType, 'accessToken' | 'levellogId'>): Promise<
   Record<'interviewQuestions', InterviewQuestionsInLevellogType[]>
 > => {
-  return axios({
-    method: 'get',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/interview-questions`,
+  const { data } = await fetcher.get(`/levellogs/${levellogId}/interview-questions`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
+
+  return data;
 };
 
-//레벨로그, 사전질문 등의 방식과 비교 후 조정
-export const requestPostInterviewQuestion = ({
+export const requestPostInterviewQuestion = async ({
   accessToken,
   levellogId,
   interviewQuestion,
-}: Omit<InterviewQuestionApiType, 'interviewQuestionId'>): AxiosPromise<void> => {
-  return axios({
-    method: 'post',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/interview-questions`,
-    headers: { Authorization: `Bearer ${accessToken}` },
-    data: { content: interviewQuestion },
-  });
+}: Omit<InterviewQuestionApiType, 'interviewQuestionId'>) => {
+  await fetcher.post(
+    `/levellogs/${levellogId}/interview-questions`,
+    {
+      content: interviewQuestion,
+    },
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  );
 };
 
-export const requestDeleteInterviewQuestion = ({
+export const requestDeleteInterviewQuestion = async ({
   accessToken,
   levellogId,
   interviewQuestionId,
-}: Omit<InterviewQuestionApiType, 'interviewQuestion'>): AxiosPromise<void> => {
-  return axios({
-    method: 'delete',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`,
+}: Omit<InterviewQuestionApiType, 'interviewQuestion'>) => {
+  await fetcher.delete(`/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 };
 
-export const requestEditInterviewQuestion = ({
+export const requestEditInterviewQuestion = async ({
   accessToken,
   levellogId,
   interviewQuestionId,
   interviewQuestion,
 }: InterviewQuestionApiType) => {
-  return axios({
-    method: 'put',
-    url: `${process.env.API_URI}/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`,
-    headers: { Authorization: `Bearer ${accessToken}` },
-    data: { content: interviewQuestion },
-  });
+  await fetcher.put(
+    `/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`,
+    {
+      content: interviewQuestion,
+    },
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  );
 };

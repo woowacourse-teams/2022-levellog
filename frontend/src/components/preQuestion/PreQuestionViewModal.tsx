@@ -23,10 +23,10 @@ const PreQuestionViewModal = ({
 }: PreQuestionViewModalProps) => {
   const { levellogId, preQuestionId } = participant;
 
-  const handleClickDeleteLevellog = async () => {
+  const handleClickDeletePreQuestion = async () => {
     if (levellogId && preQuestionId) {
       await onClickDeletePreQuestion({ levellogId, preQuestionId });
-      getTeam();
+      await getTeam();
     }
   };
 
@@ -36,15 +36,15 @@ const PreQuestionViewModal = ({
       <S.Container>
         <S.Header>
           <FlexBox alignItems={'center'} gap={0.375}>
-            <Image src={preQuestion.author.profileUrl} sizes={'MEDIUM'} />
-            <S.AuthorText>{preQuestion.author.nickname}의 사전질문</S.AuthorText>
+            <Image src={preQuestion?.author.profileUrl} sizes={'MEDIUM'} />
+            <S.AuthorText>{preQuestion?.author.nickname}의 사전질문</S.AuthorText>
           </FlexBox>
           <S.CloseButton id="closeButton" onClick={handleClickClosePreQuestionModal}>
             <Image src={closeIcon} sizes={'SMALL'} />
           </S.CloseButton>
         </S.Header>
         <S.PreQuestion>
-          <UiViewer content={preQuestion.content} />
+          <UiViewer content={preQuestion?.content} />
         </S.PreQuestion>
         <S.Footer>
           <Link
@@ -52,12 +52,12 @@ const PreQuestionViewModal = ({
               teamId,
               levellogId,
               preQuestionId,
-              authorId: preQuestion.author.id,
+              authorId: preQuestion?.author.id,
             })}
           >
             <Button>수정하기</Button>
           </Link>
-          <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>
+          <Button onClick={handleClickDeletePreQuestion}>삭제하기</Button>
         </S.Footer>
       </S.Container>
     </ModalPortal>
@@ -65,14 +65,14 @@ const PreQuestionViewModal = ({
 };
 
 interface PreQuestionViewModalProps {
-  teamId: string;
-  preQuestion: PreQuestionFormatType;
+  teamId: string | undefined;
+  preQuestion: PreQuestionFormatType | undefined;
   participant: ParticipantType;
   getTeam: () => void;
   onClickDeletePreQuestion: ({
     levellogId,
     preQuestionId,
-  }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => Promise<void>;
+  }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => void;
   handleClickClosePreQuestionModal: (e: React.MouseEvent<HTMLElement>) => void;
 }
 

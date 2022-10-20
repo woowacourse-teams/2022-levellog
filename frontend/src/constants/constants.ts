@@ -7,9 +7,9 @@ export const ROUTES_PATH = Object.freeze({
   ERROR: '/error',
   COPYRIGHT: '/copyright',
 
-  FEEDBACK: '/teams/:teamId/levellogs/:levellogId/feedbacks',
-  FEEDBACK_ADD: `/teams/:teamId/levellogs/:levellogId/feedbacks/add`,
-  FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedbacks/:feedbackId/author/:authorId/edit`,
+  FEEDBACKS: '/teams/:teamId/levellogs/:levellogId/feedbacks',
+  FEEDBACK_ADD: `/teams/:teamId/levellogs/:levellogId/feedback/add`,
+  FEEDBACK_EDIT: `/teams/:teamId/levellogs/:levellogId/feedback/:feedbackId/author/:authorId/edit`,
 
   LEVELLOG_ADD: '/teams/:teamId/levellogs/add',
   LEVELLOG_EDIT: '/teams/:teamId/levellogs/:levellogId/author/:authorId/edit',
@@ -80,6 +80,7 @@ export const TEAM_STATUS = Object.freeze({
 export const TEAMS_CONDITION = Object.freeze({
   OPEN: 'open',
   CLOSE: 'close',
+  MY: 'my',
 });
 
 export const REQUIRE_AUTH = Object.freeze({
@@ -99,3 +100,9 @@ export const GITHUB_AVATAR_SIZE_LIST = {
 };
 
 export const NOT_YET_HTTP_STATUS = 0;
+
+export const INTERVIEW_QUESTION_FILTER = Object.freeze({
+  LATEST: 'latest',
+  OLDEST: 'oldest',
+  LIKES: 'likes',
+});

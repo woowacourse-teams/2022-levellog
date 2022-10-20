@@ -8,7 +8,7 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
-import { InterviewTeamType, ParticipantType } from 'types/team';
+import { InterviewTeamType } from 'types/team';
 import { convertDateAndTime, teamGetUriBuilder } from 'utils/util';
 
 const InterviewTeam = ({ team }: InterviewTeamsProp) => {
@@ -23,14 +23,15 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
             sizes={'LARGE'}
             boxShadow={true}
             githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.LARGE}
+            aria-hidden={true}
           />
           <FlexBox flexFlow="column wrap" gap={0.625}>
-            <S.Title>{title}</S.Title>
+            <S.Title aria-label={`팀 이름 ${title}`}>{title}</S.Title>
           </FlexBox>
         </FlexBox>
         <FlexBox flexFlow="column">
           <S.Info>
-            <S.Notice>
+            <S.Notice aria-label={`인터뷰 장소 ${place}`}>
               <S.ImageBox>
                 <Image src={locationIcon} sizes={'TINY'} />
               </S.ImageBox>
@@ -38,7 +39,7 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
             </S.Notice>
           </S.Info>
           <S.Info>
-            <S.Notice>
+            <S.Notice aria-label={`인터뷰 날짜와 시간 ${convertDateAndTime({ startAt })}`}>
               <S.ImageBox>
                 <Image src={checkIcon} sizes={'TINY'} />
               </S.ImageBox>
@@ -48,12 +49,14 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
         </FlexBox>
         <S.ParticipantsBox>
           {participants.map((participant) => (
-            <Image
-              key={participant.memberId}
-              src={participant.profileUrl}
-              sizes={'SMALL'}
-              githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL}
-            />
+            <S.Participants key={participant.memberId}>
+              <Image
+                src={participant.profileUrl}
+                sizes={'SMALL'}
+                githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.SMALL}
+                alt={`참가자 ${participant.nickname}의 프로필 이미지`}
+              />
+            </S.Participants>
           ))}
         </S.ParticipantsBox>
       </S.Container>
@@ -79,11 +82,13 @@ const S = {
     cursor: pointer;
   `,
 
-  Title: styled.h3`
+  Title: styled.p`
     width: 11.5rem;
     margin-top: 0.3125rem;
     line-height: 1.5625rem;
     word-break: break-all;
+    font-size: 1.125rem;
+    font-weight: 700;
   `,
 
   Info: styled.div`
@@ -107,12 +112,13 @@ const S = {
     margin-right: 0.75rem;
   `,
 
-  ParticipantsBox: styled.div`
+  ParticipantsBox: styled.ul`
     display: flex;
     flex-direction: row;
     width: 100%;
     gap: 0.25rem;
     overflow-x: auto;
+    overflow-y: hidden;
     // chrome, Safari, Opera
     ::-webkit-scrollbar {
       display: none;
@@ -121,6 +127,11 @@ const S = {
     -ms-overflow-style: none;
     // Firefox
     scrollbar-width: none;
+  `,
+
+  Participants: styled.li`
+    width: 1.875rem;
+    height: 1.875rem;
   `,
 };
 

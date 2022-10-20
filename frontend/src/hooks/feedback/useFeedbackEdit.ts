@@ -4,9 +4,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import { MESSAGE } from 'constants/constants';
 
 import { requestEditFeedback, requestGetFeedback } from 'apis/feedback';
 import { FeedbackCustomHookType, FeedbackFormatType } from 'types/feedback';
@@ -38,9 +39,7 @@ const useFeedbackEdit = () => {
         feedbackRef.current[2].getInstance().setMarkdown(data.feedback.etc);
       },
       onError: (err: unknown) => {
-        showSnackbar({ message: 'getFeedback.error.message' });
-        navigate(ROUTES_PATH.ERROR);
-        return;
+        errorHandler({ err, showSnackbar });
       },
     },
   );
@@ -59,9 +58,7 @@ const useFeedbackEdit = () => {
         navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
       },
       onError: (err: unknown) => {
-        showSnackbar({ message: 'editFeedback.error.message' });
-        navigate(ROUTES_PATH.ERROR);
-        return;
+        errorHandler({ err, showSnackbar });
       },
     },
   );

@@ -25,7 +25,7 @@ public class OAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid final GithubCodeRequest request) {
-        final GithubProfileResponse githubProfile = oAuthService.login(request);
+        final GithubProfileResponse githubProfile = oAuthService.requestGithubProfile(request);
         return ResponseEntity.ok(loginService.login(githubProfile));
     }
 }

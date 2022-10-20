@@ -12,7 +12,7 @@ public class OAuthService {
 
     private final OAuthClient oAuthClient;
 
-    public GithubProfileResponse login(final GithubCodeRequest request) {
+    public GithubProfileResponse requestGithubProfile(final GithubCodeRequest request) {
         final String code = request.getAuthorizationCode();
         final String githubAccessToken = oAuthClient.getAccessToken(code);
 

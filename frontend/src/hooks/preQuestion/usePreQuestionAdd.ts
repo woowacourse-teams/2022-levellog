@@ -15,10 +15,6 @@ import { NotCorrectToken } from 'apis/utils';
 import { PreQuestionCustomHookType } from 'types/preQuestion';
 import { teamGetUriBuilder } from 'utils/util';
 
-const QUERY_KEY = {
-  PREQUESTION: 'preQuestion',
-};
-
 const usePreQuestionAdd = () => {
   const { showSnackbar } = useSnackbar();
   const preQuestionRef = useRef<Editor>(null);

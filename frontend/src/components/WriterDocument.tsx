@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
 
-import PreQuestionUiViewer from './preQuestion/preQuestionUiViewer';
+import PreQuestionUiViewer from './preQuestion/PreQuestionUiViewer';
 import Button from 'components/@commons/Button';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 

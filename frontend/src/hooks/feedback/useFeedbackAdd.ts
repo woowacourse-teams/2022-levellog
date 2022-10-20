@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
@@ -28,6 +29,9 @@ const useFeedbackAdd = () => {
       onSuccess: () => {
         showSnackbar({ message: MESSAGE.FEEDBACK_CREATE });
         navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
+      },
+      onError: (err: unknown) => {
+        errorHandler({ err, showSnackbar });
       },
     },
   );

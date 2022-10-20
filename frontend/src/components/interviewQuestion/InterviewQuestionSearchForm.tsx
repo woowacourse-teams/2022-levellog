@@ -27,7 +27,7 @@ const InterviewQuestionSearchForm = () => {
               src={searchIcon}
               alt={'인터뷰 질문 검색하기'}
               sizes={'SMALL'}
-              aria-hidden={'true'}
+              aria-hidden={true}
             />
             <S.SearchInput
               placeholder={'검색어를 입력하세요'}

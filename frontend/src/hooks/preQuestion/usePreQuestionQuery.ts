@@ -2,9 +2,6 @@ import { useParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 
-import errorHandler from 'hooks/utils/errorHandler';
-import useSnackbar from 'hooks/utils/useSnackbar';
-
 import { requestGetPreQuestion } from 'apis/preQuestion';
 
 const QUERY_KEY = {

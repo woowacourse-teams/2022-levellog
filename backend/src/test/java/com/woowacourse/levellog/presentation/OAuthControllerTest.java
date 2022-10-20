@@ -53,7 +53,7 @@ class OAuthControllerTest extends ControllerTest {
             final GithubCodeRequest request = new GithubCodeRequest(VALID_TOKEN);
             final String requestContent = objectMapper.writeValueAsString(request);
 
-            given(memberLogin.login(request))
+            given(oAuthService.login(request))
                     .willThrow(new IllegalStateException("Github 로그인 요청 실패 - authorizationCode:" + VALID_TOKEN));
 
             // when

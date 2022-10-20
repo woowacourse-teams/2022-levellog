@@ -11,8 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("OAuthService의")
-class OAuthServiceTest extends ServiceTest {
+@DisplayName("LoginService의")
+class LoginServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("login 메서드는")
@@ -25,7 +25,7 @@ class OAuthServiceTest extends ServiceTest {
             final GithubProfileResponse request = new GithubProfileResponse("1234", "릭", "rick.org");
 
             // when
-            final LoginResponse tokenResponse = oAuthService.login(request);
+            final LoginResponse tokenResponse = loginService.login(request);
 
             // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());
@@ -50,7 +50,7 @@ class OAuthServiceTest extends ServiceTest {
                     member.getProfileUrl());
 
             // when
-            final LoginResponse tokenResponse = oAuthService.login(request);
+            final LoginResponse tokenResponse = loginService.login(request);
 
             // then
             final String payload = jwtTokenProvider.getPayload(tokenResponse.getAccessToken());

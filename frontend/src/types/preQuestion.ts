@@ -1,5 +1,4 @@
 import { UserType } from 'types/index';
-import { ParticipantType } from 'types/index';
 
 export interface PreQuestionType {
   content: string;

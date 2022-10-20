@@ -31,6 +31,7 @@ const Questions = () => {
     !loginUserNickname ||
     !loginUserProfileUrl ||
     !levellogInfo ||
+    !team ||
     Object.keys(levellogInfo).length === 0
   ) {
     return <Loading />;

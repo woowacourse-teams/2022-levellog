@@ -73,6 +73,10 @@ const useTeam = () => {
     },
   );
 
+  useEffect(() => {
+    getTeam();
+  }, []);
+
   return {
     nicknameValue,
     participants,

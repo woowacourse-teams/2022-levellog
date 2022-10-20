@@ -184,15 +184,16 @@ class TeamQueryRepositoryTest extends RepositoryTest {
     void findMyList() {
         // given
         // 팀 1
+        final Member watcher = saveMember("참관자");
         final Member pepper = saveMember("페퍼");
         final Member alien = saveMember("알린");
 
-        final Team team1 = saveTeam(pepper, alien);
+        final Team team1 = saveTeam(pepper, List.of(watcher), alien);
 
         // 팀 2
         final Member kyoul = saveMember("결");
 
-        final Team team2 = saveTeam(pepper, kyoul);
+        final Team team2 = saveTeam(pepper, List.of(watcher), kyoul);
 
         // when
         final List<TeamListQueryResult> actual = teamQueryRepository.findMyList(pepper.getId());

@@ -77,9 +77,9 @@ export const convertFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalCons
   if (uniCode < hangeulFirstTextUnicode || uniCode > hangeulLastTextUnicode) return;
 
   if ((uniCode - hangeulFirstTextUnicode) % finalConsonantNumber !== 0) {
-    return `${word}이`;
+    return `${word}이 `;
   } else {
-    return `${word}가`;
+    return `${word}가 `;
   }
 };
 interface CheckFirstWordFinalConsonantType {

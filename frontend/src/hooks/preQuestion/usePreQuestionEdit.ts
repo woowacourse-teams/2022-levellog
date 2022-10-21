@@ -1,7 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
 import useSnackbar from 'hooks/utils/useSnackbar';
@@ -9,24 +9,16 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 import { MESSAGE } from 'constants/constants';
 
 import usePreQuestionQuery from './usePreQuestionQuery';
-import { requestEditPreQuestion, requestGetPreQuestion } from 'apis/preQuestion';
+import { requestEditPreQuestion } from 'apis/preQuestion';
 import { PreQuestionCustomHookType } from 'types/preQuestion';
 import { teamGetUriBuilder } from 'utils/util';
 
 const usePreQuestionEdit = () => {
-  const { preQuestionError, preQuestionSuccess, preQuestion } = usePreQuestionQuery();
+  const { preQuestion } = usePreQuestionQuery();
   const { showSnackbar } = useSnackbar();
   const preQuestionRef = useRef<Editor>(null);
   const { teamId, levellogId, preQuestionId } = useParams();
   const navigate = useNavigate();
-
-  if (preQuestionSuccess) {
-    if (preQuestionRef) {
-      // 사전 질문 ref에 넣어주기
-      // preQuestionRef.current.getInstance().setMarkdown(preQuestion?.content);
-    }
-    preQuestionRef.current;
-  }
 
   const accessToken = localStorage.getItem('accessToken');
 
@@ -60,6 +52,12 @@ const usePreQuestionEdit = () => {
       preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
     });
   };
+
+  useEffect(() => {
+    if (preQuestion && preQuestionRef.current) {
+      preQuestionRef.current.getInstance().setMarkdown(preQuestion.content);
+    }
+  }, [preQuestionRef]);
 
   return { preQuestionRef, handleClickPreQuestionEditButton };
 };

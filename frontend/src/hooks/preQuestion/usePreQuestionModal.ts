@@ -3,9 +3,12 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 
 import useModal from 'hooks/useModal';
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { requestGetPreQuestion } from 'apis/preQuestion';
+import { MESSAGE } from 'constants/constants';
+
+import { requestDeletePreQuestion, requestGetPreQuestion } from 'apis/preQuestion';
 import { PreQuestionCustomHookType, PreQuestionParticipantType } from 'types/preQuestion';
 import { ParticipantType } from 'types/team';
 
@@ -27,6 +30,28 @@ const usePreQuestionModal = () => {
     });
   });
 
+  const { mutateAsync: deletePreQuestion } = useMutation(
+    ({
+      levellogId,
+      preQuestionId,
+    }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
+      return requestDeletePreQuestion({
+        accessToken,
+        levellogId,
+        preQuestionId,
+      });
+    },
+    {
+      onSuccess: () => {
+        onClickCloseModal();
+        showSnackbar({ message: MESSAGE.PREQUESTION_DELETE });
+      },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
+      },
+    },
+  );
+
   const onClickOpenPreQuestionModal = ({ participant }: PreQuestionParticipantType) => {
     onClickOpenModal();
     setPreQuestionParticipant(participant);
@@ -37,12 +62,10 @@ const usePreQuestionModal = () => {
     levellogId,
     preQuestionId,
   }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
-    // await deletePreQuestion({
-    //   levellogId,
-    //   preQuestionId,
-    // });
-    // onClickCloseModal();
-    // showSnackbar({ message: MESSAGE.PREQUESTION_DELETE });
+    await deletePreQuestion({
+      levellogId,
+      preQuestionId,
+    });
   };
 
   return {

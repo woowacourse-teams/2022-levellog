@@ -6,7 +6,7 @@ const useInterviewQuestionSearch = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleClickRemoveSearchTextButton = () => {
+  const handleClickRemoveSearchTextButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     setSearchText('');
   };
 
@@ -16,6 +16,7 @@ const useInterviewQuestionSearch = () => {
 
   const handleSubmitInterviewQuestion = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (searchText.trim().length > 0) {
       navigate(`/search?keyword=${searchText}`);
     }

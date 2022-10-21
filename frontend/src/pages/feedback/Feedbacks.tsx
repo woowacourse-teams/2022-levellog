@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -35,6 +35,10 @@ const Feedbacks = () => {
 
   if (levellogError) {
     return <Error />;
+  }
+
+  if (!team) {
+    return <Loading />;
   }
 
   if (feedbacks?.feedbacks.length === 0) {

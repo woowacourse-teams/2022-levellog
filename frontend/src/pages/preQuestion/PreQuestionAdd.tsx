@@ -4,7 +4,7 @@ import usePreQuestionAdd from 'hooks/preQuestion/usePreQuestionAdd';
 
 import BottomBar from 'components/@commons/bottomBar/BottomBar';
 import UiEditor from 'components/@commons/markdownEditor/UiEditor';
-import LevellogReport from 'components/levellogs/LevellogReport';
+import LevellogContent from 'components/levellogs/LevellogContent';
 
 const PreQuestionAdd = () => {
   const { preQuestionRef, handleClickPreQuestionAddButton } = usePreQuestionAdd();
@@ -12,7 +12,7 @@ const PreQuestionAdd = () => {
     <S.Container>
       <S.Content>
         <S.LeftContent>
-          <LevellogReport />
+          <LevellogContent />
         </S.LeftContent>
         <S.RightContent>
           <UiEditor

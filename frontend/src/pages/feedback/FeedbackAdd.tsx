@@ -22,7 +22,7 @@ const FeedbackAdd = () => {
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
   const { authorInfo, feedbackWriterRole } = useRole();
 
-  usePreventGoBack(); // 새로 고침할 때마다 쌓인다.
+  usePreventGoBack();
 
   return (
     <>

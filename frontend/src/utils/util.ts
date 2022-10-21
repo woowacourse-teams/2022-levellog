@@ -52,7 +52,11 @@ export const checkFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConson
 
   if (uniCode < 44032 || uniCode > 55203) return;
 
-  return (uniCode - 44032) % 28 != 0;
+  if ((uniCode - hangeulFirstTextUnicode) % finalConsonantNumber !== 0) {
+    return `${word}이 `;
+  } else {
+    return `${word}가 `;
+  }
 };
 
 export const convertDateAndTime = ({ startAt }: any) => {

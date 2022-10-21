@@ -108,17 +108,14 @@ public class TeamQueryRepository {
 
     public List<TeamListQueryResult> findMyList(final Long memberId) {
         final String sql = "SELECT "
-                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
+                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, "
                 + "m.id memberId, m.nickname, m.profile_url "
-                + "FROM participant p "
-                + "INNER JOIN member m ON p.member_id = m.id "
-                + "INNER JOIN team t ON p.team_id = t.id "
-                + "WHERE t.id IN ( "
-                + "SELECT "
-                + "t.id FROM participant p "
-                + "INNER JOIN member m ON p.member_id = m.id "
-                + "INNER JOIN team t ON p.team_id = t.id "
-                + "WHERE m.id = :memberId AND deleted = FALSE) "
+                + "FROM (SELECT t.* "
+                    + "FROM team t INNER JOIN participant p ON p.team_id = t.id "
+                    + "WHERE t.deleted = FALSE AND p.member_id = :memberId "
+                    + "AND p.is_watcher = FALSE) AS t "
+                + "LEFT OUTER JOIN participant p ON p.team_id = t.id AND is_watcher = FALSE "
+                + "LEFT OUTER JOIN member m ON p.member_id = m.id "
                 + "ORDER BY t.is_closed ASC, t.created_at DESC, p.id ASC";
 
         final SqlParameterSource param = new MapSqlParameterSource()

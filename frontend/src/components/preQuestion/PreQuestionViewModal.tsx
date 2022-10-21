@@ -24,10 +24,11 @@ const PreQuestionViewModal = ({
 }: PreQuestionViewModalProps) => {
   const { levellogId, preQuestionId } = participant;
 
-  const handleClickDeleteLevellog = async () => {
+  const handleClickDeletePreQuestion = async () => {
     if (levellogId && preQuestionId) {
-      // await onClickDeletePreQuestion({ levellogId, preQuestionId });
       getTeam();
+      await onClickDeletePreQuestion({ levellogId, preQuestionId });
+      await getTeam();
     }
   };
 
@@ -58,7 +59,7 @@ const PreQuestionViewModal = ({
           >
             <Button>수정하기</Button>
           </Link>
-          <Button onClick={handleClickDeleteLevellog}>삭제하기</Button>
+          <Button onClick={handleClickDeletePreQuestion}>삭제하기</Button>
         </S.Footer>
       </S.Container>
     </ModalPortal>
@@ -73,7 +74,7 @@ interface PreQuestionViewModalProps {
   onClickDeletePreQuestion: ({
     levellogId,
     preQuestionId,
-  }: Omit<PreQuestionDeleteRequestType, 'accessTokens'>) => Promise<void>;
+  }: Omit<PreQuestionDeleteRequestType, 'accessToken'>) => Promise<void>;
   handleClickClosePreQuestionModal: (e: React.MouseEvent<HTMLElement>) => void;
 }
 

@@ -4,12 +4,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
 import { LevellogPostRequestType, requestPostLevellog } from 'apis/levellog';
 import { teamGetUriBuilder } from 'utils/uri';
+import { debounce } from 'utils/util';
 
 const useLevellogAdd = () => {
   const { showSnackbar } = useSnackbar();
@@ -28,6 +30,9 @@ const useLevellogAdd = () => {
         showSnackbar({ message: MESSAGE.LEVELLOG_ADD });
         navigate(teamGetUriBuilder({ teamId }));
       },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
+      },
     },
   );
 
@@ -37,11 +42,12 @@ const useLevellogAdd = () => {
       return;
     }
 
-    if (!levellogRef.current) return;
-    postLevellog({
-      teamId,
-      levellog: { content: levellogRef.current.getInstance().getMarkdown() },
-    });
+    if (levellogRef.current) {
+      debounce.action({
+        func: postLevellog,
+        args: { teamId, inputValue: levellogRef.current.getInstance().getMarkdown() },
+      });
+    }
   };
 
   return {

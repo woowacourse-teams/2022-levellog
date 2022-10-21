@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useMutation } from '@tanstack/react-query';
@@ -13,19 +13,11 @@ import { PreQuestionEditRequestType, requestEditPreQuestion } from 'apis/preQues
 import { teamGetUriBuilder } from 'utils/uri';
 
 const usePreQuestionEdit = () => {
-  const { preQuestionError, preQuestionSuccess, preQuestion } = usePreQuestionQuery();
+  const { preQuestion } = usePreQuestionQuery();
   const { showSnackbar } = useSnackbar();
   const preQuestionRef = useRef<Editor>(null);
   const { teamId, levellogId, preQuestionId } = useParams();
   const navigate = useNavigate();
-
-  if (preQuestionSuccess) {
-    if (preQuestionRef) {
-      // 사전 질문 ref에 넣어주기
-      // preQuestionRef.current.getInstance().setMarkdown(preQuestion?.content);
-    }
-    preQuestionRef.current;
-  }
 
   const accessToken = localStorage.getItem('accessToken');
 
@@ -59,6 +51,12 @@ const usePreQuestionEdit = () => {
       preQuestionContent: preQuestionRef.current.getInstance().getMarkdown(),
     });
   };
+
+  useEffect(() => {
+    if (preQuestion && preQuestionRef.current) {
+      preQuestionRef.current.getInstance().setMarkdown(preQuestion.content);
+    }
+  }, [preQuestionRef]);
 
   return { preQuestionRef, handleClickPreQuestionEditButton };
 };

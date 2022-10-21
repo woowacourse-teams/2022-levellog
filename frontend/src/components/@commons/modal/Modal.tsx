@@ -1,13 +1,18 @@
 import styled from 'styled-components';
 
+import Loading from 'pages/status/Loading';
+
 import closeIcon from 'assets/images/close.svg';
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/image/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
+import { LevellogInfoType } from 'types/levellog';
 
 const Modal = ({ modalContent, contentName, children, handleClickCloseButton }: ModalProps) => {
+  if (!modalContent) return <Loading />;
+
   return (
     <S.Container>
       <S.Header>
@@ -34,14 +39,7 @@ const Modal = ({ modalContent, contentName, children, handleClickCloseButton }: 
 };
 
 interface ModalProps {
-  modalContent: {
-    author: {
-      id: string;
-      nickname: string;
-      profileUrl: string;
-    };
-    content: string;
-  };
+  modalContent: LevellogInfoType | undefined;
   contentName: string;
   children: JSX.Element;
   handleClickCloseButton: (e: React.MouseEvent<HTMLElement>) => void;

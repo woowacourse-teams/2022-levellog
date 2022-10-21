@@ -92,7 +92,7 @@ const LevellogViewModal = ({
 interface LevellogViewModalProps {
   teamId: string | undefined;
   participant: ParticipantType;
-  levellogInfo: LevellogInfoType;
+  levellogInfo: LevellogInfoType | undefined;
   userInTeam: Boolean;
   teamStatus: TeamStatusType;
   handleClickCloseLevellogModal: (e: React.MouseEvent<HTMLElement>) => void;

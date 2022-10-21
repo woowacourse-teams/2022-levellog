@@ -54,7 +54,7 @@ const PreQuestionViewModal = ({
 
 interface PreQuestionViewModalProps {
   teamId: string | undefined;
-  preQuestion: PreQuestionFormatType;
+  preQuestion: PreQuestionFormatType | undefined;
   participant: ParticipantType;
   getTeam: () => void;
   onClickDeletePreQuestion: ({

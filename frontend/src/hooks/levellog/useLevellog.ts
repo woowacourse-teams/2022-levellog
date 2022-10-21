@@ -6,7 +6,7 @@ import { Editor } from '@toast-ui/react-editor';
 
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
+import { MESSAGE, QUERY_KEY } from 'constants/constants';
 
 import {
   requestEditLevellog,
@@ -17,10 +17,6 @@ import {
   LevellogEditRequestType,
 } from 'apis/levellog';
 import { teamGetUriBuilder } from 'utils/uri';
-
-const QUERY_KEY = {
-  LEVELLOG: 'levellog',
-};
 
 const useLevellog = () => {
   const { showSnackbar } = useSnackbar();

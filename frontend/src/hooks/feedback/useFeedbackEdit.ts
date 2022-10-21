@@ -7,15 +7,11 @@ import { Editor } from '@toast-ui/react-editor';
 import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
+import { MESSAGE, QUERY_KEY } from 'constants/constants';
 
 import { FeedbackEditRequestType, requestEditFeedback, requestGetFeedback } from 'apis/feedback';
 import { FeedbackType } from 'types/feedback';
 import { feedbacksGetUriBuilder } from 'utils/uri';
-
-const QUERY_KEY = {
-  FEEDBACK: 'feedback',
-};
 
 const useFeedbackEdit = () => {
   const { showSnackbar } = useSnackbar();

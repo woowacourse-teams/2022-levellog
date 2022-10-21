@@ -122,3 +122,7 @@ export const QUERY_KEY = Object.freeze({
   MEMBERS: 'members',
   ROLE: 'role',
 });
+
+export const HANGEUL_FIRST_TEXT_UNICODE = 44032;
+export const HANGEUL_LAST_TEXT_UNICODE = 55203;
+export const FINAL_CONSONANT_NUMBER = 28;

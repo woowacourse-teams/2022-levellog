@@ -4,7 +4,12 @@ import axios, { AxiosResponse } from 'axios';
 
 import { ShowSnackbarProps } from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
+import {
+  HANGEUL_LAST_TEXT_UNICODE,
+  MESSAGE,
+  FINAL_CONSONANT_NUMBER,
+  HANGEUL_FIRST_TEXT_UNICODE,
+} from 'constants/constants';
 
 export const debounce: DebounceType = {
   flag: '',
@@ -50,9 +55,9 @@ export const checkFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConson
   let lastLetter = word[word.length - 1];
   let uniCode = lastLetter.charCodeAt(0);
 
-  if (uniCode < 44032 || uniCode > 55203) return;
+  if (uniCode < HANGEUL_FIRST_TEXT_UNICODE || uniCode > HANGEUL_LAST_TEXT_UNICODE) return;
 
-  if ((uniCode - hangeulFirstTextUnicode) % finalConsonantNumber !== 0) {
+  if ((uniCode - HANGEUL_FIRST_TEXT_UNICODE) % FINAL_CONSONANT_NUMBER !== 0) {
     return `${word}이 `;
   } else {
     return `${word}가 `;

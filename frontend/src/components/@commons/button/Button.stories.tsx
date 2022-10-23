@@ -5,7 +5,7 @@ import Button from 'components/@commons/button/Button';
 import InterviewerButton from 'components/teams/InterviewerButton';
 
 export default {
-  title: 'Button',
+  title: '@commons/Button',
   component: Button,
 } as ComponentMeta<typeof Button>;
 

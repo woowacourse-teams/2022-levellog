@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import Role from 'components/@commons/role/Role';
 
 export default {
-  title: 'Role',
+  title: '@commons/Role',
   component: Role,
 } as ComponentMeta<typeof Role>;
 

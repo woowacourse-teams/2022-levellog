@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import Snackbar from 'components/@commons/snackbar/Snackbar';
 
 export default {
-  title: 'Snackbar',
+  title: '@commons/Snackbar',
   component: Snackbar,
 } as ComponentMeta<typeof Snackbar>;
 

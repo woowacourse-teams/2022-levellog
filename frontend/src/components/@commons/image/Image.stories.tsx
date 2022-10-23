@@ -5,7 +5,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import Image from 'components/@commons/image/Image';
 
 export default {
-  title: 'Image',
+  title: '@commons/Image',
   component: Image,
 } as ComponentMeta<typeof Image>;
 

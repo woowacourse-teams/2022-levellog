@@ -2,7 +2,7 @@ import Feedback from './Feedback';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
-  title: 'Feedback',
+  title: 'feedback/Feedback',
   component: Feedback,
 } as ComponentMeta<typeof Feedback>;
 

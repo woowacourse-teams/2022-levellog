@@ -3,7 +3,7 @@ import Button from 'components/@commons/button/Button';
 import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
 
 export default {
-  title: 'ContentHeader',
+  title: '@commons/ContentHeader',
   component: ContentHeader,
 } as ComponentMeta<typeof ContentHeader>;
 

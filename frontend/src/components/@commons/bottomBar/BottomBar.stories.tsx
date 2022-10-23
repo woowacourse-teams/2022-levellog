@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import BottomBar from 'components/@commons/bottomBar/BottomBar';
 
 export default {
-  title: 'BottomBar',
+  title: '@commons/BottomBar',
   component: BottomBar,
 } as ComponentMeta<typeof BottomBar>;
 

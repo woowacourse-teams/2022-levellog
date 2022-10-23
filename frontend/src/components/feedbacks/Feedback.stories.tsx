@@ -49,5 +49,5 @@ Others.args = {
       etc: '잘하시네요',
     },
   },
-  teamStatus: 'CLOSE',
+  teamStatus: 'CLOSED',
 };

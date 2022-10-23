@@ -47,8 +47,6 @@ const Interviewer = ({
     role.interviewer = interviewers.includes(Number(participant.memberId));
   }
 
-  if (!teamId) return <S.Container />;
-
   const handleClickOpenLevellogModal = () => {
     if (typeof teamId === 'string') {
       onClickOpenLevellogModal({ teamId, participant });

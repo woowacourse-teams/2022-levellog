@@ -1,7 +1,6 @@
 import { fetcher } from 'apis';
 import axios, { AxiosPromise } from 'axios';
 
-import { NotAccessTokenRemoveHeader } from 'apis/utils';
 import { TeamApiType, InterviewTeamType, InterviewTeamDetailType } from 'types/team';
 
 export const requestPostTeam = async ({ teamInfo, accessToken }: Omit<TeamApiType, 'teamId'>) => {

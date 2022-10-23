@@ -8,7 +8,7 @@ import Loading from 'pages/status/Loading';
 
 import BottomBar from 'components/@commons/bottomBar/BottomBar';
 import UiEditor from 'components/@commons/markdownEditor/UiEditor';
-import LevellogReport from 'components/levellogs/LevellogReport';
+import LevellogContent from 'components/levellogs/LevellogContent';
 
 const PreQuestionEdit = () => {
   const { preQuestionRef, handleClickPreQuestionEditButton } = usePreQuestionEdit();
@@ -18,7 +18,7 @@ const PreQuestionEdit = () => {
       <S.Content>
         <S.LeftContent>
           <Suspense fallback={<Loading />}>
-            <LevellogReport />
+            <LevellogContent />
           </Suspense>
         </S.LeftContent>
         <S.RightContent>

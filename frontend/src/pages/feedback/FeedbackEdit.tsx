@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import useFeedbackEdit from 'hooks/feedback/useFeedbackEdit';
 import useRole from 'hooks/useRole';
 import useContentTag from 'hooks/utils/useContentTag';
+import usePreventGoBack from 'hooks/utils/usePreventGoBack';
 
 import FlexBox from 'components/@commons/FlexBox';
 import BottomBar from 'components/@commons/bottomBar/BottomBar';
@@ -16,6 +17,8 @@ const FeedbackEdit = () => {
   const { feedbackRef, handleClickFeedbackEditButton } = useFeedbackEdit();
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
   const { feedbackWriterRole, authorInfo } = useRole();
+
+  usePreventGoBack();
 
   return (
     <>

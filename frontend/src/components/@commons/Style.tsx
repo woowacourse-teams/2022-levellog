@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import favicon from 'assets/images/favicon.webp';
-
 export const FeedbackContainer = styled.div`
   overflow: auto;
   width: 48rem;
@@ -14,5 +12,3 @@ export const FeedbackTitle = styled.h2`
   margin-bottom: 1.875rem;
   font-size: 1.875rem;
 `;
-
-export default favicon;

@@ -34,19 +34,17 @@ const PreQuestionViewModal = ({
         contentName={'사전질문'}
         handleClickCloseButton={handleClickClosePreQuestionModal}
       >
-        <>
-          <Link
-            to={preQuestionEditUriBuilder({
-              teamId,
-              levellogId,
-              preQuestionId,
-              authorId: preQuestion?.author.id,
-            })}
-          >
-            <Button>수정하기</Button>
-          </Link>
-          <S.RightButton onClick={handleClickDeletePreQuestion}>삭제하기</S.RightButton>
-        </>
+        <Link
+          to={preQuestionEditUriBuilder({
+            teamId,
+            levellogId,
+            preQuestionId,
+            authorId: preQuestion?.author.id,
+          })}
+        >
+          <Button>수정하기</Button>
+        </Link>
+        <S.RightButton onClick={handleClickDeletePreQuestion}>삭제하기</S.RightButton>
       </Modal>
     </ModalPortal>
   );

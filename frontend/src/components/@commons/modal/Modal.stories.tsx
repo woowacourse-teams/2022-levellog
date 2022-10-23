@@ -16,7 +16,7 @@ LevellogModal.args = {
     author: {
       id: '123',
       nickname: '작성자 닉네임',
-      profileUrl: '',
+      profileUrl: 'https://avatars.githubusercontent.com/u/79692272?v=4&s=44',
     },
     content: '작성된 레벨로그가 보이는 영역입니다.',
   },

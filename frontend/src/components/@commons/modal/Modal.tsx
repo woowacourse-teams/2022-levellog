@@ -41,7 +41,7 @@ const Modal = ({ modalContent, contentName, children, handleClickCloseButton }: 
 interface ModalProps {
   modalContent: LevellogInfoType | undefined;
   contentName: string;
-  children: JSX.Element;
+  children: JSX.Element[] | JSX.Element;
   handleClickCloseButton: (e: React.MouseEvent<HTMLElement>) => void;
 }
 

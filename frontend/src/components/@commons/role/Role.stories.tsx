@@ -18,7 +18,7 @@ Interviewee.args = {
   role: '인터뷰이',
 };
 
-export const InterviewEach = Template.bind({});
-InterviewEach.args = {
+export const InterviewBoth = Template.bind({});
+InterviewBoth.args = {
   role: '상호 인터뷰',
 };

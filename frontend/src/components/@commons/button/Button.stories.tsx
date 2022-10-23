@@ -1,7 +1,8 @@
-import styled from 'styled-components';
+import levellogIcon from 'assets/images/levellogIcon.svg';
 
-import Button from './Button';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
+import Button from 'components/@commons/button/Button';
+import InterviewerButton from 'components/teams/InterviewerButton';
 
 export default {
   title: 'Button',
@@ -15,34 +16,20 @@ Base.args = {
   children: '기본버튼',
 };
 
-const InterviewerTemplate: ComponentStory<typeof Button> = (args) => (
+const InterviewerTemplate: ComponentStory<typeof InterviewerButton> = (args) => (
   <InterviewerButton {...args}></InterviewerButton>
 );
 
-export const AbledInterviewerButton = InterviewerTemplate.bind({});
-AbledInterviewerButton.args = {
-  children: '레벨로그 작성하기',
-  disabled: false,
+export const InterviewerButtonBase = InterviewerTemplate.bind({});
+InterviewerButtonBase.args = {
+  isDisabled: false,
+  buttonIcon: levellogIcon,
+  buttonText: '레벨로그 작성',
 };
 
 export const DisabledInterviewerButton = InterviewerTemplate.bind({});
 DisabledInterviewerButton.args = {
-  children: '레벨로그 작성하기',
-  disabled: true,
+  isDisabled: true,
+  buttonIcon: levellogIcon,
+  buttonText: '레벨로그 작성',
 };
-
-const InterviewerButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.625rem 0.75rem;
-  border-radius: 2rem;
-  background-color: ${(props) => props.theme.default.INVISIBLE};
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: ${(props) =>
-    props.disabled ? props.theme.new_default.GRAY : props.theme.new_default.BLACK};
-  :hover {
-    box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.new_default.GRAY};
-  }
-`;

@@ -11,10 +11,10 @@ import preQuestionIcon from 'assets/images/preQuestionIcon.svg';
 import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
 import CustomLink from 'components/@commons/CustomLink';
-import Button from 'components/@commons/button/Button';
 import Image from 'components/@commons/image/Image';
 import Role from 'components/@commons/role/Role';
 import VisibleButtonList from 'components/VisibleButtonList';
+import InterviewerButton from 'components/teams/InterviewerButton';
 import { LevellogParticipantType } from 'types/levellog';
 import { PreQuestionParticipantType } from 'types/preQuestion';
 import { ParticipantType, TeamStatusType } from 'types/team';
@@ -82,10 +82,12 @@ const Interviewer = ({
             loginUserId={loginUserId}
             levellogId={participant.levellogId}
           >
-            <S.Button disabled={!participant.levellogId} onClick={handleClickOpenLevellogModal}>
-              <Image src={levellogIcon} sizes={'SMALL'} borderRadius={false} />
-              <S.ButtonText>레벨로그 보기</S.ButtonText>
-            </S.Button>
+            <InterviewerButton
+              isDisabled={!participant.levellogId}
+              buttonIcon={levellogIcon}
+              buttonText={'레벨로그 보기'}
+              onClick={handleClickOpenLevellogModal}
+            />
           </VisibleButtonList>
 
           <VisibleButtonList
@@ -98,10 +100,11 @@ const Interviewer = ({
               path={levellogAddUriBuilder({ teamId })}
               disabled={teamStatus !== TEAM_STATUS.READY}
             >
-              <S.Button disabled={teamStatus !== TEAM_STATUS.READY}>
-                <Image src={levellogIcon} sizes={'SMALL'} borderRadius={false} />
-                <S.ButtonText>레벨로그 작성</S.ButtonText>
-              </S.Button>
+              <InterviewerButton
+                isDisabled={teamStatus !== TEAM_STATUS.READY}
+                buttonIcon={levellogIcon}
+                buttonText={'레벨로그 작성'}
+              />
             </CustomLink>
           </VisibleButtonList>
 
@@ -114,10 +117,11 @@ const Interviewer = ({
               path={interviewQuestionsGetUriBuilder({ teamId, levellogId: participant.levellogId })}
               disabled={!participant.levellogId || !userInTeam}
             >
-              <S.Button disabled={!participant.levellogId || !userInTeam}>
-                <Image src={interviewQuestionIcon} sizes={'SMALL'} borderRadius={false} />
-                <S.ButtonText>인터뷰질문 보기</S.ButtonText>
-              </S.Button>
+              <InterviewerButton
+                isDisabled={!participant.levellogId || !userInTeam}
+                buttonIcon={interviewQuestionIcon}
+                buttonText={'인터뷰질문 보기'}
+              />
             </CustomLink>
           </VisibleButtonList>
 
@@ -127,13 +131,12 @@ const Interviewer = ({
             loginUserId={loginUserId}
             preQuestionId={participant.preQuestionId}
           >
-            <S.Button
-              disabled={!participant.levellogId || !userInTeam}
+            <InterviewerButton
+              isDisabled={!participant.levellogId || !userInTeam}
+              buttonIcon={preQuestionIcon}
+              buttonText={'사전질문 보기'}
               onClick={handleClickOpenPreQuestionModal}
-            >
-              <Image src={preQuestionIcon} sizes={'SMALL'} borderRadius={false} />
-              <S.ButtonText>사전질문 보기</S.ButtonText>
-            </S.Button>
+            />
           </VisibleButtonList>
 
           <VisibleButtonList
@@ -146,10 +149,11 @@ const Interviewer = ({
               path={preQuestionAddUriBuilder({ teamId, levellogId: participant.levellogId })}
               disabled={!participant.levellogId || !userInTeam}
             >
-              <S.Button disabled={!participant.levellogId || !userInTeam}>
-                <Image src={preQuestionIcon} sizes={'SMALL'} borderRadius={false} />
-                <S.ButtonText>사전질문 작성</S.ButtonText>
-              </S.Button>
+              <InterviewerButton
+                isDisabled={!participant.levellogId || !userInTeam}
+                buttonIcon={preQuestionIcon}
+                buttonText={'사전질문 작성'}
+              />
             </CustomLink>
           </VisibleButtonList>
 
@@ -157,10 +161,11 @@ const Interviewer = ({
             path={feedbacksGetUriBuilder({ teamId, levellogId: participant.levellogId })}
             disabled={!participant.levellogId || !userInTeam}
           >
-            <S.Button disabled={!participant.levellogId || !userInTeam}>
-              <Image src={feedbackIcon} sizes={'SMALL'} borderRadius={false} />
-              <S.ButtonText>피드백 작성 / 보기</S.ButtonText>
-            </S.Button>
+            <InterviewerButton
+              isDisabled={!participant.levellogId || !userInTeam}
+              buttonIcon={feedbackIcon}
+              buttonText={'피드백 작성 / 보기'}
+            />
           </CustomLink>
         </S.ButtonBox>
       </S.Content>
@@ -228,26 +233,6 @@ const S = {
     flex-direction: column;
     gap: 0.5rem;
     margin-top: 2.375rem;
-  `,
-
-  Button: styled(Button)`
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.625rem 0.75rem;
-    border-radius: 2rem;
-    background-color: ${(props) => props.theme.default.INVISIBLE};
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: ${(props) =>
-      props.disabled ? props.theme.new_default.GRAY : props.theme.new_default.BLACK};
-    :hover {
-      box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.new_default.GRAY};
-    }
-  `,
-
-  ButtonText: styled.p`
-    font-size: 1.25rem;
   `,
 };
 

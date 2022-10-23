@@ -16,9 +16,10 @@ Base.args = {
   children: '기본버튼',
 };
 
-const InterviewerButtonTemplate: ComponentStory<typeof InterviewerButton> = (args) => (
-  <InterviewerButton {...args}></InterviewerButton>
-);
+const InterviewerButtonTemplate: ComponentStory<typeof InterviewerButton> = (args) => {
+  return <InterviewerButton {...args}></InterviewerButton>;
+};
+
 export const InterviewerButtonBase = InterviewerButtonTemplate.bind({});
 InterviewerButtonBase.args = {
   isDisabled: false,

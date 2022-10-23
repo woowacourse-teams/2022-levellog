@@ -6,12 +6,11 @@ export default {
   component: ProfileDropdown,
 } as ComponentMeta<typeof ProfileDropdown>;
 
-const HeaderTemplate: ComponentStory<typeof ProfileDropdown> = (args) => (
-  <ProfileDropdown {...args} />
-);
+const HeaderTemplate: ComponentStory<typeof ProfileDropdown> = (args) => {
+  return <ProfileDropdown {...args} />;
+};
 
 export const Base = HeaderTemplate.bind({});
-
 Base.args = {
   isShowProfileDropdown: true,
   loginUserNickname: '결',

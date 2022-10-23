@@ -6,8 +6,12 @@ export default {
   component: BottomBar,
 } as ComponentMeta<typeof BottomBar>;
 
-const Template: ComponentStory<typeof BottomBar> = () => (
-  <BottomBar buttonText={'제출하기'} handleClickRightButton={() => {}} />
-);
+const Template: ComponentStory<typeof BottomBar> = (args) => {
+  return <BottomBar {...args} />;
+};
 
 export const Base = Template.bind({});
+Base.args = {
+  buttonText: '제출하기',
+  handleClickRightButton: () => {},
+};

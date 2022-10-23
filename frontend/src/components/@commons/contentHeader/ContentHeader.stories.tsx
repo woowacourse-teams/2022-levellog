@@ -7,9 +7,9 @@ export default {
   component: ContentHeader,
 } as ComponentMeta<typeof ContentHeader>;
 
-const Template: ComponentStory<typeof ContentHeader> = (args) => (
-  <ContentHeader {...args}></ContentHeader>
-);
+const Template: ComponentStory<typeof ContentHeader> = (args) => {
+  return <ContentHeader {...args}></ContentHeader>;
+};
 
 export const Base = Template.bind({});
 Base.args = {

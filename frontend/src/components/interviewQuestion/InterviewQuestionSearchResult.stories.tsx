@@ -6,9 +6,9 @@ export default {
   component: InterviewQuestionSearchResult,
 } as ComponentMeta<typeof InterviewQuestionSearchResult>;
 
-const Template: ComponentStory<typeof InterviewQuestionSearchResult> = (args) => (
-  <InterviewQuestionSearchResult {...args} />
-);
+const Template: ComponentStory<typeof InterviewQuestionSearchResult> = (args) => {
+  return <InterviewQuestionSearchResult {...args} />;
+};
 
 export const Base = Template.bind({});
 Base.args = {

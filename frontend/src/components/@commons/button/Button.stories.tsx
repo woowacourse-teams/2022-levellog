@@ -16,18 +16,17 @@ Base.args = {
   children: '기본버튼',
 };
 
-const InterviewerTemplate: ComponentStory<typeof InterviewerButton> = (args) => (
+const InterviewerButtonTemplate: ComponentStory<typeof InterviewerButton> = (args) => (
   <InterviewerButton {...args}></InterviewerButton>
 );
-
-export const InterviewerButtonBase = InterviewerTemplate.bind({});
+export const InterviewerButtonBase = InterviewerButtonTemplate.bind({});
 InterviewerButtonBase.args = {
   isDisabled: false,
   buttonIcon: levellogIcon,
   buttonText: '레벨로그 작성',
 };
 
-export const DisabledInterviewerButton = InterviewerTemplate.bind({});
+export const DisabledInterviewerButton = InterviewerButtonTemplate.bind({});
 DisabledInterviewerButton.args = {
   isDisabled: true,
   buttonIcon: levellogIcon,

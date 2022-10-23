@@ -6,6 +6,9 @@ export default {
   component: Snackbar,
 } as ComponentMeta<typeof Snackbar>;
 
-const Template: ComponentStory<typeof Snackbar> = () => <Snackbar>{'이건 스낵바여'}</Snackbar>;
+const Template: ComponentStory<typeof Snackbar> = (args) => <Snackbar {...args}></Snackbar>;
 
 export const Base = Template.bind({});
+Base.args = {
+  children: '스낵바',
+};

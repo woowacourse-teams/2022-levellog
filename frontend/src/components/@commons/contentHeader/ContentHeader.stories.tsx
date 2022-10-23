@@ -8,7 +8,7 @@ export default {
 } as ComponentMeta<typeof ContentHeader>;
 
 const Template: ComponentStory<typeof ContentHeader> = (args) => (
-  <ContentHeader {...args}>{args.children}</ContentHeader>
+  <ContentHeader {...args}></ContentHeader>
 );
 
 export const Base = Template.bind({});

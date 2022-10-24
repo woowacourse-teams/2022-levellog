@@ -2,48 +2,48 @@ import { Suspense } from 'react';
 
 import styled from 'styled-components';
 
-import useQuestion from 'hooks/question/useQuestion';
+import useInterviewQuestion from 'hooks/interviewQuestion/useInterviewQuestion';
 
 import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
 
 import Button from 'components/@commons/Button';
 import Input from 'components/@commons/Input';
-import QuestionContent from 'components/question/QuestionContent';
+import InterviewQuestionContent from 'components/interviewQuestion/InterviewQuestionContent';
 
-const Question = () => {
+const InterviewQuestion = () => {
   const {
-    QuestionError,
-    QuestionInfos,
-    QuestionRef,
-    QuestionContentRef,
-    onClickDeleteQuestionButton,
-    onSubmitEditQuestion,
-    handleSubmitQuestion,
-  } = useQuestion();
+    InterviewQuestionError,
+    InterviewQuestionInfos,
+    InterviewQuestionRef,
+    InterviewQuestionContentRef,
+    onClickDeleteInterviewQuestionButton,
+    onSubmitEditInterviewQuestion,
+    handleSubmitInterviewQuestion,
+  } = useInterviewQuestion();
 
-  if (QuestionError) {
+  if (InterviewQuestionError) {
     return <Error />;
   }
 
   return (
     <Suspense fallback={<Loading />}>
       <S.Container>
-        <S.Content ref={QuestionContentRef}>
-          {QuestionInfos!.Questions.length > 0 &&
-            QuestionInfos!.Questions.map((QuestionInfo) => (
-              <QuestionContent
-                key={QuestionInfo.id}
-                QuestionInfo={QuestionInfo}
-                onClickDeleteQuestionButton={onClickDeleteQuestionButton}
-                onSubmitEditQuestion={onSubmitEditQuestion}
+        <S.Content ref={InterviewQuestionContentRef}>
+          {InterviewQuestionInfos!.InterviewQuestions.length > 0 &&
+            InterviewQuestionInfos!.InterviewQuestions.map((InterviewQuestionInfo) => (
+              <InterviewQuestionContent
+                key={InterviewQuestionInfo.id}
+                InterviewQuestionInfo={InterviewQuestionInfo}
+                onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}
+                onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
               />
             ))}
         </S.Content>
-        <S.QuestionForm onSubmit={handleSubmitQuestion}>
-          <Input width={'100%'} height={'1.125rem'} inputRef={QuestionRef} />
+        <S.InterviewQuestionForm onSubmit={handleSubmitInterviewQuestion}>
+          <Input width={'100%'} height={'1.125rem'} inputRef={InterviewQuestionRef} />
           <S.InputButton type={'submit'}>추가하기</S.InputButton>
-        </S.QuestionForm>
+        </S.InterviewQuestionForm>
       </S.Container>
     </Suspense>
   );
@@ -74,7 +74,7 @@ const S = {
     background-color: ${(props) => props.theme.default.WHITE};
   `,
 
-  QuestionForm: styled.form`
+  InterviewQuestionForm: styled.form`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -94,4 +94,4 @@ const S = {
   `,
 };
 
-export default Question;
+export default InterviewQuestion;

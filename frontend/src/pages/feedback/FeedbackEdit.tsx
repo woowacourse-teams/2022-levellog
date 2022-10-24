@@ -11,7 +11,7 @@ import FlexBox from 'components/@commons/FlexBox';
 import ToolTip from 'components/@commons/ToolTip';
 import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
-import Question from 'components/question/Question';
+import Question from 'components/interviewQuestion/InterviewQuestion';
 
 const FeedbackEdit = () => {
   const { feedbackRef, handleClickFeedbackEditButton } = useFeedbackEdit();

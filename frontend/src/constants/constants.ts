@@ -113,8 +113,8 @@ export const QUERY_KEY = Object.freeze({
 
   PRE_QUESTION: 'preQuestion',
 
-  QUESTION: 'Question',
-  QUESTIONS: 'Questions',
+  INTERVIEW_QUESTION: 'InterviewQuestion',
+  INTERVIEW_QUESTIONS: 'InterviewQuestions',
 
   SEARCH_RESULTS: 'searchResults',
 

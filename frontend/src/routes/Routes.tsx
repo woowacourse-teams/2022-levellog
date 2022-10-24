@@ -15,7 +15,7 @@ const Login = lazy(() => import('pages/Login'));
 const FeedbackAdd = lazy(() => import('pages/feedback/FeedbackAdd'));
 const FeedbackEdit = lazy(() => import('pages/feedback/FeedbackEdit'));
 const Feedbacks = lazy(() => import('pages/feedback/Feedbacks'));
-const Questions = lazy(() => import('pages/question/questions'));
+const Questions = lazy(() => import('pages/interviewQuestion/InterviewQuestions'));
 const LevellogAdd = lazy(() => import('pages/levellogs/LevellogAdd'));
 const LevellogEdit = lazy(() => import('pages/levellogs/LevellogEdit'));
 const PreQuestionAdd = lazy(() => import('pages/preQuestion/PreQuestionAdd'));
@@ -25,7 +25,7 @@ const NotFound = lazy(() => import('pages/status/NotFound'));
 const InterviewDetail = lazy(() => import('pages/teams/InterviewDetail'));
 const InterviewTeamAdd = lazy(() => import('pages/teams/InterviewTeamAdd'));
 const InterviewTeamEdit = lazy(() => import('pages/teams/InterviewTeamEdit'));
-const QuestionSearch = lazy(() => import('pages/question/questionSearch'));
+const QuestionSearch = lazy(() => import('pages/interviewQuestion/InterviewQuestionSearch'));
 
 export const routes = [
   {

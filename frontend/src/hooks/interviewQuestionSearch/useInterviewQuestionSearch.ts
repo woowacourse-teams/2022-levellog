@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const useQuestionSearch = () => {
+const useInterviewQuestionSearch = () => {
   const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,7 +14,7 @@ const useQuestionSearch = () => {
     setSearchText(e.target.value);
   };
 
-  const handleSubmitQuestion = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitInterviewQuestion = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (searchText.trim().length > 0) {
@@ -34,8 +34,8 @@ const useQuestionSearch = () => {
     searchText,
     handleClickRemoveSearchTextButton,
     handleChangeSearchInput,
-    handleSubmitQuestion,
+    handleSubmitInterviewQuestion,
   };
 };
 
-export default useQuestionSearch;
+export default useInterviewQuestionSearch;

@@ -8,18 +8,18 @@ import useSnackbar from 'hooks//utils/useSnackbar';
 import { MESSAGE, ROUTES_PATH, INTERVIEW_QUESTION_FILTER, QUERY_KEY } from 'constants/constants';
 
 import {
-  requestLikeCancelQuestion,
-  requestLikeQuestion,
-  requestSearchedQuestion,
-} from 'apis/questionSearch';
-import { QuestionSort } from 'types/question';
+  requestLikeCancelInterviewQuestion,
+  requestLikeInterviewQuestion,
+  requestSearchedInterviewQuestion,
+} from 'apis/InterviewQuestionSearch';
+import { InterviewQuestionSort } from 'types/interviewQuestion';
 
-const useSearchedQuestion = () => {
+const useSearchedInterviewQuestion = () => {
   const { showSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
-  const [searchFilterActive, setSearchFilterActive] = useState<QuestionSort>(
+  const [searchFilterActive, setSearchFilterActive] = useState<InterviewQuestionSort>(
     INTERVIEW_QUESTION_FILTER.LATEST,
   );
 
@@ -31,12 +31,12 @@ const useSearchedQuestion = () => {
 
   const { data: searchResults, refetch: searchResultsRefetch } = useQuery(
     [QUERY_KEY.SEARCH_RESULTS, keyword, searchFilterActive],
-    () => requestSearchedQuestion({ accessToken, keyword, sort: searchFilterActive }),
+    () => requestSearchedInterviewQuestion({ accessToken, keyword, sort: searchFilterActive }),
   );
 
-  const { mutate: likeQuestion } = useMutation(
-    ({ QuestionId }: QuestionId) => {
-      return requestLikeQuestion({ accessToken, QuestionId });
+  const { mutate: likeInterviewQuestion } = useMutation(
+    ({ InterviewQuestionId }: InterviewQuestionId) => {
+      return requestLikeInterviewQuestion({ accessToken, InterviewQuestionId });
     },
     {
       onSuccess: () => {
@@ -45,7 +45,7 @@ const useSearchedQuestion = () => {
       onError: (err: unknown) => {
         if (!userId) return showSnackbar({ message: MESSAGE.NEED_LOGIN_SERVICE });
 
-        showSnackbar({ message: 'likeQuestion.error.message' });
+        showSnackbar({ message: 'likeInterviewQuestion.error.message' });
         navigate(ROUTES_PATH.ERROR);
 
         return;
@@ -53,9 +53,9 @@ const useSearchedQuestion = () => {
     },
   );
 
-  const { mutate: likeCancelQuestion } = useMutation(
-    ({ QuestionId }: QuestionId) => {
-      return requestLikeCancelQuestion({ accessToken, QuestionId });
+  const { mutate: likeCancelInterviewQuestion } = useMutation(
+    ({ InterviewQuestionId }: InterviewQuestionId) => {
+      return requestLikeCancelInterviewQuestion({ accessToken, InterviewQuestionId });
     },
     {
       onSuccess: () => {
@@ -64,7 +64,7 @@ const useSearchedQuestion = () => {
       onError: (err: unknown) => {
         if (!userId) return showSnackbar({ message: MESSAGE.NEED_LOGIN_SERVICE });
 
-        showSnackbar({ message: 'cancelLikeQuestion.error.message' });
+        showSnackbar({ message: 'cancelLikeInterviewQuestion.error.message' });
         navigate(ROUTES_PATH.ERROR);
 
         return;
@@ -72,12 +72,12 @@ const useSearchedQuestion = () => {
     },
   );
 
-  const onClickLikeButton = async ({ QuestionId }: QuestionId) => {
-    likeQuestion({ QuestionId });
+  const onClickLikeButton = async ({ InterviewQuestionId }: InterviewQuestionId) => {
+    likeInterviewQuestion({ InterviewQuestionId });
   };
 
-  const onClickCancelLikeButton = async ({ QuestionId }: QuestionId) => {
-    likeCancelQuestion({ QuestionId });
+  const onClickCancelLikeButton = async ({ InterviewQuestionId }: InterviewQuestionId) => {
+    likeCancelInterviewQuestion({ InterviewQuestionId });
   };
 
   const handleClickFilterButton = async (e: React.MouseEvent<HTMLElement>) => {
@@ -106,8 +106,8 @@ const useSearchedQuestion = () => {
   };
 };
 
-interface QuestionId {
-  QuestionId: string;
+interface InterviewQuestionId {
+  InterviewQuestionId: string;
 }
 
-export default useSearchedQuestion;
+export default useSearchedInterviewQuestion;

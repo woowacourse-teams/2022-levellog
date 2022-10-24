@@ -26,7 +26,6 @@ const PreQuestionViewModal = ({
 
   const handleClickDeletePreQuestion = async () => {
     if (levellogId && preQuestionId) {
-      getTeam();
       await onClickDeletePreQuestion({ levellogId, preQuestionId });
       await getTeam();
     }

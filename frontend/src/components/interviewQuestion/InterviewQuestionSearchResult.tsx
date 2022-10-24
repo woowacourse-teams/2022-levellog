@@ -8,18 +8,18 @@ import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/Image';
 
 const InterviewQuestionSearchResult = ({
-  InterviewQuestion,
+  interviewQuestion,
   onClickLikeButton,
   onClickCancelLikeButton,
 }: InterviewQuestionSearchResultProps) => {
-  const { id, content, like, likeCount } = InterviewQuestion;
+  const { id, content, like, likeCount } = interviewQuestion;
 
   const handleClickLikeButton = () => {
-    onClickLikeButton({ InterviewQuestionId: id });
+    onClickLikeButton({ interviewQuestionId: id });
   };
 
   const handleClickCancelLikeButton = () => {
-    onClickCancelLikeButton({ InterviewQuestionId: id });
+    onClickCancelLikeButton({ interviewQuestionId: id });
   };
 
   return (
@@ -50,13 +50,13 @@ const InterviewQuestionSearchResult = ({
 };
 
 interface InterviewQuestionSearchResultProps {
-  InterviewQuestion: any;
+  interviewQuestion: any;
   onClickLikeButton: ({
-    InterviewQuestionId,
-  }: Pick<InterviewQuestionLikeRequestType, 'InterviewQuestionId'>) => void;
+    interviewQuestionId,
+  }: Pick<InterviewQuestionLikeRequestType, 'interviewQuestionId'>) => void;
   onClickCancelLikeButton: ({
-    InterviewQuestionId,
-  }: Pick<InterviewQuestionLikeRequestType, 'InterviewQuestionId'>) => void;
+    interviewQuestionId,
+  }: Pick<InterviewQuestionLikeRequestType, 'interviewQuestionId'>) => void;
 }
 
 const S = {

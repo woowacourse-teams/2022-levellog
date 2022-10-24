@@ -51,7 +51,7 @@ const InterviewQuestionSearchResults = () => {
         {searchResults?.results.map((result) => (
           <InterviewQuestionSearchResult
             key={result.id}
-            InterviewQuestion={result}
+            interviewQuestion={result}
             onClickLikeButton={onClickLikeButton}
             onClickCancelLikeButton={onClickCancelLikeButton}
           />

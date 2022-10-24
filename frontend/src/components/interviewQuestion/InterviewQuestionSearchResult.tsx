@@ -5,7 +5,7 @@ import goodIcon from 'assets/images/good.svg';
 
 import { InterviewQuestionLikeRequestType } from 'apis/InterviewQuestionSearch';
 import FlexBox from 'components/@commons/FlexBox';
-import Image from 'components/@commons/Image';
+import Image from 'components/@commons/image/Image';
 
 const InterviewQuestionSearchResult = ({
   interviewQuestion,

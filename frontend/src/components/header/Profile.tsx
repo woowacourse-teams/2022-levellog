@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import hamburgerMenu from 'assets/images/hamburger.svg';
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
-import Image from 'components/@commons/Image';
+import Image from 'components/@commons/image/Image';
 
 const Profile = ({
   loginUserProfileUrl,

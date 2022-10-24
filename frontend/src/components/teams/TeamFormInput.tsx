@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import styled from 'styled-components';
 
-import Input from 'components/@commons/Input';
+import Input from 'components/@commons/input/Input';
 
 const TeamFormInput = ({
   label,

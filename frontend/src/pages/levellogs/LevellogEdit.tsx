@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import useLevellogEdit from 'hooks/levellog/useLevellogEdit';
 
-import BottomBar from 'components/@commons/BottomBar';
+import BottomBar from 'components/@commons/bottomBar/BottomBar';
 import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 
 const LevellogEdit = () => {

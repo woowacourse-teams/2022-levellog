@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 
 export default {
-  title: 'UiViewer',
+  title: '@commons/UiViewer',
   component: UiViewer,
 } as ComponentMeta<typeof UiViewer>;
 

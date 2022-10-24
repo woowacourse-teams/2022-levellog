@@ -6,7 +6,7 @@ import {
   InterviewQuestionDeleteRequestType,
   InterviewQuestionEditRequestType,
 } from 'apis/InterviewQuestion';
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 import { InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const InterviewQuestionContent = ({

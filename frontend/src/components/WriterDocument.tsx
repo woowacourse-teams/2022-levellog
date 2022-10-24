@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
 import usePreQuestionQuery from 'hooks/preQuestion/usePreQuestionQuery';
 
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 
 const WriterDocument = ({

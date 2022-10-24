@@ -6,7 +6,7 @@ import usePreQuestionEdit from 'hooks/preQuestion/usePreQuestionEdit';
 
 import Loading from 'pages/status/Loading';
 
-import BottomBar from 'components/@commons/BottomBar';
+import BottomBar from 'components/@commons/bottomBar/BottomBar';
 import UiEditor from 'components/@commons/markdownEditor/UiEditor';
 import LevellogContent from 'components/levellogs/LevellogContent';
 
@@ -33,7 +33,7 @@ const PreQuestionEdit = () => {
       <BottomBar
         buttonText={'작성하기'}
         handleClickRightButton={handleClickPreQuestionEditButton}
-      ></BottomBar>
+      />
     </S.Container>
   );
 };

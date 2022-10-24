@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.admin.application.AdminService;
 import com.woowacourse.levellog.admin.presentation.AdminController;
+import com.woowacourse.levellog.authentication.application.LoginService;
 import com.woowacourse.levellog.authentication.application.OAuthService;
 import com.woowacourse.levellog.authentication.presentation.OAuthController;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
@@ -92,6 +93,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected OAuthService oAuthService;
+
+    @MockBean
+    protected LoginService loginService;
 
     @MockBean
     protected AdminService adminService;

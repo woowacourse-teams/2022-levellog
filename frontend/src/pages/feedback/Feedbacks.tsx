@@ -15,9 +15,9 @@ import Loading from 'pages/status/Loading';
 import plusIcon from 'assets/images/plus.svg';
 import { TEAM_STATUS } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
-import ContentHeader from 'components/@commons/ContentHeader';
-import Image from 'components/@commons/Image';
+import Button from 'components/@commons/button/Button';
+import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
+import Image from 'components/@commons/image/Image';
 import Feedback from 'components/feedbacks/Feedback';
 import { FeedbackInfoType } from 'types/feedback';
 import { feedbackAddUriBuilder, teamGetUriBuilder } from 'utils/uri';

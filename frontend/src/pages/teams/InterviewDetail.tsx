@@ -11,9 +11,9 @@ import Loading from 'pages/status/Loading';
 
 import { TEAM_STATUS } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
-import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
+import Button from 'components/@commons/button/Button';
+import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';

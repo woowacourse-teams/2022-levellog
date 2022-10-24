@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
-import Image from 'components/@commons/Image';
+import Button from 'components/@commons/button/Button';
+import Image from 'components/@commons/image/Image';
 import { MemberType } from 'types/member';
 
 const AddMember = ({ addMember, removeEvent }: ParticipantProps) => {
@@ -33,6 +33,7 @@ const S = {
     align-items: center;
     gap: 0.25rem;
     padding: 0.5rem;
+    width: 5.625rem;
     box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.new_default.GRAY};
     border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
     border-radius: 1.5625rem;

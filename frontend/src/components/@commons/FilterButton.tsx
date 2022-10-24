@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 
 const FilterButton = ({ children, isActive, ...props }: FilterButtonProps) => {
   return (
@@ -18,6 +18,7 @@ interface FilterButtonProps {
 
 // 나중에 조건부 코드 리팩터링 해야함
 const FilterButtonStyle = styled(Button)<{ isActive: boolean }>`
+  margin-right: 0.625rem;
   padding: 0.625rem;
   border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
   border-radius: 1.25rem;

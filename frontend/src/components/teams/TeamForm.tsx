@@ -6,7 +6,7 @@ import Loading from 'pages/status/Loading';
 
 import { MESSAGE } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 import SearchMember from 'components/teams/SearchMember';
 import TeamFormInput from 'components/teams/TeamFormInput';
 import {

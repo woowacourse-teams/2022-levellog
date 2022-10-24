@@ -4,9 +4,9 @@ import styled from 'styled-components';
 
 import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
 import FlexBox from 'components/@commons/FlexBox';
-import Image from 'components/@commons/Image';
+import Button from 'components/@commons/button/Button';
+import Image from 'components/@commons/image/Image';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 import { FeedbackType } from 'types/feedback';
 import { feedbackEditUriBuilder } from 'utils/util';

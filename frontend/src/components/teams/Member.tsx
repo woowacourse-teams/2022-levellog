@@ -1,10 +1,8 @@
-import { Dispatch, SetStateAction } from 'react';
-
 import styled from 'styled-components';
 
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
-import Image from 'components/@commons/Image';
+import Image from 'components/@commons/image/Image';
 import { MemberType } from 'types/member';
 
 const Member = ({ member, addEvent }: MemberProps) => {

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import useInterviewQuestionEdit from 'hooks/interviewQuestion/useInterviewQuestionEdit';
 
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const InterviewQuestionContent = ({

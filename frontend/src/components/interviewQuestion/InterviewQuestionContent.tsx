@@ -10,18 +10,18 @@ import Button from 'components/@commons/Button';
 import { InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const InterviewQuestionContent = ({
-  InterviewQuestionInfo,
+  interviewQuestionInfo,
   onClickDeleteInterviewQuestionButton,
   onSubmitEditInterviewQuestion,
 }: InterviewQuestionContentProps) => {
   const {
     isEditInterviewQuestion,
-    InterviewQuestionEditRef,
+    interviewQuestionEditRef,
     handleClickEditInterviewQuestionButton,
     handleClickDeleteInterviewQuestionButton,
     handleSubmitEditCompleteInterviewQuestion,
   } = useInterviewQuestionEdit({
-    InterviewQuestionInfo,
+    interviewQuestionInfo,
     onClickDeleteInterviewQuestionButton,
     onSubmitEditInterviewQuestion,
   });
@@ -30,10 +30,10 @@ const InterviewQuestionContent = ({
     <S.Container>
       {isEditInterviewQuestion ? (
         <form onSubmit={handleSubmitEditCompleteInterviewQuestion}>
-          <S.Input ref={InterviewQuestionEditRef} />
+          <S.Input ref={interviewQuestionEditRef} />
         </form>
       ) : (
-        <p onClick={handleClickEditInterviewQuestionButton}>{InterviewQuestionInfo.content}</p>
+        <p onClick={handleClickEditInterviewQuestionButton}>{interviewQuestionInfo.content}</p>
       )}
       <S.DeleteButton onClick={handleClickDeleteInterviewQuestionButton}>
         <p>X</p>
@@ -43,16 +43,16 @@ const InterviewQuestionContent = ({
 };
 
 interface InterviewQuestionContentProps {
-  InterviewQuestionInfo: InterviewQuestionInfoType;
+  interviewQuestionInfo: InterviewQuestionInfoType;
   onClickDeleteInterviewQuestionButton: ({
-    InterviewQuestionId,
-  }: Pick<InterviewQuestionDeleteRequestType, 'InterviewQuestionId'>) => Promise<void>;
+    interviewQuestionId,
+  }: Pick<InterviewQuestionDeleteRequestType, 'interviewQuestionId'>) => Promise<void>;
   onSubmitEditInterviewQuestion: ({
-    InterviewQuestionId,
-    InterviewQuestion,
+    interviewQuestionId,
+    interviewQuestion,
   }: Pick<
     InterviewQuestionEditRequestType,
-    'InterviewQuestionId' | 'InterviewQuestion'
+    'interviewQuestionId' | 'interviewQuestion'
   >) => Promise<void>;
 }
 

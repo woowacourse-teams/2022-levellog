@@ -11,7 +11,7 @@ const useInterviewQuestions = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const { data: InterviewQuestions } = useQuery(
+  const { data: interviewQuestions } = useQuery(
     [QUERY_KEY.INTERVIEW_QUESTIONS, accessToken, levellogId],
     () =>
       requestGetInterviewQuestionsInLevellog({
@@ -21,7 +21,7 @@ const useInterviewQuestions = () => {
   );
 
   return {
-    InterviewQuestions: InterviewQuestions?.InterviewQuestions,
+    interviewQuestions: interviewQuestions?.interviewQuestions,
   };
 };
 

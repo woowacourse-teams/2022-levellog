@@ -13,35 +13,35 @@ import InterviewQuestionContent from 'components/interviewQuestion/InterviewQues
 
 const InterviewQuestion = () => {
   const {
-    InterviewQuestionError,
-    InterviewQuestionInfos,
-    InterviewQuestionRef,
-    InterviewQuestionContentRef,
+    interviewQuestionError,
+    interviewQuestionInfos,
+    interviewQuestionRef,
+    interviewQuestionContentRef,
     onClickDeleteInterviewQuestionButton,
     onSubmitEditInterviewQuestion,
     handleSubmitInterviewQuestion,
   } = useInterviewQuestion();
 
-  if (InterviewQuestionError) {
+  if (interviewQuestionError) {
     return <Error />;
   }
 
   return (
     <Suspense fallback={<Loading />}>
       <S.Container>
-        <S.Content ref={InterviewQuestionContentRef}>
-          {InterviewQuestionInfos!.InterviewQuestions.length > 0 &&
-            InterviewQuestionInfos!.InterviewQuestions.map((InterviewQuestionInfo) => (
+        <S.Content ref={interviewQuestionContentRef}>
+          {interviewQuestionInfos!.interviewQuestions.length > 0 &&
+            interviewQuestionInfos!.interviewQuestions.map((interviewQuestionInfo) => (
               <InterviewQuestionContent
-                key={InterviewQuestionInfo.id}
-                InterviewQuestionInfo={InterviewQuestionInfo}
+                key={interviewQuestionInfo.id}
+                interviewQuestionInfo={interviewQuestionInfo}
                 onClickDeleteInterviewQuestionButton={onClickDeleteInterviewQuestionButton}
                 onSubmitEditInterviewQuestion={onSubmitEditInterviewQuestion}
               />
             ))}
         </S.Content>
         <S.InterviewQuestionForm onSubmit={handleSubmitInterviewQuestion}>
-          <Input width={'100%'} height={'1.125rem'} inputRef={InterviewQuestionRef} />
+          <Input width={'100%'} height={'1.125rem'} inputRef={interviewQuestionRef} />
           <S.InputButton type={'submit'}>추가하기</S.InputButton>
         </S.InterviewQuestionForm>
       </S.Container>

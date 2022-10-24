@@ -10,7 +10,7 @@ export const requestGetInterviewQuestion = async ({
   accessToken,
   levellogId,
 }: InterviewQuestionRequestCommonType): Promise<
-  Record<'InterviewQuestions', InterviewQuestionInfoType[]>
+  Record<'interviewQuestions', InterviewQuestionInfoType[]>
 > => {
   const InterviewQuestionMyGet = `/levellogs/${levellogId}/interview-questions/my`;
 
@@ -23,7 +23,7 @@ export const requestGetInterviewQuestionsInLevellog = async ({
   accessToken,
   levellogId,
 }: InterviewQuestionRequestCommonType): Promise<
-  Record<'InterviewQuestions', InterviewQuestionsInLevellogInfoType[]>
+  Record<'interviewQuestions', InterviewQuestionsInLevellogInfoType[]>
 > => {
   const InterviewQuestionGetUri = `/levellogs/${levellogId}/interview-questions`;
 
@@ -35,10 +35,10 @@ export const requestGetInterviewQuestionsInLevellog = async ({
 export const requestPostInterviewQuestion = async ({
   accessToken,
   levellogId,
-  InterviewQuestion,
+  interviewQuestion,
 }: InterviewQuestionPostRequestType) => {
   const InterviewQuestionPostUri = `/levellogs/${levellogId}/interview-questions`;
-  const data = { content: InterviewQuestion };
+  const data = { content: interviewQuestion };
 
   await fetcher.post(InterviewQuestionPostUri, data, AuthorizationHeader(accessToken));
 };
@@ -46,9 +46,9 @@ export const requestPostInterviewQuestion = async ({
 export const requestDeleteInterviewQuestion = async ({
   accessToken,
   levellogId,
-  InterviewQuestionId,
+  interviewQuestionId,
 }: InterviewQuestionDeleteRequestType) => {
-  const InterviewQuestionDeleteUri = `/levellogs/${levellogId}/interview-questions/${InterviewQuestionId}`;
+  const InterviewQuestionDeleteUri = `/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`;
 
   await fetcher.delete(InterviewQuestionDeleteUri, AuthorizationHeader(accessToken));
 };
@@ -56,11 +56,11 @@ export const requestDeleteInterviewQuestion = async ({
 export const requestEditInterviewQuestion = async ({
   accessToken,
   levellogId,
-  InterviewQuestionId,
-  InterviewQuestion,
+  interviewQuestionId,
+  interviewQuestion,
 }: InterviewQuestionEditRequestType) => {
-  const InterviewQuestionEditUri = `/levellogs/${levellogId}/interview-questions/${InterviewQuestionId}`;
-  const data = { content: InterviewQuestion };
+  const InterviewQuestionEditUri = `/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`;
+  const data = { content: interviewQuestion };
 
   await fetcher.put(InterviewQuestionEditUri, data, AuthorizationHeader(accessToken));
 };
@@ -71,14 +71,14 @@ export interface InterviewQuestionRequestCommonType {
 }
 
 export interface InterviewQuestionPostRequestType extends InterviewQuestionRequestCommonType {
-  InterviewQuestion: string;
+  interviewQuestion: string;
 }
 
 export interface InterviewQuestionDeleteRequestType extends InterviewQuestionRequestCommonType {
-  InterviewQuestionId: string;
+  interviewQuestionId: string;
 }
 
 export interface InterviewQuestionEditRequestType extends InterviewQuestionRequestCommonType {
-  InterviewQuestionId: string;
-  InterviewQuestion: string;
+  interviewQuestionId: string;
+  interviewQuestion: string;
 }

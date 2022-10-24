@@ -7,41 +7,41 @@ import {
 import { InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const useInterviewQuestionEdit = ({
-  InterviewQuestionInfo,
+  interviewQuestionInfo,
   onClickDeleteInterviewQuestionButton,
   onSubmitEditInterviewQuestion,
 }: useInterviewQuestionEditProps) => {
   const [isEditInterviewQuestion, setIsEditInterviewQuestion] = useState(false);
-  const InterviewQuestionEditRef = useRef<HTMLInputElement>(null);
+  const interviewQuestionEditRef = useRef<HTMLInputElement>(null);
 
   const handleClickEditInterviewQuestionButton = () => {
     setIsEditInterviewQuestion((prev) => !prev);
   };
 
   const handleClickDeleteInterviewQuestionButton = () => {
-    onClickDeleteInterviewQuestionButton({ InterviewQuestionId: InterviewQuestionInfo.id });
+    onClickDeleteInterviewQuestionButton({ interviewQuestionId: interviewQuestionInfo.id });
   };
 
   const handleSubmitEditCompleteInterviewQuestion = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsEditInterviewQuestion((prev) => !prev);
-    if (InterviewQuestionEditRef.current) {
+    if (interviewQuestionEditRef.current) {
       onSubmitEditInterviewQuestion({
-        InterviewQuestionId: InterviewQuestionInfo.id,
-        InterviewQuestion: InterviewQuestionEditRef.current.value,
+        interviewQuestionId: interviewQuestionInfo.id,
+        interviewQuestion: interviewQuestionEditRef.current.value,
       });
     }
   };
 
   useEffect(() => {
-    if (isEditInterviewQuestion && InterviewQuestionEditRef.current) {
-      InterviewQuestionEditRef.current.value = InterviewQuestionInfo.content;
-      InterviewQuestionEditRef.current.focus();
+    if (isEditInterviewQuestion && interviewQuestionEditRef.current) {
+      interviewQuestionEditRef.current.value = interviewQuestionInfo.content;
+      interviewQuestionEditRef.current.focus();
     }
   }, [isEditInterviewQuestion]);
 
   return {
     isEditInterviewQuestion,
-    InterviewQuestionEditRef,
+    interviewQuestionEditRef,
     handleClickEditInterviewQuestionButton,
     handleClickDeleteInterviewQuestionButton,
     handleSubmitEditCompleteInterviewQuestion,
@@ -49,16 +49,16 @@ const useInterviewQuestionEdit = ({
 };
 
 interface useInterviewQuestionEditProps {
-  InterviewQuestionInfo: InterviewQuestionInfoType;
+  interviewQuestionInfo: InterviewQuestionInfoType;
   onClickDeleteInterviewQuestionButton: ({
-    InterviewQuestionId,
-  }: Pick<InterviewQuestionDeleteRequestType, 'InterviewQuestionId'>) => Promise<void>;
+    interviewQuestionId,
+  }: Pick<InterviewQuestionDeleteRequestType, 'interviewQuestionId'>) => Promise<void>;
   onSubmitEditInterviewQuestion: ({
-    InterviewQuestionId,
-    InterviewQuestion,
+    interviewQuestionId,
+    interviewQuestion,
   }: Pick<
     InterviewQuestionEditRequestType,
-    'InterviewQuestionId' | 'InterviewQuestion'
+    'interviewQuestionId' | 'interviewQuestion'
   >) => Promise<void>;
 }
 

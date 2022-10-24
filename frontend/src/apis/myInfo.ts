@@ -6,9 +6,9 @@ import { InterviewTeamType } from 'types/team';
 export const requestGetMyTeams = async ({
   accessToken,
 }: MyTeamGetRequestType): Promise<Record<'teams', InterviewTeamType[]>> => {
-  const teamGetUri = `/my-info/teams`;
+  const TEAM_GET_URI = `/my-info/teams`;
 
-  const { data } = await fetcher.get(teamGetUri, AuthorizationHeader(accessToken));
+  const { data } = await fetcher.get(TEAM_GET_URI, AuthorizationHeader(accessToken));
 
   return data;
 };

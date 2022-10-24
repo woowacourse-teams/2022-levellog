@@ -12,10 +12,6 @@ import { FeedbackInfoType } from 'types/feedback';
 import { feedbackEditUriBuilder } from 'utils/uri';
 
 const Feedback = ({ loginUserId, feedbackInfo, teamId, levellogId, teamStatus }: FeedbackProps) => {
-  console.log(teamStatus === TEAM_STATUS.IN_PROGRESS && feedbackInfo.from.id === loginUserId);
-  console.log('teamStatus: ', teamStatus);
-  console.log(' feedbackInfo.from.id, loginUserId: ', feedbackInfo.from.id, loginUserId);
-
   return (
     <S.Container>
       <S.Header>

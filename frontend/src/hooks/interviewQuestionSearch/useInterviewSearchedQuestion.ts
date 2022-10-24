@@ -35,8 +35,8 @@ const useSearchedInterviewQuestion = () => {
   );
 
   const { mutate: likeInterviewQuestion } = useMutation(
-    ({ InterviewQuestionId }: InterviewQuestionId) => {
-      return requestLikeInterviewQuestion({ accessToken, InterviewQuestionId });
+    ({ interviewQuestionId }: InterviewQuestionId) => {
+      return requestLikeInterviewQuestion({ accessToken, interviewQuestionId });
     },
     {
       onSuccess: () => {
@@ -54,8 +54,8 @@ const useSearchedInterviewQuestion = () => {
   );
 
   const { mutate: likeCancelInterviewQuestion } = useMutation(
-    ({ InterviewQuestionId }: InterviewQuestionId) => {
-      return requestLikeCancelInterviewQuestion({ accessToken, InterviewQuestionId });
+    ({ interviewQuestionId }: InterviewQuestionId) => {
+      return requestLikeCancelInterviewQuestion({ accessToken, interviewQuestionId });
     },
     {
       onSuccess: () => {
@@ -72,12 +72,12 @@ const useSearchedInterviewQuestion = () => {
     },
   );
 
-  const onClickLikeButton = async ({ InterviewQuestionId }: InterviewQuestionId) => {
-    likeInterviewQuestion({ InterviewQuestionId });
+  const onClickLikeButton = async ({ interviewQuestionId }: InterviewQuestionId) => {
+    likeInterviewQuestion({ interviewQuestionId });
   };
 
-  const onClickCancelLikeButton = async ({ InterviewQuestionId }: InterviewQuestionId) => {
-    likeCancelInterviewQuestion({ InterviewQuestionId });
+  const onClickCancelLikeButton = async ({ interviewQuestionId }: InterviewQuestionId) => {
+    likeCancelInterviewQuestion({ interviewQuestionId });
   };
 
   const handleClickFilterButton = async (e: React.MouseEvent<HTMLElement>) => {
@@ -107,7 +107,7 @@ const useSearchedInterviewQuestion = () => {
 };
 
 interface InterviewQuestionId {
-  InterviewQuestionId: string;
+  interviewQuestionId: string;
 }
 
 export default useSearchedInterviewQuestion;

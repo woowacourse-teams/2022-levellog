@@ -1,13 +1,16 @@
 import { UserType } from 'types';
 
-export interface InterviewQuestionInfoType {
-  id: string;
+export interface InterviewQuestionType {
   content: string;
+}
+
+export interface InterviewQuestionInfoType extends InterviewQuestionType {
+  id: string;
 }
 
 export interface InterviewQuestionsInLevellogInfoType {
   author: UserType;
-  contents: InterviewQuestionInfoType[];
+  contents: InterviewQuestionType[];
 }
 
 export interface InterviewQuestionSearchKeywordType {

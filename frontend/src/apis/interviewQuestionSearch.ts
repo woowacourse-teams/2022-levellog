@@ -24,18 +24,18 @@ export const requestSearchedInterviewQuestion = async ({
 
 export const requestLikeInterviewQuestion = async ({
   accessToken,
-  InterviewQuestionId,
+  interviewQuestionId,
 }: InterviewQuestionLikeRequestType) => {
-  const InterviewQuestionLikePostUri = `/interview-questions/${InterviewQuestionId}/like`;
+  const InterviewQuestionLikePostUri = `/interview-questions/${interviewQuestionId}/like`;
 
   await fetcher.post(InterviewQuestionLikePostUri, {}, AuthorizationHeader(accessToken));
 };
 
 export const requestLikeCancelInterviewQuestion = async ({
   accessToken,
-  InterviewQuestionId,
+  interviewQuestionId,
 }: InterviewQuestionLikeRequestType) => {
-  const InterviewQuestionLikeDeleteUri = `/interview-questions/${InterviewQuestionId}/like`;
+  const InterviewQuestionLikeDeleteUri = `/interview-questions/${interviewQuestionId}/like`;
 
   await fetcher.delete(InterviewQuestionLikeDeleteUri, AuthorizationHeader(accessToken));
 };
@@ -55,5 +55,5 @@ interface InterviewQuestionSearchResponseType {
 
 export interface InterviewQuestionLikeRequestType {
   accessToken: string | null;
-  InterviewQuestionId: string;
+  interviewQuestionId: string;
 }

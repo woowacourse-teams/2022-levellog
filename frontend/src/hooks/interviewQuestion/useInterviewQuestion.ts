@@ -22,18 +22,18 @@ import {
 import { WrongAccessToken } from 'apis/utils';
 
 const useInterviewQuestion = () => {
-  const { scrollRef: InterviewQuestionContentRef, afterRequestScrollDown } =
+  const { scrollRef: interviewQuestionContentRef, afterRequestScrollDown } =
     useScrollDown<HTMLUListElement>();
   const { showSnackbar } = useSnackbar();
-  const InterviewQuestionRef = useRef<HTMLInputElement>(null);
+  const interviewQuestionRef = useRef<HTMLInputElement>(null);
   const { levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
 
   const {
-    isError: InterviewQuestionError,
-    data: InterviewQuestionInfos,
-    refetch: InterviewQuestionRefetch,
+    isError: interviewQuestionError,
+    data: interviewQuestionInfos,
+    refetch: interviewQuestionRefetch,
   } = useQuery(
     [QUERY_KEY.INTERVIEW_QUESTION, accessToken, levellogId],
     () => {
@@ -55,16 +55,16 @@ const useInterviewQuestion = () => {
   );
 
   const { mutate: postInterviewQuestion } = useMutation(
-    ({ InterviewQuestion }: Pick<InterviewQuestionPostRequestType, 'InterviewQuestion'>) => {
-      return requestPostInterviewQuestion({ accessToken, levellogId, InterviewQuestion });
+    ({ interviewQuestion }: Pick<InterviewQuestionPostRequestType, 'interviewQuestion'>) => {
+      return requestPostInterviewQuestion({ accessToken, levellogId, interviewQuestion });
     },
     {
       onSuccess: () => {
-        if (InterviewQuestionRef.current) {
-          InterviewQuestionRef.current.value = '';
-          InterviewQuestionRef.current.focus();
+        if (interviewQuestionRef.current) {
+          interviewQuestionRef.current.value = '';
+          interviewQuestionRef.current.focus();
         }
-        afterRequestScrollDown({ requestFunction: InterviewQuestionRefetch });
+        afterRequestScrollDown({ requestFunction: interviewQuestionRefetch });
       },
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
@@ -79,19 +79,19 @@ const useInterviewQuestion = () => {
 
   const { mutate: editInterviewQuestion } = useMutation(
     ({
-      InterviewQuestionId,
-      InterviewQuestion,
-    }: Pick<InterviewQuestionEditRequestType, 'InterviewQuestionId' | 'InterviewQuestion'>) => {
+      interviewQuestionId,
+      interviewQuestion,
+    }: Pick<InterviewQuestionEditRequestType, 'interviewQuestionId' | 'interviewQuestion'>) => {
       return requestEditInterviewQuestion({
         accessToken,
         levellogId,
-        InterviewQuestionId,
-        InterviewQuestion,
+        interviewQuestionId,
+        interviewQuestion,
       });
     },
     {
       onSuccess: () => {
-        InterviewQuestionRefetch();
+        interviewQuestionRefetch();
       },
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
@@ -105,12 +105,12 @@ const useInterviewQuestion = () => {
   );
 
   const { mutate: deleteInterviewQuestion } = useMutation(
-    ({ InterviewQuestionId }: Pick<InterviewQuestionDeleteRequestType, 'InterviewQuestionId'>) => {
-      return requestDeleteInterviewQuestion({ accessToken, levellogId, InterviewQuestionId });
+    ({ interviewQuestionId }: Pick<InterviewQuestionDeleteRequestType, 'interviewQuestionId'>) => {
+      return requestDeleteInterviewQuestion({ accessToken, levellogId, interviewQuestionId });
     },
     {
       onSuccess: () => {
-        InterviewQuestionRefetch();
+        interviewQuestionRefetch();
       },
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
@@ -124,36 +124,36 @@ const useInterviewQuestion = () => {
   );
 
   const onClickDeleteInterviewQuestionButton = async ({
-    InterviewQuestionId,
-  }: Pick<InterviewQuestionDeleteRequestType, 'InterviewQuestionId'>) => {
-    deleteInterviewQuestion({ InterviewQuestionId });
+    interviewQuestionId,
+  }: Pick<InterviewQuestionDeleteRequestType, 'interviewQuestionId'>) => {
+    deleteInterviewQuestion({ interviewQuestionId });
   };
 
   const onSubmitEditInterviewQuestion = async ({
-    InterviewQuestionId,
-    InterviewQuestion,
-  }: Pick<InterviewQuestionEditRequestType, 'InterviewQuestionId' | 'InterviewQuestion'>) => {
-    editInterviewQuestion({ InterviewQuestionId, InterviewQuestion });
+    interviewQuestionId,
+    interviewQuestion,
+  }: Pick<InterviewQuestionEditRequestType, 'interviewQuestionId' | 'interviewQuestion'>) => {
+    editInterviewQuestion({ interviewQuestionId, interviewQuestion });
   };
 
   const handleSubmitInterviewQuestion = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (InterviewQuestionRef.current) {
-      if (InterviewQuestionRef.current.value.length < 3) {
+    if (interviewQuestionRef.current) {
+      if (interviewQuestionRef.current.value.length < 3) {
         showSnackbar({ message: MESSAGE.WRITE_MORE });
 
         return;
       }
 
-      postInterviewQuestion({ InterviewQuestion: InterviewQuestionRef.current.value });
+      postInterviewQuestion({ interviewQuestion: interviewQuestionRef.current.value });
     }
   };
 
   return {
-    InterviewQuestionError,
-    InterviewQuestionInfos,
-    InterviewQuestionRef,
-    InterviewQuestionContentRef,
+    interviewQuestionError,
+    interviewQuestionInfos,
+    interviewQuestionRef,
+    interviewQuestionContentRef,
     onClickDeleteInterviewQuestionButton,
     onSubmitEditInterviewQuestion,
     handleSubmitInterviewQuestion,

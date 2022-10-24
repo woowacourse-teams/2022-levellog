@@ -11,7 +11,7 @@ import {
   requestLikeCancelInterviewQuestion,
   requestLikeInterviewQuestion,
   requestSearchedInterviewQuestion,
-} from 'apis/InterviewQuestionSearch';
+} from 'apis/interviewQuestionSearch';
 import { InterviewQuestionSort } from 'types/interviewQuestion';
 
 const useSearchedInterviewQuestion = () => {

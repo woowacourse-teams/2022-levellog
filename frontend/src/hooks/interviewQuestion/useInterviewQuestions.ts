@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { QUERY_KEY } from 'constants/constants';
 
-import { requestGetInterviewQuestionsInLevellog } from 'apis/InterviewQuestion';
+import { requestGetInterviewQuestionsInLevellog } from 'apis/interviewQuestion';
 
 const useInterviewQuestions = () => {
   const { levellogId } = useParams();

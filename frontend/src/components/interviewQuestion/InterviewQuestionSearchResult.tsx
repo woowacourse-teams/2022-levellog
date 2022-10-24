@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import goodActiveIcon from 'assets/images/good-active.svg';
 import goodIcon from 'assets/images/good.svg';
 
-import { InterviewQuestionLikeRequestType } from 'apis/InterviewQuestionSearch';
+import { InterviewQuestionLikeRequestType } from 'apis/interviewQuestionSearch';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/image/Image';
 

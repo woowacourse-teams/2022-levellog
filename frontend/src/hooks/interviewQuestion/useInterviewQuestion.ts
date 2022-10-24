@@ -18,7 +18,7 @@ import {
   InterviewQuestionDeleteRequestType,
   InterviewQuestionEditRequestType,
   InterviewQuestionPostRequestType,
-} from 'apis/InterviewQuestion';
+} from 'apis/interviewQuestion';
 import { WrongAccessToken } from 'apis/utils';
 
 const useInterviewQuestion = () => {

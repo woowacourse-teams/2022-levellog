@@ -5,7 +5,7 @@ import useInterviewQuestionEdit from 'hooks/interviewQuestion/useInterviewQuesti
 import {
   InterviewQuestionDeleteRequestType,
   InterviewQuestionEditRequestType,
-} from 'apis/InterviewQuestion';
+} from 'apis/interviewQuestion';
 import Button from 'components/@commons/button/Button';
 import { InterviewQuestionInfoType } from 'types/interviewQuestion';
 

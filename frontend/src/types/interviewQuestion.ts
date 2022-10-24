@@ -10,7 +10,7 @@ export interface InterviewQuestionInfoType extends InterviewQuestionType {
 
 export interface InterviewQuestionsInLevellogInfoType {
   author: UserType;
-  contents: InterviewQuestionType[];
+  contents: InterviewQuestionInfoType[];
 }
 
 export interface InterviewQuestionSearchKeywordType {

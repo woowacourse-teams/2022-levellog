@@ -24,7 +24,7 @@ import { checkFirstWordFinalConsonant } from 'utils/util';
 
 const InterviewQuestions = () => {
   const { levellogInfo } = useLevellogQuery();
-  const { InterviewQuestions } = useInterviewQuestions();
+  const { interviewQuestions } = useInterviewQuestions();
   const { loginUserId, loginUserNickname, loginUserProfileUrl } = useUser();
   const { team } = useTeam();
   const { teamId, levellogId } = useParams();
@@ -54,37 +54,37 @@ const InterviewQuestions = () => {
         받은 인터뷰 질문들`}
       />
       <S.Container>
-        {InterviewQuestions?.length === 0 && (
+        {interviewQuestions?.length === 0 && (
           <EmptyInterviewQuestion
             isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo.author.id !== loginUserId}
             path={feedbackAddUriBuilder({ teamId, levellogId })}
           />
         )}
-        {InterviewQuestions?.map(
-          (InterviewQuestionInLevellogInfo: InterviewQuestionsInLevellogInfoType) => (
-            <S.Box key={InterviewQuestionInLevellogInfo.author.id}>
+        {interviewQuestions?.map(
+          (interviewQuestionInLevellogInfo: InterviewQuestionsInLevellogInfoType) => (
+            <S.Box key={interviewQuestionInLevellogInfo.author.id}>
               <S.AuthorBox>
                 <Image
-                  src={InterviewQuestionInLevellogInfo.author.profileUrl}
+                  src={interviewQuestionInLevellogInfo.author.profileUrl}
                   sizes={'MEDIUM'}
                   githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
                 />
                 <S.AuthorText>
                   {checkFirstWordFinalConsonant({
-                    word: InterviewQuestionInLevellogInfo.author.nickname,
+                    word: interviewQuestionInLevellogInfo.author.nickname,
                   })
-                    ? `${InterviewQuestionInLevellogInfo.author.nickname}이 `
-                    : `${InterviewQuestionInLevellogInfo.author.nickname}가 `}
+                    ? `${interviewQuestionInLevellogInfo.author.nickname}이 `
+                    : `${interviewQuestionInLevellogInfo.author.nickname}가 `}
                   기록해준 질문들
                 </S.AuthorText>
               </S.AuthorBox>
               <S.Content>
                 <ul>
-                  {InterviewQuestionInLevellogInfo.contents.length !== 0 &&
-                    InterviewQuestionInLevellogInfo.contents.map(
-                      (InterviewQuestionContent: InterviewQuestionInfoType) => (
-                        <S.Text key={InterviewQuestionContent.id}>
-                          <p>{InterviewQuestionContent.content}</p>
+                  {interviewQuestionInLevellogInfo.contents.length !== 0 &&
+                    interviewQuestionInLevellogInfo.contents.map(
+                      (interviewQuestionContent: InterviewQuestionInfoType) => (
+                        <S.Text key={interviewQuestionContent.id}>
+                          <p>{interviewQuestionContent.content}</p>
                         </S.Text>
                       ),
                     )}

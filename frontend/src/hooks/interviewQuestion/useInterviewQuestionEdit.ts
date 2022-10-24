@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   InterviewQuestionDeleteRequestType,
   InterviewQuestionEditRequestType,
-} from 'apis/InterviewQuestion';
+} from 'apis/interviewQuestion';
 import { InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const useInterviewQuestionEdit = ({

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
+import { ParticipantType } from 'types';
 
 import useUser from 'hooks/useUser';
 
@@ -10,12 +11,12 @@ import Button from 'components/@commons/button/Button';
 import Modal from 'components/@commons/modal/Modal';
 import ModalPortal from 'portal/ModalPortal';
 import { LevellogInfoType } from 'types/levellog';
-import { ParticipantType, TeamStatusType } from 'types/team';
+import { TeamStatusType } from 'types/team';
 import {
   levellogEditUriBuilder,
   preQuestionEditUriBuilder,
   preQuestionAddUriBuilder,
-} from 'utils/util';
+} from 'utils/uri';
 
 const LevellogViewModal = ({
   teamId,

@@ -4,14 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, QUERY_KEY, ROUTES_PATH } from 'constants/constants';
 
 import { requestGetTeam } from 'apis/teams';
 import { TeamStatusType } from 'types/team';
-
-const QUERY_KEY = {
-  TEAM: 'team',
-};
 
 const TeamStatus = ({ allowedStatuses, children }: TeamStatusProps) => {
   const { teamId } = useParams();

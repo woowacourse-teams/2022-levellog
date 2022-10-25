@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import goodActiveIcon from 'assets/images/good-active.svg';
 import goodIcon from 'assets/images/good.svg';
 
+import { InterviewQuestionLikeRequestType } from 'apis/interviewQuestionSearch';
 import FlexBox from 'components/@commons/FlexBox';
 import Image from 'components/@commons/image/Image';
-import { InterviewQuestionApiType } from 'types/interviewQuestion';
 
 const InterviewQuestionSearchResult = ({
   interviewQuestion,
@@ -53,10 +53,10 @@ interface InterviewQuestionSearchResultProps {
   interviewQuestion: any;
   onClickLikeButton: ({
     interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => void;
+  }: Pick<InterviewQuestionLikeRequestType, 'interviewQuestionId'>) => void;
   onClickCancelLikeButton: ({
     interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => void;
+  }: Pick<InterviewQuestionLikeRequestType, 'interviewQuestionId'>) => void;
 }
 
 const S = {

@@ -2,12 +2,13 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
+import { PreQuestionDeleteRequestType } from 'apis/preQuestion';
 import Button from 'components/@commons/button/Button';
 import Modal from 'components/@commons/modal/Modal';
 import ModalPortal from 'portal/ModalPortal';
-import { PreQuestionCustomHookType, PreQuestionFormatType } from 'types/preQuestion';
-import { ParticipantType } from 'types/team';
-import { preQuestionEditUriBuilder } from 'utils/util';
+import { ParticipantType } from 'types/index';
+import { PreQuestionInfoType } from 'types/preQuestion';
+import { preQuestionEditUriBuilder } from 'utils/uri';
 
 const PreQuestionViewModal = ({
   teamId,
@@ -52,13 +53,13 @@ const PreQuestionViewModal = ({
 
 interface PreQuestionViewModalProps {
   teamId: string | undefined;
-  preQuestion: PreQuestionFormatType | undefined;
+  preQuestion: PreQuestionInfoType | undefined;
   participant: ParticipantType;
   getTeam: () => void;
   onClickDeletePreQuestion: ({
     levellogId,
     preQuestionId,
-  }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => void;
+  }: Omit<PreQuestionDeleteRequestType, 'accessToken'>) => Promise<void>;
   handleClickClosePreQuestionModal: (e: React.MouseEvent<HTMLElement>) => void;
 }
 

@@ -1,31 +1,9 @@
-import { ParticipantType } from 'types/team';
+import { UserType } from 'types/index';
 
-export interface LevellogCustomHookType {
-  inputValue: string;
-  teamId: string | undefined;
-  levellogId: string | undefined;
-}
-
-export interface LevellogApiType {
-  accessToken: string | null;
-  teamId: string | undefined;
-  levellogId: string | undefined;
-  levellogContent: LevellogFormatType;
-}
-
-export interface LevellogFormatType {
+export interface LevellogType {
   content: string;
 }
 
-export interface LevellogParticipantType extends Pick<LevellogCustomHookType, 'teamId'> {
-  participant: ParticipantType;
-}
-
-export interface LevellogInfoType {
-  author: {
-    id: string;
-    nickname: string;
-    profileUrl: string;
-  };
-  content: string;
+export interface LevellogInfoType extends LevellogType {
+  author: UserType;
 }

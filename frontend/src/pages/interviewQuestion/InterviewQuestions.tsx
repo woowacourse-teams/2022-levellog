@@ -16,10 +16,11 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
 import Image from 'components/@commons/image/Image';
 import {
-  InterviewQuestionsInLevellogType,
+  InterviewQuestionsInLevellogInfoType,
   InterviewQuestionInfoType,
 } from 'types/interviewQuestion';
-import { convertFirstWordFinalConsonant, feedbackAddUriBuilder } from 'utils/util';
+import { feedbackAddUriBuilder } from 'utils/uri';
+import { checkFirstWordFinalConsonant } from 'utils/util';
 
 const InterviewQuestions = () => {
   const { levellogInfo } = useLevellogQuery();
@@ -43,9 +44,13 @@ const InterviewQuestions = () => {
     <>
       <ContentHeader
         imageUrl={loginUserProfileUrl}
-        title={`${convertFirstWordFinalConsonant({
-          word: loginUserNickname,
-        })}
+        title={`${
+          checkFirstWordFinalConsonant({
+            word: loginUserNickname,
+          })
+            ? `${loginUserNickname}이 `
+            : `${loginUserNickname}가 `
+        }
         받은 인터뷰 질문들`}
       />
       <S.Container>
@@ -56,25 +61,27 @@ const InterviewQuestions = () => {
           />
         )}
         {interviewQuestions?.map(
-          (interviewQuestionInfoInLevellog: InterviewQuestionsInLevellogType) => (
-            <S.Box key={interviewQuestionInfoInLevellog.author.id}>
+          (interviewQuestionInLevellogInfo: InterviewQuestionsInLevellogInfoType) => (
+            <S.Box key={interviewQuestionInLevellogInfo.author.id}>
               <S.AuthorBox>
                 <Image
-                  src={interviewQuestionInfoInLevellog.author.profileUrl}
+                  src={interviewQuestionInLevellogInfo.author.profileUrl}
                   sizes={'MEDIUM'}
                   githubAvatarSize={GITHUB_AVATAR_SIZE_LIST.MEDIUM}
                 />
                 <S.AuthorText>
-                  {convertFirstWordFinalConsonant({
-                    word: interviewQuestionInfoInLevellog.author.nickname,
-                  })}
+                  {checkFirstWordFinalConsonant({
+                    word: interviewQuestionInLevellogInfo.author.nickname,
+                  })
+                    ? `${interviewQuestionInLevellogInfo.author.nickname}이 `
+                    : `${interviewQuestionInLevellogInfo.author.nickname}가 `}
                   기록해준 질문들
                 </S.AuthorText>
               </S.AuthorBox>
               <S.Content>
                 <ul>
-                  {interviewQuestionInfoInLevellog.contents.length !== 0 &&
-                    interviewQuestionInfoInLevellog.contents.map(
+                  {interviewQuestionInLevellogInfo.contents.length !== 0 &&
+                    interviewQuestionInLevellogInfo.contents.map(
                       (interviewQuestionContent: InterviewQuestionInfoType) => (
                         <S.Text key={interviewQuestionContent.id}>
                           <p>{interviewQuestionContent.content}</p>

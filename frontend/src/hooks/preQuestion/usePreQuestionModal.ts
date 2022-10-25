@@ -8,9 +8,12 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { requestDeletePreQuestion, requestGetPreQuestion } from 'apis/preQuestion';
-import { PreQuestionCustomHookType, PreQuestionParticipantType } from 'types/preQuestion';
-import { ParticipantType } from 'types/team';
+import {
+  PreQuestionDeleteRequestType,
+  requestDeletePreQuestion,
+  requestGetPreQuestion,
+} from 'apis/preQuestion';
+import { ParticipantType } from 'types/index';
 
 const usePreQuestionModal = () => {
   const { isModalOpen, onClickOpenModal, onClickCloseModal } = useModal();
@@ -31,10 +34,7 @@ const usePreQuestionModal = () => {
   });
 
   const { mutateAsync: deletePreQuestion } = useMutation(
-    ({
-      levellogId,
-      preQuestionId,
-    }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
+    ({ levellogId, preQuestionId }: Omit<PreQuestionDeleteRequestType, 'accessToken'>) => {
       return requestDeletePreQuestion({
         accessToken,
         levellogId,
@@ -52,7 +52,7 @@ const usePreQuestionModal = () => {
     },
   );
 
-  const onClickOpenPreQuestionModal = ({ participant }: PreQuestionParticipantType) => {
+  const onClickOpenPreQuestionModal = ({ participant }: Record<'participant', ParticipantType>) => {
     onClickOpenModal();
     setPreQuestionParticipant(participant);
     getPreQuestion({ levellogId: participant.levellogId });
@@ -61,7 +61,7 @@ const usePreQuestionModal = () => {
   const onClickDeletePreQuestion = async ({
     levellogId,
     preQuestionId,
-  }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
+  }: Omit<PreQuestionDeleteRequestType, 'accessToken'>) => {
     await deletePreQuestion({
       levellogId,
       preQuestionId,

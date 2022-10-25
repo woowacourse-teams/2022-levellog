@@ -10,9 +10,9 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { requestEditLevellog } from 'apis/levellog';
-import { LevellogCustomHookType } from 'types/levellog';
-import { debounce, teamGetUriBuilder } from 'utils/util';
+import { LevellogEditRequestType, requestEditLevellog } from 'apis/levellog';
+import { teamGetUriBuilder } from 'utils/uri';
+import { debounce } from 'utils/util';
 
 const useLevellogEdit = () => {
   const { levellogInfo } = useLevellogQuery();
@@ -24,12 +24,12 @@ const useLevellogEdit = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const { mutate: editLevellog } = useMutation(
-    ({ teamId, levellogId, inputValue }: LevellogCustomHookType) => {
+    ({ teamId, levellogId, levellog }: Omit<LevellogEditRequestType, 'accessToken'>) => {
       return requestEditLevellog({
         accessToken,
         teamId,
         levellogId,
-        levellogContent: { content: inputValue },
+        levellog,
       });
     },
     {

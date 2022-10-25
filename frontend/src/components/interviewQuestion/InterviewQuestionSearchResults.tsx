@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
-import useSearchedInterviewQuestion from 'hooks/questionSearch/useSearchedInterviewQuestion';
+import useSearchedInterviewQuestion from 'hooks/interviewQuestionSearch/useInterviewSearchedQuestion';
 
 import EmptySearchResult from 'pages/status/EmptySearchResult';
 
 import { INTERVIEW_QUESTION_FILTER } from 'constants/constants';
 
-import Button from 'components/@commons/button/Button';
+import FilterButton from 'components/@commons/FilterButton';
 import InterviewQuestionSearchResult from 'components/interviewQuestion/InterviewQuestionSearchResult';
 
 const InterviewQuestionSearchResults = () => {
@@ -88,8 +88,9 @@ const S = {
     height: 3.625rem;
   `,
 
-  RangeButton: styled(Button)`
-    padding: 0;
+  RangeButton: styled(FilterButton)<{ isActive: boolean }>`
+    padding: 0.3125rem;
+    border: 0;
     background-color: ${(props) => props.theme.new_default.WHITE};
     color: ${(props) =>
       props.isActive ? props.theme.new_default.BLUE : props.theme.new_default.BLACK};

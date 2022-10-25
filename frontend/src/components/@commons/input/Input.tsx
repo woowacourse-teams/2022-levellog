@@ -21,13 +21,12 @@ const Input = ({
   );
 };
 
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   width?: string;
   height?: string;
   placeholder?: string;
   value?: string | undefined;
   inputRef?: React.Ref<HTMLInputElement>;
-  [props: string]: any;
 }
 
 export const InputStyle = styled.input`

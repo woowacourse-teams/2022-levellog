@@ -9,9 +9,8 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 import { MESSAGE } from 'constants/constants';
 
 import usePreQuestionQuery from './usePreQuestionQuery';
-import { requestEditPreQuestion } from 'apis/preQuestion';
-import { PreQuestionCustomHookType } from 'types/preQuestion';
-import { teamGetUriBuilder } from 'utils/util';
+import { PreQuestionEditRequestType, requestEditPreQuestion } from 'apis/preQuestion';
+import { teamGetUriBuilder } from 'utils/uri';
 
 const usePreQuestionEdit = () => {
   const { preQuestion } = usePreQuestionQuery();
@@ -27,7 +26,7 @@ const usePreQuestionEdit = () => {
       levellogId,
       preQuestionId,
       preQuestionContent,
-    }: Omit<PreQuestionCustomHookType, 'teamId' | 'preQuestion'>) => {
+    }: Omit<PreQuestionEditRequestType, 'accessToken'>) => {
       return requestEditPreQuestion({
         accessToken,
         levellogId,

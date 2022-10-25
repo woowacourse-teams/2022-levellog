@@ -9,9 +9,9 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { requestPostFeedback } from 'apis/feedback';
-import { FeedbackFormatType, FeedbackApiType } from 'types/feedback';
-import { feedbacksGetUriBuilder } from 'utils/util';
+import { requestPostFeedback, FeedbackPostRequestType } from 'apis/feedback';
+import { FeedbackType } from 'types/feedback';
+import { feedbacksGetUriBuilder } from 'utils/uri';
 
 const useFeedbackAdd = () => {
   const { showSnackbar } = useSnackbar();
@@ -22,8 +22,8 @@ const useFeedbackAdd = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const { mutate: postFeedback } = useMutation(
-    ({ levellogId, feedbackResult }: Pick<FeedbackApiType, 'levellogId' | 'feedbackResult'>) => {
-      return requestPostFeedback({ accessToken, levellogId, feedbackResult });
+    ({ levellogId, feedback }: Omit<FeedbackPostRequestType, 'accessToken'>) => {
+      return requestPostFeedback({ accessToken, levellogId, feedback });
     },
     {
       onSuccess: () => {
@@ -38,7 +38,7 @@ const useFeedbackAdd = () => {
 
   const handleClickFeedbackAddButton = () => {
     const [study, speak, etc] = feedbackRef.current;
-    const feedbackResult: FeedbackFormatType = {
+    const feedback: FeedbackType = {
       feedback: {
         study: study.getInstance().getMarkdown(),
         speak: speak.getInstance().getMarkdown(),
@@ -46,7 +46,7 @@ const useFeedbackAdd = () => {
       },
     };
 
-    postFeedback({ levellogId, feedbackResult });
+    postFeedback({ levellogId, feedback });
   };
 
   return {

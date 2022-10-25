@@ -8,20 +8,18 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import useScrollDown from 'hooks/utils/useScrollDown';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
+import { MESSAGE, QUERY_KEY } from 'constants/constants';
 
 import {
   requestDeleteInterviewQuestion,
   requestEditInterviewQuestion,
   requestGetInterviewQuestion,
   requestPostInterviewQuestion,
+  InterviewQuestionDeleteRequestType,
+  InterviewQuestionEditRequestType,
+  InterviewQuestionPostRequestType,
 } from 'apis/interviewQuestion';
-import { NotCorrectToken } from 'apis/utils';
-import { InterviewQuestionApiType } from 'types/interviewQuestion';
-
-const QUERY_KEY = {
-  INTERVIEW_QUESTION: 'interviewQuestion',
-};
+import { WrongAccessToken } from 'apis/utils';
 
 const useInterviewQuestion = () => {
   const { scrollRef: interviewQuestionContentRef, afterRequestScrollDown } =
@@ -48,7 +46,7 @@ const useInterviewQuestion = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
+          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }
@@ -57,7 +55,7 @@ const useInterviewQuestion = () => {
   );
 
   const { mutate: postInterviewQuestion } = useMutation(
-    ({ interviewQuestion }: Pick<InterviewQuestionApiType, 'interviewQuestion'>) => {
+    ({ interviewQuestion }: Pick<InterviewQuestionPostRequestType, 'interviewQuestion'>) => {
       return requestPostInterviewQuestion({ accessToken, levellogId, interviewQuestion });
     },
     {
@@ -71,7 +69,7 @@ const useInterviewQuestion = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
+          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }
@@ -83,7 +81,7 @@ const useInterviewQuestion = () => {
     ({
       interviewQuestionId,
       interviewQuestion,
-    }: Pick<InterviewQuestionApiType, 'interviewQuestionId' | 'interviewQuestion'>) => {
+    }: Pick<InterviewQuestionEditRequestType, 'interviewQuestionId' | 'interviewQuestion'>) => {
       return requestEditInterviewQuestion({
         accessToken,
         levellogId,
@@ -98,7 +96,7 @@ const useInterviewQuestion = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
+          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }
@@ -107,7 +105,7 @@ const useInterviewQuestion = () => {
   );
 
   const { mutate: deleteInterviewQuestion } = useMutation(
-    ({ interviewQuestionId }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => {
+    ({ interviewQuestionId }: Pick<InterviewQuestionDeleteRequestType, 'interviewQuestionId'>) => {
       return requestDeleteInterviewQuestion({ accessToken, levellogId, interviewQuestionId });
     },
     {
@@ -117,7 +115,7 @@ const useInterviewQuestion = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
+          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }
@@ -127,14 +125,14 @@ const useInterviewQuestion = () => {
 
   const onClickDeleteInterviewQuestionButton = async ({
     interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => {
+  }: Pick<InterviewQuestionDeleteRequestType, 'interviewQuestionId'>) => {
     deleteInterviewQuestion({ interviewQuestionId });
   };
 
   const onSubmitEditInterviewQuestion = async ({
     interviewQuestionId,
     interviewQuestion,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId' | 'interviewQuestion'>) => {
+  }: Pick<InterviewQuestionEditRequestType, 'interviewQuestionId' | 'interviewQuestion'>) => {
     editInterviewQuestion({ interviewQuestionId, interviewQuestion });
   };
 

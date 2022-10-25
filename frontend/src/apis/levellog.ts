@@ -1,25 +1,25 @@
-import { fetcher } from 'apis';
+import { AuthorizationHeader, fetcher } from 'apis';
 
-import { LevellogApiType, LevellogInfoType } from 'types/levellog';
+import { LevellogInfoType, LevellogType } from 'types/levellog';
 
 export const requestPostLevellog = async ({
   accessToken,
   teamId,
-  levellogContent,
-}: Omit<LevellogApiType, 'levellogId'>) => {
-  await fetcher.post(`/teams/${teamId}/levellogs`, levellogContent, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  levellog,
+}: LevellogPostRequestType) => {
+  const levellogPostUri = `/teams/${teamId}/levellogs`;
+
+  await fetcher.post(levellogPostUri, levellog, AuthorizationHeader(accessToken));
 };
 
 export const requestGetLevellog = async ({
   accessToken,
   teamId,
   levellogId,
-}: Omit<LevellogApiType, 'levellogContent'>): Promise<LevellogInfoType> => {
-  const { data } = await fetcher.get(`/teams/${teamId}/levellogs/${levellogId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: LevellogGetRequestType): Promise<LevellogInfoType> => {
+  const levellogGetUri = `/teams/${teamId}/levellogs/${levellogId}`;
+
+  const { data } = await fetcher.get(levellogGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };
@@ -28,9 +28,26 @@ export const requestEditLevellog = async ({
   accessToken,
   teamId,
   levellogId,
-  levellogContent,
-}: LevellogApiType) => {
-  await fetcher.put(`/teams/${teamId}/levellogs/${levellogId}`, levellogContent, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  levellog,
+}: LevellogEditRequestType) => {
+  const levellogPutUri = `/teams/${teamId}/levellogs/${levellogId}`;
+
+  await fetcher.put(levellogPutUri, levellog, AuthorizationHeader(accessToken));
 };
+
+export interface LevellogRequestCommonType {
+  accessToken: string | null;
+  teamId: string | undefined;
+}
+export interface LevellogGetRequestType extends LevellogRequestCommonType {
+  levellogId: string | undefined;
+}
+
+export interface LevellogPostRequestType extends LevellogRequestCommonType {
+  levellog: LevellogType;
+}
+
+export interface LevellogEditRequestType extends LevellogRequestCommonType {
+  levellogId: string | undefined;
+  levellog: LevellogType;
+}

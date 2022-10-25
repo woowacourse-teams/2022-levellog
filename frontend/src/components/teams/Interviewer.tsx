@@ -10,20 +10,19 @@ import levellogIcon from 'assets/images/levellogIcon.svg';
 import preQuestionIcon from 'assets/images/preQuestionIcon.svg';
 import { GITHUB_AVATAR_SIZE_LIST, TEAM_STATUS } from 'constants/constants';
 
+import InterviewerButton from './InterviewerButton';
 import CustomLink from 'components/@commons/CustomLink';
 import Image from 'components/@commons/image/Image';
 import Role from 'components/@commons/role/Role';
 import VisibleButtonList from 'components/VisibleButtonList';
-import InterviewerButton from 'components/teams/InterviewerButton';
-import { LevellogParticipantType } from 'types/levellog';
-import { PreQuestionParticipantType } from 'types/preQuestion';
-import { ParticipantType, TeamStatusType } from 'types/team';
+import { ParticipantType } from 'types/index';
+import { TeamStatusType } from 'types/team';
 import {
   feedbacksGetUriBuilder,
-  interviewQuestionsGetUriBuilder,
+  QuestionsGetUriBuilder,
   levellogAddUriBuilder,
   preQuestionAddUriBuilder,
-} from 'utils/util';
+} from 'utils/uri';
 
 const Interviewer = ({
   participant,
@@ -49,7 +48,7 @@ const Interviewer = ({
 
   const handleClickOpenLevellogModal = () => {
     if (typeof teamId === 'string') {
-      onClickOpenLevellogModal({ teamId, participant });
+      onClickOpenLevellogModal({ participant });
     }
   };
 
@@ -107,12 +106,12 @@ const Interviewer = ({
           </VisibleButtonList>
 
           <VisibleButtonList
-            type={'interviewQuestionLook'}
+            type={'QuestionLook'}
             interviewerId={participant.memberId}
             loginUserId={loginUserId}
           >
             <CustomLink
-              path={interviewQuestionsGetUriBuilder({ teamId, levellogId: participant.levellogId })}
+              path={QuestionsGetUriBuilder({ teamId, levellogId: participant.levellogId })}
               disabled={!participant.levellogId || !userInTeam}
             >
               <InterviewerButton
@@ -173,12 +172,12 @@ const Interviewer = ({
 
 interface InterviewerProps {
   participant: ParticipantType;
-  interviewees: (number | null)[];
-  interviewers: (number | null)[];
+  interviewees: Array<number | null>;
+  interviewers: Array<number | null>;
   teamStatus: TeamStatusType;
   userInTeam: Boolean;
-  onClickOpenLevellogModal: ({ teamId, participant }: LevellogParticipantType) => void;
-  onClickOpenPreQuestionModal: ({ participant }: PreQuestionParticipantType) => void;
+  onClickOpenPreQuestionModal: ({ participant }: Record<'participant', ParticipantType>) => void;
+  onClickOpenLevellogModal: ({ participant }: Record<'participant', ParticipantType>) => void;
 }
 
 const S = {

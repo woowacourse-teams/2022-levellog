@@ -2,8 +2,12 @@ import styled from 'styled-components';
 
 import useInterviewQuestionEdit from 'hooks/interviewQuestion/useInterviewQuestionEdit';
 
+import {
+  InterviewQuestionDeleteRequestType,
+  InterviewQuestionEditRequestType,
+} from 'apis/interviewQuestion';
 import Button from 'components/@commons/button/Button';
-import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';
+import { InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const InterviewQuestionContent = ({
   interviewQuestionInfo,
@@ -42,11 +46,14 @@ interface InterviewQuestionContentProps {
   interviewQuestionInfo: InterviewQuestionInfoType;
   onClickDeleteInterviewQuestionButton: ({
     interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => Promise<void>;
+  }: Pick<InterviewQuestionDeleteRequestType, 'interviewQuestionId'>) => Promise<void>;
   onSubmitEditInterviewQuestion: ({
     interviewQuestionId,
     interviewQuestion,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId' | 'interviewQuestion'>) => Promise<void>;
+  }: Pick<
+    InterviewQuestionEditRequestType,
+    'interviewQuestionId' | 'interviewQuestion'
+  >) => Promise<void>;
 }
 
 const S = {

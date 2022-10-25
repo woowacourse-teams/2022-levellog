@@ -14,7 +14,7 @@ const isButtonShow = {
 
     return false;
   },
-  interviewQuestionLook: ({ interviewerId, loginUserId }: IsButtonShowProps) => {
+  QuestionLook: ({ interviewerId, loginUserId }: IsButtonShowProps) => {
     if (interviewerId === loginUserId) return true;
 
     return false;
@@ -34,12 +34,7 @@ const isButtonShow = {
 };
 
 interface VisibleButtonListProps extends IsButtonShowProps {
-  type:
-    | 'levellogLook'
-    | 'levellogWrite'
-    | 'interviewQuestionLook'
-    | 'preQuestionLook'
-    | 'preQuestionWrite';
+  type: 'levellogLook' | 'levellogWrite' | 'QuestionLook' | 'preQuestionLook' | 'preQuestionWrite';
   children: JSX.Element;
 }
 

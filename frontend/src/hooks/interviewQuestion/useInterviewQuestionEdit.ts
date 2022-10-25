@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { InterviewQuestionApiType, InterviewQuestionInfoType } from 'types/interviewQuestion';
+import {
+  InterviewQuestionDeleteRequestType,
+  InterviewQuestionEditRequestType,
+} from 'apis/interviewQuestion';
+import { InterviewQuestionInfoType } from 'types/interviewQuestion';
 
 const useInterviewQuestionEdit = ({
   interviewQuestionInfo,
@@ -48,11 +52,14 @@ interface useInterviewQuestionEditProps {
   interviewQuestionInfo: InterviewQuestionInfoType;
   onClickDeleteInterviewQuestionButton: ({
     interviewQuestionId,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId'>) => Promise<void>;
+  }: Pick<InterviewQuestionDeleteRequestType, 'interviewQuestionId'>) => Promise<void>;
   onSubmitEditInterviewQuestion: ({
     interviewQuestionId,
     interviewQuestion,
-  }: Pick<InterviewQuestionApiType, 'interviewQuestionId' | 'interviewQuestion'>) => Promise<void>;
+  }: Pick<
+    InterviewQuestionEditRequestType,
+    'interviewQuestionId' | 'interviewQuestion'
+  >) => Promise<void>;
 }
 
 export default useInterviewQuestionEdit;

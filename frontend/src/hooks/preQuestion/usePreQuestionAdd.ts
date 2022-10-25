@@ -10,10 +10,14 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { requestDeletePreQuestion, requestPostPreQuestion } from 'apis/preQuestion';
-import { NotCorrectToken } from 'apis/utils';
-import { PreQuestionCustomHookType } from 'types/preQuestion';
-import { teamGetUriBuilder } from 'utils/util';
+import {
+  PreQuestionDeleteRequestType,
+  PreQuestionPostRequestType,
+  requestDeletePreQuestion,
+  requestPostPreQuestion,
+} from 'apis/preQuestion';
+import { WrongAccessToken } from 'apis/utils';
+import { teamGetUriBuilder } from 'utils/uri';
 
 const usePreQuestionAdd = () => {
   const { showSnackbar } = useSnackbar();
@@ -24,10 +28,7 @@ const usePreQuestionAdd = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const { mutate: postPreQuestion } = useMutation(
-    ({
-      levellogId,
-      preQuestionContent,
-    }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionContent'>) => {
+    ({ levellogId, preQuestionContent }: Omit<PreQuestionPostRequestType, 'accessToken'>) => {
       return requestPostPreQuestion({
         accessToken,
         levellogId,
@@ -42,7 +43,7 @@ const usePreQuestionAdd = () => {
       onError: (err) => {
         if (axios.isAxiosError(err) && err instanceof Error) {
           const responseBody: AxiosResponse = err.response!;
-          if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
+          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
             showSnackbar({ message: responseBody.data.message });
           }
         }
@@ -51,10 +52,7 @@ const usePreQuestionAdd = () => {
   );
 
   const { mutate: deletePreQuestion } = useMutation(
-    ({
-      levellogId,
-      preQuestionId,
-    }: Pick<PreQuestionCustomHookType, 'levellogId' | 'preQuestionId'>) => {
+    ({ levellogId, preQuestionId }: Omit<PreQuestionDeleteRequestType, 'accessToken'>) => {
       return requestDeletePreQuestion({ accessToken, levellogId, preQuestionId });
     },
   );

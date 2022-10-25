@@ -4,7 +4,7 @@ import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import Button from 'components/@commons/button/Button';
 import Image from 'components/@commons/image/Image';
-import { MemberType } from 'types/member';
+import { UserType } from 'types/index';
 
 const AddMember = ({ addMember, removeEvent }: ParticipantProps) => {
   const { id, nickname, profileUrl } = addMember;
@@ -23,8 +23,8 @@ const AddMember = ({ addMember, removeEvent }: ParticipantProps) => {
 };
 
 interface ParticipantProps {
-  addMember: MemberType;
-  removeEvent: ({ id, nickname, profileUrl }: MemberType) => void;
+  addMember: UserType;
+  removeEvent: ({ id, nickname, profileUrl }: UserType) => void;
 }
 
 const S = {

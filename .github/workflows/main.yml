@@ -2,11 +2,17 @@ name: backend CI
 
 # 하기 내용에 해당하는 이벤트 발생 시 github action 동작
 on:
+  push: # 모든 브랜치에서 push가 일어났을 때 github action 동작
+    branches:
+      - "*"
+    paths-ignore:
+      - "frontend/**"
   pull_request: # 모든 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
       - "*"
     paths-ignore:
       - "frontend/**"
+
 # 참고사항
 # push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.
 

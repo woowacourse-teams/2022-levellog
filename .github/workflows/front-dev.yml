@@ -44,3 +44,5 @@ jobs:
       - name: Dev Build # React Dev Build
         working-directory: ./frontend
         run: yarn build-dev
+
+    test:

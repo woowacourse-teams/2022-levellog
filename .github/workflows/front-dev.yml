@@ -70,5 +70,5 @@ jobs:
         run: yarn install
 
       - name: Util Test
-        working-directory: ./frontend/src/utils/**.test.ts
+        working-directory: /frontend/src/utils/**.test.ts
         run: yarn test-util

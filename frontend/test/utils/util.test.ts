@@ -1,4 +1,4 @@
-import { convertDateAndTime, checkFirstWordFinalConsonant, debounce } from './util';
+import { convertDateAndTime, checkFirstWordFinalConsonant, debounce } from '../../src/utils/util';
 import { describe, expect, test, jest } from '@jest/globals';
 
 jest.useFakeTimers();

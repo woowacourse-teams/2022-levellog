@@ -51,5 +51,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2 # github action 버전 지정(major version)
 
-      - name: Unit Test
-      - run:
+      - name: e2e Test
+      - working-directory: frontend/cypress/e2e
+      - run: yarn test-ci

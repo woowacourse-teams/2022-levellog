@@ -1,4 +1,4 @@
-import { convertDateAndTime, convertFirstWordFinalConsonant, debounce } from './util';
+import { convertDateAndTime, checkFirstWordFinalConsonant, debounce } from './util';
 import { describe, expect, test, jest } from '@jest/globals';
 
 jest.useFakeTimers();
@@ -35,14 +35,14 @@ describe('debounce 함수 동작 확인', () => {
 describe('앞 글자가 받침이 있으면 이, 없으면 가를 붙여주는 함수 동작 확인', () => {
   test('앞 글자가 받침이 있으면 이를 붙여서 반환해야 한다.', () => {
     const word = '결';
-    const convertWord = convertFirstWordFinalConsonant({ word });
+    const convertWord = checkFirstWordFinalConsonant({ word });
 
     expect(convertWord).toBe(`${word}이`);
   });
 
   test('앞 글자가 받침이 없으면 가를 붙여서 반환해야 한다.', () => {
     const word = '결이';
-    const convertWord = convertFirstWordFinalConsonant({ word });
+    const convertWord = checkFirstWordFinalConsonant({ word });
 
     expect(convertWord).toBe(`${word}가`);
   });

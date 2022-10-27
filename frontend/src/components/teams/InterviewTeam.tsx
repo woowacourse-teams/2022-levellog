@@ -7,9 +7,10 @@ import locationIcon from 'assets/images/location.svg';
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
 import FlexBox from 'components/@commons/FlexBox';
-import Image from 'components/@commons/Image';
+import Image from 'components/@commons/image/Image';
 import { InterviewTeamType } from 'types/team';
-import { convertDateAndTime, teamGetUriBuilder } from 'utils/util';
+import { teamGetUriBuilder } from 'utils/uri';
+import { convertDateAndTime } from 'utils/util';
 
 const InterviewTeam = ({ team }: InterviewTeamsProp) => {
   const { id, teamImage, title, status, place, startAt, participants } = team;

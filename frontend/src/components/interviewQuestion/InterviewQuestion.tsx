@@ -7,8 +7,8 @@ import useInterviewQuestion from 'hooks/interviewQuestion/useInterviewQuestion';
 import Error from 'pages/status/Error';
 import Loading from 'pages/status/Loading';
 
-import Button from 'components/@commons/Button';
-import Input from 'components/@commons/Input';
+import Button from 'components/@commons/button/Button';
+import Input from 'components/@commons/input/Input';
 import InterviewQuestionContent from 'components/interviewQuestion/InterviewQuestionContent';
 
 const InterviewQuestion = () => {
@@ -40,10 +40,10 @@ const InterviewQuestion = () => {
               />
             ))}
         </S.Content>
-        <S.QuestionForm onSubmit={handleSubmitInterviewQuestion}>
+        <S.InterviewQuestionForm onSubmit={handleSubmitInterviewQuestion}>
           <Input width={'100%'} height={'1.125rem'} inputRef={interviewQuestionRef} />
           <S.InputButton type={'submit'}>추가하기</S.InputButton>
-        </S.QuestionForm>
+        </S.InterviewQuestionForm>
       </S.Container>
     </Suspense>
   );
@@ -74,7 +74,7 @@ const S = {
     background-color: ${(props) => props.theme.default.WHITE};
   `,
 
-  QuestionForm: styled.form`
+  InterviewQuestionForm: styled.form`
     display: flex;
     flex-direction: row;
     align-items: center;

@@ -9,20 +9,20 @@ import usePreventGoBack from 'hooks/utils/usePreventGoBack';
 
 import Loading from 'pages/status/Loading';
 
-import BottomBar from 'components/@commons/BottomBar';
-import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
-import ToolTip from 'components/@commons/ToolTip';
+import BottomBar from 'components/@commons/bottomBar/BottomBar';
+import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
+import ToolTip from 'components/@commons/toolTip/ToolTip';
 import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
-import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
+import Question from 'components/interviewQuestion/InterviewQuestion';
 
 const FeedbackAdd = () => {
   const { feedbackRef, handleClickFeedbackAddButton } = useFeedbackAdd();
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
   const { authorInfo, feedbackWriterRole } = useRole();
 
-  usePreventGoBack(); // 새로 고침할 때마다 쌓인다.
+  usePreventGoBack();
 
   return (
     <>
@@ -56,17 +56,14 @@ const FeedbackAdd = () => {
                   toolTipText={`질문 텍스트를 클릭하면 수정가능합니다. 질문 수정 후 엔터를 눌러 반영해주세요.`}
                 />
               </FlexBox>
-              <InterviewQuestion />
+              <Question />
             </S.QuestionContent>
             <S.FeedbackContent>
               <FeedbackFormat feedbackRef={feedbackRef} />
             </S.FeedbackContent>
           </S.RightContent>
         </S.Content>
-        <BottomBar
-          buttonText={'작성하기'}
-          handleClickRightButton={handleClickFeedbackAddButton}
-        ></BottomBar>
+        <BottomBar buttonText={'작성하기'} handleClickRightButton={handleClickFeedbackAddButton} />
       </S.Container>
     </>
   );

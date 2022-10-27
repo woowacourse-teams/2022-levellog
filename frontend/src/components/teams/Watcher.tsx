@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
 
-import Image from 'components/@commons/Image';
-import { WatcherType } from 'types/team';
+import Image from 'components/@commons/image/Image';
+import { ParticipantType } from 'types/index';
 
 const Watcher = ({ watcher }: WatcherProps) => {
   return (
@@ -19,7 +19,7 @@ const Watcher = ({ watcher }: WatcherProps) => {
 };
 
 interface WatcherProps {
-  watcher: Pick<WatcherType, 'memberId' | 'nickname' | 'profileUrl'>;
+  watcher: Pick<ParticipantType, 'memberId' | 'nickname' | 'profileUrl'>;
 }
 
 const S = {

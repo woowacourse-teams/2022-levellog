@@ -8,10 +8,6 @@ export const FeedbackContainer = styled.div`
   }
 `;
 
-export const LogoStyle = styled.img`
-  height: 2rem;
-`;
-
 export const FeedbackTitle = styled.h2`
   margin-bottom: 1.875rem;
   font-size: 1.875rem;

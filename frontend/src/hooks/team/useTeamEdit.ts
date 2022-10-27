@@ -10,7 +10,7 @@ import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { requestEditTeam, requestGetTeam } from 'apis/teams';
 import { MemberContext } from 'contexts/memberContext';
-import { TeamCustomHookType } from 'types/team';
+import { TeamRequestType } from 'types/team';
 import {
   interviewDateValidate,
   interviewInterviewerValidate,
@@ -48,7 +48,7 @@ const useTeamEdit = () => {
   );
 
   const { mutate: editTeam } = useMutation(
-    ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
+    ({ teamInfo }: Record<'teamInfo', TeamRequestType>) => {
       return requestEditTeam({
         teamId,
         teamInfo,

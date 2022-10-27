@@ -1,6 +1,8 @@
 import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { UserType } from 'types';
+
 import { useMutation } from '@tanstack/react-query';
 
 import errorHandler from 'hooks/utils/errorHandler';
@@ -8,17 +10,16 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { requestGetMembers } from 'apis/member';
 import { requestGetTeam } from 'apis/teams';
-import { MemberContext, MemberDispatchContext } from 'contexts/memberContext';
-import { MembersCustomHookType, MemberType } from 'types/member';
+import { MemberDispatchContext } from 'contexts/memberContext';
 import { debounce } from 'utils/util';
 
 const useMember = () => {
   const { showSnackbar } = useSnackbar();
-  const [watchers, setWatchers] = useState<MemberType[]>([]);
-  const [participants, setParticipants] = useState<MemberType[]>([]);
+  const [watchers, setWatchers] = useState<UserType[]>([]);
+  const [participants, setParticipants] = useState<UserType[]>([]);
 
-  const [watchersOfMembers, setWatchersOfMembers] = useState<MemberType[]>([]);
-  const [participantsOfMembers, setParticipantsOfMembers] = useState<MemberType[]>([]);
+  const [watchersOfMembers, setWatchersOfMembers] = useState<UserType[]>([]);
+  const [participantsOfMembers, setParticipantsOfMembers] = useState<UserType[]>([]);
 
   const [watcherNicknameValue, setWatcherNicknameValue] = useState('');
   const [participantNicknameValue, setParticipantNicknameValue] = useState('');
@@ -28,7 +29,7 @@ const useMember = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const memberFilter = (args: Record<'members', MemberType[]>) => {
+  const memberFilter = (args: Record<'members', UserType[]>) => {
     return args?.members
       .filter((member) => participants.every((participant) => participant.id !== member.id))
       .filter((member) => watchers.every((watcher) => watcher.id !== member.id));
@@ -79,8 +80,8 @@ const useMember = () => {
   );
 
   const { mutate: getMembersForWatchers } = useMutation(
-    ({ nicknameValue = '' }: MembersCustomHookType) => {
-      return requestGetMembers({ accessToken, nickname: nicknameValue });
+    ({ nickname }: Pick<UserType, 'nickname'>) => {
+      return requestGetMembers({ accessToken, nickname });
     },
     {
       onSuccess: (res) => {
@@ -93,8 +94,8 @@ const useMember = () => {
   );
 
   const { mutate: getMembersForParticipants } = useMutation(
-    ({ nicknameValue = '' }: MembersCustomHookType) => {
-      return requestGetMembers({ accessToken, nickname: nicknameValue });
+    ({ nickname }: Pick<UserType, 'nickname'>) => {
+      return requestGetMembers({ accessToken, nickname });
     },
     {
       onSuccess: (res) => {
@@ -106,21 +107,21 @@ const useMember = () => {
     },
   );
 
-  const addWatcher = ({ id, nickname, profileUrl }: MemberType) => {
+  const addWatcher = ({ id, nickname, profileUrl }: UserType) => {
     setWatchers((prev) => prev.concat({ id, nickname, profileUrl }));
     setWatcherNicknameValue('');
   };
 
-  const addParticipant = ({ id, nickname, profileUrl }: MemberType) => {
+  const addParticipant = ({ id, nickname, profileUrl }: UserType) => {
     setParticipants((prev) => prev.concat({ id, nickname, profileUrl }));
     setParticipantNicknameValue('');
   };
 
-  const removeWatcher = ({ id }: Pick<MemberType, 'id'>) => {
+  const removeWatcher = ({ id }: Pick<UserType, 'id'>) => {
     setWatchers(watchers.filter((watcher) => id !== watcher.id));
   };
 
-  const removeParticipant = ({ id }: Pick<MemberType, 'id'>) => {
+  const removeParticipant = ({ id }: Pick<UserType, 'id'>) => {
     setParticipants(participants.filter((participant) => id !== participant.id));
   };
 

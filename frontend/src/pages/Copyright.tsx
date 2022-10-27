@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import DefaultProfile from 'assets/images/defaultProfile.webp';
 import Error from 'assets/images/error.webp';
 import Feedback from 'assets/images/feedback.webp';
-import InterviewQuestion from 'assets/images/interviewQuestion.webp';
+import Question from 'assets/images/interviewQuestion.webp';
 import InterviewBoth from 'assets/images/interviewboth.webp';
 import Interviewee from 'assets/images/interviewee.webp';
 import Interviewer from 'assets/images/interviewer.webp';
 import SearchFail from 'assets/images/searchFail.webp';
 
-import Image from 'components/@commons/Image';
+import Image from 'components/@commons/image/Image';
 
 const Copyright = () => {
   return (
@@ -24,7 +24,7 @@ const Copyright = () => {
         </S.IconLink>
       </S.IconBox>
       <S.IconBox>
-        <Image src={InterviewQuestion} sizes={'LARGE'} />
+        <Image src={Question} sizes={'LARGE'} />
         <S.IconLink href="https://www.flaticon.com/free-icons/version" title="version icons">
           Version icons created by Freepik - Flaticon
         </S.IconLink>

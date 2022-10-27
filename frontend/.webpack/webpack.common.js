@@ -2,6 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 require('dotenv').config();
 
 module.exports = {
@@ -30,6 +32,9 @@ module.exports = {
   plugins: [
     new Dotenv(),
     new HtmlWebpackPlugin({ template: 'public/index.html' }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: './public', to: './public' }],
+    }),
     new CleanWebpackPlugin(),
   ],
 };

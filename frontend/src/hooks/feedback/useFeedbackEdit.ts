@@ -4,17 +4,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE, ROUTES_PATH } from 'constants/constants';
+import { MESSAGE, QUERY_KEY } from 'constants/constants';
 
-import { requestEditFeedback, requestGetFeedback } from 'apis/feedback';
-import { FeedbackCustomHookType, FeedbackFormatType } from 'types/feedback';
-import { feedbacksGetUriBuilder } from 'utils/util';
-
-const QUERY_KEY = {
-  FEEDBACK: 'feedback',
-};
+import { FeedbackEditRequestType, requestEditFeedback, requestGetFeedback } from 'apis/feedback';
+import { FeedbackType } from 'types/feedback';
+import { feedbacksGetUriBuilder } from 'utils/uri';
 
 const useFeedbackEdit = () => {
   const { showSnackbar } = useSnackbar();
@@ -38,20 +35,14 @@ const useFeedbackEdit = () => {
         feedbackRef.current[2].getInstance().setMarkdown(data.feedback.etc);
       },
       onError: (err: unknown) => {
-        showSnackbar({ message: 'getFeedback.error.message' });
-        navigate(ROUTES_PATH.ERROR);
-        return;
+        errorHandler({ err, showSnackbar });
       },
     },
   );
 
   const editFeedback = useMutation(
-    ({
-      levellogId,
-      feedbackId,
-      feedbackResult,
-    }: Pick<FeedbackCustomHookType, 'levellogId' | 'feedbackId' | 'feedbackResult'>) => {
-      return requestEditFeedback({ accessToken, levellogId, feedbackId, feedbackResult });
+    ({ levellogId, feedbackId, feedback }: Omit<FeedbackEditRequestType, 'accessToken'>) => {
+      return requestEditFeedback({ accessToken, levellogId, feedbackId, feedback });
     },
     {
       onSuccess: () => {
@@ -59,16 +50,14 @@ const useFeedbackEdit = () => {
         navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
       },
       onError: (err: unknown) => {
-        showSnackbar({ message: 'editFeedback.error.message' });
-        navigate(ROUTES_PATH.ERROR);
-        return;
+        errorHandler({ err, showSnackbar });
       },
     },
   );
 
   const handleClickFeedbackEditButton = () => {
     const [study, speak, etc] = feedbackRef.current;
-    const feedbackResult: FeedbackFormatType = {
+    const feedback: FeedbackType = {
       feedback: {
         study: study.getInstance().getEditorElements().mdEditor.innerText,
         speak: speak.getInstance().getEditorElements().mdEditor.innerText,
@@ -79,7 +68,7 @@ const useFeedbackEdit = () => {
     editFeedback.mutate({
       levellogId,
       feedbackId,
-      feedbackResult,
+      feedback,
     });
   };
 

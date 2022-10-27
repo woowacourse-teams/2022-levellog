@@ -1,11 +1,11 @@
 import styled from 'styled-components';
+import { UserType } from 'types';
 
 import useMember from 'hooks/team/useMember';
 
 import AddMember from 'components/teams/AddMember';
 import Member from 'components/teams/Member';
 import TeamFormInput from 'components/teams/TeamFormInput';
-import { MemberType } from 'types/member';
 
 const SearchMember = () => {
   const {
@@ -32,7 +32,7 @@ const SearchMember = () => {
       >
         <S.ParticipantsBox>
           {watchers.length !== 0 &&
-            watchers.map((watcher: MemberType) => (
+            watchers.map((watcher: UserType) => (
               <AddMember key={watcher.id} addMember={watcher} removeEvent={removeWatcher} />
             ))}
         </S.ParticipantsBox>
@@ -40,7 +40,7 @@ const SearchMember = () => {
 
       <S.MembersBox>
         {watchersOfMembers?.length ? (
-          watchersOfMembers.map((member: MemberType) => (
+          watchersOfMembers.map((member: UserType) => (
             <Member key={member.id} member={member} addEvent={addWatcher} />
           ))
         ) : (
@@ -54,7 +54,7 @@ const SearchMember = () => {
         onChange={handleChangeParticipantInput}
       >
         <S.ParticipantsBox>
-          {participants.map((participant: MemberType) => (
+          {participants.map((participant: UserType) => (
             <AddMember
               key={participant.id}
               addMember={participant}
@@ -66,7 +66,7 @@ const SearchMember = () => {
 
       <S.MembersBox>
         {participantsOfMembers?.length ? (
-          participantsOfMembers.map((member: MemberType) => (
+          participantsOfMembers.map((member: UserType) => (
             <Member key={member.id} member={member} addEvent={addParticipant} />
           ))
         ) : (

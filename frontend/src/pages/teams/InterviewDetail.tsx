@@ -11,15 +11,16 @@ import Loading from 'pages/status/Loading';
 
 import { TEAM_STATUS } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
-import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
+import Button from 'components/@commons/button/Button';
+import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
 import LevellogViewModal from 'components/levellogs/LevellogViewModal';
 import PreQuestionViewModal from 'components/preQuestion/PreQuestionViewModal';
 import Interviewer from 'components/teams/Interviewer';
 import Watcher from 'components/teams/Watcher';
-import { ParticipantType, WatcherType } from 'types/team';
-import { convertDateAndTime, teamEditUriBuilder } from 'utils/util';
+import { ParticipantType } from 'types/index';
+import { teamEditUriBuilder } from 'utils/uri';
+import { convertDateAndTime } from 'utils/util';
 
 const InterviewDetail = () => {
   const { loginUserId } = useUser();
@@ -109,11 +110,12 @@ const InterviewDetail = () => {
               <S.Title>참관자</S.Title>
               <S.WatcherContent>
                 {team?.watchers.map(
-                  (watcher: Pick<WatcherType, 'memberId' | 'nickname' | 'profileUrl'>) => (
+                  (watcher: Pick<ParticipantType, 'memberId' | 'nickname' | 'profileUrl'>) => (
                     <Watcher key={watcher.memberId} watcher={watcher} />
                   ),
                 )}
               </S.WatcherContent>
+              ``
             </FlexBox>
           )}
           <FlexBox flexFlow={'column wrap'} gap={2}>

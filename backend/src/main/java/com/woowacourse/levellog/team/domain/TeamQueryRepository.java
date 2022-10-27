@@ -60,7 +60,7 @@ public class TeamQueryRepository {
                 + "LIMIT :limit OFFSET :offset) AS t "
                 + "INNER JOIN participant p ON p.team_id = t.id AND p.is_watcher = FALSE "
                 + "INNER JOIN member m ON m.id = p.member_id "
-                + "ORDER BY t.created_at DESC, p.created_at ASC";
+                + "ORDER BY t.created_at DESC, p.id ASC";
 
         final SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("isClosed", isClosed)
@@ -80,7 +80,7 @@ public class TeamQueryRepository {
                 + "LEFT OUTER JOIN levellog l ON p.team_id = l.team_id AND l.author_id = m.id "
                 + createPreQuestionJoinSql(loginStatus)
                 + "WHERE t.deleted = false AND t.id = :teamId "
-                + "ORDER BY t.is_closed ASC, t.created_at DESC, p.created_at ASC";
+                + "ORDER BY p.id ASC";
 
         final Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("teamId", teamId);
@@ -108,18 +108,15 @@ public class TeamQueryRepository {
 
     public List<TeamListQueryResult> findMyList(final Long memberId) {
         final String sql = "SELECT "
-                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, t.created_at, "
+                + "t.id teamId, t.title, t.place, t.start_at, t.profile_url teamProfileUrl, t.is_closed, "
                 + "m.id memberId, m.nickname, m.profile_url "
-                + "FROM participant p "
-                + "INNER JOIN member m ON p.member_id = m.id "
-                + "INNER JOIN team t ON p.team_id = t.id "
-                + "WHERE t.id IN ( "
-                + "SELECT "
-                + "t.id FROM participant p "
-                + "INNER JOIN member m ON p.member_id = m.id "
-                + "INNER JOIN team t ON p.team_id = t.id "
-                + "WHERE m.id = :memberId AND deleted = FALSE) "
-                + "ORDER BY t.is_closed ASC, t.created_at DESC, p.created_at ASC";
+                + "FROM (SELECT t.* "
+                    + "FROM team t INNER JOIN participant p ON p.team_id = t.id "
+                    + "WHERE t.deleted = FALSE AND p.member_id = :memberId "
+                    + "AND p.is_watcher = FALSE) AS t "
+                + "LEFT OUTER JOIN participant p ON p.team_id = t.id AND is_watcher = FALSE "
+                + "LEFT OUTER JOIN member m ON p.member_id = m.id "
+                + "ORDER BY t.is_closed ASC, t.created_at DESC, p.id ASC";
 
         final SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("memberId", memberId);

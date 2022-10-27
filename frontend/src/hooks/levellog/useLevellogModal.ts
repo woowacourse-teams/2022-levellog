@@ -6,8 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import useModal from 'hooks/useModal';
 
 import { requestGetLevellog } from 'apis/levellog';
-import { LevellogParticipantType } from 'types/levellog';
-import { ParticipantType } from 'types/team';
+import { ParticipantType } from 'types/index';
 
 const useLevellogModal = () => {
   const { isModalOpen, onClickOpenModal, onClickCloseModal } = useModal();
@@ -28,7 +27,7 @@ const useLevellogModal = () => {
     });
   });
 
-  const onClickOpenLevellogModal = ({ participant }: LevellogParticipantType) => {
+  const onClickOpenLevellogModal = ({ participant }: Record<'participant', ParticipantType>) => {
     onClickOpenModal();
     setLevellogParticipant(participant);
     getLevellog({ levellogId: participant.levellogId });

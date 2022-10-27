@@ -2,11 +2,9 @@ import { useParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { requestGetFeedbacksInTeam } from 'apis/feedback';
+import { QUERY_KEY } from 'constants/constants';
 
-const QUERY_KEY = {
-  FEEDBACKS: 'feedbacks',
-};
+import { requestGetFeedbacksInTeam } from 'apis/feedback';
 
 const useFeedbacks = () => {
   const { levellogId } = useParams();

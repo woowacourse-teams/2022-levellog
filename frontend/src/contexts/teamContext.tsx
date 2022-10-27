@@ -1,8 +1,6 @@
 import { createContext, Dispatch, SetStateAction, useState } from 'react';
 
-import { InterviewTeamDetailType, InterviewTeamType } from 'types/team';
-
-type InterviewTeamDetailDispatchType = Dispatch<SetStateAction<InterviewTeamDetailType>>;
+import { InterviewTeamDetailType } from 'types/team';
 
 const teamInfo: InterviewTeamDetailType = {
   id: '',
@@ -32,3 +30,5 @@ export const TeamProvider = ({ children }: { children: JSX.Element }) => {
     </TeamContext.Provider>
   );
 };
+
+type InterviewTeamDetailDispatchType = Dispatch<SetStateAction<InterviewTeamDetailType>>;

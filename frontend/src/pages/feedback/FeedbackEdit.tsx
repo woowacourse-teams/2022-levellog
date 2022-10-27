@@ -3,19 +3,22 @@ import styled from 'styled-components';
 import useFeedbackEdit from 'hooks/feedback/useFeedbackEdit';
 import useRole from 'hooks/useRole';
 import useContentTag from 'hooks/utils/useContentTag';
+import usePreventGoBack from 'hooks/utils/usePreventGoBack';
 
-import BottomBar from 'components/@commons/BottomBar';
-import ContentHeader from 'components/@commons/ContentHeader';
 import FlexBox from 'components/@commons/FlexBox';
-import ToolTip from 'components/@commons/ToolTip';
+import BottomBar from 'components/@commons/bottomBar/BottomBar';
+import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
+import ToolTip from 'components/@commons/toolTip/ToolTip';
 import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
-import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
+import Question from 'components/interviewQuestion/InterviewQuestion';
 
 const FeedbackEdit = () => {
   const { feedbackRef, handleClickFeedbackEditButton } = useFeedbackEdit();
   const { whichContentShow, handleClickLevellogTag, handleClickPreQuestionTag } = useContentTag();
   const { feedbackWriterRole, authorInfo } = useRole();
+
+  usePreventGoBack();
 
   return (
     <>
@@ -49,17 +52,14 @@ const FeedbackEdit = () => {
                   }
                 />
               </FlexBox>
-              <InterviewQuestion />
+              <Question />
             </S.QuestionContent>
             <S.FeedbackContent>
               <FeedbackFormat feedbackRef={feedbackRef} />
             </S.FeedbackContent>
           </S.RightContent>
         </S.Content>
-        <BottomBar
-          buttonText={'수정하기'}
-          handleClickRightButton={handleClickFeedbackEditButton}
-        ></BottomBar>
+        <BottomBar buttonText={'수정하기'} handleClickRightButton={handleClickFeedbackEditButton} />
       </S.Container>
     </>
   );

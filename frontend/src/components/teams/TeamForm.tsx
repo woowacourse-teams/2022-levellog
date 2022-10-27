@@ -6,7 +6,7 @@ import Loading from 'pages/status/Loading';
 
 import { MESSAGE } from 'constants/constants';
 
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 import SearchMember from 'components/teams/SearchMember';
 import TeamFormInput from 'components/teams/TeamFormInput';
 import {
@@ -97,49 +97,6 @@ const S = {
     height: 6.25rem;
     font-weight: 600;
   `,
-
-  ErrorBox: styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100%;
-  `,
-
-  ErrorText: styled.p``,
-
-  // ParticipantsBox: styled.div`
-  //   display: flex;
-  //   flex-wrap: wrap;
-  //   overflow: auto;
-  //   gap: 0.5rem;
-  //   width: 100%;
-  //   padding-bottom: 1rem;
-  //   @media (min-width: 560px) and (max-width: 760px) {
-  //     width: 27.5rem;
-  //   }
-  //   @media (max-width: 560px) {
-  //     width: calc(100vw - 5rem);
-  //   }
-  // `,
-
-  Notice: styled.p`
-    color: ${(props) => props.theme.default.RED};
-    font-size: 0.875rem;
-    margin-bottom: 0.625rem;
-  `,
-
-  // MembersBox: styled.div<{ isNoneMember: Boolean }>`
-  //   display: ${(props) => (props.isNoneMember ? 'none' : 'block')};
-  //   box-sizing: border-box;
-  //   overflow: auto;
-  //   width: 100%;
-  //   height: 10rem;
-  //   padding: 1rem;
-  //   border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
-  //   border-radius: 0.3125rem;
-  //   background-color: ${(props) => props.theme.default.WHITE};
-  // `,
 
   SubmitButton: styled(Button)`
     width: 100%;

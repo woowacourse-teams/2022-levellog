@@ -1,37 +1,24 @@
-export interface InterviewQuestionApiType {
-  accessToken: string | null;
-  levellogId: string | undefined;
-  interviewQuestionId: string;
-  interviewQuestion: string;
-}
+import { UserType } from 'types';
 
-export interface InterviewQuestionInfoType {
-  id: string;
+export interface InterviewQuestionType {
   content: string;
 }
 
-export interface InterviewQuestionsInLevellogType {
-  author: {
-    id: string;
-    nickname: string;
-    profileUrl: string;
-  };
+export interface InterviewQuestionInfoType extends InterviewQuestionType {
+  id: string;
+}
+
+export interface InterviewQuestionsInLevellogInfoType {
+  author: UserType;
   contents: InterviewQuestionInfoType[];
 }
 
-export interface InterviewQuestionSearchType {
+export interface InterviewQuestionSearchKeywordType {
   keyword: string | null;
 }
 
-export interface InterviewQuestionSearchResultType {
-  id: number;
-  content: string;
+export interface SearchedInterviewQuestionInfoType extends InterviewQuestionInfoType {
   like: boolean;
   likeCount: number;
 }
-export interface InterviewQuestionSearchApiType {
-  results: InterviewQuestionSearchResultType[];
-  page: number;
-}
-
 export type InterviewQuestionSort = 'likes' | 'latest' | 'oldest';

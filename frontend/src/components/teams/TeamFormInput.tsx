@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import styled from 'styled-components';
 
-import Input from 'components/@commons/Input';
+import Input from 'components/@commons/input/Input';
 
 const TeamFormInput = ({
   label,
@@ -16,7 +16,7 @@ const TeamFormInput = ({
 }: TeamFormInputProps) => {
   const [isCorrectValue, setIsCorrectValue] = useState(true);
 
-  const handleOnBlurInput = (e: FocusEvent) => {
+  const handleOnBlurInput = (e: React.FocusEvent) => {
     const input = e.target as HTMLInputElement;
     if (validate) {
       setIsCorrectValue(validate({ value: input.value }));

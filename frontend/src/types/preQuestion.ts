@@ -1,33 +1,9 @@
-import { ParticipantType } from 'types/team';
+import { UserType } from 'types/index';
 
-export interface PreQuestionCustomHookType {
-  teamId: string;
-  levellogId: string | undefined;
-  preQuestionId: string | undefined;
-  preQuestion: PreQuestionFormatType;
-  preQuestionContent: string;
-}
-
-export interface PreQuestionApiType {
-  accessToken: string | null;
-  levellogId: string | undefined;
-  preQuestionId: string | undefined;
-  preQuestion: PreQuestionFormatType;
-  preQuestionContent: string;
-}
-
-export interface PreQuestionResultType {
+export interface PreQuestionType {
   content: string;
 }
 
-export interface PreQuestionFormatType {
-  author: {
-    id: string;
-    nickname: string;
-    profileUrl: string;
-  };
-  content: string;
-}
-export interface PreQuestionParticipantType {
-  participant: ParticipantType;
+export interface PreQuestionInfoType extends PreQuestionType {
+  author: UserType;
 }

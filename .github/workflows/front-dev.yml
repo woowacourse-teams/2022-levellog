@@ -70,4 +70,5 @@ jobs:
         run: yarn install
 
       - name: Util Test
+        working-directory: ./frontend
         run: yarn test-util

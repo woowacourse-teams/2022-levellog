@@ -53,4 +53,4 @@ jobs:
 
       - name: e2e Test
       - working-directory: frontend/cypress/e2e
-      - run: yarn test-ci
+      - run: yarn test

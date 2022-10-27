@@ -46,3 +46,9 @@ jobs:
         run: yarn build-dev
 
   test:
+    runs-on: ubuntu-22.04 # 실행 환경 지정
+
+    steps:
+      - uses: actions/checkout@v2 # github action 버전 지정(major version)
+
+      - name: Unit Test

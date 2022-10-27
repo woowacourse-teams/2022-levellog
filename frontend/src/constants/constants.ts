@@ -126,3 +126,5 @@ export const QUERY_KEY = Object.freeze({
 export const HANGEUL_FIRST_TEXT_UNICODE = 44032;
 export const HANGEUL_LAST_TEXT_UNICODE = 55203;
 export const FINAL_CONSONANT_NUMBER = 28;
+
+export const ACCESS_TOKEN = 'accessToken';

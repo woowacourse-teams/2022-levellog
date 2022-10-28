@@ -9,7 +9,7 @@ import {
   MESSAGE,
   FINAL_CONSONANT_NUMBER,
   HANGEUL_FIRST_TEXT_UNICODE,
-} from 'constants/constants';
+} from '../constants/constants';
 
 export const debounce: DebounceType = {
   flag: '',

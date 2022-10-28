@@ -7,6 +7,7 @@ on:
       - "*"
     paths-ignore:
       - "frontend/**"
+      - ".github/**"
 
 # 참고사항
 # push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.
@@ -109,3 +110,7 @@ jobs:
         if: ${{ always() }} # test가 실패해도 report를 남기기 위해 설정
         with:
           files: backend/build/test-results/**/*.xml
+
+  build:
+    runs-on: ubuntu-22.04
+      - run: 'echo "No build required"'

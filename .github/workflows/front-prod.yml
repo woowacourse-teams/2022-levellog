@@ -7,11 +7,13 @@ on:
       - "main"
     paths-ignore:
       - "backend/**"
+      - ".github/**"
   pull_request: # 모든 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
       - "main"
     paths-ignore:
       - "backend/**"
+      - ".github/**"
 
 # 참고사항
 # push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.

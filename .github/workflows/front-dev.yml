@@ -77,4 +77,5 @@ jobs:
 
   sonarqube-build:
     runs-on: ubuntu-22.04
+    steps:
       - run: 'echo "No build required"'

@@ -1,18 +1,24 @@
+import { useContext } from 'react';
+
 import styled from 'styled-components';
 
+import Snackbar from 'components/@commons/snackbar/Snackbar';
+import { SnackbarContext } from 'contexts/snackbarContext';
 import SnackbarPortal from 'portal/SnackbarPortal';
 
-const SnackbarContainer = ({ children }: SnackbarContainerProps) => {
+const SnackbarContainer = () => {
+  const snackbars = useContext(SnackbarContext);
+
   return (
     <SnackbarPortal>
-      <SnackbarContainerStyle>{children}</SnackbarContainerStyle>
+      <SnackbarContainerStyle>
+        {snackbars.map((snackbar, index) => (
+          <Snackbar key={index}>{snackbar}</Snackbar>
+        ))}
+      </SnackbarContainerStyle>
     </SnackbarPortal>
   );
 };
-
-interface SnackbarContainerProps {
-  children: JSX.Element[];
-}
 
 const SnackbarContainerStyle = styled.div`
   position: fixed;

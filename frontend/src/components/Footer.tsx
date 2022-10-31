@@ -23,8 +23,8 @@ const S = {
     align-items: center;
     width: 100%;
     height: 4.375rem;
-    border-top: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    border-top: 0.125rem solid ${(props) => props.theme.default.LIGHT_GRAY};
+    background-color: ${(props) => props.theme.default.WHITE};
     @media (min-width: 1620px) {
       padding: 0 calc((100vw - 100rem) / 2);
     }
@@ -35,18 +35,18 @@ const S = {
 
   Title: styled.p`
     margin-right: 0.625rem;
-    color: ${(props) => props.theme.new_default.DARK_GRAY};
+    color: ${(props) => props.theme.default.DARK_GRAY};
     font-size: 1rem;
     font-weight: 500;
   `,
 
   Content: styled.p`
     margin-right: 0.625rem;
-    color: ${(props) => props.theme.new_default.DARK_GRAY};
+    color: ${(props) => props.theme.default.DARK_GRAY};
     font-size: 1rem;
     font-weight: 500;
     &:hover {
-      border-bottom: 1px solid ${(props) => props.theme.new_default.DARK_GRAY};
+      border-bottom: 1px solid ${(props) => props.theme.default.DARK_GRAY};
     }
   `,
 };

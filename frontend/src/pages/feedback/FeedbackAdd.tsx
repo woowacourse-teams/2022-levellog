@@ -115,11 +115,11 @@ const S = {
     align-items: center;
     height: 1.875rem;
     padding: 0.625rem 0.9375rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     border-radius: 1.25rem;
     margin-bottom: 1.25rem;
-    background-color: ${(props) => props.theme.new_default.DARK_BLACK};
-    color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.DARK_BLACK};
+    color: ${(props) => props.theme.default.WHITE};
     font-weight: 700;
   `,
 

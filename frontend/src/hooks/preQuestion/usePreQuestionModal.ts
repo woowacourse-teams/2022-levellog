@@ -23,15 +23,22 @@ const usePreQuestionModal = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const {
-    isLoading: preQuestionModalLoading,
+    isError: preQuestionModalError,
     mutate: getPreQuestion,
     data: preQuestion,
-  } = useMutation(({ levellogId }: { levellogId: string }) => {
-    return requestGetPreQuestion({
-      accessToken,
-      levellogId,
-    });
-  });
+  } = useMutation(
+    ({ levellogId }: { levellogId: string }) => {
+      return requestGetPreQuestion({
+        accessToken,
+        levellogId,
+      });
+    },
+    {
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
+      },
+    },
+  );
 
   const { mutateAsync: deletePreQuestion } = useMutation(
     ({ levellogId, preQuestionId }: Omit<PreQuestionDeleteRequestType, 'accessToken'>) => {
@@ -69,7 +76,7 @@ const usePreQuestionModal = () => {
   };
 
   return {
-    preQuestionModalLoading,
+    preQuestionModalError,
     preQuestion,
     preQuestionParticipant,
     isPreQuestionModalOpen: isModalOpen,

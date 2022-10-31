@@ -1,19 +1,15 @@
 import { useState, useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import axios, { AxiosResponse } from 'axios';
 import { UserType } from 'types';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import useUser from 'hooks/useUser';
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { QUERY_KEY } from 'constants/constants';
-
-import { requestGetMembers } from 'apis/member';
 import { requestGetTeam } from 'apis/teams';
-import { WrongAccessToken } from 'apis/utils';
 import { TeamContext, TeamDispatchContext } from 'contexts/teamContext';
 
 const useTeam = () => {
@@ -31,10 +27,6 @@ const useTeam = () => {
   const team = useContext(TeamContext);
 
   const accessToken = localStorage.getItem('accessToken');
-
-  useQuery([QUERY_KEY.MEMBERS], () => {
-    return requestGetMembers({ accessToken, nickname: '' });
-  });
 
   const { data: teamInfo, mutate: getTeam } = useMutation(
     () => {
@@ -63,12 +55,7 @@ const useTeam = () => {
         );
       },
       onError: (err) => {
-        if (axios.isAxiosError(err) && err instanceof Error) {
-          const responseBody: AxiosResponse = err.response!;
-          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
-            showSnackbar({ message: responseBody.data.message });
-          }
-        }
+        errorHandler({ err, showSnackbar });
       },
     },
   );

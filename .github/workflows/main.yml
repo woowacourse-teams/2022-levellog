@@ -12,6 +12,11 @@ on:
 # push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.
 
 jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: 'echo "No build required"'
+
   sonarqube-build:
     runs-on: ubuntu-22.04
 

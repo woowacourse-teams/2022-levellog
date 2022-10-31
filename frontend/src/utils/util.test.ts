@@ -51,7 +51,7 @@ describe('앞 글자가 받침이 있으면 이, 없으면 가를 붙여주는 �
 describe('년월일시간 형식을 변경하는 함수 동작 확인', () => {
   test('2022-10-12T14:17:00 =>  2022년 10월 12일 14시 17분', () => {
     const startAt = '2022-10-12T14:17:00';
-    const convertStartAt = convertDateAndTime({ startAt });
+    const convertStartAt = convertDateAndTime(startAt);
 
     expect(convertStartAt).toBe('2022년 10월 12일 14시 17분');
   });

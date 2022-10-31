@@ -7,8 +7,6 @@ import usePreQuestionModal from 'hooks/preQuestion/usePreQuestionModal';
 import useTeamDetail from 'hooks/team/useTeamDetail';
 import useUser from 'hooks/useUser';
 
-import Loading from 'pages/status/Loading';
-
 import { TEAM_STATUS } from 'constants/constants';
 
 import FlexBox from 'components/@commons/FlexBox';
@@ -27,7 +25,7 @@ const InterviewDetail = () => {
   const { team, getTeam, handleClickDeleteTeamButton, handleClickCloseTeamInterviewButton } =
     useTeamDetail();
   const {
-    levellogModalLoading,
+    levellogModalError,
     levellogParticipant,
     isLevellogModalOpen,
     levellogInfo,
@@ -35,7 +33,7 @@ const InterviewDetail = () => {
     handleClickCloseLevellogModal,
   } = useLevellogModal();
   const {
-    preQuestionModalLoading,
+    preQuestionModalError,
     preQuestion,
     preQuestionParticipant,
     isPreQuestionModalOpen,
@@ -45,17 +43,9 @@ const InterviewDetail = () => {
   } = usePreQuestionModal();
   const { teamId } = useParams();
 
-  if (levellogModalLoading) {
-    return <Loading />;
-  }
-
-  if (preQuestionModalLoading) {
-    return <Loading />;
-  }
-
   return (
     <>
-      {isLevellogModalOpen && (
+      {isLevellogModalOpen && !levellogModalError && (
         <LevellogViewModal
           teamId={teamId}
           participant={levellogParticipant}
@@ -65,7 +55,7 @@ const InterviewDetail = () => {
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}
         />
       )}
-      {isPreQuestionModalOpen && (
+      {isPreQuestionModalOpen && !preQuestionModalError && (
         <PreQuestionViewModal
           teamId={teamId}
           preQuestion={preQuestion}
@@ -79,9 +69,7 @@ const InterviewDetail = () => {
       <ContentHeader
         imageUrl={team?.teamImage}
         title={team?.title}
-        subTitle={`${team?.place} | ${convertDateAndTime({
-          startAt: team?.startAt,
-        })}`}
+        subTitle={`${team?.place} | ${convertDateAndTime(team?.startAt)}`}
       >
         <>
           {team?.hostId === loginUserId && (
@@ -115,7 +103,6 @@ const InterviewDetail = () => {
                   ),
                 )}
               </S.WatcherContent>
-              ``
             </FlexBox>
           )}
           <FlexBox flexFlow={'column wrap'} gap={2}>

@@ -40,11 +40,11 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
             </S.Notice>
           </S.Info>
           <S.Info>
-            <S.Notice aria-label={`인터뷰 날짜와 시간 ${convertDateAndTime({ startAt })}`}>
+            <S.Notice aria-label={`인터뷰 날짜와 시간 ${convertDateAndTime(startAt)}`}>
               <S.ImageBox>
                 <Image src={checkIcon} sizes={'TINY'} />
               </S.ImageBox>
-              {convertDateAndTime({ startAt })}
+              {convertDateAndTime(startAt)}
             </S.Notice>
           </S.Info>
         </FlexBox>

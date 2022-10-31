@@ -20,8 +20,8 @@ const ExceptionImage = ({ sizes, borderRadius = false, children }: ExceptionImag
   return <Image src={children} sizes={sizes} borderRadius={borderRadius} />;
 };
 
-const ExceptionButton = ({ children }: ExceptionButtonProps) => {
-  return <Button>{children}</Button>;
+const ExceptionButton = ({ children, onClick }: ExceptionButtonProps) => {
+  return <Button onClick={onClick}>{children}</Button>;
 };
 
 const ExceptionLoading = () => {
@@ -48,6 +48,7 @@ interface ExceptionImage {
 
 interface ExceptionButtonProps {
   children: string;
+  onClick?: () => void;
 }
 
 const S = {

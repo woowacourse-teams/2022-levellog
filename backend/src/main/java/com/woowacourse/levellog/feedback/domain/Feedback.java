@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,13 +36,13 @@ public class Feedback extends BaseEntity {
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_feedback_levellog"))
     private Levellog levellog;
 
-    @Column(length = FEEDBACK_CONTENT_MAX_LENGTH)
+    @Lob
     private String study;
 
-    @Column(length = FEEDBACK_CONTENT_MAX_LENGTH)
+    @Lob
     private String speak;
 
-    @Column(length = FEEDBACK_CONTENT_MAX_LENGTH)
+    @Lob
     private String etc;
 
     public Feedback(final Long fromId, final Levellog levellog, final String study, final String speak,

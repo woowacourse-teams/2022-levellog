@@ -1,15 +1,10 @@
-name: frontend Dev CI # Workflow 이름
+name: frontend Unit Test # Workflow 이름
 
 # 하기 내용에 해당하는 이벤트 발생 시 github action 동작
 on:
-  push: # 모든 브랜치에서 push가 일어났을 때 github action 동작
-    branches:
-      - "develop"
-    paths-ignore:
-      - "backend/**"
   pull_request: # 모든 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
-      - "develop"
+      - "*"
     paths-ignore:
       - "backend/**"
 

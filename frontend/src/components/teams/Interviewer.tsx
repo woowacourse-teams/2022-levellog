@@ -187,8 +187,8 @@ const S = {
     height: 24rem;
     padding: 1.25rem 2.125rem 0 2.125rem;
     border-radius: 0.625rem;
-    background-color: ${(props) => props.theme.new_default.WHITE};
-    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
+    background-color: ${(props) => props.theme.default.WHITE};
+    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.default.GRAY};
   `,
 
   Profile: styled.div`
@@ -207,8 +207,8 @@ const S = {
     left: -2.875rem;
     width: 13.25rem;
     height: 2.5rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
+    background-color: ${(props) => props.theme.default.WHITE};
   `,
 
   IconImage: styled(Image)`

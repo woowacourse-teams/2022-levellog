@@ -53,7 +53,7 @@ const S = {
     align-items: center;
     width: 100%;
     padding: 3.125rem 0;
-    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-bottom: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 
   Content: styled.div`
@@ -88,7 +88,7 @@ const S = {
     width: 47.5rem;
     margin-top: 1rem;
     padding: 0 0.625rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     border-radius: 1rem;
     @media (max-width: 850px) {
       width: calc(100% - 2.5rem);
@@ -101,7 +101,7 @@ const S = {
     height: 2.125rem;
     font-size: 1.5rem;
     ::placeholder {
-      color: ${(props) => props.theme.new_default.GRAY};
+      color: ${(props) => props.theme.default.GRAY};
     }
     @media (max-width: 850px) {
       width: calc(100% - 2.5rem);
@@ -117,7 +117,7 @@ const S = {
     right: 0.625rem;
     padding: 0;
     border: none;
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.WHITE};
     @media (max-width: 850px) {
       right: 1.875rem;
     }

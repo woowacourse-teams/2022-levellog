@@ -22,10 +22,10 @@ const ToolTipContent = styled.div`
   padding: 0.375rem;
   width: 12.5rem;
   min-height: 3.125rem;
-  border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+  border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   border-radius: 0.5rem;
-  background-color: ${(props) => props.theme.new_default.LIGHT_GRAY};
-  box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.new_default.GRAY};
+  background-color: ${(props) => props.theme.default.LIGHT_GRAY};
+  box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.default.GRAY};
   line-height: 1.25rem;
   opacity: 0;
   transition: all 0.5s;
@@ -37,7 +37,7 @@ const ToolTipContent = styled.div`
     border-width: 0.25rem 0.375rem 0.25rem 0;
     border-style: solid;
     border-color: ${(props) =>
-      `${props.theme.default.INVISIBLE} ${props.theme.new_default.LIGHT_GRAY}`};
+      `${props.theme.default.INVISIBLE} ${props.theme.default.LIGHT_GRAY}`};
     transform: translateY(-50%);
     content: '';
   }
@@ -67,9 +67,9 @@ const ToolTipTextBox = styled.div`
   padding-top: 0.25rem;
   width: 1.5rem;
   height: 1.5rem;
-  border: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
+  border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
   border-radius: 0.75rem;
-  color: ${(props) => props.theme.new_default.GRAY};
+  color: ${(props) => props.theme.default.GRAY};
   font-weight: 700;
 `;
 

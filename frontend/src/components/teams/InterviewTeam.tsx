@@ -78,7 +78,7 @@ const S = {
     height: 15rem;
     padding: 1.25rem 1.5rem 1.875rem 1.5rem;
     border-radius: 0.625rem;
-    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
+    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.default.GRAY};
     opacity: ${(props) => (props.status === 'CLOSED' ? 0.2 : 1)};
     cursor: pointer;
   `,

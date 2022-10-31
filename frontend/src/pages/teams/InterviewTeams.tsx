@@ -23,20 +23,8 @@ const InterviewTeams = () => {
     handleClickCloseTeamsButton,
     handleClickMyTeamsButton,
     handleClickOpenTeamsButton,
+    handleClickTeamAddButton,
   } = useTeamsCondition();
-  const { showSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-
-  const accessToken = localStorage.getItem('accessToken');
-
-  const handleClickTeamAddButton = () => {
-    if (accessToken) {
-      navigate(ROUTES_PATH.INTERVIEW_TEAMS_ADD);
-      return;
-    }
-
-    showSnackbar({ message: MESSAGE.NEED_LOGIN_SERVICE });
-  };
 
   return (
     <>
@@ -127,7 +115,7 @@ const S = {
     height: 3.125rem;
     margin: 0 auto;
     border-radius: 2rem;
-    background-color: ${(props) => props.theme.new_default.DARK_BLACK};
+    background-color: ${(props) => props.theme.default.DARK_BLACK};
     font-size: 1rem;
   `,
 

@@ -9,9 +9,9 @@ import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import { requestPostLevellog } from 'apis/levellog';
-import { LevellogCustomHookType } from 'types/levellog';
-import { debounce, teamGetUriBuilder } from 'utils/util';
+import { LevellogPostRequestType, requestPostLevellog } from 'apis/levellog';
+import { teamGetUriBuilder } from 'utils/uri';
+import { debounce } from 'utils/util';
 
 const useLevellogAdd = () => {
   const { showSnackbar } = useSnackbar();
@@ -22,8 +22,8 @@ const useLevellogAdd = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const { mutate: postLevellog } = useMutation(
-    ({ teamId, inputValue }: Omit<LevellogCustomHookType, 'levellogId'>) => {
-      return requestPostLevellog({ accessToken, teamId, levellogContent: { content: inputValue } });
+    ({ teamId, levellog }: Omit<LevellogPostRequestType, 'accessToken'>) => {
+      return requestPostLevellog({ accessToken, teamId, levellog });
     },
     {
       onSuccess: () => {

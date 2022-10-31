@@ -1,0 +1,45 @@
+name: frontend Prod CI # Workflow 이름
+
+# 하기 내용에 해당하는 이벤트 발생 시 github action 동작
+on:
+  push: # 모든 브랜치에서 push가 일어났을 때 github action 동작
+    branches:
+      - "main"
+    paths-ignore:
+      - "backend/**"
+  pull_request: # 모든 브랜치에서 PR이 일어났을 때 github action 동작
+    branches:
+      - "main"
+    paths-ignore:
+      - "backend/**"
+
+# 참고사항
+# push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04 # 실행 환경 지정
+
+    steps:
+      - name: Checkout source code. # Repo checkout
+        uses: actions/checkout@v2
+
+      - name: Check Node v # Node v 확인
+        run: node -v
+
+      - name: Cache Dependencies # 의존 파일 캐싱
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules" # 캐싱 대상
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install Dependencies # 의존 파일 설치
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: yarn install --frozen-lockfile
+
+      - name: Prod Build # React Prod Build
+        working-directory: ./frontend
+        run: yarn build-prod

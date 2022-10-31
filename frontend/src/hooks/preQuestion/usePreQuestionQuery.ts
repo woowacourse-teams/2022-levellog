@@ -2,11 +2,9 @@ import { useParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { requestGetPreQuestion } from 'apis/preQuestion';
+import { QUERY_KEY } from 'constants/constants';
 
-const QUERY_KEY = {
-  PREQUESTION: 'preQuestion',
-};
+import { requestGetPreQuestion } from 'apis/preQuestion';
 
 const usePreQuestionQuery = () => {
   const { levellogId } = useParams();
@@ -18,7 +16,7 @@ const usePreQuestionQuery = () => {
     isSuccess: preQuestionSuccess,
     data: preQuestion,
   } = useQuery(
-    [QUERY_KEY.PREQUESTION, accessToken, levellogId],
+    [QUERY_KEY.PRE_QUESTION, accessToken, levellogId],
     () =>
       requestGetPreQuestion({
         accessToken,

@@ -1,14 +1,32 @@
 import styled from 'styled-components';
 
-const Input = ({ width = '18.75rem', height = '2.5rem', inputRef, ...props }: InputProps) => {
-  return <InputStyle width={width} height={height} ref={inputRef} {...props} />;
+const Input = ({
+  width = '18.75rem',
+  height = '2.5rem',
+  placeholder,
+  value,
+  inputRef,
+  onChange,
+  ...props
+}: InputProps) => {
+  return (
+    <InputStyle
+      width={width}
+      height={height}
+      value={value}
+      ref={inputRef}
+      onChange={onChange}
+      {...props}
+    />
+  );
 };
 
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   width?: string;
   height?: string;
+  placeholder?: string;
+  value?: string | undefined;
   inputRef?: React.Ref<HTMLInputElement>;
-  [props: string]: any;
 }
 
 export const InputStyle = styled.input`

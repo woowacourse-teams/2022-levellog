@@ -10,7 +10,7 @@ import { MESSAGE, ROUTES_PATH } from 'constants/constants';
 
 import { requestPostTeam } from 'apis/teams';
 import { MemberContext } from 'contexts/memberContext';
-import { TeamCustomHookType } from 'types/team';
+import { TeamRequestType } from 'types/team';
 import {
   interviewDateValidate,
   interviewInterviewerValidate,
@@ -29,7 +29,7 @@ const useTeamAdd = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const { mutate: postTeam } = useMutation(
-    ({ teamInfo }: Record<'teamInfo', TeamCustomHookType>) => {
+    ({ teamInfo }: Record<'teamInfo', TeamRequestType>) => {
       return requestPostTeam({
         teamInfo,
         accessToken,

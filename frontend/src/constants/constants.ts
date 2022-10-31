@@ -99,10 +99,30 @@ export const GITHUB_AVATAR_SIZE_LIST = {
   SMALL: 30,
 };
 
-export const NOT_YET_HTTP_STATUS = 0;
-
 export const INTERVIEW_QUESTION_FILTER = Object.freeze({
   LATEST: 'latest',
   OLDEST: 'oldest',
   LIKES: 'likes',
 });
+
+export const QUERY_KEY = Object.freeze({
+  FEEDBACK: 'feedback',
+  FEEDBACKS: 'feedbacks',
+
+  LEVELLOG: 'levellog',
+
+  PRE_QUESTION: 'preQuestion',
+
+  INTERVIEW_QUESTION: 'InterviewQuestion',
+  INTERVIEW_QUESTIONS: 'InterviewQuestions',
+
+  SEARCH_RESULTS: 'searchResults',
+
+  TEAM: 'team',
+  MEMBERS: 'members',
+  ROLE: 'role',
+});
+
+export const HANGEUL_FIRST_TEXT_UNICODE = 44032;
+export const HANGEUL_LAST_TEXT_UNICODE = 55203;
+export const FINAL_CONSONANT_NUMBER = 28;

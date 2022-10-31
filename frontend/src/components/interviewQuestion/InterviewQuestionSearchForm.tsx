@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
-import useInterviewQuestionSearch from 'hooks/questionSearch/useInterviewQuestionSearch';
+import useInterviewQuestionSearch from 'hooks/interviewQuestionSearch/useInterviewQuestionSearch';
 
 import deleteIcon from 'assets/images/close.svg';
 import searchIcon from 'assets/images/search.svg';
 
-import Button from 'components/@commons/Button';
-import Image from 'components/@commons/Image';
-import Input from 'components/@commons/Input';
+import Button from 'components/@commons/button/Button';
+import Image from 'components/@commons/image/Image';
+import Input from 'components/@commons/input/Input';
 
 const InterviewQuestionSearchForm = () => {
   const {

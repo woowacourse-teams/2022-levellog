@@ -2,18 +2,16 @@ import { useParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { requestGetInterviewQuestionsInLevellog } from 'apis/interviewQuestion';
+import { QUERY_KEY } from 'constants/constants';
 
-const QUERY_KEY = {
-  INTERVIEW_QUESTIONS: 'interviewQuestions',
-};
+import { requestGetInterviewQuestionsInLevellog } from 'apis/interviewQuestion';
 
 const useInterviewQuestions = () => {
   const { levellogId } = useParams();
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const { isError: interviewQuestionsError, data: interviewQuestions } = useQuery(
+  const { data: interviewQuestions } = useQuery(
     [QUERY_KEY.INTERVIEW_QUESTIONS, accessToken, levellogId],
     () =>
       requestGetInterviewQuestionsInLevellog({

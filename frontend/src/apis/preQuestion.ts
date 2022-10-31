@@ -1,14 +1,15 @@
 import { fetcher } from 'apis';
 
-import { PreQuestionApiType, PreQuestionFormatType } from 'types/preQuestion';
+import { AuthorizationHeader } from 'apis/index';
+import { PreQuestionInfoType } from 'types/preQuestion';
 
 export const requestGetPreQuestion = async ({
   accessToken,
   levellogId,
-}: Pick<PreQuestionApiType, 'accessToken' | 'levellogId'>): Promise<PreQuestionFormatType> => {
-  const { data } = await fetcher.get(`/levellogs/${levellogId}/pre-questions/my`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: PreQuestionRequestCommonType): Promise<PreQuestionInfoType> => {
+  const preQuestionGetUri = `/levellogs/${levellogId}/pre-questions/my`;
+
+  const { data } = await fetcher.get(preQuestionGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };
@@ -17,16 +18,11 @@ export const requestPostPreQuestion = async ({
   accessToken,
   levellogId,
   preQuestionContent,
-}: Pick<PreQuestionApiType, 'accessToken' | 'levellogId' | 'preQuestionContent'>) => {
-  await fetcher.post(
-    `/levellogs/${levellogId}/pre-questions`,
-    {
-      content: preQuestionContent,
-    },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
-  );
+}: PreQuestionPostRequestType) => {
+  const preQuestionPostUri = `/levellogs/${levellogId}/pre-questions`;
+  const data = { content: preQuestionContent };
+
+  await fetcher.post(preQuestionPostUri, data, AuthorizationHeader(accessToken));
 };
 
 export const requestEditPreQuestion = async ({
@@ -34,24 +30,36 @@ export const requestEditPreQuestion = async ({
   levellogId,
   preQuestionId,
   preQuestionContent,
-}: Omit<PreQuestionApiType, 'preQuestion'>) => {
-  await fetcher.put(
-    `/levellogs/${levellogId}/pre-questions/${preQuestionId}`,
-    {
-      content: preQuestionContent,
-    },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
-  );
+}: PreQuestionEditRequestType) => {
+  const preQuestionPutUri = `/levellogs/${levellogId}/pre-questions/${preQuestionId}`;
+  const data = { content: preQuestionContent };
+
+  await fetcher.put(preQuestionPutUri, data, AuthorizationHeader(accessToken));
 };
 
 export const requestDeletePreQuestion = async ({
   accessToken,
   levellogId,
   preQuestionId,
-}: Pick<PreQuestionApiType, 'accessToken' | 'levellogId' | 'preQuestionId'>) => {
-  await fetcher.delete(`/levellogs/${levellogId}/pre-questions/${preQuestionId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: PreQuestionDeleteRequestType) => {
+  const preQuestionDeleteUri = `/levellogs/${levellogId}/pre-questions/${preQuestionId}`;
+
+  await fetcher.delete(preQuestionDeleteUri, AuthorizationHeader(accessToken));
 };
+
+interface PreQuestionRequestCommonType {
+  accessToken: string | null;
+  levellogId: string | undefined;
+}
+
+export interface PreQuestionDeleteRequestType extends PreQuestionRequestCommonType {
+  preQuestionId: string | undefined;
+}
+
+export interface PreQuestionPostRequestType extends PreQuestionRequestCommonType {
+  preQuestionContent: string;
+}
+
+export interface PreQuestionEditRequestType extends PreQuestionPostRequestType {
+  preQuestionId: string | undefined;
+}

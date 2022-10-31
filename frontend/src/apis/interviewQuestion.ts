@@ -1,20 +1,20 @@
 import { fetcher } from 'apis';
 
+import { AuthorizationHeader } from 'apis/index';
 import {
-  InterviewQuestionApiType,
-  InterviewQuestionsInLevellogType,
+  InterviewQuestionsInLevellogInfoType,
   InterviewQuestionInfoType,
 } from 'types/interviewQuestion';
 
 export const requestGetInterviewQuestion = async ({
   accessToken,
   levellogId,
-}: Pick<InterviewQuestionApiType, 'accessToken' | 'levellogId'>): Promise<
+}: InterviewQuestionRequestCommonType): Promise<
   Record<'interviewQuestions', InterviewQuestionInfoType[]>
 > => {
-  const { data } = await fetcher.get(`/levellogs/${levellogId}/interview-questions/my`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  const InterviewQuestionMyGet = `/levellogs/${levellogId}/interview-questions/my`;
+
+  const { data } = await fetcher.get(InterviewQuestionMyGet, AuthorizationHeader(accessToken));
 
   return data;
 };
@@ -22,12 +22,12 @@ export const requestGetInterviewQuestion = async ({
 export const requestGetInterviewQuestionsInLevellog = async ({
   accessToken,
   levellogId,
-}: Pick<InterviewQuestionApiType, 'accessToken' | 'levellogId'>): Promise<
-  Record<'interviewQuestions', InterviewQuestionsInLevellogType[]>
+}: InterviewQuestionRequestCommonType): Promise<
+  Record<'interviewQuestions', InterviewQuestionsInLevellogInfoType[]>
 > => {
-  const { data } = await fetcher.get(`/levellogs/${levellogId}/interview-questions`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  const InterviewQuestionGetUri = `/levellogs/${levellogId}/interview-questions`;
+
+  const { data } = await fetcher.get(InterviewQuestionGetUri, AuthorizationHeader(accessToken));
 
   return data;
 };
@@ -36,26 +36,21 @@ export const requestPostInterviewQuestion = async ({
   accessToken,
   levellogId,
   interviewQuestion,
-}: Omit<InterviewQuestionApiType, 'interviewQuestionId'>) => {
-  await fetcher.post(
-    `/levellogs/${levellogId}/interview-questions`,
-    {
-      content: interviewQuestion,
-    },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
-  );
+}: InterviewQuestionPostRequestType) => {
+  const InterviewQuestionPostUri = `/levellogs/${levellogId}/interview-questions`;
+  const data = { content: interviewQuestion };
+
+  await fetcher.post(InterviewQuestionPostUri, data, AuthorizationHeader(accessToken));
 };
 
 export const requestDeleteInterviewQuestion = async ({
   accessToken,
   levellogId,
   interviewQuestionId,
-}: Omit<InterviewQuestionApiType, 'interviewQuestion'>) => {
-  await fetcher.delete(`/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+}: InterviewQuestionDeleteRequestType) => {
+  const InterviewQuestionDeleteUri = `/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`;
+
+  await fetcher.delete(InterviewQuestionDeleteUri, AuthorizationHeader(accessToken));
 };
 
 export const requestEditInterviewQuestion = async ({
@@ -63,14 +58,27 @@ export const requestEditInterviewQuestion = async ({
   levellogId,
   interviewQuestionId,
   interviewQuestion,
-}: InterviewQuestionApiType) => {
-  await fetcher.put(
-    `/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`,
-    {
-      content: interviewQuestion,
-    },
-    {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    },
-  );
+}: InterviewQuestionEditRequestType) => {
+  const InterviewQuestionEditUri = `/levellogs/${levellogId}/interview-questions/${interviewQuestionId}`;
+  const data = { content: interviewQuestion };
+
+  await fetcher.put(InterviewQuestionEditUri, data, AuthorizationHeader(accessToken));
 };
+
+export interface InterviewQuestionRequestCommonType {
+  accessToken: string | null;
+  levellogId: string | undefined;
+}
+
+export interface InterviewQuestionPostRequestType extends InterviewQuestionRequestCommonType {
+  interviewQuestion: string;
+}
+
+export interface InterviewQuestionDeleteRequestType extends InterviewQuestionRequestCommonType {
+  interviewQuestionId: string;
+}
+
+export interface InterviewQuestionEditRequestType extends InterviewQuestionRequestCommonType {
+  interviewQuestionId: string;
+  interviewQuestion: string;
+}

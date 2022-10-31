@@ -4,12 +4,19 @@ name: backend CI
 on:
   pull_request: # 모든 브랜치에서 PR이 일어났을 때 github action 동작
     branches:
-      - '*'
+      - "*"
+    paths-ignore:
+      - "frontend/**"
 
 # 참고사항
 # push가 일어난 브랜치에 PR이 존재하면, push에 대한 이벤트와 PR에 대한 이벤트 모두 발생합니다.
 
 jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: 'echo "No build required"'
+
   sonarqube-build:
     runs-on: ubuntu-22.04
 
@@ -25,8 +32,8 @@ jobs:
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: "11"
+          distribution: "adopt"
 
       - name: gradlew 권한 변경
         working-directory: ./backend
@@ -74,12 +81,12 @@ jobs:
               repo: context.repo.repo,
               body: `## 🏃‍♀️💨 Code Analysis Results By SonarQube
             ### ${ SONARQUBE_ID }-${ PR_NUMBER }
-            
+
             Bugs :    ${{ steps.sonarqube_results.outputs.bugs_value }}    ${{ steps.sonarqube_results.outputs.bugs_best_value }}
             Vulnerabilities :    ${{ steps.sonarqube_results.outputs.vulnerabilities_value }}    ${{ steps.sonarqube_results.outputs.vulnerabilities_best_value }}
             Code Smells :    ${{ steps.sonarqube_results.outputs.code_smells_value }}    ${{ steps.sonarqube_results.outputs.code_smells_best_value }} 
             Coverage :    ${{ steps.sonarqube_results.outputs.coverage_value }}    ${{ steps.sonarqube_results.outputs.coverage_best_value }} 
-            
+
             [리포트 확인하기](${SONARQUBE_URL})`
             })
 

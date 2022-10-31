@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useLevellogQuery from 'hooks/levellog/useLevellogQuery';
 import usePreQuestionQuery from 'hooks/preQuestion/usePreQuestionQuery';
 
-import Button from 'components/@commons/Button';
+import Button from 'components/@commons/button/Button';
 import UiViewer from 'components/@commons/markdownEditor/UiViewer';
 
 const WriterDocument = ({
@@ -70,7 +70,7 @@ const S = {
     z-index: 10;
   `,
 
-  LevellogButton: styled(Button)`
+  LevellogButton: styled(Button)<{ whichContentShow: { levellog: boolean; preQuestion: boolean } }>`
     width: 6.25rem;
     height: 1.5rem;
     padding: 0;
@@ -82,12 +82,13 @@ const S = {
     font-size: 0.875rem;
   `,
 
-  PreQuestionButton: styled(Button)`
+  PreQuestionButton: styled(Button)<{
+    whichContentShow: { levellog: boolean; preQuestion: boolean };
+  }>`
     width: 6.25rem;
     height: 1.5rem;
     padding: 0;
     border-radius: 0 0 0.375rem 0.375rem;
-    font-size: 0.875rem;
     background-color: ${(props) =>
       props.whichContentShow.preQuestion
         ? props.theme.new_default.BLACK

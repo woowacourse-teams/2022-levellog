@@ -4,7 +4,7 @@ import static com.woowacourse.levellog.fixture.TimeFixture.TEAM_START_TIME;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowacourse.levellog.admin.application.AdminService;
-import com.woowacourse.levellog.authentication.application.OAuthService;
+import com.woowacourse.levellog.authentication.application.LoginService;
 import com.woowacourse.levellog.authentication.support.JwtTokenProvider;
 import com.woowacourse.levellog.common.domain.BaseEntity;
 import com.woowacourse.levellog.common.dto.LoginStatus;
@@ -30,7 +30,6 @@ import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
 import com.woowacourse.levellog.team.application.TeamQueryService;
 import com.woowacourse.levellog.team.application.TeamService;
-import com.woowacourse.levellog.team.domain.ParticipantsFactory;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
 import com.woowacourse.levellog.team.domain.TeamRepository;
@@ -70,7 +69,7 @@ abstract class ServiceTest {
     protected MemberService memberService;
 
     @Autowired
-    protected OAuthService oAuthService;
+    protected LoginService loginService;
 
     @Autowired
     protected LevellogService levellogService;
@@ -185,7 +184,7 @@ abstract class ServiceTest {
         return interviewQuestionRepository.save(interviewQuestion);
     }
 
-    protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {
+    protected Feedback saveFeedback(final Member from, final Levellog levellog) {
         final Feedback feedback = new Feedback(from.getId(), levellog, "study from " + from.getNickname(),
                 "speak from " + from.getNickname(), "etc from " + from.getNickname());
         return feedbackRepository.save(feedback);

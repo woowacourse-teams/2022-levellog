@@ -1,13 +1,10 @@
-// Query 폴더로 분리하는 것이 좋다.
 import { useParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { requestGetLevellog } from 'apis/levellog';
+import { QUERY_KEY } from 'constants/constants';
 
-const QUERY_KEY = {
-  LEVELLOG: 'levellog',
-};
+import { requestGetLevellog } from 'apis/levellog';
 
 const useLevellogQuery = () => {
   const { teamId, levellogId } = useParams();

@@ -1,15 +1,6 @@
 import { createContext, Dispatch, SetStateAction, useState } from 'react';
 
-import { MemberType } from 'types/member';
-
-interface ParticipantAndWatcherType {
-  participants: MemberType[];
-  watchers: MemberType[];
-}
-type MemberDispatchType = Dispatch<SetStateAction<ParticipantAndWatcherType>>;
-interface MemberProviderProps {
-  children: JSX.Element;
-}
+import { UserType } from 'types';
 
 const initValue: ParticipantAndWatcherType = {
   participants: [],
@@ -32,3 +23,14 @@ export const MemberProvider = ({ children }: MemberProviderProps) => {
     </MemberContext.Provider>
   );
 };
+
+type MemberDispatchType = Dispatch<SetStateAction<ParticipantAndWatcherType>>;
+
+interface MemberProviderProps {
+  children: JSX.Element;
+}
+
+interface ParticipantAndWatcherType {
+  participants: UserType[];
+  watchers: UserType[];
+}

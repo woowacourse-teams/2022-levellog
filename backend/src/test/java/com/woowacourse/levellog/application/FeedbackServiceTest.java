@@ -38,12 +38,12 @@ class FeedbackServiceTest extends ServiceTest {
         final Team team = saveTeam(eve, roma, alien);
         final Levellog levellog = saveLevellog(eve, team);
 
-        saveFeedback(alien, eve, levellog);
-        saveFeedback(eve, roma, levellog);
+        saveFeedback(alien, levellog);
+        saveFeedback(eve, levellog);
 
-        saveFeedback(roma, eve, levellog);
-        saveFeedback(alien, eve, levellog);
-        saveFeedback(eve, roma, levellog);
+        saveFeedback(roma, levellog);
+        saveFeedback(alien, levellog);
+        saveFeedback(eve, levellog);
 
         // when
         final List<String> fromNicknames = feedbackService.findAllByTo(getLoginStatus(eve))
@@ -71,8 +71,8 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = saveTeam(eve, roma, alien);
 
             final Levellog levellog = saveLevellog(eve, team);
-            saveFeedback(roma, eve, levellog);
-            saveFeedback(alien, eve, levellog);
+            saveFeedback(roma, levellog);
+            saveFeedback(alien, levellog);
 
             // when
             final FeedbackResponses feedbackResponses = feedbackService.findAll(levellog.getId(),
@@ -91,7 +91,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member alien = saveMember("알린");
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
-            saveFeedback(roma, eve, levellog);
+            saveFeedback(roma, levellog);
 
             final Long levellogId = levellog.getId();
 
@@ -117,8 +117,8 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = saveTeam(eve, roma, alien);
 
             final Levellog levellog = saveLevellog(eve, team);
-            final Feedback feedback = saveFeedback(roma, eve, levellog);
-            saveFeedback(alien, eve, levellog);
+            final Feedback feedback = saveFeedback(roma, levellog);
+            saveFeedback(alien, levellog);
 
             // when
             final FeedbackResponse feedbacksResponse = feedbackService.findById(
@@ -141,7 +141,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Member alien = saveMember("알린");
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
-            final Feedback feedback = saveFeedback(roma, eve, levellog);
+            final Feedback feedback = saveFeedback(roma, levellog);
 
             final Long levellogId = levellog.getId();
 
@@ -166,7 +166,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
-            final Long feedbackId = saveFeedback(roma, eve, levellog).getId();
+            final Long feedbackId = saveFeedback(roma, levellog).getId();
 
             timeStandard.setInProgress();
 
@@ -191,7 +191,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = saveTeam(eve, roma, alien);
             final Levellog levellog = saveLevellog(eve, team);
 
-            final Long feedbackId = saveFeedback(roma, eve, levellog).getId();
+            final Long feedbackId = saveFeedback(roma, levellog).getId();
 
             // when, then
             assertThatThrownBy(() ->
@@ -210,7 +210,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
-            final Long feedbackId = saveFeedback(roma, eve, levellog).getId();
+            final Long feedbackId = saveFeedback(roma, levellog).getId();
 
             // when & then
             assertThatThrownBy(() -> feedbackService.update(
@@ -230,7 +230,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = saveTeam(eve, roma);
             final Levellog levellog = saveLevellog(eve, team);
 
-            final Long feedbackId = saveFeedback(roma, eve, levellog).getId();
+            final Long feedbackId = saveFeedback(roma, levellog).getId();
 
             timeStandard.setInProgress();
             team.close(AFTER_START_TIME);
@@ -280,7 +280,7 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = saveTeam(eve, roma);
 
             final Levellog levellog = saveLevellog(eve, team);
-            saveFeedback(roma, eve, levellog);
+            saveFeedback(roma, levellog);
 
             final FeedbackWriteRequest request = new FeedbackWriteRequest(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");

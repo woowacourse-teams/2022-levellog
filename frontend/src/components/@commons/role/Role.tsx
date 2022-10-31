@@ -4,7 +4,7 @@ import interviewboth from 'assets/images/interviewboth.webp';
 import intervieweeImage from 'assets/images/interviewee.webp';
 import InterviewerImage from 'assets/images/interviewer.webp';
 
-import Image from 'components/@commons/Image';
+import Image from 'components/@commons/image/Image';
 
 const Role = ({ role }: RoleProp) => {
   return (
@@ -18,7 +18,7 @@ const Role = ({ role }: RoleProp) => {
 };
 
 interface RoleProp {
-  role: string;
+  role: '인터뷰어' | '인터뷰이' | '상호 인터뷰';
 }
 
 const RoleStyle = styled.div`

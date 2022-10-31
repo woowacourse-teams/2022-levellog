@@ -11,7 +11,7 @@ import Loading from 'pages/status/Loading';
 import { ROUTES_PATH } from 'constants/constants';
 
 import { requestGetUserAuthority } from 'apis/login';
-import { NotCorrectToken } from 'apis/utils';
+import { WrongAccessToken } from 'apis/utils';
 
 const AuthLogin = ({ needLogin }: AuthProps) => {
   const { userInfoDispatch } = useUser();
@@ -33,7 +33,7 @@ const AuthLogin = ({ needLogin }: AuthProps) => {
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err instanceof Error) {
         const responseBody: AxiosResponse = err.response!;
-        if (NotCorrectToken({ message: responseBody.data.message, showSnackbar })) {
+        if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
           showSnackbar({ message: responseBody.data.message });
         }
       }

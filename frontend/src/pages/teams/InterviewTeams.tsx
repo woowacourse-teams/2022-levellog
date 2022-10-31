@@ -23,20 +23,8 @@ const InterviewTeams = () => {
     handleClickCloseTeamsButton,
     handleClickMyTeamsButton,
     handleClickOpenTeamsButton,
+    handleClickTeamAddButton,
   } = useTeamsCondition();
-  const { showSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-
-  const accessToken = localStorage.getItem('accessToken');
-
-  const handleClickTeamAddButton = () => {
-    if (accessToken) {
-      navigate(ROUTES_PATH.INTERVIEW_TEAMS_ADD);
-      return;
-    }
-
-    showSnackbar({ message: MESSAGE.NEED_LOGIN_SERVICE });
-  };
 
   return (
     <>

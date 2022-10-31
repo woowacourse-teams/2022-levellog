@@ -43,9 +43,9 @@ const useLevellogAdd = () => {
     }
 
     if (levellogRef.current) {
-      debounce.action({
+      debounce.action<Omit<LevellogPostRequestType, 'accessToken'>>({
         func: postLevellog,
-        args: { teamId, inputValue: levellogRef.current.getInstance().getMarkdown() },
+        args: { teamId, levellog: { content: levellogRef.current.getInstance().getMarkdown() } },
       });
     }
   };

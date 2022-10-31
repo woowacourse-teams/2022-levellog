@@ -13,7 +13,13 @@ import {
 
 export const debounce: DebounceType = {
   flag: '',
-  action({ func, args, setState, navigate, timer = 300 }) {
+  action<ArgsType>({
+    func,
+    args,
+    setState,
+    navigate,
+    timer = 300,
+  }: DebounceActionArgsType<ArgsType>) {
     if (this.flag) {
       clearTimeout(this.flag);
     }
@@ -64,7 +70,9 @@ export const checkFirstWordFinalConsonant = ({ word }: CheckFirstWordFinalConson
   }
 };
 
-export const convertDateAndTime = ({ startAt }: any) => {
+export const convertDateAndTime = (startAt: string | undefined) => {
+  if (typeof startAt !== 'string') return;
+
   const year = startAt.slice(0, 4);
   const month = startAt.slice(5, 7);
   const day = startAt.slice(8, 10);
@@ -73,17 +81,22 @@ export const convertDateAndTime = ({ startAt }: any) => {
   return `${year}년 ${month}월 ${day}일 ${time}`;
 };
 
-interface DebounceActionArgsType {
+interface DebounceType {
+  flag: '' | NodeJS.Timeout;
+  action<ArgsType>({
+    func,
+    args,
+    setState,
+    navigate,
+    timer,
+  }: DebounceActionArgsType<ArgsType>): void;
+}
+interface DebounceActionArgsType<T> {
   func: Function;
-  args?: { [props: string]: any };
+  args?: T;
   setState?: React.Dispatch<React.SetStateAction<any>>;
   navigate?: [NavigateFunction, string];
   timer?: number;
-}
-
-interface DebounceType {
-  flag: '' | ReturnType<typeof setTimeout>;
-  action: ({ func, args }: DebounceActionArgsType) => any;
 }
 
 interface TryCatchProps {

@@ -61,7 +61,8 @@ const S = {
   `,
 
   Logo: styled.img`
-    height: 34px;
+    width: max-content;
+    height: 2.125rem;
   `,
 
   ProfileImage: styled.img`

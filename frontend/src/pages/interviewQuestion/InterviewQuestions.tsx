@@ -44,13 +44,9 @@ const InterviewQuestions = () => {
     <>
       <ContentHeader
         imageUrl={loginUserProfileUrl}
-        title={`${
-          checkFirstWordFinalConsonant({
-            word: loginUserNickname,
-          })
-            ? `${loginUserNickname}이 `
-            : `${loginUserNickname}가 `
-        }
+        title={`${checkFirstWordFinalConsonant({
+          word: loginUserNickname,
+        })}
         받은 인터뷰 질문들`}
       />
       <S.Container>
@@ -72,9 +68,7 @@ const InterviewQuestions = () => {
                 <S.AuthorText>
                   {checkFirstWordFinalConsonant({
                     word: interviewQuestionInLevellogInfo.author.nickname,
-                  })
-                    ? `${interviewQuestionInLevellogInfo.author.nickname}이 `
-                    : `${interviewQuestionInLevellogInfo.author.nickname}가 `}
+                  })}
                   기록해준 질문들
                 </S.AuthorText>
               </S.AuthorBox>

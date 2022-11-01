@@ -32,8 +32,8 @@ const S = {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    width: max-content;
     padding: 0.5rem;
-    width: 5.625rem;
     box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.default.GRAY};
     border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     border-radius: 1.5625rem;

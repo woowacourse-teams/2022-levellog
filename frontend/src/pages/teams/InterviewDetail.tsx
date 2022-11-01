@@ -115,7 +115,6 @@ const InterviewDetail = () => {
                   ),
                 )}
               </S.WatcherContent>
-              ``
             </FlexBox>
           )}
           <FlexBox flexFlow={'column wrap'} gap={2}>

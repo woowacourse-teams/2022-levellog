@@ -94,6 +94,7 @@ const useAuth = ({ requireAuth }: useAuthProps) => {
         }
         setIsLoad(false);
       },
+      useErrorBoundary: true,
     },
   );
 

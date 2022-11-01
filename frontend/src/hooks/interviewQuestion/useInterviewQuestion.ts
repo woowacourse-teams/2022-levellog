@@ -1,10 +1,11 @@
 import { useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
-import axios, { AxiosResponse } from 'axios';
+import { queryClient } from 'index';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useScrollDown from 'hooks/utils/useScrollDown';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
@@ -19,7 +20,6 @@ import {
   InterviewQuestionEditRequestType,
   InterviewQuestionPostRequestType,
 } from 'apis/interviewQuestion';
-import { WrongAccessToken } from 'apis/utils';
 
 const useInterviewQuestion = () => {
   const { scrollRef: interviewQuestionContentRef, afterRequestScrollDown } =
@@ -34,25 +34,12 @@ const useInterviewQuestion = () => {
     isError: interviewQuestionError,
     data: interviewQuestionInfos,
     refetch: interviewQuestionRefetch,
-  } = useQuery(
-    [QUERY_KEY.INTERVIEW_QUESTION, accessToken, levellogId],
-    () => {
-      return requestGetInterviewQuestion({
-        accessToken,
-        levellogId,
-      });
-    },
-    {
-      onError: (err) => {
-        if (axios.isAxiosError(err) && err instanceof Error) {
-          const responseBody: AxiosResponse = err.response!;
-          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
-            showSnackbar({ message: responseBody.data.message });
-          }
-        }
-      },
-    },
-  );
+  } = useQuery([QUERY_KEY.INTERVIEW_QUESTION, accessToken, levellogId], () => {
+    return requestGetInterviewQuestion({
+      accessToken,
+      levellogId,
+    });
+  });
 
   const { mutate: postInterviewQuestion } = useMutation(
     ({ interviewQuestion }: Pick<InterviewQuestionPostRequestType, 'interviewQuestion'>) => {
@@ -60,6 +47,7 @@ const useInterviewQuestion = () => {
     },
     {
       onSuccess: () => {
+        queryClient.invalidateQueries([QUERY_KEY.INTERVIEW_QUESTIONS]);
         if (interviewQuestionRef.current) {
           interviewQuestionRef.current.value = '';
           interviewQuestionRef.current.focus();
@@ -67,12 +55,7 @@ const useInterviewQuestion = () => {
         afterRequestScrollDown({ requestFunction: interviewQuestionRefetch });
       },
       onError: (err) => {
-        if (axios.isAxiosError(err) && err instanceof Error) {
-          const responseBody: AxiosResponse = err.response!;
-          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
-            showSnackbar({ message: responseBody.data.message });
-          }
-        }
+        errorHandler({ err, showSnackbar });
       },
     },
   );
@@ -91,15 +74,11 @@ const useInterviewQuestion = () => {
     },
     {
       onSuccess: () => {
+        queryClient.invalidateQueries([QUERY_KEY.INTERVIEW_QUESTIONS]);
         interviewQuestionRefetch();
       },
       onError: (err) => {
-        if (axios.isAxiosError(err) && err instanceof Error) {
-          const responseBody: AxiosResponse = err.response!;
-          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
-            showSnackbar({ message: responseBody.data.message });
-          }
-        }
+        errorHandler({ err, showSnackbar });
       },
     },
   );
@@ -110,15 +89,11 @@ const useInterviewQuestion = () => {
     },
     {
       onSuccess: () => {
+        queryClient.invalidateQueries([QUERY_KEY.INTERVIEW_QUESTIONS]);
         interviewQuestionRefetch();
       },
       onError: (err) => {
-        if (axios.isAxiosError(err) && err instanceof Error) {
-          const responseBody: AxiosResponse = err.response!;
-          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
-            showSnackbar({ message: responseBody.data.message });
-          }
-        }
+        errorHandler({ err, showSnackbar });
       },
     },
   );

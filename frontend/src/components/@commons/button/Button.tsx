@@ -24,10 +24,10 @@ export const ButtonStyle = styled.button`
   padding: 0.75rem 1.4375rem;
   border: none;
   border-radius: 0.625rem;
-  background-color: ${(props) => props.theme.new_default.BLUE};
+  background-color: ${(props) => props.theme.default.BLUE};
   font-size: 1.25rem;
   font-weight: 500;
-  color: ${(props) => props.theme.new_default.WHITE};
+  color: ${(props) => props.theme.default.WHITE};
   white-space: pre;
   :hover {
     opacity: 70%;

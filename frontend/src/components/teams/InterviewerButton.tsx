@@ -34,10 +34,9 @@ const S = {
     background-color: ${(props) => props.theme.default.INVISIBLE};
     font-size: 1.125rem;
     font-weight: 600;
-    color: ${(props) =>
-      props.disabled ? props.theme.new_default.GRAY : props.theme.new_default.BLACK};
+    color: ${(props) => (props.disabled ? props.theme.default.GRAY : props.theme.default.BLACK)};
     :hover {
-      box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.new_default.GRAY};
+      box-shadow: 0.25rem 0.25rem 0.25rem ${(props) => props.theme.default.GRAY};
     }
   `,
 

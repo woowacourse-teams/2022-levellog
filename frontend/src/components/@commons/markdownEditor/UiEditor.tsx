@@ -57,7 +57,7 @@ const S = {
       display: ${(props) => (props.needToolbar ? 'block' : 'none')};
     }
     .toastui-editor-md-container {
-      background-color: ${(props) => props.theme.new_default.WHITE};
+      background-color: ${(props) => props.theme.default.WHITE};
     }
   `,
 };

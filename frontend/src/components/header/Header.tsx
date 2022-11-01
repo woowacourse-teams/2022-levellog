@@ -72,7 +72,7 @@ const S = {
   `,
 
   Line: styled.div`
-    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-bottom: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 };
 

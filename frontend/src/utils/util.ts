@@ -91,6 +91,7 @@ interface DebounceType {
     timer,
   }: DebounceActionArgsType<ArgsType>): void;
 }
+
 interface DebounceActionArgsType<T> {
   func: Function;
   args?: T;
@@ -104,6 +105,7 @@ interface TryCatchProps {
   args?: { [props: string]: any };
   snackbar: ({ message }: ShowSnackbarProps) => any;
 }
+
 interface CheckFirstWordFinalConsonantType {
   word: string;
 }

@@ -15,7 +15,7 @@ const Login = lazy(() => import('pages/Login'));
 const FeedbackAdd = lazy(() => import('pages/feedback/FeedbackAdd'));
 const FeedbackEdit = lazy(() => import('pages/feedback/FeedbackEdit'));
 const Feedbacks = lazy(() => import('pages/feedback/Feedbacks'));
-const Questions = lazy(() => import('pages/interviewQuestion/InterviewQuestions'));
+const InterviewQuestions = lazy(() => import('pages/interviewQuestion/InterviewQuestions'));
 const LevellogAdd = lazy(() => import('pages/levellogs/LevellogAdd'));
 const LevellogEdit = lazy(() => import('pages/levellogs/LevellogEdit'));
 const PreQuestionAdd = lazy(() => import('pages/preQuestion/PreQuestionAdd'));
@@ -128,7 +128,7 @@ export const routes = [
       },
       {
         path: ROUTES_PATH.INTERVIEW_QUESTION,
-        element: <Questions />,
+        element: <InterviewQuestions />,
       },
     ],
   },

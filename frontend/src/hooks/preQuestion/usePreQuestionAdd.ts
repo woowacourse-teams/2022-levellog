@@ -1,22 +1,15 @@
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import axios, { AxiosResponse } from 'axios';
-
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE } from 'constants/constants';
 
-import {
-  PreQuestionDeleteRequestType,
-  PreQuestionPostRequestType,
-  requestDeletePreQuestion,
-  requestPostPreQuestion,
-} from 'apis/preQuestion';
-import { WrongAccessToken } from 'apis/utils';
+import { PreQuestionPostRequestType, requestPostPreQuestion } from 'apis/preQuestion';
 import { teamGetUriBuilder } from 'utils/uri';
 
 const usePreQuestionAdd = () => {
@@ -41,19 +34,8 @@ const usePreQuestionAdd = () => {
         navigate(teamGetUriBuilder({ teamId }));
       },
       onError: (err) => {
-        if (axios.isAxiosError(err) && err instanceof Error) {
-          const responseBody: AxiosResponse = err.response!;
-          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
-            showSnackbar({ message: responseBody.data.message });
-          }
-        }
+        errorHandler({ err, showSnackbar });
       },
-    },
-  );
-
-  const { mutate: deletePreQuestion } = useMutation(
-    ({ levellogId, preQuestionId }: Omit<PreQuestionDeleteRequestType, 'accessToken'>) => {
-      return requestDeletePreQuestion({ accessToken, levellogId, preQuestionId });
     },
   );
 
@@ -67,7 +49,6 @@ const usePreQuestionAdd = () => {
 
   return {
     preQuestionRef,
-    deletePreQuestion,
     handleClickPreQuestionAddButton,
   };
 };

@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import useSnackbar from 'hooks//utils/useSnackbar';
+import errorHandler from 'hooks/utils/errorHandler';
 
-import { MESSAGE, ROUTES_PATH, INTERVIEW_QUESTION_FILTER, QUERY_KEY } from 'constants/constants';
+import { MESSAGE, INTERVIEW_QUESTION_FILTER, QUERY_KEY } from 'constants/constants';
 
 import {
   requestLikeCancelInterviewQuestion,
@@ -16,9 +16,6 @@ import { InterviewQuestionSort } from 'types/interviewQuestion';
 
 const useSearchedInterviewQuestion = () => {
   const { showSnackbar } = useSnackbar();
-
-  const navigate = useNavigate();
-
   const [searchFilterActive, setSearchFilterActive] = useState<InterviewQuestionSort>(
     INTERVIEW_QUESTION_FILTER.LATEST,
   );
@@ -32,6 +29,9 @@ const useSearchedInterviewQuestion = () => {
   const { data: searchResults, refetch: searchResultsRefetch } = useQuery(
     [QUERY_KEY.SEARCH_RESULTS, keyword, searchFilterActive],
     () => requestSearchedInterviewQuestion({ accessToken, keyword, sort: searchFilterActive }),
+    {
+      staleTime: 600,
+    },
   );
 
   const { mutate: likeInterviewQuestion } = useMutation(
@@ -42,13 +42,9 @@ const useSearchedInterviewQuestion = () => {
       onSuccess: () => {
         searchResultsRefetch();
       },
-      onError: (err: unknown) => {
+      onError: (err) => {
         if (!userId) return showSnackbar({ message: MESSAGE.NEED_LOGIN_SERVICE });
-
-        showSnackbar({ message: 'likeInterviewQuestion.error.message' });
-        navigate(ROUTES_PATH.ERROR);
-
-        return;
+        errorHandler({ err, showSnackbar });
       },
     },
   );
@@ -61,13 +57,9 @@ const useSearchedInterviewQuestion = () => {
       onSuccess: () => {
         searchResultsRefetch();
       },
-      onError: (err: unknown) => {
+      onError: (err) => {
         if (!userId) return showSnackbar({ message: MESSAGE.NEED_LOGIN_SERVICE });
-
-        showSnackbar({ message: 'cancelLikeInterviewQuestion.error.message' });
-        navigate(ROUTES_PATH.ERROR);
-
-        return;
+        errorHandler({ err, showSnackbar });
       },
     },
   );

@@ -11,7 +11,7 @@ const useFeedbacks = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const { isError: feedbackError, data: feedbacks } = useQuery(
+  const { data: feedbacks } = useQuery(
     [QUERY_KEY.FEEDBACKS, accessToken, levellogId],
     () =>
       requestGetFeedbacksInTeam({
@@ -19,12 +19,11 @@ const useFeedbacks = () => {
         levellogId,
       }),
     {
-      cacheTime: 0,
+      staleTime: 60,
     },
   );
 
   return {
-    feedbackError,
     feedbacks,
   };
 };

@@ -58,9 +58,9 @@ const S = {
     position: relative;
     width: 100%;
     height: calc(100vh - 21.875rem);
-    box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.new_default.GRAY};
+    box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.default.GRAY};
     border-radius: 0.1875rem 0.5rem 0.1875rem 0.1875rem;
-    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 1px solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 
   ButtonBox: styled.div`
@@ -76,9 +76,7 @@ const S = {
     padding: 0;
     border-radius: 0 0 0.375rem 0.375rem;
     background-color: ${(props) =>
-      props.whichContentShow.levellog
-        ? props.theme.new_default.BLACK
-        : props.theme.new_default.GRAY};
+      props.whichContentShow.levellog ? props.theme.default.BLACK : props.theme.default.GRAY};
     font-size: 0.875rem;
   `,
 
@@ -90,9 +88,7 @@ const S = {
     padding: 0;
     border-radius: 0 0 0.375rem 0.375rem;
     background-color: ${(props) =>
-      props.whichContentShow.preQuestion
-        ? props.theme.new_default.BLACK
-        : props.theme.new_default.GRAY};
+      props.whichContentShow.preQuestion ? props.theme.default.BLACK : props.theme.default.GRAY};
     font-size: 0.875rem;
   `,
 

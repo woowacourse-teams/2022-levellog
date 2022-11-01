@@ -189,10 +189,10 @@ const S = {
     padding: 0.75rem 1.4375rem;
     border: none;
     border-radius: 0.625rem;
-    background-color: ${(props) => props.theme.new_default.BLUE};
+    background-color: ${(props) => props.theme.default.BLUE};
     font-size: 1.25rem;
     font-weight: 500;
-    color: ${(props) => props.theme.new_default.WHITE};
+    color: ${(props) => props.theme.default.WHITE};
     white-space: pre;
     :hover {
       opacity: 70%;
@@ -205,13 +205,13 @@ const S = {
 
   Button: styled(Button)`
     border-radius: 2rem;
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.WHITE};
     font-weight: 700;
-    color: ${(props) => props.theme.new_default.BLACK};
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    color: ${(props) => props.theme.default.BLACK};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     :hover {
-      background-color: ${(props) => props.theme.new_default.LIGHT_GRAY};
-      box-shadow: 0.25rem 0.25rem 0.375rem ${(props) => props.theme.new_default.DARK_GRAY};
+      background-color: ${(props) => props.theme.default.LIGHT_GRAY};
+      box-shadow: 0.25rem 0.25rem 0.375rem ${(props) => props.theme.default.DARK_GRAY};
     }
     @media (max-width: 520px) {
       padding: 0.4375rem 0.75rem;

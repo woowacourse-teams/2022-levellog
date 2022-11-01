@@ -21,7 +21,7 @@ const S = {
     height: 100%;
     padding: 1rem;
     border-radius: 0.5rem;
-    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 1px solid ${(props) => props.theme.default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.default.WHITE};
     @media (max-width: 520px) {
       flex-direction: column;

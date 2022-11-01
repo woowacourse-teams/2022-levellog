@@ -107,7 +107,7 @@ const S = {
     height: 3.125rem;
     margin: 0 auto;
     border-radius: 2rem;
-    background-color: ${(props) => props.theme.new_default.DARK_BLACK};
+    background-color: ${(props) => props.theme.default.DARK_BLACK};
     font-size: 1rem;
   `,
 

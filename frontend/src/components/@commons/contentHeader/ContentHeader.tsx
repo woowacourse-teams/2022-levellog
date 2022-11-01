@@ -51,7 +51,7 @@ const ContentHeaderStyle = styled.nav`
   width: 100%;
   height: 4.375rem;
   margin-bottom: 1.25rem;
-  border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+  border-bottom: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   @media (min-width: 1620px) {
     padding: 0.625rem calc((100vw - 100rem) / 2);
   }

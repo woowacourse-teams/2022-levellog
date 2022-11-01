@@ -35,7 +35,7 @@ const S = {
     width: 12.5rem;
     height: fit-content;
     padding: 0.625rem 0 0.625rem 0.875rem;
-    box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.new_default.GRAY};
+    box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.default.GRAY};
     border-radius: 0.5rem;
     background-color: ${(props) => props.theme.default.WHITE};
     transition: all 0.2s;
@@ -55,7 +55,7 @@ const S = {
     left: 0;
     top: 3.9375rem;
     width: 12.5rem;
-    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-bottom: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 
   Content: styled(Button)`

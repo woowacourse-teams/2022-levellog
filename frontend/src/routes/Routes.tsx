@@ -25,7 +25,9 @@ const NotFound = lazy(() => import('pages/status/NotFound'));
 const InterviewDetail = lazy(() => import('pages/teams/InterviewDetail'));
 const InterviewTeamAdd = lazy(() => import('pages/teams/InterviewTeamAdd'));
 const InterviewTeamEdit = lazy(() => import('pages/teams/InterviewTeamEdit'));
-const QuestionSearch = lazy(() => import('pages/interviewQuestion/InterviewQuestionSearch'));
+const InterviewQuestionSearch = lazy(
+  () => import('pages/interviewQuestion/InterviewQuestionSearch'),
+);
 
 export const routes = [
   {
@@ -55,28 +57,34 @@ export const routes = [
         path: ROUTES_PATH.FEEDBACKS,
         element: (
           <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
-            <Feedbacks />
+            <Suspense fallback={<Loading />}>
+              <Feedbacks />
+            </Suspense>
           </Auth>
         ),
       },
       {
         path: ROUTES_PATH.FEEDBACK_ADD,
         element: (
-          <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
-            <TeamStatus allowedStatuses={[TEAM_STATUS.READY, TEAM_STATUS.IN_PROGRESS]}>
-              <FeedbackAdd />
-            </TeamStatus>
-          </Auth>
+          <Suspense fallback={<Loading />}>
+            <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
+              <TeamStatus allowedStatuses={[TEAM_STATUS.READY, TEAM_STATUS.IN_PROGRESS]}>
+                <FeedbackAdd />
+              </TeamStatus>
+            </Auth>
+          </Suspense>
         ),
       },
       {
         path: ROUTES_PATH.FEEDBACK_EDIT,
         element: (
-          <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
-            <TeamStatus allowedStatuses={[TEAM_STATUS.IN_PROGRESS]}>
-              <FeedbackEdit />
-            </TeamStatus>
-          </Auth>
+          <Suspense fallback={<Loading />}>
+            <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
+              <TeamStatus allowedStatuses={[TEAM_STATUS.IN_PROGRESS]}>
+                <FeedbackEdit />
+              </TeamStatus>
+            </Auth>
+          </Suspense>
         ),
       },
 
@@ -131,7 +139,7 @@ export const routes = [
       },
       {
         path: ROUTES_PATH.INTERVIEW_QUESTION_SEARCH,
-        element: <QuestionSearch />,
+        element: <InterviewQuestionSearch />,
       },
       {
         path: ROUTES_PATH.LOGIN,

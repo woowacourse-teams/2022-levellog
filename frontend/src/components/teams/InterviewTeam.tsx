@@ -15,7 +15,7 @@ import { convertDateAndTime } from 'utils/util';
 
 const InterviewTeam = ({ team }: InterviewTeamsProp) => {
   const { id, teamImage, title, status, place, startAt, participants } = team;
-  const DateAndTime = convertDateAndTime({ startAt });
+  const DateAndTime = convertDateAndTime(startAt);
   const teamStartDate = new Date(startAt);
   const currentDate = new Date();
 

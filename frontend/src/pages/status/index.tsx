@@ -20,8 +20,8 @@ const ExceptionImage = ({ sizes, borderRadius = false, children }: ExceptionImag
   return <Image src={children} sizes={sizes} borderRadius={borderRadius} />;
 };
 
-const ExceptionButton = ({ children }: ExceptionButtonProps) => {
-  return <Button>{children}</Button>;
+const ExceptionButton = ({ children, onClick }: ExceptionButtonProps) => {
+  return <S.Button onClick={onClick}>{children}</S.Button>;
 };
 
 const ExceptionLoading = () => {
@@ -47,7 +47,8 @@ interface ExceptionImage {
 }
 
 interface ExceptionButtonProps {
-  children: string;
+  children: string | JSX.Element;
+  onClick?: () => void;
 }
 
 const S = {
@@ -62,6 +63,10 @@ const S = {
 
   Title: styled.h1`
     font-size: 1.25rem;
+  `,
+
+  Button: styled(Button)`
+    cursor: pointer;
   `,
 
   Text: styled.p`

@@ -1,15 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
-import axios, { AxiosResponse } from 'axios';
-
 import { useMutation, useQuery } from '@tanstack/react-query';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
 import { MESSAGE, QUERY_KEY, ROUTES_PATH } from 'constants/constants';
 
 import { requestCloseTeamInterview, requestDeleteTeam, requestGetTeam } from 'apis/teams';
-import { WrongAccessToken } from 'apis/utils';
 
 const useTeamDetail = () => {
   const { showSnackbar } = useSnackbar();
@@ -18,9 +16,15 @@ const useTeamDetail = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const { refetch: getTeam, data: team } = useQuery([QUERY_KEY.TEAM], () => {
-    return requestGetTeam({ accessToken, teamId });
-  });
+  const { refetch: getTeam, data: team } = useQuery(
+    [QUERY_KEY.TEAM, accessToken, teamId],
+    () => {
+      return requestGetTeam({ accessToken, teamId });
+    },
+    {
+      cacheTime: 0,
+    },
+  );
 
   const { mutate: deleteTeam } = useMutation(
     () => {
@@ -35,12 +39,7 @@ const useTeamDetail = () => {
         navigate(ROUTES_PATH.HOME);
       },
       onError: (err) => {
-        if (axios.isAxiosError(err) && err instanceof Error) {
-          const responseBody: AxiosResponse = err.response!;
-          if (WrongAccessToken({ message: responseBody.data.message, showSnackbar })) {
-            showSnackbar({ message: responseBody.data.message });
-          }
-        }
+        errorHandler({ err, showSnackbar });
       },
     },
   );
@@ -55,13 +54,7 @@ const useTeamDetail = () => {
         navigate(ROUTES_PATH.HOME);
       },
       onError: (err) => {
-        if (axios.isAxiosError(err)) {
-          const responseBody: AxiosResponse = err.response!;
-          if (err instanceof Error) {
-            showSnackbar({ message: responseBody.data.message });
-            navigate(ROUTES_PATH.HOME);
-          }
-        }
+        errorHandler({ err, showSnackbar });
       },
     },
   );

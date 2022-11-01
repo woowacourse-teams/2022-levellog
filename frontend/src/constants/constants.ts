@@ -118,6 +118,7 @@ export const QUERY_KEY = Object.freeze({
 
   SEARCH_RESULTS: 'searchResults',
 
+  TEAMS: 'teams',
   TEAM: 'team',
   MEMBERS: 'members',
   ROLE: 'role',

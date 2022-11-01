@@ -15,7 +15,7 @@ const Login = lazy(() => import('pages/Login'));
 const FeedbackAdd = lazy(() => import('pages/feedback/FeedbackAdd'));
 const FeedbackEdit = lazy(() => import('pages/feedback/FeedbackEdit'));
 const Feedbacks = lazy(() => import('pages/feedback/Feedbacks'));
-const Questions = lazy(() => import('pages/interviewQuestion/InterviewQuestions'));
+const InterviewQuestions = lazy(() => import('pages/interviewQuestion/InterviewQuestions'));
 const LevellogAdd = lazy(() => import('pages/levellogs/LevellogAdd'));
 const LevellogEdit = lazy(() => import('pages/levellogs/LevellogEdit'));
 const PreQuestionAdd = lazy(() => import('pages/preQuestion/PreQuestionAdd'));
@@ -25,7 +25,9 @@ const NotFound = lazy(() => import('pages/status/NotFound'));
 const InterviewDetail = lazy(() => import('pages/teams/InterviewDetail'));
 const InterviewTeamAdd = lazy(() => import('pages/teams/InterviewTeamAdd'));
 const InterviewTeamEdit = lazy(() => import('pages/teams/InterviewTeamEdit'));
-const QuestionSearch = lazy(() => import('pages/interviewQuestion/InterviewQuestionSearch'));
+const InterviewQuestionSearch = lazy(
+  () => import('pages/interviewQuestion/InterviewQuestionSearch'),
+);
 
 export const routes = [
   {
@@ -54,29 +56,37 @@ export const routes = [
       {
         path: ROUTES_PATH.FEEDBACKS,
         element: (
-          <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
-            <Feedbacks />
-          </Auth>
+          <Suspense fallback={<Loading />}>
+            <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
+              <Suspense fallback={<Loading />}>
+                <Feedbacks />
+              </Suspense>
+            </Auth>
+          </Suspense>
         ),
       },
       {
         path: ROUTES_PATH.FEEDBACK_ADD,
         element: (
-          <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
-            <TeamStatus allowedStatuses={[TEAM_STATUS.READY, TEAM_STATUS.IN_PROGRESS]}>
-              <FeedbackAdd />
-            </TeamStatus>
-          </Auth>
+          <Suspense fallback={<Loading />}>
+            <Auth requireAuth={REQUIRE_AUTH.NOT_ME}>
+              <TeamStatus allowedStatuses={[TEAM_STATUS.READY, TEAM_STATUS.IN_PROGRESS]}>
+                <FeedbackAdd />
+              </TeamStatus>
+            </Auth>
+          </Suspense>
         ),
       },
       {
         path: ROUTES_PATH.FEEDBACK_EDIT,
         element: (
-          <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
-            <TeamStatus allowedStatuses={[TEAM_STATUS.IN_PROGRESS]}>
-              <FeedbackEdit />
-            </TeamStatus>
-          </Auth>
+          <Suspense fallback={<Loading />}>
+            <Auth requireAuth={REQUIRE_AUTH.AUTHOR}>
+              <TeamStatus allowedStatuses={[TEAM_STATUS.IN_PROGRESS]}>
+                <FeedbackEdit />
+              </TeamStatus>
+            </Auth>
+          </Suspense>
         ),
       },
 
@@ -118,7 +128,7 @@ export const routes = [
       },
       {
         path: ROUTES_PATH.INTERVIEW_QUESTION,
-        element: <Questions />,
+        element: <InterviewQuestions />,
       },
     ],
   },
@@ -131,7 +141,7 @@ export const routes = [
       },
       {
         path: ROUTES_PATH.INTERVIEW_QUESTION_SEARCH,
-        element: <QuestionSearch />,
+        element: <InterviewQuestionSearch />,
       },
       {
         path: ROUTES_PATH.LOGIN,

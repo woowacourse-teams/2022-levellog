@@ -18,6 +18,9 @@ const useInterviewQuestions = () => {
         accessToken,
         levellogId,
       }),
+    {
+      staleTime: 60,
+    },
   );
 
   return {

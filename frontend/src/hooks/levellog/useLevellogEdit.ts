@@ -49,12 +49,12 @@ const useLevellogEdit = () => {
     }
 
     if (levellogRef.current) {
-      debounce.action({
+      debounce.action<Omit<LevellogEditRequestType, 'accessToken'>>({
         func: editLevellog,
         args: {
           teamId,
           levellogId,
-          inputValue: levellogRef.current.getInstance().getMarkdown(),
+          levellog: { content: levellogRef.current.getInstance().getMarkdown() },
         },
       });
     }

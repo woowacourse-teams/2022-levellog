@@ -1,25 +1,35 @@
 import { useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
+import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
+import { MESSAGE, QUERY_KEY } from 'constants/constants';
 
-import usePreQuestionQuery from './usePreQuestionQuery';
-import { PreQuestionEditRequestType, requestEditPreQuestion } from 'apis/preQuestion';
+import {
+  PreQuestionEditRequestType,
+  requestEditPreQuestion,
+  requestGetPreQuestion,
+} from 'apis/preQuestion';
 import { teamGetUriBuilder } from 'utils/uri';
 
 const usePreQuestionEdit = () => {
-  const { preQuestion } = usePreQuestionQuery();
   const { showSnackbar } = useSnackbar();
   const preQuestionRef = useRef<Editor>(null);
   const { teamId, levellogId, preQuestionId } = useParams();
   const navigate = useNavigate();
 
   const accessToken = localStorage.getItem('accessToken');
+
+  const { data: preQuestion } = useQuery([QUERY_KEY.PRE_QUESTION, accessToken, levellogId], () =>
+    requestGetPreQuestion({
+      accessToken,
+      levellogId,
+    }),
+  );
 
   const { mutate: editPreQuestion } = useMutation(
     ({
@@ -38,6 +48,9 @@ const usePreQuestionEdit = () => {
       onSuccess: () => {
         showSnackbar({ message: MESSAGE.PREQUESTION_EDIT });
         navigate(teamGetUriBuilder({ teamId }));
+      },
+      onError: (err) => {
+        errorHandler({ err, showSnackbar });
       },
     },
   );

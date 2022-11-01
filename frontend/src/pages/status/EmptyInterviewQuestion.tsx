@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 
 import { Exception } from 'pages/status';
 
-import InterviewQuestionImage from 'assets/images/interviewQuestion.webp';
+import emptyImage from 'assets/images/empty.webp';
 
 const EmptyInterviewQuestion = ({ isShow, path }: EmptyInterviewQuestionProps) => {
   return (
     <Exception>
-      <Exception.Image sizes={'EXTRA_HUGE'}>{InterviewQuestionImage}</Exception.Image>
+      <Exception.Image sizes={'EXCEPTION'}>{emptyImage}</Exception.Image>
       <Exception.Title>작성된 인터뷰 질문이 없습니다.</Exception.Title>
       {isShow && (
         <Link to={path}>

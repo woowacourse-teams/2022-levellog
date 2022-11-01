@@ -11,20 +11,20 @@ const useLevellogQuery = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const {
-    refetch: levellogRefetch,
-    isError: levellogError,
-    isSuccess: levellogSuccess,
-    data: levellogInfo,
-  } = useQuery([QUERY_KEY.LEVELLOG, accessToken, teamId, levellogId], () =>
-    requestGetLevellog({
-      accessToken,
-      teamId,
-      levellogId,
-    }),
+  const { isError: levellogError, data: levellogInfo } = useQuery(
+    [QUERY_KEY.LEVELLOG, accessToken, teamId, levellogId],
+    () =>
+      requestGetLevellog({
+        accessToken,
+        teamId,
+        levellogId,
+      }),
+    {
+      cacheTime: 0,
+    },
   );
 
-  return { levellogRefetch, levellogError, levellogSuccess, levellogInfo };
+  return { levellogError, levellogInfo };
 };
 
 export default useLevellogQuery;

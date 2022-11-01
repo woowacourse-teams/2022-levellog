@@ -15,7 +15,7 @@ const ErrorToHome = () => {
 
   return (
     <Exception>
-      <Exception.Image sizes={'EXTRA_HUGE'}>{errorImage}</Exception.Image>
+      <Exception.Image sizes={'EXCEPTION'}>{errorImage}</Exception.Image>
       <Exception.Title>예상치 못한 에러가 발생했습니다!</Exception.Title>
     </Exception>
   );

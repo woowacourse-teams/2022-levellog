@@ -1,5 +1,4 @@
-import { Suspense, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -9,8 +8,6 @@ import useTeam from 'hooks/team/useTeam';
 import useUser from 'hooks/useUser';
 
 import EmptyFeedback from 'pages/status/EmptyFeedback';
-import Error from 'pages/status/Error';
-import Loading from 'pages/status/Loading';
 
 import plusIcon from 'assets/images/plus.svg';
 import { TEAM_STATUS } from 'constants/constants';
@@ -23,27 +20,15 @@ import { FeedbackInfoType } from 'types/feedback';
 import { feedbackAddUriBuilder, teamGetUriBuilder } from 'utils/uri';
 
 const Feedbacks = () => {
-  const { feedbackError, feedbacks } = useFeedbacks();
-  const { levellogError, levellogInfo } = useLevellogQuery();
+  const { feedbacks } = useFeedbacks();
+  const { levellogInfo } = useLevellogQuery();
   const { team } = useTeam();
   const { loginUserId } = useUser();
   const { teamId, levellogId } = useParams();
 
-  if (feedbackError) {
-    return <Error />;
-  }
-
-  if (levellogError) {
-    return <Error />;
-  }
-
-  if (!team) {
-    return <Loading />;
-  }
-
   if (feedbacks?.feedbacks.length === 0) {
     return (
-      <Suspense fallback={<Loading />}>
+      <>
         <ContentHeader
           imageUrl={levellogInfo?.author.profileUrl}
           title={`${levellogInfo?.author.nickname}에 대한 레벨 인터뷰 피드백`}
@@ -56,12 +41,12 @@ const Feedbacks = () => {
           isShow={team.status !== TEAM_STATUS.CLOSED && levellogInfo?.author.id !== loginUserId}
           path={feedbackAddUriBuilder({ teamId, levellogId })}
         />
-      </Suspense>
+      </>
     );
   }
 
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       <ContentHeader
         imageUrl={levellogInfo?.author.profileUrl}
         title={`${levellogInfo?.author.nickname}에 대한 레벨 인터뷰 피드백`}
@@ -94,7 +79,7 @@ const Feedbacks = () => {
           />
         ))}
       </S.Container>
-    </Suspense>
+    </>
   );
 };
 

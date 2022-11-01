@@ -56,11 +56,13 @@ export const routes = [
       {
         path: ROUTES_PATH.FEEDBACKS,
         element: (
-          <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
-            <Suspense fallback={<Loading />}>
-              <Feedbacks />
-            </Suspense>
-          </Auth>
+          <Suspense fallback={<Loading />}>
+            <Auth requireAuth={REQUIRE_AUTH.IN_TEAM}>
+              <Suspense fallback={<Loading />}>
+                <Feedbacks />
+              </Suspense>
+            </Auth>
+          </Suspense>
         ),
       },
       {

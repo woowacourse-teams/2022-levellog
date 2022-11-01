@@ -29,7 +29,6 @@ export const ButtonStyle = styled.button`
   font-weight: 500;
   color: ${(props) => props.theme.default.WHITE};
   white-space: pre;
-  cursor: pointer;
   :hover {
     opacity: 70%;
   }

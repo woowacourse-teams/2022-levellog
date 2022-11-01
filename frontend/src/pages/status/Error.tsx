@@ -10,7 +10,7 @@ const Error = ({ onClick }: ErrorProps) => {
       <Exception.Image sizes={'EXTRA_HUGE'}>{errorImage}</Exception.Image>
       <Exception.Title>예상치 못한 에러가 발생했습니다!</Exception.Title>
       <Link to="/">
-        <Exception.Button onClick={onClick}>홈으로 돌아가기</Exception.Button>
+        <Exception.Button onClick={onClick}>{'홈으로 가기'}</Exception.Button>
       </Link>
     </Exception>
   );

@@ -67,7 +67,7 @@ const S = {
     width: 100%;
     padding: 0.4375rem 0.4375rem 0.4375rem 0.75rem;
     margin-bottom: 1rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 
   ResultText: styled.p`
@@ -87,7 +87,7 @@ const S = {
 
   LikeButton: styled.button`
     border: none;
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.WHITE};
   `,
 };
 

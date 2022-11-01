@@ -70,8 +70,8 @@ const S = {
     margin-top: 1.875rem;
     margin-bottom: 1.875rem;
     border-radius: 1.875rem;
-    background-color: ${(props) => props.theme.new_default.WHITE};
-    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
+    background-color: ${(props) => props.theme.default.WHITE};
+    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.default.GRAY};
     @media (max-width: 1180px) {
       width: calc(100% - 2.5rem);
     }
@@ -91,15 +91,14 @@ const S = {
   RangeButton: styled(FilterButton)<{ isActive: boolean }>`
     padding: 0.3125rem;
     border: 0;
-    background-color: ${(props) => props.theme.new_default.WHITE};
-    color: ${(props) =>
-      props.isActive ? props.theme.new_default.BLUE : props.theme.new_default.BLACK};
+    background-color: ${(props) => props.theme.default.WHITE};
+    color: ${(props) => (props.isActive ? props.theme.default.BLUE : props.theme.default.BLACK)};
   `,
 
   DivisionLine: styled.div`
     height: 1.25rem;
     margin: 0 0.625rem;
-    border-left: 0.125rem solid ${(props) => props.theme.new_default.BLACK};
+    border-left: 0.125rem solid ${(props) => props.theme.default.BLACK};
   `,
 
   Content: styled.ul`
@@ -115,7 +114,7 @@ const S = {
     width: 100%;
     padding: 0.4375rem 0.4375rem 0.4375rem 0.75rem;
     margin-bottom: 1rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 
   ResultText: styled.p`
@@ -124,7 +123,7 @@ const S = {
 
   GoodButton: styled.button`
     border: none;
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.WHITE};
   `,
 
   SearchResultAriaText: styled.p`

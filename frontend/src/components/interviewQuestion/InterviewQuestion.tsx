@@ -55,9 +55,9 @@ const S = {
     height: 19.5rem;
     padding: 1rem;
     margin-bottom: 0.625rem;
-    box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.new_default.GRAY};
+    box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.default.GRAY};
     border-radius: 0.5rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.default.WHITE};
   `,
 
@@ -68,7 +68,7 @@ const S = {
     height: '3.125rem';
     padding-right: 0.5rem;
     border-radius: 0.5rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     background-color: ${(props) => props.theme.default.WHITE};
   `,
 

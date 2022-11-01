@@ -53,7 +53,7 @@ const S = {
     max-width: 71rem;
     z-index: 30;
     border-radius: 0.875rem;
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.WHITE};
     transform: translate(-50%, -50%);
     @media (max-width: 560px) {
       width: calc(100% - 2.5rem);
@@ -67,7 +67,7 @@ const S = {
     gap: 0.375rem;
     padding: 0.875rem;
     width: 100%;
-    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
+    border-bottom: 0.0625rem solid ${(props) => props.theme.default.GRAY};
   `,
 
   AuthorText: styled.h2`
@@ -85,7 +85,7 @@ const S = {
     height: 1.125rem;
     margin-right: 0.875rem;
     border-style: none;
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.WHITE};
     font-size: 1.375rem;
     font-weight: 800;
     cursor: pointer;
@@ -97,7 +97,7 @@ const S = {
     height: 40.5rem;
     padding: 1rem;
     border-radius: 0.25rem;
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.WHITE};
     line-height: 1.875rem;
     word-spacing: 0.0625rem;
     @media (max-width: 830px) {
@@ -117,7 +117,7 @@ const S = {
     justify-content: flex-end;
     align-items: center;
     width: 100%;
-    border-top: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
+    border-top: 0.0625rem solid ${(props) => props.theme.default.GRAY};
     padding: 1rem 0.875rem 1.5rem 0;
   `,
 };

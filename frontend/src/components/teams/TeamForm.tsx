@@ -79,7 +79,7 @@ const S = {
     margin: 1.25rem auto 1.25rem auto;
     padding: 0 1.875rem 1.875rem 1.875rem;
     border-radius: 1.25rem;
-    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
+    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.default.GRAY};
     @media (min-width: 560px) and (max-width: 760px) {
       width: 32.5rem;
     }

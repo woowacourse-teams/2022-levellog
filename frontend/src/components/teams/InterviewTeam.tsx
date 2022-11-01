@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
+import cancelIcon from 'assets/images/cancel.png';
 import checkIcon from 'assets/images/check.svg';
 import locationIcon from 'assets/images/location.svg';
 import { GITHUB_AVATAR_SIZE_LIST } from 'constants/constants';
@@ -14,6 +15,9 @@ import { convertDateAndTime } from 'utils/util';
 
 const InterviewTeam = ({ team }: InterviewTeamsProp) => {
   const { id, teamImage, title, status, place, startAt, participants } = team;
+  const DateAndTime = convertDateAndTime(startAt);
+  const teamStartDate = new Date(startAt);
+  const currentDate = new Date();
 
   return (
     <Link to={teamGetUriBuilder({ teamId: id })}>
@@ -34,17 +38,23 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
           <S.Info>
             <S.Notice aria-label={`인터뷰 장소 ${place}`}>
               <S.ImageBox>
-                <Image src={locationIcon} sizes={'TINY'} />
+                <Image src={locationIcon} alt={'장소 아이콘'} sizes={'TINY'} />
               </S.ImageBox>
               {place}
             </S.Notice>
           </S.Info>
           <S.Info>
-            <S.Notice aria-label={`인터뷰 날짜와 시간 ${convertDateAndTime(startAt)}`}>
-              <S.ImageBox>
-                <Image src={checkIcon} sizes={'TINY'} />
-              </S.ImageBox>
-              {convertDateAndTime(startAt)}
+            <S.Notice aria-label={`인터뷰 날짜와 시간 ${DateAndTime}`}>
+              {teamStartDate > currentDate ? (
+                <S.ImageBox>
+                  <Image src={checkIcon} alt={'시작 전 인터뷰 아이콘'} sizes={'TINY'} />
+                </S.ImageBox>
+              ) : (
+                <S.ImageBox>
+                  <Image src={cancelIcon} alt={'시작된 인터뷰 아이콘'} sizes={'TINY'} />
+                </S.ImageBox>
+              )}
+              {DateAndTime}
             </S.Notice>
           </S.Info>
         </FlexBox>
@@ -79,7 +89,6 @@ const S = {
     padding: 1.25rem 1.5rem 1.875rem 1.5rem;
     border-radius: 0.625rem;
     box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.default.GRAY};
-    opacity: ${(props) => (props.status === 'CLOSED' ? 0.2 : 1)};
     cursor: pointer;
   `,
 

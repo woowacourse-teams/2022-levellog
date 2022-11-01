@@ -33,6 +33,7 @@ const InterviewQuestionSearchForm = () => {
               placeholder={'검색어를 입력하세요'}
               value={searchText}
               onChange={handleChangeSearchInput}
+              aria-label={'인터뷰 질문 검색하기'}
             />
           </S.InputBox>
         </S.SearchForm>
@@ -75,7 +76,7 @@ const S = {
 
   Title: styled.h1`
     width: 47.5rem;
-    font-size: 24px;
+    font-size: 1.5rem;
     @media (max-width: 850px) {
       width: calc(100% - 2.5rem);
       font-size: 1rem;

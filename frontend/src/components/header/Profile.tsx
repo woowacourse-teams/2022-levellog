@@ -21,10 +21,11 @@ const Profile = ({
       onClick={handleClickProfile}
       onError={handleErrorProfile}
     >
-      <S.HamburgerBar src={hamburgerMenu} />
+      <S.HamburgerBar src={hamburgerMenu} alt={'드롭다운 메뉴 아이콘'} />
       <Image
         src={loginUserProfileUrl}
         sizes={'SMALL'}
+        alt={`${loginUserNickname}의 프로필 이미지`}
         githubAvatarSize={
           loginUserProfileUrl.includes('avatars.githubusercontent')
             ? GITHUB_AVATAR_SIZE_LIST.SMALL

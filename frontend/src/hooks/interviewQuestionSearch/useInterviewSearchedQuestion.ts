@@ -30,7 +30,9 @@ const useSearchedInterviewQuestion = () => {
 
   const { data: searchResults, refetch: searchResultsRefetch } = useQuery(
     [QUERY_KEY.SEARCH_RESULTS, keyword, searchFilterActive],
-    () => requestSearchedInterviewQuestion({ accessToken, keyword, sort: searchFilterActive }),
+    () => {
+      return requestSearchedInterviewQuestion({ accessToken, keyword, sort: searchFilterActive });
+    },
     {
       enabled: !!keyword,
       staleTime: 600,

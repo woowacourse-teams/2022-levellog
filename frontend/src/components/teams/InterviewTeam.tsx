@@ -43,11 +43,12 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
           </S.Info>
           <S.Info>
             <S.Notice aria-label={`인터뷰 날짜와 시간 ${DateAndTime}`}>
-              {status === 'CLOSED' ? (
+              {status === 'CLOSED' && (
                 <S.ImageBox>
                   <Image src={cancelIcon} alt={'종료된 인터뷰 아이콘'} sizes={'TINY'} />
                 </S.ImageBox>
-              ) : (
+              )}
+              {status !== 'CLOSED' && (
                 <S.ImageBox>
                   <Image src={checkIcon} alt={'진행 중인 인터뷰 아이콘'} sizes={'TINY'} />
                 </S.ImageBox>

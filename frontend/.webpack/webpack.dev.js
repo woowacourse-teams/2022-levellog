@@ -5,8 +5,8 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
 
 module.exports = merge(common, {
-  mode: 'development',
-  devtool: 'eval-source-map',
+  mode: 'production',
+  devtool: 'source-map',
   module: {
     rules: [
       {

@@ -7,8 +7,6 @@ import usePreQuestionModal from 'hooks/preQuestion/usePreQuestionModal';
 import useTeamDetail from 'hooks/team/useTeamDetail';
 import useUser from 'hooks/useUser';
 
-import Loading from 'pages/status/Loading';
-
 import { TEAM_STATUS } from 'constants/constants';
 
 import FlexBox from 'components/@commons/FlexBox';
@@ -27,7 +25,7 @@ const InterviewDetail = () => {
   const { team, getTeam, handleClickDeleteTeamButton, handleClickCloseTeamInterviewButton } =
     useTeamDetail();
   const {
-    levellogModalLoading,
+    levellogModalError,
     levellogParticipant,
     isLevellogModalOpen,
     levellogInfo,
@@ -35,7 +33,7 @@ const InterviewDetail = () => {
     handleClickCloseLevellogModal,
   } = useLevellogModal();
   const {
-    preQuestionModalLoading,
+    preQuestionModalError,
     preQuestion,
     preQuestionParticipant,
     isPreQuestionModalOpen,
@@ -45,17 +43,9 @@ const InterviewDetail = () => {
   } = usePreQuestionModal();
   const { teamId } = useParams();
 
-  if (levellogModalLoading) {
-    return <Loading />;
-  }
-
-  if (preQuestionModalLoading) {
-    return <Loading />;
-  }
-
   return (
     <>
-      {isLevellogModalOpen && (
+      {isLevellogModalOpen && !levellogModalError && (
         <LevellogViewModal
           teamId={teamId}
           participant={levellogParticipant}
@@ -65,7 +55,7 @@ const InterviewDetail = () => {
           handleClickCloseLevellogModal={handleClickCloseLevellogModal}
         />
       )}
-      {isPreQuestionModalOpen && (
+      {isPreQuestionModalOpen && !preQuestionModalError && (
         <PreQuestionViewModal
           teamId={teamId}
           preQuestion={preQuestion}
@@ -79,9 +69,7 @@ const InterviewDetail = () => {
       <ContentHeader
         imageUrl={team?.teamImage}
         title={team?.title}
-        subTitle={`${team?.place} | ${convertDateAndTime({
-          startAt: team?.startAt,
-        })}`}
+        subTitle={`${team?.place} | ${convertDateAndTime(team?.startAt)}`}
       >
         <>
           {team?.hostId === loginUserId && (
@@ -115,7 +103,6 @@ const InterviewDetail = () => {
                   ),
                 )}
               </S.WatcherContent>
-              ``
             </FlexBox>
           )}
           <FlexBox flexFlow={'column wrap'} gap={2}>
@@ -202,10 +189,10 @@ const S = {
     padding: 0.75rem 1.4375rem;
     border: none;
     border-radius: 0.625rem;
-    background-color: ${(props) => props.theme.new_default.BLUE};
+    background-color: ${(props) => props.theme.default.BLUE};
     font-size: 1.25rem;
     font-weight: 500;
-    color: ${(props) => props.theme.new_default.WHITE};
+    color: ${(props) => props.theme.default.WHITE};
     white-space: pre;
     :hover {
       opacity: 70%;
@@ -218,13 +205,13 @@ const S = {
 
   Button: styled(Button)`
     border-radius: 2rem;
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.WHITE};
     font-weight: 700;
-    color: ${(props) => props.theme.new_default.BLACK};
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    color: ${(props) => props.theme.default.BLACK};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     :hover {
-      background-color: ${(props) => props.theme.new_default.LIGHT_GRAY};
-      box-shadow: 0.25rem 0.25rem 0.375rem ${(props) => props.theme.new_default.DARK_GRAY};
+      background-color: ${(props) => props.theme.default.LIGHT_GRAY};
+      box-shadow: 0.25rem 0.25rem 0.375rem ${(props) => props.theme.default.DARK_GRAY};
     }
     @media (max-width: 520px) {
       padding: 0.4375rem 0.75rem;

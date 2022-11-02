@@ -15,7 +15,7 @@ import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
 import ToolTip from 'components/@commons/toolTip/ToolTip';
 import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
-import Question from 'components/interviewQuestion/InterviewQuestion';
+import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
 
 const FeedbackAdd = () => {
   const { feedbackRef, handleClickFeedbackAddButton } = useFeedbackAdd();
@@ -56,7 +56,7 @@ const FeedbackAdd = () => {
                   toolTipText={`질문 텍스트를 클릭하면 수정가능합니다. 질문 수정 후 엔터를 눌러 반영해주세요.`}
                 />
               </FlexBox>
-              <Question />
+              <InterviewQuestion />
             </S.QuestionContent>
             <S.FeedbackContent>
               <FeedbackFormat feedbackRef={feedbackRef} />
@@ -115,11 +115,11 @@ const S = {
     align-items: center;
     height: 1.875rem;
     padding: 0.625rem 0.9375rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     border-radius: 1.25rem;
     margin-bottom: 1.25rem;
-    background-color: ${(props) => props.theme.new_default.DARK_BLACK};
-    color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.DARK_BLACK};
+    color: ${(props) => props.theme.default.WHITE};
     font-weight: 700;
   `,
 

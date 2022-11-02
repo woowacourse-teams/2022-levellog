@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import { queryClient } from 'index';
+
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
@@ -22,7 +24,7 @@ const useFeedbackEdit = () => {
   const accessToken = localStorage.getItem('accessToken');
 
   const { data: feedback, mutate: getFeedback } = useMutation(
-    [QUERY_KEY.FEEDBACK, accessToken, levellogId],
+    [QUERY_KEY.FEEDBACK, accessToken, levellogId, feedbackId],
     () => {
       return requestGetFeedback({ accessToken, levellogId, feedbackId });
     },
@@ -46,6 +48,7 @@ const useFeedbackEdit = () => {
     },
     {
       onSuccess: () => {
+        queryClient.invalidateQueries([QUERY_KEY.FEEDBACKS]);
         showSnackbar({ message: MESSAGE.FEEDBACK_EDIT });
         navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
       },

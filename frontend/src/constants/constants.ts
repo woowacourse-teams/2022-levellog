@@ -92,12 +92,12 @@ export const REQUIRE_AUTH = Object.freeze({
   AUTHOR: 'author',
 });
 
-export const GITHUB_AVATAR_SIZE_LIST = {
+export const GITHUB_AVATAR_SIZE_LIST = Object.freeze({
   HUGE: 120,
   LARGE: 60,
   MEDIUM: 44,
   SMALL: 30,
-};
+});
 
 export const INTERVIEW_QUESTION_FILTER = Object.freeze({
   LATEST: 'latest',
@@ -118,6 +118,7 @@ export const QUERY_KEY = Object.freeze({
 
   SEARCH_RESULTS: 'searchResults',
 
+  TEAMS: 'teams',
   TEAM: 'team',
   MEMBERS: 'members',
   ROLE: 'role',

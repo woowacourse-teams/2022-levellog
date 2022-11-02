@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import styled from 'styled-components';
 
 import useFeedbackEdit from 'hooks/feedback/useFeedbackEdit';
@@ -5,13 +7,15 @@ import useRole from 'hooks/useRole';
 import useContentTag from 'hooks/utils/useContentTag';
 import usePreventGoBack from 'hooks/utils/usePreventGoBack';
 
+import Loading from 'pages/status/Loading';
+
 import FlexBox from 'components/@commons/FlexBox';
 import BottomBar from 'components/@commons/bottomBar/BottomBar';
 import ContentHeader from 'components/@commons/contentHeader/ContentHeader';
 import ToolTip from 'components/@commons/toolTip/ToolTip';
 import WriterDocument from 'components/WriterDocument';
 import FeedbackFormat from 'components/feedbacks/FeedbackFormat';
-import Question from 'components/interviewQuestion/InterviewQuestion';
+import InterviewQuestion from 'components/interviewQuestion/InterviewQuestion';
 
 const FeedbackEdit = () => {
   const { feedbackRef, handleClickFeedbackEditButton } = useFeedbackEdit();
@@ -36,11 +40,13 @@ const FeedbackEdit = () => {
               {feedbackWriterRole === 'INTERVIEWER' && <S.RoleContent>{'인터뷰어'}</S.RoleContent>}
               {feedbackWriterRole === 'INTERVIEWEE' && <S.RoleContent>{'인터뷰이'}</S.RoleContent>}
             </FlexBox>
-            <WriterDocument
-              whichContentShow={whichContentShow}
-              handleClickLevellogTag={handleClickLevellogTag}
-              handleClickPreQuestionTag={handleClickPreQuestionTag}
-            />
+            <Suspense fallback={<Loading />}>
+              <WriterDocument
+                whichContentShow={whichContentShow}
+                handleClickLevellogTag={handleClickLevellogTag}
+                handleClickPreQuestionTag={handleClickPreQuestionTag}
+              />
+            </Suspense>
           </S.LeftContent>
           <S.RightContent>
             <S.QuestionContent>
@@ -52,7 +58,9 @@ const FeedbackEdit = () => {
                   }
                 />
               </FlexBox>
-              <Question />
+              <Suspense fallback={<Loading />}>
+                <InterviewQuestion />
+              </Suspense>
             </S.QuestionContent>
             <S.FeedbackContent>
               <FeedbackFormat feedbackRef={feedbackRef} />
@@ -111,11 +119,11 @@ const S = {
     align-items: center;
     height: 1.875rem;
     padding: 0.625rem 0.9375rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     border-radius: 1.25rem;
     margin-bottom: 1.25rem;
-    background-color: ${(props) => props.theme.new_default.DARK_BLACK};
-    color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.DARK_BLACK};
+    color: ${(props) => props.theme.default.WHITE};
     font-weight: 700;
   `,
 

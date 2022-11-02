@@ -71,7 +71,7 @@ const S = {
     width: 100%;
     height: 100%;
     z-index: 20;
-    background-color: ${(props) => props.theme.new_default.DIMMER_BLACK};
+    background-color: ${(props) => props.theme.default.DIMMER_BLACK};
   `,
 
   RightButton: styled(Button)`

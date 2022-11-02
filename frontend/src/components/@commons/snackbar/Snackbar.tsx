@@ -20,7 +20,7 @@ const SnackbarStyle = styled.div`
   max-width: 71rem;
   height: 3.75rem;
   border-radius: 0.875rem;
-  background-color: ${(props) => props.theme.new_default.DARK_GRAY};
+  background-color: ${(props) => props.theme.default.DARK_GRAY};
   animation: fade 2s linear;
   @keyframes fade {
     0%,
@@ -36,7 +36,7 @@ const SnackbarStyle = styled.div`
 
 const SnackbarText = styled.p`
   font-size: 0.875rem;
-  color: ${(props) => props.theme.new_default.WHITE};
+  color: ${(props) => props.theme.default.WHITE};
 `;
 
 interface SnackbarProps {

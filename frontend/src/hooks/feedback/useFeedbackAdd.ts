@@ -1,13 +1,15 @@
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { queryClient } from 'index';
+
 import { useMutation } from '@tanstack/react-query';
 import { Editor } from '@toast-ui/react-editor';
 
 import errorHandler from 'hooks/utils/errorHandler';
 import useSnackbar from 'hooks/utils/useSnackbar';
 
-import { MESSAGE } from 'constants/constants';
+import { MESSAGE, QUERY_KEY } from 'constants/constants';
 
 import { requestPostFeedback, FeedbackPostRequestType } from 'apis/feedback';
 import { FeedbackType } from 'types/feedback';
@@ -27,6 +29,7 @@ const useFeedbackAdd = () => {
     },
     {
       onSuccess: () => {
+        queryClient.invalidateQueries([QUERY_KEY.FEEDBACKS]);
         showSnackbar({ message: MESSAGE.FEEDBACK_CREATE });
         navigate(feedbacksGetUriBuilder({ teamId, levellogId }));
       },

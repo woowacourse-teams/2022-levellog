@@ -127,18 +127,18 @@ const useMember = () => {
 
   const handleChangeWatcherInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWatcherNicknameValue(e.target.value);
-    debounce.action({
+    debounce.action<Pick<UserType, 'nickname'>>({
       func: getMembersForWatchers,
-      args: { nicknameValue: e.target.value },
+      args: { nickname: e.target.value },
       timer: 200,
     });
   };
 
   const handleChangeParticipantInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setParticipantNicknameValue(e.target.value);
-    debounce.action({
+    debounce.action<Pick<UserType, 'nickname'>>({
       func: getMembersForParticipants,
-      args: { nicknameValue: e.target.value },
+      args: { nickname: e.target.value },
       timer: 200,
     });
   };

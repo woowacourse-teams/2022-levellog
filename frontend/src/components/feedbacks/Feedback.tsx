@@ -76,9 +76,9 @@ const S = {
     max-width: 71rem;
     min-width: 18.75rem;
     margin-bottom: 3.125rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.GRAY};
     border-radius: 0.5rem;
-    box-shadow: 0 0 1rem ${(props) => props.theme.new_default.GRAY};
+    box-shadow: 0 0 1rem ${(props) => props.theme.default.GRAY};
   `,
 
   Header: styled.div`
@@ -88,7 +88,7 @@ const S = {
     gap: 0.375rem;
     padding: 0.875rem;
     width: 100%;
-    border-bottom: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-bottom: 0.125rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 
   AuthorText: styled.p`
@@ -113,14 +113,14 @@ const S = {
   Question: styled.h2`
     font-size: 1.25rem;
     font-weight: 300;
-    color: ${(props) => props.theme.new_default.DARK_BLACK};
+    color: ${(props) => props.theme.default.DARK_BLACK};
   `,
 
   Content: styled.div`
     width: 100%;
     min-height: 6.25rem;
     padding: 0 1rem;
-    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 1px solid ${(props) => props.theme.default.LIGHT_GRAY};
     word-spacing: 0.0625rem;
     line-height: 1.875rem;
   `,

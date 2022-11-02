@@ -68,7 +68,7 @@ const S = {
     width: calc(100% - 2rem);
     height: 1.125rem;
     padding: 1rem;
-    border: 1px solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 1px solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 
   ErrorBox: styled.div`
@@ -81,7 +81,7 @@ const S = {
   `,
 
   ErrorText: styled.div`
-    color: ${(props) => props.theme.new_default.RED};
+    color: ${(props) => props.theme.default.RED};
   `,
 };
 

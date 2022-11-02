@@ -61,7 +61,8 @@ const S = {
   `,
 
   Logo: styled.img`
-    height: 34px;
+    width: max-content;
+    height: 2.125rem;
   `,
 
   ProfileImage: styled.img`
@@ -72,7 +73,7 @@ const S = {
   `,
 
   Line: styled.div`
-    border-bottom: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-bottom: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 };
 

@@ -21,10 +21,11 @@ const Profile = ({
       onClick={handleClickProfile}
       onError={handleErrorProfile}
     >
-      <S.HamburgerBar src={hamburgerMenu} />
+      <S.HamburgerBar src={hamburgerMenu} alt={'드롭다운 메뉴 아이콘'} />
       <Image
         src={loginUserProfileUrl}
         sizes={'SMALL'}
+        alt={`${loginUserNickname}의 프로필 이미지`}
         githubAvatarSize={
           loginUserProfileUrl.includes('avatars.githubusercontent')
             ? GITHUB_AVATAR_SIZE_LIST.SMALL
@@ -52,19 +53,19 @@ const S = {
     width: 4.8125rem;
     height: 2.625rem;
     padding-left: 0.75rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     border-radius: 2rem;
-    background-color: ${(props) => props.theme.new_default.WHITE};
+    background-color: ${(props) => props.theme.default.WHITE};
     transition: all 0.2s;
     :hover {
-      box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.new_default.GRAY};
+      box-shadow: 0.0625rem 0.0625rem 0.3125rem ${(props) => props.theme.default.GRAY};
     }
   `,
 
   HamburgerBar: styled.img`
     width: 1rem;
     height: 1rem;
-    color: ${(props) => props.theme.new_default.GRAY};
+    color: ${(props) => props.theme.default.GRAY};
     cursor: pointer;
   `,
 };

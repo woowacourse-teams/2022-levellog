@@ -20,8 +20,8 @@ const ExceptionImage = ({ sizes, borderRadius = false, children }: ExceptionImag
   return <Image src={children} sizes={sizes} borderRadius={borderRadius} />;
 };
 
-const ExceptionButton = ({ children }: ExceptionButtonProps) => {
-  return <Button>{children}</Button>;
+const ExceptionButton = ({ children, onClick }: ExceptionButtonProps) => {
+  return <S.Button onClick={onClick}>{children}</S.Button>;
 };
 
 const ExceptionLoading = () => {
@@ -47,7 +47,8 @@ interface ExceptionImage {
 }
 
 interface ExceptionButtonProps {
-  children: string;
+  children: string | JSX.Element;
+  onClick?: () => void;
 }
 
 const S = {
@@ -64,16 +65,20 @@ const S = {
     font-size: 1.25rem;
   `,
 
+  Button: styled(Button)`
+    cursor: pointer;
+  `,
+
   Text: styled.p`
-    color: ${(props) => props.theme.new_default.GRAY};
+    color: ${(props) => props.theme.default.GRAY};
     font-size: 1rem;
   `,
 
   Spinner: styled.div`
     width: 6.25rem;
     height: 6.25rem;
-    border: 0.5rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
-    border-top: 0.5rem solid ${(props) => props.theme.new_default.BLUE};
+    border: 0.5rem solid ${(props) => props.theme.default.LIGHT_GRAY};
+    border-top: 0.5rem solid ${(props) => props.theme.default.BLUE};
     border-radius: 3.125rem;
     animation: spinner 1.5s linear infinite;
     @keyframes spinner {

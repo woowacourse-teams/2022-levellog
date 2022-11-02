@@ -44,13 +44,9 @@ const InterviewQuestions = () => {
     <>
       <ContentHeader
         imageUrl={loginUserProfileUrl}
-        title={`${
-          checkFirstWordFinalConsonant({
-            word: loginUserNickname,
-          })
-            ? `${loginUserNickname}이 `
-            : `${loginUserNickname}가 `
-        }
+        title={`${checkFirstWordFinalConsonant({
+          word: loginUserNickname,
+        })}
         받은 인터뷰 질문들`}
       />
       <S.Container>
@@ -72,9 +68,7 @@ const InterviewQuestions = () => {
                 <S.AuthorText>
                   {checkFirstWordFinalConsonant({
                     word: interviewQuestionInLevellogInfo.author.nickname,
-                  })
-                    ? `${interviewQuestionInLevellogInfo.author.nickname}이 `
-                    : `${interviewQuestionInLevellogInfo.author.nickname}가 `}
+                  })}
                   기록해준 질문들
                 </S.AuthorText>
               </S.AuthorBox>
@@ -111,9 +105,9 @@ const S = {
 
   Box: styled.div`
     margin-bottom: 3.125rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     border-radius: 0.5rem;
-    box-shadow: 0 0 1rem ${(props) => props.theme.new_default.GRAY};
+    box-shadow: 0 0 1rem ${(props) => props.theme.default.GRAY};
   `,
 
   AuthorBox: styled.div`
@@ -122,7 +116,7 @@ const S = {
     gap: 0.375rem;
     padding: 0.875rem;
     width: 100%;
-    border-bottom: 0.125rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border-bottom: 0.125rem solid ${(props) => props.theme.default.LIGHT_GRAY};
   `,
 
   AuthorText: styled.p`
@@ -133,7 +127,7 @@ const S = {
   Content: styled.div`
     margin: 0.875rem;
     padding: 0.625rem 0.625rem 0.625rem 1.25rem;
-    border: 0.0625rem solid ${(props) => props.theme.new_default.LIGHT_GRAY};
+    border: 0.0625rem solid ${(props) => props.theme.default.LIGHT_GRAY};
     line-height: 1.5rem;
     word-break: keep-all;
   `,

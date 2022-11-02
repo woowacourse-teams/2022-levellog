@@ -17,7 +17,7 @@ const TeamStatus = ({ allowedStatuses, children }: TeamStatusProps) => {
   const navigate = useNavigate();
 
   useQuery(
-    [QUERY_KEY.TEAM],
+    [QUERY_KEY.TEAM, accessToken, teamId],
     () => {
       return requestGetTeam({ accessToken, teamId });
     },

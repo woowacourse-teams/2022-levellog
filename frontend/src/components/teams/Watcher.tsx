@@ -31,8 +31,8 @@ const S = {
     width: 17.5rem;
     height: 60px;
     border-radius: 0.625rem;
-    background-color: ${(props) => props.theme.new_default.WHITE};
-    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.new_default.GRAY};
+    background-color: ${(props) => props.theme.default.WHITE};
+    box-shadow: 0.0625rem 0.25rem 0.625rem ${(props) => props.theme.default.GRAY};
   `,
 
   Text: styled.p`

@@ -6,7 +6,6 @@ const useSnackbar = () => {
   const dispatch = useContext(SnackbarDispatchContext);
 
   const showSnackbar = ({ message }: ShowSnackbarProps) => {
-    dispatch({ type: 'delete' });
     dispatch({ type: 'add', message });
     removeSnackbar();
   };

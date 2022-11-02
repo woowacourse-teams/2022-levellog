@@ -11,11 +11,7 @@ const usePreQuestionQuery = () => {
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const {
-    isError: preQuestionError,
-    isSuccess: preQuestionSuccess,
-    data: preQuestion,
-  } = useQuery(
+  const { isError: preQuestionError, data: preQuestion } = useQuery(
     [QUERY_KEY.PRE_QUESTION, accessToken, levellogId],
     () =>
       requestGetPreQuestion({
@@ -23,15 +19,12 @@ const usePreQuestionQuery = () => {
         levellogId,
       }),
     {
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      retry: 0,
-      retryOnMount: false,
+      cacheTime: 0,
+      useErrorBoundary: false,
     },
   );
 
-  return { preQuestionError, preQuestionSuccess, preQuestion };
+  return { preQuestionError, preQuestion };
 };
 
 export default usePreQuestionQuery;

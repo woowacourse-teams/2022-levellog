@@ -16,8 +16,6 @@ import { convertDateAndTime } from 'utils/util';
 const InterviewTeam = ({ team }: InterviewTeamsProp) => {
   const { id, teamImage, title, status, place, startAt, participants } = team;
   const DateAndTime = convertDateAndTime(startAt);
-  const teamStartDate = new Date(startAt);
-  const currentDate = new Date();
 
   return (
     <Link to={teamGetUriBuilder({ teamId: id })}>
@@ -45,13 +43,14 @@ const InterviewTeam = ({ team }: InterviewTeamsProp) => {
           </S.Info>
           <S.Info>
             <S.Notice aria-label={`인터뷰 날짜와 시간 ${DateAndTime}`}>
-              {teamStartDate > currentDate ? (
+              {status === 'CLOSED' && (
                 <S.ImageBox>
-                  <Image src={checkIcon} alt={'시작 전 인터뷰 아이콘'} sizes={'TINY'} />
+                  <Image src={cancelIcon} alt={'종료된 인터뷰 아이콘'} sizes={'TINY'} />
                 </S.ImageBox>
-              ) : (
+              )}
+              {status !== 'CLOSED' && (
                 <S.ImageBox>
-                  <Image src={cancelIcon} alt={'시작된 인터뷰 아이콘'} sizes={'TINY'} />
+                  <Image src={checkIcon} alt={'진행 중인 인터뷰 아이콘'} sizes={'TINY'} />
                 </S.ImageBox>
               )}
               {DateAndTime}

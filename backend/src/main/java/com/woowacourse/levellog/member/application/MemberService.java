@@ -40,14 +40,14 @@ public class MemberService {
     }
 
     @Transactional
-    public Long saveIfNotExist(final GithubProfileResponse request, final int githubId) {
-        // TODO githubId를 안받아도 될듯? GithubProfileResponse에 이미 정보가 존재함. + save의 예외 발생을 이용하면 로직 간단해질듯
-        final boolean isExist = memberRepository.existsByGithubId(githubId);
-        if (isExist) {
+    public Long saveIfNotExist(final GithubProfileResponse request) {
+        final int githubId = getGithubId(request);
+        if (existsGithubId(githubId)) {
             return getByGithubId(githubId).getId();
         }
 
-        return save(new MemberCreateRequest(request.getNickname(), githubId, request.getProfileUrl()));
+        return save(
+            new MemberCreateRequest(request.getNickname(), githubId, request.getProfileUrl()));
     }
 
     public MemberResponse findMemberById(final LoginStatus loginStatus) {
@@ -58,7 +58,7 @@ public class MemberService {
 
     public MemberResponses searchByNickname(final String nickname) {
         final List<MemberResponse> responses = memberRepository.findAllByNicknameContains(nickname)
-                .stream()
+            .stream()
                 .map(member -> new MemberResponse(member.getId(), member.getNickname(), member.getProfileUrl()))
                 .collect(Collectors.toList());
 
@@ -66,23 +66,31 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateNickname(final NicknameUpdateRequest request, @Verified final LoginStatus loginStatus) {
+    public void updateNickname(final NicknameUpdateRequest request,
+        @Verified final LoginStatus loginStatus) {
         final Member member = memberRepository.getMember(loginStatus.getMemberId());
         member.updateNickname(request.getNickname());
     }
 
+    private int getGithubId(final GithubProfileResponse request) {
+        return Integer.parseInt(request.getGithubId());
+    }
+
     private void checkSameGithubId(final MemberCreateRequest request) {
-        final boolean isExistSameGithubId = memberRepository.existsByGithubId(request.getGithubId());
-        if (isExistSameGithubId) {
+        if (existsGithubId(request.getGithubId())) {
             throw new MemberAlreadyExistException(DebugMessage.init()
-                    .append("githubId", request.getGithubId()));
+                .append("githubId", request.getGithubId()));
         }
+    }
+
+    private boolean existsGithubId(final int githubId) {
+        return memberRepository.existsByGithubId(githubId);
     }
 
     private Member createMember(final MemberCreateRequest request) {
         final Member member = request.toEntity();
         final Optional<NicknameMapping> nickname = nicknameMappingRepository.findByGithubNickname(
-                request.getNickname());
+            request.getNickname());
         if (nickname.isPresent()) {
             member.updateNickname(nickname.get().getCrewNickname());
         }

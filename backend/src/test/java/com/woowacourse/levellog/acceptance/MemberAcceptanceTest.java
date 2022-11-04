@@ -11,7 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("멤버 관련 기능")
-public class MemberAcceptanceTest extends AcceptanceTest {
+class MemberAcceptanceTest extends AcceptanceTest {
 
     /*
      * Scenario: 멤버 검색

@@ -1,3 +1,7 @@
+import { Suspense } from 'react';
+
+import Loading from 'pages/status/Loading';
+
 import InterviewQuestionSearchForm from 'components/interviewQuestion/InterviewQuestionSearchForm';
 import InterviewQuestionSearchResults from 'components/interviewQuestion/InterviewQuestionSearchResults';
 
@@ -5,7 +9,9 @@ const InterviewQuestionSearch = () => {
   return (
     <>
       <InterviewQuestionSearchForm />
-      <InterviewQuestionSearchResults />
+      <Suspense fallback={<Loading />}>
+        <InterviewQuestionSearchResults />
+      </Suspense>
     </>
   );
 };

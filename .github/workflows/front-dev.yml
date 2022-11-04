@@ -40,10 +40,6 @@ jobs:
         working-directory: ./frontend
         run: yarn build-dev
 
-      - name: Unit Test
-        working-directory: ./frontend
-        run: yarn test-util
-
   sonarqube-build:
     runs-on: ubuntu-22.04
     steps:

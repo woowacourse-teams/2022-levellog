@@ -28,8 +28,8 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
         final Team team = saveTeam(eve, rick, toMember);
         final Levellog levellog = saveLevellog(toMember, team);
 
-        saveFeedback(eve, toMember, levellog);
-        saveFeedback(rick, toMember, levellog);
+        saveFeedback(eve, levellog);
+        saveFeedback(rick, levellog);
 
         // when
         final List<FeedbackResponse> feedbacks = feedbackQueryRepository.findAllByLevellogId(levellog.getId())
@@ -55,8 +55,8 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
         final Team team = saveTeam(eve, rick, toMember);
         final Levellog levellog = saveLevellog(toMember, team);
 
-        saveFeedback(eve, toMember, levellog);
-        final Feedback savedFeedback = saveFeedback(rick, toMember, levellog);
+        saveFeedback(eve, levellog);
+        final Feedback savedFeedback = saveFeedback(rick, levellog);
 
         savedFeedback.updateFeedback("update", "update", "update");
 
@@ -90,7 +90,7 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
             final Team team = saveTeam(eve, rick, toMember);
             final Levellog levellog = saveLevellog(toMember, team);
 
-            final Feedback feedback = saveFeedback(eve, toMember, levellog);
+            final Feedback feedback = saveFeedback(eve, levellog);
 
             // when
             final Optional<FeedbackResponse> actual = feedbackQueryRepository.findById(feedback.getId());

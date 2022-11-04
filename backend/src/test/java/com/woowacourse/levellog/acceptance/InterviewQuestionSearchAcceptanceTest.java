@@ -19,7 +19,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-@Nested
 @DisplayName("인터뷰 검색 관련 기능")
 class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
 
@@ -319,12 +318,6 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
     private ValidatableResponse requestPressLikeInterviewQuestion(final String interviewQuestionId,
                                                                   final MemberFixture from) {
         return post("/api/interview-questions/" + interviewQuestionId + "/like", from.getToken())
-                .getResponse();
-    }
-
-    private ValidatableResponse requestCancelLikeInterviewQuestion(final String interviewQuestionId,
-                                                                   final MemberFixture from) {
-        return delete("/api/interview-questions/" + interviewQuestionId + "/like", from.getToken())
                 .getResponse();
     }
 }

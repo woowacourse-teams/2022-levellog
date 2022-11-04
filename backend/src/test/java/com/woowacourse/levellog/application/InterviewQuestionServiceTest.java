@@ -99,8 +99,10 @@ class InterviewQuestionServiceTest extends ServiceTest {
             final Long invalidLevellogId = 1000L;
             final InterviewQuestionWriteRequest request = new InterviewQuestionWriteRequest("스프링이란?");
 
+            final LoginStatus loginStatus = getLoginStatus(eve);
+
             // when & then
-            assertThatThrownBy(() -> interviewQuestionService.save(request, invalidLevellogId, getLoginStatus(eve)))
+            assertThatThrownBy(() -> interviewQuestionService.save(request, invalidLevellogId, loginStatus))
                     .isInstanceOf(LevellogNotFoundException.class)
                     .hasMessageContainingAll("레벨로그가 존재하지 않습니다.", String.valueOf(invalidLevellogId));
         }

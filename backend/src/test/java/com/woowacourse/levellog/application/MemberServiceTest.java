@@ -148,7 +148,7 @@ class MemberServiceTest extends ServiceTest {
                     "test.image");
 
             // when
-            final Long id = memberService.saveIfNotExist(githubProfileResponse, githubId);
+            final Long id = memberService.saveIfNotExist(githubProfileResponse);
 
             // then
             assertThat(savedMember.getId()).isEqualTo(id);
@@ -166,7 +166,7 @@ class MemberServiceTest extends ServiceTest {
                     "test.image");
 
             // when
-            final Long id = memberService.saveIfNotExist(githubProfileResponse, githubId);
+            final Long id = memberService.saveIfNotExist(githubProfileResponse);
 
             // then
             assertThat(id).isEqualTo(savedMember.getId() + 1);

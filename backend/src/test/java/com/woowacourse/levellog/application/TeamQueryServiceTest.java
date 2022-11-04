@@ -137,10 +137,13 @@ public class TeamQueryServiceTest extends ServiceTest {
         @Test
         @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
         void findByTeamIdAndMemberId_notFound_exception() {
+            // given
+            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
+
             // when & then
-            assertThatThrownBy(() -> teamQueryService.findByTeamIdAndMemberId(1000L, LoginStatus.fromLogin(1L)))
-                    .isInstanceOf(TeamNotFoundException.class)
-                    .hasMessageContaining("팀이 존재하지 않습니다.");
+            assertThatThrownBy(() -> teamQueryService.findByTeamIdAndMemberId(1000L, loginStatus))
+                .isInstanceOf(TeamNotFoundException.class)
+                .hasMessageContaining("팀이 존재하지 않습니다.");
         }
 
         @Nested

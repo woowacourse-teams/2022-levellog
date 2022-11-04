@@ -1,4 +1,4 @@
-name: frontend Prod CI # Workflow 이름
+name: frontend Prod Build # Workflow 이름
 
 # 하기 내용에 해당하는 이벤트 발생 시 github action 동작
 on:

@@ -36,6 +36,6 @@ jobs:
         working-directory: ./frontend
         run: yarn install
 
-      - name: Util Test
+      - name: Unit Test
         working-directory: ./frontend
         run: yarn test-util

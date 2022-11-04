@@ -37,10 +37,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (isPreFlightRequest(request)) {
             return false;
         }
-        if (isPublicAPI((HandlerMethod) handler)) {
-            return false;
-        }
-        return true;
+        return !isPublicAPI((HandlerMethod) handler);
     }
 
     private boolean isPublicAPI(final HandlerMethod handler) {

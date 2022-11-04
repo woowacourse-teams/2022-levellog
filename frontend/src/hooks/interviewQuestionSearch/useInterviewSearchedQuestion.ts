@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 
@@ -19,6 +20,7 @@ const useSearchedInterviewQuestion = () => {
   const [searchFilterActive, setSearchFilterActive] = useState<InterviewQuestionSort>(
     INTERVIEW_QUESTION_FILTER.LATEST,
   );
+  const location = useLocation();
 
   const userId = localStorage.getItem('userId');
   const accessToken = localStorage.getItem('accessToken');
@@ -28,8 +30,11 @@ const useSearchedInterviewQuestion = () => {
 
   const { data: searchResults, refetch: searchResultsRefetch } = useQuery(
     [QUERY_KEY.SEARCH_RESULTS, keyword, searchFilterActive],
-    () => requestSearchedInterviewQuestion({ accessToken, keyword, sort: searchFilterActive }),
+    () => {
+      return requestSearchedInterviewQuestion({ accessToken, keyword, sort: searchFilterActive });
+    },
     {
+      enabled: !!keyword,
       staleTime: 600,
     },
   );
@@ -88,6 +93,10 @@ const useSearchedInterviewQuestion = () => {
         break;
     }
   };
+
+  useEffect(() => {
+    searchResultsRefetch();
+  }, [location.search]);
 
   return {
     searchResults,

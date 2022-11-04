@@ -23,19 +23,23 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
                              final Object handler) {
+        if (requireTokenValidation(request, response, handler)) {
+            validateToken(request);
+        }
+        return true;
+    }
+
+    private boolean requireTokenValidation(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final Object handler
+    ) {
         if (isPreFlightRequest(request)) {
-            return true;
+            return false;
         }
-
         if (isPublicAPI((HandlerMethod) handler)) {
-            return true;
+            return false;
         }
-
-        final String token = AuthorizationExtractor.extract(request);
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException(DebugMessage.init().append("token", token));
-        }
-
         return true;
     }
 
@@ -47,5 +51,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         final boolean isPublicMethod = methodPublicAPI != null;
 
         return isPublicClass || isPublicMethod;
+    }
+
+    private void validateToken(final HttpServletRequest request) {
+        final String token = AuthorizationExtractor.extract(request);
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new InvalidTokenException(DebugMessage.init().append("token", token));
+        }
     }
 }

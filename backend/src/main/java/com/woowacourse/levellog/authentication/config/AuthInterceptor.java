@@ -23,7 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
                              final Object handler) {
-        if (requireTokenValidation(request, response, handler)) {
+        if (requireTokenValidation(request, handler)) {
             validateToken(request);
         }
         return true;
@@ -31,7 +31,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private boolean requireTokenValidation(
             final HttpServletRequest request,
-            final HttpServletResponse response,
             final Object handler
     ) {
         if (isPreFlightRequest(request)) {

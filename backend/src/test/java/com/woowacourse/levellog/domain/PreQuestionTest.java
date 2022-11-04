@@ -65,6 +65,7 @@ public class PreQuestionTest {
         }
 
     }
+
     @Nested
     @DisplayName("update 메서드는")
     class Update {

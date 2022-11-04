@@ -60,7 +60,7 @@ class LevellogServiceTest extends ServiceTest {
             final Member author = saveMember("알린");
             final Long teamId = 1000L;
 
-            LoginStatus loginStatus = getLoginStatus(author);
+            final LoginStatus loginStatus = getLoginStatus(author);
 
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, loginStatus, teamId))
@@ -79,7 +79,7 @@ class LevellogServiceTest extends ServiceTest {
             final Long teamId = saveTeam(author, pepper)
                     .getId();
 
-            LoginStatus loginStatus = getLoginStatus(author);
+            final LoginStatus loginStatus = getLoginStatus(author);
             levellogService.save(request, loginStatus, teamId);
 
             // when & then
@@ -101,7 +101,7 @@ class LevellogServiceTest extends ServiceTest {
             final Long teamId = saveTeam(author, pepper)
                     .getId();
 
-            LoginStatus loginStatus = getLoginStatus(author);
+            final LoginStatus loginStatus = getLoginStatus(author);
 
             //  when & then
             assertThatThrownBy(() -> levellogService.save(request, loginStatus, teamId))
@@ -121,7 +121,7 @@ class LevellogServiceTest extends ServiceTest {
 
             timeStandard.setInProgress();
 
-            LoginStatus loginStatus = getLoginStatus(author);
+            final LoginStatus loginStatus = getLoginStatus(author);
 
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, loginStatus, teamId))
@@ -140,7 +140,7 @@ class LevellogServiceTest extends ServiceTest {
 
             final Long teamId = saveTeam(pepper, rick).getId();
 
-            LoginStatus loginStatus = getLoginStatus(author);
+            final LoginStatus loginStatus = getLoginStatus(author);
 
             // when & then
             assertThatThrownBy(() -> levellogService.save(request, loginStatus, teamId))
@@ -216,7 +216,7 @@ class LevellogServiceTest extends ServiceTest {
             final Member author = saveMember("알린");
             final Long levellogId = 1000L;
 
-            LoginStatus loginStatus = getLoginStatus(author);
+            final LoginStatus loginStatus = getLoginStatus(author);
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, loginStatus))
@@ -237,7 +237,7 @@ class LevellogServiceTest extends ServiceTest {
             final LevellogWriteRequest request = new LevellogWriteRequest("update content");
             final Member otherMember = saveMember("페퍼");
 
-            LoginStatus loginStatus = getLoginStatus(otherMember);
+            final LoginStatus loginStatus = getLoginStatus(otherMember);
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, loginStatus))
@@ -257,7 +257,7 @@ class LevellogServiceTest extends ServiceTest {
             final Team team = saveTeam(author, pepper);
             final Long levellogId = saveLevellog(author, team).getId();
 
-            LoginStatus loginStatus = getLoginStatus(author);
+            final LoginStatus loginStatus = getLoginStatus(author);
 
             //  when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, loginStatus))
@@ -278,7 +278,7 @@ class LevellogServiceTest extends ServiceTest {
 
             timeStandard.setInProgress();
 
-            LoginStatus loginStatus = getLoginStatus(author);
+            final LoginStatus loginStatus = getLoginStatus(author);
 
             // when & then
             assertThatThrownBy(() -> levellogService.update(request, levellogId, loginStatus))

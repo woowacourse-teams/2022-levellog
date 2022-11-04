@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.woowacourse.levellog.common.domain.MockEntityFactory;
 import com.woowacourse.levellog.team.domain.InterviewRole;
 import com.woowacourse.levellog.team.domain.Participants;
-import com.woowacourse.levellog.team.domain.ParticipantsFactory;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
 import java.util.Collections;

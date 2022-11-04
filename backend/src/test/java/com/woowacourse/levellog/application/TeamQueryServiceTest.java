@@ -142,8 +142,8 @@ public class TeamQueryServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamQueryService.findByTeamIdAndMemberId(1000L, loginStatus))
-                .isInstanceOf(TeamNotFoundException.class)
-                .hasMessageContaining("팀이 존재하지 않습니다.");
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("팀이 존재하지 않습니다.");
         }
 
         @Nested

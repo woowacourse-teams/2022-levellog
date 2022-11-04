@@ -69,14 +69,14 @@ class TeamServiceTest extends ServiceTest {
             final Long roma = saveMember("로마").getId();
 
             final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1,
-                TEAM_START_TIME,
-                List.of(alien, pepper, roma, roma), Collections.emptyList());
+                    TEAM_START_TIME,
+                    List.of(alien, pepper, roma, roma), Collections.emptyList());
             final LoginStatus loginStatus = LoginStatus.fromLogin(alien);
 
             //when & then
             assertThatThrownBy(() -> teamService.save(request, loginStatus))
-                .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("중복된 참가자가 존재합니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("중복된 참가자가 존재합니다.");
         }
 
         @Test
@@ -88,15 +88,15 @@ class TeamServiceTest extends ServiceTest {
             final Long roma = saveMember("로마").getId();
 
             final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1,
-                TEAM_START_TIME,
-                List.of(alien, pepper), List.of(roma, roma));
+                    TEAM_START_TIME,
+                    List.of(alien, pepper), List.of(roma, roma));
 
             final LoginStatus loginStatus = LoginStatus.fromLogin(alien);
 
             //when & then
             assertThatThrownBy(() -> teamService.save(request, loginStatus))
-                .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("중복된 참관자가 존재합니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("중복된 참관자가 존재합니다.");
         }
 
         @Test
@@ -108,15 +108,15 @@ class TeamServiceTest extends ServiceTest {
             final Long roma = saveMember("로마").getId();
 
             final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1,
-                TEAM_START_TIME,
-                List.of(alien, pepper, roma), List.of(roma));
+                    TEAM_START_TIME,
+                    List.of(alien, pepper, roma), List.of(roma));
 
             final LoginStatus loginStatus = LoginStatus.fromLogin(alien);
 
             //when & then
             assertThatThrownBy(() -> teamService.save(request, loginStatus))
-                .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
         }
 
         @Test
@@ -129,15 +129,15 @@ class TeamServiceTest extends ServiceTest {
             final Long rick = saveMember("릭").getId();
 
             final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1,
-                TEAM_START_TIME,
-                List.of(pepper, roma), List.of(rick));
+                    TEAM_START_TIME,
+                    List.of(pepper, roma), List.of(rick));
 
             final LoginStatus loginStatus = LoginStatus.fromLogin(alien);
 
             //when & then
             assertThatThrownBy(() -> teamService.save(request, loginStatus))
-                .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
         }
     }
 
@@ -202,7 +202,7 @@ class TeamServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, loginStatus))
-                .isInstanceOf(NotParticipantException.class);
+                    .isInstanceOf(NotParticipantException.class);
         }
 
         @Test
@@ -222,7 +222,7 @@ class TeamServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamService.findMyRole(teamId, targetMemberId, loginStatus))
-                .isInstanceOf(NotParticipantException.class);
+                    .isInstanceOf(NotParticipantException.class);
         }
     }
 
@@ -340,16 +340,16 @@ class TeamServiceTest extends ServiceTest {
             final Team team = saveTeam(rick, pepper);
 
             final TeamWriteRequest request = new TeamWriteRequest("잠실 네오조", "트랙룸", 1,
-                AFTER_START_TIME,
-                List.of(rick.getId()), Collections.emptyList());
+                    AFTER_START_TIME,
+                    List.of(rick.getId()), Collections.emptyList());
 
             final Long teamId = team.getId();
             final LoginStatus loginStatus = getLoginStatus(pepper);
 
             // when, then
             assertThatThrownBy(() -> teamService.update(request, teamId, loginStatus))
-                .isInstanceOf(HostUnauthorizedException.class)
-                .hasMessageContaining("호스트 권한이 없습니다.");
+                    .isInstanceOf(HostUnauthorizedException.class)
+                    .hasMessageContaining("호스트 권한이 없습니다.");
         }
 
         @Test
@@ -358,15 +358,15 @@ class TeamServiceTest extends ServiceTest {
             //given
             final Member rick = saveMember("릭");
             final TeamWriteRequest request = new TeamWriteRequest("잠실 네오조", "트랙룸", 1,
-                TEAM_START_TIME,
-                Collections.emptyList(), Collections.emptyList());
+                    TEAM_START_TIME,
+                    Collections.emptyList(), Collections.emptyList());
 
             final LoginStatus loginStatus = getLoginStatus(rick);
 
             //when & then
             assertThatThrownBy(() -> teamService.update(request, 1000L, loginStatus))
-                .isInstanceOf(TeamNotFoundException.class)
-                .hasMessageContaining("팀이 존재하지 않습니다.");
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("팀이 존재하지 않습니다.");
         }
 
         @Test
@@ -378,8 +378,8 @@ class TeamServiceTest extends ServiceTest {
 
             final Team team = saveTeam(rick, roma);
             final TeamWriteRequest request = new TeamWriteRequest("잠실 네오조", "트랙룸", 1,
-                TEAM_START_TIME,
-                List.of(rick.getId(), roma.getId()), Collections.emptyList());
+                    TEAM_START_TIME,
+                    List.of(rick.getId(), roma.getId()), Collections.emptyList());
             timeStandard.setInProgress();
 
             final Long teamId = team.getId();
@@ -387,8 +387,8 @@ class TeamServiceTest extends ServiceTest {
 
             //when & then
             assertThatThrownBy(() -> teamService.update(request, teamId, loginStatus))
-                .isInstanceOf(TeamNotReadyException.class)
-                .hasMessageContaining("인터뷰 준비 상태가 아닙니다.", teamId, team.getDetail().getStartAt());
+                    .isInstanceOf(TeamNotReadyException.class)
+                    .hasMessageContaining("인터뷰 준비 상태가 아닙니다.", teamId, team.getDetail().getStartAt());
         }
 
         @Test
@@ -401,15 +401,15 @@ class TeamServiceTest extends ServiceTest {
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteRequest request = new TeamWriteRequest("잠실 네오조", "트랙룸", 1,
-                TEAM_START_TIME,
-                List.of(pepper.getId(), pepper.getId()), Collections.emptyList());
+                    TEAM_START_TIME,
+                    List.of(pepper.getId(), pepper.getId()), Collections.emptyList());
 
             final LoginStatus loginStatus = getLoginStatus(alien);
 
             //when & then
             assertThatThrownBy(() -> teamService.update(request, teamId, loginStatus))
-                .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("중복된 참가자가 존재합니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("중복된 참가자가 존재합니다.");
         }
 
         @Test
@@ -422,15 +422,15 @@ class TeamServiceTest extends ServiceTest {
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1,
-                TEAM_START_TIME,
-                List.of(alien.getId(), pepper.getId()), List.of(roma.getId(), roma.getId()));
+                    TEAM_START_TIME,
+                    List.of(alien.getId(), pepper.getId()), List.of(roma.getId(), roma.getId()));
 
             final LoginStatus loginStatus = getLoginStatus(alien);
 
             //when & then
             assertThatThrownBy(() -> teamService.update(request, teamId, loginStatus))
-                .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("중복된 참관자가 존재합니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("중복된 참관자가 존재합니다.");
         }
 
         @Test
@@ -443,15 +443,15 @@ class TeamServiceTest extends ServiceTest {
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1,
-                TEAM_START_TIME,
-                List.of(alien.getId(), pepper.getId(), roma.getId()), List.of(roma.getId()));
+                    TEAM_START_TIME,
+                    List.of(alien.getId(), pepper.getId(), roma.getId()), List.of(roma.getId()));
 
             final LoginStatus loginStatus = getLoginStatus(alien);
 
             //when & then
             assertThatThrownBy(() -> teamService.update(request, teamId, loginStatus))
-                .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
         }
 
         @Test
@@ -465,15 +465,15 @@ class TeamServiceTest extends ServiceTest {
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 1,
-                TEAM_START_TIME,
-                List.of(pepper.getId(), roma.getId()), List.of(rick.getId()));
+                    TEAM_START_TIME,
+                    List.of(pepper.getId(), roma.getId()), List.of(rick.getId()));
 
             final LoginStatus loginStatus = getLoginStatus(alien);
 
             //when & then
             assertThatThrownBy(() -> teamService.update(request, teamId, loginStatus))
-                .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
         }
 
         @Test
@@ -487,15 +487,15 @@ class TeamServiceTest extends ServiceTest {
 
             final Long teamId = saveTeam(alien, pepper, roma).getId();
             final TeamWriteRequest request = new TeamWriteRequest("잠실 준조", "트랙룸", 3,
-                TEAM_START_TIME,
-                List.of(pepper.getId(), roma.getId()), List.of(alien.getId(), rick.getId()));
+                    TEAM_START_TIME,
+                    List.of(pepper.getId(), roma.getId()), List.of(alien.getId(), rick.getId()));
 
             final LoginStatus loginStatus = getLoginStatus(alien);
 
             //when & then
             assertThatThrownBy(() -> teamService.update(request, teamId, loginStatus))
-                .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
+                    .isInstanceOf(InvalidFieldException.class)
+                    .hasMessageContaining("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
         }
     }
 
@@ -533,8 +533,8 @@ class TeamServiceTest extends ServiceTest {
 
             // when & then
             assertThatThrownBy(() -> teamService.close(teamId, loginStatus))
-                .isInstanceOf(HostUnauthorizedException.class)
-                .hasMessageContainingAll("호스트 권한이 없습니다.", String.valueOf(alien.getId()));
+                    .isInstanceOf(HostUnauthorizedException.class)
+                    .hasMessageContainingAll("호스트 권한이 없습니다.", String.valueOf(alien.getId()));
         }
     }
 
@@ -558,8 +558,8 @@ class TeamServiceTest extends ServiceTest {
 
             // then
             assertThatThrownBy(() -> teamRepository.getTeam(teamId))
-                .isInstanceOf(TeamNotFoundException.class)
-                .hasMessageContaining("팀이 존재하지 않습니다.");
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("팀이 존재하지 않습니다.");
         }
 
         @Test
@@ -575,8 +575,8 @@ class TeamServiceTest extends ServiceTest {
 
             // when, then
             assertThatThrownBy(() -> teamService.delete(teamId, loginStatus))
-                .isInstanceOf(HostUnauthorizedException.class)
-                .hasMessageContaining("호스트 권한이 없습니다.");
+                    .isInstanceOf(HostUnauthorizedException.class)
+                    .hasMessageContaining("호스트 권한이 없습니다.");
         }
 
         @Test
@@ -608,8 +608,8 @@ class TeamServiceTest extends ServiceTest {
 
             //when & then
             assertThatThrownBy(() -> teamService.delete(teamId, loginStatus))
-                .isInstanceOf(TeamNotFoundException.class)
-                .hasMessageContaining("팀이 존재하지 않습니다.");
+                    .isInstanceOf(TeamNotFoundException.class)
+                    .hasMessageContaining("팀이 존재하지 않습니다.");
         }
     }
 }

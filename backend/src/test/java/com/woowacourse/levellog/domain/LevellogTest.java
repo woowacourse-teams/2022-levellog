@@ -44,9 +44,10 @@ class LevellogTest {
             // given
             final Member author = new Member("페퍼", 1111, "pepper.png");
             final Team team = TeamTest.saveTeam();
+            final Long authorId = author.getId();
 
             //  when & then
-            assertThatThrownBy(() -> new Levellog(author.getId(), team, invalidContent))
+            assertThatThrownBy(() -> new Levellog(authorId, team, invalidContent))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }
@@ -83,11 +84,12 @@ class LevellogTest {
             MockEntityFactory.setId(2L, member);
             final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(author.getId(), team, "content");
+            final Long memberId = member.getId();
 
             //  when & then
-            assertThatThrownBy(() -> levellog.updateContent(member.getId(), "update content"))
+            assertThatThrownBy(() -> levellog.updateContent(memberId, "update content"))
                     .isInstanceOf(MemberNotAuthorException.class)
-                    .hasMessageContainingAll("작성자가 아닙니다.", String.valueOf(member.getId()),
+                    .hasMessageContainingAll("작성자가 아닙니다.", String.valueOf(memberId),
                             String.valueOf(levellog.getId()));
 
         }
@@ -101,10 +103,11 @@ class LevellogTest {
             final Member author = new Member("페퍼", 1111, "pepper.png");
             MockEntityFactory.setId(1L, author);
             final Team team = TeamTest.saveTeam();
-            final Levellog levellog = new Levellog(author.getId(), team, "content");
+            final Long memberId = author.getId();
+            final Levellog levellog = new Levellog(memberId, team, "content");
 
             //  when & then
-            assertThatThrownBy(() -> levellog.updateContent(author.getId(), invalidContent))
+            assertThatThrownBy(() -> levellog.updateContent(memberId, invalidContent))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("레벨로그 내용은 공백이나 null일 수 없습니다.");
         }

@@ -25,8 +25,6 @@ public class LoginService {
     }
 
     private Long getMemberIdByGithubProfile(final GithubProfileResponse githubProfile) {
-        final int githubId = Integer.parseInt(githubProfile.getGithubId());
-
-        return memberService.saveIfNotExist(githubProfile, githubId);
+        return memberService.saveIfNotExist(githubProfile);
     }
 }

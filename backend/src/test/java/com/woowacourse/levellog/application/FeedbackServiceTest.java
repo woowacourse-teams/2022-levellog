@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.dto.request.FeedbackWriteRequest;
 import com.woowacourse.levellog.feedback.dto.response.FeedbackResponse;
@@ -94,9 +95,10 @@ class FeedbackServiceTest extends ServiceTest {
             saveFeedback(roma, levellog);
 
             final Long levellogId = levellog.getId();
+            final LoginStatus loginStatus = getLoginStatus(alien);
 
             // when & then
-            assertThatThrownBy(() -> feedbackService.findAll(levellogId, getLoginStatus(alien)))
+            assertThatThrownBy(() -> feedbackService.findAll(levellogId, loginStatus))
                     .isInstanceOf(NotParticipantException.class)
                     .hasMessageContainingAll("팀 참가자가 아닙니다.",
                             String.valueOf(team.getId()), String.valueOf(alien.getId()));
@@ -144,9 +146,11 @@ class FeedbackServiceTest extends ServiceTest {
             final Feedback feedback = saveFeedback(roma, levellog);
 
             final Long levellogId = levellog.getId();
+            final Long feedbackId = feedback.getId();
+            final LoginStatus loginStatus = getLoginStatus(alien);
 
             // when & then
-            assertThatThrownBy(() -> feedbackService.findById(levellogId, feedback.getId(), getLoginStatus(alien)))
+            assertThatThrownBy(() -> feedbackService.findById(levellogId, feedbackId, loginStatus))
                     .isInstanceOf(NotParticipantException.class)
                     .hasMessageContainingAll("팀 참가자가 아닙니다.",
                             String.valueOf(team.getId()), String.valueOf(alien.getId()));
@@ -192,11 +196,12 @@ class FeedbackServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(eve, team);
 
             final Long feedbackId = saveFeedback(roma, levellog).getId();
+            final FeedbackWriteRequest request = new FeedbackWriteRequest(
+                    "수정된 스터디", "수정된 말하기", "수정된 기타");
+            final LoginStatus loginStatus = getLoginStatus(alien);
 
             // when, then
-            assertThatThrownBy(() ->
-                    feedbackService.update(new FeedbackWriteRequest("수정된 스터디", "수정된 말하기", "수정된 기타"),
-                            feedbackId, getLoginStatus(alien)))
+            assertThatThrownBy(() -> feedbackService.update(request, feedbackId, loginStatus))
                     .isInstanceOf(InvalidFeedbackException.class)
                     .hasMessageContaining("잘못된 피드백 요청입니다.");
         }
@@ -211,11 +216,12 @@ class FeedbackServiceTest extends ServiceTest {
             final Levellog levellog = saveLevellog(eve, team);
 
             final Long feedbackId = saveFeedback(roma, levellog).getId();
+            final FeedbackWriteRequest request = new FeedbackWriteRequest("수정된 로마가 이브에게 스터디",
+                    "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타");
+            final LoginStatus loginStatus = getLoginStatus(roma);
 
             // when & then
-            assertThatThrownBy(() -> feedbackService.update(
-                    new FeedbackWriteRequest("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
-                    feedbackId, getLoginStatus(roma)))
+            assertThatThrownBy(() -> feedbackService.update(request, feedbackId, loginStatus))
                     .isInstanceOf(TeamNotInProgressException.class)
                     .hasMessageContaining("인터뷰 진행중인 상태가 아닙니다.");
         }
@@ -234,11 +240,12 @@ class FeedbackServiceTest extends ServiceTest {
 
             timeStandard.setInProgress();
             team.close(AFTER_START_TIME);
+            final FeedbackWriteRequest request = new FeedbackWriteRequest("수정된 로마가 이브에게 스터디",
+                    "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타");
+            final LoginStatus loginStatus = getLoginStatus(roma);
 
             // when & then
-            assertThatThrownBy(() -> feedbackService.update(
-                    new FeedbackWriteRequest("수정된 로마가 이브에게 스터디", "수정된 로마가 이브에게 말하기", "수정된 로마가 이브에게 기타"),
-                    feedbackId, getLoginStatus(roma)))
+            assertThatThrownBy(() -> feedbackService.update(request, feedbackId, loginStatus))
                     .isInstanceOf(TeamAlreadyClosedException.class)
                     .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }
@@ -285,10 +292,13 @@ class FeedbackServiceTest extends ServiceTest {
             final FeedbackWriteRequest request = new FeedbackWriteRequest(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
+            final Long levellogId = levellog.getId();
+            final LoginStatus loginStatus = getLoginStatus(roma);
+
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), getLoginStatus(roma)))
+            assertThatThrownBy(() -> feedbackService.save(request, levellogId, loginStatus))
                     .isInstanceOf(FeedbackAlreadyExistException.class)
-                    .hasMessageContainingAll("피드백이 이미 존재합니다.", levellog.getId().toString());
+                    .hasMessageContainingAll("피드백이 이미 존재합니다.", levellogId.toString());
         }
 
         @Test
@@ -303,8 +313,11 @@ class FeedbackServiceTest extends ServiceTest {
             final FeedbackWriteRequest request = new FeedbackWriteRequest(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
+            final Long levellogId = levellog.getId();
+            final LoginStatus loginStatus = getLoginStatus(eve);
+
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), getLoginStatus(eve)))
+            assertThatThrownBy(() -> feedbackService.save(request, levellogId, loginStatus))
                     .isInstanceOf(InvalidFeedbackException.class)
                     .hasMessageContaining("잘못된 피드백 요청입니다.");
         }
@@ -320,9 +333,13 @@ class FeedbackServiceTest extends ServiceTest {
             final Team team = saveTeam(eve, alien);
             final Levellog levellog = saveLevellog(eve, team);
 
+            final FeedbackWriteRequest request = new FeedbackWriteRequest("로마 스터디", "로마 말하기",
+                    "로마 기타");
+            final Long levellogId = levellog.getId();
+            final LoginStatus loginStatus = getLoginStatus(roma);
+
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(new FeedbackWriteRequest("로마 스터디", "로마 말하기", "로마 기타"),
-                    levellog.getId(), getLoginStatus(roma)))
+            assertThatThrownBy(() -> feedbackService.save(request, levellogId, loginStatus))
                     .isInstanceOf(NotParticipantException.class)
                     .hasMessageContaining("팀 참가자가 아닙니다.");
         }
@@ -340,8 +357,11 @@ class FeedbackServiceTest extends ServiceTest {
             final FeedbackWriteRequest request = new FeedbackWriteRequest(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
+            final Long levellogId = levellog.getId();
+            final LoginStatus loginStatus = getLoginStatus(roma);
+
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), getLoginStatus(roma)))
+            assertThatThrownBy(() -> feedbackService.save(request, levellogId, loginStatus))
                     .isInstanceOf(TeamNotInProgressException.class)
                     .hasMessageContaining("인터뷰 진행중인 상태가 아닙니다.");
         }
@@ -362,8 +382,11 @@ class FeedbackServiceTest extends ServiceTest {
             final FeedbackWriteRequest request = new FeedbackWriteRequest(
                     "Spring에 대한 학습을 충분히 하였습니다.", "아이 컨텍이 좋습니다.", "윙크하지 마세요.");
 
+            final Long levellogId = levellog.getId();
+            final LoginStatus loginStatus = getLoginStatus(roma);
+
             // when, then
-            assertThatThrownBy(() -> feedbackService.save(request, levellog.getId(), getLoginStatus(roma)))
+            assertThatThrownBy(() -> feedbackService.save(request, levellogId, loginStatus))
                     .isInstanceOf(TeamAlreadyClosedException.class)
                     .hasMessageContaining("이미 인터뷰가 종료된 팀입니다.");
         }

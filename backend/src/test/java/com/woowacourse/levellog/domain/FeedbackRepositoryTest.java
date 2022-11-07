@@ -25,7 +25,7 @@ class FeedbackRepositoryTest extends RepositoryTest {
         final Team team = saveTeam(eve, rick);
         final Levellog levellog = saveLevellog(rick, team);
 
-        saveFeedback(eve, rick, levellog);
+        saveFeedback(eve, levellog);
 
         // when
         final boolean isExist1 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(), eve.getId());
@@ -54,7 +54,7 @@ class FeedbackRepositoryTest extends RepositoryTest {
             final Member from = saveMember("로마");
             final Team team = saveTeam(to, from);
             final Levellog levellog = saveLevellog(to, team);
-            final Long expected = saveFeedback(from, to, levellog)
+            final Long expected = saveFeedback(from, levellog)
                     .getId();
 
             // when

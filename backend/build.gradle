@@ -1,3 +1,15 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+
+	dependencies {
+		// maven 에서 0.16.1 버전 처리 누락 이슈
+		// https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/652
+		classpath ("org.ysb33r.gradle:grolifant:0.16.2")
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.7.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'

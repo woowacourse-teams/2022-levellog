@@ -1,8 +1,8 @@
 package com.woowacourse.levellog.domain;
 
 import com.woowacourse.levellog.common.config.JpaConfig;
-import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.domain.BaseEntity;
+import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.feedback.domain.Feedback;
 import com.woowacourse.levellog.feedback.domain.FeedbackQueryRepository;
 import com.woowacourse.levellog.feedback.domain.FeedbackRepository;
@@ -22,7 +22,6 @@ import com.woowacourse.levellog.member.domain.NicknameMappingRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestion;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionQueryRepository;
 import com.woowacourse.levellog.prequestion.domain.PreQuestionRepository;
-import com.woowacourse.levellog.team.domain.ParticipantsFactory;
 import com.woowacourse.levellog.team.domain.Team;
 import com.woowacourse.levellog.team.domain.TeamDetail;
 import com.woowacourse.levellog.team.domain.TeamQueryRepository;
@@ -139,7 +138,7 @@ abstract class RepositoryTest {
         return interviewQuestionLikesRepository.save(interviewQuestionLikes);
     }
 
-    protected Feedback saveFeedback(final Member from, final Member to, final Levellog levellog) {
+    protected Feedback saveFeedback(final Member from, final Levellog levellog) {
         final Feedback feedback = new Feedback(from.getId(), levellog, "study from " + from.getNickname(),
                 "speak from " + from.getNickname(), "etc from " + from.getNickname());
         return feedbackRepository.save(feedback);

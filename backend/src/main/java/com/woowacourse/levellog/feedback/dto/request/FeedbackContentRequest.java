@@ -1,7 +1,5 @@
 package com.woowacourse.levellog.feedback.dto.request;
 
-import com.woowacourse.levellog.feedback.domain.Feedback;
-import com.woowacourse.levellog.levellog.domain.Levellog;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,8 +21,4 @@ public class FeedbackContentRequest {
 
     @NotNull
     private String etc;
-
-    public Feedback toEntity(final Long fromId, final Levellog levellog) {
-        return new Feedback(fromId, levellog, study, speak, etc);
-    }
 }

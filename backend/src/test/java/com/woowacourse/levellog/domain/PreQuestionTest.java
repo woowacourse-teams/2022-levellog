@@ -42,9 +42,10 @@ public class PreQuestionTest {
             // given
             final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
+            final Long fromId = from.getId();
 
             // when & then
-            assertThatThrownBy(() -> new PreQuestion(levellog, from.getId(), preQuestion))
+            assertThatThrownBy(() -> new PreQuestion(levellog, fromId, preQuestion))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("사전 내용은 공백이나 null일 수 없습니다.");
         }
@@ -54,17 +55,19 @@ public class PreQuestionTest {
         void constructor_preQuestionMyLevellog_exception() {
             // given
             final Team team = TeamTest.saveTeam();
-            final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
+            final Long authorId = author.getId();
+            final Levellog levellog = new Levellog(authorId, team, "알린의 레벨로그");
 
             final String preQuestion = "알린의 사전 질문";
 
             // when & then
-            assertThatThrownBy(() -> new PreQuestion(levellog, author.getId(), preQuestion))
+            assertThatThrownBy(() -> new PreQuestion(levellog, authorId, preQuestion))
                     .isInstanceOf(InvalidPreQuestionException.class)
                     .hasMessageContaining("잘못된 사전 질문 요청입니다.");
         }
 
     }
+
     @Nested
     @DisplayName("update 메서드는")
     class Update {
@@ -93,9 +96,10 @@ public class PreQuestionTest {
             // given
             final Team team = TeamTest.saveTeam();
             final Levellog levellog = new Levellog(author.getId(), team, "알린의 레벨로그");
+            final Long fromId = from.getId();
 
             // when & then
-            assertThatThrownBy(() -> new PreQuestion(levellog, from.getId(), preQuestion))
+            assertThatThrownBy(() -> new PreQuestion(levellog, fromId, preQuestion))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("사전 내용은 공백이나 null일 수 없습니다.");
         }

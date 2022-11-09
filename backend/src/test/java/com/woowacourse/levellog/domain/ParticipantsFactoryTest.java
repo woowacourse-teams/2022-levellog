@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.common.exception.InvalidFieldException;
 import com.woowacourse.levellog.team.domain.ParticipantsFactory;
+import com.woowacourse.levellog.team.domain.Team;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,10 +23,11 @@ class ParticipantsFactoryTest {
             // given
             final List<Long> participantIds = List.of();
             final List<Long> watcherIds = List.of(1L, 2L);
+            final Team team = TeamTest.saveTeam();
 
             // when & then
             assertThatThrownBy(
-                    () -> ParticipantsFactory.createParticipants(TeamTest.saveTeam(), 1L, participantIds, watcherIds))
+                    () -> ParticipantsFactory.createParticipants(team, 1L, participantIds, watcherIds))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("참가자는 1명 이상이어야 합니다.");
         }
@@ -36,10 +38,11 @@ class ParticipantsFactoryTest {
             // given
             final List<Long> participantIds = List.of(1L, 2L, 2L);
             final List<Long> watcherIds = List.of(3L, 4L);
+            final Team team = TeamTest.saveTeam();
 
             // when & then
             assertThatThrownBy(
-                    () -> ParticipantsFactory.createParticipants(TeamTest.saveTeam(), 1L, participantIds, watcherIds))
+                    () -> ParticipantsFactory.createParticipants(team, 1L, participantIds, watcherIds))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("중복된 참가자가 존재합니다.");
         }
@@ -50,10 +53,11 @@ class ParticipantsFactoryTest {
             // given
             final List<Long> participantIds = List.of(1L, 2L);
             final List<Long> watcherIds = List.of(3L, 3L, 4L);
+            final Team team = TeamTest.saveTeam();
 
             // when & then
             assertThatThrownBy(
-                    () -> ParticipantsFactory.createParticipants(TeamTest.saveTeam(), 1L, participantIds, watcherIds))
+                    () -> ParticipantsFactory.createParticipants(team, 1L, participantIds, watcherIds))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("중복된 참관자가 존재합니다.");
         }
@@ -64,10 +68,11 @@ class ParticipantsFactoryTest {
             // given
             final List<Long> participantIds = List.of(1L, 2L);
             final List<Long> watcherIds = List.of(2L, 3L);
+            final Team team = TeamTest.saveTeam();
 
             // when & then
             assertThatThrownBy(
-                    () -> ParticipantsFactory.createParticipants(TeamTest.saveTeam(), 1L, participantIds, watcherIds))
+                    () -> ParticipantsFactory.createParticipants(team, 1L, participantIds, watcherIds))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("참가자와 참관자에 모두 포함된 멤버가 존재합니다.");
         }
@@ -78,10 +83,11 @@ class ParticipantsFactoryTest {
             // given
             final List<Long> participantIds = List.of(1L, 2L);
             final List<Long> watcherIds = List.of(3L, 4L);
+            final Team team = TeamTest.saveTeam();
 
             // when & then
             assertThatThrownBy(
-                    () -> ParticipantsFactory.createParticipants(TeamTest.saveTeam(), 5L, participantIds, watcherIds))
+                    () -> ParticipantsFactory.createParticipants(team, 5L, participantIds, watcherIds))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("호스트가 참가자 또는 참관자 목록에 존재하지 않습니다.");
         }
@@ -92,10 +98,11 @@ class ParticipantsFactoryTest {
             // given
             final List<Long> participantIds = List.of(1L, 2L);
             final List<Long> watcherIds = List.of(3L);
+            final Team team = TeamTest.saveTeam();
 
             // when & then
             assertThatCode(
-                    () -> ParticipantsFactory.createParticipants(TeamTest.saveTeam(), 1L, participantIds, watcherIds))
+                    () -> ParticipantsFactory.createParticipants(team, 1L, participantIds, watcherIds))
                     .isInstanceOf(InvalidFieldException.class)
                     .hasMessageContaining("참가자 수는 인터뷰어 수 보다 많아야 합니다.");
         }

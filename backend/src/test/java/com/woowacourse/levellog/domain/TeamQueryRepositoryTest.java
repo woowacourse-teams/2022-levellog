@@ -146,7 +146,7 @@ class TeamQueryRepositoryTest extends RepositoryTest {
         final Member rick = saveMember("릭");
         final Member jun = saveMember("준");
 
-        final Team team1 = saveTeam(roma, List.of(jun), pep, rick);
+        saveTeam(roma, List.of(jun), pep, rick);
 
         // 팀 2
         final Member eve = saveMember("이브");

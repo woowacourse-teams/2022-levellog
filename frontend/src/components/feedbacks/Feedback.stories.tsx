@@ -21,6 +21,11 @@ Base.args = {
       nickname: '결',
       profileUrl: 'https://avatars.githubusercontent.com/u/79692272?v=4&s=44',
     },
+    to: {
+      id: '2',
+      nickname: '해리',
+      profileUrl: 'https://avatars.githubusercontent.com/u/79692272?v=4&s=44',
+    },
     feedback: {
       study: '잘하시네요',
       speak: '잘하시네요',
@@ -41,6 +46,11 @@ Others.args = {
     from: {
       id: '2',
       nickname: '결',
+      profileUrl: 'https://avatars.githubusercontent.com/u/79692272?v=4&s=44',
+    },
+    to: {
+      id: '2',
+      nickname: '해리',
       profileUrl: 'https://avatars.githubusercontent.com/u/79692272?v=4&s=44',
     },
     feedback: {

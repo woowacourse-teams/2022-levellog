@@ -10,6 +10,9 @@ module.exports = {
       {
         test: /\.(png|jpe?g|svg|webp|woff)$/,
         type: 'asset/resource',
+        generator: {
+          filename: '[hash][ext][query]',
+        },
       },
       {
         test: /\.css$/,
@@ -27,9 +30,9 @@ module.exports = {
     publicPath: '/',
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: 'public/index.html' }),
-    new CopyWebpackPlugin({
-      patterns: [{ from: './public', to: './public' }],
+    new HtmlWebpackPlugin({
+      template: path.join('public/index.html'),
+      favicon: './src/assets/images/favicon.ico',
     }),
     new CleanWebpackPlugin(),
   ],

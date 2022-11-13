@@ -38,3 +38,8 @@ jobs:
       - name: Prod Build # React Prod Build
         working-directory: ./frontend
         run: yarn build-prod
+
+  sonarqube-build:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: 'echo "No build required"'

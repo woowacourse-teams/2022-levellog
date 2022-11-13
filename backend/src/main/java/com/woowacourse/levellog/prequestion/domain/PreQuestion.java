@@ -13,6 +13,8 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_levellogId_authorId",
+                columnNames = {"levellog_id", "authorId"}
+        )})
 public class PreQuestion extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

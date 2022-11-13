@@ -41,10 +41,7 @@ class FeedbackServiceTest extends ServiceTest {
 
         saveFeedback(alien, levellog);
         saveFeedback(eve, levellog);
-
         saveFeedback(roma, levellog);
-        saveFeedback(alien, levellog);
-        saveFeedback(eve, levellog);
 
         // when
         final List<String> fromNicknames = feedbackService.findAllByTo(getLoginStatus(eve))

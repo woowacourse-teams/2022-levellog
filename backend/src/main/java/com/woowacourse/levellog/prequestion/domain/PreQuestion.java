@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(uniqueConstraints = {
         @UniqueConstraint(
-                name = "uk_levellogId_authorId",
+                name = "uk_pre_question_levellog_id_author_id",
                 columnNames = {"levellog_id", "authorId"}
         )})
 public class PreQuestion extends BaseEntity {

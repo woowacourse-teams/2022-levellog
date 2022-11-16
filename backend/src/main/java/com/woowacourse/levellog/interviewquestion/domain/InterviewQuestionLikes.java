@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(uniqueConstraints = {
         @UniqueConstraint(
-                name = "uk_interview_question_id_liker_id",
+                name = "uk_interview_question_likes_interview_question_id_liker_id",
                 columnNames = {"interviewQuestionId", "likerId"}
         )})
 public class InterviewQuestionLikes extends BaseEntity {

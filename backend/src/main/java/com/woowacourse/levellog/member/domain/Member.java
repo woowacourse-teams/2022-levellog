@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(uniqueConstraints = {
         @UniqueConstraint(
-                name = "uk_member_github_id", columnNames = {"githubId"}
+                name = "uk_member_github_id",
+                columnNames = {"githubId"}
         )})
 public class Member extends BaseEntity {
 

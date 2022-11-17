@@ -115,10 +115,9 @@ class LevellogRepositoryTest extends RepositoryTest {
             saveLevellog(author, team);
 
             final Long authorId = author.getId();
-            final Long teamId = team.getId();
 
             // when
-            final boolean actual = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
+            final boolean actual = levellogRepository.existsByAuthorIdAndTeam(authorId, team);
 
             // then
             assertTrue(actual);
@@ -135,10 +134,9 @@ class LevellogRepositoryTest extends RepositoryTest {
             saveLevellog(author, team);
 
             final Long anotherAuthorId = author.getId() + 1;
-            final Long teamId = team.getId();
 
             // when
-            final boolean actual = levellogRepository.existsByAuthorIdAndTeamId(anotherAuthorId, teamId);
+            final boolean actual = levellogRepository.existsByAuthorIdAndTeam(anotherAuthorId, team);
 
             // then
             assertFalse(actual);

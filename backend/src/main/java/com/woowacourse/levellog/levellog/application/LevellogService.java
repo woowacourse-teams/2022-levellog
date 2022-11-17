@@ -38,7 +38,7 @@ public class LevellogService {
 
         team.validateReady(timeStandard.now());
         team.validateIsParticipants(authorId);
-        validateLevellogExistence(authorId, teamId);
+        validateLevellogExistence(authorId, team);
 
         final Levellog savedLevellog = levellogRepository.save(request.toLevellog(authorId, team));
 
@@ -69,12 +69,12 @@ public class LevellogService {
         levellog.updateContent(loginStatus.getMemberId(), request.getContent());
     }
 
-    private void validateLevellogExistence(final Long authorId, final Long teamId) {
-        final boolean isExists = levellogRepository.existsByAuthorIdAndTeamId(authorId, teamId);
+    private void validateLevellogExistence(final Long authorId, final Team team) {
+        final boolean isExists = levellogRepository.existsByAuthorIdAndTeam(authorId, team);
         if (isExists) {
             throw new LevellogAlreadyExistException(DebugMessage.init()
                     .append("authorId", authorId)
-                    .append("teamId", teamId));
+                    .append("teamId", team.getId()));
         }
     }
 }

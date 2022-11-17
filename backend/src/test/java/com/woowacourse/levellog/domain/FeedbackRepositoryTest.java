@@ -28,17 +28,13 @@ class FeedbackRepositoryTest extends RepositoryTest {
         saveFeedback(eve, levellog);
 
         // when
-        final boolean isExist1 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(), eve.getId());
-        final boolean isExist2 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId() + 1,
-                eve.getId());
-        final boolean isExist3 = feedbackRepository.existsByLevellogIdAndFromId(levellog.getId(),
-                eve.getId() + 1);
+        final boolean isExist1 = feedbackRepository.existsByLevellogAndFromId(levellog, eve.getId());
+        final boolean isExist2 = feedbackRepository.existsByLevellogAndFromId(levellog, eve.getId() + 1);
 
         // then
         assertAll(() -> {
             assertThat(isExist1).isTrue();
             assertThat(isExist2).isFalse();
-            assertThat(isExist3).isFalse();
         });
     }
 

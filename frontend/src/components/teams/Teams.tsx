@@ -28,9 +28,9 @@ const S = {
   Container: styled.div`
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 3.125rem;
     @media (max-width: 560px) {
-      justify-content: center;
       gap: 2.5rem;
     }
   `,

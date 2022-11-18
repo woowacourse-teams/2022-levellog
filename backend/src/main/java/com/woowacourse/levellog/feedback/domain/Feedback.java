@@ -11,6 +11,8 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_feedback_author_id_team_id",
+                columnNames = {"fromId", "levellog_id"}
+        )})
 public class Feedback extends BaseEntity {
 
     private static final String CONTENT_TYPE_SPEAK = "Speak";

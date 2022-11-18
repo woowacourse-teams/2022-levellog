@@ -34,9 +34,9 @@ public class FeedbackService {
                      @Verified final LoginStatus loginStatus) {
         final Long memberId = loginStatus.getMemberId();
 
-        validateExistence(levellogId, memberId);
-
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
+        validateExistence(levellog, memberId);
+
         final Team team = levellog.getTeam();
 
         levellog.validateSelfFeedback(memberId);
@@ -89,10 +89,10 @@ public class FeedbackService {
                 request.getFeedback().getEtc());
     }
 
-    private void validateExistence(final Long levellogId, final Long fromMemberId) {
-        if (feedbackRepository.existsByLevellogIdAndFromId(levellogId, fromMemberId)) {
+    private void validateExistence(final Levellog levellog, final Long fromMemberId) {
+        if (feedbackRepository.existsByLevellogAndFromId(levellog, fromMemberId)) {
             throw new FeedbackAlreadyExistException(DebugMessage.init()
-                    .append("levellogId", levellogId));
+                    .append("levellogId", levellog.getId()));
         }
     }
 }

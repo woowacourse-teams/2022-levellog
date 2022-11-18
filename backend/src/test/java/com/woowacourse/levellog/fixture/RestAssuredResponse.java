@@ -48,13 +48,6 @@ public class RestAssuredResponse {
                 .split("/feedbacks/")[1];
     }
 
-    public Long getMemberId() {
-        return response
-                .extract()
-                .as(LoginResponse.class)
-                .getId();
-    }
-
     public String getToken() {
         return response
                 .extract()

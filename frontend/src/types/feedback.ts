@@ -12,4 +12,5 @@ export interface FeedbackInfoType extends FeedbackType {
   id: number;
   updatedAt: string;
   from: UserType;
+  to: UserType;
 }

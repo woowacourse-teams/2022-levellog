@@ -48,7 +48,8 @@ public class FeedbackQueryRepository {
                 + "FROM feedback f "
                 + "INNER JOIN member fm ON f.from_id = fm.id "
                 + "INNER JOIN member tm ON f.to_id = tm.id "
-                + "WHERE f.levellog_id = :levellogId";
+                + "WHERE f.levellog_id = :levellogId "
+                + "ORDER BY updatedAt DESC";
         final SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("levellogId", levellogId);
 

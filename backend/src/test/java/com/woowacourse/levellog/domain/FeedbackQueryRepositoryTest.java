@@ -18,28 +18,35 @@ import org.junit.jupiter.api.Test;
 class FeedbackQueryRepositoryTest extends RepositoryTest {
 
     @Test
-    @DisplayName("findAllByLevellog 메서드는 입력된 레벨로그에 등록된 모든 피드백을 조회한다.")
+    @DisplayName("findAllByLevellog 메서드는 입력된 레벨로그에 등록된 모든 피드백을 updatedAt 기준 내림차순으로 정렬해서 조회한다.")
     void findAllByLevellog() {
         // given
         final Member eve = saveMember("eve");
         final Member rick = saveMember("rick");
+        final Member pepper = saveMember("pepper");
         final Member toMember = saveMember("toMember");
 
         final Team team = saveTeam(eve, rick, toMember);
         final Levellog levellog = saveLevellog(toMember, team);
 
-        saveFeedback(eve, levellog);
+        final Feedback feedbackOfEve = saveFeedback(eve, levellog);
         saveFeedback(rick, levellog);
+        saveFeedback(pepper, levellog);
+        feedbackOfEve.updateFeedback("new", "new", "new");
+//        feedbackRepository.save(feedbackOfEve);
+
+        feedbackRepository.flush();
 
         // when
         final List<FeedbackResponse> feedbacks = feedbackQueryRepository.findAllByLevellogId(levellog.getId())
                 .getFeedbacks();
 
         // then
-        assertThat(feedbacks).hasSize(2)
+        assertThat(feedbacks).hasSize(3)
                 .extracting(it -> it.getFrom().getId(), it -> it.getTo().getId())
                 .containsExactly(
                         tuple(eve.getId(), toMember.getId()),
+                        tuple(pepper.getId(), toMember.getId()),
                         tuple(rick.getId(), toMember.getId())
                 );
     }

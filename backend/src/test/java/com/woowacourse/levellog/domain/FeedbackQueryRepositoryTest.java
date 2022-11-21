@@ -33,7 +33,6 @@ class FeedbackQueryRepositoryTest extends RepositoryTest {
         saveFeedback(rick, levellog);
         saveFeedback(pepper, levellog);
         feedbackOfEve.updateFeedback("new", "new", "new");
-//        feedbackRepository.save(feedbackOfEve);
 
         feedbackRepository.flush();
 

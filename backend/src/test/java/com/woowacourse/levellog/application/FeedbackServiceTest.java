@@ -60,24 +60,32 @@ class FeedbackServiceTest extends ServiceTest {
     class FindAll {
 
         @Test
-        @DisplayName("모든 피드백을 조회한다.")
+        @DisplayName("피드백이 updatedAt 기준 내림차순으로 정렬된 피드백 목록을 조회한다.")
         void success() {
             // given
             final Member eve = saveMember("이브");
             final Member roma = saveMember("로마");
             final Member alien = saveMember("알린");
+            final Member pepper = saveMember("페퍼");
             final Team team = saveTeam(eve, roma, alien);
 
             final Levellog levellog = saveLevellog(eve, team);
-            saveFeedback(roma, levellog);
+            final Feedback feedbackOfRoma = saveFeedback(roma, levellog);
             saveFeedback(alien, levellog);
+            saveFeedback(pepper, levellog);
+
+            feedbackOfRoma.updateFeedback("new", "new", "new");
+            feedbackRepository.flush();
 
             // when
-            final FeedbackResponses feedbackResponses = feedbackService.findAll(levellog.getId(),
+            final FeedbackResponses actual = feedbackService.findAll(levellog.getId(),
                     getLoginStatus(eve));
 
             // then
-            assertThat(feedbackResponses.getFeedbacks()).hasSize(2);
+            assertThat(actual.getFeedbacks())
+                    .hasSize(3)
+                    .extracting(it -> it.getFrom().getNickname())
+                    .containsExactly(roma.getNickname(), pepper.getNickname(), alien.getNickname());
         }
 
         @Test

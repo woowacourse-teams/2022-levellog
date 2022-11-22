@@ -61,6 +61,7 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
      *   given: 피드백이 등록되어있다.
      *   when: 등록된 모든 피드백을 조회한다.
      *   then: 200 OK 상태 코드와 모든 피드백을 응답 받는다.
+     *   then: 피드백은 수정 시간 기준 내림차순으로 정렬되어 있다.
      */
     @Test
     @DisplayName("피드백 전체 조회")
@@ -68,13 +69,18 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
         // given
         RICK.save();
         ROMA.save();
+        PEPPER.save();
 
-        final String teamId = saveTeam("릭 and 로마", RICK, 1, RICK, ROMA).getTeamId();
+        final String teamId = saveTeam("릭 and 로마", RICK, 1, RICK, ROMA, PEPPER).getTeamId();
         final String levellogId = saveLevellog("레벨로그", teamId, RICK).getLevellogId();
 
         timeStandard.setInProgress();
 
-        saveFeedback("test", levellogId, ROMA);
+        final String romaContent = "로마가 릭의 레벨로그에 작성한 피드백";
+        saveFeedback(romaContent, levellogId, ROMA);
+
+        final String pepperContent = "페퍼가 릭의 레벨로그에 작성한 피드백";
+        saveFeedback(pepperContent, levellogId, PEPPER);
 
         // when
         final ValidatableResponse response = RestAssured.given(specification).log().all()
@@ -86,11 +92,11 @@ class FeedbackAcceptanceTest extends AcceptanceTest {
 
         // then
         response.statusCode(HttpStatus.OK.value())
-                .body("feedbacks.from.nickname", contains("로마"),
-                        "feedbacks.to.nickname", contains("릭"),
-                        "feedbacks.feedback.study", contains("study test"),
-                        "feedbacks.feedback.speak", contains("speak test"),
-                        "feedbacks.feedback.etc", contains("etc test")
+                .body("feedbacks.from.nickname", contains(PEPPER.getNickname(), ROMA.getNickname()),
+                        "feedbacks.to.nickname", contains(RICK.getNickname(), RICK.getNickname()),
+                        "feedbacks.feedback.study", contains("study " + pepperContent, "study " + romaContent),
+                        "feedbacks.feedback.speak", contains("speak " + pepperContent, "speak " + romaContent),
+                        "feedbacks.feedback.etc", contains("etc " + pepperContent, "etc " + romaContent)
                 );
     }
 

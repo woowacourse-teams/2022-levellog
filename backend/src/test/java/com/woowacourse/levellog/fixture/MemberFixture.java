@@ -68,4 +68,8 @@ public enum MemberFixture {
 
         return null;
     }
+
+    public String getNickname() {
+        return nickname;
+    }
 }

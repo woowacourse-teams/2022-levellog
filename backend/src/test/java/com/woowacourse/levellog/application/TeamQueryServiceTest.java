@@ -138,7 +138,8 @@ public class TeamQueryServiceTest extends ServiceTest {
         @DisplayName("없는 id에 해당하는 팀을 조회하면 예외를 던진다.")
         void findByTeamIdAndMemberId_notFound_exception() {
             // given
-            final LoginStatus loginStatus = LoginStatus.fromLogin(1L);
+            final Member member = saveMember("릭");
+            final LoginStatus loginStatus = LoginStatus.fromLogin(member.getId());
 
             // when & then
             assertThatThrownBy(() -> teamQueryService.findByTeamIdAndMemberId(1000L, loginStatus))

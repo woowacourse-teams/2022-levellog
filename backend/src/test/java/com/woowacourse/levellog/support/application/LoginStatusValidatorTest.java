@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.levellog.authentication.aspect.LoginStatusValidator;
-import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.member.domain.Member;
 import com.woowacourse.levellog.member.domain.MemberRepository;
@@ -46,7 +45,7 @@ class LoginStatusValidatorTest {
     @Service
     public static class TestService {
 
-        Long someMethod(@Verified final LoginStatus loginStatus) {
+        Long someMethod(final LoginStatus loginStatus) {
             return loginStatus.getMemberId();
         }
     }

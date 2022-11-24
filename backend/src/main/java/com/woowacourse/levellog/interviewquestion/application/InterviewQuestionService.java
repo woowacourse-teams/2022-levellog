@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.interviewquestion.application;
 
-import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.interviewquestion.domain.InterviewQuestion;
@@ -43,7 +42,7 @@ public class InterviewQuestionService {
 
     @Transactional
     public Long save(final InterviewQuestionWriteRequest request, final Long levellogId,
-                     @Verified final LoginStatus loginStatus) {
+                     final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
@@ -75,7 +74,7 @@ public class InterviewQuestionService {
     }
 
     public InterviewQuestionContentResponses findAllByLevellogAndAuthor(final Long levellogId,
-                                                                        @Verified final LoginStatus loginStatus) {
+                                                                        final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final List<InterviewQuestion> interviewQuestions = interviewQuestionRepository.findAllByLevellogAndAuthorId(
                 levellog, loginStatus.getMemberId());
@@ -85,8 +84,7 @@ public class InterviewQuestionService {
                 .collect(Collectors.toList()));
     }
 
-    public InterviewQuestionSearchQueryResults searchByKeyword(final String keyword,
-                                                               @Verified final LoginStatus loginStatus,
+    public InterviewQuestionSearchQueryResults searchByKeyword(final String keyword, final LoginStatus loginStatus,
                                                                final Long size, final Long page, final String sort) {
         final InterviewQuestionSort sortCondition = InterviewQuestionSort.valueOf(sort.toUpperCase());
         final List<InterviewQuestionSearchQueryResult> results = interviewQuestionQueryRepository.searchByKeyword(
@@ -98,7 +96,7 @@ public class InterviewQuestionService {
 
     @Transactional
     public void update(final InterviewQuestionWriteRequest request, final Long interviewQuestionId,
-                       @Verified final LoginStatus loginStatus) {
+                       final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
 
@@ -110,7 +108,7 @@ public class InterviewQuestionService {
     }
 
     @Transactional
-    public void deleteById(final Long interviewQuestionId, @Verified final LoginStatus loginStatus) {
+    public void deleteById(final Long interviewQuestionId, final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
 
@@ -123,7 +121,7 @@ public class InterviewQuestionService {
     }
 
     @Transactional
-    public void pressLike(final Long interviewQuestionId, @Verified final LoginStatus loginStatus) {
+    public void pressLike(final Long interviewQuestionId, final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
         validateAlreadyExist(interviewQuestionId, loginStatus.getMemberId());
@@ -134,7 +132,7 @@ public class InterviewQuestionService {
     }
 
     @Transactional
-    public void cancelLike(final Long interviewQuestionId, @Verified final LoginStatus loginStatus) {
+    public void cancelLike(final Long interviewQuestionId, final LoginStatus loginStatus) {
         final InterviewQuestion interviewQuestion = interviewQuestionRepository.getInterviewQuestion(
                 interviewQuestionId);
         final InterviewQuestionLikes interviewQuestionLikes = getInterviewQuestionLikes(interviewQuestion,

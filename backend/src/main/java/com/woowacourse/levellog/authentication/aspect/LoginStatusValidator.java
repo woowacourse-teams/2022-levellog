@@ -26,7 +26,7 @@ public class LoginStatusValidator {
     @Before("execution(* com.woowacourse.levellog..*.application..*(..))")
     public void validateMemberId(final JoinPoint joinPoint) {
         Arrays.stream(joinPoint.getArgs())
-                .filter(this::isVerified)
+                .filter(this::isInstanceOfLoginStatus)
                 .map(this::castToLoginStatus)
                 .filter(LoginStatus::isLogin)
                 .map(LoginStatus::getMemberId)
@@ -34,7 +34,7 @@ public class LoginStatusValidator {
                 .ifPresent(memberRepository::getMember);
     }
 
-    private boolean isVerified(final Object parameter) {
+    private boolean isInstanceOfLoginStatus(final Object parameter) {
         return parameter instanceof LoginStatus;
     }
 

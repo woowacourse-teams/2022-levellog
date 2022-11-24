@@ -10,11 +10,8 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
 /**
- * Service에 정의된 public 메서드 중 {@link com.woowacourse.levellog.authentication.support.Verified}가 달린
- * {@link com.woowacourse.levellog.common.dto.LoginStatus}를 찾는다. 해당하는 매개 변수가 있다면 LoginStatus에서 MemberId를 꺼내서 DB에 존재하는지
- * 유효성 검사를 수행한다.
- * <p>
- * ※※※LoginStatus 타입이 아닌 값에 @Verified를 붙이면 IllegalArgumentException이 터진다.※※※
+ * Service에 정의된 public 메서드 중 {@link com.woowacourse.levellog.common.dto.LoginStatus}를 찾는다. 해당하는 매개 변수가 있다면 LoginStatus에서
+ * MemberId를 꺼내서 DB에 존재하는지 유효성 검사를 수행한다.
  */
 @Component
 @Aspect

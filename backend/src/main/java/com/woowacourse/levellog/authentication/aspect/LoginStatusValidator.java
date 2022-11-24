@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.authentication.aspect;
 
-import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.member.domain.MemberRepository;
 import java.util.Arrays;
@@ -36,13 +35,10 @@ public class LoginStatusValidator {
     }
 
     private boolean isVerified(final Object parameter) {
-        return parameter.getClass().isAnnotationPresent(Verified.class);
+        return parameter instanceof LoginStatus;
     }
 
     private LoginStatus castToLoginStatus(final Object parameter) {
-        if (!(parameter instanceof LoginStatus)) {
-            throw new IllegalArgumentException("@Verified 어노테이션은 LoginStatus 객체에만 붙여야함");
-        }
         return (LoginStatus) parameter;
     }
 }

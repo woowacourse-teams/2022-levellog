@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.prequestion.application;
 
-import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.levellog.domain.Levellog;
@@ -26,8 +25,7 @@ public class PreQuestionService {
     private final LevellogRepository levellogRepository;
 
     @Transactional
-    public Long save(final PreQuestionWriteRequest request, final Long levellogId,
-                     @Verified final LoginStatus loginStatus) {
+    public Long save(final PreQuestionWriteRequest request, final Long levellogId, final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         levellog.getTeam().validateIsParticipants(loginStatus.getMemberId());
 
@@ -37,7 +35,7 @@ public class PreQuestionService {
                 .getId();
     }
 
-    public PreQuestionResponse findMy(final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public PreQuestionResponse findMy(final Long levellogId, final LoginStatus loginStatus) {
         levellogRepository.getLevellog(levellogId);
 
         return preQuestionQueryRepository.findByLevellogAndAuthor(levellogId, loginStatus.getMemberId())
@@ -47,8 +45,7 @@ public class PreQuestionService {
     }
 
     @Transactional
-    public void update(final PreQuestionWriteRequest request, final Long preQuestionId, final Long levellogId,
-                       @Verified final LoginStatus loginStatus) {
+    public void update(final PreQuestionWriteRequest request, final Long preQuestionId, final Long levellogId, final LoginStatus loginStatus) {
         final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 
@@ -59,7 +56,7 @@ public class PreQuestionService {
     }
 
     @Transactional
-    public void deleteById(final Long preQuestionId, final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public void deleteById(final Long preQuestionId, final Long levellogId, final LoginStatus loginStatus) {
         final PreQuestion preQuestion = preQuestionRepository.getPreQuestion(preQuestionId);
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
 

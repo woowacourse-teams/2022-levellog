@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.team.application;
 
-import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.team.domain.TeamFilterCondition;
@@ -30,7 +29,7 @@ public class TeamQueryService {
         return results.toResponse(timeStandard.now());
     }
 
-    public TeamListResponses findAllByMemberId(@Verified final LoginStatus loginStatus) {
+    public TeamListResponses findAllByMemberId(final LoginStatus loginStatus) {
         final TeamListQueryResults results = new TeamListQueryResults(
                 teamQueryRepository.findMyList(loginStatus.getMemberId()));
 

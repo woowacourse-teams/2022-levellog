@@ -4,16 +4,14 @@ import static com.woowacourse.levellog.fixture.MemberFixture.EVE;
 import static com.woowacourse.levellog.fixture.MemberFixture.PEPPER;
 import static com.woowacourse.levellog.fixture.RestAssuredTemplate.get;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.levellog.feedback.dto.response.FeedbackResponses;
+import com.woowacourse.levellog.fixture.ConcurrentRequester;
 import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResult;
 import com.woowacourse.levellog.interviewquestion.dto.query.InterviewQuestionSearchQueryResults;
 import com.woowacourse.levellog.member.dto.response.MemberResponses;
 import com.woowacourse.levellog.team.dto.response.TeamDetailResponse;
-import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -29,23 +27,25 @@ class ConcurrentAcceptanceTest extends AcceptanceTest {
     @DisplayName("멤버 동시 가입")
     void concurrentlyCreateMember() throws InterruptedException {
         // given
-        final ExecutorService executorService = Executors.newFixedThreadPool(2);
-        final CountDownLatch countDownLatch = new CountDownLatch(2);
+        final int threadPoolSize = 2;
+        final ConcurrentRequester concurrentRequester = new ConcurrentRequester(threadPoolSize);
 
         // when
-        for (int i = 0; i < 2; i++) {
-            executorService.execute(() -> {
-                PEPPER.save();
-                countDownLatch.countDown();
-            });
+        for (int i = 0; i < threadPoolSize; i++) {
+            concurrentRequester.execute(PEPPER::login);
         }
-        countDownLatch.await();
+        concurrentRequester.await();
 
         // then
-        final MemberResponses response = get("/api/members?nickname=페퍼", EVE.getToken()).getResponse()
-                .extract().body().as(MemberResponses.class);
-        final int numberOfSavedMember = response.getMembers().size();
-        assertThat(numberOfSavedMember).isEqualTo(1);
+        final int numberOfSavedMember = getResponse("/api/members?nickname=페퍼", MemberResponses.class)
+                .getMembers()
+                .size();
+
+        assertAll(
+                () -> assertThat(concurrentRequester.getSuccessRequest()).isEqualTo(1),
+                () -> assertThat(concurrentRequester.getFailRequest()).isEqualTo(1),
+                () -> assertThat(numberOfSavedMember).isEqualTo(1)
+        );
     }
 
     /*
@@ -60,26 +60,27 @@ class ConcurrentAcceptanceTest extends AcceptanceTest {
         PEPPER.save();
         EVE.save();
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
-
-        final ExecutorService executorService = Executors.newFixedThreadPool(2);
-        final CountDownLatch countDownLatch = new CountDownLatch(2);
+        final int threadPoolSize = 3;
+        final ConcurrentRequester concurrentRequester = new ConcurrentRequester(threadPoolSize);
 
         // when
-        for (int i = 0; i < 2; i++) {
-            executorService.execute(() -> {
-                saveLevellog("Spring과 React를 학습했습니다.", teamId, PEPPER);
-                countDownLatch.countDown();
-            });
+        for (int i = 0; i < threadPoolSize; i++) {
+            concurrentRequester.execute(() -> saveLevellog("Spring과 React를 학습했습니다.", teamId, PEPPER));
         }
-        countDownLatch.await();
+        concurrentRequester.await();
 
         // then
-        final TeamDetailResponse response = get("/api/teams/" + teamId, PEPPER.getToken()).getResponse()
-                .extract().body().as(TeamDetailResponse.class);
-        final long numberOfLevellogs = response.getParticipants().stream()
+        final long numberOfLevellogs = getResponse("/api/teams/" + teamId, TeamDetailResponse.class)
+                .getParticipants()
+                .stream()
                 .filter(it -> it.getLevellogId() != null)
                 .count();
-        assertThat(numberOfLevellogs).isEqualTo(1);
+
+        assertAll(
+                () -> assertThat(concurrentRequester.getSuccessRequest()).isEqualTo(1),
+                () -> assertThat(concurrentRequester.getFailRequest()).isEqualTo(2),
+                () -> assertThat(numberOfLevellogs).isEqualTo(1)
+        );
     }
 
     /*
@@ -97,25 +98,28 @@ class ConcurrentAcceptanceTest extends AcceptanceTest {
         final String levellogId = saveLevellog("동시성을 학습했습니다.", teamId, PEPPER).getLevellogId();
         timeStandard.setInProgress();
 
-        final ExecutorService executorService = Executors.newFixedThreadPool(2);
-        final CountDownLatch countDownLatch = new CountDownLatch(2);
+        final int threadPoolSize = 2;
+        final ConcurrentRequester concurrentRequester = new ConcurrentRequester(threadPoolSize);
 
         // when
-        for (int i = 0; i < 2; i++) {
-            executorService.execute(() -> {
-                saveFeedback("이브가 페퍼의 레벨로그에 작성한 피드백", levellogId, EVE);
-                countDownLatch.countDown();
-            });
+        for (int i = 0; i < threadPoolSize; i++) {
+            concurrentRequester.execute(() -> saveFeedback("이브가 페퍼의 레벨로그에 작성한 피드백", levellogId, EVE));
         }
-        countDownLatch.await();
+        concurrentRequester.await();
 
         // then
-        final FeedbackResponses response = get("/api/levellogs/" + levellogId + "/feedbacks", PEPPER.getToken())
-                .getResponse().extract().body().as(FeedbackResponses.class);
-        final long numberOfPepperFeedbacks = response.getFeedbacks().stream()
+        final long numberOfPepperFeedbacks = getResponse("/api/levellogs/" + levellogId + "/feedbacks",
+                FeedbackResponses.class)
+                .getFeedbacks()
+                .stream()
                 .filter(it -> it.getFrom().getId().equals(EVE.getId()) && it.getTo().getId().equals(PEPPER.getId()))
                 .count();
-        assertThat(numberOfPepperFeedbacks).isEqualTo(1);
+
+        assertAll(
+                () -> assertThat(concurrentRequester.getSuccessRequest()).isEqualTo(1),
+                () -> assertThat(concurrentRequester.getFailRequest()).isEqualTo(1),
+                () -> assertThat(numberOfPepperFeedbacks).isEqualTo(1)
+        );
     }
 
     /*
@@ -125,36 +129,44 @@ class ConcurrentAcceptanceTest extends AcceptanceTest {
      */
     @Test
     @DisplayName("인터뷰 질문 좋아요 동시 요청")
-    void concurrentlyCreatePreQuestion() throws InterruptedException {
+    void concurrentlyCreateInterviewQuestionLike() throws InterruptedException {
         // given
         PEPPER.save();
         EVE.save();
         final String teamId = saveTeam("잠실 제이슨조", PEPPER, 1, PEPPER, EVE).getTeamId();
         final String levellogId = saveLevellog("동시성을 학습했습니다.", teamId, PEPPER).getLevellogId();
         timeStandard.setInProgress();
-        final String interviewQuestionId = saveInterviewQuestion("동시성은 어떻게 해결할 수 있나요?", levellogId, EVE)
+        final String interviewQuestionId = saveInterviewQuestion("concurrency는 어떻게 해결할 수 있나요?", levellogId, EVE)
                 .getInterviewQuestionId();
 
-        final ExecutorService executorService = Executors.newFixedThreadPool(2);
-        final CountDownLatch countDownLatch = new CountDownLatch(2);
+        final int threadPoolSize = 2;
+        final ConcurrentRequester concurrentRequester = new ConcurrentRequester(threadPoolSize);
 
         // when
-        for (int i = 0; i < 2; i++) {
-            executorService.execute(() -> {
-                requestPressLikeInterviewQuestion(interviewQuestionId, PEPPER);
-                countDownLatch.countDown();
-            });
+        for (int i = 0; i < threadPoolSize; i++) {
+            concurrentRequester.execute(() -> requestPressLikeInterviewQuestion(interviewQuestionId, PEPPER));
         }
-        countDownLatch.await();
+        concurrentRequester.await();
 
-        // then
-        final InterviewQuestionSearchQueryResults response = get("/api/interview-questions?keyword=동시성",
-                PEPPER.getToken()).getResponse()
-                .extract().body().as(InterviewQuestionSearchQueryResults.class);
-        final Optional<Integer> likeCounts = response.getResults().stream()
+        final int likeCounts = getResponse("/api/interview-questions?keyword=concurrency",
+                InterviewQuestionSearchQueryResults.class)
+                .getResults()
+                .stream()
                 .filter(it -> it.getId().equals(Long.valueOf(interviewQuestionId)))
                 .findFirst()
-                .map(InterviewQuestionSearchQueryResult::getLikeCount);
-        assertThat(likeCounts).hasValue(1);
+                .map(InterviewQuestionSearchQueryResult::getLikeCount)
+                .get();
+
+        assertAll(
+                () -> assertThat(concurrentRequester.getSuccessRequest()).isEqualTo(1),
+                () -> assertThat(concurrentRequester.getFailRequest()).isEqualTo(1),
+                () -> assertThat(likeCounts).isEqualTo(1)
+        );
+    }
+
+    private <T> T getResponse(final String url, final Class<T> T) {
+        return get(url, PEPPER.getToken())
+                .getResponse()
+                .extract().body().as(T);
     }
 }

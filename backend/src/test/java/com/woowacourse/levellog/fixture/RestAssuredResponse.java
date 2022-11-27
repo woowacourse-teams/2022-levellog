@@ -62,6 +62,11 @@ public class RestAssuredResponse {
                 .getAccessToken();
     }
 
+    public boolean isSuccess() {
+        final int statusCode = response.extract().statusCode();
+        return statusCode / 100 == 2;
+    }
+
     public ValidatableResponse getResponse() {
         return response;
     }

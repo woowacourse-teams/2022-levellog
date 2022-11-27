@@ -175,4 +175,9 @@ abstract class AcceptanceTest {
         return post("/api/levellogs/" + levellogId + "/interview-questions", author.getToken(),
                 new InterviewQuestionWriteRequest(content));
     }
+
+    protected RestAssuredResponse requestPressLikeInterviewQuestion(final String interviewQuestionId,
+                                                                    final MemberFixture from) {
+        return post("/api/interview-questions/" + interviewQuestionId + "/like", from.getToken());
+    }
 }

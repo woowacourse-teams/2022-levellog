@@ -25,6 +25,7 @@ import com.woowacourse.levellog.prequestion.dto.request.PreQuestionWriteRequest;
 import com.woowacourse.levellog.team.dto.request.TeamWriteRequest;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -174,5 +175,11 @@ abstract class AcceptanceTest {
                                                         final MemberFixture author) {
         return post("/api/levellogs/" + levellogId + "/interview-questions", author.getToken(),
                 new InterviewQuestionWriteRequest(content));
+    }
+
+    protected ValidatableResponse requestPressLikeInterviewQuestion(final String interviewQuestionId,
+                                                                  final MemberFixture from) {
+        return post("/api/interview-questions/" + interviewQuestionId + "/like", from.getToken())
+                .getResponse();
     }
 }

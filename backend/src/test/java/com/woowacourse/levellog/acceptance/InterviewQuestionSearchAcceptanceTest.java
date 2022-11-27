@@ -314,10 +314,4 @@ class InterviewQuestionSearchAcceptanceTest extends AcceptanceTest {
             response.statusCode(HttpStatus.NO_CONTENT.value());
         }
     }
-
-    private ValidatableResponse requestPressLikeInterviewQuestion(final String interviewQuestionId,
-                                                                  final MemberFixture from) {
-        return post("/api/interview-questions/" + interviewQuestionId + "/like", from.getToken())
-                .getResponse();
-    }
 }

@@ -1,7 +1,6 @@
 package com.woowacourse.levellog.member.application;
 
 import com.woowacourse.levellog.authentication.dto.response.GithubProfileResponse;
-import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.member.domain.Member;
@@ -66,8 +65,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateNickname(final NicknameUpdateRequest request,
-                               @Verified final LoginStatus loginStatus) {
+    public void updateNickname(final NicknameUpdateRequest request, final LoginStatus loginStatus) {
         final Member member = memberRepository.getMember(loginStatus.getMemberId());
         member.updateNickname(request.getNickname());
     }

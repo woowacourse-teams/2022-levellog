@@ -1,6 +1,5 @@
 package com.woowacourse.levellog.feedback.application;
 
-import com.woowacourse.levellog.authentication.support.Verified;
 import com.woowacourse.levellog.common.dto.LoginStatus;
 import com.woowacourse.levellog.common.support.DebugMessage;
 import com.woowacourse.levellog.feedback.domain.Feedback;
@@ -30,8 +29,7 @@ public class FeedbackService {
     private final TimeStandard timeStandard;
 
     @Transactional
-    public Long save(final FeedbackWriteRequest request, final Long levellogId,
-                     @Verified final LoginStatus loginStatus) {
+    public Long save(final FeedbackWriteRequest request, final Long levellogId, final LoginStatus loginStatus) {
         final Long memberId = loginStatus.getMemberId();
 
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
@@ -49,7 +47,7 @@ public class FeedbackService {
                 .getId();
     }
 
-    public FeedbackResponses findAll(final Long levellogId, @Verified final LoginStatus loginStatus) {
+    public FeedbackResponses findAll(final Long levellogId, final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
         team.validateIsParticipants(loginStatus.getMemberId());
@@ -57,8 +55,7 @@ public class FeedbackService {
         return feedbackQueryRepository.findAllByLevellogId(levellogId);
     }
 
-    public FeedbackResponse findById(final Long levellogId, final Long feedbackId,
-                                     @Verified final LoginStatus loginStatus) {
+    public FeedbackResponse findById(final Long levellogId, final Long feedbackId, final LoginStatus loginStatus) {
         final Levellog levellog = levellogRepository.getLevellog(levellogId);
         final Team team = levellog.getTeam();
 
@@ -70,13 +67,12 @@ public class FeedbackService {
                         .append("levellogId", levellogId)));
     }
 
-    public FeedbackResponses findAllByTo(@Verified final LoginStatus loginStatus) {
+    public FeedbackResponses findAllByTo(final LoginStatus loginStatus) {
         return feedbackQueryRepository.findAllByTo(loginStatus.getMemberId());
     }
 
     @Transactional
-    public void update(final FeedbackWriteRequest request, final Long feedbackId,
-                       @Verified final LoginStatus loginStatus) {
+    public void update(final FeedbackWriteRequest request, final Long feedbackId, final LoginStatus loginStatus) {
         final Feedback feedback = feedbackRepository.getFeedback(feedbackId);
         final Team team = feedback.getLevellog().getTeam();
 
